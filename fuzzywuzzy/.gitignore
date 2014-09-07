@@ -1,0 +1,27 @@
+*.py[oc]
+
+# Temp files
+*~
+~*
+.*~
+\#*
+.#*
+*#
+dist
+
+# Build files
+build
+dist
+pkg
+*.egg
+*.egg-info
+
+# Debian Files
+debian/files
+debian/python-beaver*
+
+# Sphinx build
+doc/_build
+
+# Generated man page
+doc/aws_hostname.1
