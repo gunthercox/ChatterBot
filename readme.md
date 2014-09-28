@@ -1,4 +1,4 @@
-# ChatBot
+# ChatBot [![Build Status](https://travis-ci.org/gunthercox/ChatBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatBot)
 
 This is a ChatBot program that takes input and returns a response based on known conversations.
 
@@ -11,7 +11,6 @@ this issue, however they are not yet implemented.
 
 ## The tasks ahead
 
-- Abstract code into a reuseable class
 - Provide use documentation
 - Add unit testing
 - Moral development
