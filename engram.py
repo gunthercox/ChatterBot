@@ -9,8 +9,8 @@ from twitter_api import TwitterAPI
 import os, sys, inspect
 currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
 parentdir = os.path.dirname(currentdir)
-sys.path.insert(0,parentdir)
-from link.settings import TWITTER
+sys.path.insert(0, parentdir)
+from settings import TWITTER
 
 
 api = TwitterAPI(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
@@ -20,7 +20,7 @@ api = TwitterAPI(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
 
 tweet = {}
 tweet["id_str"] = "508654764713050112"
-print api.favorite(tweet)
+#print api.favorite(tweet)
 
 def get_next_line(lines, index):
     """

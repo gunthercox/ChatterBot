@@ -16,8 +16,13 @@ this issue, however they are not yet implemented.
 - Add unit testing
 - Moral development
 
+## Requirements
+
+To install required packages for this project run the command:
+```sudo pip install -r requirements.md```
+
 ## Notes
 
 This program is not designed to be an open source version of CleverBot.
-Although this **ChatBot** returns responces 
-The code here handles communication much differently then [CleverBot](http://www.cleverbot.com) does.
+Although this **ChatBot** returns responces, the code here handles communication
+much differently then [CleverBot](http://www.cleverbot.com) does.
