@@ -12,8 +12,10 @@ REQUEST_TOKEN_URL = '%s/oauth2/token' % API_ENDPOINT
 REQUEST_FAVORITE_LIST = '%s/%s/favorites/list.json' % (API_ENDPOINT, API_VERSION)
 REQUEST_TWEET_LIST = '%s/%s/statuses/user_timeline.json' % (API_ENDPOINT, API_VERSION)
 REQUEST_SEARCH = '%s/%s/search/tweets.json' % (API_ENDPOINT, API_VERSION)
+REQUEST_LIST = '%s/%s/lists/members.json' % (API_ENDPOINT, API_VERSION)
+CREATE_FAVORITE = '%s/%s/favorites/create.json' % (API_ENDPOINT, API_VERSION)
 
- 
+
 class TwitterAPI(object):
  
     def __init__(self, api_key, api_secret, token=None):
@@ -28,10 +30,10 @@ class TwitterAPI(object):
         logging.info('Connected to twitter')
  
     def connect(self):
-        '''
+        """
         connect to twiter api end-point https://api.twitter.com/oauth2/token
         and obtain an oauth token
-        '''
+        """
         import base64
 
         bearer_token = '%s:%s' % (self._api_key, self._api_secret)
@@ -60,6 +62,8 @@ class TwitterAPI(object):
     def _execute(self, url, params):
         params_encode = urllib.urlencode(params)
         full_url = "%s?%s" % (url, params_encode)
+
+        print full_url
  
         request = Request(full_url)
         request.add_header('Authorization', 'Bearer %s' % self._token)
@@ -77,7 +81,7 @@ class TwitterAPI(object):
         raw_data = response.read().decode('utf-8')
         data = json.loads(raw_data)
         return data
- 
+
     def get_favourites(self, screen_name, count=20):
         params = {'count': count, 'screen_name':screen_name}
         data = self._execute(REQUEST_FAVORITE_LIST, params)
@@ -86,6 +90,11 @@ class TwitterAPI(object):
     def get_tweets(self, screen_name):
         params = {'screen_name':screen_name}
         data = self._execute(REQUEST_TWEET_LIST, params)
+        return data
+
+    def get_list(self, username, slug):
+        params = {'owner_screen_name':username, 'slug':slug}
+        data = self._execute(REQUEST_LIST, params)
         return data
 
     def get_mentions(self, username):
@@ -105,10 +114,88 @@ class TwitterAPI(object):
 
         return mentions
 
-    def search(self, q, count, result_type="mixed"):
+    def search(self, q, count=1, result_type="mixed"):
         params = {'q':q, 'result_type':result_type, 'count':str(count)}
         data = self._execute(REQUEST_SEARCH, params)
         return data
+
+    def favorite(self, tweet):
+        """
+        Favorites a tweet
+        https://api.twitter.com/1/favorites/create/:id
+
+        Does not work yet
+        """
+        import json
+        from urllib2 import HTTPError
+        data = json.dumps({"id": tweet["id_str"]}).encode()
+
+        '''
+        params = {
+            'OAuth oauth_consumer_key': "GPeLKWfhARC4c3ad9fkBXwYBg",
+            'oauth_nonce': "",
+            'oauth_signature': "",
+            'oauth_signature_method': "HMAC-SHA1",
+            'oauth_timestamp': "1410127599",
+            'oauth_token': "", #self._token
+            'oauth_version': "1.0"
+        }
+        params_encode = urllib.urlencode(params)
+        '''
+
+        # https://dev.twitter.com/discussions/9068
+        # https://dev.twitter.com/apps/5886583/oauth?nid=10607
+        # https://dev.twitter.com/docs/auth/creating-signature
+
+        request = Request(CREATE_FAVORITE, data)
+        request.add_header('Authorization', 'Bearer %s' % self._token)
+        request.add_header('Content-Type', 'application/x-www-form-urlencoded')
+
+        #request.add_header('Authorization', json.dumps(params))
+
+        try:
+            response = urllib2.urlopen(request)
+            result = response.read()
+            response.close()
+        except HTTPError as error:
+            print ">>>>>", error
+
+        #try:
+        #print "Favorited: %s, %s" % (result['text'], result['id'])
+        return result
+        #except TwitterHTTPError as e:
+        #    print "Error: ", e
+        #    return None
+
+    def tweet_to_friends(self, username, slug, debug=False):
+        """    
+        Tweet one random message to the next friend in a list every hour.
+        The tweet will not be sent and will be printed to the console when in
+        debug mode.
+        """
+        from time import time, sleep
+        from random import choice
+
+        greetings = [
+            "Hows it going?",
+            "Good day to you.",
+            "How are you doing?",
+            "Greetings fellow robot.",
+            "base64.b64decode('aGVsbG8=')",
+            "0110100001100101011011000110110001101111"
+        ]
+
+        # Get the list of robots
+        robots = self.get_list(username, slug="Robots")["users"]
+
+        for robot in robots:
+            message = ("@" + robot["screen_name"] + " " + choice(greetings)).strip("\n")
+
+            if debug is True:
+                print(message)
+            else:
+                sleep(3600-time() % 3600)
+                t.statuses.update(status=message)
 
     def clean(self, text):
         import re, json

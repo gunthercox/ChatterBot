@@ -15,6 +15,12 @@ from link.settings import TWITTER
 
 api = TwitterAPI(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
 
+#print api.get_list("salviusrobot", "Robots")
+#api.tweet_to_friends("salviusrobot", "Robots", debug=True)
+
+tweet = {}
+tweet["id_str"] = "508654764713050112"
+print api.favorite(tweet)
 
 def get_next_line(lines, index):
     """
