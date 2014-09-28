@@ -15,12 +15,12 @@ from settings import TWITTER
 
 api = TwitterAPI(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
 
-#print api.get_list("salviusrobot", "Robots")
+#print(api.get_list("salviusrobot", "Robots"))
 #api.tweet_to_friends("salviusrobot", "Robots", debug=True)
 
 tweet = {}
 tweet["id_str"] = "508654764713050112"
-#print api.favorite(tweet)
+#print(api.favorite(tweet))
 
 class Engram():
 
@@ -100,7 +100,7 @@ class Engram():
                 index = lines.index(closest)
                 user, date, message, next_index = self.get_next_line(lines, index)
 
-                #print index, next_index, len(lines)
+                #print(index, next_index, len(lines))
 
                 if next_index and (next_index < len(lines)):
                     # Closest ==> Next line
@@ -113,7 +113,7 @@ class Engram():
 
         # If the difference ratio is too low, or the choice list is empty, seek a better response
         if ((not possible_choices.keys()) or (ratio < 90)) and enable_search:
-            print "salvius: ..."
+            print("salvius: ...")
 
             search = api.get_related_messages(input_text)
 
@@ -165,7 +165,7 @@ class Engram():
 
         cb = Cleverbot()
 
-        print "salvius:", user_input
+        print("salvius:", user_input)
 
         while True:
 
@@ -176,11 +176,11 @@ class Engram():
 
             cb_input = cb.ask(user_input)
             cb_input = api.clean(cb_input)
-            print "cleverbot:", cb_input
+            print("cleverbot:", cb_input)
 
             user_input = self.engram(cb_input)
             user_input = api.clean(user_input)
-            print "salvius:", user_input
+            print("salvius:", user_input)
 
             if log:
                 logfile.write("cleverbot," + logtime + ",\"" + cb_input + "\"\n")
