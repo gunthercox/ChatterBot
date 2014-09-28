@@ -5,15 +5,20 @@ import StringIO
 
 from twitter_api import TwitterAPI
 
+enable_api_search = True
+
 # This is needed to import settings from the parent directory
-import os, sys, inspect
-currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-parentdir = os.path.dirname(currentdir)
-sys.path.insert(0, parentdir)
-from settings import TWITTER
+try:
+    import os, sys, inspect
+    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
+    parentdir = os.path.dirname(currentdir)
+    sys.path.insert(0, parentdir)
+    from settings import TWITTER
 
-
-api = TwitterAPI(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
+    api = TwitterAPI(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
+except ImportError:
+    print("Unable to import settings, api searches will not be avalable.")
+    enable_api_search = False
 
 #print(api.get_list("salviusrobot", "Robots"))
 #api.tweet_to_friends("salviusrobot", "Robots", debug=True)
@@ -24,8 +29,8 @@ tweet["id_str"] = "508654764713050112"
 
 class Engram():
 
-    def __init__(self):
-        pass
+    def __init__(self, enable_search=True):
+        self.enable_search = enable_api_search
 
     def get_next_line(self, lines, index):
         """
@@ -64,7 +69,7 @@ class Engram():
 
         return user, date, message, index
 
-    def engram(self, input_text, enable_search=True):
+    def engram(self, input_text):
         """
         Takes a message from a conversation.
         Returns the closest match based on known conversations.
@@ -112,7 +117,7 @@ class Engram():
             response = csv.reader(StringIO.StringIO(possible_choices[closest]))
 
         # If the difference ratio is too low, or the choice list is empty, seek a better response
-        if ((not possible_choices.keys()) or (ratio < 90)) and enable_search:
+        if ((not possible_choices.keys()) or (ratio < 90)) and self.enable_search:
             print("salvius: ...")
 
             search = api.get_related_messages(input_text)

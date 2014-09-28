@@ -6,7 +6,7 @@ class Tests(TestCase):
 
     def test_something(self):
 
-        engram = Engram()
-        response = engram.engram("hi", enable_search=False)
+        engram = Engram(enable_search=False)
+        response = engram.engram("hi")
 
         self.assertTrue("hello" in response.lower())
