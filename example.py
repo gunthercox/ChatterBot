@@ -1,6 +1,9 @@
 from engram import Engram
+from ChatBot import Terminal, TalkWithCleverbot
 
 
-engram = Engram()
-#engram.talk_with_cleverbot(True)
-engram.terminal(False)
+#talk = TalkWithCleverbot()
+#talk.begin(True)
+
+terminal = Terminal()
+terminal.begin(False)

@@ -2,8 +2,7 @@ from fuzzywuzzy import process
 import os
 import csv
 
-from ChatBot.twitter_api import TwitterAPI
-
+from twitter_api import TwitterAPI
 
 enable_api_search = True
 
@@ -29,8 +28,9 @@ tweet["id_str"] = "508654764713050112"
 
 class Engram():
 
-    def __init__(self, enable_search=True):
-        self.enable_search = enable_api_search
+    def __init__(self, enable_search=enable_api_search):
+        self.enable_search = enable_search
+        self.log_directory = "conversation_engrams/"
 
     def get_next_line(self, lines, index):
         """
@@ -69,21 +69,18 @@ class Engram():
 
         return user, date, message, index
 
-    def engram(self, input_text):
+    def engram(self, text):
         """
         Takes a message from a conversation.
         Returns the closest match based on known conversations.
         """
 
-        # Ensure that the input text is a string
-        input_text = str(input_text)
-
         # Check to make sure that valid text was passed in
-        if not input_text.strip():
+        if not text.strip():
             return ""
 
         # Check if a name was mentioned
-        if "Salvius" in input_text:
+        if "Salvius" in text:
             pass
 
         possible_choices = {}
@@ -103,19 +100,22 @@ class Engram():
             if not lines:
                 break
 
+            #---------------------------------#
+            # Ensure that the input text is a string
+            text = str(text)
+
             # Make sure each line is a string
             i = 0
             for line in lines:
                 lines[i] = str(line)
                 i += 1
+            #---------------------------------#
 
             # Get the closest matching line in the file
-            closest, ratio = process.extractOne(input_text, lines)
+            closest, ratio = process.extractOne(text, lines)
 
             index = lines.index(closest)
             user, date, message, next_index = self.get_next_line(lines, index)
-
-            #print(index, next_index, len(lines))
 
             if next_index and (next_index < len(lines)):
                 # Closest ==> Next line
@@ -123,14 +123,14 @@ class Engram():
 
 
         if possible_choices.keys():
-            closest, ratio = process.extractOne(input_text, possible_choices.keys())
+            closest, ratio = process.extractOne(text, possible_choices.keys())
             response = list(csv.reader([possible_choices[closest]]))[0]
 
         # If the difference ratio is too low, or the choice list is empty, seek a better response
         if ((not possible_choices.keys()) or (ratio < 90)) and self.enable_search:
             print("salvius: ...")
 
-            search = api.get_related_messages(input_text)
+            search = api.get_related_messages(text)
 
             # If results were found
             if len(search) > 0:
@@ -140,66 +140,3 @@ class Engram():
         user, date, message = response
 
         return message
-
-
-    def terminal(self, log=True):
-        import datetime
-
-        fmt = "%Y-%m-%d-%H-%M-%S"
-        timestamp = datetime.datetime.now().strftime(fmt)
-        user_input = ""
-
-        print("Type something to begin")
-        while "end program" not in user_input:
-            if log:
-                logfile = open("conversation_engrams/" + timestamp, "a")
-
-            logtime = datetime.datetime.now().strftime(fmt)
-
-            # raw_input is just input in python3
-            user_input = str(raw_input())
-
-            response = self.engram(user_input)
-            print(response)
-
-            # Write the conversation to a file
-            if log:
-                logfile.write("user," + logtime + ",\"" + user_input + "\"\n")
-                logfile.write("salvius," + logtime + ",\"" + response + "\"\n")
-                logfile.close()
-
-    def talk_with_cleverbot(self, log=True):
-        import datetime
-        from cleverbot.cleverbot import Cleverbot
-        import time
-
-        fmt = "%Y-%m-%d-%H-%M-%S"
-        timestamp = datetime.datetime.now().strftime(fmt)
-        user_input = "Hi. How are you?"
-
-        cb = Cleverbot()
-
-        print("salvius:", user_input)
-
-        while True:
-
-            if log:
-                logfile = open("conversation_engrams/" + timestamp, "a")
-
-            logtime = datetime.datetime.now().strftime(fmt)
-
-            cb_input = cb.ask(user_input)
-            cb_input = api.clean(cb_input)
-            print("cleverbot:", cb_input)
-
-            user_input = self.engram(cb_input)
-            user_input = api.clean(user_input)
-            print("salvius:", user_input)
-
-            if log:
-                logfile.write("cleverbot," + logtime + ",\"" + cb_input + "\"\n")
-                logfile.write("salvius," + logtime + ",\"" + user_input + "\"\n")
-                logfile.close()
-
-            time.sleep(1.05)
-
