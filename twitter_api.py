@@ -69,11 +69,11 @@ class TwitterAPI(object):
         request.add_header('Authorization', 'Bearer %s' % self._token)
         try:
             response = urlopen(request)
-        except urllib2.HTTPError, e:
+        except urllib2.HTTPError as e:
             logging.error('HTTPError = ' + str(e.code))
-        except urllib2.URLError, e:
+        except urllib2.URLError as e:
             logging.error('URLError = ' + str(e.reason))
-        except httplib.HTTPException, e:
+        except httplib.HTTPException as e:
             logging.error('HTTPException')
         except Exception:
             import traceback
