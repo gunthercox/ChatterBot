@@ -1,9 +1,15 @@
-import urllib
 import json
-import urllib2
-import httplib
 import logging
-from urllib2 import Request, urlopen
+from httplib import HTTPException
+
+import urllib
+
+# For supporting puthon 2 and 3 urllib
+try:
+    from urllib2 import Request, HTTPError, URLError, urlopen
+except ImportError:
+    from urllib.request import urlopen
+    from urllib.request import Request, HTTPError, URLError
 
 
 API_VERSION = '1.1'
@@ -45,11 +51,11 @@ class TwitterAPI(object):
  
         try:
             response = urlopen(request)
-        except urllib2.HTTPError as e:
+        except HTTPError as e:
             logging.error('HTTPError = ' + str(e.code))
-        except urllib2.URLError as e:
+        except URLError as e:
             logging.error('URLError = ' + str(e.reason))
-        except httplib.HTTPException as e:
+        except HTTPException as e:
             logging.error('HTTPException')
         except Exception:
             import traceback
@@ -69,11 +75,11 @@ class TwitterAPI(object):
         request.add_header('Authorization', 'Bearer %s' % self._token)
         try:
             response = urlopen(request)
-        except urllib2.HTTPError as e:
+        except HTTPError as e:
             logging.error('HTTPError = ' + str(e.code))
-        except urllib2.URLError as e:
+        except URLError as e:
             logging.error('URLError = ' + str(e.reason))
-        except httplib.HTTPException as e:
+        except HTTPException as e:
             logging.error('HTTPException')
         except Exception:
             import traceback
@@ -127,7 +133,6 @@ class TwitterAPI(object):
         Does not work yet
         """
         import json
-        from urllib2 import HTTPError
         data = json.dumps({"id": tweet["id_str"]}).encode()
 
         '''
@@ -154,7 +159,7 @@ class TwitterAPI(object):
         #request.add_header('Authorization', json.dumps(params))
 
         try:
-            response = urllib2.urlopen(request)
+            response = urlopen(request)
             result = response.read()
             response.close()
         except HTTPError as error:
