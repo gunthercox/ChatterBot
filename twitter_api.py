@@ -1,6 +1,5 @@
 import json
 import logging
-from httplib import HTTPException
 
 import urllib
 
@@ -55,8 +54,6 @@ class TwitterAPI(object):
             logging.error('HTTPError = ' + str(e.code))
         except URLError as e:
             logging.error('URLError = ' + str(e.reason))
-        except HTTPException as e:
-            logging.error('HTTPException')
         except Exception:
             import traceback
             logging.error('generic exception: ' + traceback.format_exc())
@@ -79,8 +76,6 @@ class TwitterAPI(object):
             logging.error('HTTPError = ' + str(e.code))
         except URLError as e:
             logging.error('URLError = ' + str(e.reason))
-        except HTTPException as e:
-            logging.error('HTTPException')
         except Exception:
             import traceback
             logging.error('generic exception: ' + traceback.format_exc())
