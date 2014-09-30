@@ -63,7 +63,7 @@ class TwitterAPI(object):
         params_encode = urllib.urlencode(params)
         full_url = "%s?%s" % (url, params_encode)
 
-        print full_url
+        print(full_url)
  
         request = Request(full_url)
         request.add_header('Authorization', 'Bearer %s' % self._token)
@@ -104,7 +104,7 @@ class TwitterAPI(object):
         mentions = []
         results = self.search(username, 25, "recent")
 
-        print results
+        print(results)
 
         for result in results["statuses"]:
             user = result["user"]["screen_name"]
@@ -158,13 +158,13 @@ class TwitterAPI(object):
             result = response.read()
             response.close()
         except HTTPError as error:
-            print ">>>>>", error
+            print(">>>>>", error)
 
         #try:
-        #print "Favorited: %s, %s" % (result['text'], result['id'])
+        #print("Favorited: %s, %s" % (result['text'], result['id']))
         return result
         #except TwitterHTTPError as e:
-        #    print "Error: ", e
+        #    print("Error: ", e)
         #    return None
 
     def tweet_to_friends(self, username, slug, debug=False):
