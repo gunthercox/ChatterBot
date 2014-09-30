@@ -75,6 +75,9 @@ class Engram():
         Returns the closest match based on known conversations.
         """
 
+        # Ensure that the input text is a string
+        input_text = str(input_text)
+
         # Check to make sure that valid text was passed in
         if not input_text.strip():
             return ""
@@ -99,6 +102,12 @@ class Engram():
             # Do not continue if lines is empty
             if not lines:
                 break
+
+            # Make sure each line is a string
+            i = 0
+            for line in lines:
+                lines[i] = str(line)
+                i += 1
 
             # Get the closest matching line in the file
             closest, ratio = process.extractOne(input_text, lines)
