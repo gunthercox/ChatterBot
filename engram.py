@@ -1,9 +1,9 @@
 from fuzzywuzzy import process
 import os
 import csv
-import StringIO
 
 from twitter_api import TwitterAPI
+
 
 enable_api_search = True
 
@@ -50,17 +50,17 @@ class Engram():
         iter_count = 0
 
         line = lines[index]
-        line_data = csv.reader(StringIO.StringIO(line))
 
-        data = list(line_data)
-        user, date, message = data[0]
+        line_data = list(csv.reader([line]))[0]
+        user, date, message = line_data
 
         # Set index to the next line
         #index += 1
 
         line = lines[index]
-        next_line_data = csv.reader(StringIO.StringIO(line))
-        next_user, next_date, next_message = list(next_line_data)[0]
+
+        next_line_data = list(csv.reader([line]))[0]
+        next_user, next_date, next_message = next_line_data
 
         # If the line's user is the same as the current line's user
         while (next_user == user) and (iter_count <= max_skipps):
@@ -86,35 +86,36 @@ class Engram():
         possible_choices = {}
         directory = "conversation_engrams"
 
-        for datafile in os.listdir(directory):
-            filename = directory + "/" + datafile
-            with open(filename, "r") as f:
-                lines = f.read().splitlines()
+        for log in os.listdir(directory):
+            filename = directory + "/" + log
+            f = open(filename, "rb")
 
-                # Do not continue if the file is empty
-                if os.stat(filename).st_size == 0:
-                    break
+            lines = f.read().splitlines()
 
-                # Do not continue if lines is empty
-                if not lines:
-                    break
+            # Do not continue if the file is empty
+            if os.stat(filename).st_size == 0:
+                break
 
-                # Get the closest matching line in the file
-                closest, ratio = process.extractOne(input_text, lines)
+            # Do not continue if lines is empty
+            if not lines:
+                break
 
-                index = lines.index(closest)
-                user, date, message, next_index = self.get_next_line(lines, index)
+            # Get the closest matching line in the file
+            closest, ratio = process.extractOne(input_text, lines)
 
-                #print(index, next_index, len(lines))
+            index = lines.index(closest)
+            user, date, message, next_index = self.get_next_line(lines, index)
 
-                if next_index and (next_index < len(lines)):
-                    # Closest ==> Next line
-                    possible_choices[lines[index]] = lines[next_index]
+            #print(index, next_index, len(lines))
+
+            if next_index and (next_index < len(lines)):
+                # Closest ==> Next line
+                possible_choices[lines[index]] = lines[next_index]
 
 
         if possible_choices.keys():
             closest, ratio = process.extractOne(input_text, possible_choices.keys())
-            response = csv.reader(StringIO.StringIO(possible_choices[closest]))
+            response = list(csv.reader([possible_choices[closest]]))[0]
 
         # If the difference ratio is too low, or the choice list is empty, seek a better response
         if ((not possible_choices.keys()) or (ratio < 90)) and self.enable_search:
@@ -127,8 +128,7 @@ class Engram():
                 import random
                 return random.choice(search)
 
-        temp = list(response)[0]
-        user, date, message = temp
+        user, date, message = response
 
         return message
 

@@ -9,11 +9,29 @@ in order to provide more accurate replies to input text. Because of this,
 the chat bot can provide rather profane response at random. I have plans to address
 this issue, however they are not yet implemented.
 
-## The tasks ahead
+## Useage
 
-- Provide use documentation
-- Add unit testing
-- Moral development
+Create a new chat bot
+```
+from engram import Engram
+chatbot = Engram()
+```
+
+Getting a response
+```
+response = chatbot.engram("Good morning!")
+print(response)
+```
+
+Terminal mode (User and chat bot)
+```
+chatbot.terminal(False)
+```
+
+Have the chat bot talk with CleverBot
+```
+chatbot.talk_with_cleverbot(True)
+```
 
 ## Requirements
 
