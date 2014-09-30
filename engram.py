@@ -2,7 +2,7 @@ from fuzzywuzzy import process
 import os
 import csv
 
-from twitter_api import TwitterAPI
+from ChatBot.twitter_api import TwitterAPI
 
 
 enable_api_search = True
