@@ -26,12 +26,15 @@ class ChatBot(Engram):
 
 class Terminal(ChatBot):
 
+    def __init__(self):
+        super(Terminal, self).__init__()
+
     def begin(self, log=True, user_input="Type something to begin..."):
         import sys
 
         print(user_input)
 
-        while "end program" not in user_input:
+        while "exit()" not in user_input:
 
             # raw_input is just input in python3
             if sys.version_info[0] < 3:
@@ -46,7 +49,11 @@ class Terminal(ChatBot):
             if log:
                 self.update_log("user", "salvius", user_input, bot_input)
 
+
 class TalkWithCleverbot(ChatBot):
+
+    def __init__(self):
+        super(TalkWithCleverbot, self).__init__()
 
     def begin(self, log=True, bot_input="Hi. How are you?"):
         from cleverbot.cleverbot import Cleverbot

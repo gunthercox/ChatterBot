@@ -69,10 +69,9 @@ class Engram(object):
             pass
 
         possible_choices = {}
-        directory = "conversation_engrams"
 
-        for log in os.listdir(directory):
-            filename = directory + "/" + log
+        for log in os.listdir(self.log_directory):
+            filename = self.log_directory + "/" + log
             f = open(filename, "rb")
 
             lines = f.read().splitlines()
