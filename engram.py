@@ -124,7 +124,9 @@ class Engram(object):
         if not possible_choices.keys():
             return "Error"
 
-        closest, ratio = process.extractOne(text, possible_choices.keys())
+        print(type(text), type(possible_choices.keys()))
+
+        closest, ratio = process.extractOne(str(text), list(possible_choices.keys()))
         response = list(csv.reader([possible_choices[closest]]))[0]
 
         user, date, message = response
