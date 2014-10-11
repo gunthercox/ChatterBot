@@ -1,40 +1,50 @@
 from ChatBot.engram import Engram
+import datetime
 
 
 class ChatBot(Engram):
 
     def __init__(self, fmt="%Y-%m-%d-%H-%M-%S"):
-        self.timestamp = datetime.datetime.now().strftime(fmt)
+        super(ChatBot, self).__init__()
 
-    def update_log(user_name, bot_name, user_input, bot_input):
+        self.date_fmt=fmt
+        self.timestamp = datetime.datetime.now().strftime(self.date_fmt)
+
+    def update_log(self, user_name, bot_name, user_input, bot_input):
         import datetime
+        import csv
 
-        logtime = datetime.datetime.now().strftime(fmt)
-
-        # TODO: use csv writer here.
+        logtime = datetime.datetime.now().strftime(self.date_fmt)
         logfile = open(self.log_directory + self.timestamp, "a")
-        logfile.write(user_name + logtime + ",\"" + user_input + "\"\n")
-        logfile.write(bot_name + logtime + ",\"" + bot_input + "\"\n")
+
+        logwriter = csv.writer(logfile, delimiter=",")
+        logwriter.writerow([user_name, logtime, user_input])
+        logwriter.writerow([bot_name, logtime, bot_input])
+
         logfile.close()
 
 
 class Terminal(ChatBot):
 
     def begin(self, log=True, user_input="Type something to begin..."):
+        import sys
 
         print(user_input)
 
         while "end program" not in user_input:
 
             # raw_input is just input in python3
-            user_input = str(raw_input())
+            if sys.version_info[0] < 3:
+                user_input = str(raw_input())
+            else:
+                user_input = input()
 
             bot_input = self.engram(user_input)
             print(bot_input)
 
             # Write the conversation to a file
             if log:
-                update_log("user", "salvius", user_input, bot_input)
+                self.update_log("user", "salvius", user_input, bot_input)
 
 class TalkWithCleverbot(ChatBot):
 

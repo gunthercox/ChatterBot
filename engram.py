@@ -3,7 +3,7 @@ import os
 import csv
 
 
-class Engram():
+class Engram(object):
 
     def __init__(self):
         self.log_directory = "conversation_engrams/"
@@ -37,6 +37,8 @@ class Engram():
         line = lines[index]
 
         line_data = list(csv.reader([line]))[0]
+
+        print(line_data)
         user, date, message = line_data
 
         # Set index to the next line
@@ -99,6 +101,8 @@ class Engram():
             # Get the closest matching line in the file
             closest, ratio = process.extractOne(text, lines)
 
+            print(">>>>>>>>>>>>>>>>>", filename)
+
             index = lines.index(closest)
             user, date, message, next_index = self.get_next_line(lines, index)
 
@@ -106,12 +110,7 @@ class Engram():
                 # Closest ==> Next line
                 possible_choices[lines[index]] = lines[next_index]
 
-
-        if possible_choices.keys():
-            closest, ratio = process.extractOne(text, possible_choices.keys())
-            response = list(csv.reader([possible_choices[closest]]))[0]
-
-        # If the difference ratio is too low, or the choice list is empty, seek a better response
+        # If the difference ratio is too low or the choice list is empty seek a better response
         if ((not possible_choices.keys()) or (ratio < 90)) and self.api:
             print("salvius: ...")
 
@@ -122,6 +121,12 @@ class Engram():
                 import random
                 return random.choice(search)
 
-        user, date, message = response
+        if not possible_choices.keys():
+            return "Error"
 
+        closest, ratio = process.extractOne(text, possible_choices.keys())
+        response = list(csv.reader([possible_choices[closest]]))[0]
+
+        user, date, message = response
         return message
+
