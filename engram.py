@@ -2,35 +2,20 @@ from fuzzywuzzy import process
 import os
 import csv
 
-from twitter_api import TwitterAPI
-
-enable_api_search = True
-
-# This is needed to import settings from the parent directory
-try:
-    import os, sys, inspect
-    currentdir = os.path.dirname(os.path.abspath(inspect.getfile(inspect.currentframe())))
-    parentdir = os.path.dirname(currentdir)
-    sys.path.insert(0, parentdir)
-    from settings import TWITTER
-
-    api = TwitterAPI(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
-except ImportError:
-    print("Unable to import settings, api searches will not be avalable.")
-    enable_api_search = False
-
-#print(api.get_list("salviusrobot", "Robots"))
-#api.tweet_to_friends("salviusrobot", "Robots", debug=True)
-
-tweet = {}
-tweet["id_str"] = "508654764713050112"
-#print(api.favorite(tweet))
 
 class Engram():
 
-    def __init__(self, enable_search=enable_api_search):
-        self.enable_search = enable_search
+    def __init__(self):
         self.log_directory = "conversation_engrams/"
+        self.api = None
+
+    def enable_twitter_api(consumer_key, consumer_secret):
+        """
+        Takes the public key and private key and enables the api.
+        """
+        from twitter_api import TwitterAPI
+
+        self.api = TwitterAPI(consumer_key, consumer_secret)
 
     def get_next_line(self, lines, index):
         """
@@ -127,7 +112,7 @@ class Engram():
             response = list(csv.reader([possible_choices[closest]]))[0]
 
         # If the difference ratio is too low, or the choice list is empty, seek a better response
-        if ((not possible_choices.keys()) or (ratio < 90)) and self.enable_search:
+        if ((not possible_choices.keys()) or (ratio < 90)) and self.api:
             print("salvius: ...")
 
             search = api.get_related_messages(text)

@@ -25,12 +25,12 @@ print(response)
 
 Terminal mode (User and chat bot)
 ```
-chatbot.terminal(False)
+chatbot.terminal()
 ```
 
 Have the chat bot talk with CleverBot
 ```
-chatbot.talk_with_cleverbot(True)
+chatbot.talk_with_cleverbot()
 ```
 
 ## Requirements

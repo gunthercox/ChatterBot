@@ -1,9 +1,12 @@
-from engram import Engram
 from ChatBot import Terminal, TalkWithCleverbot
 
 
 #talk = TalkWithCleverbot()
-#talk.begin(True)
+#talk.begin()
 
 terminal = Terminal()
-terminal.begin(False)
+
+#from settings import TWITTER
+#terminal.enable_twitter_api(TWITTER["CONSUMER_KEY"], TWITTER["CONSUMER_SECRET"])
+
+terminal.begin()
