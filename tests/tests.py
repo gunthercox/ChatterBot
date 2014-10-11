@@ -6,12 +6,12 @@ class Tests(TestCase):
 
     def test_engram(self):
         """
-        Make sure that simple greetings return an expected result.
+        Make sure that text is returned from an engram.
         """
         engram = Engram()
-        response = engram.engram("hi")
+        response = engram.engram("hello")
 
-        self.assertTrue("hello" in response.lower())
+        self.assertTrue(len(response) > 0)
 
     def test_twitter_api(self):
         """

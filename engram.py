@@ -37,8 +37,6 @@ class Engram(object):
         line = lines[index]
 
         line_data = list(csv.reader([line]))[0]
-
-        print(line_data)
         user, date, message = line_data
 
         # Set index to the next line
@@ -101,8 +99,6 @@ class Engram(object):
             # Get the closest matching line in the file
             closest, ratio = process.extractOne(text, lines)
 
-            print(">>>>>>>>>>>>>>>>>", filename)
-
             index = lines.index(closest)
             user, date, message, next_index = self.get_next_line(lines, index)
 
@@ -124,9 +120,7 @@ class Engram(object):
         if not possible_choices.keys():
             return "Error"
 
-        print(type(text), type(possible_choices.keys()))
-
-        closest, ratio = process.extractOne(str(text), list(possible_choices.keys()))
+        closest, ratio = process.extractOne(text, list(possible_choices.keys()))
         response = list(csv.reader([possible_choices[closest]]))[0]
 
         user, date, message = response
