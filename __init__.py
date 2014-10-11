@@ -1,4 +1,4 @@
-from engram import Engram
+from ChatBot.engram import Engram
 
 
 class ChatBot(Engram):
