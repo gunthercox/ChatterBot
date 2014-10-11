@@ -1,5 +1,5 @@
 from unittest import TestCase
-from ChatBot.engram import Engram
+from ChatterBot.engram import Engram
 
 
 class Tests(TestCase):

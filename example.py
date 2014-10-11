@@ -1,4 +1,4 @@
-from ChatBot import Terminal, TalkWithCleverbot
+from ChatterBot import Terminal, TalkWithCleverbot
 
 
 #talk = TalkWithCleverbot()

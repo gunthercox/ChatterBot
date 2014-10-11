@@ -1,6 +1,11 @@
-# ChatBot [![Build Status](https://travis-ci.org/gunthercox/ChatBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatBot)
+# ChatterBot
 
-This is a ChatBot program that takes input and returns a response based on known conversations.
+This is a chat bot program that takes input and returns a response based on known conversations.
+
+[![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
+[![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
+[![PyPi](https://pypip.in/d/ChatterBot/badge.png)](https://pypi.python.org/pypi/ChatterBot)
+
 
 ## A general warning
 
@@ -41,5 +46,5 @@ To install required packages for this project run the command:
 ## Notes
 
 This program is not designed to be an open source version of CleverBot.
-Although this **ChatBot** returns responces, the code here handles communication
+Although this **Chat Bot** returns responces, the code here handles communication
 much differently then [CleverBot](http://www.cleverbot.com) does.

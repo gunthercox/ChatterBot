@@ -1,0 +1,9 @@
+include history.rst
+include license.md
+include readme.md
+
+recursive-include tests *
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co]
+
+recursive-include docs
