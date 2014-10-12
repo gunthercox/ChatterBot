@@ -7,7 +7,7 @@ python:
   - "3.3"
   - "2.7"
   - "2.6"
-#  - "pypy"
+  - "pypy"
 
 # command to install dependencies
 install: pip install -r requirements.md
