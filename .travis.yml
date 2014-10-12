@@ -10,7 +10,12 @@ python:
   - "pypy"
 
 # command to install dependencies
-install: pip install -r requirements.md
+install:
+  - pip install coveralls
+  - pip install -r requirements.md
 
 # command to run tests
 script: nosetests
+
+after_success:
+    coveralls
