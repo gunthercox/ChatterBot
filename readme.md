@@ -18,11 +18,16 @@ pip install chatterbot
 
 Create a new chat bot
 ```
-from engram import Engram
-chatbot = Engram()
+from ChatterBot import ChatBot
+chatbot = ChatBot()
 ```
 
-Getting a response
+Specify a defult location for engram memory files
+```
+chatbot.log_directory="path/to/directory/"
+```
+
+Getting an engram based response
 ```
 response = chatbot.engram("Good morning!")
 print(response)
@@ -30,18 +35,25 @@ print(response)
 
 Terminal mode (User and chat bot)
 ```
-chatbot.terminal()
+from ChatterBot import Terminal
+terminal = Terminal()
+terminal.begin()
 ```
 
 Have the chat bot talk with CleverBot
 ```
-chatbot.talk_with_cleverbot()
+from ChatterBot import TalkWithCleverbot
+talk = TalkWithCleverbot()
+talk.begin()
 ```
 
 ## Requirements
 
 To install required packages for this project run the command:
-```sudo pip install -r requirements.md```
+*(This is only required when not installing through pip)*
+```
+sudo pip install -r requirements.txt
+```
 
 ## A general warning
 
