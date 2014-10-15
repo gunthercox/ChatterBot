@@ -33,15 +33,15 @@ setup(
     author_email='gunthercx@gmail.com',
     url='https://github.com/gunthercox/ChatterBot',
     packages=[
-        'ChatterBot',
+        'chatterbot',
     ],
-    package_dir={'ChatterBot':
-                 'ChatterBot'},
+    package_dir={'chatterbot':
+                 'chatterbot'},
     include_package_data=True,
     install_requires=requirements,
     license="BSD",
     zip_safe=False,
-    keywords='ChatterBot',
+    keywords = ['ChatterBot', 'chat bot'],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

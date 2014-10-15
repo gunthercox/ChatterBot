@@ -18,7 +18,7 @@ pip install chatterbot
 
 Create a new chat bot
 ```
-from ChatterBot import ChatBot
+from chatterbot import ChatBot
 chatbot = ChatBot()
 ```
 
@@ -35,14 +35,14 @@ print(response)
 
 Terminal mode (User and chat bot)
 ```
-from ChatterBot import Terminal
+from chatterbot import Terminal
 terminal = Terminal()
 terminal.begin()
 ```
 
 Have the chat bot talk with CleverBot
 ```
-from ChatterBot import TalkWithCleverbot
+from chatterbot import TalkWithCleverbot
 talk = TalkWithCleverbot()
 talk.begin()
 ```

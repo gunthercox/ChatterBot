@@ -1,4 +1,4 @@
-from ChatterBot.engram import Engram
+from chatterbot.engram import Engram
 import datetime
 
 
