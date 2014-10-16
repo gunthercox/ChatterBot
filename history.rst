@@ -12,3 +12,9 @@ History
 ---------------------
 
 * Updated documentation.
+
+0.0.2 (2014-10-15)
+---------------------
+
+* Changed package name to lowercase format.
+* Tests now create sample log files.
