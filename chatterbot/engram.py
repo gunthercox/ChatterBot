@@ -64,10 +64,6 @@ class Engram(object):
         if not text.strip():
             return ""
 
-        # Check if a name was mentioned
-        if "Salvius" in text:
-            pass
-
         possible_choices = {}
 
         for log in os.listdir(self.log_directory):
@@ -107,7 +103,7 @@ class Engram(object):
 
         # If the difference ratio is too low or the choice list is empty seek a better response
         if ((not possible_choices.keys()) or (ratio < 90)) and self.api:
-            print("salvius: ...")
+            print("...")
 
             search = api.get_related_messages(text)
 

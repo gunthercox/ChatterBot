@@ -7,6 +7,8 @@ class ChatBot(Engram):
     def __init__(self, fmt="%Y-%m-%d-%H-%M-%S"):
         super(ChatBot, self).__init__()
 
+        self.name = "bot"
+
         self.date_fmt=fmt
         self.timestamp = datetime.datetime.now().strftime(self.date_fmt)
 
@@ -22,6 +24,14 @@ class ChatBot(Engram):
         logwriter.writerow([bot_name, logtime, bot_input])
 
         logfile.close()
+
+    def get_response(self, input_text):
+
+        # Check if a name was mentioned
+        if self.name in input_text:
+            pass
+
+        return self.engram(input_text)
 
 
 class Terminal(ChatBot):
@@ -47,7 +57,7 @@ class Terminal(ChatBot):
 
             # Write the conversation to a file
             if log:
-                self.update_log("user", "salvius", user_input, bot_input)
+                self.update_log("user", self.name, user_input, bot_input)
 
 
 class TalkWithCleverbot(ChatBot):
@@ -61,7 +71,7 @@ class TalkWithCleverbot(ChatBot):
 
         cb = Cleverbot()
 
-        print("salvius:", bot_input)
+        print(self.name, bot_input)
 
         while True:
             cb_input = cb.ask(bot_input)
@@ -70,9 +80,9 @@ class TalkWithCleverbot(ChatBot):
 
             bot_input = self.engram(cb_input)
             bot_input = api.clean(bot_input)
-            print("salvius:", bot_input)
+            print(self.name, bot_input)
 
             if log:
-                update_log("cleverbot", "salvius", cb_input, bot_input)
+                update_log("cleverbot", self.name, cb_input, bot_input)
 
             time.sleep(1.05)

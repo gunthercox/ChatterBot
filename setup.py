@@ -35,8 +35,7 @@ setup(
     packages=[
         'chatterbot',
     ],
-    package_dir={'chatterbot':
-                 'chatterbot'},
+    package_dir={'chatterbot': 'chatterbot'},
     include_package_data=True,
     install_requires=requirements,
     license="BSD",

@@ -1,11 +1,18 @@
 # ChatterBot
 
-This is a chat bot program that takes input and returns a response based on known conversations.
+This library allows developers to create language independent chat bots that
+return responses to based on collections of known conversations.
 
 [![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
 [![PyPi](https://pypip.in/d/ChatterBot/badge.png)](https://pypi.python.org/pypi/ChatterBot)
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
+
+An example of typical input would be something like this:
+> user: Good morning! How are you doing?  
+> bot:  I am doing very well, thank you for asking.  
+> user: Your welcome.  
+> bot: Do you like hats?  
 
 ## Installation
 
@@ -22,15 +29,22 @@ from chatterbot import ChatBot
 chatbot = ChatBot()
 ```
 
-Specify a defult location for engram memory files
-```
-chatbot.log_directory="path/to/directory/"
-```
-
 Getting an engram based response
 ```
 response = chatbot.engram("Good morning!")
 print(response)
+```
+
+Specify a defult location for engram memory files  
+**Note:** The default log directory is `conversation_engrams/`.
+```
+chatbot.log_directory = "path/to/directory/"
+```
+
+Setting the chatbot's name  
+**Note:** The default name for the bot is `bot`.
+```
+chatbot.name = "Mr. Robot"
 ```
 
 Terminal mode (User and chat bot)
@@ -45,14 +59,6 @@ Have the chat bot talk with CleverBot
 from chatterbot import TalkWithCleverbot
 talk = TalkWithCleverbot()
 talk.begin()
-```
-
-## Requirements
-
-To install required packages for this project run the command:
-*(This is only required when not installing through pip)*
-```
-sudo pip install -r requirements.txt
 ```
 
 ## A general warning

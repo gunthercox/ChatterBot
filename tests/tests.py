@@ -1,6 +1,5 @@
 from unittest import TestCase
 from chatterbot import ChatBot
-from chatterbot.engram import Engram
 
 
 class Tests(TestCase):
@@ -51,7 +50,7 @@ class Tests(TestCase):
 
         input_text = "What... is your favourite colour?"
         chatbot = ChatBot()
-        response = chatbot.engram(input_text)
+        response = chatbot.get_response(input_text)
 
         self.assertTrue("Blue" in response)
 
@@ -59,16 +58,7 @@ class Tests(TestCase):
 
         input_text = "Siri is my cat"
         chatbot = ChatBot()
-        response = chatbot.engram(input_text)
-
-        self.assertTrue(len(response) > 0)
-
-    def test_engram(self):
-        """
-        Make sure that text is returned from an engram.
-        """
-        engram = Engram()
-        response = engram.engram("hello")
+        response = chatbot.get_response(input_text)
 
         self.assertTrue(len(response) > 0)
 
