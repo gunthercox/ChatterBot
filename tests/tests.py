@@ -46,8 +46,23 @@ class Tests(TestCase):
 
         os.rmdir(self.directory)
 
-    def test_chatbot_returns_answer_to_known_input(self):
+    def test_logging_timestamps(self):
+        """
+        Tests that the chat bot returns the correct datetime for logging
+        """
+        import datetime
 
+        chatbot = ChatBot()
+        fmt = "%Y-%m-%d-%H-%M-%S"
+        t = chatbot.timestamp(fmt)
+
+        self.assertEqual(t, datetime.datetime.now().strftime(fmt))
+
+    def test_chatbot_returns_answer_to_known_input(self):
+        """
+        Test that a matching response is returned when an exact
+        match exists in the log files.
+        """
         input_text = "What... is your favourite colour?"
         chatbot = ChatBot()
         response = chatbot.get_response(input_text)
@@ -55,12 +70,46 @@ class Tests(TestCase):
         self.assertTrue("Blue" in response)
 
     def test_match_is_last_line_in_file(self):
-
+        """
+        Make sure that the if the last line in a file matches the input text
+        then a index error does not occure.
+        """
         input_text = "Siri is my cat"
         chatbot = ChatBot()
         response = chatbot.get_response(input_text)
 
         self.assertTrue(len(response) > 0)
+
+
+    def test_input_text_returned_in_response_data(self):
+        """
+        This checks to see if a value is returned for the
+        user name, timestamp and input text
+        """
+        user_name = "Ron Obvious"
+        user_input = "Hello!"
+
+        chatbot = ChatBot()
+        data = chatbot.get_response_data(user_name, user_input)
+
+        self.assertEqual(data["user"]["name"], user_name)
+        self.assertTrue(len(data["user"]["timestamp"]) > 0)
+        self.assertEqual(data["user"]["text"], user_input)
+
+    def test_output_text_returned_in_response_data(self):
+        """
+        This checks to see if a value is returned for the
+        bot name, timestamp and input text
+        """
+        user_name = "Sherlock"
+        user_input = "Elementary my dear watson."
+
+        chatbot = ChatBot("Watson")
+        data = chatbot.get_response_data(user_name, user_input)
+
+        self.assertEqual(data["bot"]["name"], "Watson")
+        self.assertTrue(len(data["bot"]["timestamp"]) > 0)
+        self.assertTrue(len(data["bot"]["text"]) > 0)
 
     def test_twitter_api(self):
         """

@@ -1,37 +1,89 @@
 from chatterbot.engram import Engram
-import datetime
 
 
 class ChatBot(Engram):
 
-    def __init__(self, fmt="%Y-%m-%d-%H-%M-%S"):
+    def __init__(self, name="bot", enable_logging=True):
         super(ChatBot, self).__init__()
 
-        self.name = "bot"
+        self.TIMESTAMP = self.timestamp()
 
-        self.date_fmt=fmt
-        self.timestamp = datetime.datetime.now().strftime(self.date_fmt)
+        self.name = name
+        self.log = enable_logging
 
-    def update_log(self, user_name, bot_name, user_input, bot_input):
+    def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
+        """
+        Returns a string formatted timestamp of the current time.
+        """
         import datetime
+        return str(datetime.datetime.now().strftime(fmt))
+
+    def update_log(self, data):
         import csv
 
-        logtime = datetime.datetime.now().strftime(self.date_fmt)
-        logfile = open(self.log_directory + self.timestamp, "a")
-
+        logtime = self.timestamp()
+        logfile = open(self.log_directory + self.TIMESTAMP, "a")
         logwriter = csv.writer(logfile, delimiter=",")
-        logwriter.writerow([user_name, logtime, user_input])
-        logwriter.writerow([bot_name, logtime, bot_input])
+
+        logwriter.writerow([
+            data["user"]["name"],
+            data["user"]["timestamp"],
+            data["user"]["text"]
+        ])
+
+        logwriter.writerow([
+            data["bot"]["name"],
+            data["bot"]["timestamp"],
+            data["bot"]["text"]
+        ])
 
         logfile.close()
 
-    def get_response(self, input_text):
+    def get_response_data(self, user_name, input_text):
+        """
+        Returns a dictionary containing the following data:
+        * user:
+            * The name of the user who instigated a response
+            * The timestamp at which the user issued their statement
+            * The user's statement
+        * bot:
+            * The name of the chat bot instance
+            * The timestamp of the chat bot's response
+            * The chat bot's response text
+        """
 
         # Check if a name was mentioned
         if self.name in input_text:
             pass
 
-        return self.engram(input_text)
+        bot = {}
+        user = {}
+
+        e = Engram()
+
+        user["name"] = user_name
+        user["text"] = input_text
+        user["timestamp"] = self.timestamp()
+
+        bot["name"] = self.name
+        bot["text"] = e.engram(input_text)
+        bot["timestamp"] = self.timestamp()
+
+        data = {
+            "user": user,
+            "bot": bot
+        }
+
+        if self.log:
+            self.update_log(data)
+
+        return data
+
+    def get_response(self, input_text, user_name="user"):
+        """
+        Return only the response text from the input
+        """
+        return self.get_response_data(user_name, input_text)["bot"]["text"]
 
 
 class Terminal(ChatBot):
@@ -46,18 +98,14 @@ class Terminal(ChatBot):
 
         while "exit()" not in user_input:
 
-            # raw_input is just input in python3
+            # 'raw_input' is just 'input' in python3
             if sys.version_info[0] < 3:
                 user_input = str(raw_input())
             else:
                 user_input = input()
 
-            bot_input = self.engram(user_input)
+            bot_input = self.get_response(user_input)
             print(bot_input)
-
-            # Write the conversation to a file
-            if log:
-                self.update_log("user", self.name, user_input, bot_input)
 
 
 class TalkWithCleverbot(ChatBot):
@@ -65,24 +113,20 @@ class TalkWithCleverbot(ChatBot):
     def __init__(self):
         super(TalkWithCleverbot, self).__init__()
 
-    def begin(self, log=True, bot_input="Hi. How are you?"):
+        self.running = True
+        self.cb = Cleverbot()
+
+    def begin(self, bot_input="Hi. How are you?"):
         from cleverbot.cleverbot import Cleverbot
         import time
 
-        cb = Cleverbot()
-
         print(self.name, bot_input)
 
-        while True:
-            cb_input = cb.ask(bot_input)
-            cb_input = api.clean(cb_input)
+        while self.running:
+            cb_input = api.clean(self.cb.ask(bot_input))
             print("cleverbot:", cb_input)
 
-            bot_input = self.engram(cb_input)
-            bot_input = api.clean(bot_input)
+            bot_input = api.clean(self.get_response(cb_input, "cleverbot"))
             print(self.name, bot_input)
-
-            if log:
-                update_log("cleverbot", self.name, cb_input, bot_input)
 
             time.sleep(1.05)
