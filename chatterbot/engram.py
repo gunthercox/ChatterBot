@@ -6,7 +6,6 @@ import csv
 class Engram(object):
 
     def __init__(self):
-        self.log_directory = "conversation_engrams/"
         self.api = None
 
     def enable_twitter_api(consumer_key, consumer_secret):
@@ -54,7 +53,7 @@ class Engram(object):
 
         return user, date, message, index
 
-    def engram(self, text):
+    def engram(self, text, log_directory):
         """
         Takes a message from a conversation.
         Returns the closest match based on known conversations.
@@ -66,8 +65,8 @@ class Engram(object):
 
         possible_choices = {}
 
-        for log in os.listdir(self.log_directory):
-            filename = self.log_directory + "/" + log
+        for log in os.listdir(log_directory):
+            filename = log_directory + "/" + log
             f = open(filename, "rb")
 
             lines = f.read().splitlines()

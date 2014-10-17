@@ -1,7 +1,7 @@
 from chatterbot.engram import Engram
 
 
-class ChatBot(Engram):
+class ChatBot(object):
 
     def __init__(self, name="bot", enable_logging=True):
         super(ChatBot, self).__init__()
@@ -10,6 +10,7 @@ class ChatBot(Engram):
 
         self.name = name
         self.log = enable_logging
+        self.log_directory = "conversation_engrams/"
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
         """
@@ -66,7 +67,7 @@ class ChatBot(Engram):
         user["timestamp"] = self.timestamp()
 
         bot["name"] = self.name
-        bot["text"] = e.engram(input_text)
+        bot["text"] = e.engram(input_text, self.log_directory)
         bot["timestamp"] = self.timestamp()
 
         data = {
@@ -91,7 +92,7 @@ class Terminal(ChatBot):
     def __init__(self):
         super(Terminal, self).__init__()
 
-    def begin(self, log=True, user_input="Type something to begin..."):
+    def begin(self, user_input="Type something to begin..."):
         import sys
 
         print(user_input)
@@ -108,25 +109,27 @@ class Terminal(ChatBot):
             print(bot_input)
 
 
-class TalkWithCleverbot(ChatBot):
+class TalkWithCleverbot(object):
 
     def __init__(self):
         super(TalkWithCleverbot, self).__init__()
 
         self.running = True
-        self.cb = Cleverbot()
+
+        self.cleverbot = Cleverbot()
+        self.chatbot = ChatBot()
 
     def begin(self, bot_input="Hi. How are you?"):
         from cleverbot.cleverbot import Cleverbot
         import time
 
-        print(self.name, bot_input)
+        print(self.chatbot.name, bot_input)
 
         while self.running:
-            cb_input = api.clean(self.cb.ask(bot_input))
+            cb_input = api.clean(self.cleverbot.ask(bot_input))
             print("cleverbot:", cb_input)
 
-            bot_input = api.clean(self.get_response(cb_input, "cleverbot"))
-            print(self.name, bot_input)
+            bot_input = api.clean(self.chatbot.get_response(cb_input, "cleverbot"))
+            print(self.chatbot.name, bot_input)
 
             time.sleep(1.05)
