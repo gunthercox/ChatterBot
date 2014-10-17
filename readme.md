@@ -5,7 +5,7 @@ return responses to based on collections of known conversations.
 
 [![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
-[![PyPi](https://pypip.in/d/ChatterBot/badge.png)](https://pypi.python.org/pypi/ChatterBot)
+[![PyPi](https://pypip.in/download/ChatterBot/badge.svg)](https://pypi.python.org/pypi/ChatterBot)
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
 
 An example of typical input would be something like this:
