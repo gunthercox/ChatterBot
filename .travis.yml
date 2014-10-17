@@ -15,7 +15,8 @@ install:
   - pip install -r requirements.txt
 
 # command to run tests
-script: nosetests
+script:
+  - nosetests  --with-coverage --cover-package=chatterbot
 
 after_success:
-    coveralls
+  - coveralls
