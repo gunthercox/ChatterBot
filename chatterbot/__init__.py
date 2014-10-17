@@ -111,25 +111,30 @@ class Terminal(ChatBot):
 
 class TalkWithCleverbot(object):
 
-    def __init__(self):
+    def __init__(self, log_directory="GitHub/salvius/conversation_engrams/"):
         super(TalkWithCleverbot, self).__init__()
+        #from cleverbot.cleverbot import Cleverbot
+        from chatterbot.cleverbot.cleverbot import Cleverbot
 
         self.running = True
 
         self.cleverbot = Cleverbot()
         self.chatbot = ChatBot()
+        self.chatbot.log_directory = log_directory
 
     def begin(self, bot_input="Hi. How are you?"):
-        from cleverbot.cleverbot import Cleverbot
         import time
+        from chatterbot.twitter_api import clean
 
         print(self.chatbot.name, bot_input)
 
         while self.running:
-            cb_input = api.clean(self.cleverbot.ask(bot_input))
+            cb_input = self.cleverbot.ask(bot_input)
             print("cleverbot:", cb_input)
+            cb_input = clean(cb_input)
 
-            bot_input = api.clean(self.chatbot.get_response(cb_input, "cleverbot"))
+            bot_input = self.chatbot.get_response(cb_input, "cleverbot")
             print(self.chatbot.name, bot_input)
+            bot_input = clean(bot_input)
 
             time.sleep(1.05)

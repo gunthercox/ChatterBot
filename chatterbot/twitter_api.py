@@ -21,6 +21,41 @@ REQUEST_LIST = '%s/%s/lists/members.json' % (API_ENDPOINT, API_VERSION)
 CREATE_FAVORITE = '%s/%s/favorites/create.json' % (API_ENDPOINT, API_VERSION)
 
 
+def clean(text):
+    import re, json
+
+    # Remove links from message
+    text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
+
+    # Replace linebreaks with spaces
+    text = text.replace("\n", " ").replace("\r", " ")
+
+    # Remove any leeding or trailing whitespace
+    text = text.strip()
+
+    # Remove non-ascii characters
+    text = text.encode("ascii",errors="ignore")
+
+    # Replace quotes
+    text = text.replace("\"", "'")
+
+    # Replace html characters with ascii equivilant
+    text = text.replace("&amp;", "&")
+    text = text.replace("&gt;", ">")
+    text = text.replace("&lt;", "<")
+
+    # Remove leeding usernames
+    if (len(text) > 0) and (len(text.split(" ",1)) > 0) and (text[0] == "@"):
+        text = text.split(" ",1)[1]
+        text = clean(text)
+
+    # Remove trailing usernames
+    if (len(list(text.split(" ")[-1])) > 0) and (list(text.split(" ")[-1])[0] == "@"):
+        text = text.rsplit(" ", 1)[0]
+
+    return text
+
+
 class TwitterAPI(object):
  
     def __init__(self, api_key, api_secret, token=None):
@@ -197,40 +232,6 @@ class TwitterAPI(object):
                 sleep(3600-time() % 3600)
                 t.statuses.update(status=message)
 
-    def clean(self, text):
-        import re, json
-
-        # Remove links from message
-        text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
-
-        # Replace linebreaks with spaces
-        text = text.replace("\n", " ").replace("\r", " ")
-
-        # Remove any leeding or trailing whitespace
-        text = text.strip()
-
-        # Remove non-ascii characters
-        text = text.encode("ascii",errors="ignore")
-
-        # Replace quotes
-        text = text.replace("\"", "'")
-
-        # Replace html characters with ascii equivilant
-        text = text.replace("&amp;", "&")
-        text = text.replace("&gt;", ">")
-        text = text.replace("&lt;", "<")
-
-        # Remove leeding usernames
-        if (len(text) > 0) and (len(text.split(" ",1)) > 0) and (text[0] == "@"):
-            text = text.split(" ",1)[1]
-            text = self.clean(text)
-
-        # Remove trailing usernames
-        if (len(list(text.split(" ")[-1])) > 0) and (list(text.split(" ")[-1])[0] == "@"):
-            text = text.rsplit(" ", 1)[0]
-
-        return text
-
     def get_related_messages(self, text):
         results = self.search(text, 50)
         replies = []
@@ -240,12 +241,12 @@ class TwitterAPI(object):
 
             # Select only results that are replies
             if result["in_reply_to_status_id_str"] is not None:
-                message = self.clean(result["text"])
+                message = clean(result["text"])
                 replies.append(message)
 
             # Save a list of other results in case a reply cannot be found
             else:
-                message = self.clean(result["text"])
+                message = clean(result["text"])
                 non_replies.append(message)
 
         if len(replies) == 0:

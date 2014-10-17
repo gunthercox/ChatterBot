@@ -34,6 +34,7 @@ setup(
     url='https://github.com/gunthercox/ChatterBot',
     packages=[
         'chatterbot',
+        'chatterbot.cleverbot'
     ],
     package_dir={'chatterbot': 'chatterbot'},
     include_package_data=True,

@@ -30,7 +30,7 @@ class Engram(object):
             return None, None, None, None
 
         # Maximum number of lines that can be skipped
-        max_skipps = 100
+        max_skipps = 50
         iter_count = 0
 
         line = lines[index]

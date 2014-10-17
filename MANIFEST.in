@@ -3,4 +3,3 @@ include license.md
 include readme.md
 
 recursive-include tests *
-recursive-exclude * __pycache__
