@@ -16,10 +16,10 @@ def clean(text):
     text = text.strip()
 
     # Normalize unicode characters
-    text = str(unicodedata.normalize('NFKD', text).encode('ascii','ignore'))
+    text = unicodedata.normalize('NFKD', text).encode('ascii','ignore')
 
     # Remove non-ascii characters
-    text = filter(lambda x: x in string.printable, text)
+    text = str(filter(lambda x: x in string.printable, text))
 
     # Replace html characters with ascii equivilant
     text = text.replace("&amp;", "&")
