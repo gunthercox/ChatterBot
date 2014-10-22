@@ -18,9 +18,6 @@ def clean(text):
     # Normalize unicode characters
     text = unicodedata.normalize('NFKD', text).encode('ascii','ignore')
 
-    # Remove non-ascii characters
-    text = str(filter(lambda x: x in string.printable, text))
-
     # Replace html characters with ascii equivilant
     text = text.replace("&amp;", "&")
     text = text.replace("&gt;", ">")
