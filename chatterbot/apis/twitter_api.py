@@ -1,7 +1,8 @@
 import json
 import logging
-
 import urllib
+
+from chatterbot.apis import clean
 
 # For supporting puthon 2 and 3 urllib
 try:
@@ -21,39 +22,7 @@ REQUEST_LIST = '%s/%s/lists/members.json' % (API_ENDPOINT, API_VERSION)
 CREATE_FAVORITE = '%s/%s/favorites/create.json' % (API_ENDPOINT, API_VERSION)
 
 
-def clean(text):
-    import re, json
 
-    # Remove links from message
-    text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
-
-    # Replace linebreaks with spaces
-    text = text.replace("\n", " ").replace("\r", " ")
-
-    # Remove any leeding or trailing whitespace
-    text = text.strip()
-
-    # Remove non-ascii characters
-    text = text.encode("ascii",errors="ignore")
-
-    # Replace quotes
-    text = text.replace("\"", "'")
-
-    # Replace html characters with ascii equivilant
-    text = text.replace("&amp;", "&")
-    text = text.replace("&gt;", ">")
-    text = text.replace("&lt;", "<")
-
-    # Remove leeding usernames
-    if (len(text) > 0) and (len(text.split(" ",1)) > 0) and (text[0] == "@"):
-        text = text.split(" ",1)[1]
-        text = clean(text)
-
-    # Remove trailing usernames
-    if (len(list(text.split(" ")[-1])) > 0) and (list(text.split(" ")[-1])[0] == "@"):
-        text = text.rsplit(" ", 1)[0]
-
-    return text
 
 
 class TwitterAPI(object):

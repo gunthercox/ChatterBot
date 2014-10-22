@@ -26,7 +26,7 @@ test_requirements = [
 
 setup(
     name='ChatterBot',
-    version='0.0.2',
+    version='0.0.3',
     description='An open-source chat bot program written in Python.',
     long_description=readme('readme.md') + '\n\n' + history,
     author='Gunther Cox',
@@ -34,6 +34,7 @@ setup(
     url='https://github.com/gunthercox/ChatterBot',
     packages=[
         'chatterbot',
+        'chatterbot.apis',
         'chatterbot.cleverbot'
     ],
     package_dir={'chatterbot': 'chatterbot'},

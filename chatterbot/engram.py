@@ -12,7 +12,7 @@ class Engram(object):
         """
         Takes the public key and private key and enables the api.
         """
-        from twitter_api import TwitterAPI
+        from chatterbot.apis.twitter_api import TwitterAPI
 
         self.api = TwitterAPI(consumer_key, consumer_secret)
 
