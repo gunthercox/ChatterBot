@@ -16,7 +16,7 @@ def clean(text):
     text = text.strip()
 
     # Normalize unicode characters
-    text = str(unicodedata.normalize('NFKD', text).encode('ascii','ignore'))
+    text = unicodedata.normalize('NFKD', text).encode('ascii','ignore').decode("utf-8")
 
     # Replace html characters with ascii equivilant
     text = text.replace("&amp;", "&")
