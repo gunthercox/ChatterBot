@@ -29,26 +29,26 @@ class Engram(object):
         if (index + 1) >= len(lines):
             return None, None, None, None
 
-        # Maximum number of lines that can be skipped
-        max_skipps = 50
-        iter_count = 0
-
         line = lines[index]
 
         line_data = list(csv.reader([line]))[0]
-        user, date, message = line_data
-
-        # Set index to the next line
-        #index += 1
-
-        line = lines[index]
+        try:
+            user, date, message = line_data
+        except ValueError:
+            print("Value error in ", line_data)
+            return None, None, None, None
 
         next_line_data = list(csv.reader([line]))[0]
         next_user, next_date, next_message = next_line_data
 
+        # Maximum number of lines that can be skipped
+        max_skipps = 10
+
         # If the line's user is the same as the current line's user
-        while (next_user == user) and (iter_count <= max_skipps):
+        if (next_user == user) and (max_skipps >= 0):
             index += 1
+            max_skipps -= 1
+
             next_user, next_date, message, i = self.get_next_line(lines, index)
 
         return user, date, message, index
@@ -112,7 +112,7 @@ class Engram(object):
                 return random.choice(search)
 
         if not possible_choices.keys():
-            return "Error"
+            return "Error, no possible replies could be determined."
 
         closest, ratio = process.extractOne(text, list(possible_choices.keys()))
         response = list(csv.reader([possible_choices[closest]]))[0]

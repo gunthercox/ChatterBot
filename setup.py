@@ -42,7 +42,7 @@ setup(
     install_requires=requirements,
     license="BSD",
     zip_safe=False,
-    keywords = ['ChatterBot', 'chat bot'],
+    keywords = ['ChatterBot', 'chatbot', 'chat', 'bot'],
     classifiers=[
         'Development Status :: 2 - Pre-Alpha',
         'Intended Audience :: Developers',

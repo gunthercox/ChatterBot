@@ -22,6 +22,9 @@ def clean(text):
     text = text.replace("&amp;", "&")
     text = text.replace("&gt;", ">")
     text = text.replace("&lt;", "<")
+    text = text.replace("&#039;", "'")
+    text = text.replace("&quot;", "\"")
+    text = text.replace("&#064;", "@")
 
     # Remove leeding usernames
     if (len(text) > 0) and (len(text.split(" ",1)) > 0) and (text[0] == "@"):
