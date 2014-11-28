@@ -1,122 +1,36 @@
-from fuzzywuzzy import process
-import os
-import csv
+from conversation import Conversation
 
 
 class Engram(object):
-
-    def __init__(self):
-        self.api = None
-
-    def enable_twitter_api(consumer_key, consumer_secret):
-        """
-        Takes the public key and private key and enables the api.
-        """
-        from chatterbot.apis.twitter_api import TwitterAPI
-
-        self.api = TwitterAPI(consumer_key, consumer_secret)
-
-    def get_next_line(self, lines, index):
-        """
-        Returns the response to a known statement.
-
-        If the user name on the next line is the same as
-        the one on the current line then the line will be skipped
-        until a different user name is found.
-        """
-
-        # If the line is the last line in the file
-        if (index + 1) >= len(lines):
-            return None, None, None, None
-
-        line = lines[index]
-
-        line_data = list(csv.reader([line]))[0]
-        try:
-            user, date, message = line_data
-        except ValueError:
-            print("Value error in ", line_data)
-            return None, None, None, None
-
-        next_line_data = list(csv.reader([line]))[0]
-        next_user, next_date, next_message = next_line_data
-
-        # Maximum number of lines that can be skipped
-        max_skipps = 10
-
-        # If the line's user is the same as the current line's user
-        if (next_user == user) and (max_skipps >= 0):
-            index += 1
-            max_skipps -= 1
-
-            next_user, next_date, message, i = self.get_next_line(lines, index)
-
-        return user, date, message, index
 
     def engram(self, text, log_directory):
         """
         Takes a message from a conversation.
         Returns the closest match based on known conversations.
         """
+        import os
 
         # Check to make sure that valid text was passed in
+        text = str(text)
         if not text.strip():
-            return ""
+            return "No text input was provided."
 
-        possible_choices = {}
+        closest_response = None
+        closest_ratio = 0
 
         for log in os.listdir(log_directory):
-            filename = log_directory + "/" + log
-            f = open(filename, "rb")
+            path = log_directory + "/" + log
 
-            lines = f.read().splitlines()
+            conversation = Conversation()
+            conversation.read(path)
+            response, ratio = conversation.find_closest_response(text)
 
-            # Do not continue if the file is empty
-            if os.stat(filename).st_size == 0:
-                break
+            if ratio > closest_ratio:
+                closest_response = response
+                closest_ratio = ratio
 
-            # Do not continue if lines is empty
-            if not lines:
-                break
-
-            #---------------------------------#
-            # Ensure that the input text is a string
-            text = str(text)
-
-            # Make sure each line is a string
-            i = 0
-            for line in lines:
-                lines[i] = str(line)
-                i += 1
-            #---------------------------------#
-
-            # Get the closest matching line in the file
-            closest, ratio = process.extractOne(text, lines)
-
-            index = lines.index(closest)
-            user, date, message, next_index = self.get_next_line(lines, index)
-
-            if next_index and (next_index < len(lines)):
-                # Closest ==> Next line
-                possible_choices[lines[index]] = lines[next_index]
-
-        # If the difference ratio is too low or the choice list is empty seek a better response
-        if ((not possible_choices.keys()) or (ratio < 90)) and self.api:
-            print("...")
-
-            search = api.get_related_messages(text)
-
-            # If results were found
-            if len(search) > 0:
-                import random
-                return random.choice(search)
-
-        if not possible_choices.keys():
+        if not closest_response:
             return "Error, no possible replies could be determined."
 
-        closest, ratio = process.extractOne(text, list(possible_choices.keys()))
-        response = list(csv.reader([possible_choices[closest]]))[0]
-
-        user, date, message = response
-        return message
+        return closest_response[0].text
 
