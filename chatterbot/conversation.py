@@ -6,22 +6,26 @@ class Statement(object):
 
     def __init__(self, name, text, date=None, sentiment=None):
 
-        if not date:
-            import datetime
-            self.date = datetime.datetime.now()
-
-        if type(date) is str:
-            import datetime
-            #      'Jun 1 2005  1:33PM'
-            #date_format = '%b %d %Y %I:%M%p'
-            #self.date = datetime.datetime.strptime(date, date_format)
-            pass
-
         self.name = name
         self.date = date
         self.text = text
         self.response_to = None
         self.sentiment = sentiment
+
+        if not date:
+            import datetime
+            self.date = datetime.datetime.now()
+
+        # convert date strings to a date object
+        if type(date) is str:
+            import datetime
+            date_format = "%Y-%m-%d-%H-%M-%S"
+
+            # Get the date object if possible
+            try:
+                self.date = datetime.datetime.strptime(date, date_format)
+            except ValueError:
+                self.date = datetime.datetime.now()
 
     def in_response_to(self, previous_statement):
         """

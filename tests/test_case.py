@@ -28,10 +28,10 @@ class ChatBotTestCase(TestCase):
         log2.close()
 
         log3 = open(self.chatbot.log_directory + "/log3", "w+")
-        log3.write("Bridgekeeper,0,What... is your quest?\n")
-        log3.write("Sir Lancelot,0,To seek the Holy Grail.\n")
-        log3.write("Bridgekeeper,0,What... is your favourite colour?\n")
-        log3.write("Sir Lancelot,0,Blue.\n")
+        log3.write("Bridgekeeper,2014-10-15-15-17-31,What... is your quest?\n")
+        log3.write("Sir Lancelot,2014-10-15-15-17-32,To seek the Holy Grail.\n")
+        log3.write("Bridgekeeper,2014-10-15-15-17-33,What... is your favourite colour?\n")
+        log3.write("Sir Lancelot,2014-10-15-15-17-34,Blue.\n")
         log3.close()
 
     def tearDown(self):

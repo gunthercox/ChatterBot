@@ -1,6 +1,3 @@
-from conversation import Conversation
-
-
 class Engram(object):
 
     def engram(self, text, log_directory):
@@ -8,6 +5,7 @@ class Engram(object):
         Takes a message from a conversation.
         Returns the closest match based on known conversations.
         """
+        from chatterbot.conversation import Conversation
         import os
 
         # Check to make sure that valid text was passed in

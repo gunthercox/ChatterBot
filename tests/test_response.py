@@ -3,17 +3,6 @@ from .test_case import ChatBotTestCase
 
 class ChatBotTests(ChatBotTestCase):
 
-    def test_logging_timestamps(self):
-        """
-        Tests that the chat bot returns the correct datetime for logging
-        """
-        import datetime
-
-        fmt = "%Y-%m-%d-%H-%M-%S"
-        time = self.chatbot.timestamp(fmt)
-
-        self.assertEqual(time, datetime.datetime.now().strftime(fmt))
-
     def test_chatbot_returns_answer_to_known_input(self):
         """
         Test that a matching response is returned when an exact
@@ -76,7 +65,6 @@ class ChatBotTests(ChatBotTestCase):
         file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
 
         # Force the chatbot to update it's timestamp
-        self.chatbot.TIMESTAMP = self.chatbot.timestamp()
         self.chatbot.log = True
 
         # Submit input which should cause a new log to be created
@@ -96,7 +84,6 @@ class ChatBotTests(ChatBotTestCase):
         file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
 
         # Force the chatbot to update it's timestamp
-        self.chatbot.TIMESTAMP = self.chatbot.timestamp()
         self.chatbot.log = False
 
         # Submit input which should cause a new log to be created

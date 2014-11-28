@@ -2,24 +2,19 @@ class ChatBot(object):
 
     def __init__(self, name="bot", logging=True):
         super(ChatBot, self).__init__()
+        import datetime
 
-        self.TIMESTAMP = self.timestamp()
+        fmt = "%Y-%m-%d-%H-%M-%S"
+
+        self.TIMESTAMP = str(datetime.datetime.now().strftime(fmt))
 
         self.name = name
         self.log = logging
         self.log_directory = "conversation_engrams/"
 
-    def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
-        """
-        Returns a string formatted timestamp of the current time.
-        """
-        import datetime
-        return str(datetime.datetime.now().strftime(fmt))
-
     def update_log(self, data):
         import csv
 
-        logtime = self.timestamp()
         logfile = open(self.log_directory + self.TIMESTAMP, "a")
         logwriter = csv.writer(logfile, delimiter=",")
 
@@ -64,11 +59,11 @@ class ChatBot(object):
 
         user["name"] = user_name
         user["text"] = input_text
-        user["timestamp"] = self.timestamp()
+        user["timestamp"] = self.TIMESTAMP
 
         bot["name"] = self.name
         bot["text"] = e.engram(input_text, self.log_directory)
-        bot["timestamp"] = self.timestamp()
+        bot["timestamp"] = self.TIMESTAMP
 
         data = {
             "user": user,
