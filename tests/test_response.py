@@ -22,7 +22,11 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What... is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
-        self.assertTrue("Blue" in response)
+        output = ""
+        for statement in response:
+            output += statement.text
+
+        self.assertTrue("Blue" in output)
 
     def test_match_is_last_line_in_file(self):
         """

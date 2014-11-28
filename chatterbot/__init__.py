@@ -30,11 +30,12 @@ class ChatBot(object):
         ])
 
         for line in data["bot"]["text"]:
-            logwriter.writerow([
-                line.name,
-                line.date,
-                line.text
-            ])
+            if line: # Why 'if line?' This needs a comment or a fix.
+                logwriter.writerow([
+                    line.name,
+                    line.date,
+                    line.text
+                ])
 
         logfile.close()
 

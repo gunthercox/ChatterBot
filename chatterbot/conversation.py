@@ -23,13 +23,13 @@ class Statement(object):
         self.response_to = None
         self.sentiment = sentiment
 
-        def in_response_to(previous_statement):
-            """
-            Setter method that takes a previous statement as a parameter.
-            This allows the current object to be a response to the a previous
-            statement.
-            """
-            self.response_to = previous_statement
+    def in_response_to(self, previous_statement):
+        """
+        Setter method that takes a previous statement as a parameter.
+        This allows the current object to be a response to the a previous
+        statement.
+        """
+        self.response_to = previous_statement
 
     def detect_sentiment():
         """
