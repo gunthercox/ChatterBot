@@ -1,15 +1,12 @@
-from chatterbot.engram import Engram
-
-
 class ChatBot(object):
 
-    def __init__(self, name="bot", enable_logging=True):
+    def __init__(self, name="bot", logging=True):
         super(ChatBot, self).__init__()
 
         self.TIMESTAMP = self.timestamp()
 
         self.name = name
-        self.log = enable_logging
+        self.log = logging
         self.log_directory = "conversation_engrams/"
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
@@ -32,11 +29,12 @@ class ChatBot(object):
             data["user"]["text"]
         ])
 
-        logwriter.writerow([
-            data["bot"]["name"],
-            data["bot"]["timestamp"],
-            data["bot"]["text"]
-        ])
+        for line in data["bot"]["text"]:
+            logwriter.writerow([
+                line.name,
+                line.date,
+                line.text
+            ])
 
         logfile.close()
 
@@ -52,6 +50,7 @@ class ChatBot(object):
             * The timestamp of the chat bot's response
             * The chat bot's response text
         """
+        from chatterbot.engram import Engram
 
         # Check if a name was mentioned
         if self.name in input_text:
@@ -106,7 +105,8 @@ class Terminal(ChatBot):
                 user_input = input()
 
             bot_input = self.get_response(user_input)
-            print(bot_input)
+            for line in bot_input:
+                print(line.text)
 
 
 class TalkWithCleverbot(object):
@@ -124,7 +124,7 @@ class TalkWithCleverbot(object):
 
     def begin(self, bot_input="Hi. How are you?"):
         import time
-        from chatterbot.twitter_api import clean
+        from chatterbot.api import clean
 
         print(self.chatbot.name, bot_input)
 

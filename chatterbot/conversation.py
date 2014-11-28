@@ -50,6 +50,13 @@ class Conversation(object):
         """
         return len(self.statements)
 
+    def __iter__(self):
+        """
+        Allows the conversation to be iterable.
+        """
+        for statement in self.statements:
+            yield statement
+
     def read(self, path):
         """
         Reads a conversation from a file.
@@ -101,6 +108,19 @@ class Conversation(object):
         quantity *= -1
         return self.statements[quantity:]
 
+    def next_line(self, index):
+        """
+        If the closest match is not the last one in the conversation,
+        then return the next line as the response.
+        """
+
+        index = index + 1
+
+        if index >= len(self):
+            return None, index
+
+        return self.statements[index], index
+
     def find_closest_response(self, text):
         """
         Returns the statement after the closest matchng statement in the
@@ -108,42 +128,36 @@ class Conversation(object):
         """
         from fuzzywuzzy import fuzz
 
-        closest_statement = None
         closest_ratio = 0
         response = []
 
-        for statement in self.statements:
+        for statement in self:
             ratio = fuzz.ratio(statement.text, text)
             if ratio > closest_ratio:
-                closest_statement = statement
                 closest_ratio = ratio
+                response = []
 
-                '''
-                If the closest match is not the last one in the conversation,
-                then return the next line as the response.
-                '''
                 index = self.statements.index(statement)
 
-                if index + 1 < len(self):
-                    response = []
-                    response.append(self.statements[index + 1])
-    
-                    '''
-                    if the next line exists and has the same user as the first
-                    response, then add that one to the list.
-                    '''
-                    #TODO
+                '''
+                If the next line exists and has the same user as the first
+                response, then add that one to the list.
+                '''
+                next, index = self.next_line(index)
+                while not response or (next and next.name == response[0].name):
+                    response.append(next)
+                    next, index = self.next_line(index)
 
         return response, closest_ratio
 
-    def get_sentiment(user):
+    def get_sentiment(name):
         """
         Returns the average sentament for a single user throughout a
         conversation.
         """
         sentiment = []
-        for statement in self.statements:
-            if statement.user == user:
+        for statement in self:
+            if statement.name == name:
                 sentiment.append(statement)
 
         return "" #TODO: return the average sentiment

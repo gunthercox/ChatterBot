@@ -21,16 +21,18 @@ class Engram(object):
         for log in os.listdir(log_directory):
             path = log_directory + "/" + log
 
-            conversation = Conversation()
-            conversation.read(path)
-            response, ratio = conversation.find_closest_response(text)
+            if os.path.isfile(path):
 
-            if ratio > closest_ratio:
-                closest_response = response
-                closest_ratio = ratio
+                conversation = Conversation()
+                conversation.read(path)
+                response, ratio = conversation.find_closest_response(text)
+
+                if ratio > closest_ratio:
+                    closest_response = response
+                    closest_ratio = ratio
 
         if not closest_response:
-            return "Error, no possible replies could be determined."
+            return ["Error, no possible replies could be determined."]
 
-        return closest_response[0].text
+        return closest_response
 
