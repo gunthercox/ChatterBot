@@ -1,6 +1,7 @@
 class Statement(object):
     """
     A statement is a single expression declared by a source such as a person.
+    A statement may consist of a single or multiple sentences.
     """
 
     def __init__(self, name, text, date=None, sentiment=None):
@@ -19,7 +20,16 @@ class Statement(object):
         self.name = name
         self.date = date
         self.text = text
+        self.response_to = None
         self.sentiment = sentiment
+
+        def in_response_to(previous_statement):
+            """
+            Setter method that takes a previous statement as a parameter.
+            This allows the current object to be a response to the a previous
+            statement.
+            """
+            self.response_to = previous_statement
 
     def detect_sentiment():
         """
@@ -72,6 +82,7 @@ class Conversation(object):
 
             # Continue only if the file contains lines
             if lines:
+                previous_statement = None
                 for line in lines:
                     user, date, text = line
 
@@ -79,7 +90,10 @@ class Conversation(object):
                     text = str(text)
 
                     statement = Statement(user, text, date=date)
+                    statement.in_response_to(previous_statement)
                     self.add(statement)
+
+                    previous_statement = statement
 
     def write(self):
         """
