@@ -22,6 +22,11 @@ def engram(text, log_directory):
                 closest_response = response
                 closest_ratio = ratio
 
+    # Seek a better response if the difference ratio is too low or the choice list is empty
+    if (not closest_response) or (closest_ratio < 90):
+        # TODO Search the web or use other algorithms
+        pass
+
     if not closest_response:
         default = Statement("error", "No possible replies could be determined.")
         return [default]

@@ -49,7 +49,7 @@ class ChatBot(object):
             * The timestamp of the chat bot's response
             * The chat bot's response text
         """
-        from chatterbot.algorithms import engram
+        from chatterbot.algorithms.engram import engram
 
         # Check if a name was mentioned
         if self.name in input_text:
