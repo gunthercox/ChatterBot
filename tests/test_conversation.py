@@ -27,6 +27,27 @@ class StatementTests(ChatBotTestCase):
 
         self.assertEqual(second.response_to, first)
 
+    def test_update_timestamp(self):
+        import time
+
+        statement = Statement("bot", "You stand with us... or you stand against me.")
+
+        date = statement.date
+
+        time.sleep(0.0001)
+        statement.update_timestamp()
+
+        update = statement.date
+
+        self.assertNotEqual(date, update)
+
+    def test_update_name(self):
+
+        statement = Statement("bot", "Freedom is the right of all sentient beings.")
+        statement.set_name("Optimus")
+
+        self.assertEqual(statement.name, "Optimus")
+
 
 class ConversationTests(ChatBotTestCase):
 

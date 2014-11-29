@@ -14,7 +14,7 @@ class ChatBot(object):
         Returns a string formatted timestamp of the current time.
         """
         import datetime
-        return str(datetime.datetime.now().strftime(fmt))
+        return datetime.datetime.now().strftime(fmt)
 
     def update_log(self, data):
         import csv
@@ -49,7 +49,7 @@ class ChatBot(object):
             * The timestamp of the chat bot's response
             * The chat bot's response text
         """
-        from chatterbot.types import engram
+        from chatterbot.algorithms import engram
 
         # Check if a name was mentioned
         if self.name in input_text:
@@ -113,7 +113,6 @@ class TalkWithCleverbot(object):
 
     def __init__(self, log_directory="GitHub/salvius/conversation_engrams/"):
         super(TalkWithCleverbot, self).__init__()
-        #from cleverbot.cleverbot import Cleverbot
         from chatterbot.cleverbot.cleverbot import Cleverbot
 
         self.running = True

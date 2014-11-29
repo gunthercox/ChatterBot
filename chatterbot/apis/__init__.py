@@ -3,10 +3,12 @@ def clean(text):
     A function for cleaning a string of text.
     Returns valid ASCII characters.
     """
-    import re, json, string
-    import unicodedata
+    import re, unicodedata
 
-    text = unicode(text)
+    try:
+        text = unicode(text)
+    except ImportError:
+        text = str(text)
 
     # Replace linebreaks with spaces
     text = text.replace("\n", " ").replace("\r", " ").replace("\t", " ")

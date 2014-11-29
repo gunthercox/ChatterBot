@@ -1,7 +1,7 @@
 def engram(text, log_directory):
     """
     Takes a message from a conversation.
-    Returns the closest match based on known conversations.
+    Returns a response based on the closest match based on in known conversations.
     """
     from chatterbot.conversation import Statement, Conversation
     import os
@@ -27,3 +27,11 @@ def engram(text, log_directory):
         return [default]
 
     return closest_response
+
+def markov(text, log_directory):
+    """
+    Takes a message from a conversation.
+    Returns a responses based on a markov chain algorithm.
+    """
+    # Future
+    pass

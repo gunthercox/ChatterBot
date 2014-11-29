@@ -45,7 +45,7 @@ class Statement(object):
         Returns a string formatted timestamp of the current time.
         """
         import datetime
-        return str(datetime.datetime.now().strftime(fmt))
+        self.date = datetime.datetime.now().strftime(fmt)
 
     def set_name(self, name):
         self.name = name
