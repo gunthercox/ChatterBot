@@ -6,8 +6,7 @@ def clean(text):
     import re, json, string
     import unicodedata
 
-    # Remove links from message
-    text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
+    text = unicode(text)
 
     # Replace linebreaks with spaces
     text = text.replace("\n", " ").replace("\r", " ").replace("\t", " ")
@@ -16,7 +15,8 @@ def clean(text):
     text = text.strip()
 
     # Normalize unicode characters
-    text = unicodedata.normalize('NFKD', text).encode('ascii','ignore').decode("utf-8")
+    if isinstance(text, unicode):
+        text = unicodedata.normalize('NFKD', text).encode('ascii','ignore').decode("utf-8")
 
     # Replace html characters with ascii equivilant
     text = text.replace("&amp;", "&")
@@ -25,6 +25,9 @@ def clean(text):
     text = text.replace("&#039;", "'")
     text = text.replace("&quot;", "\"")
     text = text.replace("&#064;", "@")
+
+    # Remove links from message
+    text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
 
     # Remove leeding usernames
     if (len(text) > 0) and (len(text.split(" ",1)) > 0) and (text[0] == "@"):

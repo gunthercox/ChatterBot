@@ -2,15 +2,19 @@ class ChatBot(object):
 
     def __init__(self, name="bot", logging=True):
         super(ChatBot, self).__init__()
-        import datetime
 
-        fmt = "%Y-%m-%d-%H-%M-%S"
-
-        self.TIMESTAMP = str(datetime.datetime.now().strftime(fmt))
+        self.TIMESTAMP = self.timestamp()
 
         self.name = name
         self.log = logging
         self.log_directory = "conversation_engrams/"
+
+    def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
+        """
+        Returns a string formatted timestamp of the current time.
+        """
+        import datetime
+        return str(datetime.datetime.now().strftime(fmt))
 
     def update_log(self, data):
         import csv
@@ -20,17 +24,16 @@ class ChatBot(object):
 
         logwriter.writerow([
             data["user"]["name"],
-            data["user"]["timestamp"],
+            data["user"]["date"],
             data["user"]["text"]
         ])
 
-        for line in data["bot"]["text"]:
-            if line: # Why 'if line?' This needs a comment or a fix.
-                logwriter.writerow([
-                    line.name,
-                    line.date,
-                    line.text
-                ])
+        for line in data["bot"]:
+            logwriter.writerow([
+                line["name"],
+                line["date"],
+                line["text"]
+            ])
 
         logfile.close()
 
@@ -46,24 +49,25 @@ class ChatBot(object):
             * The timestamp of the chat bot's response
             * The chat bot's response text
         """
-        from chatterbot.engram import Engram
+        from chatterbot.types import engram
 
         # Check if a name was mentioned
         if self.name in input_text:
             pass
 
-        bot = {}
+        bot = []
         user = {}
-
-        e = Engram()
 
         user["name"] = user_name
         user["text"] = input_text
-        user["timestamp"] = self.TIMESTAMP
+        user["date"] = self.timestamp()
 
-        bot["name"] = self.name
-        bot["text"] = e.engram(input_text, self.log_directory)
-        bot["timestamp"] = self.TIMESTAMP
+        output = engram(input_text, self.log_directory)
+
+        for out in output:
+            out.update_timestamp()
+            out.set_name(self.name)
+            bot.append(dict(out))
 
         data = {
             "user": user,
@@ -79,7 +83,7 @@ class ChatBot(object):
         """
         Return only the response text from the input
         """
-        return self.get_response_data(user_name, input_text)["bot"]["text"]
+        return self.get_response_data(user_name, input_text)["bot"]
 
 
 class Terminal(ChatBot):
@@ -102,7 +106,7 @@ class Terminal(ChatBot):
 
             bot_input = self.get_response(user_input)
             for line in bot_input:
-                print(line.text)
+                print(line["name"], line["text"])
 
 
 class TalkWithCleverbot(object):
@@ -120,7 +124,7 @@ class TalkWithCleverbot(object):
 
     def begin(self, bot_input="Hi. How are you?"):
         import time
-        from chatterbot.api import clean
+        from chatterbot.apis import clean
 
         print(self.chatbot.name, bot_input)
 
@@ -130,7 +134,7 @@ class TalkWithCleverbot(object):
             cb_input = clean(cb_input)
 
             bot_input = self.chatbot.get_response(cb_input, "cleverbot")
-            print(self.chatbot.name, bot_input)
-            bot_input = clean(bot_input)
+            print(self.chatbot.name, bot_input[0]["text"])
+            bot_input = clean(bot_input[0]["text"])
 
             time.sleep(1.05)

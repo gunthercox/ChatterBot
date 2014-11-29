@@ -3,6 +3,17 @@ from .test_case import ChatBotTestCase
 
 class ChatBotTests(ChatBotTestCase):
 
+    def test_logging_timestamps(self):
+        """
+        Tests that the chat bot returns the correct datetime for logging
+        """
+        import datetime
+
+        fmt = "%Y-%m-%d-%H-%M-%S"
+        time = self.chatbot.timestamp(fmt)
+
+        self.assertEqual(time, datetime.datetime.now().strftime(fmt))
+
     def test_chatbot_returns_answer_to_known_input(self):
         """
         Test that a matching response is returned when an exact
@@ -13,7 +24,7 @@ class ChatBotTests(ChatBotTestCase):
 
         output = ""
         for statement in response:
-            output += statement.text
+            output += statement["text"]
 
         self.assertTrue("Blue" in output)
 
@@ -39,7 +50,7 @@ class ChatBotTests(ChatBotTestCase):
         data = self.chatbot.get_response_data(user_name, user_input)
 
         self.assertEqual(data["user"]["name"], user_name)
-        self.assertTrue(len(data["user"]["timestamp"]) > 0)
+        self.assertTrue(len(data["user"]["date"]) > 0)
         self.assertEqual(data["user"]["text"], user_input)
 
     def test_output_text_returned_in_response_data(self):
@@ -52,9 +63,9 @@ class ChatBotTests(ChatBotTestCase):
 
         data = self.chatbot.get_response_data(user_name, user_input)
 
-        self.assertEqual(data["bot"]["name"], "Test Bot")
-        self.assertTrue(len(data["bot"]["timestamp"]) > 0)
-        self.assertTrue(len(data["bot"]["text"]) > 0)
+        self.assertEqual(data["bot"][0]["name"], "Test Bot")
+        self.assertTrue(len(data["bot"][0]["date"]) > 0)
+        self.assertTrue(len(data["bot"][0]["text"]) > 0)
 
     def test_log_file_is_created(self):
         """

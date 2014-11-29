@@ -27,6 +27,29 @@ class Statement(object):
             except ValueError:
                 self.date = datetime.datetime.now()
 
+    def __str__(self):
+        return self.text
+
+    def __iter__(self):
+        dictionary = {
+            "name": self.name,
+            "date": str(self.date),
+            "text": self.text
+        }
+
+        for key in dictionary:
+            yield (key, dictionary[key])
+
+    def update_timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
+        """
+        Returns a string formatted timestamp of the current time.
+        """
+        import datetime
+        return str(datetime.datetime.now().strftime(fmt))
+
+    def set_name(self, name):
+        self.name = name
+
     def in_response_to(self, previous_statement):
         """
         Setter method that takes a previous statement as a parameter.
@@ -162,7 +185,7 @@ class Conversation(object):
                 response, then add that one to the list.
                 '''
                 next, index = self.next_line(index)
-                while not response or (next and next.name == response[0].name):
+                while (not response and next) or (next and next.name == response[0].name):
                     response.append(next)
                     next, index = self.next_line(index)
 

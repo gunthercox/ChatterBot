@@ -4,6 +4,14 @@ from chatterbot.conversation import Statement, Conversation
 
 class StatementTests(ChatBotTestCase):
 
+    def test_string_is_text_value(self):
+
+        text = "I am a robot."
+
+        statement = Statement("bot", text)
+
+        self.assertEqual(str(statement), text)
+
     def test_statement_automatic_date(self):
         import datetime
 
