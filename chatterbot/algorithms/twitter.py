@@ -1,6 +1,43 @@
+def remove_leeding_usernames(text):
+
+    # The base case is that the is only one word
+    if not len(text.split(" ", 1)) > 1:
+        return text
+
+    if text and text[0] == "@":
+        if len(text.split(" ", 1)) > 1:
+
+            # Split the text at the first space character
+            text = text.split(" ", 1)[1]
+            text = "".join(text)
+
+    if text and text[0] == "@":
+        text = remove_leeding_usernames(text)
+
+    return text
+
+def remove_trailing_usernames(text):
+
+    # The base case is that the is only one word
+    if not len(text.split(" ", 1)) > 1:
+        return text
+
+    last_word = text.split(" ")[-1]
+
+    if len(last_word) > 0 and last_word[0] == "@":
+        text = text[:-len(last_word)]
+        text = text.strip()
+
+    last_word = text.split(" ")[-1]
+
+    if last_word[0] == "@":
+        text = remove_trailing_usernames(text)
+
+    return text
+
 def twitter(text, consumer_key, consumer_secret):
     from chatterbot.conversation import Statement
-    from chatterbot.apis.twitter_api import TwitterAPI
+    from chatterbot.apis.twitter import Twitter
     from chatterbot.apis import clean
     import random
 
@@ -12,6 +49,12 @@ def twitter(text, consumer_key, consumer_secret):
 
         # Clean the text
         result = clean(result)
+
+        # Remove leeding usernames
+        result = remove_leeding_usernames(text)
+
+        # Remove trailing usernames
+        result = remove_trailing_usernames(text)
 
         # Ignore single usernames
         if len(result.split()) > 0 and result[0] != "@":

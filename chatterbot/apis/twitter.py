@@ -20,7 +20,7 @@ REQUEST_LIST = '%s/%s/lists/members.json' % (API_ENDPOINT, API_VERSION)
 CREATE_FAVORITE = '%s/%s/favorites/create.json' % (API_ENDPOINT, API_VERSION)
 
 
-class TwitterAPI(object):
+class Twitter(object):
  
     def __init__(self, api_key, api_secret, token=None):
         self._api_key = api_key

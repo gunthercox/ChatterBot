@@ -28,15 +28,7 @@ def engram(text, log_directory):
         pass
 
     if not closest_response:
-        default = Statement("error", "No possible replies could be determined.")
+        default = Statement("Error", "No possible replies could be determined.")
         return [default]
 
     return closest_response
-
-def markov(text, log_directory):
-    """
-    Takes a message from a conversation.
-    Returns a responses based on a markov chain algorithm.
-    """
-    # Future
-    pass
