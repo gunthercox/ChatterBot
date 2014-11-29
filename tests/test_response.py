@@ -1,4 +1,4 @@
-from .test_case import ChatBotTestCase
+from .base_case import ChatBotTestCase
 
 
 class ChatBotTests(ChatBotTestCase):
@@ -22,7 +22,11 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What... is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
-        self.assertTrue("Blue" in response)
+        output = ""
+        for statement in response:
+            output += statement["text"]
+
+        self.assertTrue("Blue" in output)
 
     def test_match_is_last_line_in_file(self):
         """
@@ -46,7 +50,7 @@ class ChatBotTests(ChatBotTestCase):
         data = self.chatbot.get_response_data(user_name, user_input)
 
         self.assertEqual(data["user"]["name"], user_name)
-        self.assertTrue(len(data["user"]["timestamp"]) > 0)
+        self.assertTrue(len(data["user"]["date"]) > 0)
         self.assertEqual(data["user"]["text"], user_input)
 
     def test_output_text_returned_in_response_data(self):
@@ -59,9 +63,9 @@ class ChatBotTests(ChatBotTestCase):
 
         data = self.chatbot.get_response_data(user_name, user_input)
 
-        self.assertEqual(data["bot"]["name"], "Test Bot")
-        self.assertTrue(len(data["bot"]["timestamp"]) > 0)
-        self.assertTrue(len(data["bot"]["text"]) > 0)
+        self.assertEqual(data["bot"][0]["name"], "Test Bot")
+        self.assertTrue(len(data["bot"][0]["date"]) > 0)
+        self.assertTrue(len(data["bot"][0]["text"]) > 0)
 
     def test_log_file_is_created(self):
         """
@@ -72,7 +76,6 @@ class ChatBotTests(ChatBotTestCase):
         file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
 
         # Force the chatbot to update it's timestamp
-        self.chatbot.TIMESTAMP = self.chatbot.timestamp()
         self.chatbot.log = True
 
         # Submit input which should cause a new log to be created
@@ -92,7 +95,6 @@ class ChatBotTests(ChatBotTestCase):
         file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
 
         # Force the chatbot to update it's timestamp
-        self.chatbot.TIMESTAMP = self.chatbot.timestamp()
         self.chatbot.log = False
 
         # Submit input which should cause a new log to be created

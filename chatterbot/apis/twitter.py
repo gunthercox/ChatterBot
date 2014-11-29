@@ -2,8 +2,6 @@ import json
 import logging
 import urllib
 
-from chatterbot.apis import clean
-
 # For supporting puthon 2 and 3 urllib
 try:
     from urllib2 import Request, HTTPError, URLError, urlopen
@@ -22,10 +20,7 @@ REQUEST_LIST = '%s/%s/lists/members.json' % (API_ENDPOINT, API_VERSION)
 CREATE_FAVORITE = '%s/%s/favorites/create.json' % (API_ENDPOINT, API_VERSION)
 
 
-
-
-
-class TwitterAPI(object):
+class Twitter(object):
  
     def __init__(self, api_key, api_secret, token=None):
         self._api_key = api_key
@@ -210,15 +205,15 @@ class TwitterAPI(object):
 
             # Select only results that are replies
             if result["in_reply_to_status_id_str"] is not None:
-                message = clean(result["text"])
+                message = result["text"]
                 replies.append(message)
 
             # Save a list of other results in case a reply cannot be found
             else:
-                message = clean(result["text"])
+                message = result["text"]
                 non_replies.append(message)
 
-        if len(replies) == 0:
-            return non_replies
+        if len(replies) > 0:
+            return replies
 
-        return replies
+        return non_replies

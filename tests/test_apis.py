@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .test_case import ChatBotTestCase
+from .base_case import ChatBotTestCase
 
 
 class ChatBotApiTests(ChatBotTestCase):
@@ -15,9 +15,3 @@ class ChatBotApiTests(ChatBotTestCase):
         normal_text = "Kluft skrams infor pa federal electoral groe"
 
         self.assertEqual(clean_text, normal_text)
-
-    def test_twitter_api(self):
-        """
-        Make sure that results from the twitter api can be used.
-        """
-        pass
