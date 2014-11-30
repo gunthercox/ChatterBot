@@ -22,7 +22,7 @@ class EngramTests(ChatBotTestCase):
 
     def test_failing_results(self):
 
-        output = engram(";;;;;;;;;;;;;;;", self.chatbot.log_directory)
+        output = engram("", self.chatbot.log_directory)
 
         self.assertEqual(len(output), 1)
         self.assertEqual(output[0].name, "Error")

@@ -59,5 +59,5 @@ talk.begin()
 ## Notes
 
 This program is not designed to be an open source version of CleverBot.
-Although this **Chat Bot** returns responces, the code here handles communication
+Although this **Chat Bot** returns responces, the code here handels communication
 much differently then [CleverBot](http://www.cleverbot.com) does.

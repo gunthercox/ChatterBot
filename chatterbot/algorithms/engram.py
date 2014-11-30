@@ -24,7 +24,7 @@ def engram(text, log_directory):
                     closest_response = []
                     closest_response.append(response)
                     closest_ratio = ratio
-                elif ratio == closest_ratio:
+                elif ratio == closest_ratio and closest_ratio != 0:
                     closest_response.append(response)
                     closest_ratio = ratio
 

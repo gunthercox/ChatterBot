@@ -168,6 +168,7 @@ class Conversation(object):
         conversation.
         """
         from fuzzywuzzy import fuzz
+        import random
 
         closest_ratio = 0
         response = []
@@ -188,6 +189,24 @@ class Conversation(object):
                 while (not response and next) or (next and next.name == response[0].name):
                     response.append(next)
                     next, index = self.next_line(index)
+
+            # If the ratios are the same, pick the one to keep at random
+            elif ratio == closest_ratio and closest_ratio != 0:
+
+                # Use a random boolean to determine which statement to keep
+                if bool(random.getrandbits(1)):
+                    response = []
+
+                    index = self.statements.index(statement)
+
+                    '''
+                    If the next line exists and has the same user as the first
+                    response, then add that one to the list.
+                    '''
+                    next, index = self.next_line(index)
+                    while (not response and next) or (next and next.name == response[0].name):
+                        response.append(next)
+                        next, index = self.next_line(index)
 
         return response, closest_ratio
 
