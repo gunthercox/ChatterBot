@@ -58,6 +58,9 @@ talk.begin()
 
 ## Notes
 
+Sample conversations for training the chatbot can be downloaded
+from https://gist.github.com/gunthercox/6bde8279615b9b638f71
+
 This program is not designed to be an open source version of CleverBot.
 Although this **Chat Bot** returns responces, the code here handels communication
 much differently then [CleverBot](http://www.cleverbot.com) does.

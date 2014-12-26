@@ -20,7 +20,7 @@ class EngramTests(ChatBotTestCase):
         self.assertEqual(len(output), 1)
         self.assertEqual(output[0].text, expected)
 
-    def test_failing_results(self):
+    def test_empty_input(self):
 
         output = engram("", self.chatbot.log_directory)
 

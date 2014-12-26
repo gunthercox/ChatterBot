@@ -96,17 +96,26 @@ class Terminal(ChatBot):
 
         print(user_input)
 
-        while "exit()" not in user_input:
+        while True:
+            try:
+                # 'raw_input' is just 'input' in python3
+                if sys.version_info[0] < 3:
+                    user_input = str(raw_input())
+                else:
+                    user_input = input()
 
-            # 'raw_input' is just 'input' in python3
-            if sys.version_info[0] < 3:
-                user_input = str(raw_input())
-            else:
-                user_input = input()
+                # End the session if the exit command is issued
+                if "exit()" == user_input:
+                    import warnings
+                    warnings.warn("'exit()' is deprecated. Use 'ctrl c' or 'ctrl d' to end a session.")
+                    break
 
-            bot_input = self.get_response(user_input)
-            for line in bot_input:
-                print(line["name"], line["text"])
+                bot_input = self.get_response(user_input)
+                for line in bot_input:
+                    print(line["name"], line["text"])
+
+            except (KeyboardInterrupt, EOFError, SystemExit):
+                break
 
 
 class TalkWithCleverbot(object):
