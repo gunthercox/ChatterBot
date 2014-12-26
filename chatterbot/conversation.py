@@ -68,7 +68,7 @@ class Statement(object):
 
         # Evaluate the sentiment of the statement
         #else:
-            # Would this be better done from the conversation level?
+
             
 
 
@@ -212,7 +212,7 @@ class Conversation(object):
 
     def get_sentiment(name):
         """
-        Returns the average sentament for a single user throughout a
+        Returns the average sentiment for a single user throughout a
         conversation.
         """
         sentiment = []

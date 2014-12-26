@@ -120,7 +120,7 @@ class Terminal(ChatBot):
 
 class TalkWithCleverbot(object):
 
-    def __init__(self, log_directory="GitHub/salvius/conversation_engrams/"):
+    def __init__(self, log_directory="conversation_engrams/"):
         super(TalkWithCleverbot, self).__init__()
         from chatterbot.cleverbot.cleverbot import Cleverbot
 
@@ -146,3 +146,40 @@ class TalkWithCleverbot(object):
             bot_input = clean(bot_input[0]["text"])
 
             time.sleep(1.05)
+
+
+class SocialBot(object):
+    """
+    Check for online mentions on social media sites.
+    The bot will follow the user who mentioned it and
+    favorite the post in which the mention was made.
+    """
+
+    def __init__(self, log_directory="conversation_engrams/", **kwargs):
+        from chatterbot.apis.twitter import Twitter
+
+        chatbot = ChatBot()
+        chatbot.log_directory = log_directory
+
+        if "twitter" in kwargs:
+            twitter_bot = Twitter(kwargs["twitter"])
+
+            for mention in twitter_bot.get_mentions():
+
+                '''
+                Check to see if the post has been favorited
+                We will use this as a check for whether or not to respond to it.
+                Only respond to unfavorited mentions.
+                '''
+
+                if not mention["favorited"]:
+                    screen_name = mention["user"]["screen_name"]
+                    text = mention["text"]
+                    response = chatbot.get_response(text)
+
+                    print(text)
+                    print(response)
+
+                    follow(screen_name)
+                    favorite(mention["id"])
+                    reply(mention["id"], response)

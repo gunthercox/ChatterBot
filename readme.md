@@ -42,19 +42,39 @@ Specify a defult location for conversation log files
 chatbot.log_directory = "path/to/directory/"
 ```
 
-Terminal mode (User and chat bot)
+**Terminal mode (User and chat bot)**
 ```
 from chatterbot import Terminal
 terminal = Terminal()
 terminal.begin()
 ```
 
-Have the chat bot talk with CleverBot
+**Have the chat bot talk with CleverBot**
 ```
 from chatterbot import TalkWithCleverbot
 talk = TalkWithCleverbot()
 talk.begin()
 ```
+
+**Social mode (Have the bot respond to users on social media sites)**
+```
+from chatterbot import SocialBot
+
+log_dir = "GitHub/salvius/conversation_engrams/"
+
+TWITTER = {
+    "CONSUMER_KEY": "jbe2j2Krcmzedkbvppxvne2lp",
+    "CONSUMER_SECRET": "13T4V7ptmh3ysmsijopclx3nsd7aescahqbbilgbfpopzbspou",
+    "ACCESS_KEY": "712978718-zsujn0Gnxq1boa9Rutmpyhzstzn5jqulnhrfdabm",
+    "ACCESS_SECRET": "fqrwultic3i6Il2Qw65nx5Y99Ph7an2p56wi4p39Jxk1W"
+}
+
+chatbot = SocialBot(log_directory=log_dir, twitter=TWITTER)
+```
+The example keys shown in the example are invalid and will not work.
+You will need to generate your own keys for using any api.
+To use this feature you will need to register your app on
+https://dev.twitter.com/apps to get the token and secret keys.
 
 ## Notes
 
