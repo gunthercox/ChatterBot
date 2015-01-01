@@ -1,43 +1,38 @@
-def get_closest(text, log_directory, similarity_threshold):
-    from chatterbot.conversation import Statement, Conversation
-    import os
-
-    closest_response = []
-    closest_ratio = 0
-
-    for log in os.listdir(log_directory):
-        path = log_directory + "/" + log
-
-        if os.path.isfile(path):
-            conversation = Conversation()
-            conversation.read(path)
-            response, ratio = conversation.find_closest_response(text)
-
-            # A response may not be returned if a log has less than one line
-            if response:
-                if ratio > closest_ratio:
-                    closest_response = []
-                    closest_response.append(response)
-                    closest_ratio = ratio
-                elif ratio == closest_ratio and closest_ratio != 0:
-                    closest_response.append(response)
-                    closest_ratio = ratio
-
-    return closest_response, closest_ratio
-
-def engram(text, log_directory):
+def engram(chatbot, text):
     """
-    Takes a message from a conversation.
+    Takes a chatbot object and a statement object.
     Returns a response based on the closest match based on in known conversations.
     """
-    import random
+    from bson import ObjectId
+    from fuzzywuzzy import fuzz
 
-    threshold = 90
-    closest_response, closest_ratio = get_closest(text, log_directory, threshold)
+    statements = chatbot.database.statements
 
-    if not closest_response:
-        from chatterbot.conversation import Statement
-        default = Statement("Error", "No possible replies could be determined.")
-        return [default]
+    closest_statement = statements.find()[0]
+    closest_ratio = 0
 
-    return random.choice(closest_response)
+    for statement in statements.find():
+        ratio = fuzz.ratio(statement["text"], text)
+
+        responces_exist = statements.find(
+            {"in_response_to": statement["_id"]}
+        ).count() > 0
+
+        if ratio > closest_ratio:
+            if responces_exist:
+                closest_ratio = ratio
+                closest_statement = statement
+
+        # If equal ratios, choose the one that has the greatest number of occurances
+        elif ratio == closest_ratio:
+            if responces_exist:
+                if statement["occurrences"] > closest_statement["occurrences"]:
+                    closest_statement = statement
+
+    # Select all statements which have been used to respond to this object
+    possible_responses = statements.find(
+        {"in_response_to": ObjectId(closest_statement["_id"])}
+    ).sort("occurrences", -1)
+
+    # Return the response with the greatest number of occurances
+    return possible_responses[0]

@@ -1,2 +1,3 @@
 fuzzywuzzy==0.4.0
 oauth2==1.5.211
+pymongo==2.7.2
