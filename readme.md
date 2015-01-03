@@ -1,7 +1,6 @@
 # ChatterBot
 
-This library allows developers to create language independent chat bots that
-return responses to based on collections of known conversations.
+ChatterBot is a conversational Python library which makes it possible to generate responses to based on collections of known conversations. ChatterBot's language independent design allows it to be trained to speak any language.
 
 [![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
@@ -9,10 +8,10 @@ return responses to based on collections of known conversations.
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
 
 An example of typical input would be something like this:
-> user: Good morning! How are you doing?  
-> bot:  I am doing very well, thank you for asking.  
-> user: Your welcome.  
-> bot: Do you like hats?  
+> **user:** Good morning! How are you doing?  
+> **bot:**  I am doing very well, thank you for asking.  
+> **user:** Your welcome.  
+> **bot:** Do you like hats?  
 
 ## Installation
 
@@ -36,7 +35,7 @@ response = chatbot.get_response("Good morning!")
 print(response)
 ```
 
-Specify a defult location for conversation log files  
+Specify a default location for conversation log files  
 **Note:** The default log directory is `conversation_engrams/`.
 ```
 chatbot.log_directory = "path/to/directory/"
@@ -71,7 +70,7 @@ TWITTER = {
 
 chatbot = SocialBot(log_directory=log_dir, twitter=TWITTER)
 ```
-The example keys shown in the example are invalid and will not work.
+The keys shown in the example are invalid and will not work.
 You will need to generate your own keys for using any api.
 To use this feature you will need to register your app on
 https://dev.twitter.com/apps to get the token and secret keys.
@@ -81,6 +80,3 @@ https://dev.twitter.com/apps to get the token and secret keys.
 Sample conversations for training the chatbot can be downloaded
 from https://gist.github.com/gunthercox/6bde8279615b9b638f71
 
-This program is not designed to be an open source version of CleverBot.
-Although this **Chat Bot** returns responces, the code here handels communication
-much differently then [CleverBot](http://www.cleverbot.com) does.
