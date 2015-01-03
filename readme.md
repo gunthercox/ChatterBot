@@ -1,6 +1,9 @@
 # ChatterBot
 
-ChatterBot is a conversational Python library which makes it possible to generate responses to based on collections of known conversations. ChatterBot's language independent design allows it to be trained to speak any language.
+ChatterBot is a machine-learning based conversational dialog engine build in
+Python which makes it possible to generate responses based on collections of
+known conversations. The language independent design of ChatterBot allows it to
+be trained to speak any language.
 
 [![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
@@ -8,6 +11,7 @@ ChatterBot is a conversational Python library which makes it possible to generat
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
 
 An example of typical input would be something like this:
+
 > **user:** Good morning! How are you doing?  
 > **bot:**  I am doing very well, thank you for asking.  
 > **user:** Your welcome.  
@@ -16,20 +20,23 @@ An example of typical input would be something like this:
 ## Installation
 
 This package can be installed using
+
 ```
 pip install chatterbot
 ```
 
-## Useage
+## Usage
 
 Create a new chat bot  
 **Note:** This object takes an optional parameter for the bot's name.
+
 ```
 from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
 ```
 
 Getting a response to input text
+
 ```
 response = chatbot.get_response("Good morning!")
 print(response)
@@ -37,11 +44,13 @@ print(response)
 
 Specify a default location for conversation log files  
 **Note:** The default log directory is `conversation_engrams/`.
+
 ```
 chatbot.log_directory = "path/to/directory/"
 ```
 
 **Terminal mode (User and chat bot)**
+
 ```
 from chatterbot import Terminal
 terminal = Terminal()
@@ -49,6 +58,7 @@ terminal.begin()
 ```
 
 **Have the chat bot talk with CleverBot**
+
 ```
 from chatterbot import TalkWithCleverbot
 talk = TalkWithCleverbot()
@@ -56,27 +66,28 @@ talk.begin()
 ```
 
 **Social mode (Have the bot respond to users on social media sites)**
+
 ```
 from chatterbot import SocialBot
 
-log_dir = "GitHub/salvius/conversation_engrams/"
+log_dir = "path/to/conversation_engrams/"
 
 TWITTER = {
-    "CONSUMER_KEY": "jbe2j2Krcmzedkbvppxvne2lp",
-    "CONSUMER_SECRET": "13T4V7ptmh3ysmsijopclx3nsd7aescahqbbilgbfpopzbspou",
-    "ACCESS_KEY": "712978718-zsujn0Gnxq1boa9Rutmpyhzstzn5jqulnhrfdabm",
-    "ACCESS_SECRET": "fqrwultic3i6Il2Qw65nx5Y99Ph7an2p56wi4p39Jxk1W"
+    "CONSUMER_KEY": "<consumer_key>",
+    "CONSUMER_SECRET": "<consumer_secret>",
+    "ACCESS_KEY": "<access_key>",
+    "ACCESS_SECRET": "<access_secret>"
 }
 
 chatbot = SocialBot(log_directory=log_dir, twitter=TWITTER)
 ```
-The keys shown in the example are invalid and will not work.
-You will need to generate your own keys for using any api.
-To use this feature you will need to register your app on
-https://dev.twitter.com/apps to get the token and secret keys.
+
+You will need to generate your own keys for using any API. To use this feature
+you will need to register your application at
+[Twitter's developer website](https://dev.twitter.com/apps) to get the token and
+secret keys.
 
 ## Notes
 
-Sample conversations for training the chatbot can be downloaded
+Sample conversations for training the chat bot can be downloaded
 from https://gist.github.com/gunthercox/6bde8279615b9b638f71
-
