@@ -58,7 +58,7 @@ class Statement(object):
         """
         self.response_to = previous_statement
 
-    def detect_sentiment():
+    def detect_sentiment(self):
         """
         A property that describes hows the 
         """
@@ -216,7 +216,7 @@ class Conversation(object):
         conversation.
         """
         sentiment = []
-        for statement in self:
+        for statement in name:
             if statement.name == name:
                 sentiment.append(statement)
 
