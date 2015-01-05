@@ -216,7 +216,7 @@ class Conversation(object):
         conversation.
         """
         sentiment = []
-        for statement in self:
+        for statement in name:
             if statement.name == name:
                 sentiment.append(statement)
 
