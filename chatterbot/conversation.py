@@ -58,7 +58,7 @@ class Statement(object):
         """
         self.response_to = previous_statement
 
-    def detect_sentiment():
+    def detect_sentiment(self):
         """
         A property that describes hows the 
         """
