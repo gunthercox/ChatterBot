@@ -91,7 +91,7 @@ class Terminal(ChatBot):
     def __init__(self):
         super(Terminal, self).__init__()
 
-    def begin(self, user_input="Type something to begin..."):
+    def begin(self, user_input="Hi Master ! Type something to begin..."):
         import sys
 
         print(user_input)
