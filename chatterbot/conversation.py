@@ -4,13 +4,12 @@ class Statement(object):
     A statement may consist of a single or multiple sentences.
     """
 
-    def __init__(self, name, text, date=None, sentiment=None):
+    def __init__(self, name, text, date=None):
 
         self.name = name
         self.date = date
         self.text = text
         self.response_to = None
-        self.sentiment = sentiment
 
         if not date:
             import datetime
@@ -56,20 +55,7 @@ class Statement(object):
         This allows the current object to be a response to the a previous
         statement.
         """
-        self.response_to = previous_statement
-
-    def detect_sentiment():
-        """
-        A property that describes hows the 
-        """
-
-        if self.sentiment:
-            return self.sentiment
-
-        # Evaluate the sentiment of the statement
-        #else:
-
-            
+        self.response_to = previous_statement            
 
 
 class Conversation(object):
@@ -209,15 +195,3 @@ class Conversation(object):
                         next, index = self.next_line(index)
 
         return response, closest_ratio
-
-    def get_sentiment(name):
-        """
-        Returns the average sentiment for a single user throughout a
-        conversation.
-        """
-        sentiment = []
-        for statement in self:
-            if statement.name == name:
-                sentiment.append(statement)
-
-        return "" #TODO: return the average sentiment

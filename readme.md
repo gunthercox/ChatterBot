@@ -87,6 +87,11 @@ you will need to register your application at
 [Twitter's developer website](https://dev.twitter.com/apps) to get the token and
 secret keys.
 
+## Use Cases
+
+**Using ChatterBot in your app? Let us know!**
+- [Salvius (humanoid robot)](https://github.com/gunthercox/salvius)
+
 ## Notes
 
 Sample conversations for training the chat bot can be downloaded
