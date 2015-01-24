@@ -1,2 +1,2 @@
 fuzzywuzzy==0.4.0
-oauth2==1.5.211
+requests-oauthlib==0.4.2

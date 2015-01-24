@@ -1,76 +1,140 @@
+# -*- encoding: utf-8 -*-
+from __future__ import unicode_literals
+import requests
+from requests_oauthlib import OAuth1
+
+
 class Twitter(object):
- 
-    def __init__(self, TWITTER):
-        import oauth2 as oauth
 
-        consumer = oauth.Consumer(key=TWITTER["CONSUMER_KEY"], secret=TWITTER["CONSUMER_SECRET"])
-        access_token = oauth.Token(key=TWITTER["ACCESS_KEY"], secret=TWITTER["ACCESS_SECRET"])
+    def __init__(self, twitter):
 
-        self.client = oauth.Client(consumer, access_token)
+        self.REQUEST_TOKEN_URL = "https://api.twitter.com/oauth/request_token"
+        self.AUTHORIZE_URL = "https://api.twitter.com/oauth/authorize?oauth_token="
+        self.ACCESS_TOKEN_URL = "https://api.twitter.com/oauth/access_token"
+
+        self.consumer_key = twitter["CONSUMER_KEY"]
+        self.consumer_secret = twitter["CONSUMER_SECRET"]
+        self.oauth_token = None
+        self.oauth_token_secret = None
+
+        # Resource owner variables used during authorization process
+        self.resource_owner_key = None
+        self.resource_owner_secret = None
+
+        self.oauth = None
+
+        # An exisitng oauth token can be passed in to skip this step.
+        if "OAUTH_TOKEN" in twitter and "OAUTH_TOKEN_SECRET" in twitter:
+            self.oauth_token = twitter["OAUTH_TOKEN"]
+            self.oauth_token_secret = twitter["OAUTH_TOKEN_SECRET"]
+            self.oauth = self.get_oauth()
+
+    def get_authorization_url(self):
+        from urlparse import parse_qs
+
+        # Get request token
+        oauth = OAuth1(self.consumer_key, client_secret=self.consumer_secret)
+        response = requests.post(url=self.REQUEST_TOKEN_URL, auth=oauth)
+        credentials = parse_qs(response.content)
+
+        self.resource_owner_key = credentials.get("oauth_token")[0]
+        self.resource_owner_secret = credentials.get("oauth_token_secret")[0]
+
+        # Return the url to authorize request token
+        return self.AUTHORIZE_URL + self.resource_owner_key
+
+    def verify(self, verifier):
+        from urlparse import parse_qs
+
+        oauth = OAuth1(self.consumer_key,
+                       client_secret=self.consumer_secret,
+                       resource_owner_key=self.resource_owner_key,
+                       resource_owner_secret=self.resource_owner_secret,
+                       verifier=verifier)
+
+        # Get the access token
+        response = requests.post(url=self.ACCESS_TOKEN_URL, auth=oauth)
+        credentials = parse_qs(response.content)
+
+        self.oauth_token = credentials.get("oauth_token")[0]
+        self.oauth_token_secret = credentials.get("oauth_token_secret")[0]
+        self.oauth = self.get_oauth()
+
+    def get_oauth(self):
+        oauth = OAuth1(self.consumer_key,
+                    client_secret=self.consumer_secret,
+                    resource_owner_key=self.oauth_token,
+                    resource_owner_secret=self.oauth_token_secret)
+        return oauth
 
     def get_timeline(self):
         """
         Get status list
         """
-        import json
+        endpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json"
+        response = requests.get(url=timeline_endpoint, auth=self.oauth)
 
-        timeline_endpoint = "https://api.twitter.com/1.1/statuses/user_timeline.json"
-        response, data = self.client.request(timeline_endpoint)
-
-        return json.loads(data)
+        return response.json()
 
     def post_update(self, message):
         # Post an update
-        url = "https://api.twitter.com/1.1/statuses/update.json"
-        url += "?status=" + message.replace(" ", "%20")
+        endpoint = "https://api.twitter.com/1.1/statuses/update.json"
 
-        self.client.request(url, method="POST")
+        data = {
+            "status": message
+        }
+
+        response = requests.post(url=endpoint, data=data, auth=self.oauth)
+
+        return response.json()
 
     def favorite(self, tweet_id):
-        url = "https://api.twitter.com/1.1/favorites/create.json"
-        url += "?id=" + str(tweet_id)
+        endpoint = "https://api.twitter.com/1.1/favorites/create.json"
 
-        self.client.request(url, method="POST")
+        data = {
+            "id": tweet_id
+        }
+
+        response = requests.post(url=endpoint, data=data, auth=self.oauth)
+
+        return response.json()
 
     def follow(self, username):
-        url = "https://api.twitter.com/1.1/friendships/create.json"
-        url += "?follow=true&screen_name=" + username
+        endpoint = "https://api.twitter.com/1.1/friendships/create.json"
 
-        self.client.request(url, method="POST")
+        data = {
+            "follow": True,
+            "screen_name": username
+        }
+
+        response = requests.post(url=endpoint, data=data, auth=self.oauth)
+
+        return response.json()
 
     def get_list_users(self, username, slug):
-        import json
+        endpoint = "https://api.twitter.com/1.1/lists/members.json"
+        endpoint += "?slug=" + slug + "&owner_screen_name=" + username
 
-        url = "https://api.twitter.com/1.1/lists/members.json"
-        url += "?slug=" + slug + "&owner_screen_name=" + username
-
-        response, data = self.client.request(url)
-        data = json.loads(data)
+        response = requests.get(url=endpoint, auth=self.oauth)
         
-        return list(str(user["screen_name"]) for user in data["users"])
+        return list(str(user["screen_name"]) for user in response.json()["users"])
 
     def get_mentions(self):
-        import json
+        endpoint = "https://api.twitter.com/1.1/statuses/mentions_timeline.json"
 
-        url = "https://api.twitter.com/1.1/statuses/mentions_timeline.json"
+        response = requests.get(url=endpoint, auth=self.oauth)
 
-        response, data = self.client.request(url)
-        data = json.loads(data)
-
-        return data
+        return response.json()
 
     def search(self, q, count=1, result_type="mixed"):
-        import json
-
         url = "https://api.twitter.com/1.1/search/tweets.json"
         url += "?q=" + q
         url += "&result_type=" + result_type
         url += "&count=" + str(count)
 
-        response, data = self.client.request(url)
-        data = json.loads(data)
+        response = requests.get(url=endpoint, auth=self.oauth)
 
-        return data
+        return response.json()
 
     def get_related_messages(self, text):
         results = search(text, count=50)
@@ -123,7 +187,9 @@ class Twitter(object):
         url += "?status=" + message.replace(" ", "%20")
         url += "&in_reply_to_status_id=" + str(tweet_id)
 
-        self.client.request(url, method="POST")
+        response = requests.get(url=url, auth=self.oauth)
+
+        return response.json()
 
     def tweet_to_friends(self, username, slug, greetings, debug=False):
         """    
