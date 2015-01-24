@@ -74,9 +74,7 @@ log_dir = "path/to/conversation_engrams/"
 
 TWITTER = {
     "CONSUMER_KEY": "<consumer_key>",
-    "CONSUMER_SECRET": "<consumer_secret>",
-    "ACCESS_KEY": "<access_key>",
-    "ACCESS_SECRET": "<access_secret>"
+    "CONSUMER_SECRET": "<consumer_secret>"
 }
 
 chatbot = SocialBot(log_directory=log_dir, twitter=TWITTER)
