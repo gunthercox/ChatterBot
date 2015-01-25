@@ -1,98 +1,173 @@
 class ChatBot(object):
 
-    def __init__(self, name="bot", logging=True):
-        super(ChatBot, self).__init__()
-
-        self.TIMESTAMP = self.timestamp()
-
-        self.name = name
-        self.log = logging
-        self.log_directory = "conversation_engrams/"
-
-    def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
-        """
-        Returns a string formatted timestamp of the current time.
-        """
-        import datetime
-        return datetime.datetime.now().strftime(fmt)
-
-    def update_log(self, data):
-        import csv
-
-        logfile = open(self.log_directory + self.TIMESTAMP, "a")
-        logwriter = csv.writer(logfile, delimiter=",")
-
-        logwriter.writerow([
-            data["user"]["name"],
-            data["user"]["date"],
-            data["user"]["text"]
-        ])
-
-        for line in data["bot"]:
-            logwriter.writerow([
-                line["name"],
-                line["date"],
-                line["text"]
-            ])
-
-        logfile.close()
-
-    def get_response_data(self, user_name, input_text):
-        """
-        Returns a dictionary containing the following data:
-        * user:
-            * The name of the user who instigated a response
-            * The timestamp at which the user issued their statement
-            * The user's statement
-        * bot:
-            * The name of the chat bot instance
-            * The timestamp of the chat bot's response
-            * The chat bot's response text
-        """
+    def __init__(self, algorithm=None, log=True):
+        from pymongo import MongoClient
         from chatterbot.algorithms.engram import engram
 
-        # Check if a name was mentioned
-        if self.name in input_text:
-            pass
+        if not algorithm:
+            algorithm = engram
 
-        bot = []
-        user = {}
+        self.response_algorithm = algorithm
+        self.logging = log
+        self.connection = MongoClient("localhost", 27017)
+        self.database = self.connection["chatterbot"]
 
-        user["name"] = user_name
-        user["text"] = input_text
-        user["date"] = self.timestamp()
+        self.profile_id = None
+        self.speaker_profile_id = None
 
-        output = engram(input_text, self.log_directory)
+        self.profile(name="Chat Bot")
+        self.current_speaker(name="User Name")
 
-        for out in output:
-            out.update_timestamp()
-            out.set_name(self.name)
-            bot.append(dict(out))
-
-        data = {
-            "user": user,
-            "bot": bot
-        }
-
-        if self.log:
-            self.update_log(data)
-
-        return data
-
-    def get_response(self, input_text, user_name="user"):
+    def profile(self, **kwargs):
         """
-        Return only the response text from the input
+        Uses given data to find an existing profile for the chat bot.
+        Assigns that profile id to the chat bot for later reference.
+        If no arguments are given, the current profile object will be returned.
         """
-        return self.get_response_data(user_name, input_text)["bot"]
+        people = self.database.people
+
+        if "name" in kwargs:
+            profile = people.find_one({"name": kwargs["name"]})
+            if profile:
+                self.profile_id = profile["_id"]
+            else:
+                profile_id = people.insert({
+                    "name": kwargs["name"],
+                    "statements": []
+                })
+                self.profile_id = profile_id
+
+        if "id" in kwargs:
+            self.profile_id = kwargs["id"]
+
+        return people.find_one({"id": self.profile_id})
+
+    def current_speaker(self, **kwargs):
+        """
+        Sets the name of the person speaking to the chat bot.
+        """
+        people = self.database.people
+
+        if "name" in kwargs:
+            profile = people.find_one({"name": kwargs["name"]})
+            if profile:
+                self.speaker_profile_id = profile["_id"]
+            else:
+                profile_id = people.insert({
+                    "name": kwargs["name"],
+                    "statements": []
+                })
+                self.speaker_profile_id = profile_id
+
+        if "id" in kwargs:
+            self.speaker_profile_id = kwargs["id"]
+
+        return people.find_one({"id": self.speaker_profile_id})
+
+    def get_latest_statement(self):
+        """
+        Returns the latest statement object that exists in the database.
+        This is used to keep track of what needs to be marked as a response.
+        """
+        return self.database.statements.find().sort("last_accessed")[0]
+
+    def response(self, text):
+        """
+        Takes text input and a response algorithm object
+        as parameters.
+        Returns a dictionary containing the data for the
+        input statement and resulting response.
+        """
+        import datetime
+
+        people = self.database.people
+        statements = self.database.statements
+
+        output_statement = self.response_algorithm(self, text)
+
+        '''
+        If logging is enabled, increment the
+        occurance count for the input text.
+        Create a new entry if needed.
+        '''
+        if self.logging:
+            statements.update(
+                {"text": text},
+                {
+                    "$inc": {"occurrences": 1},
+                    "$set": {"text": text, "last_accessed": datetime.datetime.now()},
+                    "$addToSet": { "in_response_to": self.get_latest_statement()["_id"]}
+                },
+                upsert=True
+            )
+
+        input_statement = statements.find_one({"text": text})
+
+        # Update the count of the statement's occurrences
+        statements.update(
+            {"_id": output_statement["_id"]},
+            {
+                "$inc": {"occurrences": 1},
+                "$set": {"last_accessed": datetime.datetime.now()},
+                "$addToSet": {"in_response_to": input_statement["_id"]}
+            },
+            upsert=True
+        )
+
+        return output_statement
+
+    def train(self, conversation):
+        """
+        Train the chatterbot by loading sample conversations.
+        """
+        people = self.database.people
+        statements = self.database.statements
+
+        previous_statement_id = None
+
+        for statement in conversation:
+            user, text = statement
+
+            if previous_statement_id:
+                statements.update(
+                    {"text": text},
+                    {"$inc": {"occurrences": 1},
+                    "$addToSet": {"in_response_to": previous_statement_id}},
+                    upsert=True
+                )
+            else:
+                statements.update(
+                    {"text": text},
+                    {"$inc": {"occurrences": 1}},
+                    upsert=True
+                )
+
+            input_statement = statements.find_one({"text": text})
+            previous_statement_id = input_statement["_id"]
+
+            people.update(
+                {"name": user},
+                {"$addToSet": {"statements": input_statement["_id"]}},
+                upsert=True
+            )
+
+            input_user = statements.find_one({"text": text})
 
 
 class Terminal(ChatBot):
 
-    def __init__(self):
-        super(Terminal, self).__init__()
+    def __init__(self, algorithm, log=True):
+        super(Terminal, self).__init__(algorithm, log=True)
 
-    def begin(self, user_input="Type something to begin..."):
+    def begin(self, user_input=None):
         import sys
+
+        if not user_input:
+            user_input = self.get_latest_statement()["text"]
+
+        # If there is no latest statement, display a prompt
+        if not user_input:
+            user_input = "Type something to begin..."
 
         print(user_input)
 
@@ -104,62 +179,60 @@ class Terminal(ChatBot):
                 else:
                     user_input = input()
 
-                # End the session if the exit command is issued
-                if "exit()" == user_input:
-                    import warnings
-                    warnings.warn("'exit()' is deprecated. Use 'ctrl c' or 'ctrl d' to end a session.")
-                    break
-
-                bot_input = self.get_response(user_input)
-                for line in bot_input:
-                    print(line["name"], line["text"])
+                bot_response = self.response(user_input)
+                print(bot_response["text"])
 
             except (KeyboardInterrupt, EOFError, SystemExit):
                 break
 
+        # close the connection to MongoDB
+        self.connection.close()
 
-class TalkWithCleverbot(object):
 
-    def __init__(self, log_directory="conversation_engrams/"):
-        super(TalkWithCleverbot, self).__init__()
+class TalkWithCleverbot(ChatBot):
+
+    def __init__(self, algorithm, log=True):
+        super(TalkWithCleverbot, self).__init__(algorithm, log=True)
         from chatterbot.cleverbot.cleverbot import Cleverbot
 
-        self.running = True
-
         self.cleverbot = Cleverbot()
-        self.chatbot = ChatBot()
-        self.chatbot.log_directory = log_directory
 
     def begin(self, bot_input="Hi. How are you?"):
         import time
         from chatterbot.apis import clean
 
-        print(self.chatbot.name, bot_input)
+        print(bot_input)
 
-        while self.running:
-            cb_input = self.cleverbot.ask(bot_input)
-            print("cleverbot:", cb_input)
-            cb_input = clean(cb_input)
+        while True:
+            try:
+                cb_input = self.cleverbot.ask(bot_input)
+                #cb_input = clean(cb_input)
+                print("cleverbot: ", cb_input)
 
-            bot_input = self.chatbot.get_response(cb_input, "cleverbot")
-            print(self.chatbot.name, bot_input[0]["text"])
-            bot_input = clean(bot_input[0]["text"])
+                bot_input = self.response(cb_input)["text"]
+                #bot_input = clean(bot_input)
+                print("chatterbot:", str(bot_input))
 
-            time.sleep(1.05)
+                time.sleep(1.55)
+
+            except (KeyboardInterrupt, EOFError, SystemExit):
+                break
+
+        # close the connection to MongoDB
+        self.connection.close()
 
 
-class SocialBot(object):
+class SocialBot(ChatBot):
     """
     Check for online mentions on social media sites.
     The bot will follow the user who mentioned it and
     favorite the post in which the mention was made.
     """
 
-    def __init__(self, log_directory="conversation_engrams/", **kwargs):
-        from chatterbot.apis.twitter import Twitter
+    def __init__(self, **kwargs):
+        super(SocialBot, self).__init__()
 
-        chatbot = ChatBot()
-        chatbot.log_directory = log_directory
+        from chatterbot.apis.twitter import Twitter
 
         if "twitter" in kwargs:
             twitter_bot = Twitter(kwargs["twitter"])
@@ -175,7 +248,7 @@ class SocialBot(object):
                 if not mention["favorited"]:
                     screen_name = mention["user"]["screen_name"]
                     text = mention["text"]
-                    response = chatbot.get_response(text)
+                    response = self.get_response(text)
 
                     print(text)
                     print(response)

@@ -75,9 +75,6 @@ class ChatBotTests(ChatBotTestCase):
 
         file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
 
-        # Force the chatbot to update it's timestamp
-        self.chatbot.log = True
-
         # Submit input which should cause a new log to be created
         input_text = "What is the airspeed velocity of an unladen swallow?"
         response = self.chatbot.get_response(input_text)
@@ -95,7 +92,7 @@ class ChatBotTests(ChatBotTestCase):
         file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
 
         # Force the chatbot to update it's timestamp
-        self.chatbot.log = False
+        self.chatbot.logging = False
 
         # Submit input which should cause a new log to be created
         input_text = "What is the airspeed velocity of an unladen swallow?"
