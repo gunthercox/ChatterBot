@@ -93,20 +93,23 @@ class Conversation(object):
             log = open(path, "r")
             lines = list(csv.reader(log))
 
-            # Continue only if the file contains lines
+            # Check to make sure the file is not empty
             if lines:
                 previous_statement = None
                 for line in lines:
-                    user, date, text = line
 
-                    # Make sure the text is a string and not an integer or other type
-                    text = str(text)
+                    # Check to make sure the line is not empty
+                    if line:
+                        user, date, text = line
 
-                    statement = Statement(user, text, date=date)
-                    statement.in_response_to(previous_statement)
-                    self.add(statement)
+                        # Make sure the text is a string and not an integer or other type
+                        text = str(text)
 
-                    previous_statement = statement
+                        statement = Statement(user, text, date=date)
+                        statement.in_response_to(previous_statement)
+                        self.add(statement)
+
+                        previous_statement = statement
 
     def write(self):
         """
