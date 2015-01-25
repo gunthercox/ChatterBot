@@ -76,6 +76,11 @@ class Twitter(object):
 
         return response.json()
 
+    def get_name(self):
+        endpoint = "https://api.twitter.com/1.1/account/verify_credentials.json"
+        response = requests.get(url=endpoint, auth=self.oauth)
+        return response.json()["screen_name"]
+
     def post_update(self, message):
         # Post an update
         endpoint = "https://api.twitter.com/1.1/statuses/update.json"
