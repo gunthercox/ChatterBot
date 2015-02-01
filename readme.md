@@ -28,11 +28,35 @@ pip install chatterbot
 ## Usage
 
 Create a new chat bot  
-**Note:** This object takes an optional parameter for the bot's name.
+**Note:** *This object takes an optional parameter for the bot's name.*
 
 ```
 from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
+```
+
+After creating a new chatterbot instance it is also possible to train the bot.
+Training is a good way to ensure that the bot starts off with knowledge about
+specific responses.
+
+**Note** Training is recommended, but not required. The bot will begin learning
+as soon as it starts receiving input.
+
+```
+conversation = [
+    "Hello",
+    "Hi there!",
+    "How are you doing?",
+    "I'm great.",
+    "That is good to hear",
+    "Thank you.",
+    "Your welcome.",
+    "Sure, any time.",
+    "Yeah",
+    "Can I help you with anything?"
+]
+
+chatbot.train(conversation)
 ```
 
 Getting a response to input text

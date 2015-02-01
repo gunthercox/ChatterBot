@@ -16,9 +16,33 @@ class ChatBot(object):
         import datetime
         return datetime.datetime.now().strftime(fmt)
 
-    def train(self, data):
-        pass
-        # TODO
+    def train(self, conversation):
+        for i in range(0, len(conversation)):
+
+            statement = conversation[i]
+
+            # Create an entry if the statement does not exist in the database
+            if not statement in self.database:
+                self.database[statement] = {}
+
+            database_values = self.database[statement]
+
+            database_values["date"] = self.timestamp()
+
+            if not "occurrence" in database_values:
+                database_values["occurrence"] = 0
+            database_values["occurrence"] += 1
+
+            if not "in_response_to" in database_values:
+                database_values["in_response_to"] = []
+
+            # Add the previous statement for all statements except the first one
+            if i > 0:
+                # Check to make sure that the statement does not already exist
+                if not conversation[i - 1] in database_values["in_response_to"]:
+                    database_values["in_response_to"].append(conversation[i - 1])
+
+            self.database[statement] = database_values
 
     def update_log(self, data):
 
