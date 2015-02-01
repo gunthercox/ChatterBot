@@ -10,7 +10,7 @@ class EngramTests(ChatBotTestCase):
         expected = "To seek the Holy Grail."
 
         self.assertEqual(len(output), 1)
-        self.assertEqual(expected, output.keys()[0])
+        self.assertEqual(expected, list(output.keys())[0])
 
     def test_close_results(self):
 
@@ -18,7 +18,7 @@ class EngramTests(ChatBotTestCase):
         expected = "To seek the Holy Grail."
 
         self.assertEqual(len(output), 1)
-        self.assertEqual(output.keys()[0], expected)
+        self.assertEqual(list(output.keys())[0], expected)
 
     def test_empty_input(self):
 

@@ -47,7 +47,7 @@ class ChatBotTests(ChatBotTestCase):
 
         #self.assertEqual(data["user"]["name"], user_name)
         #self.assertTrue(len(data["user"]["date"]) > 0)
-        self.assertTrue(user_input in data["user"].keys())
+        self.assertTrue(user_input in list(data["user"].keys()))
 
     def test_output_text_returned_in_response_data(self):
         """

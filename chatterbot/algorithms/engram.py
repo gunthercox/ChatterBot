@@ -48,11 +48,11 @@ def engram(text, log_directory):
 
     # If no text was passed in, then return a random statement.
     if not text or not text.strip():
-        selection = random.choice(database.keys())
+        selection = random.choice(list(database.keys()))
         return {selection: database[selection]}
 
     closest_statement = get_closest_statement(text, log_directory)
-    closest_statement_key = closest_statement.keys()[0]
+    closest_statement_key = list(closest_statement.keys())[0]
 
     for statement in database:
 
@@ -65,7 +65,7 @@ def engram(text, log_directory):
 
     # If no matching responses are found: return something random
     if not matching_responces:
-        selection = random.choice(database.keys())
+        selection = random.choice(list(database.keys()))
         return {selection: database[selection]}
 
     # Choose from the selection of matching responces

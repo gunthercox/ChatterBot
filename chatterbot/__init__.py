@@ -22,7 +22,7 @@ class ChatBot(object):
 
     def update_log(self, data):
 
-        key = data.keys()[0]
+        key = list(data.keys())[0]
         values = data[key]
 
         # Create the key if it does not exist in the database
@@ -44,7 +44,7 @@ class ChatBot(object):
 
         # If a previous statement exists
         if self.last_statement:
-            statement_text = self.last_statement.keys()[0]
+            statement_text = list(self.last_statement.keys())[0]
 
             # If the statement is not already in the list
             if not statement_text in database_values["in_response_to"]:
@@ -80,7 +80,7 @@ class ChatBot(object):
             self.update_log(user)
 
         self.last_statement = engram(input_text, self.log_directory)
-        statement_text = self.last_statement.keys()[0]
+        statement_text = list(self.last_statement.keys())[0]
 
         if self.log:
             values = self.database[input_text]
@@ -99,7 +99,7 @@ class ChatBot(object):
         response = self.get_response_data(user_name, input_text)["bot"]
 
         # Return the text for the statement
-        return response.keys()[0]
+        return list(response.keys())[0]
 
 
 class Terminal(ChatBot):
