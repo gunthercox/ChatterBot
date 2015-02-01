@@ -6,7 +6,6 @@ python:
   - "3.4"
   - "3.3"
   - "2.7"
-  - "2.6"
   - "pypy"
 
 # command to install dependencies
