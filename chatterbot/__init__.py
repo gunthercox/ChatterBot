@@ -144,12 +144,6 @@ class Terminal(ChatBot):
                 else:
                     user_input = input()
 
-                # End the session if the exit command is issued
-                if "exit()" == user_input:
-                    import warnings
-                    warnings.warn("'exit()' is deprecated. Use 'ctrl c' or 'ctrl d' to end a session.")
-                    break
-
                 bot_input = self.get_response(user_input)
                 print(bot_input)
 
@@ -159,7 +153,7 @@ class Terminal(ChatBot):
 
 class TalkWithCleverbot(object):
 
-    def __init__(self, log_directory="conversation_engrams/"):
+    def __init__(self):
         super(TalkWithCleverbot, self).__init__()
         from chatterbot.cleverbot.cleverbot import Cleverbot
 
@@ -167,10 +161,10 @@ class TalkWithCleverbot(object):
 
         self.cleverbot = Cleverbot()
         self.chatbot = ChatBot()
-        self.chatbot.log_directory = log_directory
 
     def begin(self, bot_input="Hi. How are you?"):
         import time
+        from random import randint 
         from chatterbot.apis import clean
 
         print(self.chatbot.name, bot_input)
@@ -181,10 +175,11 @@ class TalkWithCleverbot(object):
             cb_input = clean(cb_input)
 
             bot_input = self.chatbot.get_response(cb_input, "cleverbot")
-            print(self.chatbot.name, bot_input[0]["text"])
-            bot_input = clean(bot_input[0]["text"])
+            print(self.chatbot.name, bot_input)
+            bot_input = clean(bot_input)
 
-            time.sleep(1.05)
+            # Delay a random number of seconds.
+            time.sleep(1.05 + randint(0, 9))
 
 
 class SocialBot(object):
@@ -194,11 +189,10 @@ class SocialBot(object):
     favorite the post in which the mention was made.
     """
 
-    def __init__(self, log_directory="conversation_engrams/", **kwargs):
+    def __init__(self, **kwargs):
         from chatterbot.apis.twitter import Twitter
 
         chatbot = ChatBot()
-        chatbot.log_directory = log_directory
 
         if "twitter" in kwargs:
             twitter_bot = Twitter(kwargs["twitter"])
