@@ -1,13 +1,13 @@
 class ChatBot(object):
 
     def __init__(self, name="bot", logging=True):
-        super(ChatBot, self).__init__()
-
-        self.TIMESTAMP = self.timestamp()
+        from jsondb.db import Database
 
         self.name = name
         self.log = logging
-        self.log_directory = "conversation_engrams/"
+        self.log_directory = "database.db"
+        self.last_statement = None
+        self.database = Database(self.log_directory)
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
         """
@@ -16,38 +16,49 @@ class ChatBot(object):
         import datetime
         return datetime.datetime.now().strftime(fmt)
 
+    def train(self, data):
+        pass
+        # TODO
+
     def update_log(self, data):
-        import csv
 
-        logfile = open(self.log_directory + self.TIMESTAMP, "a")
-        logwriter = csv.writer(logfile, delimiter=",")
+        key = data.keys()[0]
+        values = data[key]
 
-        logwriter.writerow([
-            data["user"]["name"],
-            data["user"]["date"],
-            data["user"]["text"]
-        ])
+        # Create the key if it does not exist in the database
+        if not key in self.database:
+            self.database[key] = {}
 
-        for line in data["bot"]:
-            logwriter.writerow([
-                line["name"],
-                line["date"],
-                line["text"]
-            ])
+        # Get the existing values from the database
+        database_values = self.database[key]
 
-        logfile.close()
+        database_values["name"] = values["name"]
+        database_values["date"] = values["date"]
 
+        if not "occurrence" in database_values:
+            database_values["occurrence"] = 0
+        database_values["occurrence"] += 1
+
+        if not "in_response_to" in database_values:
+            database_values["in_response_to"] = []
+
+        # If a previous statement exists
+        if self.last_statement:
+            statement_text = self.last_statement.keys()[0]
+
+            # If the statement is not already in the list
+            if not statement_text in database_values["in_response_to"]:
+                database_values["in_response_to"].append(statement_text)
+
+        # Update the database with the changes
+        self.database[key] = database_values
+
+    # TODO, change user_name and input_text into a single dict
     def get_response_data(self, user_name, input_text):
         """
         Returns a dictionary containing the following data:
-        * user:
-            * The name of the user who instigated a response
-            * The timestamp at which the user issued their statement
-            * The user's statement
-        * bot:
-            * The name of the chat bot instance
-            * The timestamp of the chat bot's response
-            * The chat bot's response text
+        * user: The user's meta data
+        * bot: The statement's meta data
         """
         from chatterbot.algorithms.engram import engram
 
@@ -55,35 +66,40 @@ class ChatBot(object):
         if self.name in input_text:
             pass
 
-        bot = []
-        user = {}
+        bot = {}
 
-        user["name"] = user_name
-        user["text"] = input_text
-        user["date"] = self.timestamp()
-
-        output = engram(input_text, self.log_directory)
-
-        for out in output:
-            out.update_timestamp()
-            out.set_name(self.name)
-            bot.append(dict(out))
-
-        data = {
-            "user": user,
-            "bot": bot
+        user = {
+            input_text: {
+                "name": user_name,
+                "date": self.timestamp()
+            }
         }
 
+        # If logging is enabled, add the user's input to the database before selecting a response.
         if self.log:
-            self.update_log(data)
+            self.update_log(user)
 
-        return data
+        self.last_statement = engram(input_text, self.log_directory)
+        statement_text = self.last_statement.keys()[0]
+
+        if self.log:
+            values = self.database[input_text]
+            if not "in_response_to" in values:
+                values["in_response_to"] = []
+            if not statement_text in values["in_response_to"]:
+                values["in_response_to"].append(statement_text)
+                self.database[input_text] = values
+
+        return {"user": user, "bot": self.last_statement}
 
     def get_response(self, input_text, user_name="user"):
         """
         Return only the response text from the input
         """
-        return self.get_response_data(user_name, input_text)["bot"]
+        response = self.get_response_data(user_name, input_text)["bot"]
+
+        # Return the text for the statement
+        return response.keys()[0]
 
 
 class Terminal(ChatBot):
@@ -111,8 +127,7 @@ class Terminal(ChatBot):
                     break
 
                 bot_input = self.get_response(user_input)
-                for line in bot_input:
-                    print(line["name"], line["text"])
+                print(bot_input)
 
             except (KeyboardInterrupt, EOFError, SystemExit):
                 break
