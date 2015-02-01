@@ -10,7 +10,7 @@ class EngramTests(ChatBotTestCase):
         expected = "To seek the Holy Grail."
 
         self.assertEqual(len(output), 1)
-        self.assertEqual(expected, list(output.keys())[0])
+        self.assertIn(expected, output.keys())
 
     def test_close_results(self):
 
@@ -18,7 +18,7 @@ class EngramTests(ChatBotTestCase):
         expected = "To seek the Holy Grail."
 
         self.assertEqual(len(output), 1)
-        self.assertEqual(list(output.keys())[0], expected)
+        self.assertIn(expected, output.keys())
 
     def test_empty_input(self):
 
@@ -30,5 +30,6 @@ class EngramTests(ChatBotTestCase):
         from chatterbot.algorithms.engram import get_closest_statement
 
         closest = get_closest_statement("What is your quest?", self.chatbot.log_directory)
+        expected = "What... is your quest?"
 
-        self.assertEqual(list(closest.keys())[0], "What... is your quest?")
+        self.assertIn(expected, closest.keys())

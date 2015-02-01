@@ -22,7 +22,7 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What... is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
-        self.assertTrue("Blue" in response)
+        self.assertIn("Blue", response)
 
     def test_match_is_last_line_in_file(self):
         """
@@ -32,7 +32,7 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "Siri is my cat"
         response = self.chatbot.get_response(input_text)
 
-        self.assertTrue(len(response) > 0)
+        self.assertGreater(len(response), 0)
 
 
     def test_input_text_returned_in_response_data(self):
@@ -47,7 +47,7 @@ class ChatBotTests(ChatBotTestCase):
 
         #self.assertEqual(data["user"]["name"], user_name)
         #self.assertTrue(len(data["user"]["date"]) > 0)
-        self.assertTrue(user_input in list(data["user"].keys()))
+        self.assertIn(user_input, data["user"].keys())
 
     def test_output_text_returned_in_response_data(self):
         """
@@ -61,7 +61,7 @@ class ChatBotTests(ChatBotTestCase):
 
         #self.assertEqual(data["bot"]["name"], "Test Bot")
         #self.assertTrue(len(data["bot"]["date"]) > 0)
-        self.assertTrue(len(data["bot"]) > 0)
+        self.assertGreater(len(data["bot"]), 0)
 
     def test_log_file_is_updated(self):
         """
@@ -80,7 +80,7 @@ class ChatBotTests(ChatBotTestCase):
 
         file_size_after = os.path.getsize(self.chatbot.log_directory)
 
-        self.assertTrue(file_size_before < file_size_after)
+        self.assertLess(file_size_before, file_size_after)
 
     def test_log_file_is_not_updated_when_logging_is_set_to_false(self):
         """
