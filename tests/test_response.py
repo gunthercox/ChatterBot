@@ -22,11 +22,7 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What... is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
-        output = ""
-        for statement in response:
-            output += statement["text"]
-
-        self.assertTrue("Blue" in output)
+        self.assertTrue("Blue" in response)
 
     def test_match_is_last_line_in_file(self):
         """
@@ -49,9 +45,9 @@ class ChatBotTests(ChatBotTestCase):
 
         data = self.chatbot.get_response_data(user_name, user_input)
 
-        self.assertEqual(data["user"]["name"], user_name)
-        self.assertTrue(len(data["user"]["date"]) > 0)
-        self.assertEqual(data["user"]["text"], user_input)
+        #self.assertEqual(data["user"]["name"], user_name)
+        #self.assertTrue(len(data["user"]["date"]) > 0)
+        self.assertTrue(user_input in list(data["user"].keys()))
 
     def test_output_text_returned_in_response_data(self):
         """
@@ -63,17 +59,17 @@ class ChatBotTests(ChatBotTestCase):
 
         data = self.chatbot.get_response_data(user_name, user_input)
 
-        self.assertEqual(data["bot"][0]["name"], "Test Bot")
-        self.assertTrue(len(data["bot"][0]["date"]) > 0)
-        self.assertTrue(len(data["bot"][0]["text"]) > 0)
+        #self.assertEqual(data["bot"]["name"], "Test Bot")
+        #self.assertTrue(len(data["bot"]["date"]) > 0)
+        self.assertTrue(len(data["bot"]) > 0)
 
-    def test_log_file_is_created(self):
+    def test_log_file_is_updated(self):
         """
-        Test that a log file is created when logging is set to true.
+        Test that a log file is updated when logging is set to true.
         """
         import os
 
-        file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
+        file_size_before = os.path.getsize(self.chatbot.log_directory)
 
         # Force the chatbot to update it's timestamp
         self.chatbot.log = True
@@ -82,17 +78,18 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What is the airspeed velocity of an unladen swallow?"
         response = self.chatbot.get_response(input_text)
 
-        file_count_after = len([name for name in os.listdir(self.chatbot.log_directory)])
+        file_size_after = os.path.getsize(self.chatbot.log_directory)
 
-        self.assertTrue(file_count_before < file_count_after)
+        self.assertTrue(file_size_before < file_size_after)
 
-    def test_log_file_is_not_created_when_logging_is_set_to_false(self):
+    def test_log_file_is_not_updated_when_logging_is_set_to_false(self):
         """
-        Test that a log file is not created when logging is set to false.
+        Test that a log file is not created when logging
+        is set to false.
         """
         import os
 
-        file_count_before = len([name for name in os.listdir(self.chatbot.log_directory)])
+        file_size_before = os.path.getsize(self.chatbot.log_directory)
 
         # Force the chatbot to update it's timestamp
         self.chatbot.log = False
@@ -101,6 +98,6 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What is the airspeed velocity of an unladen swallow?"
         response = self.chatbot.get_response(input_text)
 
-        file_count_after = len([name for name in os.listdir(self.chatbot.log_directory)])
+        file_size_after = os.path.getsize(self.chatbot.log_directory)
 
-        self.assertEqual(file_count_before, file_count_after)
+        self.assertEqual(file_size_before, file_size_after)

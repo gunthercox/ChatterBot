@@ -1,10 +1,10 @@
-from .base_case import ChatBotTestCase
+from unittest import TestCase
 from chatterbot.apis.twitter import Twitter
 from chatterbot.algorithms.twitter import remove_leeding_usernames
 from chatterbot.algorithms.twitter import remove_trailing_usernames
 
 
-class TwitterTests(ChatBotTestCase):
+class TwitterTests(TestCase):
 
     def test_consumer_stored(self):
         TWITTER = {
@@ -18,7 +18,7 @@ class TwitterTests(ChatBotTestCase):
         self.assertEqual(TWITTER["CONSUMER_SECRET"], chatbot.consumer_secret)
 
 
-class TwitterAlgorithmTests(ChatBotTestCase):
+class TwitterAlgorithmTests(TestCase):
 
     def test_remove_leeding_usernames(self):
 

@@ -1,43 +1,73 @@
-def get_closest(text, log_directory, similarity_threshold):
-    from chatterbot.conversation import Statement, Conversation
+def get_closest_statement(text, log_directory):
+    """
+    Takes a statement from a conversation.
+    Returns a the closest matching statement in the database.
+    """
     import os
+    from jsondb.db import Database
+    from fuzzywuzzy import fuzz
+    import random
 
-    closest_response = []
+    closest_statement = None
     closest_ratio = 0
 
-    for log in os.listdir(log_directory):
-        path = log_directory + "/" + log
+    database = Database(log_directory)
+    data = database.data()
 
-        if os.path.isfile(path):
-            conversation = Conversation()
-            conversation.read(path)
-            response, ratio = conversation.find_closest_response(text)
+    # Return immediately if an exact match exists
+    if text in data:
+        return {text: data[text]}
 
-            # A response may not be returned if a log has less than one line
-            if response:
-                if ratio > closest_ratio:
-                    closest_response = []
-                    closest_response.append(response)
-                    closest_ratio = ratio
-                elif ratio == closest_ratio and closest_ratio != 0:
-                    closest_response.append(response)
-                    closest_ratio = ratio
+    for statement in data:
+        ratio = fuzz.ratio(statement, text)
 
-    return closest_response, closest_ratio
+        if ratio > closest_ratio:
+            closest_ratio = ratio
+            closest_statement = statement
+
+        # If the ratios are the same, pick the one to keep at random
+        elif ratio == closest_ratio and closest_ratio != 0:
+
+            # Use a random boolean to determine which statement to keep
+            if bool(random.getrandbits(1)):
+                closest_statement = statement
+
+    return {closest_statement: data[closest_statement]}
 
 def engram(text, log_directory):
     """
-    Takes a message from a conversation.
-    Returns a response based on the closest match based on in known conversations.
+    Returns the statement after the closest matchng statement in
+    the conversation.
     """
+    import os
+    from jsondb.db import Database
     import random
 
-    threshold = 90
-    closest_response, closest_ratio = get_closest(text, log_directory, threshold)
+    matching_responces = []
+    database = Database(log_directory).data()
 
-    if not closest_response:
-        from chatterbot.conversation import Statement
-        default = Statement("Error", "No possible replies could be determined.")
-        return [default]
+    # If no text was passed in, then return a random statement.
+    if not text or not text.strip():
+        selection = random.choice(list(database.keys()))
+        return {selection: database[selection]}
 
-    return random.choice(closest_response)
+    closest_statement = get_closest_statement(text, log_directory)
+    closest_statement_key = list(closest_statement.keys())[0]
+
+    for statement in database:
+
+        if "in_response_to" in database[statement]:
+            in_response_to = database[statement]["in_response_to"]
+
+            # check if our closest statement is in this list
+            if closest_statement_key in in_response_to:
+                matching_responces.append(statement)
+
+    # If no matching responses are found: return something random
+    if not matching_responces:
+        selection = random.choice(list(database.keys()))
+        return {selection: database[selection]}
+
+    # Choose from the selection of matching responces
+    selection = random.choice(matching_responces)
+    return {selection: database[selection]} 

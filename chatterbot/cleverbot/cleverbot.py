@@ -7,7 +7,6 @@ import urllib2
 class Cleverbot:
     """
     Wrapper over the Cleverbot API.
-
     """
     HOST = "www.cleverbot.com"
     PROTOCOL = "http://"
