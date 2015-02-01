@@ -17,16 +17,13 @@ except ImportError:
     readme = lambda f: open(f, "r").read()
 
 requirements = [
-    "fuzzywuzzy==0.3.2"
-]
-
-test_requirements = [
-    "fuzzywuzzy==0.3.2"
+    "fuzzywuzzy==0.4.0",
+    "requests-oauthlib==0.4.2"
 ]
 
 setup(
     name="ChatterBot",
-    version="0.0.4",
+    version="0.0.5",
     description="An open-source chat bot program written in Python.",
     long_description=readme("readme.md") + "\n\n" + history,
     author="Gunther Cox",
@@ -57,5 +54,5 @@ setup(
         "Programming Language :: Python :: 3.4",
     ],
     test_suite="tests",
-    tests_require=test_requirements
+    tests_require=[]
 )
