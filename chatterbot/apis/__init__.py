@@ -27,8 +27,6 @@ def clean(text):
         parser = html.parser.HTMLParser()
         text = parser.unescape(text)
 
-
-
     # Normalize unicode characters
     # 'raw_input' is just 'input' in python3
     if sys.version_info[0] < 3:
