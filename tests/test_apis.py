@@ -10,7 +10,7 @@ class CleanFuncTests(ChatBotTestCase):
         from chatterbot.apis import clean
         self.clean = clean
 
-    def test_linebreaks_replaced_with_spaces(self):
+    def test_linebreaks_removed(self):
 
         text = '\tThe quick \nbrown fox \rjumps over \vthe \alazy \fdog\\.'
         clean_text = self.clean(text)
@@ -18,7 +18,7 @@ class CleanFuncTests(ChatBotTestCase):
 
         self.assertEqual(clean_text, normal_text)
 
-    def test_leeding_or_trailing_whitespace_removed(self):
+    def test_leading_or_trailing_whitespace_removed(self):
 
         text = '     The quick brown fox jumps over the lazy dog.   '
         clean_text = self.clean(text)
