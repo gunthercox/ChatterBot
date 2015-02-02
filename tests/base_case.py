@@ -74,10 +74,11 @@ class ChatBotTestCase(TestCase):
         }
 
         self.chatbot = ChatBot("Test Bot")
+        self.chatbot.database.path = "test-database.db"
 
-        log1 = open(self.chatbot.database.path, "w+")
-        log1.write(json.dumps(data))
-        log1.close()
+        database = open(self.chatbot.database.path, "w+")
+        database.write(json.dumps(data))
+        database.close()
 
     def tearDown(self):
         """
