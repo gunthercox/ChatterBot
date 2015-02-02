@@ -8,8 +8,9 @@ known conversations. The language independent design of ChatterBot allows it to
 be trained to speak any language.
 
 [![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
-[![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
 [![PyPi](https://pypip.in/download/ChatterBot/badge.svg)](https://pypi.python.org/pypi/ChatterBot)
+[![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
+[![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
 
 An example of typical input would be something like this:
@@ -21,78 +22,67 @@ An example of typical input would be something like this:
 
 ## Installation
 
-This package can be installed using
+This package can be installed from [Pypi](https://pypi.python.org/pypi/ChatterBot) by running:
 
 ```
 pip install chatterbot
 ```
 
-## Usage
-
-Create a new chat bot  
-**Note:** *This object takes an optional parameter for the bot's name.*
+### Create a new chat bot  
+**Note:** *The `ChatBot` object takes an optional parameter for the bot's name. The default name is 'bot'.*
 
 ```
 from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
 ```
 
-After creating a new chatterbot instance it is also possible to train the bot.
-Training is a good way to ensure that the bot starts off with knowledge about
-specific responses.
+### Training
+After creating a new chatterbot instance it is also possible to train the bot. Training is a good way to ensure that the bot starts off with knowledge about specific responses. The current training method takes a list of statements that represent a conversation.
 
-**Note** Training is recommended, but not required. The bot will begin learning
-as soon as it starts receiving input.
+**Note:** Training is not required but it is recommended.
 
 ```
 conversation = [
     "Hello",
     "Hi there!",
     "How are you doing?",
-    "I'm great.",
+    "I'm doing great.",
     "That is good to hear",
     "Thank you.",
-    "Your welcome.",
-    "Sure, any time.",
-    "Yeah",
-    "Can I help you with anything?"
+    "Your welcome."
 ]
 
 chatbot.train(conversation)
 ```
 
-Getting a response to input text
+### Get a response
 
 ```
 response = chatbot.get_response("Good morning!")
 print(response)
 ```
 
-Specify a default location for conversation log files  
-**Note:** The default log location is `./database.db`.
+### Change the default log file
+**Note:** The default log file is `database.db`.
 
 ```
 chatbot.database.path = "path/to/file.db"
 ```
 
-**Terminal mode (User and chat bot)**
+## Other bot types
 
+ChatterBot comes with a selection of useful chat bots built in.
+
+#### Terminal ChatterBot
+This is a simple chatterbot that runs in the console. It responds to any user input that is entered.
 ```
 from chatterbot import Terminal
 terminal = Terminal()
 terminal.begin()
 ```
 
-**Have the chat bot talk with CleverBot**
-
-```
-from chatterbot import TalkWithCleverbot
-talk = TalkWithCleverbot()
-talk.begin()
-```
-
-**Social mode (Have the bot respond to users on social media sites)**
-
+### Social ChatterBot
+This bot type integrates with various social networking sites to communicate.
 ```
 from chatterbot import SocialBot
 
@@ -104,17 +94,23 @@ TWITTER = {
 chatbot = SocialBot(twitter=TWITTER)
 ```
 
-You will need to generate your own keys for using any API. To use this feature
-you will need to register your application at
+You will need to generate your own keys for using any API. To use this feature with twitter's api you will need to register your application at
 [Twitter's developer website](https://dev.twitter.com/apps) to get the token and
 secret keys.
+
+### Talk with CleverBot
+Want to see what two bots have to say to each other? This allows your ChatterBot to talk to [CleverBot](http://www.cleverbot.com/).
+```
+from chatterbot import TalkWithCleverbot
+talk = TalkWithCleverbot()
+talk.begin()
+```
 
 ## Use Cases
 
 **Using ChatterBot in your app? Let us know!**
 - [Salvius (humanoid robot)](https://github.com/gunthercox/salvius)
 
-## Notes
+## History
 
-Sample conversations for training the chat bot can be downloaded
-from https://gist.github.com/gunthercox/6bde8279615b9b638f71
+See release notes for changes https://github.com/gunthercox/ChatterBot/releases

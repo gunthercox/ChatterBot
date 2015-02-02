@@ -7,8 +7,6 @@ try:
 except ImportError:
     from distutils.core import setup
 
-history = open("history.rst").read().replace(".. :changelog:", "")
-
 try:
     from pypandoc import convert
     readme = lambda f: convert(f, "rst")
@@ -18,14 +16,16 @@ except ImportError:
 
 requirements = [
     "fuzzywuzzy==0.4.0",
-    "requests-oauthlib==0.4.2"
+    "requests==2.5.1",
+    "requests-oauthlib==0.4.2",
+    "jsondatabase==0.0.2"
 ]
 
 setup(
     name="ChatterBot",
     version="0.0.5",
     description="An open-source chat bot program written in Python.",
-    long_description=readme("readme.md") + "\n\n" + history,
+    long_description=readme("readme.md"),
     author="Gunther Cox",
     author_email="gunthercx@gmail.com",
     url="https://github.com/gunthercox/ChatterBot",
