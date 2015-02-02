@@ -75,7 +75,7 @@ class ChatBotTestCase(TestCase):
 
         self.chatbot = ChatBot("Test Bot")
 
-        log1 = open(self.chatbot.log_directory, "w+")
+        log1 = open(self.chatbot.database.path, "w+")
         log1.write(json.dumps(data))
         log1.close()
 
@@ -85,4 +85,4 @@ class ChatBotTestCase(TestCase):
         """
         import os
 
-        os.remove(self.chatbot.log_directory)
+        os.remove(self.chatbot.database.path)

@@ -45,8 +45,6 @@ class ChatBotTests(ChatBotTestCase):
 
         data = self.chatbot.get_response_data(user_name, user_input)
 
-        #self.assertEqual(data["user"]["name"], user_name)
-        #self.assertTrue(len(data["user"]["date"]) > 0)
         self.assertIn(user_input, data["user"].keys())
 
     def test_output_text_returned_in_response_data(self):
@@ -59,8 +57,6 @@ class ChatBotTests(ChatBotTestCase):
 
         data = self.chatbot.get_response_data(user_name, user_input)
 
-        #self.assertEqual(data["bot"]["name"], "Test Bot")
-        #self.assertTrue(len(data["bot"]["date"]) > 0)
         self.assertGreater(len(data["bot"]), 0)
 
     def test_log_file_is_updated(self):
@@ -69,7 +65,7 @@ class ChatBotTests(ChatBotTestCase):
         """
         import os
 
-        file_size_before = os.path.getsize(self.chatbot.log_directory)
+        file_size_before = os.path.getsize(self.chatbot.database.path)
 
         # Force the chatbot to update it's timestamp
         self.chatbot.log = True
@@ -78,7 +74,7 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What is the airspeed velocity of an unladen swallow?"
         response = self.chatbot.get_response(input_text)
 
-        file_size_after = os.path.getsize(self.chatbot.log_directory)
+        file_size_after = os.path.getsize(self.chatbot.database.path)
 
         self.assertLess(file_size_before, file_size_after)
 
@@ -89,7 +85,7 @@ class ChatBotTests(ChatBotTestCase):
         """
         import os
 
-        file_size_before = os.path.getsize(self.chatbot.log_directory)
+        file_size_before = os.path.getsize(self.chatbot.database.path)
 
         # Force the chatbot to update it's timestamp
         self.chatbot.log = False
@@ -98,6 +94,6 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What is the airspeed velocity of an unladen swallow?"
         response = self.chatbot.get_response(input_text)
 
-        file_size_after = os.path.getsize(self.chatbot.log_directory)
+        file_size_after = os.path.getsize(self.chatbot.database.path)
 
         self.assertEqual(file_size_before, file_size_after)

@@ -5,9 +5,9 @@ class ChatBot(object):
 
         self.name = name
         self.log = logging
-        self.log_directory = "database.db"
+
         self.last_statement = None
-        self.database = Database(self.log_directory)
+        self.database = Database("database.db")
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
         """
@@ -103,7 +103,7 @@ class ChatBot(object):
         if self.log:
             self.update_log(user)
 
-        self.last_statement = engram(input_text, self.log_directory)
+        self.last_statement = engram(input_text, self.database.path)
         statement_text = list(self.last_statement.keys())[0]
 
         if self.log:

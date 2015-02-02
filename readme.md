@@ -1,3 +1,5 @@
+![Chatterbot: Machine learning in Python](http://i.imgur.com/b3SCmGT.png)
+
 # ChatterBot
 
 ChatterBot is a machine-learning based conversational dialog engine build in
@@ -67,10 +69,10 @@ print(response)
 ```
 
 Specify a default location for conversation log files  
-**Note:** The default log directory is `conversation_engrams/`.
+**Note:** The default log location is `./database.db`.
 
 ```
-chatbot.log_directory = "path/to/directory/"
+chatbot.database.path = "path/to/file.db"
 ```
 
 **Terminal mode (User and chat bot)**
@@ -94,14 +96,12 @@ talk.begin()
 ```
 from chatterbot import SocialBot
 
-log_dir = "path/to/conversation_engrams/"
-
 TWITTER = {
     "CONSUMER_KEY": "<consumer_key>",
     "CONSUMER_SECRET": "<consumer_secret>"
 }
 
-chatbot = SocialBot(log_directory=log_dir, twitter=TWITTER)
+chatbot = SocialBot(twitter=TWITTER)
 ```
 
 You will need to generate your own keys for using any API. To use this feature
