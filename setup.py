@@ -23,7 +23,7 @@ requirements = [
 
 setup(
     name="ChatterBot",
-    version="0.0.5",
+    version="0.1.0",
     description="An open-source chat bot program written in Python.",
     long_description=readme("readme.md"),
     author="Gunther Cox",

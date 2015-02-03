@@ -70,4 +70,4 @@ def engram(text, log_directory):
 
     # Choose from the selection of matching responces
     selection = random.choice(matching_responces)
-    return {selection: database[selection]} 
+    return {selection: database[selection]}
