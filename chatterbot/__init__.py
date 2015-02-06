@@ -151,31 +151,29 @@ class Terminal(ChatBot):
                 break
 
 
-class TalkWithCleverbot(object):
+class TalkWithCleverbot(ChatBot):
 
     def __init__(self):
         super(TalkWithCleverbot, self).__init__()
         from chatterbot.cleverbot.cleverbot import Cleverbot
 
         self.running = True
-
         self.cleverbot = Cleverbot()
-        self.chatbot = ChatBot()
 
     def begin(self, bot_input="Hi. How are you?"):
         import time
         from random import randint 
         from chatterbot.apis import clean
 
-        print(self.chatbot.name, bot_input)
+        print(self.name, bot_input)
 
         while self.running:
             cb_input = self.cleverbot.ask(bot_input)
             print("cleverbot:", cb_input)
             cb_input = clean(cb_input)
 
-            bot_input = self.chatbot.get_response(cb_input, "cleverbot")
-            print(self.chatbot.name, bot_input)
+            bot_input = self.get_response(cb_input, "cleverbot")
+            print(self.name, bot_input)
             bot_input = clean(bot_input)
 
             # Delay a random number of seconds.

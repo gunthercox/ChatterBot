@@ -22,7 +22,7 @@ An example of typical input would be something like this:
 
 ## Installation
 
-This package can be installed from [Pypi](https://pypi.python.org/pypi/ChatterBot) by running:
+This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBot) by running:
 
 ```
 pip install chatterbot
