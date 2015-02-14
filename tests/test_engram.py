@@ -25,11 +25,3 @@ class EngramTests(ChatBotTestCase):
         output = engram("", self.chatbot.database.path)
 
         self.assertEqual(len(output), 1)
-
-    def test_get_closest_statement(self):
-        from chatterbot.algorithms.engram import get_closest_statement
-
-        closest = get_closest_statement("What is your quest?", self.chatbot.database.path)
-        expected = "What... is your quest?"
-
-        self.assertIn(expected, closest.keys())

@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-
 try:
     from setuptools import setup, find_packages
 except ImportError:
@@ -18,7 +17,8 @@ requirements = [
     "fuzzywuzzy==0.4.0",
     "requests==2.5.1",
     "requests-oauthlib==0.4.2",
-    "jsondatabase==0.0.2"
+    "jsondatabase==0.0.2",
+    "stemming==1.0.1"
 ]
 
 setup(
