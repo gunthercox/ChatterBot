@@ -19,3 +19,12 @@ script:
 
 after_success:
   - coveralls
+
+deploy:
+  provider: pypi
+  user: gunthercox
+  password:
+    secure: "Ak6TRc4O6pKHguj60Y5OXFNl1XszAQFbryuHYxWUcp+7BFpvNfNjFVSsOxvt1bYCIQC1JB26KGSruIZHdvMBGkaKWOnfjAp8DtVLbmmmbpKU/yW7XcoKNBNHCQgRiK+LFyZUrc7h1/hExoT4vys4fcz6IM1ktArWh2gEgvgb6GY="
+
+  on:
+    tags: true
