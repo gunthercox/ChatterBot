@@ -33,7 +33,7 @@ setup(
     platforms=["any"],
     keywords=["ChatterBot", "chatbot", "chat", "bot"],
     classifiers=[
-        "Development Status :: 1",
+        "Development Status :: 4 - Beta",
         "Intended Audience :: Developers",
         "License :: OSI Approved :: BSD License",
         "Environment :: Console",

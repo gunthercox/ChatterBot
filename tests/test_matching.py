@@ -9,4 +9,4 @@ class MatchingTests(ChatBotTestCase):
         close = closest("What is your quest?", self.chatbot.database.path)
         expected = "What... is your quest?"
 
-        self.assertIn(expected, close.keys())
+        self.assertEqual(expected, close)

@@ -10,31 +10,27 @@ def engram(text, log_directory):
     from jsondb.db import Database
     import random
 
-    matching_responces = []
-    database = Database(log_directory).data()
+    database = Database(log_directory)
 
-    # If no text was passed in, then return a random statement.
-    if not text or not text.strip():
-        selection = random.choice(list(database.keys()))
-        return {selection: database[selection]}
+    # Initialize the matching responce with a random statement from the database
+    matching_responces = random.choice(list(database))
+    occurrence_count = database[matching_responces]["occurrence"]
 
     closest_statement = closest(text, log_directory)
-    closest_statement_key = list(closest_statement.keys())[0]
 
     for statement in database:
 
         if "in_response_to" in database[statement]:
-            in_response_to = database[statement]["in_response_to"]
 
-            # check if our closest statement is in this list
-            if closest_statement_key in in_response_to:
-                matching_responces.append(statement)
+            # Check if our closest statement is in this list
+            if closest_statement in database[statement]["in_response_to"]:
 
-    # If no matching responses are found: return something random
-    if not matching_responces:
-        selection = random.choice(list(database.keys()))
-        return {selection: database[selection]}
+                # Keep the more common statement
+                if database[statement]["occurrence"] >= occurrence_count:
+                    matching_responces = statement
+                    occurrence_count = database[statement]["occurrence"]
 
-    # Choose from the selection of matching responces
-    selection = random.choice(matching_responces)
-    return {selection: database[selection]}
+                # If the two statements occure equaly in frequency, keep one at random
+
+    # Choose the most common selection of matching responces
+    return {matching_responces: database[matching_responces]}

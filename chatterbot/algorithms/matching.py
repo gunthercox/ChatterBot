@@ -9,17 +9,19 @@ def closest(text, log_directory):
     from stemming.porter2 import stem
     import random
 
-    closest_statement = None
-    closest_ratio = 0
 
     database = Database(log_directory)
-    data = database.data()
+
+
+    # Initialize the closest statement to a random item in the database
+    closest_statement = random.choice(database)
+    closest_ratio = 0
 
     # Return immediately if an exact match exists
-    if text in data:
-        return {text: data[text]}
+    if text in database:
+        return text
 
-    for statement in data:
+    for statement in database:
 
         stemmed_statement = stem(statement)
         stemmed_text = stem(text)
@@ -38,4 +40,4 @@ def closest(text, log_directory):
             if bool(random.getrandbits(1)):
                 closest_statement = statement
 
-    return {closest_statement: data[closest_statement]}
+    return closest_statement
