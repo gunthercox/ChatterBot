@@ -6,7 +6,7 @@ class ChatBot(object):
         self.name = name
         self.log = logging
 
-        self.last_statement = None
+        self.last_statement = []
         self.database = Database("database.db")
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
@@ -68,7 +68,7 @@ class ChatBot(object):
 
         # If a previous statement exists
         if self.last_statement:
-            statement_text = list(self.last_statement.keys())[0]
+            statement_text = list(self.last_statement[0].keys())[0]
 
             # If the statement is not already in the list
             if not statement_text in database_values["in_response_to"]:
@@ -103,8 +103,8 @@ class ChatBot(object):
         if self.log:
             self.update_log(user)
 
-        self.last_statement = engram(input_text, self.database.path)
-        statement_text = list(self.last_statement.keys())[0]
+        self.last_statement = [engram(input_text, self.database.path)] + self.last_statement
+        statement_text = list(self.last_statement[0].keys())[0]
 
         if self.log:
             values = self.database[input_text]
@@ -114,7 +114,7 @@ class ChatBot(object):
                 values["in_response_to"].append(statement_text)
                 self.database[input_text] = values
 
-        return {"user": user, "bot": self.last_statement}
+        return {"user": user, "bot": self.last_statement[0]}
 
     def get_response(self, input_text, user_name="user"):
         """

@@ -1,5 +1,5 @@
 fuzzywuzzy==0.5.0
 requests==2.5.1
 requests-oauthlib==0.4.2
-jsondatabase==0.0.2
+jsondatabase==0.0.3
 stemming==1.0.1
