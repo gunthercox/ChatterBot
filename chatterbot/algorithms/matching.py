@@ -1,16 +1,12 @@
-def closest(text, log_directory):
+def closest(text, database):
     """
     Takes a statement from a conversation.
     Returns a the closest matching statement in the database.
     """
     import os
-    from jsondb.db import Database
     from fuzzywuzzy import fuzz
     from stemming.porter2 import stem
     import random
-
-
-    database = Database(log_directory)
 
 
     # Initialize the closest statement to a random item in the database

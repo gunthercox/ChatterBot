@@ -2,7 +2,7 @@ from .base_case import ChatBotTestCase
 from chatterbot import Terminal
 
 
-class ChatBotTests(ChatBotTestCase):
+class TerminalTests(ChatBotTestCase):
 
     def test_log_file_is_created(self):
         """

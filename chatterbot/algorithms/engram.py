@@ -1,22 +1,19 @@
 from chatterbot.algorithms.matching import closest
 
 
-def engram(text, log_directory):
+def engram(text, database):
     """
     Returns the statement after the closest matchng statement in
     the conversation.
     """
     import os
-    from jsondb.db import Database
     import random
-
-    database = Database(log_directory)
 
     # Initialize the matching responce with a random statement from the database
     matching_responces = random.choice(list(database))
     occurrence_count = database[matching_responces]["occurrence"]
 
-    closest_statement = closest(text, log_directory)
+    closest_statement = closest(text, database)
 
     for statement in database:
 

@@ -6,8 +6,14 @@ class ChatBot(object):
         self.name = name
         self.log = logging
 
-        self.last_statement = []
+        self.last_statements = []
         self.database = Database("database.db")
+
+    def get_last_statement(self):
+        """
+        Returns the last statement that was issued to the chat bot.
+        """
+        return self.last_statements[-1]
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
         """
@@ -67,8 +73,8 @@ class ChatBot(object):
             database_values["in_response_to"] = []
 
         # If a previous statement exists
-        if self.last_statement:
-            statement_text = list(self.last_statement[0].keys())[0]
+        if self.last_statements:
+            statement_text = list(self.get_last_statement().keys())[0]
 
             # If the statement is not already in the list
             if not statement_text in database_values["in_response_to"]:
@@ -103,8 +109,8 @@ class ChatBot(object):
         if self.log:
             self.update_log(user)
 
-        self.last_statement = [engram(input_text, self.database.path)] + self.last_statement
-        statement_text = list(self.last_statement[0].keys())[0]
+        self.last_statements.append(engram(input_text, self.database))
+        statement_text = list(self.get_last_statement().keys())[0]
 
         if self.log:
             values = self.database[input_text]
@@ -114,16 +120,13 @@ class ChatBot(object):
                 values["in_response_to"].append(statement_text)
                 self.database[input_text] = values
 
-        return {"user": user, "bot": self.last_statement[0]}
+        return {"user": user, "bot": statement_text}
 
     def get_response(self, input_text, user_name="user"):
         """
-        Return only the response text from the input
+        Return only the bot's response text from the input
         """
-        response = self.get_response_data(user_name, input_text)["bot"]
-
-        # Return the text for the statement
-        return list(response.keys())[0]
+        return self.get_response_data(user_name, input_text)["bot"]
 
 
 class Terminal(ChatBot):
