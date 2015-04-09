@@ -70,7 +70,7 @@ print(response)
 **Note:** The default log file is `database.db`.
 
 ```
-chatbot.database.path = "path/to/file.db"
+chatbot.database.set_path("path/to/file.db")
 ```
 
 ## Other bot types
