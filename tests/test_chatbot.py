@@ -70,6 +70,13 @@ class ChatBotTests(ChatBotTestCase):
 
         self.assertIn("Blue", response)
 
+    def test_chatbot_returns_answer_close_to_known_input(self):
+ 
+        input_text = "What is your favourite colour?"
+        response = self.chatbot.get_response(input_text)
+
+        self.assertIn("Blue", response)
+
     def test_match_is_last_line_in_file(self):
         """
         Make sure that the if the last line in a file
@@ -92,7 +99,7 @@ class ChatBotTests(ChatBotTestCase):
 
         data = self.chatbot.get_response_data(user_name, user_input)
 
-        self.assertIn(user_input, data["user"].keys())
+        self.assertIn(user_input, data[user_name].keys())
 
     def test_output_text_returned_in_response_data(self):
         """

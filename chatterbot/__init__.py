@@ -91,12 +91,14 @@ class ChatBot(object):
         * bot: The statement's meta data
         """
         from chatterbot.algorithms.engram import engram
+        from chatterbot.matching import closest
 
-        # Check if a name was mentioned
-        if self.name in input_text:
-            pass
+        # Use the closest known matching statement
+        closest_statement = closest(input_text, self.database)
+        response_statement = engram(closest_statement, self.database)
+        self.last_statements.append(response_statement)
 
-        bot = {}
+        statement_text = list(self.get_last_statement().keys())[0]
 
         user = {
             input_text: {
@@ -105,22 +107,11 @@ class ChatBot(object):
             }
         }
 
-        # If logging is enabled, add the user's input to the database before selecting a response.
+        # Add the input to the database before selecting a response if logging is enabled
         if self.log:
             self.update_log(user)
 
-        self.last_statements.append(engram(input_text, self.database))
-        statement_text = list(self.get_last_statement().keys())[0]
-
-        if self.log:
-            values = self.database[input_text]
-            if not "in_response_to" in values:
-                values["in_response_to"] = []
-            if not statement_text in values["in_response_to"]:
-                values["in_response_to"].append(statement_text)
-                self.database[input_text] = values
-
-        return {"user": user, "bot": statement_text}
+        return {user_name: user, "bot": statement_text}
 
     def get_response(self, input_text, user_name="user"):
         """

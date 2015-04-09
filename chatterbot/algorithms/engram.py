@@ -1,19 +1,16 @@
-from chatterbot.algorithms.matching import closest
-
-
-def engram(text, database):
+def engram(closest_statement, database):
     """
-    Returns the statement after the closest matchng statement in
-    the conversation.
+    Returns a statement in response to the closest matching statement in
+    the database. For each match, the statement with the greatest number
+    of occurrence will be returned.
     """
-    import os
-    import random
 
-    # Initialize the matching responce with a random statement from the database
-    matching_responces = random.choice(list(database))
-    occurrence_count = database[matching_responces]["occurrence"]
+    if not closest_statement in database:
+        raise Exception("A matching statement must exist in the database")
 
-    closest_statement = closest(text, database)
+    # Initialize the matching responce with the first statement in the database
+    matching_response = database[0].keys()[0]
+    occurrence_count = database[matching_response]["occurrence"]
 
     for statement in database:
 
@@ -24,10 +21,10 @@ def engram(text, database):
 
                 # Keep the more common statement
                 if database[statement]["occurrence"] >= occurrence_count:
-                    matching_responces = statement
+                    matching_response = statement
                     occurrence_count = database[statement]["occurrence"]
 
-                # If the two statements occure equaly in frequency, keep one at random
+                #TODO? If the two statements occure equaly in frequency, should we keep one at random
 
-    # Choose the most common selection of matching responces
-    return {matching_responces: database[matching_responces]}
+    # Choose the most common selection of matching response
+    return {matching_response: database[matching_response]}

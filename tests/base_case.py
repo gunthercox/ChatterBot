@@ -19,11 +19,11 @@ class ChatBotTestCase(TestCase):
             },
             "african or european?": {
                 "date": "2014-10-15-15-18-41",
-                "in_response_to": ["How do know so much about swallows?"],
+                "in_response_to": ["How do you know so much about swallows?"],
                 "occurrence": 1,
                 "name": "user"
             },
-            "How do know so much about swallows?": {
+            "How do you know so much about swallows?": {
                 "date": "2014-10-15-15-18-40",
                 "in_response_to": [],
                 "name": "user",
@@ -73,12 +73,35 @@ class ChatBotTestCase(TestCase):
             }
         }
 
-        self.chatbot = ChatBot("Test Bot")
-        self.chatbot.database.path = "test-database.db"
+        data1 = [
+            "african or european?",
+            "Huh? I... I don't know that.",
+            "How do you know so much about swallows?"
+        ]
 
-        database = open(self.chatbot.database.path, "w+")
-        database.write(json.dumps(data))
-        database.close()
+        data2 = [
+            "Siri is adorable",
+            "Who is Seri?",
+            "Siri is my cat",
+        ]
+
+        data3 = [
+            "What... is your quest?",
+            "To seek the Holy Grail.",
+            "What... is your favourite colour?",
+            "Blue."
+        ]
+
+        self.chatbot = ChatBot("Test Bot")
+        #self.chatbot.database.path = "test-database.db"
+
+        #self.chatbot.train(data1)
+        #self.chatbot.train(data2)
+        self.chatbot.train(data3)
+
+        #database = open(self.chatbot.database.path, "w+")
+        #database.write(json.dumps(data))
+        #database.close()
 
     def tearDown(self):
         """
