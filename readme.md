@@ -22,7 +22,7 @@ An example of typical input would be something like this:
 
 ## How it works
 
-An untrained instance of ChatterBot starts off with no knowledge of how to communicate. Each time a user enters a statement, the library saves the text that they entered and the text that the statement was in response to. As ChatterBot recieves more input the number of responses that it can reply and the accuracy of each response in relation to the input statement increase. The program selects the closest matching response by searching for the closest matching known statement that matches the input, it then returns the most likely response to that statement based on how frequently each response is issued by the people the bot communicates with.
+An untrained instance of ChatterBot starts off with no knowledge of how to communicate. Each time a user enters a statement, the library saves the text that they entered and the text that the statement was in response to. As ChatterBot receives more input the number of responses that it can reply and the accuracy of each response in relation to the input statement increase. The program selects the closest matching response by searching for the closest matching known statement that matches the input, it then returns the most likely response to that statement based on how frequently each response is issued by the people the bot communicates with.
 
 ## Installation
 
@@ -53,7 +53,7 @@ conversation = [
     "I'm doing great.",
     "That is good to hear",
     "Thank you.",
-    "Your welcome."
+    "You're welcome."
 ]
 
 chatbot.train(conversation)
