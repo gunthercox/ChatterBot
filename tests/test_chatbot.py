@@ -1,4 +1,5 @@
 from .base_case import ChatBotTestCase
+from chatterbot import ChatBot
 
 
 class ChatBotTests(ChatBotTestCase):
@@ -29,6 +30,10 @@ class ChatBotTests(ChatBotTestCase):
         Ensure that the training method adds statements
         to the database.
         """
+        import os
+
+        bot = ChatBot("Test Bot2")
+        bot.database.set_path("test-database-2")
 
         conversation = [
             "Hello",
@@ -43,9 +48,13 @@ class ChatBotTests(ChatBotTestCase):
             "Can I help you with anything?"
         ]
 
-        self.chatbot.train(conversation)
+        bot.train(conversation)
 
-        self.assertEqual(self.chatbot.get_response("Thank you."), "You are welcome.")
+        response = bot.get_response("Thank you.")
+
+        os.remove("test-database-2")
+
+        self.assertEqual(response, "You are welcome.")
 
     def test_training_increments_occurrence_count(self):
         
