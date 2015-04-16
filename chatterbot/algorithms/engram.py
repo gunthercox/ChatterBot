@@ -21,7 +21,8 @@ def engram(closest_statement, database):
         raise Exception("A matching statement must exist in the database")
 
     # Initialize the matching responce with the first statement in the database
-    matching_response = database[0].keys()[0]
+    # The list of keys has to be cast as a list for python 3
+    matching_response = list(database[0].keys())[0]
     occurrence_count = get_occurrence_count(matching_response, database)
 
     for statement in database:
