@@ -90,12 +90,12 @@ class ChatBot(object):
         * user: The user's statement meta data
         * bot: The bot's statement meta data
         """
-        from chatterbot.algorithms.engram import engram
+        from chatterbot.algorithms.engram import Engram
         from chatterbot.matching import closest
 
         # Use the closest known matching statement
         closest_statement = closest(input_text, self.database)
-        response_statement = engram(closest_statement, self.database)
+        response_statement = Engram(closest_statement, self.database)
         self.last_statements.append(response_statement)
 
         statement_text = list(self.get_last_statement().keys())[0]
