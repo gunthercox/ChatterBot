@@ -86,7 +86,7 @@ class ChatBotTests(ChatBotTestCase):
 
         self.assertIn("Blue", response)
 
-    def test_match_is_last_line_in_file(self):
+    def test_match_has_no_response(self):
         """
         Make sure that the if the last line in a file
         matches the input text then a index error does

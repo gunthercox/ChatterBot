@@ -8,6 +8,8 @@ class ChatBotTestCase(TestCase):
         """
         Set up a database for testing.
         """
+        import os
+
         data1 = [
             "african or european?",
             "Huh? I... I don't know that.",
@@ -17,7 +19,7 @@ class ChatBotTestCase(TestCase):
         data2 = [
             "Siri is adorable",
             "Who is Seri?",
-            "Siri is my cat",
+            "Siri is my cat"
         ]
 
         data3 = [

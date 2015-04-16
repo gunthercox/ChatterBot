@@ -87,8 +87,8 @@ class ChatBot(object):
     def get_response_data(self, user_name, input_text):
         """
         Returns a dictionary containing the following data:
-        * user: The user's meta data
-        * bot: The statement's meta data
+        * user: The user's statement meta data
+        * bot: The bot's statement meta data
         """
         from chatterbot.algorithms.engram import engram
         from chatterbot.matching import closest
@@ -107,7 +107,7 @@ class ChatBot(object):
             }
         }
 
-        # Add the input to the database before selecting a response if logging is enabled
+        # Update the database before selecting a response if logging is enabled
         if self.log:
             self.update_log(user)
 
