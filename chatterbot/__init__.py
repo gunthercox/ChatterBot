@@ -96,7 +96,7 @@ class ChatBot(object):
         # Use the closest known matching statement
         closest_statement = closest(input_text, self.database)
         response_statement = Engram(closest_statement, self.database)
-        self.last_statements.append(response_statement)
+        self.last_statements.append(response_statement.get())
 
         statement_text = list(self.get_last_statement().keys())[0]
 

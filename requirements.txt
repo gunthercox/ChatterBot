@@ -1,4 +1,4 @@
 fuzzywuzzy==0.5.0
 requests==2.6.0
 requests-oauthlib==0.4.2
-jsondatabase==0.0.4
+jsondatabase==0.0.5

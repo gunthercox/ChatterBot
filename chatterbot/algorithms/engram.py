@@ -36,7 +36,7 @@ class Engram(object):
 
         return False
 
-    def keys(self):
+    def get(self):
         """
         Returns a statement in response to the closest matching statement in
         the database. For each match, the statement with the greatest number

@@ -18,7 +18,7 @@ requirements = req.readlines()
 
 setup(
     name="ChatterBot",
-    version="0.1.1",
+    version="0.1.2",
     url="https://github.com/gunthercox/ChatterBot",
     description="An open-source chat bot program written in Python.",
     long_description=readme("readme.md"),

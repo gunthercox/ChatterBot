@@ -9,7 +9,7 @@ class EngramTests(ChatBotTestCase):
         output = Engram("What... is your quest?", self.chatbot.database)
         expected = "To seek the Holy Grail."
 
-        self.assertIn(expected, output.keys())
+        self.assertIn(expected, output.get().keys())
 
     def test_empty_input(self):
         """
