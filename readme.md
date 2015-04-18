@@ -33,11 +33,19 @@ pip install chatterbot
 ```
 
 ### Create a new chat bot  
-**Note:** *The `ChatBot` object takes an optional parameter for the bot's name. The default name is 'bot'.*
+**Note:** *The `ChatBot` requires that a name is specified for the bot.
 
 ```
 from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
+```
+
+An optional parameter `database` can be used to change the default database path.
+The default database path is 'database.db'.*
+
+```
+from chatterbot import ChatBot
+chatbot = ChatBot("Ron Obvious", database="my/custom/database.db")
 ```
 
 ### Training

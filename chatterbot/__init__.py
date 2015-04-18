@@ -1,13 +1,13 @@
 class ChatBot(object):
 
-    def __init__(self, name="bot", logging=True):
+    def __init__(self, name, database="database.db", logging=True):
         from jsondb.db import Database
 
         self.name = name
         self.log = logging
+        self.database = Database(database)
 
         self.last_statements = []
-        self.database = Database("database.db")
 
     def get_last_statement(self):
         """
