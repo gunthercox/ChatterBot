@@ -110,6 +110,11 @@ talk = TalkWithCleverbot()
 talk.begin()
 ```
 
+## Testing
+
+ChatterBot's built in tests can be run using nose.  
+See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
+
 ## Use Cases
 
 **Using ChatterBot in your app? Let us know!**
