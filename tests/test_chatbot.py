@@ -69,6 +69,31 @@ class ChatBotTests(ChatBotTestCase):
         count = self.chatbot.database["Do you like my hat?"]["occurrence"]
         self.assertEqual(count, 2)
 
+    def test_update_occurrence_count(self):
+
+        response = self.chatbot.get_response("Hi")
+
+        count1 = self.chatbot.database["Hi"]["occurrence"]
+
+        self.chatbot.update_occurrence_count("Hi")
+
+        count2 = self.chatbot.database["Hi"]["occurrence"]
+
+        self.assertTrue(count1 < count2)
+
+    def test_update_response_list(self):
+
+        response = self.chatbot.get_response("Hi")
+
+        response_list1 = self.chatbot.database["Hi"]["in_response_to"]
+
+        self.chatbot.update_response_list("Hi", "Hello there Mr. Duck.")
+
+        response_list2 = self.chatbot.database["Hi"]["in_response_to"]
+
+        self.assertTrue(len(response_list1) < len(response_list2))
+        self.assertTrue("Hello there Mr. Duck." in response_list2)
+
     def test_chatbot_returns_answer_to_known_input(self):
         """
         Test that a matching response is returned when an

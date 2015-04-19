@@ -1,18 +1,35 @@
 class ChatBot(object):
 
-    def __init__(self, name, database="database.db", logging=True):
-        from jsondb.db import Database
+    def __init__(self, name, adapter="chatterbot.adapters.jsondb.JsonDatabaseAdapter", database="database.db", logging=True):
+
 
         self.name = name
         self.log = logging
+
+        #Adapter = self.import_adapter(adapter)
+        #self.database = Adapter(database)
+
+        from jsondb.db import Database
         self.database = Database(database)
 
         self.last_statements = []
+
+    def import_adapter(self, adapter):
+        module_parts = module_path.split(".")
+        module_path = ".".join(module_parts[:-1])
+        module = importlib.import_module(module_path)
+
+        return getattr(module, module_parts[-1])
 
     def get_last_statement(self):
         """
         Returns the last statement that was issued to the chat bot.
         """
+
+        # If there was no last statements, return None
+        if len(self.last_statements) == 0:
+            return None
+
         return self.last_statements[-1]
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
@@ -21,6 +38,46 @@ class ChatBot(object):
         """
         import datetime
         return datetime.datetime.now().strftime(fmt)
+
+    def update_occurrence_count(self, key):
+        """
+        Increment the occurrence count for a given statement in the database.
+        The key parameter is a statement that exists in the database.
+        """
+        database_values = self.database[key]
+
+        # If an occurence count does not exist then initialize it
+        if not "occurrence" in database_values:
+            database_values["occurrence"] = 0
+
+        database_values["occurrence"] += 1
+
+        # Save the changes to the database
+        self.database[key] = database_values
+
+    def update_response_list(self, key, previous_statement):
+        """
+        Update the list of statements that a know statement has responded to.
+        """
+
+        database_values = self.database[key]
+
+        if not "in_response_to" in database_values:
+            database_values["in_response_to"] = []
+
+        # TODO:
+        '''
+        In the future, the in_response_to list should become a dictionary
+        of the response statements with a value of the number of times each statement
+        has occured. This should make selecting likely responces more accurate.
+        '''
+
+        if previous_statement:
+            # Check to make sure that the statement does not already exist
+            if not previous_statement in database_values["in_response_to"]:
+                database_values["in_response_to"].append(previous_statement)
+
+        self.database[key] = database_values
 
     def train(self, conversation):
         for i in range(0, len(conversation)):
@@ -35,53 +92,33 @@ class ChatBot(object):
 
             database_values["date"] = self.timestamp()
 
-            if not "occurrence" in database_values:
-                database_values["occurrence"] = 0
-            database_values["occurrence"] += 1
-
-            if not "in_response_to" in database_values:
-                database_values["in_response_to"] = []
-
-            # Add the previous statement for all statements except the first one
-            if i > 0:
-                # Check to make sure that the statement does not already exist
-                if not conversation[i - 1] in database_values["in_response_to"]:
-                    database_values["in_response_to"].append(conversation[i - 1])
-
             self.database[statement] = database_values
+
+            self.update_occurrence_count(statement)
+            self.update_response_list(statement, self.get_last_statement())
+
+            self.last_statements.append(statement)
 
     def update_log(self, data):
 
-        key = list(data.keys())[0]
-        values = data[key]
+        statement = list(data.keys())[0]
+        values = data[statement]
 
-        # Create the key if it does not exist in the database
-        if not key in self.database:
-            self.database[key] = {}
+        # Create the statement if it doesn't exist in the database
+        if not statement in self.database:
+            self.database[statement] = {}
 
         # Get the existing values from the database
-        database_values = self.database[key]
+        database_values = self.database[statement]
 
         database_values["name"] = values["name"]
         database_values["date"] = values["date"]
 
-        if not "occurrence" in database_values:
-            database_values["occurrence"] = 0
-        database_values["occurrence"] += 1
-
-        if not "in_response_to" in database_values:
-            database_values["in_response_to"] = []
-
-        # If a previous statement exists
-        if self.last_statements:
-            statement_text = list(self.get_last_statement().keys())[0]
-
-            # If the statement is not already in the list
-            if not statement_text in database_values["in_response_to"]:
-                database_values["in_response_to"].append(statement_text)
-
         # Update the database with the changes
-        self.database[key] = database_values
+        self.database[statement] = database_values
+
+        self.update_occurrence_count(statement)
+        self.update_response_list(statement, self.get_last_statement())
 
     # TODO, change user_name and input_text into a single dict
     def get_response_data(self, user_name, input_text):
