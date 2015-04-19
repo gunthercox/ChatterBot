@@ -9,9 +9,10 @@ class ChatBotTests(ChatBotTestCase):
         Make sure that the get last statement method
         returns the last statement that was issued.
         """
-        self.chatbot.last_statements.append("Test statement")
-
-        self.assertEqual(self.chatbot.get_last_statement(), "Test statement")
+        self.chatbot.last_statements.append("Test statement 1")
+        self.chatbot.last_statements.append("Test statement 2")
+        self.chatbot.last_statements.append("Test statement 3")
+        self.assertEqual(self.chatbot.get_last_statement(), "Test statement 3")
 
     def test_logging_timestamps(self):
         """
@@ -32,8 +33,7 @@ class ChatBotTests(ChatBotTestCase):
         """
         import os
 
-        bot = ChatBot("Test Bot2")
-        bot.database.set_path("test-database-2")
+        bot = ChatBot("Test Bot2", database="test-database-2")
 
         conversation = [
             "Hello",
@@ -66,18 +66,18 @@ class ChatBotTests(ChatBotTestCase):
         self.chatbot.train(conversation)
         self.chatbot.train(conversation)
 
-        count = self.chatbot.database["Do you like my hat?"]["occurrence"]
+        count = self.chatbot.database.find("Do you like my hat?")["occurrence"]
         self.assertEqual(count, 2)
 
     def test_update_occurrence_count(self):
 
         response = self.chatbot.get_response("Hi")
 
-        count1 = self.chatbot.database["Hi"]["occurrence"]
+        count1 = self.chatbot.database.find("Hi")["occurrence"]
 
         self.chatbot.update_occurrence_count("Hi")
 
-        count2 = self.chatbot.database["Hi"]["occurrence"]
+        count2 = self.chatbot.database.find("Hi")["occurrence"]
 
         self.assertTrue(count1 < count2)
 
@@ -85,11 +85,11 @@ class ChatBotTests(ChatBotTestCase):
 
         response = self.chatbot.get_response("Hi")
 
-        response_list1 = self.chatbot.database["Hi"]["in_response_to"]
+        response_list1 = self.chatbot.database.find("Hi")["in_response_to"]
 
         self.chatbot.update_response_list("Hi", "Hello there Mr. Duck.")
 
-        response_list2 = self.chatbot.database["Hi"]["in_response_to"]
+        response_list2 = self.chatbot.database.find("Hi")["in_response_to"]
 
         self.assertTrue(len(response_list1) < len(response_list2))
         self.assertTrue("Hello there Mr. Duck." in response_list2)
@@ -152,37 +152,31 @@ class ChatBotTests(ChatBotTestCase):
         Test that a log file is updated when logging is
         set to true.
         """
-        import os
-
-        file_size_before = os.path.getsize(self.chatbot.database.path)
-
-        # Force the chatbot to update it's timestamp
         self.chatbot.log = True
-
-        # Submit input which should cause a new log to be created
         input_text = "What is the airspeed velocity of an unladen swallow?"
+
+        exists_before = self.chatbot.database.find(input_text)
+
         response = self.chatbot.get_response(input_text)
 
-        file_size_after = os.path.getsize(self.chatbot.database.path)
+        exists_after = self.chatbot.database.find("What is the airspeed velocity of an unladen swallow?")
 
-        self.assertLess(file_size_before, file_size_after)
+        self.assertFalse(exists_before)
+        self.assertTrue(exists_after)
 
     def test_log_file_is_not_updated_when_logging_is_set_to_false(self):
         """
         Test that a log file is not created when logging
         is set to false.
         """
-        import os
-
-        file_size_before = os.path.getsize(self.chatbot.database.path)
-
-        # Force the chatbot to update it's timestamp
         self.chatbot.log = False
+        input_text = "Who are you? The proud lord said."
 
-        # Submit input which should cause a new log to be created
-        input_text = "What is the airspeed velocity of an unladen swallow?"
+        exists_before = self.chatbot.database.find(input_text)
+
         response = self.chatbot.get_response(input_text)
 
-        file_size_after = os.path.getsize(self.chatbot.database.path)
+        exists_after = self.chatbot.database.find("Who are you? The proud lord said.")
 
-        self.assertEqual(file_size_before, file_size_after)
+        self.assertFalse(exists_before)
+        self.assertFalse(exists_after)

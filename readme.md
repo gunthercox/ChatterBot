@@ -74,13 +74,6 @@ response = chatbot.get_response("Good morning!")
 print(response)
 ```
 
-### Change the default log file
-**Note:** The default log file is `database.db`.
-
-```
-chatbot.database.set_path("path/to/file.db")
-```
-
 ## Other bot types
 
 ChatterBot comes with a selection of useful chat bots built in.

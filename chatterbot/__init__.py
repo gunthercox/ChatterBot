@@ -1,21 +1,19 @@
 class ChatBot(object):
 
-    def __init__(self, name, adapter="chatterbot.adapters.jsondb.JsonDatabaseAdapter", database="database.db", logging=True):
-
+    def __init__(self, name, adapter="chatterbot.adapters.JsonDatabaseAdapter", database="database.db", logging=True):
 
         self.name = name
         self.log = logging
 
-        #Adapter = self.import_adapter(adapter)
-        #self.database = Adapter(database)
-
-        from jsondb.db import Database
-        self.database = Database(database)
+        Adapter = self.import_adapter(adapter)
+        self.database = Adapter(database)
 
         self.last_statements = []
 
     def import_adapter(self, adapter):
-        module_parts = module_path.split(".")
+        import importlib
+
+        module_parts = adapter.split(".")
         module_path = ".".join(module_parts[:-1])
         module = importlib.import_module(module_path)
 
@@ -44,7 +42,7 @@ class ChatBot(object):
         Increment the occurrence count for a given statement in the database.
         The key parameter is a statement that exists in the database.
         """
-        database_values = self.database[key]
+        database_values = self.database.find(key)
 
         # If an occurence count does not exist then initialize it
         if not "occurrence" in database_values:
@@ -53,14 +51,14 @@ class ChatBot(object):
         database_values["occurrence"] += 1
 
         # Save the changes to the database
-        self.database[key] = database_values
+        self.database.update(key, database_values)
 
     def update_response_list(self, key, previous_statement):
         """
         Update the list of statements that a know statement has responded to.
         """
 
-        database_values = self.database[key]
+        database_values = self.database.find(key)
 
         if not "in_response_to" in database_values:
             database_values["in_response_to"] = []
@@ -77,7 +75,7 @@ class ChatBot(object):
             if not previous_statement in database_values["in_response_to"]:
                 database_values["in_response_to"].append(previous_statement)
 
-        self.database[key] = database_values
+        self.database.update(key, database_values)
 
     def train(self, conversation):
         for i in range(0, len(conversation)):
@@ -85,14 +83,14 @@ class ChatBot(object):
             statement = conversation[i]
 
             # Create an entry if the statement does not exist in the database
-            if not statement in self.database:
-                self.database[statement] = {}
+            if not self.database.find(statement):
+                self.database.insert(statement, {})
 
-            database_values = self.database[statement]
+            database_values = self.database.find(statement)
 
             database_values["date"] = self.timestamp()
 
-            self.database[statement] = database_values
+            self.database.update(statement, database_values)
 
             self.update_occurrence_count(statement)
             self.update_response_list(statement, self.get_last_statement())
@@ -105,17 +103,17 @@ class ChatBot(object):
         values = data[statement]
 
         # Create the statement if it doesn't exist in the database
-        if not statement in self.database:
-            self.database[statement] = {}
+        if not self.database.find(statement):
+            self.database.insert(statement, {})
 
         # Get the existing values from the database
-        database_values = self.database[statement]
+        database_values = self.database.find(statement)
 
         database_values["name"] = values["name"]
         database_values["date"] = values["date"]
 
         # Update the database with the changes
-        self.database[statement] = database_values
+        self.database.update(statement, database_values)
 
         self.update_occurrence_count(statement)
         self.update_response_list(statement, self.get_last_statement())
@@ -130,8 +128,13 @@ class ChatBot(object):
         from chatterbot.algorithms.engram import Engram
         from chatterbot.matching import closest
 
-        # Use the closest known matching statement
-        closest_statement = closest(input_text, self.database)
+        if input_text:
+            # Use the closest known matching statement
+            closest_statement = closest(input_text, self.database)
+        else:
+            # If the input is blank, return a random statement
+            closest_statement = self.database.get_random()
+
         response_statement = Engram(closest_statement, self.database)
         self.last_statements.append(response_statement.get())
 

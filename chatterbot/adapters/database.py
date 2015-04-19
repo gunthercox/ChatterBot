@@ -9,16 +9,16 @@ class DatabaseAdapter(object):
         """
         Returns a object from the database if it exists
         """
-        except DatabaseAdapterNotImplementedError()
+        raise DatabaseAdapterNotImplementedError()
 
     def insert(self, key):
         """
         Creates a new entry in the database.
         """
-        except DatabaseAdapterNotImplementedError()
+        raise DatabaseAdapterNotImplementedError()
 
     def update(self, key):
         """
         Modifies an entry in the database.
         """
-        except DatabaseAdapterNotImplementedError()
+        raise DatabaseAdapterNotImplementedError()

@@ -29,8 +29,7 @@ class ChatBotTestCase(TestCase):
             "Blue."
         ]
 
-        self.chatbot = ChatBot("Test Bot")
-        self.chatbot.database.set_path("test-database.db")
+        self.chatbot = ChatBot("Test Bot", database="test-database.db")
 
         self.chatbot.train(data1)
         self.chatbot.train(data2)
@@ -42,4 +41,4 @@ class ChatBotTestCase(TestCase):
         """
         import os
 
-        os.remove(self.chatbot.database.path)
+        os.remove(self.chatbot.database.database.path)

@@ -11,11 +11,11 @@ def closest(text, database):
     from fuzzywuzzy import process
 
     # Check if an exact match exists
-    if text in database:
+    if database.find(text):
         return text
 
     # Get the closest matching statement from the database
-    return process.extract(text, database[0].keys(), limit=1)[0][0]
+    return process.extract(text, database.keys(), limit=1)[0][0]
 
 def similar(text, database):
     """

@@ -6,19 +6,21 @@ class Engram(object):
         exists within the database, and the database object.
         """
 
-        if not statement in database:
+        if not statement in database.keys():
             raise Exception("A matching statement must exist in the database")
 
         self.statement = statement
         self.database = database
 
-    def get_occurrence_count(self, key, database):
+    def get_occurrence_count(self, key):
         """
         Return the number of times a statement occurs in the database
         """
 
-        if "occurrence" in database[key]:
-            return database[key]["occurrence"]
+        statement = self.database.find(key)
+
+        if "occurrence" in statement:
+            return statement["occurrence"]
 
         # If the number of occurances has not been set then return 1
         return 1
@@ -29,9 +31,10 @@ class Engram(object):
         Otherwise, returns false
         """
 
+        statement = self.database.find(statement)
+
         # Check if the statement has responses in the database
-        if "in_response_to" in self.database[statement] and \
-            self.statement in self.database[statement]["in_response_to"]:
+        if "in_response_to" in statement and self.statement in statement["in_response_to"]:
             return True
 
         return False
@@ -44,15 +47,14 @@ class Engram(object):
         """
 
         # Initialize the matching responce with the first statement in the database
-        # The list of keys has to be cast as a list for python 3
-        matching_response = list(self.database[0].keys())[0]
-        occurrence_count = self.get_occurrence_count(matching_response, self.database)
+        matching_response = self.database.keys()[0]
+        occurrence_count = self.get_occurrence_count(matching_response)
 
-        for statement in self.database:
+        for statement in self.database.keys():
 
             if self.responces_in_database(statement):
 
-                statement_occurrence_count = self.get_occurrence_count(statement, self.database)
+                statement_occurrence_count = self.get_occurrence_count(statement)
 
                 # Keep the more common statement
                 if statement_occurrence_count >= occurrence_count:
@@ -62,4 +64,4 @@ class Engram(object):
                 #TODO? If the two statements occure equaly in frequency, should we keep one at random
 
         # Choose the most common selection of matching response
-        return {matching_response: self.database[matching_response]}
+        return {matching_response: self.database.find(matching_response)}
