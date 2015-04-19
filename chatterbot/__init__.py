@@ -162,8 +162,8 @@ class ChatBot(object):
 
 class Terminal(ChatBot):
 
-    def __init__(self):
-        super(Terminal, self).__init__()
+    def __init__(self, name="Terminal", adapter="chatterbot.adapters.JsonDatabaseAdapter", database="database.db", logging=True):
+        super(Terminal, self).__init__(name, adapter, database)
 
     def begin(self, user_input="Type something to begin..."):
         import sys
@@ -187,8 +187,8 @@ class Terminal(ChatBot):
 
 class TalkWithCleverbot(ChatBot):
 
-    def __init__(self):
-        super(TalkWithCleverbot, self).__init__()
+    def __init__(self, name="ChatterBot", adapter="chatterbot.adapters.JsonDatabaseAdapter", database="database.db", logging=True):
+        super(TalkWithCleverbot, self).__init__(name, adapter, database)
         from chatterbot.cleverbot.cleverbot import Cleverbot
 
         self.running = True
@@ -224,7 +224,7 @@ class SocialBot(object):
     def __init__(self, **kwargs):
         from chatterbot.apis.twitter import Twitter
 
-        chatbot = ChatBot()
+        chatbot = ChatBot("ChatterBot")
 
         if "twitter" in kwargs:
             twitter_bot = Twitter(kwargs["twitter"])
