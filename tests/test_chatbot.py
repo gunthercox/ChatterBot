@@ -57,7 +57,7 @@ class ChatBotTests(ChatBotTestCase):
         self.assertEqual(response, "You are welcome.")
 
     def test_training_increments_occurrence_count(self):
-        
+
         conversation = [
             "Do you like my hat?",
             "I do not like your hat."
@@ -105,7 +105,7 @@ class ChatBotTests(ChatBotTestCase):
         self.assertIn("Blue", response)
 
     def test_chatbot_returns_answer_close_to_known_input(self):
- 
+
         input_text = "What is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 

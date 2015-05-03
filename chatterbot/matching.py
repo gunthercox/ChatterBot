@@ -6,7 +6,7 @@ to an existing statement in the database.
 def closest(text, database):
     """
     Takes a statement from the current conversation and a database instance.
-    Returns a the closest known statement that matches by string comparison.
+    Returns the closest known statement that matches by string comparison.
     """
     from fuzzywuzzy import process
 

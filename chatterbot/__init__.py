@@ -82,11 +82,11 @@ class ChatBot(object):
 
             statement = conversation[i]
 
-            # Create an entry if the statement does not exist in the database
-            if not self.database.find(statement):
-                self.database.insert(statement, {})
-
             database_values = self.database.find(statement)
+
+            # Create an entry if the statement does not exist in the database
+            if not database_values:
+                self.database.insert(statement, {})
 
             database_values["date"] = self.timestamp()
 
@@ -196,7 +196,7 @@ class TalkWithCleverbot(ChatBot):
 
     def begin(self, bot_input="Hi. How are you?"):
         import time
-        from random import randint 
+        from random import randint
         from chatterbot.apis import clean
 
         print(self.name, bot_input)

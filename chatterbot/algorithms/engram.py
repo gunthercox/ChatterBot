@@ -22,7 +22,7 @@ class Engram(object):
         if "occurrence" in statement:
             return statement["occurrence"]
 
-        # If the number of occurances has not been set then return 1
+        # If the number of occurences has not been set then return 1
         return 1
 
     def responces_in_database(self, statement):
