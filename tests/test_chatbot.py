@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .base_case import ChatBotTestCase
 from chatterbot import ChatBot
 
@@ -9,9 +10,9 @@ class ChatBotTests(ChatBotTestCase):
         Make sure that the get last statement method
         returns the last statement that was issued.
         """
-        self.chatbot.last_statements.append("Test statement 1")
-        self.chatbot.last_statements.append("Test statement 2")
-        self.chatbot.last_statements.append("Test statement 3")
+        self.chatbot.recent_statements.append("Test statement 1")
+        self.chatbot.recent_statements.append("Test statement 2")
+        self.chatbot.recent_statements.append("Test statement 3")
         self.assertEqual(self.chatbot.get_last_statement(), "Test statement 3")
 
     def test_logging_timestamps(self):
@@ -180,3 +181,42 @@ class ChatBotTests(ChatBotTestCase):
 
         self.assertFalse(exists_before)
         self.assertFalse(exists_after)
+
+    def test_training_with_unicode_characters(self):
+        """
+        Ensure that the training method adds unicode statements
+        to the database.
+        """
+        import os
+
+        bot = ChatBot("Test Bot2", database="unicode-database.db")
+
+        conversation = [
+            u"¶ ∑ ∞ ∫ π ∈ ℝ² ∖ ⩆ ⩇ ⩈ ⩉ ⩊ ⩋ ⪽ ⪾ ⪿ ⫀ ⫁ ⫂ ⋒ ⋓",
+            u"⊂ ⊃ ⊆ ⊇ ⊈ ⊉ ⊊ ⊋ ⊄ ⊅ ⫅ ⫆ ⫋ ⫌ ⫃ ⫄ ⫇ ⫈ ⫉ ⫊ ⟃ ⟄",
+            u"∠ ∡ ⦛ ⦞ ⦟ ⦢ ⦣ ⦤ ⦥ ⦦ ⦧ ⦨ ⦩ ⦪ ⦫ ⦬ ⦭ ⦮ ⦯ ⦓ ⦔ ⦕ ⦖ ⟀",
+            u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌ ⨍ ⨎ ⨏ ⨐ ⨑ ⨒ ⨓ ⨔ ⨕ ⨖ ⨗ ⨘ ⨙ ⨚ ⨛ ⨜",
+            u"≁ ≂ ≃ ≄ ⋍ ≅ ≆ ≇ ≈ ≉ ≊ ≋ ≌ ⩯ ⩰ ⫏ ⫐ ⫑ ⫒ ⫓ ⫔ ⫕ ⫖",
+            u"¬ ⫬ ⫭ ⊨ ⊭ ∀ ∁ ∃ ∄ ∴ ∵ ⊦ ⊬ ⊧ ⊩ ⊮ ⊫ ⊯ ⊪ ⊰ ⊱ ⫗ ⫘",
+            u"∧ ∨ ⊻ ⊼ ⊽ ⋎ ⋏ ⟑ ⟇ ⩑ ⩒ ⩓ ⩔ ⩕ ⩖ ⩗ ⩘ ⩙ ⩚ ⩛ ⩜ ⩝ ⩞ ⩟ ⩠ ⩢",
+        ]
+
+        bot.train(conversation)
+
+        response = bot.get_response(conversation[1])
+
+        os.remove("unicode-database.db")
+
+        self.assertEqual(response, conversation[2])
+
+    def test_occurrence_count_with_unicode_statements(self):
+
+        response = self.chatbot.get_response(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")
+
+        count1 = self.chatbot.database.find(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")["occurrence"]
+
+        self.chatbot.update_occurrence_count(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")
+
+        count2 = self.chatbot.database.find(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")["occurrence"]
+
+        self.assertTrue(count1 < count2)

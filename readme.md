@@ -8,10 +8,10 @@ known conversations. The language independent design of ChatterBot allows it to
 be trained to speak any language.
 
 [![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
-[![PyPi](https://pypip.in/download/ChatterBot/badge.svg)](https://pypi.python.org/pypi/ChatterBot)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
+[![Code Climate](https://codeclimate.com/github/gunthercox/ChatterBot/badges/gpa.svg)](https://codeclimate.com/github/gunthercox/ChatterBot)
 
 An example of typical input would be something like this:
 
@@ -119,7 +119,10 @@ See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more i
 ## Use Cases
 
 **Using ChatterBot in your app? Let us know!**
-- [Salvius (humanoid robot)](https://github.com/gunthercox/salvius)
+
+|[Salvius the Robot](https://github.com/gunthercox/salvius)|A humanoid robot.|
+|---|---|
+|[Zuluhotel](http://zuluhotel3.com)|A mmorpg shard emulation game.|
 
 ## History
 

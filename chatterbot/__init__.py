@@ -8,7 +8,7 @@ class ChatBot(object):
         Adapter = self.import_adapter(adapter)
         self.database = Adapter(database)
 
-        self.last_statements = []
+        self.recent_statements = []
 
     def import_adapter(self, adapter):
         import importlib
@@ -25,10 +25,10 @@ class ChatBot(object):
         """
 
         # If there was no last statements, return None
-        if len(self.last_statements) == 0:
+        if len(self.recent_statements) == 0:
             return None
 
-        return self.last_statements[-1]
+        return self.recent_statements[-1]
 
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
         """
@@ -78,9 +78,7 @@ class ChatBot(object):
         self.database.update(key, database_values)
 
     def train(self, conversation):
-        for i in range(0, len(conversation)):
-
-            statement = conversation[i]
+        for statement in conversation:
 
             database_values = self.database.find(statement)
 
@@ -95,7 +93,7 @@ class ChatBot(object):
             self.update_occurrence_count(statement)
             self.update_response_list(statement, self.get_last_statement())
 
-            self.last_statements.append(statement)
+            self.recent_statements.append(statement)
 
     def update_log(self, data):
 
@@ -136,7 +134,7 @@ class ChatBot(object):
             closest_statement = self.database.get_random()
 
         response_statement = Engram(closest_statement, self.database)
-        self.last_statements.append(response_statement.get())
+        self.recent_statements.append(response_statement.get())
 
         statement_text = list(self.get_last_statement().keys())[0]
 
