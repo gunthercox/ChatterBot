@@ -8,12 +8,18 @@ class JsonDatabaseAdapter(DatabaseAdapter):
         self.database = Database(database_path)
 
     def find(self, key):
-        return self.database[key]
+        return self.database.data(key=key)
 
     def insert(self, key, values):
         self.database[key] = values
 
-    def update(self, key, values):
+    def update(self, key, **kwargs):
+
+        values = self.database.data(key=key)
+
+        for parameter in kwargs:
+            values[parameter] = kwargs[parameter]
+
         self.database[key] = values
 
     def keys(self):

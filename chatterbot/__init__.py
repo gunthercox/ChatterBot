@@ -43,15 +43,16 @@ class ChatBot(object):
         The key parameter is a statement that exists in the database.
         """
         database_values = self.database.find(key)
+        count = 0
 
-        # If an occurence count does not exist then initialize it
-        if not "occurrence" in database_values:
-            database_values["occurrence"] = 0
+        # If an occurence count exists then initialize it
+        if "occurrence" in database_values:
+            count = database_values["occurrence"]
 
-        database_values["occurrence"] += 1
+        count += 1
 
         # Save the changes to the database
-        self.database.update(key, database_values)
+        self.database.update(key, occurrence=count)
 
     def update_response_list(self, key, previous_statement):
         """
@@ -59,9 +60,10 @@ class ChatBot(object):
         """
 
         database_values = self.database.find(key)
+        responses = []
 
-        if not "in_response_to" in database_values:
-            database_values["in_response_to"] = []
+        if "in_response_to" in database_values:
+            responses = database_values["in_response_to"]
 
         # TODO:
         '''
@@ -72,10 +74,10 @@ class ChatBot(object):
 
         if previous_statement:
             # Check to make sure that the statement does not already exist
-            if not previous_statement in database_values["in_response_to"]:
-                database_values["in_response_to"].append(previous_statement)
+            if not previous_statement in responses:
+                responses.append(previous_statement)
 
-        self.database.update(key, database_values)
+        self.database.update(key, in_response_to=responses)
 
     def train(self, conversation):
         for statement in conversation:
@@ -86,9 +88,7 @@ class ChatBot(object):
             if not database_values:
                 self.database.insert(statement, {})
 
-            database_values["date"] = self.timestamp()
-
-            self.database.update(statement, database_values)
+            self.database.update(statement, date=self.timestamp())
 
             self.update_occurrence_count(statement)
             self.update_response_list(statement, self.get_last_statement())
@@ -96,7 +96,6 @@ class ChatBot(object):
             self.recent_statements.append(statement)
 
     def update_log(self, data):
-
         statement = list(data.keys())[0]
         values = data[statement]
 
@@ -104,14 +103,8 @@ class ChatBot(object):
         if not self.database.find(statement):
             self.database.insert(statement, {})
 
-        # Get the existing values from the database
-        database_values = self.database.find(statement)
-
-        database_values["name"] = values["name"]
-        database_values["date"] = values["date"]
-
         # Update the database with the changes
-        self.database.update(statement, database_values)
+        self.database.update(statement, name=values["name"], date=values["date"])
 
         self.update_occurrence_count(statement)
         self.update_response_list(statement, self.get_last_statement())
