@@ -13,6 +13,8 @@ class JsonDatabaseAdapter(DatabaseAdapter):
     def insert(self, key, values):
         self.database[key] = values
 
+        return values
+
     def update(self, key, **kwargs):
 
         values = self.database.data(key=key)
@@ -21,6 +23,8 @@ class JsonDatabaseAdapter(DatabaseAdapter):
             values[parameter] = kwargs[parameter]
 
         self.database[key] = values
+
+        return values
 
     def keys(self):
         # The return value has to be cast as a list for Python 3 compatibility
