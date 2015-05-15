@@ -1,6 +1,8 @@
 class ChatBot(object):
 
-    def __init__(self, name, adapter="chatterbot.adapters.JsonDatabaseAdapter", database="database.db", logging=True):
+    def __init__(self, name,
+                adapter="chatterbot.database_adapters.JsonDatabaseAdapter",
+                database="database.db", logging=True):
 
         self.name = name
         self.log = logging
