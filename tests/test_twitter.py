@@ -32,6 +32,5 @@ class TwitterAlgorithmTests(TestCase):
 
         string = "@ASIMO Watch your step @Demo @in @Tokyo"
         string = remove_trailing_usernames(string)
-        result = "@ASIMO Watch your step"
 
-        self.assertEqual(string, result)
+        self.assertEqual(string, "@ASIMO Watch your step")

@@ -17,8 +17,7 @@ class ChatBotTests(ChatBotTestCase):
 
     def test_logging_timestamps(self):
         """
-        Tests that the chat bot returns the correct
-        datetime for logging
+        Tests that the correct datetime is returned for logging
         """
         import datetime
 
@@ -29,8 +28,7 @@ class ChatBotTests(ChatBotTestCase):
 
     def test_training_adds_statements(self):
         """
-        Ensure that the training method adds statements
-        to the database.
+        Test that the training method adds statements to the database.
         """
         import os
 
@@ -73,11 +71,9 @@ class ChatBotTests(ChatBotTestCase):
     def test_update_occurrence_count(self):
 
         response = self.chatbot.get_response("Hi")
-
         count1 = self.chatbot.database.find("Hi")["occurrence"]
 
         self.chatbot.update_occurrence_count("Hi")
-
         count2 = self.chatbot.database.find("Hi")["occurrence"]
 
         self.assertTrue(count1 < count2)
@@ -85,27 +81,25 @@ class ChatBotTests(ChatBotTestCase):
     def test_update_response_list(self):
 
         response = self.chatbot.get_response("Hi")
-
         response_list1 = self.chatbot.database.find("Hi")["in_response_to"]
 
-        self.chatbot.update_response_list("Hi", "Hello there Mr. Duck.")
-
+        self.chatbot.update_response_list("Hi", "Hello there Mr. Jones.")
         response_list2 = self.chatbot.database.find("Hi")["in_response_to"]
 
         self.assertTrue(len(response_list1) < len(response_list2))
-        self.assertTrue("Hello there Mr. Duck." in response_list2)
+        self.assertTrue("Hello there Mr. Jones." in response_list2)
 
-    def test_chatbot_returns_answer_to_known_input(self):
+    def test_answer_to_known_input(self):
         """
         Test that a matching response is returned when an
-        exact match exists in the log files.
+        exact match exists in the database.
         """
         input_text = "What... is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
         self.assertIn("Blue", response)
 
-    def test_chatbot_returns_answer_close_to_known_input(self):
+    def test_answer_close_to_known_input(self):
 
         input_text = "What is your favourite colour?"
         response = self.chatbot.get_response(input_text)
@@ -122,7 +116,6 @@ class ChatBotTests(ChatBotTestCase):
         response = self.chatbot.get_response(input_text)
 
         self.assertGreater(len(response), 0)
-
 
     def test_input_text_returned_in_response_data(self):
         """
@@ -147,40 +140,6 @@ class ChatBotTests(ChatBotTestCase):
         data = self.chatbot.get_response_data(user_name, user_input)
 
         self.assertGreater(len(data["bot"]), 0)
-
-    def test_log_file_is_updated(self):
-        """
-        Test that a log file is updated when logging is
-        set to true.
-        """
-        self.chatbot.log = True
-        input_text = "What is the airspeed velocity of an unladen swallow?"
-
-        exists_before = self.chatbot.database.find(input_text)
-
-        response = self.chatbot.get_response(input_text)
-
-        exists_after = self.chatbot.database.find("What is the airspeed velocity of an unladen swallow?")
-
-        self.assertFalse(exists_before)
-        self.assertTrue(exists_after)
-
-    def test_log_file_is_not_updated_when_logging_is_set_to_false(self):
-        """
-        Test that a log file is not created when logging
-        is set to false.
-        """
-        self.chatbot.log = False
-        input_text = "Who are you? The proud lord said."
-
-        exists_before = self.chatbot.database.find(input_text)
-
-        response = self.chatbot.get_response(input_text)
-
-        exists_after = self.chatbot.database.find("Who are you? The proud lord said.")
-
-        self.assertFalse(exists_before)
-        self.assertFalse(exists_after)
 
     def test_training_with_unicode_characters(self):
         """
@@ -211,12 +170,45 @@ class ChatBotTests(ChatBotTestCase):
 
     def test_occurrence_count_with_unicode_statements(self):
 
-        response = self.chatbot.get_response(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")
+        string = u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌"
 
-        count1 = self.chatbot.database.find(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")["occurrence"]
+        response = self.chatbot.get_response(string)
+        count1 = self.chatbot.database.find(string)["occurrence"]
 
-        self.chatbot.update_occurrence_count(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")
-
-        count2 = self.chatbot.database.find(u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌")["occurrence"]
+        self.chatbot.update_occurrence_count(string)
+        count2 = self.chatbot.database.find(string)["occurrence"]
 
         self.assertTrue(count1 < count2)
+
+
+class DatabaseTests(ChatBotTestCase):
+
+    def test_database_is_updated(self):
+        """
+        Test that the database is updated when logging is set to true.
+        """
+        self.chatbot.log = True
+
+        input_text = "What is the airspeed velocity of an unladen swallow?"
+        exists_before = self.chatbot.database.find(input_text)
+
+        response = self.chatbot.get_response(input_text)
+        exists_after = self.chatbot.database.find(input_text)
+
+        self.assertFalse(exists_before)
+        self.assertTrue(exists_after)
+
+    def test_database_is_not_updated_when_logging_is_disabled(self):
+        """
+        Test that the database is not updated when logging is set to false.
+        """
+        self.chatbot.log = False
+
+        input_text = "Who are you? The proud lord said."
+        exists_before = self.chatbot.database.find(input_text)
+
+        response = self.chatbot.get_response(input_text)
+        exists_after = self.chatbot.database.find(input_text)
+
+        self.assertFalse(exists_before)
+        self.assertFalse(exists_after)
