@@ -1,14 +1,19 @@
 class ChatBot(object):
 
     def __init__(self, name,
-                adapter="chatterbot.storage_adapters.JsonDatabaseAdapter",
-                database="database.db", logging=True):
+            storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+            logic_adapter="chatterbot.adapters.logic.EngramAdapter",
+            io_adapter="chatterbot.adapters.io.TerminalAdapter",
+            database="database.db", logging=True):
 
         self.name = name
         self.log = logging
 
-        Adapter = self.import_adapter(adapter)
-        self.database = Adapter(database)
+        StorageAdapter = self.import_adapter(storage_adapter)
+        self.database = StorageAdapter(database)
+
+        IOAdapter = self.import_adapter(io_adapter)
+        self.io = IOAdapter()
 
         self.recent_statements = []
 

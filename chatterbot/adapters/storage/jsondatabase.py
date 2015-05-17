@@ -1,4 +1,4 @@
-from chatterbot.storage_adapters.database import DatabaseAdapter
+from chatterbot.adapters.storage import DatabaseAdapter
 from jsondb.db import Database
 
 
