@@ -9,8 +9,12 @@ class ChatBot(object):
         self.name = name
         self.log = logging
 
+        # TODO: Change database to storage
         StorageAdapter = self.import_adapter(storage_adapter)
         self.database = StorageAdapter(database)
+
+        LogicAdapter = self.import_adapter(logic_adapter)
+        self.logic = LogicAdapter(self.database)
 
         IOAdapter = self.import_adapter(io_adapter)
         self.io = IOAdapter()
@@ -123,7 +127,6 @@ class ChatBot(object):
         * user: The user's statement meta data
         * bot: The bot's statement meta data
         """
-        from .algorithms.engram import Engram
         from .matching import closest
 
         if input_text:
@@ -133,8 +136,8 @@ class ChatBot(object):
             # If the input is blank, return a random statement
             closest_statement = self.database.get_random()
 
-        response_statement = Engram(closest_statement, self.database)
-        self.recent_statements.append(response_statement.get())
+        response_statement = self.logic.get(closest_statement)
+        self.recent_statements.append(response_statement)
 
         statement_text = list(self.get_last_statement().keys())[0]
 
@@ -153,6 +156,7 @@ class ChatBot(object):
 
     def get_response(self, input_text, user_name="user"):
         """
-        Return only the bot's response text from the input
+        Return only the bot's response text from the input.
         """
+
         return self.get_response_data(user_name, input_text)["bot"]

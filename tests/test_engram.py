@@ -1,15 +1,15 @@
 from .base_case import ChatBotTestCase
-from chatterbot.algorithms.engram import Engram
+from chatterbot.adapters.logic.engram import EngramAdapter
 
 
 class EngramTests(ChatBotTestCase):
 
     def test_exact_results(self):
 
-        output = Engram("What... is your quest?", self.chatbot.database)
+        output = EngramAdapter(self.chatbot.database)
         expected = "To seek the Holy Grail."
 
-        self.assertIn(expected, output.get().keys())
+        self.assertIn(expected, output.get("What... is your quest?").keys())
 
     def test_empty_input(self):
         """

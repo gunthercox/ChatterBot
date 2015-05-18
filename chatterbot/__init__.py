@@ -1,27 +1,6 @@
 from .chatterbot import ChatBot
 
 
-def Terminal():
-    import sys
-
-    bot = ChatBot("Terminal",
-        storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
-        logic_adapter="chatterbot.adapters.logic.EngramAdapter",
-        io_adapter="chatterbot.adapters.io.TerminalAdapter",
-        database="database.db", logging=True)
-
-    user_input = "Type something to begin..."
-
-    print(user_input)
-
-    while True:
-        try:
-            bot.get_response(user_input)
-
-        except (KeyboardInterrupt, EOFError, SystemExit):
-            break
-
-
 class TalkWithCleverbot(ChatBot):
 
     def __init__(self, name="ChatterBot", adapter="chatterbot.adapters.JsonDatabaseAdapter", database="database.db", logging=True):
