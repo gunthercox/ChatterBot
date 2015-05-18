@@ -153,7 +153,6 @@ class ChatBot(object):
 
     def get_response(self, input_text, user_name="user"):
         """
-        Return only the bot's response text from the input.
+        Return the bot's response based on the input.
         """
-
-        return self.get_response_data(user_name, input_text)["bot"]
+        return self.io.get_response(self, input_text, user_name)
