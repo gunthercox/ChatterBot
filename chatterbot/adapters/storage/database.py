@@ -1,6 +1,4 @@
-class DatabaseAdapterNotImplementedError(NotImplementedError):
-    def __init__(self, message="This method must be overridden in a subclass method."):
-        self.message = message
+from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class DatabaseAdapter(object):
@@ -9,16 +7,16 @@ class DatabaseAdapter(object):
         """
         Returns a object from the database if it exists
         """
-        raise DatabaseAdapterNotImplementedError()
+        raise AdapterNotImplementedError()
 
     def insert(self, key):
         """
         Creates a new entry in the database.
         """
-        raise DatabaseAdapterNotImplementedError()
+        raise AdapterNotImplementedError()
 
     def update(self, key):
         """
         Modifies an entry in the database.
         """
-        raise DatabaseAdapterNotImplementedError()
+        raise AdapterNotImplementedError()

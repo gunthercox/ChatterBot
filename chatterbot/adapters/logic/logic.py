@@ -1,9 +1,7 @@
-class LogicAdapterNotImplementedError(NotImplementedError):
-    def __init__(self, message="This method must be overridden in a subclass method."):
-        self.message = message
+from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class LogicAdapter(object):
 
     def get_response(self):
-        raise DatabaseAdapterNotImplementedError()
+        raise AdapterNotImplementedError()
