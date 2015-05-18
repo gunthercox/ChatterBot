@@ -35,4 +35,6 @@ class JsonDatabaseAdapter(DatabaseAdapter):
         Returns a random statement from the database
         """
         from random import choice
-        return choice(self.keys())
+
+        statement = choice(self.keys())
+        return {statement: self.find(statement)}

@@ -1,5 +1,5 @@
 from .base_case import ChatBotTestCase
-from chatterbot.matching import closest
+from chatterbot.adapters.logic.matching import closest
 
 
 class MatchingTests(ChatBotTestCase):

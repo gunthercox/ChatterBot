@@ -1,4 +1,5 @@
 from .logic import LogicAdapter
+from .matching import closest
 
 
 class EngramAdapter(LogicAdapter):
@@ -45,8 +46,8 @@ class EngramAdapter(LogicAdapter):
         of occurrence will be returned.
         """
 
-        if not input_statement in self.database.keys():
-            raise Exception("A matching statement must exist in the database")
+        # Use the closest known matching statement
+        closest_statement = closest(input_statement, self.database)
 
         # Initialize the matching responce with the first statement in the database
         matching_response = self.database.keys()[0]
@@ -54,7 +55,7 @@ class EngramAdapter(LogicAdapter):
 
         for statement in self.database.keys():
 
-            if self.responces_in_database(statement, input_statement):
+            if self.responces_in_database(statement, closest_statement):
 
                 statement_occurrence_count = self.get_occurrence_count(statement)
 

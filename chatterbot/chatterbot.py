@@ -127,16 +127,13 @@ class ChatBot(object):
         * user: The user's statement meta data
         * bot: The bot's statement meta data
         """
-        from .matching import closest
 
         if input_text:
-            # Use the closest known matching statement
-            closest_statement = closest(input_text, self.database)
+            response_statement = self.logic.get(input_text)
         else:
             # If the input is blank, return a random statement
-            closest_statement = self.database.get_random()
+            response_statement = self.database.get_random()
 
-        response_statement = self.logic.get(closest_statement)
         self.recent_statements.append(response_statement)
 
         statement_text = list(self.get_last_statement().keys())[0]
