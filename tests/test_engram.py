@@ -6,7 +6,7 @@ class EngramTests(ChatBotTestCase):
 
     def test_exact_results(self):
 
-        output = EngramAdapter(self.chatbot.database)
+        output = EngramAdapter(self.chatbot.storage)
         expected = "To seek the Holy Grail."
 
         self.assertIn(expected, output.get("What... is your quest?").keys())

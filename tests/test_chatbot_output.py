@@ -65,26 +65,26 @@ class ChatBotTests(ChatBotTestCase):
         self.chatbot.train(conversation)
         self.chatbot.train(conversation)
 
-        count = self.chatbot.database.find("Do you like my hat?")["occurrence"]
+        count = self.chatbot.storage.find("Do you like my hat?")["occurrence"]
         self.assertEqual(count, 2)
 
     def test_update_occurrence_count(self):
 
         response = self.chatbot.get_response("Hi")
-        count1 = self.chatbot.database.find("Hi")["occurrence"]
+        count1 = self.chatbot.storage.find("Hi")["occurrence"]
 
         self.chatbot.update_occurrence_count("Hi")
-        count2 = self.chatbot.database.find("Hi")["occurrence"]
+        count2 = self.chatbot.storage.find("Hi")["occurrence"]
 
         self.assertTrue(count1 < count2)
 
     def test_update_response_list(self):
 
         response = self.chatbot.get_response("Hi")
-        response_list1 = self.chatbot.database.find("Hi")["in_response_to"]
+        response_list1 = self.chatbot.storage.find("Hi")["in_response_to"]
 
         self.chatbot.update_response_list("Hi", "Hello there Mr. Jones.")
-        response_list2 = self.chatbot.database.find("Hi")["in_response_to"]
+        response_list2 = self.chatbot.storage.find("Hi")["in_response_to"]
 
         self.assertTrue(len(response_list1) < len(response_list2))
         self.assertTrue("Hello there Mr. Jones." in response_list2)
@@ -173,10 +173,10 @@ class ChatBotTests(ChatBotTestCase):
         string = u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌"
 
         response = self.chatbot.get_response(string)
-        count1 = self.chatbot.database.find(string)["occurrence"]
+        count1 = self.chatbot.storage.find(string)["occurrence"]
 
         self.chatbot.update_occurrence_count(string)
-        count2 = self.chatbot.database.find(string)["occurrence"]
+        count2 = self.chatbot.storage.find(string)["occurrence"]
 
         self.assertTrue(count1 < count2)
 
@@ -190,10 +190,10 @@ class DatabaseTests(ChatBotTestCase):
         self.chatbot.log = True
 
         input_text = "What is the airspeed velocity of an unladen swallow?"
-        exists_before = self.chatbot.database.find(input_text)
+        exists_before = self.chatbot.storage.find(input_text)
 
         response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.database.find(input_text)
+        exists_after = self.chatbot.storage.find(input_text)
 
         self.assertFalse(exists_before)
         self.assertTrue(exists_after)
@@ -205,10 +205,10 @@ class DatabaseTests(ChatBotTestCase):
         self.chatbot.log = False
 
         input_text = "Who are you? The proud lord said."
-        exists_before = self.chatbot.database.find(input_text)
+        exists_before = self.chatbot.storage.find(input_text)
 
         response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.database.find(input_text)
+        exists_after = self.chatbot.storage.find(input_text)
 
         self.assertFalse(exists_before)
         self.assertFalse(exists_after)

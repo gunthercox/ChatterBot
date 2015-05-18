@@ -41,4 +41,4 @@ class ChatBotTestCase(TestCase):
         """
         import os
 
-        os.remove(self.chatbot.database.database.path)
+        os.remove(self.chatbot.storage.database.path)

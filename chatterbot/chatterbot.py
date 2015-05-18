@@ -11,10 +11,10 @@ class ChatBot(object):
 
         # TODO: Change database to storage
         StorageAdapter = self.import_adapter(storage_adapter)
-        self.database = StorageAdapter(database)
+        self.storage = StorageAdapter(database)
 
         LogicAdapter = self.import_adapter(logic_adapter)
-        self.logic = LogicAdapter(self.database)
+        self.logic = LogicAdapter(self.storage)
 
         IOAdapter = self.import_adapter(io_adapter)
         self.io = IOAdapter()
@@ -53,7 +53,7 @@ class ChatBot(object):
         Increment the occurrence count for a given statement in the database.
         The key parameter is a statement that exists in the database.
         """
-        database_values = self.database.find(key)
+        database_values = self.storage.find(key)
         count = 0
 
         # If an occurence count exists then initialize it
@@ -63,14 +63,14 @@ class ChatBot(object):
         count += 1
 
         # Save the changes to the database
-        self.database.update(key, occurrence=count)
+        self.storage.update(key, occurrence=count)
 
     def update_response_list(self, key, previous_statement):
         """
         Update the list of statements that a know statement has responded to.
         """
 
-        database_values = self.database.find(key)
+        database_values = self.storage.find(key)
         responses = []
 
         if "in_response_to" in database_values:
@@ -88,18 +88,18 @@ class ChatBot(object):
             if not previous_statement in responses:
                 responses.append(previous_statement)
 
-        self.database.update(key, in_response_to=responses)
+        self.storage.update(key, in_response_to=responses)
 
     def train(self, conversation):
         for statement in conversation:
 
-            database_values = self.database.find(statement)
+            database_values = self.storage.find(statement)
 
             # Create an entry if the statement does not exist in the database
             if not database_values:
-                self.database.insert(statement, {})
+                self.storage.insert(statement, {})
 
-            self.database.update(statement, date=self.timestamp())
+            self.storage.update(statement, date=self.timestamp())
 
             self.update_occurrence_count(statement)
             self.update_response_list(statement, self.get_last_statement())
@@ -111,11 +111,11 @@ class ChatBot(object):
         values = data[statement]
 
         # Create the statement if it doesn't exist in the database
-        if not self.database.find(statement):
-            self.database.insert(statement, {})
+        if not self.storage.find(statement):
+            self.storage.insert(statement, {})
 
         # Update the database with the changes
-        self.database.update(statement, name=values["name"], date=values["date"])
+        self.storage.update(statement, name=values["name"], date=values["date"])
 
         self.update_occurrence_count(statement)
         self.update_response_list(statement, self.get_last_statement())
@@ -132,7 +132,7 @@ class ChatBot(object):
             response_statement = self.logic.get(input_text)
         else:
             # If the input is blank, return a random statement
-            response_statement = self.database.get_random()
+            response_statement = self.storage.get_random()
 
         self.recent_statements.append(response_statement)
 
