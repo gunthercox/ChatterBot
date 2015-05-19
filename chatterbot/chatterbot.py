@@ -9,7 +9,6 @@ class ChatBot(object):
         self.name = name
         self.log = logging
 
-        # TODO: Change database to storage
         StorageAdapter = self.import_adapter(storage_adapter)
         self.storage = StorageAdapter(database)
 
