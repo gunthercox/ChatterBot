@@ -29,23 +29,22 @@ class ChatBot(object):
 
         return getattr(module, module_parts[-1])
 
-    def get_last_statement(self):
-        """
-        Returns the last statement that was issued to the chat bot.
-        """
-
-        # If there was no last statements, return None
-        if len(self.recent_statements) == 0:
-            return None
-
-        return self.recent_statements[-1]
-
     def timestamp(self, fmt="%Y-%m-%d-%H-%M-%S"):
         """
         Returns a string formatted timestamp of the current time.
         """
         import datetime
         return datetime.datetime.now().strftime(fmt)
+
+    def get_last_statement(self):
+        """
+        Returns the last statement that was issued to the chat bot.
+        If there was no last statement then return None.
+        """
+        if len(self.recent_statements) == 0:
+            return None
+
+        return self.recent_statements[-1]
 
     def update_occurrence_count(self, key):
         """
@@ -64,16 +63,10 @@ class ChatBot(object):
         # Save the changes to the database
         self.storage.update(key, occurrence=count)
 
-    def update_response_list(self, key, previous_statement):
+    def update_response_list(self, key):
         """
         Update the list of statements that a know statement has responded to.
         """
-
-        database_values = self.storage.find(key)
-        responses = []
-
-        if "in_response_to" in database_values:
-            responses = database_values["in_response_to"]
 
         # TODO:
         '''
@@ -82,7 +75,17 @@ class ChatBot(object):
         has occured. This should make selecting likely responces more accurate.
         '''
 
+        previous_statement = self.get_last_statement()
+
+        database_values = self.storage.find(key)
+        responses = []
+
+        if "in_response_to" in database_values:
+            responses = database_values["in_response_to"]
+
         if previous_statement:
+            statement = list(previous_statement.keys())[0]
+
             # Check to make sure that the statement does not already exist
             if not previous_statement in responses:
                 responses.append(previous_statement)
@@ -98,26 +101,25 @@ class ChatBot(object):
             if not database_values:
                 self.storage.insert(statement, {})
 
-            self.storage.update(statement, date=self.timestamp())
-
             self.update_occurrence_count(statement)
-            self.update_response_list(statement, self.get_last_statement())
+            self.update_response_list(statement)
 
-            self.recent_statements.append(statement)
+            data = self.storage.update(statement, date=self.timestamp())
+            self.recent_statements.append(data)
 
     def update_log(self, data):
         statement = list(data.keys())[0]
+
         values = data[statement]
 
         # Create the statement if it doesn't exist in the database
         if not self.storage.find(statement):
             self.storage.insert(statement, {})
 
+        self.update_occurrence_count(statement)
+
         # Update the database with the changes
         self.storage.update(statement, name=values["name"], date=values["date"])
-
-        self.update_occurrence_count(statement)
-        self.update_response_list(statement, self.get_last_statement())
 
     # TODO, change user_name and input_text into a single dict
     def get_response_data(self, user_name, input_text):

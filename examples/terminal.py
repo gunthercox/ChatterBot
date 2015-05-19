@@ -8,23 +8,6 @@ bot = ChatBot("Terminal",
     io_adapter="chatterbot.adapters.io.TerminalAdapter",
     database="../database.db", logging=True)
 
-
-conversation = [
-    "Hello",
-    "Hi there!",
-    "How are you doing?",
-    "I'm great.",
-    "That is good to hear",
-    "Thank you.",
-    "Your welcome.",
-    "Sure, any time.",
-    "Yeah",
-    "Can I help you with anything?"
-]
-
-bot.train(conversation)
-
-
 user_input = "Type something to begin..."
 
 print(user_input)
