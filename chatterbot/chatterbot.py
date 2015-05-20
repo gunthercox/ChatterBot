@@ -46,98 +46,86 @@ class ChatBot(object):
 
         return self.recent_statements[-1]
 
-    def update_occurrence_count(self, key):
+    def update_occurrence_count(self, data):
         """
-        Increment the occurrence count for a given statement in the database.
-        The key parameter is a statement that exists in the database.
+        Increment the occurrence count for a given statement.
         """
-        database_values = self.storage.find(key)
-        count = 0
+        if "occurrence" in data:
+            return data["occurrence"] + 1
 
-        # If an occurence count exists then initialize it
-        if "occurrence" in database_values:
-            count = database_values["occurrence"]
+        return 1
 
-        count += 1
-
-        # Save the changes to the database
-        self.storage.update(key, occurrence=count)
-
-    def update_response_list(self, key):
+    def update_response_list(self, key, previous_statement):
         """
         Update the list of statements that a know statement has responded to.
         """
-
-        # TODO:
-        '''
-        In the future, the in_response_to list should become a dictionary
-        of the response statements with a value of the number of times each statement
-        has occured. This should make selecting likely responces more accurate.
-        '''
-
-        previous_statement = self.get_last_statement()
-
-        database_values = self.storage.find(key)
         responses = []
+        values = self.storage.find(key)
 
-        if "in_response_to" in database_values:
-            responses = database_values["in_response_to"]
+        if not values:
+            values = {}
+
+        if "in_response_to" in values:
+            responses = values["in_response_to"]
 
         if previous_statement:
-            statement = list(previous_statement.keys())[0]
 
             # Check to make sure that the statement does not already exist
             if not previous_statement in responses:
                 responses.append(previous_statement)
 
-        self.storage.update(key, in_response_to=responses)
+        self.recent_statements.append(key)
+        return responses
 
     def train(self, conversation):
         for statement in conversation:
 
-            database_values = self.storage.find(statement)
+            values = self.storage.find(statement)
 
             # Create an entry if the statement does not exist in the database
-            if not database_values:
-                self.storage.insert(statement, {})
+            if not values:
+                values = self.storage.insert(statement, {})
 
-            self.update_occurrence_count(statement)
-            self.update_response_list(statement)
+            count = self.update_occurrence_count(values)
+            timestamp = self.timestamp()
 
-            data = self.storage.update(statement, date=self.timestamp())
-            self.recent_statements.append(data)
+            previous_statement = self.get_last_statement()
+            response_list = self.update_response_list(statement, previous_statement)
+
+            self.storage.update(statement, date=timestamp, occurrence=count, in_response_to=response_list)
 
     def update_log(self, data):
         statement = list(data.keys())[0]
-
         values = data[statement]
 
         # Create the statement if it doesn't exist in the database
         if not self.storage.find(statement):
             self.storage.insert(statement, {})
 
-        self.update_occurrence_count(statement)
+        count = self.update_occurrence_count(values)
+        username = values["name"]
+        timestamp = values["date"]
+
+        previous_statement = self.get_last_statement()
+        response_list = self.update_response_list(statement, previous_statement)
 
         # Update the database with the changes
-        self.storage.update(statement, name=values["name"], date=values["date"])
+        data = self.storage.update(statement, name=username, date=timestamp, occurrence=count, in_response_to=response_list)
+
+        #print "YYYY", count, data
 
     # TODO, change user_name and input_text into a single dict
     def get_response_data(self, user_name, input_text):
         """
-        Returns a dictionary containing the following data:
-        * user: The user's statement meta data
-        * bot: The bot's statement meta data
+        Returns a dictionary containing the meta data for
+        the current response.
         """
 
         if input_text:
-            response_statement = self.logic.get(input_text)
+            response = self.logic.get(input_text)
         else:
             # If the input is blank, return a random statement
-            response_statement = self.storage.get_random()
-
-        self.recent_statements.append(response_statement)
-
-        statement_text = list(self.get_last_statement().keys())[0]
+            response = self.storage.get_random()
 
         user = {
             input_text: {
@@ -146,14 +134,21 @@ class ChatBot(object):
             }
         }
 
-        # Update the database before selecting a response if logging is enabled
-        if self.log:
-            self.update_log(user)
+        self.recent_statements.append(list(response.keys())[0])
 
-        return {user_name: user, "bot": statement_text}
+        return {
+            user_name: user,
+            "bot": response
+        }
 
     def get_response(self, input_text, user_name="user"):
         """
         Return the bot's response based on the input.
         """
-        return self.io.get_response(self, input_text, user_name)
+        response = self.get_response_data(user_name, input_text)
+
+        # Update the database before selecting a response if logging is enabled
+        if self.log:
+            self.update_log(response[user_name])
+
+        return list(response["bot"].keys())[0]

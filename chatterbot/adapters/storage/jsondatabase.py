@@ -20,14 +20,14 @@ class JsonDatabaseAdapter(DatabaseAdapter):
         values = self.database.data(key=key)
 
         for parameter in kwargs:
-            values[parameter] = kwargs[parameter]
+            values[parameter] = kwargs.get(parameter)
 
         self.database[key] = values
 
         return values
 
     def keys(self):
-        # The return value has to be cast as a list for Python 3 compatibility
+        # The value has to be cast as a list for Python 3 compatibility
         return list(self.database[0].keys())
 
     def get_random(self):

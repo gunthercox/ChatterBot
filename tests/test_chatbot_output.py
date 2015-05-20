@@ -70,24 +70,16 @@ class ChatBotTests(ChatBotTestCase):
 
     def test_update_occurrence_count(self):
 
-        response = self.chatbot.get_response("Hi")
-        count1 = self.chatbot.storage.find("Hi")["occurrence"]
+        count = self.chatbot.update_occurrence_count({"occurrence": 3})
 
-        self.chatbot.update_occurrence_count("Hi")
-        count2 = self.chatbot.storage.find("Hi")["occurrence"]
-
-        self.assertTrue(count1 < count2)
+        self.assertTrue(count > 3)
 
     def test_update_response_list(self):
 
-        response = self.chatbot.get_response("Hi")
-        response_list1 = self.chatbot.storage.find("Hi")["in_response_to"]
+        previous_statement = "Greetings Dr. Jones."
+        response_list = self.chatbot.update_response_list("Yo", previous_statement)
 
-        self.chatbot.update_response_list("Hi", "Hello there Mr. Jones.")
-        response_list2 = self.chatbot.storage.find("Hi")["in_response_to"]
-
-        self.assertTrue(len(response_list1) < len(response_list2))
-        self.assertTrue("Hello there Mr. Jones." in response_list2)
+        self.assertTrue(previous_statement in response_list)
 
     def test_answer_to_known_input(self):
         """
@@ -103,6 +95,8 @@ class ChatBotTests(ChatBotTestCase):
 
         input_text = "What is your favourite colour?"
         response = self.chatbot.get_response(input_text)
+
+        print self.chatbot.storage.database.data()
 
         self.assertIn("Blue", response)
 
@@ -167,18 +161,6 @@ class ChatBotTests(ChatBotTestCase):
         os.remove("unicode-database.db")
 
         self.assertEqual(response, conversation[2])
-
-    def test_occurrence_count_with_unicode_statements(self):
-
-        string = u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌"
-
-        response = self.chatbot.get_response(string)
-        count1 = self.chatbot.storage.find(string)["occurrence"]
-
-        self.chatbot.update_occurrence_count(string)
-        count2 = self.chatbot.storage.find(string)["occurrence"]
-
-        self.assertTrue(count1 < count2)
 
 
 class DatabaseTests(ChatBotTestCase):
