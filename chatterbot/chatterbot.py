@@ -84,7 +84,7 @@ class ChatBot(object):
 
             # Create an entry if the statement does not exist in the database
             if not values:
-                values = self.storage.insert(statement, {})
+                values = {}
 
             count = self.update_occurrence_count(values)
             timestamp = self.timestamp()
@@ -98,10 +98,6 @@ class ChatBot(object):
         statement = list(data.keys())[0]
         values = data[statement]
 
-        # Create the statement if it doesn't exist in the database
-        if not self.storage.find(statement):
-            self.storage.insert(statement, {})
-
         count = self.update_occurrence_count(values)
         username = values["name"]
         timestamp = values["date"]
@@ -110,9 +106,7 @@ class ChatBot(object):
         response_list = self.update_response_list(statement, previous_statement)
 
         # Update the database with the changes
-        data = self.storage.update(statement, name=username, date=timestamp, occurrence=count, in_response_to=response_list)
-
-        #print "YYYY", count, data
+        self.storage.update(statement, name=username, date=timestamp, occurrence=count, in_response_to=response_list)
 
     # TODO, change user_name and input_text into a single dict
     def get_response_data(self, user_name, input_text):

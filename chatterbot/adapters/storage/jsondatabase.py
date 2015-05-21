@@ -19,6 +19,11 @@ class JsonDatabaseAdapter(DatabaseAdapter):
 
         values = self.database.data(key=key)
 
+        # Create the statement if it doesn't exist in the database
+        if not values:
+            self.database[key] = {}
+            values = {}
+
         for parameter in kwargs:
             values[parameter] = kwargs.get(parameter)
 

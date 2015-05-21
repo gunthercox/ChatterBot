@@ -96,8 +96,6 @@ class ChatBotTests(ChatBotTestCase):
         input_text = "What is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
-        print self.chatbot.storage.database.data()
-
         self.assertIn("Blue", response)
 
     def test_match_has_no_response(self):

@@ -18,5 +18,6 @@ class DatabaseAdapter(object):
     def update(self, key):
         """
         Modifies an entry in the database.
+        Creates an entry if one does not exist.
         """
         raise AdapterNotImplementedError()
