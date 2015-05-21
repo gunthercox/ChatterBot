@@ -86,27 +86,21 @@ class ChatBot(object):
             if not values:
                 values = {}
 
-            count = self.update_occurrence_count(values)
-            timestamp = self.timestamp()
+            values["occurrence"] = self.update_occurrence_count(values)
+            values["date"] = self.timestamp()
 
             previous_statement = self.get_last_statement()
-            response_list = self.update_response_list(statement, previous_statement)
+            values["in_response_to"] = self.update_response_list(statement, previous_statement)
 
-            self.storage.update(statement, date=timestamp, occurrence=count, in_response_to=response_list)
+            self.storage.update(statement, **values)
 
-    def update_log(self, data):
-        statement = list(data.keys())[0]
-        values = data[statement]
+    def update_log(self, **kwargs):
 
-        count = self.update_occurrence_count(values)
-        username = values["name"]
-        timestamp = values["date"]
-
-        previous_statement = self.get_last_statement()
-        response_list = self.update_response_list(statement, previous_statement)
+        statement = list(kwargs.keys())[0]
+        values = kwargs[statement]
 
         # Update the database with the changes
-        self.storage.update(statement, name=username, date=timestamp, occurrence=count, in_response_to=response_list)
+        self.storage.update(statement, **values)
 
     # TODO, change user_name and input_text into a single dict
     def get_response_data(self, user_name, input_text):
@@ -121,17 +115,25 @@ class ChatBot(object):
             # If the input is blank, return a random statement
             response = self.storage.get_random()
 
-        user = {
-            input_text: {
-                "name": user_name,
-                "date": self.timestamp()
-            }
-        }
+        statement = list(response.keys())[0]
+        values = response[statement]
+
+        previous_statement = self.get_last_statement()
+        response_list = self.update_response_list(statement, previous_statement)
+
+        count = self.update_occurrence_count(values)
+
+        values["name"] = user_name
+        values["date"] = self.timestamp()
+        values["occurrence"] = count
+        values["in_response_to"] = response_list
 
         self.recent_statements.append(list(response.keys())[0])
 
         return {
-            user_name: user,
+            user_name: {
+                input_text: values
+            },
             "bot": response
         }
 
@@ -143,6 +145,6 @@ class ChatBot(object):
 
         # Update the database before selecting a response if logging is enabled
         if self.log:
-            self.update_log(response[user_name])
+            self.update_log(**response[user_name])
 
         return list(response["bot"].keys())[0]
