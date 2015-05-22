@@ -117,7 +117,7 @@ class ChatBotTests(ChatBotTestCase):
         user_name = "Ron Obvious"
         user_input = "Hello!"
 
-        data = self.chatbot.get_response_data(user_name, user_input)
+        data = self.chatbot.get_response_data({"name": user_name, "text": user_input})
 
         self.assertIn(user_input, data[user_name].keys())
 
@@ -129,7 +129,7 @@ class ChatBotTests(ChatBotTestCase):
         user_name = "Sherlock"
         user_input = "Elementary my dear watson."
 
-        data = self.chatbot.get_response_data(user_name, user_input)
+        data = self.chatbot.get_response_data({"name": user_name, "text": user_input})
 
         self.assertGreater(len(data["bot"]), 0)
 

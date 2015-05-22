@@ -21,6 +21,9 @@ class ChatBot(object):
         self.recent_statements = []
 
     def import_adapter(self, adapter):
+        """
+        Imports the specified adapter module.
+        """
         import importlib
 
         module_parts = adapter.split(".")
@@ -95,7 +98,6 @@ class ChatBot(object):
             self.storage.update(statement, **values)
 
     def update_log(self, **kwargs):
-
         statement = list(kwargs.keys())[0]
         values = kwargs[statement]
 
@@ -103,14 +105,14 @@ class ChatBot(object):
         self.storage.update(statement, **values)
 
     # TODO, change user_name and input_text into a single dict
-    def get_response_data(self, user_name, input_text):
+    def get_response_data(self, data):
         """
         Returns a dictionary containing the meta data for
         the current response.
         """
 
-        if input_text:
-            response = self.logic.get(input_text)
+        if "text" in data:
+            response = self.logic.get(data["text"])
         else:
             # If the input is blank, return a random statement
             response = self.storage.get_random()
@@ -123,7 +125,7 @@ class ChatBot(object):
 
         count = self.update_occurrence_count(values)
 
-        values["name"] = user_name
+        values["name"] = data["name"]
         values["date"] = self.timestamp()
         values["occurrence"] = count
         values["in_response_to"] = response_list
@@ -131,8 +133,8 @@ class ChatBot(object):
         self.recent_statements.append(list(response.keys())[0])
 
         return {
-            user_name: {
-                input_text: values
+            data["name"]: {
+                data["text"]: values
             },
             "bot": response
         }
@@ -141,7 +143,7 @@ class ChatBot(object):
         """
         Return the bot's response based on the input.
         """
-        response = self.get_response_data(user_name, input_text)
+        response = self.get_response_data({"name":user_name, "text": input_text})
 
         # Update the database before selecting a response if logging is enabled
         if self.log:
