@@ -16,9 +16,12 @@ except ImportError:
 req = open("requirements.txt")
 requirements = req.readlines()
 
+# Dynamically calculate the version based on chatterbot version
+version = __import__('chatterbot').__version__
+
 setup(
     name="ChatterBot",
-    version="0.1.2",
+    version=version,
     url="https://github.com/gunthercox/ChatterBot",
     description="An open-source chat bot program written in Python.",
     long_description=readme("readme.md"),
