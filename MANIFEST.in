@@ -1,5 +1,6 @@
 include history.rst
 include license.md
 include readme.md
+include requirements.txt
 
 recursive-include tests *
