@@ -32,23 +32,14 @@ This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBo
 pip install chatterbot
 ```
 
-### Create a new chat bot  
-**Note:** *The `ChatBot` requires that a name is specified for the bot.
-
+## Create a new chat bot
 ```
 from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
 ```
+**Note:** *The `ChatBot` requires that a name is specified for the bot.
 
-An optional parameter `database` can be used to change the default database path.
-The default database path is 'database.db'.*
-
-```
-from chatterbot import ChatBot
-chatbot = ChatBot("Ron Obvious", database="my/custom/database.db")
-```
-
-### Training
+## Training
 After creating a new chatterbot instance it is also possible to train the bot. Training is a good way to ensure that the bot starts off with knowledge about specific responses. The current training method takes a list of statements that represent a conversation.
 
 **Note:** Training is not required but it is recommended.
@@ -67,56 +58,94 @@ conversation = [
 chatbot.train(conversation)
 ```
 
-### Get a response
+## Get a response
 
 ```
 response = chatbot.get_response("Good morning!")
 print(response)
 ```
 
-## Other bot types
+## Logging
 
-ChatterBot comes with a selection of useful chat bots built in.
+Your ChatterBot will learn based on each new input statement it recieves.
+If you do not want your bot to learn, set `logging=False` when initializing the
+bot.
 
-#### Terminal ChatterBot
-This is a simple chatterbot that runs in the console. It responds to any user input that is entered.
 ```
-from chatterbot import Terminal
-terminal = Terminal()
-terminal.begin()
+chatbot = ChatBot("Johnny Five", logging=False)
 ```
 
-### Social ChatterBot
-This bot type integrates with various social networking sites to communicate.
+# Adapters
+
+ChatterBot uses adapters to handle three types of operations. All adapters for
+ChatterBot fall into one of three categories: **storage**, **io**, and **logic**.
+
+By default, ChatterBot uses the `JsonDatabaseAdapter` adapter for storage,
+the `EngramAdapter` for logic, and the `TerminalAdapter` for IO.
+
+Each adapter can be set by passing in the dot-notated import path to the constructor.
+
 ```
-from chatterbot import SocialBot
-
-TWITTER = {
-    "CONSUMER_KEY": "<consumer_key>",
-    "CONSUMER_SECRET": "<consumer_secret>"
-}
-
-chatbot = SocialBot(twitter=TWITTER)
-```
-
-You will need to generate your own keys for using any API. To use this feature with twitter's api you will need to register your application at
-[Twitter's developer website](https://dev.twitter.com/apps) to get the token and
-secret keys.
-
-### Talk with CleverBot
-Want to see what two bots have to say to each other? This allows your ChatterBot to talk to [CleverBot](http://www.cleverbot.com/).
-```
-from chatterbot import TalkWithCleverbot
-talk = TalkWithCleverbot()
-talk.begin()
+bot = ChatBot("My ChatterBot",
+    storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+    logic_adapter="chatterbot.adapters.logic.EngramAdapter",
+    io_adapter="chatterbot.adapters.io.TerminalAdapter",
+    database="../database.db")
 ```
 
-## Testing
+## Storage adapters
+
+Storage adapters allow ChatterBot to connect to connect to any type of storage
+backend.
+
+### `JsonDatabaseAdapter`
+
+```
+"chatterbot.adapters.storage.JsonDatabaseAdapter"
+```
+
+The JSON Database adapter requires an additional parameter (`database`) to be
+passed to the ChatterBot constructor. This storage adapter uses a local file
+database so this parameter is needed to specify the location of the file.
+
+## IO adapters
+
+IO adapters allow ChatterBot to communicate through various interfaces. The
+default io adapter uses the terminal to communicate with the user.
+
+### `TerminalAdapter`
+
+```
+"chatterbot.adapters.io.TerminalAdapter"
+```
+
+The terminal adapter allows the ChatterBot to communicate with you through your
+terminal.
+
+## Logic adapters
+
+Logic adapters determine how ChatterBot selects responces to input statements.
+
+### `EngramAdapter`
+
+```
+"chatterbot.adapters.logic.EngramAdapter"
+```
+
+The engram adapter selects a response based on the closest know match to a
+given statement.
+
+# Examples
+
+For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
+directory in this project's repository.
+
+# Testing
 
 ChatterBot's built in tests can be run using nose.  
 See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
 
-## Use Cases
+# Use Cases
 
 **Using ChatterBot in your app? Let us know!**
 
@@ -124,6 +153,6 @@ See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more i
 |---|---|
 |[Zuluhotel](http://zuluhotel3.com)|A mmorpg shard emulation game.|
 
-## History
+# History
 
 See release notes for changes https://github.com/gunthercox/ChatterBot/releases
