@@ -7,6 +7,10 @@ class JsonDatabaseAdapter(DatabaseAdapter):
     def __init__(self, database_path):
         self.database = Database(database_path)
 
+    def _keys(self):
+        # The value has to be cast as a list for Python 3 compatibility
+        return list(self.database[0].keys())
+
     def find(self, key):
         return self.database.data(key=key)
 
@@ -31,15 +35,16 @@ class JsonDatabaseAdapter(DatabaseAdapter):
 
         return values
 
-    def keys(self):
-        # The value has to be cast as a list for Python 3 compatibility
-        return list(self.database[0].keys())
-
     def get_random(self):
-        """
-        Returns a random statement from the database
-        """
         from random import choice
 
-        statement = choice(self.keys())
+        statement = choice(self._keys())
         return {statement: self.find(statement)}
+
+    def drop(self):
+        """
+        Remove the json file database completely
+        """
+        import os
+
+        os.remove(self.database.path)

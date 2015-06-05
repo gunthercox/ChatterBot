@@ -37,8 +37,6 @@ class ChatBotTestCase(TestCase):
 
     def tearDown(self):
         """
-        Remove the log files that were created for testing.
+        Remove the test database.
         """
-        import os
-
-        os.remove(self.chatbot.storage.database.path)
+        self.chatbot.storage.storage_adapter.drop()
