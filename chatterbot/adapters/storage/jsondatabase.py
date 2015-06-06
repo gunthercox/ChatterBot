@@ -1,4 +1,5 @@
 from chatterbot.adapters.storage import DatabaseAdapter
+from chatterbot.adapters.exceptions import EmptyDatabaseException
 from jsondb.db import Database
 
 
@@ -10,6 +11,9 @@ class JsonDatabaseAdapter(DatabaseAdapter):
     def _keys(self):
         # The value has to be cast as a list for Python 3 compatibility
         return list(self.database[0].keys())
+
+    def count(self):
+        return len(self._keys())
 
     def find(self, key):
         return self.database.data(key=key)
@@ -37,6 +41,9 @@ class JsonDatabaseAdapter(DatabaseAdapter):
 
     def get_random(self):
         from random import choice
+
+        if self.count() < 1:
+            raise EmptyDatabaseException()
 
         statement = choice(self._keys())
         return {statement: self.find(statement)}

@@ -3,6 +3,12 @@ from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 class DatabaseAdapter(object):
 
+    def count(self):
+        """
+        Return the number of entries in the database.
+        """
+        raise AdapterNotImplementedError()
+
     def find(self, key):
         """
         Returns a object from the database if it exists
