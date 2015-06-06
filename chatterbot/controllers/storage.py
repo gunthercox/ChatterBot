@@ -93,14 +93,19 @@ class StorageController(object):
 
             self.storage_adapter.update(statement, **values)
 
+    def list_statements(self):
+        """
+        Returns a list of the statement text for all statements in the database.
+        """
+        # TODO: Call to _keys is bad
+        return self.storage_adapter._keys()
+
     def get_statements_in_response_to(self, input_statement):
         """
         Returns a list of statement objects that are
         in response to a specified statement object.
         """
-        # TODO: Call to _keys is bad
-        statements = self.storage_adapter._keys()
-
+        statements = self.list_statements()
         results = []
 
         for statement in statements:

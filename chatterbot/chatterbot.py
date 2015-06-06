@@ -16,7 +16,7 @@ class ChatBot(object):
         self.storage = StorageController(storage_adapter, database)
 
         LogicAdapter = import_module(logic_adapter)
-        self.logic = LogicAdapter(self.storage.storage_adapter)
+        self.logic = LogicAdapter()
 
         IOAdapter = import_module(io_adapter)
         self.io = IOAdapter()
@@ -35,7 +35,9 @@ class ChatBot(object):
         """
 
         if "text" in data:
-            match = self.logic.get(data["text"])
+            text_of_all_statements = self.storage.list_statements()
+
+            match = self.logic.get(data["text"], text_of_all_statements)
 
             if match:
                 response = self.storage.get_most_frequent_response(match)
