@@ -4,9 +4,9 @@ import sys
 
 bot = ChatBot("Terminal",
     storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
-    logic_adapter="chatterbot.adapters.logic.EngramAdapter",
+    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
     io_adapter="chatterbot.adapters.io.TerminalAdapter",
-    database="../database.db", logging=True)
+    database="../database.db")
 
 user_input = "Type something to begin..."
 

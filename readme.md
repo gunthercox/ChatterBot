@@ -81,14 +81,14 @@ ChatterBot uses adapters to handle three types of operations. All adapters for
 ChatterBot fall into one of three categories: **storage**, **io**, and **logic**.
 
 By default, ChatterBot uses the `JsonDatabaseAdapter` adapter for storage,
-the `EngramAdapter` for logic, and the `TerminalAdapter` for IO.
+the `ClosestMatchAdapter` for logic, and the `TerminalAdapter` for IO.
 
 Each adapter can be set by passing in the dot-notated import path to the constructor.
 
 ```
 bot = ChatBot("My ChatterBot",
     storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
-    logic_adapter="chatterbot.adapters.logic.EngramAdapter",
+    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
     io_adapter="chatterbot.adapters.io.TerminalAdapter",
     database="../database.db")
 ```
@@ -126,13 +126,13 @@ terminal.
 
 Logic adapters determine how ChatterBot selects responces to input statements.
 
-### `EngramAdapter`
+### `ClosestMatchAdapter`
 
 ```
-"chatterbot.adapters.logic.EngramAdapter"
+"chatterbot.adapters.logic.ClosestMatchAdapter"
 ```
 
-The engram adapter selects a response based on the closest know match to a
+The `ClosestMatchAdapter` selects a response based on the closest know match to a
 given statement.
 
 # Examples

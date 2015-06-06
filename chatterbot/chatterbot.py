@@ -4,14 +4,24 @@ from .utils.module_loading import import_module
 
 class ChatBot(object):
 
-    def __init__(self, name,
-            storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
-            logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
-            io_adapter="chatterbot.adapters.io.TerminalAdapter",
-            database="database.db", logging=True):
+    def __init__(self, name, **kwargs):
+
+        storage_adapter = kwargs.get("storage_adapter",
+            "chatterbot.adapters.storage.JsonDatabaseAdapter"
+        )
+
+        logic_adapter = kwargs.get("logic_adapter",
+            "chatterbot.adapters.logic.ClosestMatchAdapter"
+        )
+
+        io_adapter = kwargs.get("storage_adapter",
+            "chatterbot.adapters.io.TerminalAdapter"
+        )
+
+        database = kwargs.get("database", "database.db")
 
         self.name = name
-        self.log = logging
+        self.log = kwargs.get("logging", True)
 
         self.storage = StorageController(storage_adapter, database)
 
