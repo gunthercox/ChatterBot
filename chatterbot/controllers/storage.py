@@ -29,15 +29,10 @@ class StorageController(object):
 
         return data.get("occurrence", 0) + 1
 
-    def get_occurrence_count(self, key):
+    def get_occurrence_count(self, statement):
         """
         Return the number of times a statement occurs in the database
         """
-
-        statement = self.storage_adapter.find(key)
-        #if "occurrence" in statement:
-        #    return statement["occurrence"]
-
         # If the number of occurences has not been set then return 1
         return statement.get("occurrence", 1)
 
@@ -77,7 +72,7 @@ class StorageController(object):
 
         return responses
 
-    def update_log(self, **kwargs):
+    def save_statement(self, **kwargs):
         statement = list(kwargs.keys())[0]
         values = kwargs[statement]
 
@@ -101,48 +96,50 @@ class StorageController(object):
 
             self.storage_adapter.update(statement, **values)
 
-    def get_statements_in_response_to(self, statement):
+    def get_statements_in_response_to(self, input_statement):
         """
         Returns a list of statement objects that are
         in response to a specified statement object.
         """
-        pass
+        # TODO: Call to _keys is bad
+        statements = self.storage_adapter._keys()
+
+        results = []
+
+        for statement in statements:
+            if input_statement in self.get_responses(statement):
+                results.append(statement)
+
+        return results
 
     def get_most_frequent_response(self, closest_statement):
         """
-        Returns a statement in response to the closest matching statement in
-        the database. For each match, the statement with the greatest number
-        of occurrence will be returned.
-
-        The statement passed in must be an existing statement within the database.
+        Returns the statement with the greatest number of occurrences.
         """
 
-        all_data = self.storage_adapter._keys()
+        response_list = self.get_statements_in_response_to(closest_statement)
+        # TODO: if list empty
 
-        if not all_data:
-            return {self.get_last_statement(): {}}
-
-        # Initialize the matching responce with the statement that was entered.
+        # Initialize the matching responce to the closest statement.
         # This will be returned in the case that no match can be found.
         matching_response = closest_statement
-        occurrence_count = self.get_occurrence_count(matching_response)
 
-        for statement in all_data:
+        # The statement passed in must be an existing statement within the database.
+        statement_data = self.storage_adapter.find(matching_response)
+        occurrence_count = self.get_occurrence_count(statement_data)
+
+        for statement in response_list:
 
             statement_data = self.storage_adapter.find(statement)
 
-            response_exists = closest_statement in self.get_responses(statement)
+            statement_occurrence_count = self.get_occurrence_count(statement_data)
 
-            if response_exists:
+            # Keep the more common statement
+            if statement_occurrence_count >= occurrence_count:
+                matching_response = statement
+                occurrence_count = statement_occurrence_count
 
-                statement_occurrence_count = self.get_occurrence_count(statement)
-
-                # Keep the more common statement
-                if statement_occurrence_count >= occurrence_count:
-                    matching_response = statement
-                    occurrence_count = statement_occurrence_count
-
-                #TODO? If the two statements occure equaly in frequency, should we keep one at random
+            #TODO? If the two statements occure equaly in frequency, should we keep one at random
 
         # Choose the most common selection of matching response
         return {matching_response: self.storage_adapter.find(matching_response)}

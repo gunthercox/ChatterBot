@@ -16,7 +16,14 @@ class UtilityTests(TestCase):
         fmt = "%Y-%m-%d-%H-%M-%S"
         time = self.statement.now(fmt)
 
-        self.assertEqual(time, datetime.datetime.now().strftime(fmt))
+        now = datetime.datetime.now().strftime(fmt)
 
-    def test_import_module(self):
-        pass
+        self.assertEqual(time, now)
+
+    def test_add_signature(self):
+        # TODO
+        self.assertTrue(True)
+
+    def test_serializer(self):
+        # TODO
+        self.assertTrue(True)

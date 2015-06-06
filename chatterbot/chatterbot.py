@@ -71,7 +71,7 @@ class ChatBot(object):
 
         # Update the database before selecting a response if logging is enabled
         if self.log:
-            self.storage.update_log(**response_data[name])
+            self.storage.save_statement(**response_data[name])
 
         return response_data
 
