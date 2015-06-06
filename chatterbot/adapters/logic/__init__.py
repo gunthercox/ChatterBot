@@ -1,2 +1,2 @@
 from .logic import LogicAdapter
-from .engram import EngramAdapter
+from .closest_match import ClosestMatchAdapter

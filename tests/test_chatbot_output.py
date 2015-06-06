@@ -3,28 +3,7 @@ from .base_case import ChatBotTestCase
 from chatterbot import ChatBot
 
 
-class ChatBotTests(ChatBotTestCase):
-
-    def test_get_last_statement(self):
-        """
-        Make sure that the get last statement method
-        returns the last statement that was issued.
-        """
-        self.chatbot.recent_statements.append("Test statement 1")
-        self.chatbot.recent_statements.append("Test statement 2")
-        self.chatbot.recent_statements.append("Test statement 3")
-        self.assertEqual(self.chatbot.get_last_statement(), "Test statement 3")
-
-    def test_logging_timestamps(self):
-        """
-        Tests that the correct datetime is returned for logging
-        """
-        import datetime
-
-        fmt = "%Y-%m-%d-%H-%M-%S"
-        time = self.chatbot.timestamp(fmt)
-
-        self.assertEqual(time, datetime.datetime.now().strftime(fmt))
+class ChatBotOutputTests(ChatBotTestCase):
 
     def test_training_adds_statements(self):
         """
@@ -65,21 +44,8 @@ class ChatBotTests(ChatBotTestCase):
         self.chatbot.train(conversation)
         self.chatbot.train(conversation)
 
-        count = self.chatbot.storage.find("Do you like my hat?")["occurrence"]
+        count = self.chatbot.storage.storage_adapter.find("Do you like my hat?")["occurrence"]
         self.assertEqual(count, 2)
-
-    def test_update_occurrence_count(self):
-
-        count = self.chatbot.update_occurrence_count({"occurrence": 3})
-
-        self.assertTrue(count > 3)
-
-    def test_update_response_list(self):
-
-        previous_statement = "Greetings Dr. Jones."
-        response_list = self.chatbot.update_response_list("Yo", previous_statement)
-
-        self.assertTrue(previous_statement in response_list)
 
     def test_answer_to_known_input(self):
         """
@@ -160,6 +126,14 @@ class ChatBotTests(ChatBotTestCase):
 
         self.assertEqual(response, conversation[2])
 
+    def test_empty_input(self):
+        """
+        If empty input is provided, anything may be returned.
+        """
+        output = self.chatbot.get_response("")
+
+        self.assertTrue(len(output) > -1)
+
 
 class DatabaseTests(ChatBotTestCase):
 
@@ -170,10 +144,10 @@ class DatabaseTests(ChatBotTestCase):
         self.chatbot.log = True
 
         input_text = "What is the airspeed velocity of an unladen swallow?"
-        exists_before = self.chatbot.storage.find(input_text)
+        exists_before = self.chatbot.storage.storage_adapter.find(input_text)
 
         response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.storage.find(input_text)
+        exists_after = self.chatbot.storage.storage_adapter.find(input_text)
 
         self.assertFalse(exists_before)
         self.assertTrue(exists_after)
@@ -185,10 +159,10 @@ class DatabaseTests(ChatBotTestCase):
         self.chatbot.log = False
 
         input_text = "Who are you? The proud lord said."
-        exists_before = self.chatbot.storage.find(input_text)
+        exists_before = self.chatbot.storage.storage_adapter.find(input_text)
 
         response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.storage.find(input_text)
+        exists_after = self.chatbot.storage.storage_adapter.find(input_text)
 
         self.assertFalse(exists_before)
         self.assertFalse(exists_after)
