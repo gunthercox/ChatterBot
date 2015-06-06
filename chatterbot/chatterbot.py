@@ -40,11 +40,11 @@ class ChatBot(object):
             if match:
                 response = self.storage.get_most_frequent_response(match)
             else:
-                response = self.storage.storage_adapter.get_random()
+                response = self.storage.get_random_statement()
 
         else:
             # If the input is blank, return a random statement
-            response = self.storage.storage_adapter.get_random()
+            response = self.storage.get_random_statement()
 
         statement = list(response.keys())[0]
         values = response[statement]

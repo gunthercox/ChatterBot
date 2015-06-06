@@ -20,18 +20,18 @@ class StorageController(object):
 
         return self.recent_statements[-1]
 
+    def get_random_statement(self):
+        return self.storage_adapter.get_random()
+
     def update_occurrence_count(self, data):
         """
         Increment the occurrence count for a given statement.
         """
-        #if "occurrence" in data:
-        #    return data["occurrence"] + 1
-
         return data.get("occurrence", 0) + 1
 
     def get_occurrence_count(self, statement):
         """
-        Return the number of times a statement occurs in the database
+        Return the number of times a statement occurs in the database.
         """
         # If the number of occurences has not been set then return 1
         return statement.get("occurrence", 1)
@@ -40,13 +40,7 @@ class StorageController(object):
         """
         Returns the list of responses for a given statement.
         """
-
-        #TODO: Don't make this lookup here
-        statement = self.storage_adapter.find(statement)
-
-        responses = statement.get("in_response_to", [])
-
-        return responses
+        return statement.get("in_response_to", [])
 
     def update_response_list(self, key, previous_statement):
         """
@@ -73,10 +67,13 @@ class StorageController(object):
         return responses
 
     def save_statement(self, **kwargs):
+        """
+        Update the database with the changes
+        for a new or existing statement.
+        """
         statement = list(kwargs.keys())[0]
         values = kwargs[statement]
 
-        # Update the database with the changes
         self.storage_adapter.update(statement, **values)
 
     def train(self, conversation):
@@ -107,7 +104,10 @@ class StorageController(object):
         results = []
 
         for statement in statements:
-            if input_statement in self.get_responses(statement):
+
+            statement_data = self.storage_adapter.find(statement)
+
+            if input_statement in self.get_responses(statement_data):
                 results.append(statement)
 
         return results
