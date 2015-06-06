@@ -49,7 +49,9 @@ class StorageController(object):
         #TODO: Don't make this lookup here
         statement = self.storage_adapter.find(statement)
 
-        return statement.get("in_response_to", [])
+        responses = statement.get("in_response_to", [])
+
+        return responses
 
     def update_response_list(self, key, previous_statement):
         """
@@ -83,7 +85,6 @@ class StorageController(object):
         self.storage_adapter.update(statement, **values)
 
     def train(self, conversation):
-        from chatterbot.utils.chronology import timestamp
 
         for statement in conversation:
 
@@ -94,12 +95,18 @@ class StorageController(object):
                 values = {}
 
             values["occurrence"] = self.update_occurrence_count(values)
-            values["date"] = timestamp()
 
             previous_statement = self.get_last_statement()
             values["in_response_to"] = self.update_response_list(statement, previous_statement)
 
             self.storage_adapter.update(statement, **values)
+
+    def get_statements_in_response_to(self, statement):
+        """
+        Returns a list of statement objects that are
+        in response to a specified statement object.
+        """
+        pass
 
     def get_most_frequent_response(self, closest_statement):
         """
@@ -121,6 +128,8 @@ class StorageController(object):
         occurrence_count = self.get_occurrence_count(matching_response)
 
         for statement in all_data:
+
+            statement_data = self.storage_adapter.find(statement)
 
             response_exists = closest_statement in self.get_responses(statement)
 

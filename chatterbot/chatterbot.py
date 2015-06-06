@@ -22,6 +22,10 @@ class ChatBot(object):
         self.io = IOAdapter()
 
     def train(self, conversation):
+
+        if not self.log:
+            raise Exception("Logging is disabled. Enable logging to allow training.")
+
         self.storage.train(conversation)
 
     def get_response_data(self, data):
@@ -29,7 +33,6 @@ class ChatBot(object):
         Returns a dictionary containing the meta data for
         the current response.
         """
-        from .utils.chronology import timestamp
 
         if "text" in data:
             match = self.logic.get(data["text"])
@@ -54,7 +57,6 @@ class ChatBot(object):
         name = data["name"]
 
         values["name"] = name
-        values["date"] = timestamp()
         values["occurrence"] = count
         values["in_response_to"] = response_list
 
