@@ -32,110 +32,21 @@ This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBo
 pip install chatterbot
 ```
 
-## Create a new chat bot
+## Basic Usage
+
 ```
 from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
-```
-**Note:** *The `ChatBot` requires that a name is specified for the bot.
 
-## Training
-After creating a new chatterbot instance it is also possible to train the bot. Training is a good way to ensure that the bot starts off with knowledge about specific responses. The current training method takes a list of statements that represent a conversation.
-
-**Note:** Training is not required but it is recommended.
-
-```
-conversation = [
-    "Hello",
-    "Hi there!",
-    "How are you doing?",
-    "I'm doing great.",
-    "That is good to hear",
-    "Thank you.",
-    "You're welcome."
-]
-
-chatbot.train(conversation)
+chatbot.get_response("Hello, how are you today?")
 ```
 
-## Get a response
+## Getting Started
 
-```
-response = chatbot.get_response("Good morning!")
-print(response)
-```
+See the instructions for using ChatterBot.  
+https://github.com/gunthercox/ChatterBot/wiki/Quick-Start
 
-## Logging
-
-Your ChatterBot will learn based on each new input statement it recieves.
-If you do not want your bot to learn, set `logging=False` when initializing the
-bot.
-
-```
-chatbot = ChatBot("Johnny Five", logging=False)
-```
-
-# Adapters
-
-ChatterBot uses adapters to handle three types of operations. All adapters for
-ChatterBot fall into one of three categories: **storage**, **io**, and **logic**.
-
-By default, ChatterBot uses the `JsonDatabaseAdapter` adapter for storage,
-the `ClosestMatchAdapter` for logic, and the `TerminalAdapter` for IO.
-
-Each adapter can be set by passing in the dot-notated import path to the constructor.
-
-```
-bot = ChatBot("My ChatterBot",
-    storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
-    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
-    io_adapter="chatterbot.adapters.io.TerminalAdapter",
-    database="../database.db")
-```
-
-## Storage adapters
-
-Storage adapters allow ChatterBot to connect to connect to any type of storage
-backend.
-
-### `JsonDatabaseAdapter`
-
-```
-"chatterbot.adapters.storage.JsonDatabaseAdapter"
-```
-
-The JSON Database adapter requires an additional parameter (`database`) to be
-passed to the ChatterBot constructor. This storage adapter uses a local file
-database so this parameter is needed to specify the location of the file.
-
-## IO adapters
-
-IO adapters allow ChatterBot to communicate through various interfaces. The
-default io adapter uses the terminal to communicate with the user.
-
-### `TerminalAdapter`
-
-```
-"chatterbot.adapters.io.TerminalAdapter"
-```
-
-The terminal adapter allows the ChatterBot to communicate with you through your
-terminal.
-
-## Logic adapters
-
-Logic adapters determine how ChatterBot selects responces to input statements.
-
-### `ClosestMatchAdapter`
-
-```
-"chatterbot.adapters.logic.ClosestMatchAdapter"
-```
-
-The `ClosestMatchAdapter` selects a response based on the closest know match to a
-given statement.
-
-# Examples
+## Examples
 
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
 directory in this project's repository.
@@ -145,13 +56,11 @@ directory in this project's repository.
 ChatterBot's built in tests can be run using nose.  
 See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
 
-# Use Cases
+# Applications
 
-**Using ChatterBot in your app? Let us know!**
-
-|[Salvius the Robot](https://github.com/gunthercox/salvius)|A humanoid robot.|
-|---|---|
-|[Zuluhotel](http://zuluhotel3.com)|A mmorpg shard emulation game.|
+Have you created something cool using ChatterBot?
+Please add your creation to the list of projects using ChatterBot in the wiki.  
+https://github.com/gunthercox/ChatterBot/wiki/
 
 # History
 
