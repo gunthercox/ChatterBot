@@ -92,8 +92,11 @@ class ChatBot(object):
         """
         Return the bot's response based on the input.
         """
-        response = self.io.get_response(
-            self, {"name":user_name, "text": input_text}
+
+        response_data = self.get_response_data(
+            {"name":user_name, "text": input_text}
         )
+
+        response = self.io.process_response(response_data)
 
         return response
