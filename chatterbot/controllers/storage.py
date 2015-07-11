@@ -76,22 +76,22 @@ class StorageController(object):
 
         self.storage_adapter.update(statement, **values)
 
-    def train(self, conversation):
+    def train(self, statement):
+        """
+        Update or create the data for a statement.
+        """
+        values = self.storage_adapter.find(statement)
 
-        for statement in conversation:
+        # Create an entry if the statement does not exist in the database
+        if not values:
+            values = {}
 
-            values = self.storage_adapter.find(statement)
+        values["occurrence"] = self.update_occurrence_count(values)
 
-            # Create an entry if the statement does not exist in the database
-            if not values:
-                values = {}
+        previous_statement = self.get_last_statement()
+        values["in_response_to"] = self.update_response_list(statement, previous_statement)
 
-            values["occurrence"] = self.update_occurrence_count(values)
-
-            previous_statement = self.get_last_statement()
-            values["in_response_to"] = self.update_response_list(statement, previous_statement)
-
-            self.storage_adapter.update(statement, **values)
+        self.storage_adapter.update(statement, **values)
 
     def list_statements(self):
         """

@@ -14,7 +14,7 @@ class ChatBot(object):
             "chatterbot.adapters.logic.ClosestMatchAdapter"
         )
 
-        io_adapter = kwargs.get("storage_adapter",
+        io_adapter = kwargs.get("io_adapter",
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
@@ -36,7 +36,8 @@ class ChatBot(object):
         if not self.log:
             raise Exception("Logging is disabled. Enable logging to allow training.")
 
-        self.storage.train(conversation)
+        for statement in conversation:
+            self.storage.train(statement)
 
     def get_response_data(self, data):
         """
