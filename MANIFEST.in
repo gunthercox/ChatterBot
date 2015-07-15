@@ -1,6 +1,10 @@
 include license.md
 include readme.md
 include requirements.txt
-database.db
+include database.db
 
 recursive-include tests *
+
+recursive-exclude * *.pyc
+recursive-exclude * *.pyc~
+recursive-exclude * *.py~
