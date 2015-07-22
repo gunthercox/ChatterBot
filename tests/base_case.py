@@ -8,8 +8,6 @@ class ChatBotTestCase(TestCase):
         """
         Set up a database for testing.
         """
-        import os
-
         data1 = [
             "african or european?",
             "Huh? I... I don't know that.",
@@ -40,3 +38,32 @@ class ChatBotTestCase(TestCase):
         Remove the test database.
         """
         self.chatbot.storage.storage_adapter.drop()
+
+
+class UntrainedChatBotTestCase(TestCase):
+    """
+    This is a test case for use when the
+    chat bot should not start with any
+    prior training.
+    """
+
+    def setUp(self):
+        """
+        Set up a database for testing.
+        """
+        test_db = self.random_string() + ".db"
+        self.chatbot = ChatBot("Test Bot", database=test_db)
+
+    def random_string(self, start=0, end=9000):
+        """
+        Generate a string based on a random number.
+        """
+        from random import randint
+        return str(randint(start, end))
+
+    def tearDown(self):
+        """
+        Remove the test database.
+        """
+        self.chatbot.storage.storage_adapter.drop()
+

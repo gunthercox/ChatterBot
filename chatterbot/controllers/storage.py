@@ -121,16 +121,18 @@ class StorageController(object):
         """
         Returns the statement with the greatest number of occurrences.
         """
-
         response_list = self.get_statements_in_response_to(closest_statement)
-        # TODO: if list empty
 
         # Initialize the matching responce to the closest statement.
         # This will be returned in the case that no match can be found.
         matching_response = closest_statement
 
-        # The statement passed in must be an existing statement within the database.
+        # The statement passed in must be an existing statement within the database
         statement_data = self.storage_adapter.find(matching_response)
+
+        if not statement_data:
+            return {matching_response: {}}
+
         occurrence_count = self.get_occurrence_count(statement_data)
 
         for statement in response_list:
@@ -148,3 +150,4 @@ class StorageController(object):
 
         # Choose the most common selection of matching response
         return {matching_response: self.storage_adapter.find(matching_response)}
+

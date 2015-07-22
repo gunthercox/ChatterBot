@@ -10,6 +10,10 @@ class ClosestMatchAdapter(LogicAdapter):
         """
         from fuzzywuzzy import process
 
+        # If the list is empty, return the statement
+        if not list_of_statements:
+            return text
+
         # Check if an exact match exists
         if text in list_of_statements:
             return text

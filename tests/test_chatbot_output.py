@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .base_case import ChatBotTestCase
+from .base_case import ChatBotTestCase, UntrainedChatBotTestCase
 from chatterbot import ChatBot
 
 
@@ -135,7 +135,19 @@ class ChatBotOutputTests(ChatBotTestCase):
         self.assertTrue(len(output) > -1)
 
 
-class DatabaseTests(ChatBotTestCase):
+class ResponseTestCase(UntrainedChatBotTestCase):
+
+    def test_empty_database(self):
+        """
+        If there is no statements in the database, then the
+        user's input is the only thing that can be returned.
+        """
+        response = self.chatbot.get_response("How are you?")
+
+        self.assertEqual("How are you?", response)
+
+
+class DatabaseTests(UntrainedChatBotTestCase):
 
     def test_database_is_updated(self):
         """
