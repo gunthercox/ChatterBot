@@ -1,32 +1,32 @@
 '''
-Check for online mentions on social media sites.
+Respond to mentions on twitter.
 The bot will follow the user who mentioned it and
 favorite the post in which the mention was made.
 '''
 
-from chatterbot.apis.twitter import Twitter
+chatbot = ChatBot("ChatterBot",
+    storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
+    io_adapter="chatterbot.adapters.io.TwitterAdapter",
+    database="../database.db")
 
-chatbot = ChatBot("ChatterBot")
+for mention in chatbot.get_mentions():
 
-if "twitter" in kwargs:
-    twitter_bot = Twitter(kwargs["twitter"])
+    '''
+    Check to see if the post has been favorited
+    We will use this as a check for whether or not to respond to it.
+    Only respond to unfavorited mentions.
+    '''
 
-    for mention in twitter_bot.get_mentions():
+    if not mention["favorited"]:
+        screen_name = mention["user"]["screen_name"]
+        text = mention["text"]
+        response = chatbot.get_response(text)
 
-        '''
-        Check to see if the post has been favorited
-        We will use this as a check for whether or not to respond to it.
-        Only respond to unfavorited mentions.
-        '''
+        print(text)
+        print(response)
 
-        if not mention["favorited"]:
-            screen_name = mention["user"]["screen_name"]
-            text = mention["text"]
-            response = chatbot.get_response(text)
+        chatbot.follow(screen_name)
+        chatbot.favorite(mention["id"])
+        chatbot.reply(mention["id"], response)
 
-            print(text)
-            print(response)
-
-            follow(screen_name)
-            favorite(mention["id"])
-            reply(mention["id"], response)

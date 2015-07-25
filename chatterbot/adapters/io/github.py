@@ -1,6 +1,8 @@
+from chatterbot.adapters.io import IOAdapter
 import requests
 
-class GitHub(object):
+
+class GitHubAdapter(IOAdapter):
 
     def __init__(self, github):
         self.github = github

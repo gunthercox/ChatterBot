@@ -1,10 +1,11 @@
 # -*- encoding: utf-8 -*-
 from __future__ import unicode_literals
+from chatterbot.adapters.io import IOAdapter
 import requests
 from requests_oauthlib import OAuth1
 
 
-class Twitter(object):
+class TwitterAdapter(IOAdapter):
 
     def __init__(self, twitter):
 

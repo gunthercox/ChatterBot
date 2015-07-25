@@ -1,7 +1,5 @@
 from unittest import TestCase
-from chatterbot.apis.twitter import Twitter
-from chatterbot.algorithms.twitter import remove_leeding_usernames
-from chatterbot.algorithms.twitter import remove_trailing_usernames
+from chatterbot.adapters.io import TwitterAdapter
 
 
 class TwitterTests(TestCase):
@@ -12,7 +10,7 @@ class TwitterTests(TestCase):
             "CONSUMER_SECRET": "nullvoidnullvoidnullvoid"
         }
 
-        chatbot = Twitter(twitter=TWITTER)
+        chatbot = TwitterAdapter(twitter=TWITTER)
 
         self.assertEqual(TWITTER["CONSUMER_KEY"], chatbot.consumer_key)
         self.assertEqual(TWITTER["CONSUMER_SECRET"], chatbot.consumer_secret)
