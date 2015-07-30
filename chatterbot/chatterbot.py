@@ -100,3 +100,6 @@ class ChatBot(object):
         response = self.io.process_response(response_data)
 
         return response
+
+    def get_input(self):
+        return self.io.process_input()
