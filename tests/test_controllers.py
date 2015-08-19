@@ -10,9 +10,13 @@ class ControllerTests(ChatBotTestCase):
         """
         super(ControllerTests, self).setUp()
 
+        kwargs = {
+            "database": self.chatbot.storage.storage_adapter.database.path
+        }
+
         self.controller = StorageController(
             "chatterbot.adapters.storage.JsonDatabaseAdapter",
-            self.chatbot.storage.storage_adapter.database.path
+            **kwargs
         )
 
     def test_get_last_statement(self):

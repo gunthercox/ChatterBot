@@ -3,10 +3,10 @@ from chatterbot.utils.module_loading import import_module
 
 class StorageController(object):
 
-    def __init__(self, adapter, database_name):
+    def __init__(self, adapter, **kwargs):
 
         StorageAdapter = import_module(adapter)
-        self.storage_adapter = StorageAdapter(database_name)
+        self.storage_adapter = StorageAdapter(**kwargs)
 
         self.recent_statements = []
 

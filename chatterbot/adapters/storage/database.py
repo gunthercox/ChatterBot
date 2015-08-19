@@ -3,6 +3,9 @@ from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 class DatabaseAdapter(object):
 
+    def __init__(self, **kwargs):
+        self.kwargs = kwargs
+
     def count(self):
         """
         Return the number of entries in the database.

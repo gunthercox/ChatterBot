@@ -1,10 +1,12 @@
 from .controllers import StorageController
+from .conversation import Response, Statement, Signature
 from .utils.module_loading import import_module
 
 
 class ChatBot(object):
 
     def __init__(self, name, **kwargs):
+        self.name = name
 
         storage_adapter = kwargs.get("storage_adapter",
             "chatterbot.adapters.storage.JsonDatabaseAdapter"
@@ -18,12 +20,9 @@ class ChatBot(object):
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
-        database = kwargs.get("database", "database.db")
-
-        self.name = name
         self.log = kwargs.get("logging", True)
 
-        self.storage = StorageController(storage_adapter, database)
+        self.storage = StorageController(storage_adapter, **kwargs)
 
         LogicAdapter = import_module(logic_adapter)
         self.logic = LogicAdapter()
@@ -34,6 +33,7 @@ class ChatBot(object):
     def train(self, conversation):
 
         if not self.log:
+            # TODO: Create a custom exception class
             raise Exception("Logging is disabled. Enable logging to allow training.")
 
         for statement in conversation:
@@ -103,3 +103,4 @@ class ChatBot(object):
 
     def get_input(self):
         return self.io.process_input()
+
