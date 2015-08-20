@@ -153,8 +153,6 @@ class DatabaseTests(UntrainedChatBotTestCase):
         """
         Test that the database is updated when logging is set to true.
         """
-        self.chatbot.log = True
-
         input_text = "What is the airspeed velocity of an unladen swallow?"
         exists_before = self.chatbot.storage.storage_adapter.find(input_text)
 
@@ -168,7 +166,7 @@ class DatabaseTests(UntrainedChatBotTestCase):
         """
         Test that the database is not updated when logging is set to false.
         """
-        self.chatbot.log = False
+        self.chatbot.storage.log = False
 
         input_text = "Who are you? The proud lord said."
         exists_before = self.chatbot.storage.storage_adapter.find(input_text)
@@ -178,3 +176,29 @@ class DatabaseTests(UntrainedChatBotTestCase):
 
         self.assertFalse(exists_before)
         self.assertFalse(exists_after)
+
+    def test_database_is_valid(self):
+        """
+        Test that the database maintains a valid format
+        when data is added and updated.
+        """
+        subobjects = []
+
+        conversation = [
+            "Hello sir!",
+            "Hi, can I help you?",
+            "Yes, I am looking for italian parsely.",
+            "Italian parsely is right over here in out produce department",
+            "Great, thank you for your help.",
+            "No problem, did you need help finding anything else?",
+            "Nope, that was it.",
+            "Alright, have a great day.",
+            "Thanks, you too."
+        ]
+
+        self.chatbot.train(conversation)
+
+        # print self.chatbot.storage.storage_adapter.database.data()
+
+        self.assertEqual(self.chatbot.storage.storage_adapter.count(), 9)
+

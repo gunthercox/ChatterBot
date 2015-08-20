@@ -8,6 +8,9 @@ class StorageController(object):
         StorageAdapter = import_module(adapter)
         self.storage_adapter = StorageAdapter(**kwargs)
 
+        # TODO: Rename to read_only
+        self.log = kwargs.get("logging", True)
+
         self.recent_statements = []
 
     def get_last_statement(self):
@@ -71,15 +74,22 @@ class StorageController(object):
         Update the database with the changes
         for a new or existing statement.
         """
-        statement = list(kwargs.keys())[0]
-        values = kwargs[statement]
+        # Do not alter the database unless writing is enabled
+        if self.log:
+            statement = list(kwargs.keys())[0]
+            values = kwargs[statement]
 
-        self.storage_adapter.update(statement, **values)
+            self.storage_adapter.update(statement, **values)
 
     def train(self, statement):
         """
         Update or create the data for a statement.
         """
+        from chatterbot.exceptions import LoggingDisabledException
+
+        if not self.log:
+            raise LoggingDisabledException()
+
         values = self.storage_adapter.find(statement)
 
         # Create an entry if the statement does not exist in the database

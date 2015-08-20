@@ -20,8 +20,6 @@ class ChatBot(object):
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
-        self.log = kwargs.get("logging", True)
-
         self.storage = StorageController(storage_adapter, **kwargs)
 
         LogicAdapter = import_module(logic_adapter)
@@ -31,11 +29,6 @@ class ChatBot(object):
         self.io = IOAdapter()
 
     def train(self, conversation):
-
-        if not self.log:
-            # TODO: Create a custom exception class
-            raise Exception("Logging is disabled. Enable logging to allow training.")
-
         for statement in conversation:
             self.storage.train(statement)
 
@@ -44,7 +37,6 @@ class ChatBot(object):
         Returns a dictionary containing the meta data for
         the current response.
         """
-
         if "text" in data:
             text_of_all_statements = self.storage.list_statements()
 
@@ -82,9 +74,8 @@ class ChatBot(object):
             "bot": response
         }
 
-        # Update the database before selecting a response if logging is enabled
-        if self.log:
-            self.storage.save_statement(**response_data[name])
+        # Update the database before selecting a response
+        self.storage.save_statement(**response_data[name])
 
         return response_data
 
@@ -92,7 +83,6 @@ class ChatBot(object):
         """
         Return the bot's response based on the input.
         """
-
         response_data = self.get_response_data(
             {"name":user_name, "text": input_text}
         )
