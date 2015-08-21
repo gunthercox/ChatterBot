@@ -8,8 +8,7 @@ class StorageController(object):
         StorageAdapter = import_module(adapter)
         self.storage_adapter = StorageAdapter(**kwargs)
 
-        # TODO: Rename to read_only
-        self.log = kwargs.get("logging", True)
+        self.read_only = kwargs.get("read_only", False)
 
         self.recent_statements = []
 
@@ -75,7 +74,7 @@ class StorageController(object):
         for a new or existing statement.
         """
         # Do not alter the database unless writing is enabled
-        if self.log:
+        if not self.read_only:
             statement = list(kwargs.keys())[0]
             values = kwargs[statement]
 
@@ -87,7 +86,7 @@ class StorageController(object):
         """
         from chatterbot.exceptions import LoggingDisabledException
 
-        if not self.log:
+        if self.read_only:
             raise LoggingDisabledException()
 
         values = self.storage_adapter.find(statement)
