@@ -166,7 +166,7 @@ class DatabaseTests(UntrainedChatBotTestCase):
         """
         Test that the database is not updated when read_only is set to true.
         """
-        self.chatbot.storage.read_only = True
+        self.chatbot.storage.storage_adapter.read_only = True
 
         input_text = "Who are you? The proud lord said."
         exists_before = self.chatbot.storage.storage_adapter.find(input_text)

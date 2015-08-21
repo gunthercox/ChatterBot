@@ -20,7 +20,10 @@ class ChatBot(object):
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
-        self.storage = StorageController(storage_adapter, **kwargs)
+        StorageAdapter = import_module(storage_adapter)
+        self.storage_adapter = StorageAdapter(**kwargs)
+
+        self.storage = StorageController(self.storage_adapter)
 
         LogicAdapter = import_module(logic_adapter)
         self.logic = LogicAdapter()
@@ -29,8 +32,25 @@ class ChatBot(object):
         self.io = IOAdapter()
 
     def train(self, conversation):
+        """
+        Update or create the data for a statement.
+        """
         for statement in conversation:
-            self.storage.train(statement)
+            values = self.storage_adapter.find(statement)
+
+            # Create an entry if the statement does not exist in the database
+            if not values:
+                values = {}
+
+            values["occurrence"] = self.storage.update_occurrence_count(values)
+
+            previous_statement = self.storage.get_last_statement()
+            values["in_response_to"] = self.storage.update_response_list(
+                statement,
+                previous_statement
+            )
+
+            self.storage_adapter.update(statement, **values)
 
     def get_response_data(self, data):
         """
@@ -45,11 +65,11 @@ class ChatBot(object):
             if match:
                 response = self.storage.get_most_frequent_response(match)
             else:
-                response = self.storage.get_random_statement()
+                response = self.storage_adapter.get_random()
 
         else:
             # If the input is blank, return a random statement
-            response = self.storage.get_random_statement()
+            response = self.storage_adapter.get_random()
 
         statement = list(response.keys())[0]
         values = response[statement]

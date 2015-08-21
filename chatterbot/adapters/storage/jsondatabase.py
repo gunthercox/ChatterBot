@@ -21,11 +21,18 @@ class JsonDatabaseAdapter(DatabaseAdapter):
         return self.database.data(key=key)
 
     def insert(self, key, values):
-        self.database[key] = values
+
+        # Do not alter the database unless writing is enabled
+        if not self.read_only:
+            self.database[key] = values
 
         return values
 
     def update(self, key, **kwargs):
+
+        # Do not alter the database unless writing is enabled
+        if self.read_only:
+            return {}
 
         values = self.database.data(key=key)
 
@@ -52,7 +59,7 @@ class JsonDatabaseAdapter(DatabaseAdapter):
 
     def drop(self):
         """
-        Remove the json file database completely
+        Remove the json file database completely.
         """
         import os
 

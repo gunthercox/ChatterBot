@@ -5,6 +5,7 @@ class DatabaseAdapter(object):
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
+        self.read_only = kwargs.get("read_only", False)
 
     def count(self):
         """

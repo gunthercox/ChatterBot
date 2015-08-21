@@ -3,12 +3,9 @@ from chatterbot.utils.module_loading import import_module
 
 class StorageController(object):
 
-    def __init__(self, adapter, **kwargs):
+    def __init__(self, adapter):
 
-        StorageAdapter = import_module(adapter)
-        self.storage_adapter = StorageAdapter(**kwargs)
-
-        self.read_only = kwargs.get("read_only", False)
+        self.storage_adapter = adapter
 
         self.recent_statements = []
 
@@ -21,9 +18,6 @@ class StorageController(object):
             return None
 
         return self.recent_statements[-1]
-
-    def get_random_statement(self):
-        return self.storage_adapter.get_random()
 
     def update_occurrence_count(self, data):
         """
@@ -73,32 +67,8 @@ class StorageController(object):
         Update the database with the changes
         for a new or existing statement.
         """
-        # Do not alter the database unless writing is enabled
-        if not self.read_only:
-            statement = list(kwargs.keys())[0]
-            values = kwargs[statement]
-
-            self.storage_adapter.update(statement, **values)
-
-    def train(self, statement):
-        """
-        Update or create the data for a statement.
-        """
-        from chatterbot.exceptions import LoggingDisabledException
-
-        if self.read_only:
-            raise LoggingDisabledException()
-
-        values = self.storage_adapter.find(statement)
-
-        # Create an entry if the statement does not exist in the database
-        if not values:
-            values = {}
-
-        values["occurrence"] = self.update_occurrence_count(values)
-
-        previous_statement = self.get_last_statement()
-        values["in_response_to"] = self.update_response_list(statement, previous_statement)
+        statement = list(kwargs.keys())[0]
+        values = kwargs[statement]
 
         self.storage_adapter.update(statement, **values)
 
