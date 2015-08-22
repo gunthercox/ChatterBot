@@ -1,5 +1,6 @@
 from chatterbot.adapters.storage import DatabaseAdapter
 from chatterbot.adapters.exceptions import EmptyDatabaseException
+from chatterbot.conversation import Statement
 from jsondb.db import Database
 
 
@@ -17,36 +18,43 @@ class JsonDatabaseAdapter(DatabaseAdapter):
     def count(self):
         return len(self._keys())
 
-    def find(self, key):
-        return self.database.data(key=key)
+    def find(self, statement_text):
+        values = self.database.data(key=statement_text)
 
-    def insert(self, key, values):
+        if not values:
+            return None
 
+        return Statement(statement_text, **values)
+
+    def filter(self, **kwargs):
+        """
+        Returns a list of statements in the database
+        that match the parameters specified.
+        """
+        pass
+        # TODO
+
+    def insert(self, statement):
         # Do not alter the database unless writing is enabled
         if not self.read_only:
-            self.database[key] = values
+            data = statement.serialize()
 
-        return values
+            # Remove the text key from the data
+            del(data['text'])
+            self.database[statement.text] = data
 
-    def update(self, key, **kwargs):
+        return statement
 
+    def update(self, statement):
         # Do not alter the database unless writing is enabled
-        if self.read_only:
-            return {}
+        if not self.read_only:
+            data = statement.serialize()
 
-        values = self.database.data(key=key)
+            # Remove the text key from the data
+            del(data['text'])
+            self.database[statement.text] = data
 
-        # Create the statement if it doesn't exist in the database
-        if not values:
-            self.database[key] = {}
-            values = {}
-
-        for parameter in kwargs:
-            values[parameter] = kwargs.get(parameter)
-
-        self.database[key] = values
-
-        return values
+        return statement
 
     def get_random(self):
         from random import choice
@@ -55,7 +63,7 @@ class JsonDatabaseAdapter(DatabaseAdapter):
             raise EmptyDatabaseException()
 
         statement = choice(self._keys())
-        return {statement: self.find(statement)}
+        return self.find(statement)
 
     def drop(self):
         """
@@ -64,3 +72,4 @@ class JsonDatabaseAdapter(DatabaseAdapter):
         import os
 
         os.remove(self.database.path)
+

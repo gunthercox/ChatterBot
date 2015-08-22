@@ -4,7 +4,6 @@ from chatterbot.utils.module_loading import import_module
 class StorageController(object):
 
     def __init__(self, adapter):
-
         self.storage_adapter = adapter
 
         self.recent_statements = []
@@ -19,48 +18,11 @@ class StorageController(object):
 
         return self.recent_statements[-1]
 
-    def update_occurrence_count(self, data):
-        """
-        Increment the occurrence count for a given statement.
-        """
-        return data.get("occurrence", 0) + 1
-
-    def get_occurrence_count(self, statement):
-        """
-        Return the number of times a statement occurs in the database.
-        """
-        # If the number of occurences has not been set then return 1
-        return statement.get("occurrence", 1)
-
     def get_responses(self, statement):
         """
         Returns the list of responses for a given statement.
         """
         return statement.get("in_response_to", [])
-
-    def update_response_list(self, key, previous_statement):
-        """
-        Update the list of statements that a know statement has responded to.
-        """
-        responses = []
-
-        values = self.storage_adapter.find(key)
-
-        if not values:
-            values = {}
-
-        if "in_response_to" in values:
-            responses = values["in_response_to"]
-
-        if previous_statement:
-
-            # Check to make sure that the statement does not already exist
-            if not previous_statement in responses:
-                responses.append(previous_statement)
-
-        self.recent_statements.append(key)
-
-        return responses
 
     def save_statement(self, **kwargs):
         """
@@ -89,9 +51,9 @@ class StorageController(object):
 
         for statement in statements:
 
-            statement_data = self.storage_adapter.find(statement)
+            result = self.storage_adapter.find(statement)
 
-            if input_statement in self.get_responses(statement_data):
+            if input_statement in self.get_responses(result.text):
                 results.append(statement)
 
         return results
@@ -109,16 +71,13 @@ class StorageController(object):
         # The statement passed in must be an existing statement within the database
         statement_data = self.storage_adapter.find(matching_response)
 
-        if not statement_data:
-            return {matching_response: {}}
-
-        occurrence_count = self.get_occurrence_count(statement_data)
+        occurrence_count = statement_data.get_occurrence_count()
 
         for statement in response_list:
 
             statement_data = self.storage_adapter.find(statement)
 
-            statement_occurrence_count = self.get_occurrence_count(statement_data)
+            statement_occurrence_count = statement_data.get_occurrence_count()
 
             # Keep the more common statement
             if statement_occurrence_count >= occurrence_count:
@@ -127,6 +86,6 @@ class StorageController(object):
 
             #TODO? If the two statements occure equaly in frequency, should we keep one at random
 
-        # Choose the most common selection of matching response
-        return {matching_response: self.storage_adapter.find(matching_response)}
+        # Choose the most commonly occuring matching response
+        return matching_response
 

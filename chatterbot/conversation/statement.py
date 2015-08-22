@@ -1,39 +1,50 @@
-import datetime
-
-
 class Statement(object):
 
-    def __init__(self, text):
+    def __init__(self, text, **kwargs):
         self.text = text
-        self.occurrence = 0
-        self.in_response_to = []
-        self.signatures = []
+        self.date = kwargs.get("date", "2015-04-16-09-01-59")
+        self.occurrence = kwargs.get("occurrence", 1)
+        self.name = kwargs.get("name", "user")
 
-    def now(self, fmt="%Y-%m-%d-%H-%M-%S"):
+        # TODO: Make this a list of statement objects instead of a list of strings
+        self.in_response_to = kwargs.get("in_response_to", [])
+
+        self.modified = False
+
+    def add_response(self, statement):
         """
-        Returns a string formatted timestamp of the current time.
+        Add the statement to the list if it does not already exist.
         """
-        return datetime.datetime.now().strftime(fmt)
+        if not statement in self.in_response_to:
+            self.in_response_to.append(statement)
 
-    def add_signature(self, name):
+    def get_occurrence_count(self):
+        """
+        Return the number of times the statement occurs in the database.
+        """
+        return self.occurrence
 
-        signature = {}
-
-        signature["name"] = name
-        signature["time"] = self.now()
-
-        self.signatures.append(signature)
+    def update_occurrence_count(self):
+        """
+        Increment the occurrence count.
+        """
+        self.occurrence = self.occurrence + 1
 
     def serialize(self):
         """
         Returns a dictionary representation of the current object.
         """
+        data = {}
 
-        statement = {}
+        data["text"] = self.text
+        data["date"] = self.date
+        data["occurrence"] = self.occurrence
+        data["name"] = self.name
 
-        statement["text"] = self.text
-        statement["occurrence"] = self.occurrence
-        statement["in_response_to"] = self.in_response_to
-        statement["signatures"] = self.signatures
+        data["in_response_to"] = []
 
-        return statement
+        for statement in self.in_response_to:
+            data["in_response_to"].append(statement.text)
+
+        return data
+

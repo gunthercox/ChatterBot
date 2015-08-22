@@ -1,6 +1,6 @@
-from .controllers import StorageController
-from .conversation import Response, Statement, Signature
 from .utils.module_loading import import_module
+from .controllers import StorageController
+from .conversation import Statement
 
 
 class ChatBot(object):
@@ -35,32 +35,28 @@ class ChatBot(object):
         """
         Update or create the data for a statement.
         """
-        for statement in conversation:
-            values = self.storage_adapter.find(statement)
-
-            # Create an entry if the statement does not exist in the database
-            if not values:
-                values = {}
-
-            values["occurrence"] = self.storage.update_occurrence_count(values)
+        for text in conversation:
+            statement = self.storage_adapter.find(text)
+            statement.update_occurrence_count()
 
             previous_statement = self.storage.get_last_statement()
-            values["in_response_to"] = self.storage.update_response_list(
-                statement,
-                previous_statement
-            )
 
-            self.storage_adapter.update(statement, **values)
+            statement.add_response(previous_statement)
+            self.storage.recent_statements.append(previous_statement)
 
-    def get_response_data(self, data):
+            self.storage_adapter.update(statement.text, **statement.serialize())
+
+    def get_response_data(self, statement_text):
         """
         Returns a dictionary containing the meta data for
         the current response.
         """
-        if "text" in data:
+        statement = Statement(statement_text)
+
+        if statement_text.strip():
             text_of_all_statements = self.storage.list_statements()
 
-            match = self.logic.get(data["text"], text_of_all_statements)
+            match = self.logic.get(statement_text, text_of_all_statements)
 
             if match:
                 response = self.storage.get_most_frequent_response(match)
@@ -71,42 +67,25 @@ class ChatBot(object):
             # If the input is blank, return a random statement
             response = self.storage_adapter.get_random()
 
-        statement = list(response.keys())[0]
-        values = response[statement]
-
         previous_statement = self.storage.get_last_statement()
-        response_list = self.storage.update_response_list(statement, previous_statement)
+        statement.add_response(previous_statement)
 
-        count = self.storage.update_occurrence_count(values)
-
-        name = data["name"]
-
-        values["name"] = name
-        values["occurrence"] = count
-        values["in_response_to"] = response_list
+        statement.update_occurrence_count()
 
         self.storage.recent_statements.append(list(response.keys())[0])
 
-        response_data = {
-            name: {
-                data["text"]: values
-            },
-            "bot": response
-        }
+        response_data = response.serialize()
 
-        # Update the database before selecting a response
-        self.storage.save_statement(**response_data[name])
+        # Update the database after selecting a response
+        self.storage.save_statement(**response_data)
 
         return response_data
 
-    def get_response(self, input_text, user_name="user"):
+    def get_response(self, input_text):
         """
         Return the bot's response based on the input.
         """
-        response_data = self.get_response_data(
-            {"name":user_name, "text": input_text}
-        )
-
+        response_data = self.get_response_data(input_text)
         response = self.io.process_response(response_data)
 
         return response
