@@ -2,6 +2,7 @@ from chatterbot import ChatBot
 import sys
 
 
+# Create a new instance of a ChatBot
 bot = ChatBot("Terminal",
     storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
     logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",

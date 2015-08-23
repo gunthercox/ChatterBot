@@ -41,15 +41,17 @@ chatbot = ChatBot("Ron Obvious")
 chatbot.get_response("Hello, how are you today?")
 ```
 
-## Getting Started
+## Documentation
 
-See the instructions for using ChatterBot.  
-https://github.com/gunthercox/ChatterBot/wiki/Quick-Start
+View the [documentation](https://github.com/gunthercox/ChatterBot/wiki/Quick-Start)
+for using ChatterBot in the project wiki.
 
 ## Examples
 
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
 directory in this project's repository.
+
+There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot).
 
 # Testing
 
