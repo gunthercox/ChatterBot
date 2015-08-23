@@ -5,9 +5,7 @@ class Statement(object):
 
     def __init__(self, text, **kwargs):
         self.text = text
-        self.date = kwargs.get("date", "2015-04-16-09-01-59")
         self.occurrence = kwargs.get("occurrence", 1)
-        self.name = kwargs.get("name", "user")
 
         self.signatures = kwargs.get("signatures", [])
 
@@ -53,10 +51,7 @@ class Statement(object):
         data = {}
 
         data["text"] = self.text
-        data["date"] = self.date
         data["occurrence"] = self.occurrence
-        data["name"] = self.name
-
         data["in_response_to"] = self.in_response_to
 
         data["signature"] = []
