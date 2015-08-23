@@ -9,3 +9,4 @@ class IOAdapter(object):
         Returns an output value.
         """
         raise AdapterNotImplementedError()
+

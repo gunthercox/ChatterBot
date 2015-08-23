@@ -7,7 +7,7 @@ class TerminalAdapterTests(TestCase):
     """
     The terminal adapter is designed to allow
     interaction with the chat bot to occur through
-    a command line interface.a command line interface.
+    a command line interface.
     """
 
     def test_response_is_printed(self):

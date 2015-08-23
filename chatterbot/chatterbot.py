@@ -88,14 +88,13 @@ class ChatBot(object):
         # Choose the most commonly occuring matching response
         return matching_response
 
-    def get_response_data(self, statement_text):
+    def get_response(self, input_text):
         """
-        Returns a dictionary containing the meta data for
-        the current response.
+        Return the bot's response based on the input.
         """
         from .adapters.exceptions import EmptyDatabaseException
 
-        statement = Statement(statement_text)
+        statement = Statement(input_text)
 
         try:
             # Instantiate the response as a random statement
@@ -124,14 +123,8 @@ class ChatBot(object):
         # Update the database after selecting a response
         self.storage.update(statement)
 
-        return response
-
-    def get_response(self, input_text):
-        """
-        Return the bot's response based on the input.
-        """
-        response_data = self.get_response_data(input_text)
-        response = self.io.process_response(response_data)
+        # Process the response output with the IO adapter
+        response = self.io.process_response(response)
 
         return response
 
