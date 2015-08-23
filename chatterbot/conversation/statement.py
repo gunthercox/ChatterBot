@@ -1,3 +1,6 @@
+from .signature import Signature
+
+
 class Statement(object):
 
     def __init__(self, text, **kwargs):
@@ -6,7 +9,8 @@ class Statement(object):
         self.occurrence = kwargs.get("occurrence", 1)
         self.name = kwargs.get("name", "user")
 
-        # TODO: Make this a list of statement objects instead of a list of strings
+        self.signatures = kwargs.get("signatures", [])
+
         self.in_response_to = kwargs.get("in_response_to", [])
 
         self.modified = False
@@ -39,6 +43,9 @@ class Statement(object):
         """
         self.occurrence = self.occurrence + 1
 
+    def add_signature(self, signature):
+        self.signatures.append(signature)
+
     def serialize(self):
         """
         Returns a dictionary representation of the current object.
@@ -51,6 +58,11 @@ class Statement(object):
         data["name"] = self.name
 
         data["in_response_to"] = self.in_response_to
+
+        data["signature"] = []
+
+        for signature in self.signatures:
+            data["signature"].append(signature.serialize())
 
         return data
 

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Signature
 
 
 class StatementTests(TestCase):
@@ -45,30 +45,11 @@ class StatementTests(TestCase):
         )
 
     def test_add_signature(self):
-        # TODO
-        self.assertTrue(True)
+        signature = Signature("Gunther Cox")
+        self.statement.add_signature(signature)
+        self.assertIn(signature, self.statement.signatures)
 
     def test_serializer(self):
-        # TODO
-        self.assertTrue(True)
-
-'''
-class SignatureTests(TestCase):
-
-    def setUp(self):
-        self.signature = Signature("Gunther Cox")
-
-    def test_add_timestamp(self):
-        """
-        Tests that the correct timestamp is returned.
-        """
-        import datetime
-
-        fmt = "%Y-%m-%d-%H-%M-%S"
-        time = self.signature.create_timestamp(fmt)
-
-        now = datetime.datetime.now().strftime(fmt)
-
-        self.assertEqual(time, now)
-'''
+        data = self.statement.serialize()
+        self.assertEqual(self.statement.text, data["text"])
 

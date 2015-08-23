@@ -156,8 +156,6 @@ class ChatBot(object):
             if previous_statement:
                 statement.add_response(previous_statement)
 
-            print statement.text, statement.occurrence
-
             self.recent_statements.append(statement)
             self.storage.update(statement)
 
