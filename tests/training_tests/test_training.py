@@ -40,13 +40,15 @@ class TrainingTestCase(UntrainedChatBotTestCase):
         statement = self.chatbot.storage.find("Do you like my hat?")
         self.assertEqual(statement.get_occurrence_count(), 2)
 
-    def test_database_is_valid(self):
+    def test_database_has_correct_format(self):
         """
         Test that the database maintains a valid format
-        when data is added and updated.
+        when data is added and updated. This means that
+        after the training process, the database should
+        contain nine objects and eight of these objects
+        should list the previous member of the list as
+        a response.
         """
-        subobjects = []
-
         conversation = [
             "Hello sir!",
             "Hi, can I help you?",
@@ -61,7 +63,26 @@ class TrainingTestCase(UntrainedChatBotTestCase):
 
         self.chatbot.train(conversation)
 
+        # There should be a total of 9 statements in the database after training
         self.assertEqual(self.chatbot.storage.count(), 9)
+
+        # The first statement should be in responce to another statement yet
+        self.assertEqual(
+            len(self.chatbot.storage.find(conversation[0]).in_response_to),
+            0
+        )
+
+        # The second statement should have one response
+        self.assertEqual(
+            len(self.chatbot.storage.find(conversation[1]).in_response_to),
+            1
+        )
+
+        # The second statement should be in response to the first statement
+        self.assertIn(
+            conversation[0],
+            self.chatbot.storage.find(conversation[1]).in_response_to,
+        )
 
     def test_training_with_unicode_characters(self):
         """
@@ -83,4 +104,22 @@ class TrainingTestCase(UntrainedChatBotTestCase):
         response = self.chatbot.get_response(conversation[1])
 
         self.assertEqual(response, conversation[2])
+
+    def test_chatbot_statement_history_matches_training(self):
+        conversation = [
+            "Do you like my hat?",
+            "I do not like your hat."
+        ]
+
+        self.chatbot.train(conversation)
+
+        self.assertEqual(len(self.chatbot.recent_statements), 2)
+        self.assertEqual(
+            conversation[0],
+            self.chatbot.recent_statements[0].text
+        )
+        self.assertEqual(
+            conversation[1],
+            self.chatbot.recent_statements[1].text
+        )
 
