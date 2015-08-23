@@ -1,5 +1,4 @@
 from chatterbot import ChatBot
-import sys
 
 
 bot = ChatBot("Training Example",
