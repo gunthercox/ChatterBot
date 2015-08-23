@@ -1,4 +1,5 @@
 from unittest import TestCase
+from chatterbot.conversation import Statement
 from chatterbot.adapters.io import TerminalAdapter
 
 
@@ -14,9 +15,7 @@ class TerminalAdapterTests(TestCase):
         This test ensures that the bot's response is
         correctly printed in the terminal.
         """
-
         # TODO: How can you test this?
-
         self.assertTrue(True)
 
     def test_response_is_returned(self):
@@ -24,21 +23,11 @@ class TerminalAdapterTests(TestCase):
         For consistency across io adapters, the
         terminal adaper should return the output value. 
         """
-
-        test_data = {
-            "user": {
-                "Come with me if you want to live.": {}
-            },
-            "bot": {
-                "Fortunately for you, my process cannot be terminated.": {}
-            }
-        }
-
         adapter = TerminalAdapter()
-
-        response = adapter.process_response(test_data)
+        statement = Statement("Come with me if you want to live.")
 
         self.assertEqual(
-            "Fortunately for you, my process cannot be terminated.",
-            response
+            adapter.process_response(statement),
+            statement.text
         )
+

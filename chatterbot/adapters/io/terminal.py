@@ -11,11 +11,7 @@ class TerminalAdapter(IOAdapter):
         user_input = input_function()
         return user_input
 
-    def process_response(self, response_data):
+    def process_response(self, statement):
+        print(statement.text)
+        return statement.text
 
-        bot_response = response_data["bot"]
-
-        bot_response_text = list(bot_response.keys())[0]
-
-        print(bot_response_text)
-        return bot_response_text

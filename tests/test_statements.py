@@ -7,6 +7,19 @@ class StatementTests(TestCase):
     def setUp(self):
         self.statement = Statement("A test statement.")
 
+    def test_equality(self):
+        """
+        It should be possible to check if a statement
+        exists in the list of statements that another
+        statement has been issued in response to.
+        """
+        self.statement.add_response(Statement("Yo"))
+        self.assertEqual(len(self.statement.in_response_to), 1)
+        self.assertIn(
+            Statement("Yo"),
+            self.statement.in_response_to
+        )
+
     def test_occurrence_count(self):
         self.statement.update_occurrence_count()
         self.assertTrue(
@@ -39,7 +52,7 @@ class StatementTests(TestCase):
         # TODO
         self.assertTrue(True)
 
-
+'''
 class SignatureTests(TestCase):
 
     def setUp(self):
@@ -57,3 +70,5 @@ class SignatureTests(TestCase):
         now = datetime.datetime.now().strftime(fmt)
 
         self.assertEqual(time, now)
+'''
+

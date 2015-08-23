@@ -37,7 +37,7 @@ class ChatBotTestCase(TestCase):
         """
         Remove the test database.
         """
-        self.chatbot.storage.storage_adapter.drop()
+        self.chatbot.storage.drop()
 
 
 class UntrainedChatBotTestCase(TestCase):
@@ -65,5 +65,5 @@ class UntrainedChatBotTestCase(TestCase):
         """
         Remove the test database.
         """
-        self.chatbot.storage.storage_adapter.drop()
+        self.chatbot.storage.drop()
 

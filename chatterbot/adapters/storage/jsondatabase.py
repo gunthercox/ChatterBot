@@ -32,18 +32,7 @@ class JsonDatabaseAdapter(DatabaseAdapter):
         that match the parameters specified.
         """
         pass
-        # TODO
-
-    def insert(self, statement):
-        # Do not alter the database unless writing is enabled
-        if not self.read_only:
-            data = statement.serialize()
-
-            # Remove the text key from the data
-            del(data['text'])
-            self.database[statement.text] = data
-
-        return statement
+        # TODO: Useful for in_response_to...
 
     def update(self, statement):
         # Do not alter the database unless writing is enabled
@@ -53,6 +42,13 @@ class JsonDatabaseAdapter(DatabaseAdapter):
             # Remove the text key from the data
             del(data['text'])
             self.database[statement.text] = data
+
+            # Make sure that an entry for each response is saved
+            for response_statement in statement.in_response_to:
+                response = self.find(response_statement)
+                if not response:
+                    response = Statement(response_statement)
+                    self.update(response)
 
         return statement
 

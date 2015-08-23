@@ -38,7 +38,7 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         when one item has been saved to the database.
         """
         statement = Statement("Test statement")
-        self.adapter.insert(statement)
+        self.adapter.update(statement)
         self.assertEqual(self.adapter.count(), 1)
 
     def test_statement_not_found(self):
@@ -54,7 +54,7 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         when it exists in the database.
         """
         statement = Statement("New statement")
-        self.adapter.insert(statement)
+        self.adapter.update(statement)
 
         found_statement = self.adapter.find("New statement")
         self.assertNotEqual(found_statement, None)
@@ -70,7 +70,7 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 
     def test_update_modifies_existing_statement(self):
         statement = Statement("New statement")
-        self.adapter.insert(statement)
+        self.adapter.update(statement)
 
         # Check the initial values
         found_statement = self.adapter.find(statement.text)
@@ -86,10 +86,25 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 
     def test_get_random_returns_statement(self):
         statement = Statement("New statement")
-        self.adapter.insert(statement)
+        self.adapter.update(statement)
 
         random_statement = self.adapter.get_random()
         self.assertEqual(random_statement.text, statement.text)
+
+    def test_find_returns_nested_responces(self):
+        response_list = [
+            "Yes", "No"
+        ]
+        statement = Statement(
+            "Do you like this?",
+            in_response_to=response_list
+        )
+        self.adapter.update(statement)
+
+        result = self.adapter.find(statement.text)
+
+        self.assertIn("Yes", result.in_response_to)
+        self.assertIn("No", result.in_response_to)
 
 
 class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):

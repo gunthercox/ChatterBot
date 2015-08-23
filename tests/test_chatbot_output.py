@@ -1,56 +1,38 @@
-# -*- coding: utf-8 -*-
 from .base_case import ChatBotTestCase, UntrainedChatBotTestCase
-from chatterbot import ChatBot
+from chatterbot.conversation import Statement
 
 
 class ChatBotOutputTests(ChatBotTestCase):
 
-    def test_training_adds_statements(self):
+    def test_get_last_statement(self):
         """
-        Test that the training method adds statements to the database.
+        Make sure that the get last statement method
+        returns the last statement that was issued.
         """
-        import os
+        self.chatbot.recent_statements.append(
+            Statement("Test statement 1")
+        )
+        self.chatbot.recent_statements.append(
+            Statement("Test statement 2")
+        )
+        self.chatbot.recent_statements.append(
+            Statement("Test statement 3")
+        )
 
-        bot = ChatBot("Test Bot2", database="test-database-2")
+        last_statement = self.chatbot.get_last_statement()
+        self.assertEqual(last_statement.text, "Test statement 3")
 
-        conversation = [
-            "Hello",
-            "Hi there!",
-            "How are you doing?",
-            "I'm great.",
-            "That is good to hear",
-            "Thank you.",
-            "You are welcome.",
-            "Sure, any time.",
-            "Yeah",
-            "Can I help you with anything?"
-        ]
+    def test_get_most_frequent_response(self):
+        output = self.chatbot.get_most_frequent_response(
+            Statement("What... is your quest?")
+        )
 
-        bot.train(conversation)
-
-        response = bot.get_response("Thank you.")
-
-        os.remove("test-database-2")
-
-        self.assertEqual(response, "You are welcome.")
-
-    def test_training_increments_occurrence_count(self):
-
-        conversation = [
-            "Do you like my hat?",
-            "I do not like your hat."
-        ]
-
-        self.chatbot.train(conversation)
-        self.chatbot.train(conversation)
-
-        count = self.chatbot.storage.storage_adapter.find("Do you like my hat?")["occurrence"]
-        self.assertEqual(count, 2)
+        self.assertEqual("To seek the Holy Grail.", output)
 
     def test_answer_to_known_input(self):
         """
-        Test that a matching response is returned when an
-        exact match exists in the database.
+        Test that a matching response is returned
+        when an exact match exists.
         """
         input_text = "What... is your favourite colour?"
         response = self.chatbot.get_response(input_text)
@@ -75,57 +57,6 @@ class ChatBotOutputTests(ChatBotTestCase):
 
         self.assertGreater(len(response), 0)
 
-    def test_input_text_returned_in_response_data(self):
-        """
-        This checks to see if a value is returned for the
-        user name, timestamp and input text
-        """
-        user_name = "Ron Obvious"
-        user_input = "Hello!"
-
-        data = self.chatbot.get_response_data({"name": user_name, "text": user_input})
-
-        self.assertIn(user_input, data[user_name].keys())
-
-    def test_output_text_returned_in_response_data(self):
-        """
-        This checks to see if a value is returned for the
-        bot name, timestamp and input text
-        """
-        user_name = "Sherlock"
-        user_input = "Elementary my dear watson."
-
-        data = self.chatbot.get_response_data({"name": user_name, "text": user_input})
-
-        self.assertGreater(len(data["bot"]), 0)
-
-    def test_training_with_unicode_characters(self):
-        """
-        Ensure that the training method adds unicode statements
-        to the database.
-        """
-        import os
-
-        bot = ChatBot("Test Bot2", database="unicode-database.db")
-
-        conversation = [
-            u"¶ ∑ ∞ ∫ π ∈ ℝ² ∖ ⩆ ⩇ ⩈ ⩉ ⩊ ⩋ ⪽ ⪾ ⪿ ⫀ ⫁ ⫂ ⋒ ⋓",
-            u"⊂ ⊃ ⊆ ⊇ ⊈ ⊉ ⊊ ⊋ ⊄ ⊅ ⫅ ⫆ ⫋ ⫌ ⫃ ⫄ ⫇ ⫈ ⫉ ⫊ ⟃ ⟄",
-            u"∠ ∡ ⦛ ⦞ ⦟ ⦢ ⦣ ⦤ ⦥ ⦦ ⦧ ⦨ ⦩ ⦪ ⦫ ⦬ ⦭ ⦮ ⦯ ⦓ ⦔ ⦕ ⦖ ⟀",
-            u"∫ ∬ ∭ ∮ ∯ ∰ ∱ ∲ ∳ ⨋ ⨌ ⨍ ⨎ ⨏ ⨐ ⨑ ⨒ ⨓ ⨔ ⨕ ⨖ ⨗ ⨘ ⨙ ⨚ ⨛ ⨜",
-            u"≁ ≂ ≃ ≄ ⋍ ≅ ≆ ≇ ≈ ≉ ≊ ≋ ≌ ⩯ ⩰ ⫏ ⫐ ⫑ ⫒ ⫓ ⫔ ⫕ ⫖",
-            u"¬ ⫬ ⫭ ⊨ ⊭ ∀ ∁ ∃ ∄ ∴ ∵ ⊦ ⊬ ⊧ ⊩ ⊮ ⊫ ⊯ ⊪ ⊰ ⊱ ⫗ ⫘",
-            u"∧ ∨ ⊻ ⊼ ⊽ ⋎ ⋏ ⟑ ⟇ ⩑ ⩒ ⩓ ⩔ ⩕ ⩖ ⩗ ⩘ ⩙ ⩚ ⩛ ⩜ ⩝ ⩞ ⩟ ⩠ ⩢",
-        ]
-
-        bot.train(conversation)
-
-        response = bot.get_response(conversation[1])
-
-        os.remove("unicode-database.db")
-
-        self.assertEqual(response, conversation[2])
-
     def test_empty_input(self):
         """
         If empty input is provided, anything may be returned.
@@ -147,17 +78,17 @@ class ResponseTestCase(UntrainedChatBotTestCase):
         self.assertEqual("How are you?", response)
 
 
-class DatabaseTests(UntrainedChatBotTestCase):
+class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):
 
     def test_database_is_updated(self):
         """
         Test that the database is updated when read_only is set to false.
         """
         input_text = "What is the airspeed velocity of an unladen swallow?"
-        exists_before = self.chatbot.storage.storage_adapter.find(input_text)
+        exists_before = self.chatbot.storage.find(input_text)
 
         response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.storage.storage_adapter.find(input_text)
+        exists_after = self.chatbot.storage.find(input_text)
 
         self.assertFalse(exists_before)
         self.assertTrue(exists_after)
@@ -166,39 +97,14 @@ class DatabaseTests(UntrainedChatBotTestCase):
         """
         Test that the database is not updated when read_only is set to true.
         """
-        self.chatbot.storage.storage_adapter.read_only = True
+        self.chatbot.storage.read_only = True
 
         input_text = "Who are you? The proud lord said."
-        exists_before = self.chatbot.storage.storage_adapter.find(input_text)
+        exists_before = self.chatbot.storage.find(input_text)
 
         response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.storage.storage_adapter.find(input_text)
+        exists_after = self.chatbot.storage.find(input_text)
 
         self.assertFalse(exists_before)
         self.assertFalse(exists_after)
-
-    def test_database_is_valid(self):
-        """
-        Test that the database maintains a valid format
-        when data is added and updated.
-        """
-        subobjects = []
-
-        conversation = [
-            "Hello sir!",
-            "Hi, can I help you?",
-            "Yes, I am looking for italian parsely.",
-            "Italian parsely is right over here in out produce department",
-            "Great, thank you for your help.",
-            "No problem, did you need help finding anything else?",
-            "Nope, that was it.",
-            "Alright, have a great day.",
-            "Thanks, you too."
-        ]
-
-        self.chatbot.train(conversation)
-
-        # print self.chatbot.storage.storage_adapter.database.data()
-
-        self.assertEqual(self.chatbot.storage.storage_adapter.count(), 9)
 

@@ -11,12 +11,21 @@ class Statement(object):
 
         self.modified = False
 
+    def __eq__(self, other):
+        if not other:
+            return False
+
+        if isinstance(other, Statement):
+            return self.text == other.text
+
+        return self.text == other
+
     def add_response(self, statement):
         """
         Add the statement to the list if it does not already exist.
         """
-        if not statement in self.in_response_to:
-            self.in_response_to.append(statement)
+        if not statement.text in self.in_response_to:
+            self.in_response_to.append(statement.text)
 
     def get_occurrence_count(self):
         """
@@ -41,10 +50,7 @@ class Statement(object):
         data["occurrence"] = self.occurrence
         data["name"] = self.name
 
-        data["in_response_to"] = []
-
-        for statement in self.in_response_to:
-            data["in_response_to"].append(statement.text)
+        data["in_response_to"] = self.in_response_to
 
         return data
 

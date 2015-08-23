@@ -1,5 +1,4 @@
 from .utils.module_loading import import_module
-from .controllers import StorageController
 from .conversation import Statement
 
 
@@ -21,9 +20,7 @@ class ChatBot(object):
         )
 
         StorageAdapter = import_module(storage_adapter)
-        self.storage_adapter = StorageAdapter(**kwargs)
-
-        self.storage = StorageController(self.storage_adapter)
+        self.storage = StorageAdapter(**kwargs)
 
         LogicAdapter = import_module(logic_adapter)
         self.logic = LogicAdapter()
@@ -31,55 +28,103 @@ class ChatBot(object):
         IOAdapter = import_module(io_adapter)
         self.io = IOAdapter()
 
-    def train(self, conversation):
+        self.recent_statements = []
+
+    def get_last_statement(self):
         """
-        Update or create the data for a statement.
+        Returns the last statement that was issued to the chat bot.
+        If there was no last statement then return None.
         """
-        for text in conversation:
-            statement = self.storage_adapter.find(text)
-            statement.update_occurrence_count()
+        if len(self.recent_statements) == 0:
+            return None
 
-            previous_statement = self.storage.get_last_statement()
+        return self.recent_statements[-1]
 
-            statement.add_response(previous_statement)
-            self.storage.recent_statements.append(previous_statement)
+    def get_statements_in_response_to(self, input_statement):
+        """
+        Returns a list of statement objects that are
+        in response to a specified statement object.
+        """
+        statements = self.storage._keys()
+        results = []
 
-            self.storage_adapter.update(statement.text, **statement.serialize())
+        for statement in statements:
+
+            result = self.storage.find(statement)
+
+            if input_statement in result.in_response_to:
+                results.append(result)
+
+        return results
+
+    def get_most_frequent_response(self, closest_statement):
+        """
+        Returns the statement with the greatest number of occurrences.
+        """
+        response_list = self.get_statements_in_response_to(closest_statement)
+
+        # Initialize the matching responce to the closest statement.
+        # This will be returned in the case that no match can be found.
+        matching_response = closest_statement
+
+        # The statement passed in must be an existing statement within the database
+        found_statement = self.storage.find(matching_response.text)
+
+        occurrence_count = found_statement.get_occurrence_count()
+
+        for statement in response_list:
+
+            statement_data = self.storage.find(statement.text)
+
+            statement_occurrence_count = statement_data.get_occurrence_count()
+
+            # Keep the more common statement
+            if statement_occurrence_count >= occurrence_count:
+                matching_response = statement
+                occurrence_count = statement_occurrence_count
+
+            #TODO? If the two statements occure equaly in frequency, should we keep one at random
+
+        # Choose the most commonly occuring matching response
+        return matching_response
 
     def get_response_data(self, statement_text):
         """
         Returns a dictionary containing the meta data for
         the current response.
         """
+        from .adapters.exceptions import EmptyDatabaseException
+
         statement = Statement(statement_text)
 
-        if statement_text.strip():
-            text_of_all_statements = self.storage.list_statements()
+        try:
+            # Instantiate the response as a random statement
+            response = self.storage.get_random()
+        except EmptyDatabaseException:
+            # Use the input statement if the database is empty
+            response = statement
 
-            match = self.logic.get(statement_text, text_of_all_statements)
+        if statement.text.strip():
+            text_of_all_statements = self.storage._keys()
+
+            match = self.logic.get(statement.text, text_of_all_statements)
 
             if match:
-                response = self.storage.get_most_frequent_response(match)
-            else:
-                response = self.storage_adapter.get_random()
+                match = self.storage.find(match)
+                if match:
+                    response = self.get_most_frequent_response(match)
 
-        else:
-            # If the input is blank, return a random statement
-            response = self.storage_adapter.get_random()
+        previous_statement = self.get_last_statement()
+        self.recent_statements.append(statement)
 
-        previous_statement = self.storage.get_last_statement()
-        statement.add_response(previous_statement)
-
+        if previous_statement:
+            statement.add_response(previous_statement)
         statement.update_occurrence_count()
 
-        self.storage.recent_statements.append(list(response.keys())[0])
-
-        response_data = response.serialize()
-
         # Update the database after selecting a response
-        self.storage.save_statement(**response_data)
+        self.storage.update(statement)
 
-        return response_data
+        return response
 
     def get_response(self, input_text):
         """
@@ -92,4 +137,27 @@ class ChatBot(object):
 
     def get_input(self):
         return self.io.process_input()
+
+    def train(self, conversation):
+        """
+        Update or create the data for a statement.
+        """
+        for text in conversation:
+            statement = self.storage.find(text)
+
+            # Create the statement if a match was not found
+            if not statement:
+                statement = Statement(text)
+            else:
+                statement.update_occurrence_count()
+
+            previous_statement = self.get_last_statement()
+
+            if previous_statement:
+                statement.add_response(previous_statement)
+
+            print statement.text, statement.occurrence
+
+            self.recent_statements.append(statement)
+            self.storage.update(statement)
 
