@@ -40,28 +40,13 @@ class ChatBot(object):
 
         return self.recent_statements[-1]
 
-    def get_statements_in_response_to(self, input_statement):
-        """
-        Returns a list of statement objects that are
-        in response to a specified statement object.
-        """
-        statements = self.storage._keys()
-        results = []
-
-        for statement in statements:
-
-            result = self.storage.find(statement)
-
-            if input_statement in result.in_response_to:
-                results.append(result)
-
-        return results
-
     def get_most_frequent_response(self, closest_statement):
         """
         Returns the statement with the greatest number of occurrences.
         """
-        response_list = self.get_statements_in_response_to(closest_statement)
+        response_list = self.storage.filter(
+            in_response_to__contains=closest_statement
+        )
 
         # Initialize the matching responce to the closest statement.
         # This will be returned in the case that no match can be found.
