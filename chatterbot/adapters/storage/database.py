@@ -13,19 +13,23 @@ class DatabaseAdapter(object):
         """
         raise AdapterNotImplementedError()
 
-    def find(self, key):
+    def find(self, statement_text):
         """
         Returns a object from the database if it exists
         """
         raise AdapterNotImplementedError()
 
-    def insert(self, key):
+    def filter(self, **kwargs):
         """
-        Creates a new entry in the database.
+        Returns a list of objects from the database.
+        The kwargs parameter can contain any number
+        of attributes. Only objects which contain
+        all listed attributes and in which all values
+        match for all listed attributes will be returned.
         """
         raise AdapterNotImplementedError()
 
-    def update(self, key):
+    def update(self, statement):
         """
         Modifies an entry in the database.
         Creates an entry if one does not exist.
@@ -43,3 +47,4 @@ class DatabaseAdapter(object):
         Drop the database attached to a given adapter.
         """
         raise AdapterNotImplementedError()
+

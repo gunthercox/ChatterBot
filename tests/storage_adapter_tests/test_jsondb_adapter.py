@@ -106,6 +106,141 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
 
+    def test_filter_no_results(self):
+        statement1 = Statement(
+            "Testing...",
+            occurrence=4
+        )
+        self.adapter.update(statement1)
+
+        results = self.adapter.filter(occurrence=100)
+        self.assertEqual(len(results), 0)
+
+    def test_filter_equal_result(self):
+        statement1 = Statement(
+            "Testing...",
+            occurrence=22
+        )
+        statement2 = Statement(
+            "Testing one, two, three.",
+            occurrence=1
+        )
+        self.adapter.update(statement1)
+        self.adapter.update(statement2)
+
+        results = self.adapter.filter(occurrence=22)
+        self.assertEqual(len(results), 1)
+        self.assertIn(statement1, results)
+
+    def test_filter_equal_multiple_results(self):
+        statement1 = Statement(
+            "Testing...",
+            occurrence=6
+        )
+        statement2 = Statement(
+            "Testing one, two, three.",
+            occurrence=1
+        )
+        statement3 = Statement(
+            "Test statement.",
+            occurrence=6
+        )
+        self.adapter.update(statement1)
+        self.adapter.update(statement2)
+        self.adapter.update(statement3)
+
+        results = self.adapter.filter(occurrence=6)
+        self.assertEqual(len(results), 2)
+        self.assertIn(statement1, results)
+        self.assertIn(statement3, results)
+
+    def test_filter_contains_result(self):
+        statement1 = Statement(
+            "Testing...",
+            in_response_to=[
+                "What are you doing?"
+            ]
+        )
+        statement2 = Statement(
+            "Testing one, two, three.",
+            in_response_to=[
+                "Testing..."
+            ]
+        )
+        self.adapter.update(statement1)
+        self.adapter.update(statement2)
+
+        results = self.adapter.filter(
+            in_response_to__contains="What are you doing?"
+        )
+        self.assertEqual(len(results), 1)
+        self.assertIn(statement1, results)
+
+    def test_filter_contains_no_result(self):
+        statement1 = Statement(
+            "Testing...",
+            in_response_to=[
+                "What are you doing?"
+            ]
+        )
+        self.adapter.update(statement1)
+
+        results = self.adapter.filter(
+            in_response_to__contains="How do you do?"
+        )
+        self.assertEqual(len(results), 0)
+
+    def test_filter_multiple_parameters(self):
+        statement1 = Statement(
+            "Testing...",
+            occurrence=6,
+            in_response_to=[
+                "Why are you counting?"
+            ]
+        )
+        statement2 = Statement(
+            "Testing one, two, three.",
+            occurrence=6,
+            in_response_to=[
+                "Testing..."
+            ]
+        )
+        self.adapter.update(statement1)
+        self.adapter.update(statement2)
+
+        results = self.adapter.filter(
+            occurrence=6,
+            in_response_to__contains="Why are you counting?"
+        )
+
+        self.assertEqual(len(results), 1)
+        self.assertIn(statement1, results)
+
+    def test_filter_multiple_parameters_no_results(self):
+        statement1 = Statement(
+            "Testing...",
+            occurrence=6,
+            in_response_to=[
+                "Why are you counting?"
+            ]
+        )
+        statement2 = Statement(
+            "Testing one, two, three.",
+            occurrence=1,
+            in_response_to=[
+                "Testing..."
+            ]
+        )
+        self.adapter.update(statement1)
+        self.adapter.update(statement2)
+
+        results = self.adapter.filter(
+            occurrence=6,
+            in_response_to__contains="Testing..."
+        )
+
+        self.assertEqual(len(results), 0)
+
 
 class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 

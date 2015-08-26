@@ -26,13 +26,39 @@ class JsonDatabaseAdapter(DatabaseAdapter):
 
         return Statement(statement_text, **values)
 
+    def _all_kwargs_match_values(self, kwarguments, values):
+
+        for kwarg in kwarguments:
+
+            if "__" in kwarg:
+                kwarg_parts = kwarg.split("__")
+
+                if kwarg_parts[1] == "contains":
+                    if kwarguments[kwarg] not in values[kwarg_parts[0]]:
+                        return False
+
+            if kwarg in values:
+                if values[kwarg] != kwarguments[kwarg]:
+                    return False
+
+        return True
+
     def filter(self, **kwargs):
         """
         Returns a list of statements in the database
         that match the parameters specified.
         """
-        pass
-        # TODO: Useful for in_response_to...
+        results = []
+
+        for key in self._keys():
+            values = self.database.data(key=key)
+
+            if self._all_kwargs_match_values(kwargs, values):
+                results.append(
+                    Statement(key, **values)
+                )
+
+        return results
 
     def update(self, statement):
         # Do not alter the database unless writing is enabled
