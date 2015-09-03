@@ -22,6 +22,12 @@ class Statement(object):
 
         return self.text == other
 
+    def __repr__(self):
+        return "<Statement text:%s>" % (self.text)
+
+    def __str__(self):
+        return self.text
+
     def add_response(self, statement):
         """
         Add the statement to the list if it does not already exist.

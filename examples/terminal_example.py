@@ -6,7 +6,7 @@ bot = ChatBot("Terminal",
     storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
     logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
     io_adapter="chatterbot.adapters.io.TerminalAdapter",
-    database="../database.db")
+    database="/home/gcox/GitHub/ChatterBot/database.db")
 
 user_input = "Type something to begin..."
 

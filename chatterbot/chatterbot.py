@@ -40,17 +40,14 @@ class ChatBot(object):
 
         return self.recent_statements[-1]
 
-    def get_most_frequent_response(self, closest_statement):
+    def get_most_frequent_response(self, response_list):
         """
         Returns the statement with the greatest number of occurrences.
         """
-        response_list = self.storage.filter(
-            in_response_to__contains=closest_statement
-        )
 
-        # Initialize the matching responce to the closest statement.
+        # Initialize the matching responce to the first response.
         # This will be returned in the case that no match can be found.
-        matching_response = closest_statement
+        matching_response = response_list[0]
 
         # The statement passed in must be an existing statement within the database
         found_statement = self.storage.find(matching_response.text)
@@ -68,45 +65,74 @@ class ChatBot(object):
                 matching_response = statement
                 occurrence_count = statement_occurrence_count
 
-            #TODO? If the two statements occure equaly in frequency, should we keep one at random
-
         # Choose the most commonly occuring matching response
         return matching_response
+
+    def get_first_response(self, response_list):
+        """
+        Return the first statement in the response list.
+        """
+        return response_list[0]
+
+    def get_random_response(self, response_list):
+        """
+        Choose a random response from the selection.
+        """
+        from random import choice
+        return choice(response_list)
 
     def get_response(self, input_text):
         """
         Return the bot's response based on the input.
         """
-        from .adapters.exceptions import EmptyDatabaseException
+        text_of_all_statements = self.storage._keys()
 
-        statement = Statement(input_text)
+        input_statement = Statement(input_text)
 
-        try:
-            # Instantiate the response as a random statement
+        # If no responses exist, use the input text
+        if not text_of_all_statements:
+            response = Statement(input_text)
+            self.storage.update(response)
+            self.recent_statements.append(response)
+
+            # Process the response output with the IO adapter
+            response = self.io.process_response(response)
+
+            return response
+
+        # Select the closest match to the input statement
+        closest_match = self.logic.get(
+            input_text, text_of_all_statements
+        )
+        closest_match = self.storage.find(closest_match)
+
+        # Check if the closest match is an exact match
+        if closest_match == input_statement:
+            input_statement = closest_match
+
+        # Get all statements that are in response to the closest match
+        response_list = self.storage.filter(
+            in_response_to__contains=closest_match.text
+        )
+
+        if response_list:
+            response = self.get_most_frequent_response(response_list)
+            #response = self.get_first_response(response_list)
+            #response = self.get_random_response(response_list)
+        else:
             response = self.storage.get_random()
-        except EmptyDatabaseException:
-            # Use the input statement if the database is empty
-            response = statement
-
-        if statement.text.strip():
-            text_of_all_statements = self.storage._keys()
-
-            match = self.logic.get(statement.text, text_of_all_statements)
-
-            if match:
-                match = self.storage.find(match)
-                if match:
-                    response = self.get_most_frequent_response(match)
 
         previous_statement = self.get_last_statement()
-        self.recent_statements.append(statement)
 
         if previous_statement:
-            statement.add_response(previous_statement)
-        statement.update_occurrence_count()
+            input_statement.add_response(previous_statement)
+
+        input_statement.update_occurrence_count()
 
         # Update the database after selecting a response
-        self.storage.update(statement)
+        self.storage.update(input_statement)
+
+        self.recent_statements.append(response)
 
         # Process the response output with the IO adapter
         response = self.io.process_response(response)

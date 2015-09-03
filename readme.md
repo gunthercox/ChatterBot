@@ -41,12 +41,12 @@ chatbot = ChatBot("Ron Obvious")
 chatbot.get_response("Hello, how are you today?")
 ```
 
-## Documentation
+# Documentation
 
 View the [documentation](https://github.com/gunthercox/ChatterBot/wiki/Quick-Start)
 for using ChatterBot in the project wiki.
 
-## Examples
+# Examples
 
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
 directory in this project's repository.
@@ -61,8 +61,7 @@ See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more i
 # Applications
 
 Have you created something cool using ChatterBot?
-Please add your creation to the list of projects using ChatterBot in the wiki.  
-https://github.com/gunthercox/ChatterBot/wiki/
+Please add your creation to the [list of projects](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) using ChatterBot in the wiki.
 
 # History
 
