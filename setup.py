@@ -6,13 +6,6 @@ try:
 except ImportError:
     from distutils.core import setup, find_packages
 
-try:
-    from pypandoc import convert
-    readme = lambda f: convert(f, "rst")
-except ImportError:
-    print("Module pypandoc not found, could not convert Markdown to RST")
-    readme = lambda f: open(f, "r").read()
-
 req = open("requirements.txt")
 requirements = req.readlines()
 
@@ -23,8 +16,9 @@ setup(
     name="ChatterBot",
     version=version,
     url="https://github.com/gunthercox/ChatterBot",
+    setup_requires=['setuptools-markdown'],
+    long_description_markdown_filename='readme.md',
     description="An open-source chat bot program written in Python.",
-    long_description=readme("readme.md"),
     author="Gunther Cox",
     author_email="gunthercx@gmail.com",
     packages=find_packages(),

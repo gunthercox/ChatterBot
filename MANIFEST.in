@@ -6,5 +6,4 @@ include database.db
 recursive-include tests *
 
 recursive-exclude * *.pyc
-recursive-exclude * *.pyc~
 recursive-exclude * *.py~

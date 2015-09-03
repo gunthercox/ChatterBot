@@ -1,11 +1,11 @@
 ![Chatterbot: Machine learning in Python](http://i.imgur.com/b3SCmGT.png)
-
 # ChatterBot
 
 ChatterBot is a machine-learning based conversational dialog engine build in
 Python which makes it possible to generate responses based on collections of
-known conversations. The language independent design of ChatterBot allows it to
-be trained to speak any language.
+known conversations. The language independent design of ChatterBot allows it
+to be trained to speak any language.
+
 
 [![Package Version](https://badge.fury.io/py/ChatterBot.png)](http://badge.fury.io/py/ChatterBot)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
@@ -55,7 +55,8 @@ There is also an example [Django project using ChatterBot](https://github.com/gu
 
 # Testing
 
-ChatterBot's built in tests can be run using nose.  
+ChatterBot's built in tests can be run using nose.
+
 See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
 
 # Applications
