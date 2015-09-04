@@ -8,7 +8,7 @@ python:
 
 install:
   - pip install coveralls
-  - pip install pymongo
+  - pip install nltk
   - pip install -r requirements.txt
 
 services:
