@@ -10,14 +10,6 @@ class TerminalAdapterTests(TestCase):
     a command line interface.
     """
 
-    def test_response_is_printed(self):
-        """
-        This test ensures that the bot's response is
-        correctly printed in the terminal.
-        """
-        # TODO: How can you test this?
-        self.assertTrue(True)
-
     def test_response_is_returned(self):
         """
         For consistency across io adapters, the

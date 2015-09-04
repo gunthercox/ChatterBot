@@ -3,5 +3,5 @@ from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 class LogicAdapter(object):
 
-    def get_response(self):
+    def get(self):
         raise AdapterNotImplementedError()

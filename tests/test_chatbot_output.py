@@ -43,9 +43,8 @@ class ChatBotOutputTests(ChatBotTestCase):
     def test_get_first_response(self):
         statement_list = [
             Statement("What... is your quest?", occurrence=2),
-            Statement("This is a phone.", occurrence=4),
             Statement("A what?", occurrence=2),
-            Statement("A phone.", occurrence=2)
+            Statement("A quest.", occurrence=2)
         ]
 
         output = self.chatbot.get_first_response(
@@ -55,7 +54,17 @@ class ChatBotOutputTests(ChatBotTestCase):
         self.assertEqual("What... is your quest?", output)
 
     def test_get_random_response(self):
-        pass # TODO
+        statement_list = [
+            Statement("This is a phone.", occurrence=4),
+            Statement("A what?", occurrence=2),
+            Statement("A phone.", occurrence=2)
+        ]
+
+        output = self.chatbot.get_random_response(
+            statement_list
+        )
+
+        self.assertTrue(output)
 
     def test_answer_to_known_input(self):
         """
