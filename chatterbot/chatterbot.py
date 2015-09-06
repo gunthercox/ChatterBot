@@ -85,12 +85,10 @@ class ChatBot(object):
         """
         Return the bot's response based on the input.
         """
-        text_of_all_statements = self.storage._keys()
-
         input_statement = Statement(input_text)
 
         # If no responses exist, use the input text
-        if not text_of_all_statements:
+        if not self.storage.count():
             response = Statement(input_text)
             self.storage.update(response)
             self.recent_statements.append(response)
@@ -99,6 +97,11 @@ class ChatBot(object):
             response = self.io.process_response(response)
 
             return response
+
+        all_statements = self.storage.filter()
+        text_of_all_statements = []
+        for statement in all_statements:
+            text_of_all_statements.append(statement.text)
 
         # Select the closest match to the input statement
         closest_match = self.logic.get(

@@ -8,7 +8,11 @@ python:
 
 install:
   - pip install coveralls
+  - pip install pymongo
   - pip install -r requirements.txt
+
+services:
+  - mongodb
 
 script:
   - nosetests  --with-coverage --cover-package=chatterbot
