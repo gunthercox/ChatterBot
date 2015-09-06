@@ -1,58 +1,112 @@
 from chatterbot.adapters.storage import DatabaseAdapter
+from chatterbot.adapters.exceptions import EmptyDatabaseException
+from chatterbot.conversation import Statement
 from pymongo import MongoClient
-
-# Use the default host and port
-client = MongoClient()
-
-# We can also specify the host and port explicitly
-#client = MongoClient('localhost', 27017)
-
-# Specify the name of the database
-db = client['test-database']
-
-# The mongo collection of statement documents
-statements = db['statements']
 
 
 class MongoDatabaseAdapter(DatabaseAdapter):
 
     def __init__(self, **kwargs):
-        pass
+        super(MongoDatabaseAdapter, self).__init__(**kwargs)
 
-    def find(self, statement):
-    #def find(self, key):
-        return statements.find_one(statement)
+        self.database_name = self.kwargs.get("database", "chatterbot-database")
 
-    def insert(self, key, values):
-        statement_id = self.statements.insert_one(statement).inserted_id
+        # Use the default host and port
+        self.client = MongoClient()
 
-        return statement_id
+        # Specify the name of the database
+        self.database = self.client[self.database_name]
 
-    def update(self, key, **kwargs):
+        # The mongo collection of statement documents
+        self.statements = self.database['statements']
 
-        values = self.database.data(key=key)
+    def count(self):
+        return self.statements.count()
 
-        # Create the statement if it doesn't exist in the database
+    def find(self, statement_text):
+        values = self.statements.find_one({'text': statement_text})
+
         if not values:
-            self.database[key] = {}
-            values = {}
+            return None
 
+        del(values['text'])
+        return Statement(statement_text, **values)
+
+    def filter(self, **kwargs):
+        """
+        Returns a list of statements in the database
+        that match the parameters specified.
+        """
+        filter_parameters = kwargs.copy()
+        contains_parameters = {}
+
+        # Exclude special arguments from the kwargs
         for parameter in kwargs:
-            values[parameter] = kwargs.get(parameter)
+            if "__" in parameter:
+                del(filter_parameters[parameter])
 
-        self.database[key] = values
+                kwarg_parts = parameter.split("__")
 
-        return values
+                if kwarg_parts[1] == "contains":
+                    key = kwarg_parts[0]
+                    value = kwargs[parameter]
+                    contains_parameters[key] = value
 
-    def keys(self):
-        # The value has to be cast as a list for Python 3 compatibility
-        return list(self.database[0].keys())
+        filter_parameters.update(contains_parameters)
+
+        matches = self.statements.find(filter_parameters)
+        matches = list(matches)
+
+        results = []
+
+        for match in matches:
+            statement_text = match['text']
+            del(match['text'])
+            results.append(Statement(statement_text, **match))
+
+        return results
+
+    def update(self, statement):
+        # Do not alter the database unless writing is enabled
+        if not self.read_only:
+            data = statement.serialize()
+
+            # Remove the text key from the data
+            self.statements.update({'text': statement.text}, data, True)
+
+            # Make sure that an entry for each response is saved
+            for response_statement in statement.in_response_to:
+                response = self.find(response_statement)
+                if not response:
+                    response = Statement(response_statement)
+                    self.update(response)
+
+        return statement
 
     def get_random(self):
         """
         Returns a random statement from the database
         """
-        from random import choice
+        from random import randint
 
-        statement = choice(self.keys())
-        return {statement: self.find(statement)}
+        count = self.count()
+
+        random_integer = randint(0, count -1)
+
+        if self.count() < 1:
+            raise EmptyDatabaseException()
+
+        statement = self.statements.find().limit(1).skip(random_integer * count)
+
+        values = list(statement)[0]
+        statement_text = values['text']
+
+        del(values['text'])
+        return Statement(statement_text, **values)
+
+    def drop(self):
+        """
+        Remove the database.
+        """
+        self.client.drop_database(self.database_name)
+

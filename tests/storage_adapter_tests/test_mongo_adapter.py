@@ -1,20 +1,17 @@
 from unittest import TestCase
-from chatterbot.adapters.storage import JsonDatabaseAdapter
+from chatterbot.adapters.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement
 
 
-class BaseJsonDatabaseAdapterTestCase(TestCase):
+class BaseMongoDatabaseAdapterTestCase(TestCase):
 
     def setUp(self):
         """
         Instantiate the adapter.
         """
-        from random import randint
+        database_name = "test_db"
 
-        # Generate a random name for the database
-        database_name = str(randint(0, 9000))
-
-        self.adapter = JsonDatabaseAdapter(database=database_name)
+        self.adapter = MongoDatabaseAdapter(database=database_name)
 
     def tearDown(self):
         """
@@ -22,8 +19,7 @@ class BaseJsonDatabaseAdapterTestCase(TestCase):
         """
         self.adapter.drop()
 
-
-class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
+class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -105,6 +101,7 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
+
 
     def test_filter_no_results(self):
         statement1 = Statement(
@@ -256,7 +253,7 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertEqual(len(results), 2)
 
 
-class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
+class ReadOnlyMongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
