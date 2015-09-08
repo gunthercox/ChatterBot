@@ -43,7 +43,7 @@ chatbot.get_response("Hello, how are you today?")
 
 # Documentation
 
-View the [documentation](https://github.com/gunthercox/ChatterBot/wiki/Quick-Start)
+View the [documentation](https://github.com/gunthercox/ChatterBot/wiki/)
 for using ChatterBot in the project wiki.
 
 # Examples

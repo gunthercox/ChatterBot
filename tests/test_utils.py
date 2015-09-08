@@ -9,8 +9,8 @@ from chatterbot.utils.module_loading import import_module
 class UtilityTests(TestCase):
 
     def test_import_module(self):
-        # TODO
-        self.assertTrue(True)
+        datetime = import_module("datetime.datetime")
+        self.assertTrue(hasattr(datetime, 'now'))
 
 
 class CleanWhitespaceTests(TestCase):
