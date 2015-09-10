@@ -96,7 +96,7 @@ class MongoDatabaseAdapter(DatabaseAdapter):
         if self.count() < 1:
             raise EmptyDatabaseException()
 
-        statement = self.statements.find().limit(1).skip(random_integer * count)
+        statement = self.statements.find().limit(1).skip(random_integer)
 
         values = list(statement)[0]
         statement_text = values['text']
