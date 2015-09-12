@@ -1,4 +1,5 @@
 from unittest import TestCase
+from unittest import SkipTest
 from chatterbot.adapters.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement
 
@@ -9,9 +10,22 @@ class BaseMongoDatabaseAdapterTestCase(TestCase):
         """
         Instantiate the adapter.
         """
+        from pymongo.errors import ServerSelectionTimeoutError
+        from pymongo import MongoClient
+
         database_name = "test_db"
 
-        self.adapter = MongoDatabaseAdapter(database=database_name)
+        # Skip these tests if a mongo client is not running.
+        try:
+            client = MongoClient(
+                serverSelectionTimeoutMS=1
+            )
+            client.server_info()
+
+            self.adapter = MongoDatabaseAdapter(database=database_name)
+
+        except ServerSelectionTimeoutError:
+            raise SkipTest("Unable to connect to mongo database.")
 
     def tearDown(self):
         """
