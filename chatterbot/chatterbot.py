@@ -32,13 +32,11 @@ class ChatBot(object):
 
     def get_last_statement(self):
         """
-        Returns the last statement that was issued to the chat bot.
-        If there was no last statement then return None.
+        Return the last statement that was received.
         """
-        if len(self.recent_statements) == 0:
-            return None
-
-        return self.recent_statements[-1]
+        if self.recent_statements:
+            return self.recent_statements[-1]
+        return None
 
     def get_most_frequent_response(self, response_list):
         """
@@ -105,7 +103,9 @@ class ChatBot(object):
 
         # Select the closest match to the input statement
         closest_match = self.logic.get(
-            input_text, text_of_all_statements
+            input_text,
+            text_of_all_statements,
+            self.recent_statements
         )
         closest_match = self.storage.find(closest_match)
 
