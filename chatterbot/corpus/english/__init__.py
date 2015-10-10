@@ -1,12 +1,21 @@
 from chatterbot.corpus.utils import read_corpus
-import os
+import os, sys
 
 
 os.chdir(os.path.dirname(__file__))
 
 _greetings = read_corpus(os.getcwd() + '/greetings.json')
-greetings = _greetings["greetings"]
-
 _conversations = read_corpus(os.getcwd() + '/conversations.json')
-conversations = _conversations["conversations"]
+
+setattr(
+    sys.modules[__name__],
+    'greetings', _greetings['greetings']
+)
+
+setattr(
+    sys.modules[__name__],
+    'conversations', _conversations['conversations']
+)
+
+modules = [_greetings, _conversations]
 

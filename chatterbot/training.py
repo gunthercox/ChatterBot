@@ -1,4 +1,4 @@
-from .corpus.utils import read_corpus
+from .corpus.utils import load_corpus
 from .conversation import Statement
 
 
@@ -6,14 +6,6 @@ class Trainer(object):
 
     def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
-
-        # TODO: If I just choose .english, it should recurse through all sub-modules of that corpus.
-        default_corpora = [
-            "chatterbot.corpus.english.greetings",
-            "chatterbot.corpus.english.conversations"
-        ]
-
-        self.corpora = kwargs.get("corpora", default_corpora)
 
     def train_from_list(self, conversation):
         for text in conversation:
@@ -33,6 +25,10 @@ class Trainer(object):
             self.chatbot.recent_statements.append(statement)
             self.chatbot.storage.update(statement)
 
-    def train_from_corpora(self):
-        pass
+    def train_from_corpora(self, corpora):
+        for corpus in corpora:
+            corpus_data = load_corpus(corpus)
+            for data in corpus_data:
+                for pair in data:
+                    self.train_from_list(pair)
 
