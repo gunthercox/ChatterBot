@@ -1,10 +1,10 @@
-from chatterbot.adapters.storage import DatabaseAdapter
+from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.adapters.exceptions import EmptyDatabaseException
 from chatterbot.conversation import Statement
 from pymongo import MongoClient
 
 
-class MongoDatabaseAdapter(DatabaseAdapter):
+class MongoDatabaseAdapter(StorageAdapter):
 
     def __init__(self, **kwargs):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)

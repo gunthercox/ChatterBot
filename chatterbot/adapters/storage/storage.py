@@ -1,7 +1,7 @@
 from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
-class DatabaseAdapter(object):
+class StorageAdapter(object):
     """
     This is an abstract class that represents the interface
     that all storage adapters should implement.
