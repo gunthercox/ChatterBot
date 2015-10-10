@@ -2,6 +2,10 @@ from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class DatabaseAdapter(object):
+    """
+    This is an abstract class that represents the interface
+    that all storage adapters should implement.
+    """
 
     def __init__(self, **kwargs):
         self.kwargs = kwargs
