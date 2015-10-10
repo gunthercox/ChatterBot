@@ -34,10 +34,14 @@ pip install chatterbot
 
 ## Basic Usage
 
-```
+```python
 from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
 
+# Train based on the english corpus
+chatterbot.train("chatterbot.corpus.english")
+
+# Get a response to an input statement
 chatbot.get_response("Hello, how are you today?")
 ```
 

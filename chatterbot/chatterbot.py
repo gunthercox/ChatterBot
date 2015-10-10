@@ -28,6 +28,8 @@ class ChatBot(object):
         IOAdapter = import_module(io_adapter)
         self.io = IOAdapter()
 
+        self.trainer = None
+
         self.recent_statements = []
 
     def get_last_statement(self):
@@ -145,23 +147,20 @@ class ChatBot(object):
     def get_input(self):
         return self.io.process_input()
 
-    def train(self, conversation):
+    def train(self, conversation=None, *args, **kwargs):
         """
-        Update or create the data for a statement.
+        Train the chatbot based on input data.
         """
-        for text in conversation:
-            statement = self.storage.find(text)
+        from .training import Trainer
 
-            # Create the statement if a match was not found
-            if not statement:
-                statement = Statement(text)
-            else:
-                statement.update_occurrence_count()
+        self.trainer = Trainer(self)
 
-            previous_statement = self.get_last_statement()
+        if isinstance(conversation, str):
+            corpora = list(args)
+            corpora.append(conversation)
 
-            if previous_statement:
-                statement.add_response(previous_statement)
+            if corpora:
+                self.trainer.train_from_corpora(corpora)
+        else:
+            self.trainer.train_from_list(conversation)
 
-            self.recent_statements.append(statement)
-            self.storage.update(statement)
