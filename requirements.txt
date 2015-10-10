@@ -1,6 +1,6 @@
-fuzzywuzzy>=0.6.0,<0.7.0
+fuzzywuzzy>=0.6.0,<0.8.0
 jsondatabase>=0.0.6
 nltk==3.0.5
-pymongo==3.0.3
-requests==2.7.0
+pymongo>=3.0.3,<4.0.0
+requests==2.8.0,<3.0.0
 requests-oauthlib==0.5.0
