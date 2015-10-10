@@ -147,14 +147,20 @@ class ChatBot(object):
     def get_input(self):
         return self.io.process_input()
 
-    def train(self, conversation):
+    def train(self, conversation=None, *args, **kwargs):
         """
         Train the chatbot based on input data.
         """
         from .training import Trainer
 
-        if not self.trainer:
-            self.trainer = Trainer(self)
+        self.trainer = Trainer(self)
 
-        self.trainer.train_from_list(conversation)
+        if isinstance(conversation, str):
+            corpora = list(args)
+            corpora.append(conversation)
+
+            if corpora:
+                self.trainer.train_from_corpora(corpora)
+        else:
+            self.trainer.train_from_list(conversation)
 
