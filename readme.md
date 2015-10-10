@@ -39,11 +39,19 @@ from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
 
 # Train based on the english corpus
-chatterbot.train("chatterbot.corpus.english")
+chatbot.train("chatterbot.corpus.english")
 
 # Get a response to an input statement
 chatbot.get_response("Hello, how are you today?")
 ```
+
+# Training data
+
+Chatterbot comes with a data utility module that can be used to train chat bots.
+At the moment there is only English training data in this module. Contributions
+of additional training data or training data in other languages would be greatly
+appreciated. Take a look at the data files in the `chatterbot.corpus` directory
+if you are interested in contributing.
 
 # Documentation
 
@@ -57,16 +65,14 @@ directory in this project's repository.
 
 There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot).
 
+Have you created something cool using ChatterBot?  
+Please add your creation to the [list of projects](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) using ChatterBot in the wiki.
+
 # Testing
 
 ChatterBot's built in tests can be run using nose.
 
 See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
-
-# Applications
-
-Have you created something cool using ChatterBot?
-Please add your creation to the [list of projects](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) using ChatterBot in the wiki.
 
 # History
 
