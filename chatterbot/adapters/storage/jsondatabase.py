@@ -1,10 +1,10 @@
-from chatterbot.adapters.storage import DatabaseAdapter
+from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.adapters.exceptions import EmptyDatabaseException
 from chatterbot.conversation import Statement
 from jsondb.db import Database
 
 
-class JsonDatabaseAdapter(DatabaseAdapter):
+class JsonDatabaseAdapter(StorageAdapter):
 
     def __init__(self, **kwargs):
         super(JsonDatabaseAdapter, self).__init__(**kwargs)
