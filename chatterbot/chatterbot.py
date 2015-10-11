@@ -165,4 +165,3 @@ class ChatBot(object):
 
             self.recent_statements.append(statement)
             self.storage.update(statement)
-
