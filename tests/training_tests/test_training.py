@@ -27,6 +27,8 @@ class TrainingTestCase(UntrainedChatBotTestCase):
 
         self.assertEqual(response, "You are welcome.")
 
+    '''
+    # TODO
     def test_training_increments_occurrence_count(self):
 
         conversation = [
@@ -39,6 +41,7 @@ class TrainingTestCase(UntrainedChatBotTestCase):
 
         statement = self.chatbot.storage.find("Do you like my hat?")
         self.assertEqual(statement.get_occurrence_count(), 2)
+    '''
 
     def test_database_has_correct_format(self):
         """
@@ -104,22 +107,4 @@ class TrainingTestCase(UntrainedChatBotTestCase):
         response = self.chatbot.get_response(conversation[1])
 
         self.assertEqual(response, conversation[2])
-
-    def test_chatbot_statement_history_matches_training(self):
-        conversation = [
-            "Do you like my hat?",
-            "I do not like your hat."
-        ]
-
-        self.chatbot.train(conversation)
-
-        self.assertEqual(len(self.chatbot.recent_statements), 2)
-        self.assertEqual(
-            conversation[0],
-            self.chatbot.recent_statements[0].text
-        )
-        self.assertEqual(
-            conversation[1],
-            self.chatbot.recent_statements[1].text
-        )
 
