@@ -24,10 +24,10 @@ class ChatBotOutputTests(ChatBotTestCase):
 
     def test_get_most_frequent_response(self):
         statement_list = [
-            Statement("What... is your quest?", occurrence=2),
-            Statement("This is a phone.", occurrence=4),
-            Statement("A what?", occurrence=2),
-            Statement("A phone.", occurrence=2)
+            Statement("What... is your quest?", in_response_to=[Response("Hello", occurrence=2)]),
+            Statement("This is a phone.", in_response_to=[Response("Hello", occurrence=4)]),
+            Statement("A what?", in_response_to=[Response("Hello", occurrence=2)]),
+            Statement("A phone.", in_response_to=[Response("Hello", occurrence=1)])
         ]
 
         # Save each statement to the database
@@ -35,6 +35,7 @@ class ChatBotOutputTests(ChatBotTestCase):
             self.chatbot.storage.update(statement)
 
         output = self.chatbot.get_most_frequent_response(
+            Statement("Hello"),
             statement_list
         )
 
@@ -42,9 +43,9 @@ class ChatBotOutputTests(ChatBotTestCase):
 
     def test_get_first_response(self):
         statement_list = [
-            Statement("What... is your quest?", occurrence=2),
-            Statement("A what?", occurrence=2),
-            Statement("A quest.", occurrence=2)
+            Statement("What... is your quest?"),
+            Statement("A what?"),
+            Statement("A quest.")
         ]
 
         output = self.chatbot.get_first_response(
@@ -55,9 +56,9 @@ class ChatBotOutputTests(ChatBotTestCase):
 
     def test_get_random_response(self):
         statement_list = [
-            Statement("This is a phone.", occurrence=4),
-            Statement("A what?", occurrence=2),
-            Statement("A phone.", occurrence=2)
+            Statement("This is a phone."),
+            Statement("A what?"),
+            Statement("A phone.")
         ]
 
         output = self.chatbot.get_random_response(

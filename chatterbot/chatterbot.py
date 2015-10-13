@@ -40,7 +40,7 @@ class ChatBot(object):
             return self.recent_statements[-1]
         return None
 
-    def get_most_frequent_response(self, response_list):
+    def get_most_frequent_response(self, input_statement, response_list):
         """
         Returns the statement with the greatest number of occurrences.
         """
@@ -51,14 +51,12 @@ class ChatBot(object):
         occurrence_count = 0
 
         for statement in response_list:
-
-            statement_data = self.storage.find(statement.text)
-            statement_occurrence_count = statement_data.get_response_count()
+            count = statement.get_response_count(input_statement)
 
             # Keep the more common statement
-            if statement_occurrence_count >= occurrence_count:
+            if count >= occurrence_count:
                 matching_response = statement
-                occurrence_count = statement_occurrence_count
+                occurrence_count = count
 
         # Choose the most commonly occuring matching response
         return matching_response
@@ -105,7 +103,7 @@ class ChatBot(object):
         )
 
         if response_list:
-            #response = self.get_most_frequent_response(response_list)
+            #response = self.get_most_frequent_response(closest_match, response_list)
             response = self.get_first_response(response_list)
             #response = self.get_random_response(response_list)
         else:
