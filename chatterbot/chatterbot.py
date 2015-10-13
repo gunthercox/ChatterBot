@@ -1,5 +1,5 @@
 from .utils.module_loading import import_module
-from .conversation import Statement
+from .conversation import Statement, Response
 
 
 class ChatBot(object):
@@ -48,17 +48,12 @@ class ChatBot(object):
         # Initialize the matching responce to the first response.
         # This will be returned in the case that no match can be found.
         matching_response = response_list[0]
-
-        # The statement passed in must be an existing statement within the database
-        found_statement = self.storage.find(matching_response.text)
-
-        occurrence_count = found_statement.get_occurrence_count()
+        occurrence_count = 0
 
         for statement in response_list:
 
             statement_data = self.storage.find(statement.text)
-
-            statement_occurrence_count = statement_data.get_occurrence_count()
+            statement_occurrence_count = statement_data.get_response_count()
 
             # Keep the more common statement
             if statement_occurrence_count >= occurrence_count:
@@ -99,30 +94,26 @@ class ChatBot(object):
             return response
 
         all_statements = self.storage.filter()
+
         text_of_all_statements = []
         for statement in all_statements:
             text_of_all_statements.append(statement.text)
 
         # Select the closest match to the input statement
-        closest_match = self.logic.get(
+        closest_match_text = self.logic.get(
             input_text,
             text_of_all_statements,
             self.recent_statements
         )
-        closest_match = self.storage.find(closest_match)
-
-        # Check if the closest match is an exact match
-        if closest_match == input_statement:
-            input_statement = closest_match
 
         # Get all statements that are in response to the closest match
         response_list = self.storage.filter(
-            in_response_to__contains=closest_match.text
+            in_response_to__contains=closest_match_text
         )
 
         if response_list:
-            response = self.get_most_frequent_response(response_list)
-            #response = self.get_first_response(response_list)
+            #response = self.get_most_frequent_response(response_list)
+            response = self.get_first_response(response_list)
             #response = self.get_random_response(response_list)
         else:
             response = self.storage.get_random()
@@ -131,8 +122,6 @@ class ChatBot(object):
 
         if previous_statement:
             input_statement.add_response(previous_statement)
-
-        input_statement.update_occurrence_count()
 
         # Update the database after selecting a response
         self.storage.update(input_statement)

@@ -13,5 +13,5 @@ class JsonAdapterTests(TestCase):
         response = self.adapter.process_response(statement)
 
         self.assertEqual(statement.text, response["text"])
-        self.assertEqual(statement.occurrence, response["occurrence"])
+        self.assertIn("in_response_to", response)
 
