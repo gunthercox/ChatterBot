@@ -10,7 +10,9 @@ class ClosestMeaningAdapterTests(TestCase):
 
     def test_no_choices(self):
         possible_choices = []
-        close = self.adapter.get("Hello", possible_choices)
+        statement = Statement("Hello")
+
+        close = self.adapter.get(statement, possible_choices)
 
         self.assertEqual("Hello", close)
 
@@ -20,8 +22,9 @@ class ClosestMeaningAdapterTests(TestCase):
             Statement("This is a beautiful swamp."),
             Statement("It smells like swamp.")
         ]
+        statement = Statement("This is a lovely swamp.")
 
-        close = self.adapter.get("This is a lovely swamp.", possible_choices)
+        close = self.adapter.get(statement, possible_choices)
 
         self.assertEqual("This is a lovely bog.", close)
 
