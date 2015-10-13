@@ -20,13 +20,6 @@ class StatementTests(TestCase):
             self.statement.in_response_to
         )
 
-    def test_occurrence_count(self):
-        self.statement.update_occurrence_count()
-        self.assertTrue(
-            self.statement.get_occurrence_count(),
-            2
-        )
-
     def test_update_response_list_new(self):
         new_statement = Statement("Hello")
         self.statement.add_response(new_statement)
@@ -52,4 +45,30 @@ class StatementTests(TestCase):
     def test_serializer(self):
         data = self.statement.serialize()
         self.assertEqual(self.statement.text, data["text"])
+
+    def test_occurrence_count_for_new_statement(self):
+        """
+        When the occurrence is updated for a statement that
+        previously did not exist as a statement that the current
+        statement was issued in response to, then the new statement
+        should be added to the response list and the occurence count
+        for that response should be set to 1.
+        """
+        statement = Statement("This is a test.")
+
+        self.statement.add_response(statement)
+        self.assertTrue(
+            self.statement.get_response_count(statement),
+            1
+        )
+
+    def test_occurrence_count_for_existing_statement(self):
+        statement = Statement("This is a test.")
+
+        self.statement.add_response(statement)
+        self.statement.add_response(statement)
+        self.assertTrue(
+            self.statement.get_response_count(statement),
+            2
+        )
 

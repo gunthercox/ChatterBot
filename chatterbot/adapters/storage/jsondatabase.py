@@ -1,6 +1,6 @@
 from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.adapters.exceptions import EmptyDatabaseException
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Response
 from jsondb.db import Database
 
 
@@ -24,7 +24,28 @@ class JsonDatabaseAdapter(StorageAdapter):
         if not values:
             return None
 
+        # Build the objects for the response list
+        response_list = self._objectify_response_list(values["in_response_to"])
+        values["in_response_to"] = response_list
+
         return Statement(statement_text, **values)
+
+    def _objectify_response_list(self, response_list):
+        """
+        Takes the list of response items and returns a
+        the list converted to object versions of the responses.
+        """
+        in_response_to = []
+
+        for item in response_list:
+            text = item[0]
+            occurrence = item[1]
+
+            in_response_to.append(
+                Response(text, occurrence=occurrence)
+            )
+
+        return in_response_to
 
     def _all_kwargs_match_values(self, kwarguments, values):
 
@@ -34,7 +55,11 @@ class JsonDatabaseAdapter(StorageAdapter):
                 kwarg_parts = kwarg.split("__")
 
                 if kwarg_parts[1] == "contains":
-                    if kwarguments[kwarg] not in values[kwarg_parts[0]]:
+                    text_values = []
+                    for val in values[kwarg_parts[0]]:
+                        text_values.append(val[0])
+
+                    if (kwarguments[kwarg] not in text_values) and (kwarguments[kwarg] not in values[kwarg_parts[0]]):
                         return False
 
             if kwarg in values:
@@ -54,6 +79,11 @@ class JsonDatabaseAdapter(StorageAdapter):
             values = self.database.data(key=key)
 
             if self._all_kwargs_match_values(kwargs, values):
+
+                # Build the objects for the response list
+                response_list = self._objectify_response_list(values["in_response_to"])
+                values["in_response_to"] = response_list
+
                 results.append(
                     Statement(key, **values)
                 )
@@ -67,13 +97,13 @@ class JsonDatabaseAdapter(StorageAdapter):
 
             # Remove the text key from the data
             del(data['text'])
-            self.database[statement.text] = data
+            self.database.data(key=statement.text, value=data)
 
             # Make sure that an entry for each response is saved
             for response_statement in statement.in_response_to:
-                response = self.find(response_statement)
+                response = self.find(response_statement.text)
                 if not response:
-                    response = Statement(response_statement)
+                    response = Statement(response_statement.text)
                     self.update(response)
 
         return statement
