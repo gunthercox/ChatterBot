@@ -1,5 +1,6 @@
 from unittest import TestCase
 from chatterbot.adapters.logic import ClosestMatchAdapter
+from chatterbot.conversation import Statement
 
 
 class ClosestMatchAdapterTests(TestCase):
@@ -9,12 +10,12 @@ class ClosestMatchAdapterTests(TestCase):
 
     def test_get_closest_statement(self):
         possible_choices = [
-            "Who do you love?",
-            "What is the meaning of life?",
-            "I am Iron Man.",
-            "What... is your quest?",
-            "Yuck, black licorice jelly beans.",
-            "I hear you are going on a quest?",
+            Statement("Who do you love?"),
+            Statement("What is the meaning of life?"),
+            Statement("I am Iron Man."),
+            Statement("What... is your quest?"),
+            Statement("Yuck, black licorice jelly beans."),
+            Statement("I hear you are going on a quest?"),
         ]
 
         close = self.adapter.get("What is your quest?", possible_choices)

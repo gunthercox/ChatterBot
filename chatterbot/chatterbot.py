@@ -95,14 +95,10 @@ class ChatBot(object):
 
         all_statements = self.storage.filter()
 
-        text_of_all_statements = []
-        for statement in all_statements:
-            text_of_all_statements.append(statement.text)
-
         # Select the closest match to the input statement
         closest_match_text = self.logic.get(
             input_text,
-            text_of_all_statements,
+            all_statements,
             self.recent_statements
         )
 
