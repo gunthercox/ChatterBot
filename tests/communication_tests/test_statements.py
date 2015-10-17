@@ -63,12 +63,17 @@ class StatementTests(TestCase):
         )
 
     def test_occurrence_count_for_existing_statement(self):
-        statement = Statement("This is a test.")
-
-        self.statement.add_response(statement)
-        self.statement.add_response(statement)
+        self.statement.add_response(self.statement)
+        self.statement.add_response(self.statement)
         self.assertTrue(
-            self.statement.get_response_count(statement),
+            self.statement.get_response_count(self.statement),
             2
         )
+
+    def test_occurrence_count_incremented(self):
+        self.statement.add_response(self.statement)
+        self.statement.add_response(self.statement)
+
+        self.assertEqual(len(self.statement.in_response_to), 1)
+        self.assertEqual(self.statement.in_response_to[0].occurrence, 2)
 

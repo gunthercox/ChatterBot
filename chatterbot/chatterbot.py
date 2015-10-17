@@ -109,6 +109,14 @@ class ChatBot(object):
         else:
             response = self.storage.get_random()
 
+        #if input_statement.text == closest_match.text:
+        #    input_statement = closest_match
+
+        # TODO: Why is checking if the input is equal to the closest match not the same here?
+        existing_statement = self.storage.find(input_statement.text)
+        if existing_statement:
+            input_statement = existing_statement
+
         previous_statement = self.get_last_statement()
 
         if previous_statement:

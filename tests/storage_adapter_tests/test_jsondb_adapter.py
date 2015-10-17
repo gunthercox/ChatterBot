@@ -118,6 +118,47 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 
         self.assertEqual(len(results), 2)
 
+    def test_multiple_responses_added_on_update(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thank you."),
+                Response("Thanks.")
+            ]
+        )
+        self.adapter.update(statement)
+        result = self.adapter.find(statement.text)
+
+        self.assertEqual(len(result.in_response_to), 2)
+        self.assertIn(statement.in_response_to[0], result.in_response_to)
+        self.assertIn(statement.in_response_to[1], result.in_response_to)
+
+    def test_update_saves_statement_with_multiple_responses(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thanks."),
+                Response("Thank you.")
+            ]
+        )
+        self.adapter.update(statement)
+        response = self.adapter.find(statement.text)
+
+        self.assertEqual(len(response.in_response_to), 2)
+
+    def test_getting_and_updating_statement(self):
+        statement = Statement("Hi")
+        self.adapter.update(statement)
+
+        statement.add_response(Response("Hello"))
+        statement.add_response(Response("Hello"))
+        self.adapter.update(statement)
+
+        response = self.adapter.find(statement.text)
+
+        self.assertEqual(len(response.in_response_to), 1)
+        self.assertEqual(response.in_response_to[0].occurrence, 2)
+
 
 class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
 
@@ -228,6 +269,24 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
         results = self.adapter.filter()
 
         self.assertEqual(len(results), 2)
+
+    def test_filter_returns_statement_with_multiple_responses(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thanks."),
+                Response("Thank you.")
+            ]
+        )
+        self.adapter.update(statement)
+        response = self.adapter.filter(
+            in_response_to__contains="Thanks."
+        )
+
+        # Get the first response
+        response = response[0]
+
+        self.assertEqual(len(response.in_response_to), 2)
 
 
 class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):

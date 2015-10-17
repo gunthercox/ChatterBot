@@ -68,10 +68,10 @@ class Statement(object):
                 [response.text, response.occurrence]
             )
 
-        data["signature"] = []
+        #data["signature"] = []
 
-        for signature in self.signatures:
-            data["signature"].append(signature.serialize())
+        #for signature in self.signatures:
+        #    data["signature"].append(signature.serialize())
 
         return data
 
