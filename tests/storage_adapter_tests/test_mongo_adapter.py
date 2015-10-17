@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest import SkipTest
 from chatterbot.adapters.storage import MongoDatabaseAdapter
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Response
 
 
 class BaseMongoDatabaseAdapterTestCase(TestCase):
@@ -84,15 +84,21 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
         # Check the initial values
         found_statement = self.adapter.find(statement.text)
-        self.assertEqual(found_statement.occurrence, 1)
+        self.assertEqual(
+            len(found_statement.in_response_to), 0
+        )
 
         # Update the statement value
-        statement.update_occurrence_count()
+        statement.add_response(
+            Response("New response")
+        )
         self.adapter.update(statement)
 
         # CHeck that the values have changed
         found_statement = self.adapter.find(statement.text)
-        self.assertEqual(found_statement.occurrence, 2)
+        self.assertEqual(
+            len(found_statement.in_response_to), 1
+        )
 
     def test_get_random_returns_statement(self):
         statement = Statement("New statement")
@@ -103,7 +109,8 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
     def test_find_returns_nested_responces(self):
         response_list = [
-            "Yes", "No"
+            Response("Yes"),
+            Response("No")
         ]
         statement = Statement(
             "Do you like this?",
@@ -118,64 +125,43 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
 
     def test_filter_no_results(self):
-        statement1 = Statement(
-            "Testing...",
-            occurrence=4
-        )
+        statement1 = Statement("Testing...")
         self.adapter.update(statement1)
 
-        results = self.adapter.filter(occurrence=100)
+        results = self.adapter.filter(text="Howdy")
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_result(self):
-        statement1 = Statement(
-            "Testing...",
-            occurrence=22
-        )
-        statement2 = Statement(
-            "Testing one, two, three.",
-            occurrence=1
-        )
+        statement1 = Statement("Testing...")
+        statement2 = Statement("Testing one, two, three.")
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
-        results = self.adapter.filter(occurrence=22)
+        results = self.adapter.filter(text="Testing...")
         self.assertEqual(len(results), 1)
         self.assertIn(statement1, results)
 
     def test_filter_equal_multiple_results(self):
-        statement1 = Statement(
-            "Testing...",
-            occurrence=6
-        )
-        statement2 = Statement(
-            "Testing one, two, three.",
-            occurrence=1
-        )
-        statement3 = Statement(
-            "Test statement.",
-            occurrence=6
-        )
+        statement1 = Statement("Testing...")
+        statement2 = Statement("Testing one, two, three.")
         self.adapter.update(statement1)
         self.adapter.update(statement2)
-        self.adapter.update(statement3)
 
-        results = self.adapter.filter(occurrence=6)
-        self.assertEqual(len(results), 2)
+        results = self.adapter.filter(text="Testing...")
+        self.assertEqual(len(results), 1)
         self.assertIn(statement1, results)
-        self.assertIn(statement3, results)
 
     def test_filter_contains_result(self):
         statement1 = Statement(
             "Testing...",
             in_response_to=[
-                "What are you doing?"
+                Response("What are you doing?")
             ]
         )
         statement2 = Statement(
             "Testing one, two, three.",
             in_response_to=[
-                "Testing..."
+                Response("Testing...")
             ]
         )
         self.adapter.update(statement1)
@@ -191,7 +177,7 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         statement1 = Statement(
             "Testing...",
             in_response_to=[
-                "What are you doing?"
+                Response("What are you doing?")
             ]
         )
         self.adapter.update(statement1)
@@ -199,29 +185,24 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         results = self.adapter.filter(
             in_response_to__contains="How do you do?"
         )
-        self.assertEqual(len(results), 0)
+        self.assertEqual(results, [])
 
     def test_filter_multiple_parameters(self):
+        response = Response("Why are you counting?")
         statement1 = Statement(
             "Testing...",
-            occurrence=6,
-            in_response_to=[
-                "Why are you counting?"
-            ]
+            in_response_to=[response]
         )
         statement2 = Statement(
             "Testing one, two, three.",
-            occurrence=6,
-            in_response_to=[
-                "Testing..."
-            ]
+            in_response_to=[response]
         )
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
         results = self.adapter.filter(
-            occurrence=6,
-            in_response_to__contains="Why are you counting?"
+            text=statement1.text,
+            in_response_to__contains=response.text
         )
 
         self.assertEqual(len(results), 1)
@@ -230,23 +211,21 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
     def test_filter_multiple_parameters_no_results(self):
         statement1 = Statement(
             "Testing...",
-            occurrence=6,
             in_response_to=[
-                "Why are you counting?"
+                Response("Why are you counting?")
             ]
         )
         statement2 = Statement(
             "Testing one, two, three.",
-            occurrence=1,
             in_response_to=[
-                "Testing..."
+                Response("Testing...")
             ]
         )
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
         results = self.adapter.filter(
-            occurrence=6,
+            text="Test",
             in_response_to__contains="Testing..."
         )
 
@@ -284,11 +263,16 @@ class ReadOnlyMongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
         self.adapter.read_only = True
 
-        statement.update_occurrence_count()
+        statement.add_response(
+            Response("New response")
+        )
         self.adapter.update(statement)
 
         statement_found = self.adapter.find("New statement")
-        self.assertEqual(statement_found.text, statement.text)
-        self.assertEqual(statement.occurrence, 2)
-        self.assertEqual(statement_found.occurrence, 1)
+        self.assertEqual(
+            statement_found.text, statement.text
+        )
+        self.assertEqual(
+            statement_found.in_response_to, []
+        )
 
