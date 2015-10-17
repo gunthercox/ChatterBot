@@ -5,11 +5,7 @@ class Statement(object):
 
     def __init__(self, text, **kwargs):
         self.text = text
-
-        self.signatures = kwargs.get("signatures", [])
         self.in_response_to = kwargs.get("in_response_to", [])
-
-        self.modified = False
 
     def __str__(self):
         return self.text
@@ -51,9 +47,6 @@ class Statement(object):
 
         return 0
 
-    def add_signature(self, signature):
-        self.signatures.append(signature)
-
     def serialize(self):
         """
         Returns a dictionary representation of the current object.
@@ -68,11 +61,6 @@ class Statement(object):
                 [response.text, response.occurrence]
             )
 
-        #data["signature"] = []
-
-        #for signature in self.signatures:
-        #    data["signature"].append(signature.serialize())
-
         return data
 
 
@@ -81,6 +69,7 @@ class Response(object):
     def __init__(self, text, **kwargs):
         self.text = text
         self.occurrence = kwargs.get("occurrence", 1)
+        self.signatures = kwargs.get("signatures", [])
 
     def __str__(self):
         return self.text
@@ -95,8 +84,19 @@ class Response(object):
         if isinstance(other, Response):
             return self.text == other.text
 
-        if isinstance(other, Statement):
-            return self.text == other.text
-
         return self.text == other
+
+    def add_signature(self, signature):
+        self.signatures.append(signature)
+
+    def serialize(self):
+        data = {}
+
+        data["text"] = self.text
+        data["signature"] = []
+
+        for signature in self.signatures:
+            data["signature"].append(signature.serialize())
+
+        return data
 
