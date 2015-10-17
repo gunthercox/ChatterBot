@@ -32,8 +32,8 @@ class JsonDatabaseAdapter(StorageAdapter):
 
     def _objectify_response_list(self, response_list):
         """
-        Takes the list of response items and returns a
-        the list converted to object versions of the responses.
+        Takes the list of response items and returns the
+        list converted to object versions of the responses.
         """
         in_response_to = []
 
