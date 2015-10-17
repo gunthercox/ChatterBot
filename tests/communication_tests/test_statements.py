@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.conversation import Statement, Signature
+from chatterbot.conversation import Statement
 
 
 class StatementTests(TestCase):
@@ -36,11 +36,6 @@ class StatementTests(TestCase):
             len(self.statement.in_response_to),
             1
         )
-
-    def test_add_signature(self):
-        signature = Signature("Gunther Cox")
-        self.statement.add_signature(signature)
-        self.assertIn(signature, self.statement.signatures)
 
     def test_serializer(self):
         data = self.statement.serialize()
