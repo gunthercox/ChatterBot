@@ -8,21 +8,24 @@ class Trainer(object):
         self.chatbot = chatbot
 
     def train_from_list(self, conversation):
+
+        recent_statements = []
+
         for text in conversation:
             statement = self.chatbot.storage.find(text)
 
             # Create the statement if a match was not found
             if not statement:
                 statement = Statement(text)
-            else:
-                statement.update_occurrence_count()
 
-            previous_statement = self.chatbot.get_last_statement()
+            previous_statement = None
+            if recent_statements:
+                previous_statement = recent_statements[-1]
 
             if previous_statement:
                 statement.add_response(previous_statement)
 
-            self.chatbot.recent_statements.append(statement)
+            recent_statements.append(statement)
             self.chatbot.storage.update(statement)
 
     def train_from_corpora(self, corpora):

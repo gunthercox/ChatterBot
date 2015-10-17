@@ -1,5 +1,5 @@
 from .base_case import ChatBotTestCase, UntrainedChatBotTestCase
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Response
 
 
 class ChatBotOutputTests(ChatBotTestCase):
@@ -24,10 +24,10 @@ class ChatBotOutputTests(ChatBotTestCase):
 
     def test_get_most_frequent_response(self):
         statement_list = [
-            Statement("What... is your quest?", occurrence=2),
-            Statement("This is a phone.", occurrence=4),
-            Statement("A what?", occurrence=2),
-            Statement("A phone.", occurrence=2)
+            Statement("What... is your quest?", in_response_to=[Response("Hello", occurrence=2)]),
+            Statement("This is a phone.", in_response_to=[Response("Hello", occurrence=4)]),
+            Statement("A what?", in_response_to=[Response("Hello", occurrence=2)]),
+            Statement("A phone.", in_response_to=[Response("Hello", occurrence=1)])
         ]
 
         # Save each statement to the database
@@ -35,6 +35,7 @@ class ChatBotOutputTests(ChatBotTestCase):
             self.chatbot.storage.update(statement)
 
         output = self.chatbot.get_most_frequent_response(
+            Statement("Hello"),
             statement_list
         )
 
@@ -42,9 +43,9 @@ class ChatBotOutputTests(ChatBotTestCase):
 
     def test_get_first_response(self):
         statement_list = [
-            Statement("What... is your quest?", occurrence=2),
-            Statement("A what?", occurrence=2),
-            Statement("A quest.", occurrence=2)
+            Statement("What... is your quest?"),
+            Statement("A what?"),
+            Statement("A quest.")
         ]
 
         output = self.chatbot.get_first_response(
@@ -55,9 +56,9 @@ class ChatBotOutputTests(ChatBotTestCase):
 
     def test_get_random_response(self):
         statement_list = [
-            Statement("This is a phone.", occurrence=4),
-            Statement("A what?", occurrence=2),
-            Statement("A phone.", occurrence=2)
+            Statement("This is a phone."),
+            Statement("A what?"),
+            Statement("A phone.")
         ]
 
         output = self.chatbot.get_random_response(
@@ -100,10 +101,18 @@ class ChatBotOutputTests(ChatBotTestCase):
         """
         output = self.chatbot.get_response("")
 
-        self.assertTrue(len(output) > -1)
+        self.assertTrue(len(output) >= 0)
 
 
 class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
+
+    def setUp(self):
+        super(ChatterBotResponseTestCase, self).setUp()
+
+        response_list = [
+            Response("Hi")
+        ]
+        self.test_statement = Statement("Hello", in_response_to=response_list)
 
     def test_empty_database(self):
         """
@@ -138,36 +147,33 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         self.assertEqual(response, statement_text)
 
     def test_response_known(self):
-        statement = Statement("Hello", in_response_to=["Hi"])
-        self.chatbot.storage.update(statement)
+        self.chatbot.storage.update(self.test_statement)
 
         response = self.chatbot.get_response("Hi")
 
-        self.assertEqual(response, statement.text)
+        self.assertEqual(response, self.test_statement.text)
 
     def test_response_format(self):
-        statement = Statement("Hello", in_response_to=["Hi"])
-        self.chatbot.storage.update(statement)
+        self.chatbot.storage.update(self.test_statement)
 
         response = self.chatbot.get_response("Hi")
         statement_object = self.chatbot.storage.find(response)
 
-        self.assertEqual(response, statement.text)
-        #self.assertEqual(statement_object.get_occurrence_count(), 2)
+        self.assertEqual(response, self.test_statement.text)
+        #TODO: self.assertEqual(statement_object.get_occurrence_count(), 2)
         self.assertEqual(len(statement_object.in_response_to), 1)
         self.assertIn("Hi", statement_object.in_response_to)
 
     def test_second_response_format(self):
-        statement = Statement("Hello", in_response_to=["Hi"])
-        self.chatbot.storage.update(statement)
+        self.chatbot.storage.update(self.test_statement)
 
         response = self.chatbot.get_response("Hi")
         # response = "Hello"
         second_response = self.chatbot.get_response("How are you?")
         statement_object = self.chatbot.storage.find(second_response)
 
-        self.assertEqual(second_response, statement.text)
-        #self.assertEqual(statement_object.get_occurrence_count(), 2)
+        self.assertEqual(second_response, self.test_statement.text)
+        #TODO: self.assertEqual(statement_object.get_response_count(), 2)
         self.assertEqual(len(statement_object.in_response_to), 1)
         self.assertIn("Hi", statement_object.in_response_to)
 

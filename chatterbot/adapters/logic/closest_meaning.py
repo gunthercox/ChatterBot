@@ -76,30 +76,35 @@ class ClosestMeaningAdapter(LogicAdapter):
 
         return total_similarity
 
-    def get(self, text, list_of_statements, current_conversation=None):
+    def get(self, input_statement, statement_list, current_conversation=None):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
 
+        # Get the text of each statement
+        text_of_all_statements = []
+        for statement in statement_list:
+            text_of_all_statements.append(statement.text)
+
         # Check if there is no options
-        if not list_of_statements:
-            return text
+        if not statement_list:
+            return input_statement
 
         # Check if an exact match exists
-        if text in list_of_statements:
-            return text
+        if input_statement.text in text_of_all_statements:
+            return input_statement
 
-        closest_statement = list_of_statements[0]
+        closest_statement = text_of_all_statements[0]
         closest_similarity = 0
 
         # For each option in the list of options
-        for statement in list_of_statements:
-            similarity = self.get_similarity(text, statement)
+        for statement in text_of_all_statements:
+            similarity = self.get_similarity(input_statement.text, statement)
 
             if similarity > closest_similarity:
                 closest_similarity = similarity
                 closest_statement = statement
 
-        return closest_statement
+        return next((s for s in statement_list if s.text == closest_statement), None)
 

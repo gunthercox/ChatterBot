@@ -1,5 +1,6 @@
 from unittest import TestCase
 from chatterbot.adapters.logic import ClosestMeaningAdapter
+from chatterbot.conversation import Statement
 
 
 class ClosestMeaningAdapterTests(TestCase):
@@ -9,18 +10,21 @@ class ClosestMeaningAdapterTests(TestCase):
 
     def test_no_choices(self):
         possible_choices = []
-        close = self.adapter.get("Hello", possible_choices)
+        statement = Statement("Hello")
+
+        close = self.adapter.get(statement, possible_choices)
 
         self.assertEqual("Hello", close)
 
     def test_get_closest_statement(self):
         possible_choices = [
-            "This is a lovely bog.",
-            "This is a beautiful swamp.",
-            "It smells like swamp."
+            Statement("This is a lovely bog."),
+            Statement("This is a beautiful swamp."),
+            Statement("It smells like swamp.")
         ]
+        statement = Statement("This is a lovely swamp.")
 
-        close = self.adapter.get("This is a lovely swamp.", possible_choices)
+        close = self.adapter.get(statement, possible_choices)
 
         self.assertEqual("This is a lovely bog.", close)
 

@@ -4,20 +4,31 @@ from fuzzywuzzy import process
 
 class ClosestMatchAdapter(LogicAdapter):
 
-    def get(self, text, list_of_statements, current_conversation=None):
+    def get(self, input_statement, statement_list, current_conversation=None):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
 
+        # Get the text of each statement
+        text_of_all_statements = []
+        for statement in statement_list:
+            text_of_all_statements.append(statement.text)
+
         # If the list is empty, return the statement
-        if not list_of_statements:
-            return text
+        if not statement_list:
+            return input_statement
 
         # Check if an exact match exists
-        if text in list_of_statements:
-            return text
+        if input_statement.text in text_of_all_statements:
+            return input_statement
 
         # Get the closest matching statement from the database
-        return process.extract(text, list_of_statements, limit=1)[0][0]
+        closest_match = process.extract(
+            input_statement.text,
+            text_of_all_statements,
+            limit=1
+        )[0][0]
+
+        return next((s for s in statement_list if s.text == closest_match), None)
 

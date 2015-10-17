@@ -1,5 +1,5 @@
 from .utils.module_loading import import_module
-from .conversation import Statement
+from .conversation import Statement, Response
 
 
 class ChatBot(object):
@@ -40,7 +40,7 @@ class ChatBot(object):
             return self.recent_statements[-1]
         return None
 
-    def get_most_frequent_response(self, response_list):
+    def get_most_frequent_response(self, input_statement, response_list):
         """
         Returns the statement with the greatest number of occurrences.
         """
@@ -48,22 +48,15 @@ class ChatBot(object):
         # Initialize the matching responce to the first response.
         # This will be returned in the case that no match can be found.
         matching_response = response_list[0]
-
-        # The statement passed in must be an existing statement within the database
-        found_statement = self.storage.find(matching_response.text)
-
-        occurrence_count = found_statement.get_occurrence_count()
+        occurrence_count = 0
 
         for statement in response_list:
-
-            statement_data = self.storage.find(statement.text)
-
-            statement_occurrence_count = statement_data.get_occurrence_count()
+            count = statement.get_response_count(input_statement)
 
             # Keep the more common statement
-            if statement_occurrence_count >= occurrence_count:
+            if count >= occurrence_count:
                 matching_response = statement
-                occurrence_count = statement_occurrence_count
+                occurrence_count = count
 
         # Choose the most commonly occuring matching response
         return matching_response
@@ -87,33 +80,22 @@ class ChatBot(object):
         """
         input_statement = Statement(input_text)
 
-        # If no responses exist, use the input text
+        # If no responses exist, return the input statement
         if not self.storage.count():
-            response = Statement(input_text)
-            self.storage.update(response)
-            self.recent_statements.append(response)
+            self.storage.update(input_statement)
+            self.recent_statements.append(input_statement)
 
             # Process the response output with the IO adapter
-            response = self.io.process_response(response)
-
-            return response
+            return self.io.process_response(input_statement)
 
         all_statements = self.storage.filter()
-        text_of_all_statements = []
-        for statement in all_statements:
-            text_of_all_statements.append(statement.text)
 
         # Select the closest match to the input statement
         closest_match = self.logic.get(
-            input_text,
-            text_of_all_statements,
+            input_statement,
+            all_statements,
             self.recent_statements
         )
-        closest_match = self.storage.find(closest_match)
-
-        # Check if the closest match is an exact match
-        if closest_match == input_statement:
-            input_statement = closest_match
 
         # Get all statements that are in response to the closest match
         response_list = self.storage.filter(
@@ -121,18 +103,25 @@ class ChatBot(object):
         )
 
         if response_list:
-            response = self.get_most_frequent_response(response_list)
-            #response = self.get_first_response(response_list)
+            #response = self.get_most_frequent_response(closest_match, response_list)
+            response = self.get_first_response(response_list)
             #response = self.get_random_response(response_list)
         else:
             response = self.storage.get_random()
+
+        #if input_statement.text == closest_match.text:
+        #    input_statement = closest_match
+
+        # TODO: Why is checking if the input is equal to the closest match not the same here?
+        existing_statement = self.storage.find(input_statement.text)
+
+        if existing_statement:
+            input_statement = existing_statement
 
         previous_statement = self.get_last_statement()
 
         if previous_statement:
             input_statement.add_response(previous_statement)
-
-        input_statement.update_occurrence_count()
 
         # Update the database after selecting a response
         self.storage.update(input_statement)
