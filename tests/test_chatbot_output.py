@@ -101,7 +101,7 @@ class ChatBotOutputTests(ChatBotTestCase):
         """
         output = self.chatbot.get_response("")
 
-        self.assertTrue(len(output) > -1)
+        self.assertTrue(len(output) >= 0)
 
 
 class ChatterBotResponseTestCase(UntrainedChatBotTestCase):

@@ -1,7 +1,7 @@
 from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.adapters.exceptions import EmptyDatabaseException
 from chatterbot.conversation import Statement, Response
-from jsondb.db import Database
+from jsondb import Database
 
 
 class JsonDatabaseAdapter(StorageAdapter):

@@ -114,6 +114,7 @@ class ChatBot(object):
 
         # TODO: Why is checking if the input is equal to the closest match not the same here?
         existing_statement = self.storage.find(input_statement.text)
+
         if existing_statement:
             input_statement = existing_statement
 
