@@ -23,7 +23,7 @@ class ChatBot(object):
         self.storage = StorageAdapter(**kwargs)
 
         LogicAdapter = import_module(logic_adapter)
-        self.logic = LogicAdapter()
+        self.logic = LogicAdapter(**kwargs)
 
         IOAdapter = import_module(io_adapter)
         self.io = IOAdapter(**kwargs)
