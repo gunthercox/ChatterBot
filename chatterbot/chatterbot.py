@@ -26,7 +26,7 @@ class ChatBot(object):
         self.logic = LogicAdapter()
 
         IOAdapter = import_module(io_adapter)
-        self.io = IOAdapter()
+        self.io = IOAdapter(**kwargs)
 
         self.trainer = None
 
