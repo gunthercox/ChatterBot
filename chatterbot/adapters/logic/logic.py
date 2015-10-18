@@ -7,6 +7,9 @@ class LogicAdapter(object):
     that all logic adapters should implement.
     """
 
+    def __init__(self, **kwargs):
+        pass
+
     def get(self, text, statement_list, current_conversation):
         raise AdapterNotImplementedError()
 
