@@ -123,5 +123,6 @@ class JsonDatabaseAdapter(StorageAdapter):
         """
         import os
 
-        os.remove(self.database.path)
+        if os.path.exists(self.database.path):
+            os.remove(self.database.path)
 
