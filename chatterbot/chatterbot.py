@@ -105,6 +105,11 @@ class ChatBot(object):
         if response_list:
             #response = self.get_most_frequent_response(closest_match, response_list)
             response = self.get_first_response(response_list)
+
+            if closest_match.text != input_statement:
+                response.add_response(input_statement)
+                self.storage.update(response)
+
             #response = self.get_random_response(response_list)
         else:
             response = self.storage.get_random()
