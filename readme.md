@@ -39,7 +39,12 @@ from chatterbot import ChatBot
 chatbot = ChatBot("Ron Obvious")
 
 # Train based on the english corpus
-chatbot.train("chatterbot.corpus.english")
+
+# For better greetings
+chatbot.train("chatterbot.corpus.english.greetings")
+
+# For more verbose conversations
+chatbot.train("chatterbot.corpus.english.conversations")
 
 # Get a response to an input statement
 chatbot.get_response("Hello, how are you today?")
