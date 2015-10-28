@@ -1,11 +1,12 @@
-from .corpus.utils import load_corpus
 from .conversation import Statement
+from .corpus import Corpus
 
 
 class Trainer(object):
 
     def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
+        self.corpus = Corpus()
 
     def train_from_list(self, conversation):
 
@@ -30,7 +31,7 @@ class Trainer(object):
 
     def train_from_corpora(self, corpora):
         for corpus in corpora:
-            corpus_data = load_corpus(corpus)
+            corpus_data = self.corpus.load_corpus(corpus)
             for data in corpus_data:
                 for pair in data:
                     self.train_from_list(pair)
