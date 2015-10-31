@@ -1,10 +1,9 @@
 include license.md
 include readme.md
 include requirements.txt
-include database.db
 
 recursive-include tests *
-recursive-include corpus *.json
+recursive-include chatterbot/corpus/* *.json
 
 recursive-exclude * *.pyc
 recursive-exclude * *.py~
