@@ -12,6 +12,6 @@ class TerminalAdapter(IOAdapter):
         return user_input
 
     def process_response(self, statement):
-        print(statement.text)
+#        print(statement.text)
         return statement.text
 
