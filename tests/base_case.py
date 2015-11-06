@@ -1,10 +1,46 @@
 from unittest import TestCase
 from chatterbot import ChatBot
+import os
 
 
-class ChatBotTestCase(TestCase):
+class UntrainedChatBotTestCase(TestCase):
 
     def setUp(self):
+        self.test_data_directory = 'test_data'
+        self.test_database_name = self.random_string() + ".db"
+
+        if not os.path.exists(self.test_data_directory):
+            os.makedirs(self.test_data_directory)
+
+        database_path = self.test_data_directory + '/' + self.test_database_name
+
+        self.chatbot = ChatBot("Test Bot", database=database_path)
+
+    def random_string(self, start=0, end=9000):
+        """
+        Generate a string based on a random number.
+        """
+        from random import randint
+        return str(randint(start, end))
+
+    def remove_test_data(self):
+        import shutil
+
+        if os.path.exists(self.test_data_directory):
+            shutil.rmtree(self.test_data_directory)
+
+    def tearDown(self):
+        """
+        Remove the test database.
+        """
+        self.chatbot.storage.drop()
+        self.remove_test_data()
+
+
+class ChatBotTestCase(UntrainedChatBotTestCase):
+
+    def setUp(self):
+        super(ChatBotTestCase, self).setUp()
         """
         Set up a database for testing.
         """
@@ -27,43 +63,7 @@ class ChatBotTestCase(TestCase):
             "Blue."
         ]
 
-        self.chatbot = ChatBot("Test Bot", database="test-database.db")
-
         self.chatbot.train(data1)
         self.chatbot.train(data2)
         self.chatbot.train(data3)
-
-    def tearDown(self):
-        """
-        Remove the test database.
-        """
-        self.chatbot.storage.drop()
-
-
-class UntrainedChatBotTestCase(TestCase):
-    """
-    This is a test case for use when the
-    chat bot should not start with any
-    prior training.
-    """
-
-    def setUp(self):
-        """
-        Set up a database for testing.
-        """
-        test_db = self.random_string() + ".db"
-        self.chatbot = ChatBot("Test Bot", database=test_db)
-
-    def random_string(self, start=0, end=9000):
-        """
-        Generate a string based on a random number.
-        """
-        from random import randint
-        return str(randint(start, end))
-
-    def tearDown(self):
-        """
-        Remove the test database.
-        """
-        self.chatbot.storage.drop()
 

@@ -50,8 +50,22 @@ chatbot.get_response("Hello, how are you today?")
 Chatterbot comes with a data utility module that can be used to train chat bots.
 At the moment there is only English training data in this module. Contributions
 of additional training data or training data in other languages would be greatly
-appreciated. Take a look at the data files in the `chatterbot.corpus` directory
-if you are interested in contributing.
+appreciated. Take a look at the data files in the
+[chatterbot/corpus](https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/corpus)
+directory if you are interested in contributing.
+
+```
+# Train based on the english corpus
+chatbot.train("chatterbot.corpus.english")
+
+# Train based on english greetings corpus
+chatbot.train("chatterbot.corpus.english.greetings")
+
+# Train based on the english conversations corpus
+chatbot.train("chatterbot.corpus.english.conversations")
+```
+
+**Corpus contributions are welcome! Please make a pull request.**
 
 # Documentation
 
