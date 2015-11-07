@@ -14,7 +14,11 @@ class UntrainedChatBotTestCase(TestCase):
 
         database_path = self.test_data_directory + '/' + self.test_database_name
 
-        self.chatbot = ChatBot("Test Bot", database=database_path)
+        self.chatbot = ChatBot(
+            "Test Bot",
+            io_adapter="chatterbot.adapters.io.NoOutputAdapter",
+            database=database_path
+        )
 
     def random_string(self, start=0, end=9000):
         """
