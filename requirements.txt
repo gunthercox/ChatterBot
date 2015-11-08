@@ -4,3 +4,4 @@ nltk<4.0.0
 pymongo>=3.0.3,<4.0.0
 requests~=2.8.0,<3.0.0
 requests-oauthlib==0.5.0
+regex4dummies==1.4.4
