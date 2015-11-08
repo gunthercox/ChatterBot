@@ -201,4 +201,3 @@ class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):
 
         self.assertFalse(exists_before)
         self.assertFalse(exists_after)
-

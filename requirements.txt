@@ -3,3 +3,4 @@ jsondatabase>=0.0.6
 pymongo==3.0.3
 requests==2.7.0
 requests-oauthlib==0.5.0
+regex4dummies==1.4.4
