@@ -42,7 +42,7 @@ class ClosestSVOAdapter(LogicAdapter):
         if dependencies1[ 1 ] == dependencies2[ 1 ]:
             similarity += 1
 
-        if dependencies1[ 1 ] == dependencies2[ 2 ]:
+        if dependencies1[ 2 ] == dependencies2[ 2 ]:
             similarity += 1
 
         # Returning the found similarity
