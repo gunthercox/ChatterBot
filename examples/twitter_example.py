@@ -29,4 +29,3 @@ for mention in chatbot.get_mentions():
         chatbot.follow(screen_name)
         chatbot.favorite(mention["id"])
         chatbot.reply(mention["id"], response)
-
