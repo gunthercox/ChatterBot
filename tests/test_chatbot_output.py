@@ -174,7 +174,7 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
 
         self.assertEqual(second_response, self.test_statement.text)
         #TODO: self.assertEqual(statement_object.get_response_count(), 2)
-        self.assertEqual(len(statement_object.in_response_to), 1)
+        self.assertEqual(len(statement_object.in_response_to), 2)
         self.assertIn("Hi", statement_object.in_response_to)
 
 

@@ -108,3 +108,24 @@ class TrainingTestCase(UntrainedChatBotTestCase):
 
         self.assertEqual(response, conversation[2])
 
+    def test_similar_sentence_gets_same_response_multiple_times(self):
+        """
+        Tests if the bot returns the same response for the same question (which is similar to the one 
+        present in the training set) when asked repeatedly.
+        Also, it checks if the question is added to the in_response_to array in db for the response.
+        """
+        training = [
+            'how do you login to gmail?',
+            'Goto gmail.com, enter your login information and hit enter!'
+        ]
+
+        similar_question = 'how do I login to gmail?'
+
+        self.chatbot.train(training)
+        response_to_trained_set = self.chatbot.get_response('how do you login to gmail?')
+        response_to_similar_question_1 = self.chatbot.get_response(similar_question)
+        response_to_similar_question_2 = self.chatbot.get_response(similar_question)
+
+        self.assertEqual(response_to_trained_set, response_to_similar_question_1)
+        self.assertEqual(response_to_similar_question_1, response_to_similar_question_2)
+        self.assertIn(similar_question, self.chatbot.storage.find(response_to_trained_set).in_response_to)
