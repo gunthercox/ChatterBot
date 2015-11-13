@@ -19,6 +19,9 @@ class ChatBot(object):
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
+        MathematicalPreprocessor = import_module("chatterbot.adapters.preprocessor.EvaluateMathematically")
+        self.math_processor = MathematicalPreprocessor(**kwargs)
+
         StorageAdapter = import_module(storage_adapter)
         self.storage = StorageAdapter(**kwargs)
 
@@ -79,6 +82,8 @@ class ChatBot(object):
         Return the bot's response based on the input.
         """
         input_statement = Statement(input_text)
+
+        input_statement.text = self.math_processor.process( input_statement.text )
 
         # If no responses exist, return the input statement
         if not self.storage.count():
@@ -152,4 +157,3 @@ class ChatBot(object):
                 self.trainer.train_from_corpora(corpora)
         else:
             self.trainer.train_from_list(conversation)
-

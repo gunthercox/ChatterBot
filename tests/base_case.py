@@ -70,4 +70,3 @@ class ChatBotTestCase(UntrainedChatBotTestCase):
         self.chatbot.train(data1)
         self.chatbot.train(data2)
         self.chatbot.train(data3)
-
