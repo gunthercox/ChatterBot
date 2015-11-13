@@ -1,5 +1,5 @@
 from .preprocessor import PreProcessorAdapter
-
+import re
 
 class EvaluateMathematically(PreProcessorAdapter):
 
@@ -10,9 +10,13 @@ class EvaluateMathematically(PreProcessorAdapter):
         with the mathematical terms "solved".
         """
 
+        #input_text = re.sub( '.', '', input_text )
+
         expression = self.simplify_chunks( input_text )
 
-        return input_text + " Test"
+        print input_text
+
+        return input_text
 
 
     def simplify_chunks(self, input_text):
