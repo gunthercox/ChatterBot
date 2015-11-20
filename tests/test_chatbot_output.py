@@ -182,9 +182,17 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
 
         response = self.chatbot.get_response("What is 100 + 54?")
         second_response = self.chatbot.get_response("What is 100 * 20")
+        third_response = self.chatbot.get_response("What is 100 + ( 1000 * 2 )?")
+        fourth_response = self.chatbot.get_response("What is four and 100 + ( 100 * 2 )?")
+        fifth_response = self.chatbot.get_response("What is one hundred + four hundred?")
+        sixth_response = self.chatbot.get_response("What is 100 divided by 100?")
 
         self.assertEqual(response, "100 + 54 = 154")
         self.assertEqual(second_response, "100 * 20 = 2000")
+        self.assertEqual(third_response, "100 + ( 1000 * 2 ) = 2100")
+        self.assertEqual(fourth_response, "4 + 100 + ( 100 * 2 ) = 304")
+        self.assertEqual(fifth_response, "100 + 400 = 500")
+        self.assertEqual(sixth_response, "100 / 100 = 1")
 
 
 class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):

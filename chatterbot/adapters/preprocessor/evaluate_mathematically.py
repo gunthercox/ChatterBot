@@ -104,7 +104,7 @@ class EvaluateMathematically(PreProcessorAdapter):
         false.
         """
 
-        if string in "+-/*^":
+        if string in "+-/*^\(\)":
             return string
         else:
             return False
@@ -122,5 +122,42 @@ class EvaluateMathematically(PreProcessorAdapter):
         # Removing punctuation
         string = re.sub( '[.!?/:;]', '', string )
 
+        # Removing words
+        string = self.substitute_words( string )
+
         # Returning normalized text
         return string
+
+
+    def substitute_words(self, string):
+        """
+        Substitutes numbers for words.
+        """
+
+        nums = { "one" : 1, "two" : 2, "three" : 3, "four" : 4 }
+        words = { "and" : '+', "plus" : '+', "minus" : '-', "times" : '*', 'divided by' : '/' }
+        scales = { 'hundred' : '* 100', 'thousand' : '* 1000' }
+
+        condensed_string = '_'.join( string.split( ' ' ) )
+
+        for word in words:
+            condensed_string = re.sub( '_'.join( word.split( ' ' ) ), words[ word ], condensed_string )
+
+        for number in nums:
+            condensed_string = re.sub( number, str( nums[ number ] ), condensed_string )
+
+        for scale in scales:
+            condensed_string = re.sub( "_" + scale, " " + scales[ scale ], condensed_string)
+
+        condensed_string = condensed_string.split( '_' )
+        for chunk_index in range( 0, len( condensed_string ) ):
+            value = ""
+
+            try:
+                value = str( eval( condensed_string[ chunk_index ] ) )
+
+                condensed_string[ chunk_index ] = value
+            except:
+                pass
+
+        return ' '.join( condensed_string )
