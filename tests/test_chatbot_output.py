@@ -177,6 +177,15 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         self.assertEqual(len(statement_object.in_response_to), 1)
         self.assertIn("Hi", statement_object.in_response_to)
 
+    def test_evaluate_mathematically(self):
+        self.chatbot.storage.update(self.test_statement)
+
+        response = self.chatbot.get_response("What is 100 + 54?")
+        second_response = self.chatbot.get_response("What is 100 * 20")
+
+        self.assertEqual(response, "100 + 54 = 154")
+        self.assertEqual(second_response, "100 * 20 = 2000")
+
 
 class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):
 

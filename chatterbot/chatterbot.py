@@ -83,7 +83,11 @@ class ChatBot(object):
         """
         input_statement = Statement(input_text)
 
-        input_statement.text = self.math_processor.process( input_statement.text )
+        math_response, is_response = self.math_processor.process( input_statement.text )
+
+        # If the question was a mathematical question, use the answer as a response (and do not update the database)
+        if is_response:
+            return math_response
 
         # If no responses exist, return the input statement
         if not self.storage.count():
