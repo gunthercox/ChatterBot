@@ -87,6 +87,7 @@ class ChatBot(object):
 
         # If the question was a mathematical question, use the answer as a response (and do not update the database)
         if is_response:
+            print math_response
             return math_response
 
         # If no responses exist, return the input statement
