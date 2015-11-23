@@ -1,6 +1,6 @@
 from .preprocessor import PreProcessorAdapter
 import re
-import ast
+import os, json
 
 class EvaluateMathematically(PreProcessorAdapter):
 
@@ -128,26 +128,34 @@ class EvaluateMathematically(PreProcessorAdapter):
         # Returning normalized text
         return string
 
+    def load_data( self, language ):
+        """
+        Load language-specific data
+        """
+
+        if language == "english":
+            with open(os.path.join(os.path.dirname(__file__), 'data') + "/math_words_EN.json") as data_file:
+                data = json.load(data_file)
+            self.data = data
+
 
     def substitute_words(self, string):
         """
         Substitutes numbers for words.
         """
 
-        nums = { "one" : 1, "two" : 2, "three" : 3, "four" : 4 }
-        words = { "plus" : '+', "minus" : '-', "times" : '*', 'divided by' : '/' }
-        scales = { 'hundred' : '* 100', 'thousand' : '* 1000' }
+        self.load_data( "english" )
 
         condensed_string = '_'.join( string.split( ' ' ) )
 
-        for word in words:
-            condensed_string = re.sub( '_'.join( word.split( ' ' ) ), words[ word ], condensed_string )
+        for word in self.data[ "words" ]:
+            condensed_string = re.sub( '_'.join( word.split( ' ' ) ), self.data[ "words" ][ word ], condensed_string )
 
-        for number in nums:
-            condensed_string = re.sub( number, str( nums[ number ] ), condensed_string )
+        for number in self.data[ "numbers" ]:
+            condensed_string = re.sub( number, str( self.data[ "numbers" ][ number ] ), condensed_string )
 
-        for scale in scales:
-            condensed_string = re.sub( "_" + scale, " " + scales[ scale ], condensed_string)
+        for scale in self.data[ "scales" ]:
+            condensed_string = re.sub( "_" + scale, " " + self.data[ "scales" ][ scale ], condensed_string)
 
         condensed_string = condensed_string.split( '_' )
         for chunk_index in range( 0, len( condensed_string ) ):

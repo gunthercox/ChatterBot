@@ -194,6 +194,7 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         self.assertEqual(fourth_response, "( 4 + ( 100 + ( ( 100 * ( 2 ) ) ) ) ) = 304")
         self.assertEqual(fifth_response, "( 100 + 400 ) = 500")
         self.assertEqual(sixth_response, "( 100 / 100 ) = 1")
+        self.assertEqual(seventh_response, "( 1000 + 200 + 4 ) / ( 100 ) = 12")
 
 
 class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):
