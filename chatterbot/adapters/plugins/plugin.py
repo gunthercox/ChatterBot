@@ -12,3 +12,6 @@ class PluginAdapter(object):
 
     def process(self, text):
         raise AdapterNotImplementedError()
+
+    def should_answer(self, text):
+        raise AdapterNotImplementedError()

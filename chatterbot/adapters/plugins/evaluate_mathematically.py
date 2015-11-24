@@ -4,6 +4,20 @@ import os, json
 
 class EvaluateMathematically(PluginAdapter):
 
+    def should_answer(self, input_text):
+        """
+        Determines whether it is appropriate for this plugin
+        to respond to the user input.
+        """
+
+        response = self.process( input_text )
+
+        if response == False:
+            return False
+        else:
+            return True
+
+
     def process(self, input_text):
         """
         Takes a statement string.
@@ -18,9 +32,9 @@ class EvaluateMathematically(PluginAdapter):
         try:
             string += '= ' + str( eval( string ) )#self.evaluate( string ) )
 
-            return string, True
+            return string
         except:
-            return string, False
+            return False
 
 
     def simplify_chunks(self, input_text):
