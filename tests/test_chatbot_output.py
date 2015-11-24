@@ -193,9 +193,6 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         self.assertEqual(third_response, "( 100 + ( ( 1000 * ( 2 ) ) ) ) = 2100")
         self.assertEqual(fourth_response, "( 4 + ( 100 + ( ( 100 * ( 2 ) ) ) ) ) = 304")
         self.assertEqual(fifth_response, "( 100 + 400 ) = 500")
-        # The following assert statements break the Travis-Ci build because division is handled differently in Python 3.x than Python 2.7
-        #self.assertEqual(sixth_response, "( 100 / 100 ) = 1")
-        #self.assertEqual(seventh_response, "( 1000 + 200 + 4 ) / ( 100 ) = 12")
 
 
 class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):

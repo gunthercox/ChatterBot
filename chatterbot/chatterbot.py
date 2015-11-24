@@ -19,8 +19,8 @@ class ChatBot(object):
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
-        MathematicalPlugin = import_module("chatterbot.adapters.plugins.EvaluateMathematically")
-        self.math_plugin = MathematicalPlugin(**kwargs)
+        PluginChooser = import_module("chatterbot.adapters.plugins.PluginChooser")
+        self.plugin_chooser = PluginChooser(**kwargs)
 
         StorageAdapter = import_module(storage_adapter)
         self.storage = StorageAdapter(**kwargs)
@@ -84,11 +84,12 @@ class ChatBot(object):
         input_statement = Statement(input_text)
 
         # Applying plugin logic to see whether the chatbot should respond in this way
-        math_response, is_response = self.math_plugin.process( input_statement.text )
+        plugin_response = self.plugin_chooser.choose( input_statement )
 
-        # If the question was a mathematical question, use the answer as a response (and do not update the database)
-        if is_response:
-            return math_response
+        if plugin_response == False:
+            pass
+        else:
+            return plugin_response
 
         # If no responses exist, return the input statement
         if not self.storage.count():
