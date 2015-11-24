@@ -1,2 +1,2 @@
-from .preprocessor import PreProcessorAdapter
+from .plugin import PluginAdapter
 from .evaluate_mathematically import EvaluateMathematically
