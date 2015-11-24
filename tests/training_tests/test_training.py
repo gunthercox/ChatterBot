@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
-from tests.base_case import UntrainedChatBotTestCase 
+from tests.base_case import ChatBotTestCase
 
 
-class TrainingTestCase(UntrainedChatBotTestCase):
+class TrainingTestCase(ChatBotTestCase):
 
     def test_training_adds_statements(self):
         """
@@ -128,4 +128,71 @@ class TrainingTestCase(UntrainedChatBotTestCase):
 
         self.assertEqual(response_to_trained_set, response_to_similar_question_1)
         self.assertEqual(response_to_similar_question_1, response_to_similar_question_2)
+
+
+class ChatterBotResponseTests(ChatBotTestCase):
+
+    def setUp(self):
+        super(ChatterBotResponseTests, self).setUp()
+        """
+        Set up a database for testing.
+        """
+        data1 = [
+            "african or european?",
+            "Huh? I... I don't know that.",
+            "How do you know so much about swallows?"
+        ]
+
+        data2 = [
+            "Siri is adorable",
+            "Who is Seri?",
+            "Siri is my cat"
+        ]
+
+        data3 = [
+            "What... is your quest?",
+            "To seek the Holy Grail.",
+            "What... is your favourite colour?",
+            "Blue."
+        ]
+
+        self.chatbot.train(data1)
+        self.chatbot.train(data2)
+        self.chatbot.train(data3)
+
+    def test_answer_to_known_input(self):
+        """
+        Test that a matching response is returned
+        when an exact match exists.
+        """
+        input_text = "What... is your favourite colour?"
+        response = self.chatbot.get_response(input_text)
+
+        self.assertIn("Blue", response)
+
+    def test_answer_close_to_known_input(self):
+
+        input_text = "What is your favourite colour?"
+        response = self.chatbot.get_response(input_text)
+
+        self.assertIn("Blue", response)
+
+    def test_match_has_no_response(self):
+        """
+        Make sure that the if the last line in a file
+        matches the input text then a index error does
+        not occure.
+        """
+        input_text = "Siri is my cat"
+        response = self.chatbot.get_response(input_text)
+
+        self.assertGreater(len(response), 0)
+
+    def test_empty_input(self):
+        """
+        If empty input is provided, anything may be returned.
+        """
+        output = self.chatbot.get_response("")
+
+        self.assertTrue(len(output) >= 0)
 

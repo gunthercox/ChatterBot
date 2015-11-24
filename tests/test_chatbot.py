@@ -1,8 +1,8 @@
-from .base_case import ChatBotTestCase, UntrainedChatBotTestCase
+from .base_case import ChatBotTestCase
 from chatterbot.conversation import Statement, Response
 
 
-class ChatBotOutputTests(ChatBotTestCase):
+class ChatterBotTests(ChatBotTestCase):
 
     def test_get_last_statement(self):
         """
@@ -67,51 +67,16 @@ class ChatBotOutputTests(ChatBotTestCase):
 
         self.assertTrue(output)
 
-    def test_answer_to_known_input(self):
-        """
-        Test that a matching response is returned
-        when an exact match exists.
-        """
-        input_text = "What... is your favourite colour?"
-        response = self.chatbot.get_response(input_text)
 
-        self.assertIn("Blue", response)
-
-    def test_answer_close_to_known_input(self):
-
-        input_text = "What is your favourite colour?"
-        response = self.chatbot.get_response(input_text)
-
-        self.assertIn("Blue", response)
-
-    def test_match_has_no_response(self):
-        """
-        Make sure that the if the last line in a file
-        matches the input text then a index error does
-        not occure.
-        """
-        input_text = "Siri is my cat"
-        response = self.chatbot.get_response(input_text)
-
-        self.assertGreater(len(response), 0)
-
-    def test_empty_input(self):
-        """
-        If empty input is provided, anything may be returned.
-        """
-        output = self.chatbot.get_response("")
-
-        self.assertTrue(len(output) >= 0)
-
-
-class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
+class ChatterBotResponseTests(ChatBotTestCase):
 
     def setUp(self):
-        super(ChatterBotResponseTestCase, self).setUp()
+        super(ChatterBotResponseTests, self).setUp()
 
         response_list = [
             Response("Hi")
         ]
+
         self.test_statement = Statement("Hello", in_response_to=response_list)
 
     def test_empty_database(self):
@@ -160,7 +125,6 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         statement_object = self.chatbot.storage.find(response)
 
         self.assertEqual(response, self.test_statement.text)
-        #TODO: self.assertEqual(statement_object.get_occurrence_count(), 2)
         self.assertEqual(len(statement_object.in_response_to), 1)
         self.assertIn("Hi", statement_object.in_response_to)
 
@@ -173,38 +137,6 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         statement = self.chatbot.storage.find(second_response)
 
         self.assertEqual(second_response, self.test_statement.text)
-        #TODO: self.assertEqual(statement.get_response_count(), 2)
         self.assertEqual(len(statement.in_response_to), 1)
         self.assertIn("Hi", statement.in_response_to)
-
-
-class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):
-
-    def test_database_is_updated(self):
-        """
-        Test that the database is updated when read_only is set to false.
-        """
-        input_text = "What is the airspeed velocity of an unladen swallow?"
-        exists_before = self.chatbot.storage.find(input_text)
-
-        response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.storage.find(input_text)
-
-        self.assertFalse(exists_before)
-        self.assertTrue(exists_after)
-
-    def test_database_is_not_updated_when_read_only(self):
-        """
-        Test that the database is not updated when read_only is set to true.
-        """
-        self.chatbot.storage.read_only = True
-
-        input_text = "Who are you? The proud lord said."
-        exists_before = self.chatbot.storage.find(input_text)
-
-        response = self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.storage.find(input_text)
-
-        self.assertFalse(exists_before)
-        self.assertFalse(exists_after)
 
