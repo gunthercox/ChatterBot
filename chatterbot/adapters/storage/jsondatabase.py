@@ -65,10 +65,6 @@ class JsonDatabaseAdapter(StorageAdapter):
                     if (kwarguments[kwarg] not in text_values) and (kwarguments[kwarg] not in values[key]):
                         return False
 
-                if identifier == "not":
-                    if (key in values) and (kwarguments[kwarg] == values[key]):
-                        return False
-
             if kwarg in values:
                 if values[kwarg] != kwarguments[kwarg]:
                     return False
