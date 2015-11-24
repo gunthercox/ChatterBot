@@ -1,10 +1,10 @@
 from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
-class PreProcessorAdapter(object):
+class PluginAdapter(object):
     """
     This is an abstract class that represents the interface
-    that all preprocess adapters should implement.
+    that all plugins should implement.
     """
 
     def __init__(self, **kwargs):
