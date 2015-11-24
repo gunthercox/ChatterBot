@@ -1,8 +1,8 @@
-from .preprocessor import PreProcessorAdapter
+from .plugin import PluginAdapter
 import re
 import os, json
 
-class EvaluateMathematically(PreProcessorAdapter):
+class EvaluateMathematically(PluginAdapter):
 
     def process(self, input_text):
         """
