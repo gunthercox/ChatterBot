@@ -170,12 +170,12 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         response = self.chatbot.get_response("Hi")
         # response = "Hello"
         second_response = self.chatbot.get_response("How are you?")
-        statement_object = self.chatbot.storage.find(second_response)
+        statement = self.chatbot.storage.find(second_response)
 
         self.assertEqual(second_response, self.test_statement.text)
-        #TODO: self.assertEqual(statement_object.get_response_count(), 2)
-        self.assertEqual(len(statement_object.in_response_to), 1)
-        self.assertIn("Hi", statement_object.in_response_to)
+        #TODO: self.assertEqual(statement.get_response_count(), 2)
+        self.assertEqual(len(statement.in_response_to), 1)
+        self.assertIn("Hi", statement.in_response_to)
 
 
 class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):

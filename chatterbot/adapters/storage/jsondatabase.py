@@ -54,12 +54,19 @@ class JsonDatabaseAdapter(StorageAdapter):
             if "__" in kwarg:
                 kwarg_parts = kwarg.split("__")
 
-                if kwarg_parts[1] == "contains":
+                key = kwarg_parts[0]
+                identifier = kwarg_parts[1]
+
+                if identifier == "contains":
                     text_values = []
-                    for val in values[kwarg_parts[0]]:
+                    for val in values[key]:
                         text_values.append(val[0])
 
-                    if (kwarguments[kwarg] not in text_values) and (kwarguments[kwarg] not in values[kwarg_parts[0]]):
+                    if (kwarguments[kwarg] not in text_values) and (kwarguments[kwarg] not in values[key]):
+                        return False
+
+                if identifier == "not":
+                    if (key in values) and (kwarguments[kwarg] == values[key]):
                         return False
 
             if kwarg in values:
