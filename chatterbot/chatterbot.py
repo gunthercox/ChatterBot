@@ -86,8 +86,7 @@ class ChatBot(object):
         # Applying plugin logic to see whether the chatbot should respond in this way
         plugin_response = self.plugin_chooser.choose( input_statement )
 
-        if not plugin_response == False:
-            print plugin_response
+        if not plugin_response is False:
             return plugin_response
 
         # If no responses exist, return the input statement
