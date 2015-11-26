@@ -20,11 +20,8 @@ class PluginChooser():
 
         # Testing each plugin to determine whether it should be used to answer user input
         for plugin in self.plugins:
-            # Getting whether or not the plugin should be used to respond to the incoming text
-            should_use = plugin.should_answer( input_statement.text )
-
             # If it should, get the response and return that
-            if should_use:
+            if plugin.should_answer( input_statement.text ):
                 return plugin.process( input_statement.text )
 
         # Otherwise, return that no plugin was found that should respond
