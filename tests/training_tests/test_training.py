@@ -27,8 +27,6 @@ class TrainingTestCase(ChatBotTestCase):
 
         self.assertEqual(response, "You are welcome.")
 
-    '''
-    # TODO
     def test_training_increments_occurrence_count(self):
 
         conversation = [
@@ -39,9 +37,12 @@ class TrainingTestCase(ChatBotTestCase):
         self.chatbot.train(conversation)
         self.chatbot.train(conversation)
 
-        statement = self.chatbot.storage.find("Do you like my hat?")
-        self.assertEqual(statement.get_occurrence_count(), 2)
-    '''
+        statements = self.chatbot.storage.filter(
+            in_response_to__contains="Do you like my hat?"
+        )
+        response = statements[0].in_response_to[0]
+
+        self.assertEqual(response.occurrence, 2)
 
     def test_database_has_correct_format(self):
         """
