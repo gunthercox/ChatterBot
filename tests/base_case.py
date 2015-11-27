@@ -12,7 +12,10 @@ class ChatBotTestCase(TestCase):
         if not os.path.exists(self.test_data_directory):
             os.makedirs(self.test_data_directory)
 
-        database_path = self.test_data_directory + '/' + self.test_database_name
+        database_path = os.path.join(
+            self.test_data_directory,
+            self.test_database_name
+        )
 
         self.chatbot = ChatBot(
             "Test Bot",
