@@ -187,12 +187,16 @@ class ChatterBotResponseTestCase(UntrainedChatBotTestCase):
         fifth_response = self.chatbot.get_response("What is one hundred + four hundred?")
         sixth_response = self.chatbot.get_response("What is 100 divided by 100?")
         seventh_response = self.chatbot.get_response("What is one thousand two hundred four divided by one hundred?")
+        eighth_response = self.chatbot.get_response("What is -100.5 * 20?")
+        ninth_response = self.chatbot.get_response("What is -105 * 5")
 
         self.assertEqual(response, "( 100 + 54 ) = 154")
         self.assertEqual(second_response, "( 100 * 20 ) = 2000")
         self.assertEqual(third_response, "( 100 + ( ( 1000 * ( 2 ) ) ) ) = 2100")
         self.assertEqual(fourth_response, "( 4 + ( 100 + ( ( 100 * ( 2 ) ) ) ) ) = 304")
         self.assertEqual(fifth_response, "( 100 + 400 ) = 500")
+        self.assertEqual(eighth_response, "( -100.5 * 20 ) = -2010.0")
+        self.assertEqual(ninth_response, "( -105 * 5 ) = -525")
 
 
 class ChatterBotStorageIntegrationTests(UntrainedChatBotTestCase):

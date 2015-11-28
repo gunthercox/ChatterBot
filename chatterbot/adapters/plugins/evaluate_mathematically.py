@@ -87,9 +87,9 @@ class EvaluateMathematically(PluginAdapter):
         it returns False.
         """
 
-        if string.isdigit():
+        try:
             return int( string )
-        else:
+        except:
             return False
 
 
@@ -100,7 +100,7 @@ class EvaluateMathematically(PluginAdapter):
         false.
         """
 
-        if string in "+-/*^\(\)":
+        if string in "+-/*^()":
             return string
         else:
             return False
