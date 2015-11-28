@@ -19,6 +19,9 @@ class ChatBot(object):
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
+        PluginChooser = import_module("chatterbot.adapters.plugins.PluginChooser")
+        self.plugin_chooser = PluginChooser(**kwargs)
+
         StorageAdapter = import_module(storage_adapter)
         self.storage = StorageAdapter(**kwargs)
 
@@ -79,6 +82,12 @@ class ChatBot(object):
         Return the bot's response based on the input.
         """
         input_statement = Statement(input_text)
+
+        # Applying plugin logic to see whether the chatbot should respond in this way
+        plugin_response = self.plugin_chooser.choose( input_statement )
+
+        if not plugin_response is False:
+            return plugin_response
 
         # If no responses exist, return the input statement
         if not self.storage.count():
@@ -168,4 +177,3 @@ class ChatBot(object):
                 self.trainer.train_from_corpora(corpora)
         else:
             self.trainer.train_from_list(conversation)
-
