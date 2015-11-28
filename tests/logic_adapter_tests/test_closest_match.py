@@ -1,4 +1,5 @@
 from unittest import TestCase
+from chatterbot.adapters.exceptions import EmptyDatasetException
 from chatterbot.adapters.logic import ClosestMatchAdapter
 from chatterbot.conversation import Statement
 
@@ -27,7 +28,6 @@ class ClosestMatchAdapterTests(TestCase):
         possible_choices = []
         statement = Statement("What is your quest?")
 
-        close = self.adapter.get(statement, possible_choices)
-
-        self.assertEqual("What is your quest?", close)
+        with self.assertRaises(EmptyDatasetException):
+            self.adapter.get(statement, possible_choices)
 
