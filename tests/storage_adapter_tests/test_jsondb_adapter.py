@@ -288,58 +288,6 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
 
         self.assertEqual(len(response.in_response_to), 2)
 
-    def test_not_filter_no_responses(self):
-        statement = Statement(
-            "You are welcome.",
-            in_response_to=[]
-        )
-        self.adapter.update(statement)
-        response = self.adapter.filter(
-            in_response_to__not=[]
-        )
-
-        self.assertEqual(
-            len(response),
-            0,
-            "A response was found when none should have been returned."
-        )
-
-    def test_not_filter_multiple_responses(self):
-        statements = [
-            Statement(
-                "You are welcome.",
-                in_response_to=[]
-            ),
-            Statement(
-                "I like ducks.",
-                in_response_to=[]
-            ),
-            Statement(
-                "Hello.",
-                in_response_to=[Response("Hi.")]
-            ),
-            Statement(
-                "Hi.",
-                in_response_to=[Response("Hello.")]
-            ),
-            Statement(
-                "Hey!",
-                in_response_to=[Response("Hello.")]
-            )
-        ]
-
-        for statement in statements:
-            self.adapter.update(statement)
-
-        response = self.adapter.filter(
-            in_response_to__not=[]
-        )
-
-        self.assertEqual(len(response), 3)
-        self.assertIn("Hello.", response)
-        self.assertIn("Hi.", response)
-        self.assertIn("Hey!", response)
-
 
 class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 

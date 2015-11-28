@@ -1,3 +1,4 @@
+from chatterbot.adapters.exceptions import EmptyDatasetException
 from .logic import LogicAdapter
 
 from nltk.corpus import wordnet
@@ -82,14 +83,14 @@ class ClosestMeaningAdapter(LogicAdapter):
         Returns the closest matching statement from the list.
         """
 
+        # Check if the list is empty
+        if not statement_list:
+            raise EmptyDatasetException
+
         # Get the text of each statement
         text_of_all_statements = []
         for statement in statement_list:
             text_of_all_statements.append(statement.text)
-
-        # Check if there is no options
-        if not statement_list:
-            return input_statement
 
         # Check if an exact match exists
         if input_statement.text in text_of_all_statements:

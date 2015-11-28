@@ -1,7 +1,7 @@
-from tests.base_case import UntrainedChatBotTestCase
+from tests.base_case import ChatBotTestCase
 
 
-class CorpusTrainingTestCase(UntrainedChatBotTestCase):
+class CorpusTrainingTestCase(ChatBotTestCase):
 
     def test_train_with_english_greeting_corpus(self):
         self.chatbot.train(
