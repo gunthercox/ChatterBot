@@ -1,6 +1,7 @@
 build
 dist
 database.db
+settings.py
 *.pyc
 *.swp
 *.egg-info
