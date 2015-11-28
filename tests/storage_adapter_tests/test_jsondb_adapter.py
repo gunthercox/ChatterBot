@@ -109,12 +109,12 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
 
-    def test_objectify_response_list(self):
+    def test_deserialize_responses(self):
         response_list = [
-            ["Test", 3],
-            ["Testing", 1]
+            {"text": "Test", "occurrence": 3},
+            {"text": "Testing", "occurrence": 1},
         ]
-        results = self.adapter._objectify_response_list(response_list)
+        results = self.adapter.deserialize_responses(response_list)
 
         self.assertEqual(len(results), 2)
 

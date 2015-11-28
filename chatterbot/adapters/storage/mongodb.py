@@ -32,26 +32,26 @@ class MongoDatabaseAdapter(StorageAdapter):
         del(values['text'])
 
         # Build the objects for the response list
-        response_list = self._objectify_response_list(
+        response_list = self.deserialize_responses(
             values["in_response_to"]
         )
         values["in_response_to"] = response_list
 
         return Statement(statement_text, **values)
 
-    def _objectify_response_list(self, response_list):
+    def deserialize_responses(self, response_list):
         """
         Takes the list of response items and returns the
         list converted to object versions of the responses.
         """
         in_response_to = []
 
-        for item in response_list:
-            text = item[0]
-            occurrence = item[1]
+        for response in response_list:
+            text = response["text"]
+            del(response["text"])
 
             in_response_to.append(
-                Response(text, occurrence=occurrence)
+                Response(text, **response)
             )
 
         return in_response_to
@@ -74,7 +74,12 @@ class MongoDatabaseAdapter(StorageAdapter):
                 if kwarg_parts[1] == "contains":
                     key = kwarg_parts[0]
                     value = kwargs[parameter]
-                    contains_parameters[key] = {'$elemMatch': {'$elemMatch': {'$in':[value]}}}
+
+                    contains_parameters[key] = {
+                        '$elemMatch': {
+                            'text': value
+                        }
+                    }
 
         filter_parameters.update(contains_parameters)
 

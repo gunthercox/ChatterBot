@@ -25,24 +25,24 @@ class JsonDatabaseAdapter(StorageAdapter):
             return None
 
         # Build the objects for the response list
-        response_list = self._objectify_response_list(values["in_response_to"])
+        response_list = self.deserialize_responses(values["in_response_to"])
         values["in_response_to"] = response_list
 
         return Statement(statement_text, **values)
 
-    def _objectify_response_list(self, response_list):
+    def deserialize_responses(self, response_list):
         """
         Takes the list of response items and returns the
         list converted to object versions of the responses.
         """
         in_response_to = []
 
-        for item in response_list:
-            text = item[0]
-            occurrence = item[1]
+        for response in response_list:
+            text = response["text"]
+            del(response["text"])
 
             in_response_to.append(
-                Response(text, occurrence=occurrence)
+                Response(text, **response)
             )
 
         return in_response_to
@@ -60,7 +60,7 @@ class JsonDatabaseAdapter(StorageAdapter):
                 if identifier == "contains":
                     text_values = []
                     for val in values[key]:
-                        text_values.append(val[0])
+                        text_values.append(val["text"])
 
                     if (kwarguments[kwarg] not in text_values) and (kwarguments[kwarg] not in values[key]):
                         return False
@@ -84,7 +84,7 @@ class JsonDatabaseAdapter(StorageAdapter):
             if self._all_kwargs_match_values(kwargs, values):
 
                 # Build the objects for the response list
-                response_list = self._objectify_response_list(values["in_response_to"])
+                response_list = self.deserialize_responses(values["in_response_to"])
                 values["in_response_to"] = response_list
 
                 results.append(

@@ -57,9 +57,7 @@ class Statement(object):
         data["in_response_to"] = []
 
         for response in self.in_response_to:
-            data["in_response_to"].append(
-                [response.text, response.occurrence]
-            )
+            data["in_response_to"].append(response.serialize())
 
         return data
 
@@ -93,6 +91,7 @@ class Response(object):
         data = {}
 
         data["text"] = self.text
+        data["occurrence"] = self.occurrence
         data["signature"] = []
 
         for signature in self.signatures:

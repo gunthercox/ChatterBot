@@ -117,29 +117,17 @@ class ChatBot(object):
             if not response_exists:
                 all_statements.remove(statement)
 
-        # It will not be possible to select a match from an empty list of statements
-        if not all_statements:
-            previous_statement = self.get_last_statement()
-
-            if previous_statement:
-                input_statement.add_response(previous_statement)
-
-            # Update the database after selecting a response
-            self.storage.update(input_statement)
-
-            # Return a random response
-            response = self.storage.get_random()
-
-            self.recent_statements.append(response)
-
-            return self.io.process_response(response)
-
-        # Select the closest match to the input statement
-        closest_match = self.logic.get(
-            input_statement,
-            all_statements,
-            self.recent_statements
-        )
+        # There must be a statement list to select a match from
+        if all_statements:
+            # Select the closest match to the input statement
+            closest_match = self.logic.get(
+                input_statement,
+                all_statements,
+                self.recent_statements
+            )
+        else:
+            # Use a randomly picked statement
+            closest_match = self.storage.get_random()
 
         # Get all statements that are in response to the closest match
         response_list = self.storage.filter(
