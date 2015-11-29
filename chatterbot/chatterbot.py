@@ -87,7 +87,7 @@ class ChatBot(object):
         plugin_response = self.plugin_chooser.choose( input_statement )
 
         if not plugin_response is False:
-            return plugin_response
+            return self.io.process_response( Statement( plugin_response ) )
 
         # If no responses exist, return the input statement
         if not self.storage.count():
