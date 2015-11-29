@@ -4,6 +4,7 @@ include requirements.txt
 
 recursive-include tests *
 recursive-include chatterbot/corpus/* *.json
+recursive-include chatterbot/adapters/* *.json
 
 recursive-exclude * *.pyc
 recursive-exclude * *.py~
