@@ -8,8 +8,8 @@ from nltk import word_tokenize
 
 class ClosestMeaningAdapter(LogicAdapter):
 
-    def __init__(self):
-        super(ClosestMeaningAdapter, self).__init__()
+    def __init__(self, **kwargs):
+        super(ClosestMeaningAdapter, self).__init__(**kwargs)
         from nltk.data import find
         from nltk import download
 
