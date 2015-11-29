@@ -1,5 +1,8 @@
+bin
 build
 dist
+include
+lib
 database.db
 settings.py
 *.pyc
