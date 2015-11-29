@@ -136,6 +136,9 @@ class ChatterBotResponseTests(ChatBotTestCase):
         second_response = self.chatbot.get_response("How are you?")
         statement = self.chatbot.storage.find(second_response)
 
+        # Make sure that the second response was saved to the database
+        self.assertIsNotNone(self.chatbot.storage.find("How are you?"))
+
         self.assertEqual(second_response, self.test_statement.text)
         self.assertEqual(len(statement.in_response_to), 1)
         self.assertIn("Hi", statement.in_response_to)
