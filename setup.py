@@ -9,8 +9,10 @@ except ImportError:
 req = open("requirements.txt")
 requirements = req.readlines()
 
-# Dynamically calculate the version based on chatterbot version
+# Dynamically retrieve the version information from the chatterbot module
 version = __import__('chatterbot').__version__
+maintainer = __import__('chatterbot').__maintainer__
+maintainer_email = __import__('chatterbot').__email__
 
 setup(
     name="ChatterBot",
@@ -19,8 +21,8 @@ setup(
     setup_requires=['setuptools-markdown'],
     long_description_markdown_filename='readme.md',
     description="An open-source chat bot program written in Python.",
-    author="Gunther Cox",
-    author_email="gunthercx@gmail.com",
+    author=maintainer,
+    author_email=maintainer_email,
     packages=find_packages(),
     package_dir={"chatterbot": "chatterbot"},
     include_package_data=True,
