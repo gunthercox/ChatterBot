@@ -45,7 +45,7 @@ class EvaluateMathematically(PluginAdapter):
 
         string = ''
 
-        for chunk in input_text.split( ' ' ):
+        for chunk in input_text.split():
 
             is_chunk_integer = self.is_integer( chunk )
 
@@ -55,9 +55,7 @@ class EvaluateMathematically(PluginAdapter):
                 if is_chunk_float is False:
                     is_chunk_operator = self.is_operator( chunk )
 
-                    if is_chunk_operator is False:
-                        continue
-                    else:
+                    if not is_chunk_operator is False:
                         string += str( is_chunk_operator ) + ' '
                 else:
                     string += str( is_chunk_float ) + ' '
@@ -112,12 +110,16 @@ class EvaluateMathematically(PluginAdapter):
         and improper calculations.
         """
 
+        # If the string is empty, just return it
+        if len( string ) is 0:
+            return string
+
         # Setting all words to lowercase
         string = string.lower()
 
         # Removing punctuation
-        if string.endswith( ('.', '!', '?', ':', ';' ) ):
-            string = string[ : len(string) - 1 ]
+        if not string[-1].isalnum():
+            string = string[ : -1 ]
 
         # Removing words
         string = self.substitute_words( string )
@@ -143,7 +145,7 @@ class EvaluateMathematically(PluginAdapter):
 
         self.load_data( "english" )
 
-        condensed_string = '_'.join( string.split( ' ' ) )
+        condensed_string = '_'.join( string.split() )
 
         for word in self.data[ "words" ]:
             condensed_string = re.sub( '_'.join( word.split( ' ' ) ), self.data[ "words" ][ word ], condensed_string )
