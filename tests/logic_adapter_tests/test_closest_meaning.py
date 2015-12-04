@@ -27,4 +27,3 @@ class ClosestMeaningAdapterTests(TestCase):
         close = self.adapter.get(statement, possible_choices)
 
         self.assertEqual("This is a lovely bog.", close)
-
