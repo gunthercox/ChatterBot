@@ -125,6 +125,9 @@ class ChatBot(object):
                 all_statements,
                 self.recent_statements
             )
+
+            # Save any updates made to the statement by the logic adapter
+            self.storage.update(closest_match)
         else:
             # Use a randomly picked statement
             closest_match = self.storage.get_random()

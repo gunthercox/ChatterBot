@@ -102,7 +102,7 @@ class JsonDatabaseAdapter(StorageAdapter):
             del(data['text'])
             self.database.data(key=statement.text, value=data)
 
-            # Make sure that an entry for each response is saved
+            # Make sure that an entry for each response exists
             for response_statement in statement.in_response_to:
                 response = self.find(response_statement.text)
                 if not response:

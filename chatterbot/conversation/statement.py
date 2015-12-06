@@ -7,6 +7,13 @@ class Statement(object):
         self.text = text
         self.in_response_to = kwargs.get("in_response_to", [])
 
+        self.extra_data = {}
+
+        if "in_response_to" in kwargs:
+            del(kwargs["in_response_to"])
+
+        self.extra_data.update(kwargs)
+
     def __str__(self):
         return self.text
 
@@ -21,6 +28,9 @@ class Statement(object):
             return self.text == other.text
 
         return self.text == other
+
+    def add_extra_data(self, key, value):
+        self.extra_data[key] = value
 
     def add_response(self, statement):
         """
@@ -55,6 +65,7 @@ class Statement(object):
 
         data["text"] = self.text
         data["in_response_to"] = []
+        data.update(self.extra_data)
 
         for response in self.in_response_to:
             data["in_response_to"].append(response.serialize())
