@@ -177,7 +177,7 @@ class ChatBot(object):
         """
         from .training import Trainer
 
-        self.trainer = Trainer(self)
+        self.trainer = Trainer(self.storage)
 
         if isinstance(conversation, str):
             corpora = list(args)

@@ -4,8 +4,8 @@ from .corpus import Corpus
 
 class Trainer(object):
 
-    def __init__(self, chatbot, **kwargs):
-        self.chatbot = chatbot
+    def __init__(self, storage, **kwargs):
+        self.storage = storage
         self.corpus = Corpus()
 
     def train_from_list(self, conversation):
@@ -13,7 +13,7 @@ class Trainer(object):
         recent_statements = []
 
         for text in conversation:
-            statement = self.chatbot.storage.find(text)
+            statement = self.storage.find(text)
 
             # Create the statement if a match was not found
             if not statement:
@@ -27,7 +27,7 @@ class Trainer(object):
                 statement.add_response(previous_statement)
 
             recent_statements.append(statement)
-            self.chatbot.storage.update(statement)
+            self.storage.update(statement)
 
     def train_from_corpora(self, corpora):
         for corpus in corpora:
