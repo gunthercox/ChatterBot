@@ -93,7 +93,7 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         random_statement = self.adapter.get_random()
         self.assertEqual(random_statement.text, statement.text)
 
-    def test_find_returns_nested_responces(self):
+    def test_find_returns_nested_responses(self):
         response_list = [
             Response("Yes"),
             Response("No")
