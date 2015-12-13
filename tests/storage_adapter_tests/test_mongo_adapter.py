@@ -33,7 +33,7 @@ class BaseMongoDatabaseAdapterTestCase(TestCase):
         """
         self.adapter.drop()
 
-class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
+class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -107,7 +107,7 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         random_statement = self.adapter.get_random()
         self.assertEqual(random_statement.text, statement.text)
 
-    def test_find_returns_nested_responces(self):
+    def test_find_returns_nested_responses(self):
         response_list = [
             Response("Yes"),
             Response("No")
@@ -122,7 +122,6 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
-
 
     def test_filter_no_results(self):
         statement1 = Statement("Testing...")
@@ -244,6 +243,23 @@ class JsonDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         results = self.adapter.filter()
 
         self.assertEqual(len(results), 2)
+
+    def test_response_list_in_results(self):
+        """
+        If a statement with response values is found using the
+        filter method, they should be returned as response objects.
+        """
+        statement = Statement(
+            "The first is to help yourself, the second is to help others.",
+            in_response_to=[
+                Response("Why do people have two hands?")
+            ]
+        )
+        self.adapter.update(statement)
+        found = self.adapter.filter(text=statement.text)
+
+        self.assertEqual(len(found[0].in_response_to), 1)
+        self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
 class ReadOnlyMongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):

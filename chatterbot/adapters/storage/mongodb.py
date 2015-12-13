@@ -91,6 +91,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         for match in matches:
             statement_text = match['text']
             del(match['text'])
+
+            response_list = self.deserialize_responses(match["in_response_to"])
+            match["in_response_to"] = response_list
+
             results.append(Statement(statement_text, **match))
 
         return results
