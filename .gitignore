@@ -8,3 +8,4 @@ settings.py
 *.pyc
 *.swp
 *.egg-info
+.eggs
