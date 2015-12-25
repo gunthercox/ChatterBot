@@ -106,7 +106,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             data = statement.serialize()
 
             # Remove the text key from the data
-            self.statements.update({'text': statement.text}, data, True)
+            self.statements.replace_one({'text': statement.text}, data, True)
 
             # Make sure that an entry for each response is saved
             for response_statement in statement.in_response_to:
