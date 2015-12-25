@@ -94,33 +94,12 @@ class ChatBot(Adaptation):
             # Process the response output with the IO adapter
             return self.io.process_response(input_statement)
 
-        all_statements = self.storage.filter()
-
-        '''
-        Filter out all statements that are not in response to another statement.
-        A statement must exist which lists the closest matching statement in the
-        in_response_to field. Otherwise, the logic adapter may find a closest
-        matching statement that does not have a known response.
-        '''
-        responses = set()
-        to_remove = list()
-        for statement in all_statements:
-            for response in statement.in_response_to:
-                responses.add(response.text)
-        for statement in all_statements:
-            if statement.text not in responses:
-                to_remove.append(statement)
-
-        for statement in to_remove:
-            all_statements.remove(statement)
+        all_statements = self.logic.get_statements_with_known_responses()
 
         # There must be a statement list to select a match from
         if all_statements:
             # Select the closest match to the input statement
-            closest_match = self.logic.get(
-                input_statement,
-                all_statements
-            )
+            closest_match = self.logic.get(input_statement, all_statements)
 
             # Save any updates made to the statement by the logic adapter
             self.storage.update(closest_match)

@@ -17,7 +17,9 @@ class Adaptation(object):
 
     def add_adapter(self, name, adapter):
         NewAdapter = import_module(adapter)
-        self.context.data[name] = NewAdapter(self.context, **self.kwargs)
 
-        return self.context.data[name]
+        adapter = NewAdapter(self.context, **self.kwargs)
+        setattr(self.context, name, adapter)
+
+        return adapter
 
