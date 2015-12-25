@@ -10,9 +10,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)
 
         self.database_name = self.kwargs.get("database", "chatterbot-database")
+        self.database_uri = self.kwargs.get("database_uri", "mongodb://localhost:27017/")
 
         # Use the default host and port
-        self.client = MongoClient()
+        self.client = MongoClient(self.database_uri)
 
         # Specify the name of the database
         self.database = self.client[self.database_name]
@@ -142,4 +143,3 @@ class MongoDatabaseAdapter(StorageAdapter):
         Remove the database.
         """
         self.client.drop_database(self.database_name)
-
