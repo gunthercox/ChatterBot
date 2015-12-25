@@ -5,15 +5,22 @@ from fuzzywuzzy import process
 
 class ClosestMatchAdapter(LogicAdapter):
 
-    def get(self, input_statement, statement_list):
+    def get(self, input_statement, statement_list=None):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
 
+        if not statement_list:
+            statement_list = self.get_statements_with_known_responses()
+
         # Check if the list is empty
         if not statement_list:
-            raise EmptyDatasetException
+            if self.context and self.context.storage:
+                # Use a randomly picked statement
+                return self.context.storage.get_random()
+            else:
+                raise EmptyDatasetException
 
         # Get the text of each statement
         text_of_all_statements = []

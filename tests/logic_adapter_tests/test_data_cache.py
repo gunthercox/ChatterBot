@@ -11,7 +11,7 @@ class DummyMutatorLogicAdapter(LogicAdapter):
     the resulting statement before it is returned.
     """
 
-    def get(self, text, statement_list):
+    def get(self, text, statement_list=None):
         statement = Statement("Hello")
         statement.add_extra_data("pos_tags", "NN")
 

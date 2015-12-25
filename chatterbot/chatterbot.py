@@ -94,18 +94,11 @@ class ChatBot(Adaptation):
             # Process the response output with the IO adapter
             return self.io.process_response(input_statement)
 
-        all_statements = self.logic.get_statements_with_known_responses()
+        # Select the closest match to the input statement
+        closest_match = self.logic.get(input_statement)
 
-        # There must be a statement list to select a match from
-        if all_statements:
-            # Select the closest match to the input statement
-            closest_match = self.logic.get(input_statement, all_statements)
-
-            # Save any updates made to the statement by the logic adapter
-            self.storage.update(closest_match)
-        else:
-            # Use a randomly picked statement
-            closest_match = self.storage.get_random()
+        # Save any updates made to the statement by the logic adapter
+        self.storage.update(closest_match)
 
         # Get all statements that are in response to the closest match
         response_list = self.storage.filter(

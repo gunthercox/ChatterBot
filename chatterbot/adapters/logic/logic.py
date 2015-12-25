@@ -8,7 +8,7 @@ class LogicAdapter(Adapter):
     that all logic adapters should implement.
     """
 
-    def get(self, text, statement_list):
+    def get(self, text, statement_list=None):
         raise AdapterNotImplementedError()
 
     def get_statements_with_known_responses(self):
@@ -18,6 +18,9 @@ class LogicAdapter(Adapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
+        if (not self.context) or (not self.context.storage):
+            return []
+
         all_statements = self.context.storage.filter()
 
         responses = set()
