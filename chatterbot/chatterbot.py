@@ -105,17 +105,17 @@ class ChatBot(object):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         '''
-        # Copy the list of statements to prevent changing the size of the list while iterating over it
-        all_statements_copy = list(all_statements)
-        for statement in all_statements_copy:
-            response_exists = False
-            for s in all_statements_copy:
-                if statement in s.in_response_to:
-                    response_exists = True
-                    break # Exit for loop since one exists
+        responses = set()
+        to_remove = list()
+        for statement in all_statements:
+            for response in statement.in_response_to:
+                responses.add(response.text)
+        for statement in all_statements:
+            if statement.text not in responses:
+                to_remove.append(statement)
 
-            if not response_exists:
-                all_statements.remove(statement)
+        for statement in to_remove:
+            all_statements.remove(statement)
 
         # There must be a statement list to select a match from
         if all_statements:
