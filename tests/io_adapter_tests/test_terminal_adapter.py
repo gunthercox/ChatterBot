@@ -10,16 +10,18 @@ class TerminalAdapterTests(TestCase):
     a command line interface.
     """
 
+    def setUp(self):
+        self.adapter = TerminalAdapter(None)
+
     def test_response_is_returned(self):
         """
         For consistency across io adapters, the
         terminal adaper should return the output value. 
         """
-        adapter = TerminalAdapter()
         statement = Statement("Come with me if you want to live.")
 
         self.assertEqual(
-            adapter.process_response(statement),
+            self.adapter.process_response(statement),
             statement.text
         )
 

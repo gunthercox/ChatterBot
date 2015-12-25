@@ -9,13 +9,13 @@ class ChatterBotTests(ChatBotTestCase):
         Make sure that the get last statement method
         returns the last statement that was issued.
         """
-        self.chatbot.recent_statements.append(
+        self.chatbot.context.recent_statements.append(
             Statement("Test statement 1")
         )
-        self.chatbot.recent_statements.append(
+        self.chatbot.context.recent_statements.append(
             Statement("Test statement 2")
         )
-        self.chatbot.recent_statements.append(
+        self.chatbot.context.recent_statements.append(
             Statement("Test statement 3")
         )
 
@@ -108,7 +108,7 @@ class ChatterBotResponseTests(ChatBotTestCase):
         statement_text = "Wow!"
         response = self.chatbot.get_response(statement_text)
 
-        self.assertIn(statement_text, self.chatbot.recent_statements)
+        self.assertIn(statement_text, self.chatbot.context.recent_statements)
         self.assertEqual(response, statement_text)
 
     def test_response_known(self):

@@ -8,8 +8,8 @@ from nltk import word_tokenize
 
 class ClosestMeaningAdapter(LogicAdapter):
 
-    def __init__(self, **kwargs):
-        super(ClosestMeaningAdapter, self).__init__(**kwargs)
+    def __init__(self, context, **kwargs):
+        super(ClosestMeaningAdapter, self).__init__(context, **kwargs)
         from nltk.data import find
         from nltk import download
 
@@ -77,7 +77,7 @@ class ClosestMeaningAdapter(LogicAdapter):
 
         return total_similarity
 
-    def get(self, input_statement, statement_list, current_conversation=None):
+    def get(self, input_statement, statement_list):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.

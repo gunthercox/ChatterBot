@@ -11,15 +11,17 @@ class NoOutputAdapterTests(TestCase):
     is used.
     """
 
+    def setUp(self):
+        self.adapter = NoOutputAdapter(None)
+
     def test_response_is_returned(self):
         """
         For consistency across io adapters, the
         no output adaper should return the output value.
         """
-        adapter = NoOutputAdapter()
         statement = Statement("The test statement to process is here.")
 
         self.assertEqual(
-            adapter.process_response(statement),
+            self.adapter.process_response(statement),
             statement.text
         )

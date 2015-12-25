@@ -1,13 +1,15 @@
+from chatterbot.adapters import Adapter
 from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
-class StorageAdapter(object):
+class StorageAdapter(Adapter):
     """
     This is an abstract class that represents the interface
     that all storage adapters should implement.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, context, **kwargs):
+        super(StorageAdapter, self).__init__(context, **kwargs)
         self.kwargs = kwargs
         self.read_only = kwargs.get("read_only", False)
 

@@ -5,7 +5,7 @@ from fuzzywuzzy import process
 
 class ClosestMatchAdapter(LogicAdapter):
 
-    def get(self, input_statement, statement_list, current_conversation=None):
+    def get(self, input_statement, statement_list):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.

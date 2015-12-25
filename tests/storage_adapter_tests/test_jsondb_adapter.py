@@ -14,7 +14,7 @@ class BaseJsonDatabaseAdapterTestCase(TestCase):
         # Generate a random name for the database
         database_name = str(randint(0, 9000))
 
-        self.adapter = JsonDatabaseAdapter(database=database_name)
+        self.adapter = JsonDatabaseAdapter(None, database=database_name)
 
     def tearDown(self):
         """
