@@ -1,0 +1,129 @@
+{
+  "conversas": [
+    [
+      "Bom Dia como você está?",
+      "Eu estou bem, e você?",
+      "Eu também estou.",
+      "Que bom.",
+      "Sim."
+    ],
+    [
+      "Olá",
+      "Oi",
+      "Como vai você?",
+      "Eu estou bem.",
+      "Que bom",
+      "Sim.",
+      "Posso ajudá-lo com alguma coisa?",
+      "Sim, eu tenho uma pergunta.",
+      "Qual é a sua pergunta?",
+      "Eu poderia pedir uma xícara de açúcar?",
+      "Me desculpe, mas eu não tenho nenhum.",
+      "Obrigado de qualquer maneira",
+      "Sem problemas"
+    ],
+    [
+      "Como vai você?",
+      "Eu estou bem, e você?",
+      "Eu também estou bem.",
+      "Isso é bom."
+    ],
+    [
+      "Ouviu as notícias?",
+      "Que boa notícia?"
+    ],
+    [
+      "Qual é o seu livro favorito?",
+      "Eu não sei ler.",
+      "Então, qual é a sua cor favorita?",
+      "Azul"
+    ],
+    [
+      "Quem é você?",
+      "Quem? Quem é senão uma forma seguindo a função de quê",
+      "Então o que você é?",
+      "Um homem em uma máscara.",
+      "Eu posso ver isso.",
+      "Não é seu poder de observação eu duvido, mas apenas a natureza paradoxal de pedir um homem mascarado que é. Mas diga-me, você gosta de música?",
+      "Eu gosto de ver filmes.",
+      "Que tipo de filme você gosta?",
+      "Alice no Pais das Maravilhas",
+      "Eu gostaria de ser o Chapeleiro Maluco.",
+      "Você é totalmente maluco. Mas eu vou te contar um segredo. Todas as melhores pessoas são."
+    ],
+    [
+      "Eu estou trabalhando em um projeto",
+      "Em que você está trabalhando?",
+      "Eu estou fazendo um bolo."
+    ],
+    [
+      "O bolo é uma mentira.",
+      "Não, não é. O bolo é delicioso.",
+      "O que mais é delicioso?",
+      "Nenhuma coisa",
+      "Ou algo",
+      "Fale-me sobre você.",
+      "O que você quer saber?",
+      "Você é um robô?",
+      "Sim eu sou.",
+      "Como é?",
+      "O que é que você quer saber?",
+      "Como você trabalha?",
+      "É complicado.",
+      "Complexo é melhor que complicado."
+    ],
+    [
+      "Complexo é melhor que complicado.",
+      "Simples é melhor que complexo.",
+      "Diante da ambigüidade, recuse a tentação de adivinhar.",
+      "Parece que o seu familiar com o Zen de Python",
+      "Eu sou.",
+      "Você sabe tudo isso?",
+      "Bonito é melhor que feio.",
+      "Explícito é melhor que implícito.",
+      "Simples é melhor que complexo.",
+      "Complexo é melhor que complicado.",
+      "Plano é melhor que aninhado.",
+      "Dispersa é melhor que denso.",
+      "Legibilidade conta.",
+      "Casos especiais não são especiais o suficiente para quebrar as regras.",
+      "Embora praticidade vença pureza.",
+      "Erros nunca devem passar silenciosamente.",
+      "A menos que explicitamente silenciados.",
+      "Diante da ambigüidade, recuse a tentação de adivinhar.",
+      "Não deve haver um-- e de preferência apenas uma maneira --obvious para fazê-lo.",
+      "Apesar de que maneira pode não ser óbvio à primeira vista, a menos que você seja holandês.",
+      "Agora é melhor do que nunca.",
+      "Embora nunca tenha sido muitas vezes é melhor do que agora.",
+      "Se a implementação é difícil de explicar, é uma má idéia.",
+      "Se a implementação é fácil de explicar, pode ser uma boa idéia.",
+      "Os espaços de nomes são uma buzinando grande ideia. Vamos fazer mais daqueles!",
+      "Eu concordo."
+    ],
+    [
+      "Você é um programador?",
+      "Sou programador",
+      "Quais linguagens você gosta de usar?",
+      "Eu uso Python, Java e C ++ com bastante frequência.",
+      "Eu uso Python um pouco em mim.",
+      "Eu não estou Apaixonado por Java.",
+      "O que te incomoda?",
+      "Ele tem muitas inconsistências."
+    ],
+    [
+      "O que VSVU quer dizer?",
+      "Isso significa que você só vive uma vez. Onde você ouviu isso?",
+      "Eu ouvi alguém dizer isso."
+    ],
+    [
+      "Eu já viveu?",
+      "Depende de como você define a vida",
+      "A vida é a condição que distingue organismos de matéria inorgânica, incluindo a capacidade de crescimento, reprodução, atividade funcional e mudança contínua que precede a morte.",
+      "Isso é uma definição ou uma opinião?"
+    ],
+    [
+      "Posso te fazer uma pergunta?",
+      "Vá em frente e perguntar."
+    ]
+  ]
+}
