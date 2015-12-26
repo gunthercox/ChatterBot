@@ -30,7 +30,7 @@ class KnownResponseMixin(object):
 class ResponseSelectionMixin(object):
 
     def process(self, input_statement):
-        
+
         # Select the closest match to the input statement
         closest_match = self.get(input_statement)
 
@@ -43,9 +43,12 @@ class ResponseSelectionMixin(object):
         )
 
         if response_list:
-            #response = self.get_most_frequent_response(closest_match, response_list)
-            response = self.get_first_response(response_list)
-            #response = self.get_random_response(response_list)
+            if self.tie_breaking_method == "first_response":
+                response = self.get_first_response(response_list)
+            elif self.tie_breaking_method == "most_frequent_response":
+                response = self.get_most_frequent_response(closest_match, response_list)
+            else:
+                response = self.get_random_response(response_list)
         else:
             response = self.storage.get_random()
 
