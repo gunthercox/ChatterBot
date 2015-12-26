@@ -11,6 +11,10 @@ class LogicAdapter(Adapter):
     def get(self, text, statement_list=None):
         raise AdapterNotImplementedError()
 
+    def process(self, text, statement_list=None):
+        # TODO
+        pass
+
     def get_statements_with_known_responses(self):
         """
         Filter out all statements that are not in response to another statement.
@@ -36,4 +40,60 @@ class LogicAdapter(Adapter):
             all_statements.remove(statement)
 
         return all_statements
+
+    def get_most_frequent_response(self, input_statement, response_list):
+        """
+        Returns the statement with the greatest number of occurrences.
+        """
+
+        # Initialize the matching responce to the first response.
+        # This will be returned in the case that no match can be found.
+        matching_response = response_list[0]
+        occurrence_count = 0
+
+        for statement in response_list:
+            count = statement.get_response_count(input_statement)
+
+            # Keep the more common statement
+            if count >= occurrence_count:
+                matching_response = statement
+                occurrence_count = count
+
+        # Choose the most commonly occuring matching response
+        return matching_response
+
+    def get_first_response(self, response_list):
+        """
+        Return the first statement in the response list.
+        """
+        return response_list[0]
+
+    def get_random_response(self, response_list):
+        """
+        Choose a random response from the selection.
+        """
+        from random import choice
+        return choice(response_list)
+
+    def process(self, input_statement):
+        
+        # Select the closest match to the input statement
+        closest_match = self.get(input_statement)
+
+        # Save any updates made to the statement by the logic adapter
+        self.context.storage.update(closest_match)
+
+        # Get all statements that are in response to the closest match
+        response_list = self.context.storage.filter(
+            in_response_to__contains=closest_match.text
+        )
+
+        if response_list:
+            #response = self.get_most_frequent_response(closest_match, response_list)
+            response = self.get_first_response(response_list)
+            #response = self.get_random_response(response_list)
+        else:
+            response = self.storage.get_random()
+
+        return response
 

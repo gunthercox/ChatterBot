@@ -22,51 +22,6 @@ class ChatterBotTests(ChatBotTestCase):
         last_statement = self.chatbot.get_last_statement()
         self.assertEqual(last_statement.text, "Test statement 3")
 
-    def test_get_most_frequent_response(self):
-        statement_list = [
-            Statement("What... is your quest?", in_response_to=[Response("Hello", occurrence=2)]),
-            Statement("This is a phone.", in_response_to=[Response("Hello", occurrence=4)]),
-            Statement("A what?", in_response_to=[Response("Hello", occurrence=2)]),
-            Statement("A phone.", in_response_to=[Response("Hello", occurrence=1)])
-        ]
-
-        # Save each statement to the database
-        for statement in statement_list:
-            self.chatbot.storage.update(statement)
-
-        output = self.chatbot.get_most_frequent_response(
-            Statement("Hello"),
-            statement_list
-        )
-
-        self.assertEqual("This is a phone.", output)
-
-    def test_get_first_response(self):
-        statement_list = [
-            Statement("What... is your quest?"),
-            Statement("A what?"),
-            Statement("A quest.")
-        ]
-
-        output = self.chatbot.get_first_response(
-            statement_list
-        )
-
-        self.assertEqual("What... is your quest?", output)
-
-    def test_get_random_response(self):
-        statement_list = [
-            Statement("This is a phone."),
-            Statement("A what?"),
-            Statement("A phone.")
-        ]
-
-        output = self.chatbot.get_random_response(
-            statement_list
-        )
-
-        self.assertTrue(output)
-
 
 class ChatterBotResponseTests(ChatBotTestCase):
 

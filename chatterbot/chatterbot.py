@@ -40,40 +40,6 @@ class ChatBot(Adaptation):
             return self.context.recent_statements[-1]
         return None
 
-    def get_most_frequent_response(self, input_statement, response_list):
-        """
-        Returns the statement with the greatest number of occurrences.
-        """
-
-        # Initialize the matching responce to the first response.
-        # This will be returned in the case that no match can be found.
-        matching_response = response_list[0]
-        occurrence_count = 0
-
-        for statement in response_list:
-            count = statement.get_response_count(input_statement)
-
-            # Keep the more common statement
-            if count >= occurrence_count:
-                matching_response = statement
-                occurrence_count = count
-
-        # Choose the most commonly occuring matching response
-        return matching_response
-
-    def get_first_response(self, response_list):
-        """
-        Return the first statement in the response list.
-        """
-        return response_list[0]
-
-    def get_random_response(self, response_list):
-        """
-        Choose a random response from the selection.
-        """
-        from random import choice
-        return choice(response_list)
-
     def get_response(self, input_text):
         """
         Return the bot's response based on the input.
@@ -94,28 +60,9 @@ class ChatBot(Adaptation):
             # Process the response output with the IO adapter
             return self.io.process_response(input_statement)
 
-        # Select the closest match to the input statement
-        closest_match = self.logic.get(input_statement)
+        # Select a response to the input statement
+        response = self.logic.process(input_statement)
 
-        # Save any updates made to the statement by the logic adapter
-        self.storage.update(closest_match)
-
-        # Get all statements that are in response to the closest match
-        response_list = self.storage.filter(
-            in_response_to__contains=closest_match.text
-        )
-
-        if response_list:
-            #response = self.get_most_frequent_response(closest_match, response_list)
-            response = self.get_first_response(response_list)
-            #response = self.get_random_response(response_list)
-        else:
-            response = self.storage.get_random()
-
-        #if input_statement.text == closest_match.text:
-        #    input_statement = closest_match
-
-        # TODO: Why is checking if the input is equal to the closest match not the same here?
         existing_statement = self.storage.find(input_statement.text)
 
         if existing_statement:
@@ -132,9 +79,7 @@ class ChatBot(Adaptation):
         self.context.recent_statements.append(response)
 
         # Process the response output with the IO adapter
-        response = self.io.process_response(response)
-
-        return response
+        return self.io.process_response(response)
 
     def get_input(self):
         return self.io.process_input()
