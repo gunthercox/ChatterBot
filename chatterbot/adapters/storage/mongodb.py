@@ -6,8 +6,8 @@ from pymongo import MongoClient
 
 class MongoDatabaseAdapter(StorageAdapter):
 
-    def __init__(self, **kwargs):
-        super(MongoDatabaseAdapter, self).__init__(**kwargs)
+    def __init__(self, context, **kwargs):
+        super(MongoDatabaseAdapter, self).__init__(context, **kwargs)
 
         self.database_name = self.kwargs.get("database", "chatterbot-database")
         self.database_uri = self.kwargs.get("database_uri", "mongodb://localhost:27017/")

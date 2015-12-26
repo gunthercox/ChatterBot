@@ -1,17 +1,18 @@
 from unittest import TestCase
 from chatterbot.adapters.logic import LogicAdapter
+from chatterbot.adapters.logic.mixins import KnownResponseMixin, ResponseSelectionMixin
 from chatterbot import ChatBot
 from chatterbot.conversation import Statement
 import os
 
 
-class DummyMutatorLogicAdapter(LogicAdapter):
+class DummyMutatorLogicAdapter(KnownResponseMixin, ResponseSelectionMixin, LogicAdapter):
     """
     This is a dummy class designed to modify a
     the resulting statement before it is returned.
     """
 
-    def get(self, text, statement_list, current_conversation):
+    def get(self, text, statement_list=None):
         statement = Statement("Hello")
         statement.add_extra_data("pos_tags", "NN")
 

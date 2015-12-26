@@ -1,15 +1,25 @@
+from chatterbot.adapters import Adapter
 from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
-class LogicAdapter(object):
+class LogicAdapter(Adapter):
     """
     This is an abstract class that represents the interface
     that all logic adapters should implement.
     """
 
-    def __init__(self, **kwargs):
-        pass
+    def __init__(self, context, **kwargs):
+        super(LogicAdapter, self).__init__(context, **kwargs)
 
-    def get(self, text, statement_list, current_conversation):
+        self.tie_breaking_method = kwargs.get(
+            "tie_breaking_method",
+            "first_response"
+        )
+
+    def process(self, text):
+        """
+        Method that takes an input statement and returns
+        a statement as output.
+        """
         raise AdapterNotImplementedError()
 

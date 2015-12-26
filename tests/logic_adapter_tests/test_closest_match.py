@@ -7,7 +7,7 @@ from chatterbot.conversation import Statement
 class ClosestMatchAdapterTests(TestCase):
 
     def setUp(self):
-        self.adapter = ClosestMatchAdapter()
+        self.adapter = ClosestMatchAdapter(None)
 
     def test_get_closest_statement(self):
         possible_choices = [

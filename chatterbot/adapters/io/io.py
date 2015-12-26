@@ -1,14 +1,12 @@
+from chatterbot.adapters import Adapter
 from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
-class IOAdapter(object):
+class IOAdapter(Adapter):
     """
     This is an abstract class that represents the interface
     that all input-output adapters should implement.
     """
-
-    def __init__(self, **kwargs):
-        pass
 
     def process_input(self):
         """
