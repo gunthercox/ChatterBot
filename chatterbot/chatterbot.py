@@ -30,8 +30,6 @@ class ChatBot(Adaptation):
         self.logic = self.add_adapter('logic', logic_adapter)
         self.io = self.add_adapter('io', io_adapter)
 
-        self.trainer = None
-
     def get_last_statement(self):
         """
         Return the last statement that was received.
@@ -39,6 +37,9 @@ class ChatBot(Adaptation):
         if self.context.recent_statements:
             return self.context.recent_statements[-1]
         return None
+
+    def get_input(self):
+        return self.io.process_input()
 
     def get_response(self, input_text):
         """
@@ -81,23 +82,20 @@ class ChatBot(Adaptation):
         # Process the response output with the IO adapter
         return self.io.process_response(response)
 
-    def get_input(self):
-        return self.io.process_input()
-
     def train(self, conversation=None, *args, **kwargs):
         """
         Train the chatbot based on input data.
         """
         from .training import Trainer
 
-        self.trainer = Trainer(self.storage)
+        trainer = Trainer(self.storage)
 
         if isinstance(conversation, str):
             corpora = list(args)
             corpora.append(conversation)
 
             if corpora:
-                self.trainer.train_from_corpora(corpora)
+                trainer.train_from_corpora(corpora)
         else:
-            self.trainer.train_from_list(conversation)
+            trainer.train_from_list(conversation)
 
