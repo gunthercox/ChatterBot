@@ -2,8 +2,18 @@ from chatterbot.utils.module_loading import import_module
 
 
 class Adaptation(object):
+    """
+    This is a base from which ChatterBot inherits utility methods
+    and a context attribute that allows access of adapters to be
+    shared between other adapters. This also makes it possible to
+    share other context information such as a name, or the current
+    conversation with each of the adapters.
+    """
 
     class context(object):
+        """
+        This subclass provides static access to the context data.
+        """
         data = {}
 
         def __getattr__(self, key):
