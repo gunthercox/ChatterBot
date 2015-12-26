@@ -1,9 +1,10 @@
 from chatterbot.adapters.exceptions import EmptyDatasetException
+from chatterbot.adapters.logic.mixins import KnownResponseMixin, ResponseSelectionMixin
 from .logic import LogicAdapter
 from fuzzywuzzy import process
 
 
-class ClosestMatchAdapter(LogicAdapter):
+class ClosestMatchAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapter):
 
     def get(self, input_statement, statement_list=None):
         """

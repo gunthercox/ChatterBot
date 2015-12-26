@@ -1,11 +1,12 @@
 from unittest import TestCase
 from chatterbot.adapters.logic import LogicAdapter
+from chatterbot.adapters.logic.mixins import KnownResponseMixin, ResponseSelectionMixin
 from chatterbot import ChatBot
 from chatterbot.conversation import Statement
 import os
 
 
-class DummyMutatorLogicAdapter(LogicAdapter):
+class DummyMutatorLogicAdapter(KnownResponseMixin, ResponseSelectionMixin, LogicAdapter):
     """
     This is a dummy class designed to modify a
     the resulting statement before it is returned.

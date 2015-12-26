@@ -1,4 +1,5 @@
 from chatterbot.adapters.exceptions import EmptyDatasetException
+from chatterbot.adapters.logic.mixins import KnownResponseMixin, ResponseSelectionMixin
 from .logic import LogicAdapter
 
 from nltk.corpus import wordnet
@@ -6,7 +7,7 @@ from nltk.corpus import stopwords
 from nltk import word_tokenize
 
 
-class ClosestMeaningAdapter(LogicAdapter):
+class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapter):
 
     def __init__(self, context, **kwargs):
         super(ClosestMeaningAdapter, self).__init__(context, **kwargs)
