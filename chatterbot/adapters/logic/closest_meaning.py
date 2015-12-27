@@ -9,8 +9,8 @@ from nltk import word_tokenize
 
 class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapter):
 
-    def __init__(self, context, **kwargs):
-        super(ClosestMeaningAdapter, self).__init__(context, **kwargs)
+    def __init__(self, **kwargs):
+        super(ClosestMeaningAdapter, self).__init__(**kwargs)
         from nltk.data import find
         from nltk import download
 

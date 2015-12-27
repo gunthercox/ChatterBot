@@ -11,7 +11,7 @@ class TerminalAdapterTests(TestCase):
     """
 
     def setUp(self):
-        self.adapter = TerminalAdapter(None)
+        self.adapter = TerminalAdapter()
 
     def test_response_is_returned(self):
         """

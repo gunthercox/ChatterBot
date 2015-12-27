@@ -12,7 +12,7 @@ class NoOutputAdapterTests(TestCase):
     """
 
     def setUp(self):
-        self.adapter = NoOutputAdapter(None)
+        self.adapter = NoOutputAdapter()
 
     def test_response_is_returned(self):
         """
@@ -25,3 +25,4 @@ class NoOutputAdapterTests(TestCase):
             self.adapter.process_response(statement),
             statement.text
         )
+

@@ -8,8 +8,9 @@ class StorageAdapter(Adapter):
     that all storage adapters should implement.
     """
 
-    def __init__(self, context, **kwargs):
-        super(StorageAdapter, self).__init__(context, **kwargs)
+    def __init__(self, **kwargs):
+        super(StorageAdapter, self).__init__(**kwargs)
+
         self.kwargs = kwargs
         self.read_only = kwargs.get("read_only", False)
 

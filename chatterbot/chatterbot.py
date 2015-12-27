@@ -8,8 +8,8 @@ class ChatBot(Adaptation):
     def __init__(self, name, **kwargs):
         super(ChatBot, self).__init__(**kwargs)
 
-        self.context.name = name
-        self.context.recent_statements = []
+        kwargs["name"] = name
+        self.recent_statements = []
 
         storage_adapter = kwargs.get("storage_adapter",
             "chatterbot.adapters.storage.JsonDatabaseAdapter"
@@ -26,16 +26,28 @@ class ChatBot(Adaptation):
         PluginChooser = import_module("chatterbot.adapters.plugins.PluginChooser")
         self.plugin_chooser = PluginChooser(**kwargs)
 
-        self.storage = self.add_adapter('storage', storage_adapter)
-        self.logic = self.add_adapter('logic', logic_adapter)
-        self.io = self.add_adapter('io', io_adapter)
+        self.add_adapter(storage_adapter, **kwargs)
+        self.add_adapter(logic_adapter, **kwargs)
+        self.add_adapter(io_adapter, **kwargs)
+
+        self.storage.set_context(self)
+        self.logic.set_context(self)
+        self.io.set_context(self)
+
+    @property
+    def storage(self):
+        return self.storage_adapters[0]
+
+    @property
+    def io(self):
+        return self.io_adapters[0]
 
     def get_last_statement(self):
         """
         Return the last statement that was received.
         """
-        if self.context.recent_statements:
-            return self.context.recent_statements[-1]
+        if self.recent_statements:
+            return self.recent_statements[-1]
         return None
 
     def get_input(self):
@@ -56,7 +68,7 @@ class ChatBot(Adaptation):
         # If no responses exist, return the input statement
         if not self.storage.count():
             self.storage.update(input_statement)
-            self.context.recent_statements.append(input_statement)
+            self.recent_statements.append(input_statement)
 
             # Process the response output with the IO adapter
             return self.io.process_response(input_statement)
@@ -77,7 +89,7 @@ class ChatBot(Adaptation):
         # Update the database after selecting a response
         self.storage.update(input_statement)
 
-        self.context.recent_statements.append(response)
+        self.recent_statements.append(response)
 
         # Process the response output with the IO adapter
         return self.io.process_response(response)

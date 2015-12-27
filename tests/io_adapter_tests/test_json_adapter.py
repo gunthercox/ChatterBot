@@ -6,7 +6,7 @@ from chatterbot.adapters.io import JsonAdapter
 class JsonAdapterTests(TestCase):
 
     def setUp(self):
-        self.adapter = JsonAdapter(None)
+        self.adapter = JsonAdapter()
 
     def test_response_json_returned(self):
         statement = Statement("Robot ipsum datus scan amet.")

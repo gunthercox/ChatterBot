@@ -1,3 +1,8 @@
+from chatterbot.adapters.exceptions import UnknownAdapterTypeException
+from chatterbot.adapters.storage import StorageAdapter
+from chatterbot.adapters.logic import LogicAdapter
+from chatterbot.adapters.io import IOAdapter
+from chatterbot.adapters.logic import MultiLogicAdapter
 from chatterbot.utils.module_loading import import_module
 
 
@@ -10,26 +15,24 @@ class Adaptation(object):
     conversation with each of the adapters.
     """
 
-    class context(object):
-        """
-        This subclass provides static access to the context data.
-        """
-        data = {}
-
-        def __getattr__(self, key):
-            return getattr(data, key)
-
-        def __setattr__(self, key, value):
-            return setattr(data, key, value)
-
     def __init__(self, **kwargs):
-        self.kwargs = kwargs
+        self.storage_adapters = []
+        self.io_adapters = []
 
-    def add_adapter(self, name, adapter):
+        self.logic = MultiLogicAdapter(**kwargs)
+        self.logic.set_context(self)
+
+    def add_adapter(self, adapter, **kwargs):
         NewAdapter = import_module(adapter)
 
-        adapter = NewAdapter(self.context, **self.kwargs)
-        setattr(self.context, name, adapter)
+        adapter = NewAdapter(**kwargs)
 
-        return adapter
+        if issubclass(NewAdapter, StorageAdapter):
+            self.storage_adapters.append(adapter)
+        elif issubclass(NewAdapter, LogicAdapter):
+            self.logic.add_adapter(adapter)
+        elif issubclass(NewAdapter, IOAdapter):
+            self.io_adapters.append(adapter)
+        else:
+            raise UnknownAdapterTypeException()
 

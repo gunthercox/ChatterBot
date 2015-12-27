@@ -7,14 +7,21 @@ class AdaptationTests(TestCase):
     def setUp(self):
         self.adaptation = Adaptation()
 
-    def test_add_adapter(self):
+    def test_add_storage_adapter(self):
         self.adaptation.add_adapter(
-            "storage",
             "chatterbot.adapters.storage.JsonDatabaseAdapter"
         )
-        self.assertTrue(hasattr(self.adaptation.context, "storage"))
+        self.assertEqual(len(self.adaptation.storage_adapters), 1)
 
-    def test_context_can_be_set(self):
-        self.adaptation.context.name = "ChatterBot"
-        self.assertEqual(self.adaptation.context.name, "ChatterBot")
+    def test_add_logic_adapter(self):
+        self.adaptation.add_adapter(
+            "chatterbot.adapters.logic.ClosestMatchAdapter"
+        )
+        self.assertEqual(len(self.adaptation.logic.adapters), 1)
+
+    def test_add_io_adapter(self):
+        self.adaptation.add_adapter(
+            "chatterbot.adapters.io.TerminalAdapter"
+        )
+        self.assertEqual(len(self.adaptation.io_adapters), 1)
 
