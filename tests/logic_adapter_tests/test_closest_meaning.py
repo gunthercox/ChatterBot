@@ -1,5 +1,4 @@
 from unittest import TestCase
-from chatterbot.adapters.exceptions import EmptyDatasetException
 from chatterbot.adapters.logic import ClosestMeaningAdapter
 from chatterbot.conversation import Statement
 
@@ -10,6 +9,8 @@ class ClosestMeaningAdapterTests(TestCase):
         self.adapter = ClosestMeaningAdapter()
 
     def test_no_choices(self):
+        from chatterbot.adapters.exceptions import EmptyDatasetException
+
         possible_choices = []
         statement = Statement("Hello")
 
@@ -24,7 +25,7 @@ class ClosestMeaningAdapterTests(TestCase):
         ]
         statement = Statement("This is a lovely swamp.")
 
-        close = self.adapter.get(statement, possible_choices)
+        confidence, match = self.adapter.get(statement, possible_choices)
 
-        self.assertEqual("This is a lovely bog.", close)
+        self.assertEqual("This is a lovely bog.", match)
 

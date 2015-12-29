@@ -14,13 +14,15 @@ class MultiLogicAdapter(LogicAdapter):
         for a given input statement.
         """
         result = None
-        confidence = 0
+        max_confidence = -1
 
         for adapter in self.adapters:
-            output = adapter.process(statement)
-            result = output
+            confidence, output = adapter.process(statement)
+            if confidence > max_confidence:
+                result = output
+                max_confidence = confidence
 
-        return result #, confidence
+        return max_confidence, result
 
     def add_adapter(self, adapter):
         self.adapters.append(adapter)
@@ -32,6 +34,5 @@ class MultiLogicAdapter(LogicAdapter):
         super(MultiLogicAdapter, self).set_context(context)
 
         for adapter in self.adapters:
-            # TODO, will this actually set the context on the instance?
             adapter.set_context(context)
 

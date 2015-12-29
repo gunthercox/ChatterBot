@@ -74,7 +74,7 @@ class ChatBot(Adaptation):
             return self.io.process_response(input_statement)
 
         # Select a response to the input statement
-        response = self.logic.process(input_statement)
+        confidence, response = self.logic.process(input_statement)
 
         existing_statement = self.storage.find(input_statement.text)
 

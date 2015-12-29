@@ -32,7 +32,7 @@ class ResponseSelectionMixin(object):
     def process(self, input_statement):
 
         # Select the closest match to the input statement
-        closest_match = self.get(input_statement)
+        confidence, closest_match = self.get(input_statement)
 
         # Save any updates made to the statement by the logic adapter
         self.context.storage.update(closest_match)
@@ -52,7 +52,7 @@ class ResponseSelectionMixin(object):
         else:
             response = self.storage.get_random()
 
-        return response
+        return confidence, response
 
     def get_most_frequent_response(self, input_statement, response_list):
         """
