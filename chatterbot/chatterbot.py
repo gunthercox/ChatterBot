@@ -19,6 +19,10 @@ class ChatBot(Adaptation):
             "chatterbot.adapters.logic.ClosestMatchAdapter"
         )
 
+        logic_adapters = kwargs.get("logic_adapters", [
+            logic_adapter
+        ])
+
         io_adapter = kwargs.get("io_adapter",
             "chatterbot.adapters.io.TerminalAdapter"
         )
@@ -27,8 +31,10 @@ class ChatBot(Adaptation):
         self.plugin_chooser = PluginChooser(**kwargs)
 
         self.add_adapter(storage_adapter, **kwargs)
-        self.add_adapter(logic_adapter, **kwargs)
         self.add_adapter(io_adapter, **kwargs)
+
+        for adapter in logic_adapters:
+            self.add_adapter(adapter, **kwargs)
 
         self.storage.set_context(self)
         self.logic.set_context(self)
