@@ -19,7 +19,7 @@ class ClosestMatchAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapt
         if not statement_list:
             if self.context and self.context.storage:
                 # Use a randomly picked statement
-                return self.context.storage.get_random()
+                return 0, self.context.storage.get_random()
             else:
                 raise EmptyDatasetException
 
@@ -30,14 +30,14 @@ class ClosestMatchAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapt
 
         # Check if an exact match exists
         if input_statement.text in text_of_all_statements:
-            return input_statement
+            return 1, input_statement
 
         # Get the closest matching statement from the database
-        closest_match = process.extract(
+        closest_match, confidence = process.extract(
             input_statement.text,
             text_of_all_statements,
             limit=1
-        )[0][0]
+        )[0]
 
-        return next((s for s in statement_list if s.text == closest_match), None)
+        return confidence, next((s for s in statement_list if s.text == closest_match), None)
 

@@ -16,7 +16,7 @@ class DummyMutatorLogicAdapter(KnownResponseMixin, ResponseSelectionMixin, Logic
         statement = Statement("Hello")
         statement.add_extra_data("pos_tags", "NN")
 
-        return statement
+        return 1, statement
 
 
 class DataCachingTests(TestCase):

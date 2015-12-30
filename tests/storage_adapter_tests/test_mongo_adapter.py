@@ -22,7 +22,7 @@ class BaseMongoDatabaseAdapterTestCase(TestCase):
             )
             client.server_info()
 
-            self.adapter = MongoDatabaseAdapter(None, database=database_name)
+            self.adapter = MongoDatabaseAdapter(database=database_name)
 
         except ServerSelectionTimeoutError:
             raise SkipTest("Unable to connect to mongo database.")

@@ -55,7 +55,8 @@ class ResponseSelectionMixinTests(TestCase):
 
         self.mixin = KnownResponseMixin()
         context = Adaptation()
-        adapter = JsonDatabaseAdapter(context)
+        adapter = JsonDatabaseAdapter()
+        adapter.set_context(context)
 
         # Simulate a storage adapter
         setattr(self.mixin, "context", context)

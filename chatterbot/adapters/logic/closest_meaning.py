@@ -9,8 +9,8 @@ from nltk import word_tokenize
 
 class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapter):
 
-    def __init__(self, context, **kwargs):
-        super(ClosestMeaningAdapter, self).__init__(context, **kwargs)
+    def __init__(self, **kwargs):
+        super(ClosestMeaningAdapter, self).__init__(**kwargs)
         from nltk.data import find
         from nltk import download
 
@@ -91,7 +91,7 @@ class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAda
         if not statement_list:
             if self.context and self.context.storage:
                 # Use a randomly picked statement
-                return self.context.storage.get_random()
+                return 0, self.context.storage.get_random()
             else:
                 raise EmptyDatasetException
 
@@ -102,18 +102,23 @@ class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAda
 
         # Check if an exact match exists
         if input_statement.text in text_of_all_statements:
-            return input_statement
+            return 1, input_statement
 
         closest_statement = text_of_all_statements[0]
         closest_similarity = 0
+        total_similarity = 0
 
         # For each option in the list of options
         for statement in text_of_all_statements:
             similarity = self.get_similarity(input_statement.text, statement)
 
+            total_similarity += similarity
+
             if similarity > closest_similarity:
                 closest_similarity = similarity
                 closest_statement = statement
 
-        return next((s for s in statement_list if s.text == closest_statement), None)
+        confidence = closest_similarity / total_similarity
+
+        return confidence, next((s for s in statement_list if s.text == closest_statement), None)
 
