@@ -2,3 +2,4 @@ fuzzywuzzy>=0.8.0
 jsondatabase>=0.0.7
 nltk<4.0.0
 pymongo>=3.0.3,<4.0.0
+python-twitter>=3.0rc1
