@@ -1,13 +1,13 @@
 from unittest import TestCase
 from ..base_case import ChatBotTestCase
-from chatterbot.adapters.logic.mixins import ResponseSelectionMixin, KnownResponseMixin
+from chatterbot.adapters.logic.mixins import TieBreaking
 from chatterbot.conversation import Statement, Response
 
 
-class ResponseSelectionMixinTests(TestCase):
+class TieBreakingTests(TestCase):
 
     def setUp(self):
-        self.mixin = ResponseSelectionMixin()
+        self.mixin = TieBreaking()
 
     def test_get_most_frequent_response(self):
         statement_list = [
@@ -45,35 +45,4 @@ class ResponseSelectionMixinTests(TestCase):
         output = self.mixin.get_random_response(statement_list)
 
         self.assertTrue(output)
-
-
-class ResponseSelectionMixinTests(TestCase):
-
-    def setUp(self):
-        from chatterbot.adapters import Adaptation
-        from chatterbot.adapters.storage import JsonDatabaseAdapter
-
-        self.mixin = KnownResponseMixin()
-        context = Adaptation()
-        adapter = JsonDatabaseAdapter()
-        adapter.set_context(context)
-
-        # Simulate a storage adapter
-        setattr(self.mixin, "context", context)
-        setattr(self.mixin.context, "storage", adapter)
-
-    def test_get_statements_with_known_responses(self):
-        statement_list = [
-            Statement("What... is your quest?"),
-            Statement("This is a phone."),
-            Statement("A what?", in_response_to=[Response("This is a phone.")]),
-            Statement("A phone.", in_response_to=[Response("A what?")])
-        ]
-
-        for statement in statement_list:
-            self.mixin.context.storage.update(statement)
-
-        responses = self.mixin.get_statements_with_known_responses()
-
-        self.assertEqual(len(responses), 2)
 

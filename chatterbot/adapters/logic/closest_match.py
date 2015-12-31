@@ -1,23 +1,19 @@
 from chatterbot.adapters.exceptions import EmptyDatasetException
-from chatterbot.adapters.logic.mixins import KnownResponseMixin, ResponseSelectionMixin
-from .logic import LogicAdapter
+from .base_match import BaseMatchAdapter
 from fuzzywuzzy import process
 
 
-class ClosestMatchAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapter):
+class ClosestMatchAdapter(BaseMatchAdapter):
 
     def get(self, input_statement, statement_list=None):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
+        statement_list = self.get_available_statements(statement_list)
 
         if not statement_list:
-            statement_list = self.get_statements_with_known_responses()
-
-        # Check if the list is empty
-        if not statement_list:
-            if self.context and self.context.storage:
+            if self.has_storage_context:
                 # Use a randomly picked statement
                 return 0, self.context.storage.get_random()
             else:
