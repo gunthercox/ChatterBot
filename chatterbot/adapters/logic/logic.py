@@ -8,18 +8,10 @@ class LogicAdapter(Adapter):
     that all logic adapters should implement.
     """
 
-    def __init__(self, **kwargs):
-        super(LogicAdapter, self).__init__(**kwargs)
-
-        self.tie_breaking_method = kwargs.get(
-            "tie_breaking_method",
-            "first_response"
-        )
-
     def process(self, statement):
         """
         Method that takes an input statement and returns
-        a statement as output.
+        a confidence value and a statement as output.
         """
         raise AdapterNotImplementedError()
 

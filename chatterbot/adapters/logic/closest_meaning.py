@@ -1,13 +1,12 @@
 from chatterbot.adapters.exceptions import EmptyDatasetException
-from chatterbot.adapters.logic.mixins import KnownResponseMixin, ResponseSelectionMixin
-from .logic import LogicAdapter
+from .base_match import BaseMatchAdapter
 
 from nltk.corpus import wordnet
 from nltk.corpus import stopwords
 from nltk import word_tokenize
 
 
-class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAdapter):
+class ClosestMeaningAdapter(BaseMatchAdapter):
 
     def __init__(self, **kwargs):
         super(ClosestMeaningAdapter, self).__init__(**kwargs)
@@ -83,13 +82,10 @@ class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAda
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
+        statement_list = self.get_available_statements(statement_list)
 
         if not statement_list:
-            statement_list = self.get_statements_with_known_responses()
-
-        # Check if the list is empty
-        if not statement_list:
-            if self.context and self.context.storage:
+            if self.has_storage_context:
                 # Use a randomly picked statement
                 return 0, self.context.storage.get_random()
             else:
@@ -104,8 +100,8 @@ class ClosestMeaningAdapter(ResponseSelectionMixin, KnownResponseMixin, LogicAda
         if input_statement.text in text_of_all_statements:
             return 1, input_statement
 
-        closest_statement = text_of_all_statements[0]
-        closest_similarity = 0
+        closest_statement = None
+        closest_similarity = -1
         total_similarity = 0
 
         # For each option in the list of options

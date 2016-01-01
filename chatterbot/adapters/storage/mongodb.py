@@ -125,7 +125,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         count = self.count()
 
-        random_integer = randint(0, count -1)
+        random_integer = randint(0, count - 1)
 
         if self.count() < 1:
             raise EmptyDatabaseException()

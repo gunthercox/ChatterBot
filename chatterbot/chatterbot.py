@@ -1,5 +1,5 @@
 from .adapters import Adaptation
-from .conversation import Statement, Response
+from .conversation import Statement
 from .utils.module_loading import import_module
 
 

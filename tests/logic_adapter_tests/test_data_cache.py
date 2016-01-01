@@ -1,20 +1,20 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import LogicAdapter
-from chatterbot.adapters.logic.mixins import KnownResponseMixin, ResponseSelectionMixin
 from chatterbot import ChatBot
+from chatterbot.adapters.logic import LogicAdapter
 from chatterbot.conversation import Statement
 import os
 
 
-class DummyMutatorLogicAdapter(KnownResponseMixin, ResponseSelectionMixin, LogicAdapter):
+class DummyMutatorLogicAdapter(LogicAdapter):
     """
     This is a dummy class designed to modify a
     the resulting statement before it is returned.
     """
 
-    def get(self, text, statement_list=None):
-        statement = Statement("Hello")
+    def process(self, statement):
         statement.add_extra_data("pos_tags", "NN")
+
+        self.context.storage.update(statement)
 
         return 1, statement
 
@@ -64,15 +64,6 @@ class DataCachingTests(TestCase):
         """
         self.chatbot.storage.drop()
         self.remove_data()
-
-    def test_modified_statement_saved(self):
-        statement = Statement("How are you?")
-        response = self.chatbot.get_response("Hello")
-        found_statement = self.chatbot.storage.find(statement.text)
-
-        # The dummy adapter should always return the same response statement
-        self.assertEqual(response, statement)
-        self.assertIsNotNone(found_statement)
 
     def test_additional_attributes_saved(self):
         """

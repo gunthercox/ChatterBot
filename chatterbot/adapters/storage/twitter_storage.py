@@ -83,7 +83,7 @@ class TwitterAdapter(StorageAdapter):
         if word:
             tweets = self.api.GetSearch(term=word, count=5)
             if tweets:
-                tweet = random.choice(tweets)            
+                tweet = random.choice(tweets)
 
         # TODO: Handle non-ascii characters properly
         cleaned_text = ''.join(
