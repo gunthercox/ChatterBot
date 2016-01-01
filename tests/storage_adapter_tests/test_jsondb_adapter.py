@@ -3,7 +3,7 @@ from chatterbot.adapters.storage import JsonDatabaseAdapter
 from chatterbot.conversation import Statement, Response
 
 
-class BaseJsonDatabaseAdapterTestCase(TestCase):
+class JsonAdapterTestCase(TestCase):
 
     def setUp(self):
         """
@@ -23,7 +23,7 @@ class BaseJsonDatabaseAdapterTestCase(TestCase):
         self.adapter.drop()
 
 
-class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
+class JsonDatabaseAdapterTestCase(JsonAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -74,17 +74,21 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 
         # Check the initial values
         found_statement = self.adapter.find(statement.text)
-        self.assertEqual(len(statement.in_response_to), 0)
+        self.assertEqual(
+            len(found_statement.in_response_to), 0
+        )
 
         # Update the statement value
         statement.add_response(
-            Statement("A response")
+            Statement("New response")
         )
         self.adapter.update(statement)
 
         # Check that the values have changed
         found_statement = self.adapter.find(statement.text)
-        self.assertEqual(len(found_statement.in_response_to), 1)
+        self.assertEqual(
+            len(found_statement.in_response_to), 1
+        )
 
     def test_get_random_returns_statement(self):
         statement = Statement("New statement")
@@ -109,15 +113,6 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
 
-    def test_deserialize_responses(self):
-        response_list = [
-            {"text": "Test", "occurrence": 3},
-            {"text": "Testing", "occurrence": 1},
-        ]
-        results = self.adapter.deserialize_responses(response_list)
-
-        self.assertEqual(len(results), 2)
-
     def test_multiple_responses_added_on_update(self):
         statement = Statement(
             "You are welcome.",
@@ -137,8 +132,8 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         statement = Statement(
             "You are welcome.",
             in_response_to=[
+                Response("Thank you."),
                 Response("Thanks."),
-                Response("Thank you.")
             ]
         )
         self.adapter.update(statement)
@@ -159,8 +154,17 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertEqual(len(response.in_response_to), 1)
         self.assertEqual(response.in_response_to[0].occurrence, 2)
 
+    def test_deserialize_responses(self):
+        response_list = [
+            {"text": "Test", "occurrence": 3},
+            {"text": "Testing", "occurrence": 1},
+        ]
+        results = self.adapter.deserialize_responses(response_list)
 
-class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
+        self.assertEqual(len(results), 2)
+
+
+class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
 
     def setUp(self):
         super(JsonDatabaseAdapterFilterTestCase, self).setUp()
@@ -289,7 +293,7 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertEqual(len(response.in_response_to), 2)
 
 
-class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
+class ReadOnlyJsonDatabaseAdapterTestCase(JsonAdapterTestCase):
 
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
@@ -307,12 +311,14 @@ class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.adapter.read_only = True
 
         statement.add_response(
-            Statement("A response")
+            Statement("New response")
         )
 
         self.adapter.update(statement)
 
         statement_found = self.adapter.find("New statement")
         self.assertEqual(statement_found.text, statement.text)
-        self.assertEqual(len(statement_found.in_response_to), 0)
+        self.assertEqual(
+            len(statement_found.in_response_to), 0
+        )
 

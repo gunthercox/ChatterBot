@@ -4,7 +4,7 @@ from chatterbot.adapters.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement, Response
 
 
-class BaseMongoDatabaseAdapterTestCase(TestCase):
+class MongoAdapterTestCase(TestCase):
 
     def setUp(self):
         """
@@ -33,7 +33,8 @@ class BaseMongoDatabaseAdapterTestCase(TestCase):
         """
         self.adapter.drop()
 
-class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
+
+class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -94,7 +95,7 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         )
         self.adapter.update(statement)
 
-        # CHeck that the values have changed
+        # Check that the values have changed
         found_statement = self.adapter.find(statement.text)
         self.assertEqual(
             len(found_statement.in_response_to), 1
@@ -122,6 +123,59 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
+
+    def test_multiple_responses_added_on_update(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thank you."),
+                Response("Thanks.")
+            ]
+        )
+        self.adapter.update(statement)
+        result = self.adapter.find(statement.text)
+
+        self.assertEqual(len(result.in_response_to), 2)
+        self.assertIn(statement.in_response_to[0], result.in_response_to)
+        self.assertIn(statement.in_response_to[1], result.in_response_to)
+
+    def test_update_saves_statement_with_multiple_responses(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thanks."),
+                Response("Thank you.")
+            ]
+        )
+        self.adapter.update(statement)
+        response = self.adapter.find(statement.text)
+
+        self.assertEqual(len(response.in_response_to), 2)
+
+    def test_getting_and_updating_statement(self):
+        statement = Statement("Hi")
+        self.adapter.update(statement)
+
+        statement.add_response(Response("Hello"))
+        statement.add_response(Response("Hello"))
+        self.adapter.update(statement)
+
+        response = self.adapter.find(statement.text)
+
+        self.assertEqual(len(response.in_response_to), 1)
+        self.assertEqual(response.in_response_to[0].occurrence, 2)
+
+    def test_deserialize_responses(self):
+        response_list = [
+            {"text": "Test", "occurrence": 3},
+            {"text": "Testing", "occurrence": 1},
+        ]
+        results = self.adapter.deserialize_responses(response_list)
+
+        self.assertEqual(len(results), 2)
+
+
+class MongoAdapterFilterTestCase(MongoAdapterTestCase):
 
     def test_filter_no_results(self):
         statement1 = Statement("Testing...")
@@ -262,7 +316,7 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
-class ReadOnlyMongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
+class ReadOnlyMongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
@@ -289,6 +343,6 @@ class ReadOnlyMongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
             statement_found.text, statement.text
         )
         self.assertEqual(
-            statement_found.in_response_to, []
+            len(statement_found.in_response_to), 0
         )
 
