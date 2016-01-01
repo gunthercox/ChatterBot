@@ -14,10 +14,12 @@ class AdaptationTests(TestCase):
         self.assertEqual(len(self.adaptation.storage_adapters), 1)
 
     def test_add_logic_adapter(self):
+        count_before = len(self.adaptation.logic.adapters)
+
         self.adaptation.add_adapter(
             "chatterbot.adapters.logic.ClosestMatchAdapter"
         )
-        self.assertEqual(len(self.adaptation.logic.adapters), 1)
+        self.assertEqual(len(self.adaptation.logic.adapters), count_before + 1)
 
     def test_add_io_adapter(self):
         self.adaptation.add_adapter(

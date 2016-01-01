@@ -22,6 +22,9 @@ class Adaptation(object):
         self.logic = MultiLogicAdapter(**kwargs)
         self.logic.set_context(self)
 
+        # Add required system adapter
+        self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
+
     def add_adapter(self, adapter, **kwargs):
         NewAdapter = import_module(adapter)
 

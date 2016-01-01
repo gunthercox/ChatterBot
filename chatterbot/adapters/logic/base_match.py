@@ -44,6 +44,14 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
         """
         raise AdapterNotImplementedError()
 
+    def can_process(self, statement):
+        """
+        Override the can_process method to check if the
+        storage context is available and there is at least
+        one statement in the database.
+        """
+        return self.has_storage_context and self.context.storage.count()
+
     def process(self, input_statement):
 
         # Select the closest match to the input statement
