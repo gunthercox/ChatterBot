@@ -71,14 +71,6 @@ class ChatBot(Adaptation):
         if not plugin_response is False:
             return self.io.process_response(Statement(plugin_response))
 
-        # If no responses exist, return the input statement
-        if not self.storage.count():
-            self.storage.update(input_statement)
-            self.recent_statements.append(input_statement)
-
-            # Process the response output with the IO adapter
-            return self.io.process_response(input_statement)
-
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
 

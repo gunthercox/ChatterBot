@@ -8,6 +8,15 @@ class LogicAdapter(Adapter):
     that all logic adapters should implement.
     """
 
+    def can_process(self, statement):
+        """
+        A preliminary check that is called to determine if a
+        logic adapter can process a given statement. By default,
+        this method returns true but it can be overridden in
+        child classes as needed.
+        """
+        return True
+
     def process(self, statement):
         """
         Method that takes an input statement and returns
