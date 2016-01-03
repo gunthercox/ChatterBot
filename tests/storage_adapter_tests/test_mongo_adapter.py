@@ -18,7 +18,7 @@ class MongoAdapterTestCase(TestCase):
         # Skip these tests if a mongo client is not running.
         try:
             client = MongoClient(
-                serverSelectionTimeoutMS=1
+                serverSelectionTimeoutMS=0.5
             )
             client.server_info()
 
