@@ -9,11 +9,11 @@ class EvaluateMathematically(LogicAdapter):
 
     def can_process(self, statement):
         """
-        Determines whether it is appropriate for this plugin
-        to respond to the user input.
+        Determines whether it is appropriate for this
+        adapter to respond to the user input.
         """
         confidence, response = self.process(statement)
-        return confidence, response
+        return confidence == 1
 
     def process(self, statement):
         """

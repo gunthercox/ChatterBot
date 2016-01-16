@@ -6,7 +6,12 @@ from chatterbot.conversation import Statement
 class MathematicalEvaluationTests(TestCase):
 
     def setUp(self):
+        import sys
+
         self.adapter = EvaluateMathematically()
+
+        # Some tests may return decimals under python 3
+        self.python_version = sys.version_info[0]
 
     def test_addition_operator(self):
         statement = Statement("What is 100 + 54?")
@@ -26,7 +31,11 @@ class MathematicalEvaluationTests(TestCase):
     def test_division_operator(self):
         statement = Statement("What is 100 / 20")
         confidence, response = self.adapter.process(statement)
-        self.assertEqual(response.text, "( 100 / 20 ) = 5")
+
+        if self.python_version <= 2:
+            self.assertEqual(response.text, "( 100 / 20 ) = 5")
+        else:
+            self.assertEqual(response.text, "( 100 / 20 ) = 5.0")
 
     def test_parenthesized_multiplication_and_addition(self):
         statement = Statement("What is 100 + ( 1000 * 2 )?")
@@ -46,12 +55,20 @@ class MathematicalEvaluationTests(TestCase):
     def test_word_division_operator(self):
         statement = Statement("What is 100 divided by 100?")
         confidence, response = self.adapter.process(statement)
-        self.assertEqual(response.text, "( 100 / 100 ) = 1")
+
+        if self.python_version <= 2:
+            self.assertEqual(response.text, "( 100 / 100 ) = 1")
+        else:
+            self.assertEqual(response.text, "( 100 / 100 ) = 1.0")
 
     def test_large_word_division_operator(self):
         statement = Statement("What is one thousand two hundred four divided by one hundred?")
         confidence, response = self.adapter.process(statement)
-        self.assertEqual(response.text, "( 1000 + 200 + 4 ) / ( 100 ) = 12")
+
+        if self.python_version <= 2:
+            self.assertEqual(response.text, "( 1000 + 200 + 4 ) / ( 100 ) = 12")
+        else:
+            self.assertEqual(response.text, "( 1000 + 200 + 4 ) / ( 100 ) = 12.04")
 
     def test_negative_multiplication(self):
         statement = Statement("What is -105 * 5")
