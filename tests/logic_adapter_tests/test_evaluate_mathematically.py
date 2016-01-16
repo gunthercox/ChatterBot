@@ -3,6 +3,50 @@ from chatterbot.adapters.logic import EvaluateMathematically
 from chatterbot.conversation import Statement
 
 
+class EvaluateMathematicallyTests(TestCase):
+
+    def setUp(self):
+        self.adapter = EvaluateMathematically()
+
+    def test_can_process(self):
+        statement = Statement("What is 10 + 10 + 10?")
+        self.assertTrue(self.adapter.can_process(statement))
+
+    def test_can_not_process(self):
+        statement = Statement("What is your favorite song?")
+        self.assertFalse(self.adapter.can_process(statement))
+
+    def test_is_integer(self):
+        self.assertTrue(self.adapter.is_integer(42))
+
+    def test_is_float(self):
+        self.assertTrue(self.adapter.is_float(0.5))
+
+    def test_is_operator(self):
+        self.assertTrue(self.adapter.is_operator('+'))
+
+    def test_is_not_operator(self):
+        self.assertFalse(self.adapter.is_operator('9'))
+
+    def test_normalize_empty_string(self):
+        """
+        If a string is empty, the string should be returned.
+        """
+        self.assertEqual(self.adapter.normalize(""), "")
+
+    def test_normalize_text_to_lowercase(self):
+        normalized = self.adapter.normalize("HELLO")
+        self.assertTrue(normalized.islower())
+
+    def test_normalize_punctuation(self):
+        normalized = self.adapter.normalize("the end.")
+        self.assertEqual(normalized, "the end")
+
+    def test_load_data(self):
+        self.adapter.load_data("english")
+        self.assertIn("numbers", self.adapter.data)
+
+
 class MathematicalEvaluationTests(TestCase):
 
     def setUp(self):
