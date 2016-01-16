@@ -1,42 +1,39 @@
-from .plugin import PluginAdapter
+from chatterbot.adapters.logic import LogicAdapter
+from chatterbot.conversation import Statement
 import re
 import os, json
 import decimal
 
-class EvaluateMathematically(PluginAdapter):
 
-    def should_answer(self, input_text):
+class EvaluateMathematically(LogicAdapter):
+
+    def can_process(self, statement):
         """
         Determines whether it is appropriate for this plugin
         to respond to the user input.
         """
+        confidence, response = self.process(statement)
+        return confidence, response
 
-        response = self.process( input_text )
-
-        if response is False:
-            return False
-        else:
-            return True
-
-
-    def process(self, input_text):
+    def process(self, statement):
         """
         Takes a statement string.
         Returns the simplified statement string
         with the mathematical terms "solved".
         """
+        input_text = statement.text
 
         # Getting the mathematical terms within the input statement
-        expression = self.simplify_chunks( self.normalize( input_text ) )
+        expression = self.simplify_chunks(self.normalize(input_text))
 
         # Returning important information
         try:
-            expression += '= ' + str( eval( expression ) )
+            expression += '= ' + str(eval(expression))
 
-            return expression
+            # return a confidence of 1 if the expression could be evaluated
+            return 1, Statement(expression)
         except:
-            return False
-
+            return 0, Statement(expression)
 
     def simplify_chunks(self, input_text):
         """
@@ -47,23 +44,22 @@ class EvaluateMathematically(PluginAdapter):
 
         for chunk in input_text.split():
 
-            is_chunk_integer = self.is_integer( chunk )
+            is_chunk_integer = self.is_integer(chunk)
 
             if is_chunk_integer is False:
-                is_chunk_float = self.is_float( chunk )
+                is_chunk_float = self.is_float(chunk)
 
                 if is_chunk_float is False:
-                    is_chunk_operator = self.is_operator( chunk )
+                    is_chunk_operator = self.is_operator(chunk)
 
                     if not is_chunk_operator is False:
-                        string += str( is_chunk_operator ) + ' '
+                        string += str(is_chunk_operator) + ' '
                 else:
-                    string += str( is_chunk_float ) + ' '
+                    string += str(is_chunk_float) + ' '
             else:
-                string += str( is_chunk_integer ) + ' '
+                string += str(is_chunk_integer) + ' '
 
         return string
-
 
     def is_float(self, string):
         """
@@ -77,7 +73,6 @@ class EvaluateMathematically(PluginAdapter):
         except decimal.DecimalException:
             return False
 
-
     def is_integer(self, string):
         """
         If the string is an integer, returns
@@ -86,10 +81,9 @@ class EvaluateMathematically(PluginAdapter):
         """
 
         try:
-            return int( string )
+            return int(string)
         except:
             return False
-
 
     def is_operator(self, string):
         """
@@ -103,7 +97,6 @@ class EvaluateMathematically(PluginAdapter):
         else:
             return False
 
-
     def normalize(self, string):
         """
         Normalizes input text, reducing errors
@@ -111,7 +104,7 @@ class EvaluateMathematically(PluginAdapter):
         """
 
         # If the string is empty, just return it
-        if len( string ) is 0:
+        if len(string) is 0:
             return string
 
         # Setting all words to lowercase
@@ -119,15 +112,15 @@ class EvaluateMathematically(PluginAdapter):
 
         # Removing punctuation
         if not string[-1].isalnum():
-            string = string[ : -1 ]
+            string = string[:-1]
 
         # Removing words
-        string = self.substitute_words( string )
+        string = self.substitute_words(string)
 
         # Returning normalized text
         return string
 
-    def load_data( self, language ):
+    def load_data(self, language):
         """
         Load language-specific data
         """
@@ -137,49 +130,48 @@ class EvaluateMathematically(PluginAdapter):
                 data = json.load(data_file)
             self.data = data
 
-
     def substitute_words(self, string):
         """
         Substitutes numbers for words.
         """
 
-        self.load_data( "english" )
+        self.load_data("english")
 
-        condensed_string = '_'.join( string.split() )
+        condensed_string = '_'.join(string.split())
 
-        for word in self.data[ "words" ]:
-            condensed_string = re.sub( '_'.join( word.split( ' ' ) ), self.data[ "words" ][ word ], condensed_string )
+        for word in self.data["words"]:
+            condensed_string = re.sub('_'.join(word.split(' ')), self.data["words"][word], condensed_string)
 
-        for number in self.data[ "numbers" ]:
-            condensed_string = re.sub( number, str( self.data[ "numbers" ][ number ] ), condensed_string )
+        for number in self.data["numbers"]:
+            condensed_string = re.sub(number, str(self.data["numbers"][number]), condensed_string)
 
-        for scale in self.data[ "scales" ]:
-            condensed_string = re.sub( "_" + scale, " " + self.data[ "scales" ][ scale ], condensed_string)
+        for scale in self.data["scales"]:
+            condensed_string = re.sub("_" + scale, " " + self.data["scales"][scale], condensed_string)
 
-        condensed_string = condensed_string.split( '_' )
-        for chunk_index in range( 0, len( condensed_string ) ):
+        condensed_string = condensed_string.split('_')
+        for chunk_index in range(0, len(condensed_string)):
             value = ""
 
             try:
-                value = str( eval( condensed_string[ chunk_index ] ) )
+                value = str(eval(condensed_string[chunk_index]))
 
-                condensed_string[ chunk_index ] = value
+                condensed_string[chunk_index] = value
             except:
                 pass
 
-        for chunk_index in range( 0, len( condensed_string ) ):
-            if self.is_integer( condensed_string[ chunk_index ] ) or self.is_float( condensed_string[ chunk_index ] ):
+        for chunk_index in range(0, len(condensed_string)):
+            if self.is_integer(condensed_string[chunk_index]) or self.is_float(condensed_string[chunk_index]):
                 i = 1
                 start_index = chunk_index
                 end_index = -1
-                while( chunk_index + i < len( condensed_string ) and ( self.is_integer( condensed_string[ chunk_index + i ] ) or self.is_float( condensed_string[ chunk_index + i ] ) ) ):
+                while (chunk_index + i < len(condensed_string) and (self.is_integer(condensed_string[chunk_index + i]) or self.is_float(condensed_string[chunk_index + i]))):
                     end_index = chunk_index + i
                     i += 1
 
-                for sub_chunk in range( start_index, end_index ):
-                    condensed_string[ sub_chunk ] += " +"
+                for sub_chunk in range(start_index, end_index):
+                    condensed_string[sub_chunk] += " +"
 
-                condensed_string[ start_index ] = "( " + condensed_string[ start_index ]
-                condensed_string[ end_index ] += " )"
+                condensed_string[start_index] = "( " + condensed_string[start_index]
+                condensed_string[end_index] += " )"
 
-        return ' '.join( condensed_string )
+        return ' '.join(condensed_string)

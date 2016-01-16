@@ -5,4 +5,3 @@ class Adapter(object):
 
     def set_context(self, context):
         self.context = context
-
