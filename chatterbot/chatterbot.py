@@ -1,6 +1,5 @@
 from .adapters import Adaptation
 from .conversation import Statement
-from .utils.module_loading import import_module
 
 
 class ChatBot(Adaptation):
@@ -26,9 +25,6 @@ class ChatBot(Adaptation):
         io_adapter = kwargs.get("io_adapter",
             "chatterbot.adapters.io.TerminalAdapter"
         )
-
-        PluginChooser = import_module("chatterbot.adapters.plugins.PluginChooser")
-        self.plugin_chooser = PluginChooser(**kwargs)
 
         self.add_adapter(storage_adapter, **kwargs)
         self.add_adapter(io_adapter, **kwargs)
@@ -64,12 +60,6 @@ class ChatBot(Adaptation):
         Return the bot's response based on the input.
         """
         input_statement = Statement(input_text)
-
-        # Applying plugin logic to see whether the chatbot should respond in this way
-        plugin_response = self.plugin_chooser.choose(input_statement)
-
-        if not plugin_response is False:
-            return self.io.process_response(Statement(plugin_response))
 
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
