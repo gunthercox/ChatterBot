@@ -182,10 +182,18 @@ class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
             ]
         )
 
-    def test_filter_no_results(self):
+    def test_filter_text_no_matches(self):
+        self.adapter.update(self.statement1)
+        results = self.adapter.filter(text="Howdy")
+
+        self.assertEqual(len(results), 0)
+
+    def test_filter_in_response_to_no_matches(self):
         self.adapter.update(self.statement1)
 
-        results = self.adapter.filter(in_response_to=[Response("Maybe")])
+        results = self.adapter.filter(
+            in_response_to=[Response("Maybe")]
+        )
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -205,19 +213,6 @@ class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
         self.assertIn(statement1, results)
         self.assertIn(statement2, results)
 
-    def test_filter_multiple_different_results(self):
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[]
-        )
-        self.adapter.update(statement1)
-        self.adapter.update(self.statement2)
-
-        results = self.adapter.filter(in_response_to=[])
-        self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
-        self.assertNotIn(self.statement2, results)
-
     def test_filter_contains_result(self):
         self.adapter.update(self.statement1)
         self.adapter.update(self.statement2)
@@ -234,14 +229,14 @@ class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
         results = self.adapter.filter(
             in_response_to__contains="How do you do?"
         )
-        self.assertEqual(len(results), 0)
+        self.assertEqual(results, [])
 
     def test_filter_multiple_parameters(self):
         self.adapter.update(self.statement1)
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
-            occurrence=6,
+            text="Testing...",
             in_response_to__contains="Why are you counting?"
         )
 
@@ -253,6 +248,7 @@ class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            text="Test",
             in_response_to__contains="Not an existing response."
         )
 
@@ -260,15 +256,13 @@ class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
 
     def test_filter_no_parameters(self):
         """
-        If not parameters are provided to the filter,
+        If no parameters are passed to the filter,
         then all statements should be returned.
         """
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[]
-        )
+        statement1 = Statement("Testing...")
+        statement2 = Statement("Testing one, two, three.")
         self.adapter.update(statement1)
-        self.adapter.update(self.statement2)
+        self.adapter.update(statement2)
 
         results = self.adapter.filter()
 
@@ -291,6 +285,24 @@ class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
         response = response[0]
 
         self.assertEqual(len(response.in_response_to), 2)
+
+    def test_response_list_in_results(self):
+        """
+        If a statement with response values is found using
+        the filter method, they should be returned as
+        response objects.
+        """
+        statement = Statement(
+            "The first is to help yourself, the second is to help others.",
+            in_response_to=[
+                Response("Why do people have two hands?")
+            ]
+        )
+        self.adapter.update(statement)
+        found = self.adapter.filter(text=statement.text)
+
+        self.assertEqual(len(found[0].in_response_to), 1)
+        self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
 class ReadOnlyJsonDatabaseAdapterTestCase(JsonAdapterTestCase):
@@ -321,4 +333,3 @@ class ReadOnlyJsonDatabaseAdapterTestCase(JsonAdapterTestCase):
         self.assertEqual(
             len(statement_found.in_response_to), 0
         )
-

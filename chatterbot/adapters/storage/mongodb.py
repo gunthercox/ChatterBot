@@ -65,8 +65,18 @@ class MongoDatabaseAdapter(StorageAdapter):
         filter_parameters = kwargs.copy()
         contains_parameters = {}
 
+        # Convert Response objects to data
+        if "in_response_to" in filter_parameters:
+            response_objects = filter_parameters["in_response_to"]
+            serialized_responses = []
+            for response in response_objects:
+                serialized_responses.append(response.serialize())
+
+            filter_parameters["in_response_to"] = serialized_responses
+
         # Exclude special arguments from the kwargs
         for parameter in kwargs:
+
             if "__" in parameter:
                 del(filter_parameters[parameter])
 

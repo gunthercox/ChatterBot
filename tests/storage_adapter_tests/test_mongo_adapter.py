@@ -177,63 +177,65 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
 class MongoAdapterFilterTestCase(MongoAdapterTestCase):
 
-    def test_filter_no_results(self):
-        statement1 = Statement("Testing...")
-        self.adapter.update(statement1)
+    def setUp(self):
+        super(MongoAdapterFilterTestCase, self).setUp()
 
-        results = self.adapter.filter(text="Howdy")
-        self.assertEqual(len(results), 0)
-
-    def test_filter_equal_result(self):
-        statement1 = Statement("Testing...")
-        statement2 = Statement("Testing one, two, three.")
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
-
-        results = self.adapter.filter(text="Testing...")
-        self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
-
-    def test_filter_equal_multiple_results(self):
-        statement1 = Statement("Testing...")
-        statement2 = Statement("Testing one, two, three.")
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
-
-        results = self.adapter.filter(text="Testing...")
-        self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
-
-    def test_filter_contains_result(self):
-        statement1 = Statement(
+        self.statement1 = Statement(
             "Testing...",
             in_response_to=[
-                Response("What are you doing?")
+                Response("Why are you counting?")
             ]
         )
-        statement2 = Statement(
+        self.statement2 = Statement(
             "Testing one, two, three.",
             in_response_to=[
                 Response("Testing...")
             ]
         )
+
+    def test_filter_text_no_matches(self):
+        self.adapter.update(self.statement1)
+        results = self.adapter.filter(text="Howdy")
+
+        self.assertEqual(len(results), 0)
+
+    def test_filter_in_response_to_no_matches(self):
+        self.adapter.update(self.statement1)
+
+        results = self.adapter.filter(
+            in_response_to=[Response("Maybe")]
+        )
+        self.assertEqual(len(results), 0)
+
+    def test_filter_equal_results(self):
+        statement1 = Statement(
+            "Testing...",
+            in_response_to=[]
+        )
+        statement2 = Statement(
+            "Testing one, two, three.",
+            in_response_to=[]
+        )
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
+        results = self.adapter.filter(in_response_to=[])
+        self.assertEqual(len(results), 2)
+        self.assertIn(statement1, results)
+        self.assertIn(statement2, results)
+
+    def test_filter_contains_result(self):
+        self.adapter.update(self.statement1)
+        self.adapter.update(self.statement2)
+
         results = self.adapter.filter(
-            in_response_to__contains="What are you doing?"
+            in_response_to__contains="Why are you counting?"
         )
         self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
+        self.assertIn(self.statement1, results)
 
     def test_filter_contains_no_result(self):
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[
-                Response("What are you doing?")
-            ]
-        )
-        self.adapter.update(statement1)
+        self.adapter.update(self.statement1)
 
         results = self.adapter.filter(
             in_response_to__contains="How do you do?"
@@ -241,52 +243,31 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.assertEqual(results, [])
 
     def test_filter_multiple_parameters(self):
-        response = Response("Why are you counting?")
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[response]
-        )
-        statement2 = Statement(
-            "Testing one, two, three.",
-            in_response_to=[response]
-        )
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
+        self.adapter.update(self.statement1)
+        self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
-            text=statement1.text,
-            in_response_to__contains=response.text
+            text="Testing...",
+            in_response_to__contains="Why are you counting?"
         )
 
         self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
+        self.assertIn(self.statement1, results)
 
     def test_filter_multiple_parameters_no_results(self):
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[
-                Response("Why are you counting?")
-            ]
-        )
-        statement2 = Statement(
-            "Testing one, two, three.",
-            in_response_to=[
-                Response("Testing...")
-            ]
-        )
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
+        self.adapter.update(self.statement1)
+        self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
             text="Test",
-            in_response_to__contains="Testing..."
+            in_response_to__contains="Not an existing response."
         )
 
         self.assertEqual(len(results), 0)
 
     def test_filter_no_parameters(self):
         """
-        If not parameters are provided to the filter,
+        If no parameters are passed to the filter,
         then all statements should be returned.
         """
         statement1 = Statement("Testing...")
@@ -298,10 +279,29 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
 
         self.assertEqual(len(results), 2)
 
+    def test_filter_returns_statement_with_multiple_responses(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thanks."),
+                Response("Thank you.")
+            ]
+        )
+        self.adapter.update(statement)
+        response = self.adapter.filter(
+            in_response_to__contains="Thanks."
+        )
+
+        # Get the first response
+        response = response[0]
+
+        self.assertEqual(len(response.in_response_to), 2)
+
     def test_response_list_in_results(self):
         """
-        If a statement with response values is found using the
-        filter method, they should be returned as response objects.
+        If a statement with response values is found using
+        the filter method, they should be returned as
+        response objects.
         """
         statement = Statement(
             "The first is to help yourself, the second is to help others.",
@@ -345,4 +345,3 @@ class ReadOnlyMongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         self.assertEqual(
             len(statement_found.in_response_to), 0
         )
-
