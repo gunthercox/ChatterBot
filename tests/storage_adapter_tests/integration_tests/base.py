@@ -1,7 +1,4 @@
-from .base_case import ChatBotTestCase
-
-
-class ChatterBotStorageIntegrationTests(ChatBotTestCase):
+class StorageIntegrationTests(object):
 
     def test_database_is_updated(self):
         """

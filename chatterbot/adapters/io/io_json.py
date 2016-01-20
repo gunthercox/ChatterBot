@@ -15,4 +15,3 @@ class JsonAdapter(IOAdapter):
 
     def process_response(self, statement):
         return statement.serialize()
-

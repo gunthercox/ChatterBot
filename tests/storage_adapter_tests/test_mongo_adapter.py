@@ -4,7 +4,7 @@ from chatterbot.adapters.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement, Response
 
 
-class BaseMongoDatabaseAdapterTestCase(TestCase):
+class MongoAdapterTestCase(TestCase):
 
     def setUp(self):
         """
@@ -18,7 +18,7 @@ class BaseMongoDatabaseAdapterTestCase(TestCase):
         # Skip these tests if a mongo client is not running.
         try:
             client = MongoClient(
-                serverSelectionTimeoutMS=1
+                serverSelectionTimeoutMS=0.5
             )
             client.server_info()
 
@@ -33,7 +33,8 @@ class BaseMongoDatabaseAdapterTestCase(TestCase):
         """
         self.adapter.drop()
 
-class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
+
+class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -94,7 +95,7 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         )
         self.adapter.update(statement)
 
-        # CHeck that the values have changed
+        # Check that the values have changed
         found_statement = self.adapter.find(statement.text)
         self.assertEqual(
             len(found_statement.in_response_to), 1
@@ -123,63 +124,118 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
 
-    def test_filter_no_results(self):
-        statement1 = Statement("Testing...")
-        self.adapter.update(statement1)
-
-        results = self.adapter.filter(text="Howdy")
-        self.assertEqual(len(results), 0)
-
-    def test_filter_equal_result(self):
-        statement1 = Statement("Testing...")
-        statement2 = Statement("Testing one, two, three.")
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
-
-        results = self.adapter.filter(text="Testing...")
-        self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
-
-    def test_filter_equal_multiple_results(self):
-        statement1 = Statement("Testing...")
-        statement2 = Statement("Testing one, two, three.")
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
-
-        results = self.adapter.filter(text="Testing...")
-        self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
-
-    def test_filter_contains_result(self):
-        statement1 = Statement(
-            "Testing...",
+    def test_multiple_responses_added_on_update(self):
+        statement = Statement(
+            "You are welcome.",
             in_response_to=[
-                Response("What are you doing?")
+                Response("Thank you."),
+                Response("Thanks.")
             ]
         )
-        statement2 = Statement(
+        self.adapter.update(statement)
+        result = self.adapter.find(statement.text)
+
+        self.assertEqual(len(result.in_response_to), 2)
+        self.assertIn(statement.in_response_to[0], result.in_response_to)
+        self.assertIn(statement.in_response_to[1], result.in_response_to)
+
+    def test_update_saves_statement_with_multiple_responses(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thanks."),
+                Response("Thank you.")
+            ]
+        )
+        self.adapter.update(statement)
+        response = self.adapter.find(statement.text)
+
+        self.assertEqual(len(response.in_response_to), 2)
+
+    def test_getting_and_updating_statement(self):
+        statement = Statement("Hi")
+        self.adapter.update(statement)
+
+        statement.add_response(Response("Hello"))
+        statement.add_response(Response("Hello"))
+        self.adapter.update(statement)
+
+        response = self.adapter.find(statement.text)
+
+        self.assertEqual(len(response.in_response_to), 1)
+        self.assertEqual(response.in_response_to[0].occurrence, 2)
+
+    def test_deserialize_responses(self):
+        response_list = [
+            {"text": "Test", "occurrence": 3},
+            {"text": "Testing", "occurrence": 1},
+        ]
+        results = self.adapter.deserialize_responses(response_list)
+
+        self.assertEqual(len(results), 2)
+
+
+class MongoAdapterFilterTestCase(MongoAdapterTestCase):
+
+    def setUp(self):
+        super(MongoAdapterFilterTestCase, self).setUp()
+
+        self.statement1 = Statement(
+            "Testing...",
+            in_response_to=[
+                Response("Why are you counting?")
+            ]
+        )
+        self.statement2 = Statement(
             "Testing one, two, three.",
             in_response_to=[
                 Response("Testing...")
             ]
         )
+
+    def test_filter_text_no_matches(self):
+        self.adapter.update(self.statement1)
+        results = self.adapter.filter(text="Howdy")
+
+        self.assertEqual(len(results), 0)
+
+    def test_filter_in_response_to_no_matches(self):
+        self.adapter.update(self.statement1)
+
+        results = self.adapter.filter(
+            in_response_to=[Response("Maybe")]
+        )
+        self.assertEqual(len(results), 0)
+
+    def test_filter_equal_results(self):
+        statement1 = Statement(
+            "Testing...",
+            in_response_to=[]
+        )
+        statement2 = Statement(
+            "Testing one, two, three.",
+            in_response_to=[]
+        )
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
+        results = self.adapter.filter(in_response_to=[])
+        self.assertEqual(len(results), 2)
+        self.assertIn(statement1, results)
+        self.assertIn(statement2, results)
+
+    def test_filter_contains_result(self):
+        self.adapter.update(self.statement1)
+        self.adapter.update(self.statement2)
+
         results = self.adapter.filter(
-            in_response_to__contains="What are you doing?"
+            in_response_to__contains="Why are you counting?"
         )
         self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
+        self.assertIn(self.statement1, results)
 
     def test_filter_contains_no_result(self):
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[
-                Response("What are you doing?")
-            ]
-        )
-        self.adapter.update(statement1)
+        self.adapter.update(self.statement1)
 
         results = self.adapter.filter(
             in_response_to__contains="How do you do?"
@@ -187,52 +243,31 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         self.assertEqual(results, [])
 
     def test_filter_multiple_parameters(self):
-        response = Response("Why are you counting?")
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[response]
-        )
-        statement2 = Statement(
-            "Testing one, two, three.",
-            in_response_to=[response]
-        )
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
+        self.adapter.update(self.statement1)
+        self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
-            text=statement1.text,
-            in_response_to__contains=response.text
+            text="Testing...",
+            in_response_to__contains="Why are you counting?"
         )
 
         self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
+        self.assertIn(self.statement1, results)
 
     def test_filter_multiple_parameters_no_results(self):
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[
-                Response("Why are you counting?")
-            ]
-        )
-        statement2 = Statement(
-            "Testing one, two, three.",
-            in_response_to=[
-                Response("Testing...")
-            ]
-        )
-        self.adapter.update(statement1)
-        self.adapter.update(statement2)
+        self.adapter.update(self.statement1)
+        self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
             text="Test",
-            in_response_to__contains="Testing..."
+            in_response_to__contains="Not an existing response."
         )
 
         self.assertEqual(len(results), 0)
 
     def test_filter_no_parameters(self):
         """
-        If not parameters are provided to the filter,
+        If no parameters are passed to the filter,
         then all statements should be returned.
         """
         statement1 = Statement("Testing...")
@@ -244,10 +279,29 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
 
         self.assertEqual(len(results), 2)
 
+    def test_filter_returns_statement_with_multiple_responses(self):
+        statement = Statement(
+            "You are welcome.",
+            in_response_to=[
+                Response("Thanks."),
+                Response("Thank you.")
+            ]
+        )
+        self.adapter.update(statement)
+        response = self.adapter.filter(
+            in_response_to__contains="Thanks."
+        )
+
+        # Get the first response
+        response = response[0]
+
+        self.assertEqual(len(response.in_response_to), 2)
+
     def test_response_list_in_results(self):
         """
-        If a statement with response values is found using the
-        filter method, they should be returned as response objects.
+        If a statement with response values is found using
+        the filter method, they should be returned as
+        response objects.
         """
         statement = Statement(
             "The first is to help yourself, the second is to help others.",
@@ -262,7 +316,7 @@ class MongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
         self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
-class ReadOnlyMongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
+class ReadOnlyMongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
@@ -289,6 +343,5 @@ class ReadOnlyMongoDatabaseAdapterTestCase(BaseMongoDatabaseAdapterTestCase):
             statement_found.text, statement.text
         )
         self.assertEqual(
-            statement_found.in_response_to, []
+            len(statement_found.in_response_to), 0
         )
-

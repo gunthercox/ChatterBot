@@ -109,4 +109,3 @@ class Response(object):
             data["signature"].append(signature.serialize())
 
         return data
-

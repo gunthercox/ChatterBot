@@ -36,4 +36,3 @@ class MultiLogicAdapter(LogicAdapter):
 
         for adapter in self.adapters:
             adapter.set_context(context)
-

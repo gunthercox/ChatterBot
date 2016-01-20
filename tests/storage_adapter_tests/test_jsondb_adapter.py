@@ -3,7 +3,7 @@ from chatterbot.adapters.storage import JsonDatabaseAdapter
 from chatterbot.conversation import Statement, Response
 
 
-class BaseJsonDatabaseAdapterTestCase(TestCase):
+class JsonAdapterTestCase(TestCase):
 
     def setUp(self):
         """
@@ -23,7 +23,7 @@ class BaseJsonDatabaseAdapterTestCase(TestCase):
         self.adapter.drop()
 
 
-class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
+class JsonDatabaseAdapterTestCase(JsonAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -74,17 +74,21 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
 
         # Check the initial values
         found_statement = self.adapter.find(statement.text)
-        self.assertEqual(len(statement.in_response_to), 0)
+        self.assertEqual(
+            len(found_statement.in_response_to), 0
+        )
 
         # Update the statement value
         statement.add_response(
-            Statement("A response")
+            Statement("New response")
         )
         self.adapter.update(statement)
 
         # Check that the values have changed
         found_statement = self.adapter.find(statement.text)
-        self.assertEqual(len(found_statement.in_response_to), 1)
+        self.assertEqual(
+            len(found_statement.in_response_to), 1
+        )
 
     def test_get_random_returns_statement(self):
         statement = Statement("New statement")
@@ -109,15 +113,6 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertIn("Yes", result.in_response_to)
         self.assertIn("No", result.in_response_to)
 
-    def test_deserialize_responses(self):
-        response_list = [
-            {"text": "Test", "occurrence": 3},
-            {"text": "Testing", "occurrence": 1},
-        ]
-        results = self.adapter.deserialize_responses(response_list)
-
-        self.assertEqual(len(results), 2)
-
     def test_multiple_responses_added_on_update(self):
         statement = Statement(
             "You are welcome.",
@@ -137,8 +132,8 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         statement = Statement(
             "You are welcome.",
             in_response_to=[
+                Response("Thank you."),
                 Response("Thanks."),
-                Response("Thank you.")
             ]
         )
         self.adapter.update(statement)
@@ -159,8 +154,17 @@ class JsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertEqual(len(response.in_response_to), 1)
         self.assertEqual(response.in_response_to[0].occurrence, 2)
 
+    def test_deserialize_responses(self):
+        response_list = [
+            {"text": "Test", "occurrence": 3},
+            {"text": "Testing", "occurrence": 1},
+        ]
+        results = self.adapter.deserialize_responses(response_list)
 
-class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
+        self.assertEqual(len(results), 2)
+
+
+class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
 
     def setUp(self):
         super(JsonDatabaseAdapterFilterTestCase, self).setUp()
@@ -178,10 +182,18 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
             ]
         )
 
-    def test_filter_no_results(self):
+    def test_filter_text_no_matches(self):
+        self.adapter.update(self.statement1)
+        results = self.adapter.filter(text="Howdy")
+
+        self.assertEqual(len(results), 0)
+
+    def test_filter_in_response_to_no_matches(self):
         self.adapter.update(self.statement1)
 
-        results = self.adapter.filter(in_response_to=[Response("Maybe")])
+        results = self.adapter.filter(
+            in_response_to=[Response("Maybe")]
+        )
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -201,19 +213,6 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.assertIn(statement1, results)
         self.assertIn(statement2, results)
 
-    def test_filter_multiple_different_results(self):
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[]
-        )
-        self.adapter.update(statement1)
-        self.adapter.update(self.statement2)
-
-        results = self.adapter.filter(in_response_to=[])
-        self.assertEqual(len(results), 1)
-        self.assertIn(statement1, results)
-        self.assertNotIn(self.statement2, results)
-
     def test_filter_contains_result(self):
         self.adapter.update(self.statement1)
         self.adapter.update(self.statement2)
@@ -230,14 +229,14 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
         results = self.adapter.filter(
             in_response_to__contains="How do you do?"
         )
-        self.assertEqual(len(results), 0)
+        self.assertEqual(results, [])
 
     def test_filter_multiple_parameters(self):
         self.adapter.update(self.statement1)
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
-            occurrence=6,
+            text="Testing...",
             in_response_to__contains="Why are you counting?"
         )
 
@@ -249,6 +248,7 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            text="Test",
             in_response_to__contains="Not an existing response."
         )
 
@@ -256,15 +256,13 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
 
     def test_filter_no_parameters(self):
         """
-        If not parameters are provided to the filter,
+        If no parameters are passed to the filter,
         then all statements should be returned.
         """
-        statement1 = Statement(
-            "Testing...",
-            in_response_to=[]
-        )
+        statement1 = Statement("Testing...")
+        statement2 = Statement("Testing one, two, three.")
         self.adapter.update(statement1)
-        self.adapter.update(self.statement2)
+        self.adapter.update(statement2)
 
         results = self.adapter.filter()
 
@@ -288,8 +286,26 @@ class JsonDatabaseAdapterFilterTestCase(BaseJsonDatabaseAdapterTestCase):
 
         self.assertEqual(len(response.in_response_to), 2)
 
+    def test_response_list_in_results(self):
+        """
+        If a statement with response values is found using
+        the filter method, they should be returned as
+        response objects.
+        """
+        statement = Statement(
+            "The first is to help yourself, the second is to help others.",
+            in_response_to=[
+                Response("Why do people have two hands?")
+            ]
+        )
+        self.adapter.update(statement)
+        found = self.adapter.filter(text=statement.text)
 
-class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
+        self.assertEqual(len(found[0].in_response_to), 1)
+        self.assertEqual(type(found[0].in_response_to[0]), Response)
+
+
+class ReadOnlyJsonDatabaseAdapterTestCase(JsonAdapterTestCase):
 
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
@@ -307,12 +323,13 @@ class ReadOnlyJsonDatabaseAdapterTestCase(BaseJsonDatabaseAdapterTestCase):
         self.adapter.read_only = True
 
         statement.add_response(
-            Statement("A response")
+            Statement("New response")
         )
 
         self.adapter.update(statement)
 
         statement_found = self.adapter.find("New statement")
         self.assertEqual(statement_found.text, statement.text)
-        self.assertEqual(len(statement_found.in_response_to), 0)
-
+        self.assertEqual(
+            len(statement_found.in_response_to), 0
+        )

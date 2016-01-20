@@ -98,4 +98,3 @@ class ChatBot(Adaptation):
                 trainer.train_from_corpora(corpora)
         else:
             trainer.train_from_list(conversation)
-

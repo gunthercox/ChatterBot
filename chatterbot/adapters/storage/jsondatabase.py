@@ -49,7 +49,6 @@ class JsonDatabaseAdapter(StorageAdapter):
         return in_response_to
 
     def _all_kwargs_match_values(self, kwarguments, values):
-
         for kwarg in kwarguments:
 
             if "__" in kwarg:
@@ -63,7 +62,8 @@ class JsonDatabaseAdapter(StorageAdapter):
                     for val in values[key]:
                         text_values.append(val["text"])
 
-                    if (kwarguments[kwarg] not in text_values) and (kwarguments[kwarg] not in values[key]):
+                    if (kwarguments[kwarg] not in text_values) and (
+                            kwarguments[kwarg] not in values[key]):
                         return False
 
             if kwarg in values:
@@ -82,14 +82,21 @@ class JsonDatabaseAdapter(StorageAdapter):
         for key in self._keys():
             values = self.database.data(key=key)
 
+            # Add the text attribute to the values
+            values["text"] = key
+
             if self._all_kwargs_match_values(kwargs, values):
 
                 # Build the objects for the response list
-                response_list = self.deserialize_responses(values["in_response_to"])
+                in_response_to = values["in_response_to"]
+                response_list = self.deserialize_responses(in_response_to)
                 values["in_response_to"] = response_list
 
+                # Remove the text attribute from the values
+                text = values.pop("text")
+
                 results.append(
-                    Statement(key, **values)
+                    Statement(text, **values)
                 )
 
         return results
@@ -129,4 +136,3 @@ class JsonDatabaseAdapter(StorageAdapter):
 
         if os.path.exists(self.database.path):
             os.remove(self.database.path)
-

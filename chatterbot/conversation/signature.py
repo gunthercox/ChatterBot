@@ -20,4 +20,3 @@ class Signature(object):
         signature['time'] = self.time
 
         return signature
-

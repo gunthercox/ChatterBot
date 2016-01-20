@@ -35,4 +35,3 @@ class Trainer(object):
             for data in corpus_data:
                 for pair in data:
                     self.train_from_list(pair)
-

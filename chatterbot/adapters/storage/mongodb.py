@@ -9,8 +9,12 @@ class MongoDatabaseAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)
 
-        self.database_name = self.kwargs.get("database", "chatterbot-database")
-        self.database_uri = self.kwargs.get("database_uri", "mongodb://localhost:27017/")
+        self.database_name = self.kwargs.get(
+            "database", "chatterbot-database"
+        )
+        self.database_uri = self.kwargs.get(
+            "database_uri", "mongodb://localhost:27017/"
+        )
 
         # Use the default host and port
         self.client = MongoClient(self.database_uri)
@@ -65,8 +69,18 @@ class MongoDatabaseAdapter(StorageAdapter):
         filter_parameters = kwargs.copy()
         contains_parameters = {}
 
+        # Convert Response objects to data
+        if "in_response_to" in filter_parameters:
+            response_objects = filter_parameters["in_response_to"]
+            serialized_responses = []
+            for response in response_objects:
+                serialized_responses.append(response.serialize())
+
+            filter_parameters["in_response_to"] = serialized_responses
+
         # Exclude special arguments from the kwargs
         for parameter in kwargs:
+
             if "__" in parameter:
                 del(filter_parameters[parameter])
 

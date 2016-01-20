@@ -38,4 +38,3 @@ class Adaptation(object):
             self.io_adapters.append(adapter)
         else:
             raise UnknownAdapterTypeException()
-

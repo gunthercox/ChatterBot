@@ -72,7 +72,7 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
                 # Compare the first synset in each list of synsets
                 similarity = synset1[0].path_similarity(synset2[0])
 
-                if similarity:  
+                if similarity:
                     total_similarity = total_similarity + similarity
 
         return total_similarity
@@ -116,5 +116,6 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
 
         confidence = closest_similarity / total_similarity
 
-        return confidence, next((s for s in statement_list if s.text == closest_statement), None)
-
+        return confidence, next(
+            (s for s in statement_list if s.text == closest_statement), None
+        )

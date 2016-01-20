@@ -18,4 +18,3 @@ def get_response_statements(statement_list):
         statement_list.remove(statement)
 
     return statement_list
-

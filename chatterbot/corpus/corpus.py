@@ -1,4 +1,4 @@
-import os, json
+import os
 
 
 class Corpus(object):
@@ -27,6 +27,8 @@ class Corpus(object):
         """
         Read and return the data from a corpus json file.
         """
+        import json
+
         with open(file_name) as data_file:
             data = json.load(data_file)
         return data
@@ -58,4 +60,3 @@ class Corpus(object):
                 corpora.append(corpus[key])
 
         return corpora
-
