@@ -25,4 +25,3 @@ class MongoStorageIntegrationTests(StorageIntegrationTests, ChatBotTestCase):
         self.chatbot.add_adapter(
             "chatterbot.adapters.storage.MongoDatabaseAdapter"
         )
-
