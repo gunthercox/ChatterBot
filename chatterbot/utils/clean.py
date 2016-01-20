@@ -1,5 +1,6 @@
 import re
 
+
 def clean_whitespace(text):
     """
     Remove any extra whitespace and line breaks as needed.
@@ -15,17 +16,19 @@ def clean_whitespace(text):
 
     return text
 
+
 def clean(text):
     """
     A function for cleaning a string of text.
     Returns valid ASCII characters.
     """
-    import sys, unicodedata
+    import unicodedata
+    import sys
 
     text = clean_whitespace(text)
 
     # Remove links from message
-    #text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
+    # text = re.sub(r'http[s]?://(?:[a-zA-Z]|[0-9]|[$-_@.&+]|[!*\(\),]|(?:%[0-9a-fA-F][0-9a-fA-F]))+', '', text)
 
     # Replace HTML escape characters
     if sys.version_info[0] < 3:

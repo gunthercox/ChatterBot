@@ -54,4 +54,3 @@ class StorageAdapter(Adapter):
         Drop the database attached to a given adapter.
         """
         raise AdapterNotImplementedError()
-

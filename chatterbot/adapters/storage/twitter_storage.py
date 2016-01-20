@@ -32,9 +32,9 @@ class TwitterAdapter(StorageAdapter):
         """
         statement_text = kwargs.get('text')
 
-        #if not statement_text:
+        # if not statement_text:
         #    statement_text = kwargs.get('in_response_to__contains')
-        #data['in_reply_to_status_id_str']
+        # data['in_reply_to_status_id_str']
 
         # If no text parameter was given get a selection of recent tweets
         if not statement_text:
@@ -98,4 +98,3 @@ class TwitterAdapter(StorageAdapter):
         this case so it cannot be removed.
         """
         pass
-

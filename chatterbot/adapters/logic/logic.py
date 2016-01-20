@@ -23,4 +23,3 @@ class LogicAdapter(Adapter):
         a confidence value and a statement as output.
         """
         raise AdapterNotImplementedError()
-

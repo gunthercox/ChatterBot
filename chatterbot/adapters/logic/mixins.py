@@ -44,4 +44,3 @@ class TieBreaking(object):
         """
         from random import choice
         return choice(response_list)
-

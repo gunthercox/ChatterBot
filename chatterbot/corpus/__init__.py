@@ -1,2 +1,1 @@
 from .corpus import Corpus
-

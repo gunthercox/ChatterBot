@@ -1,7 +1,8 @@
 from chatterbot.adapters.logic import LogicAdapter
 from chatterbot.conversation import Statement
 import re
-import os, json
+import os
+import json
 import decimal
 
 
@@ -52,7 +53,7 @@ class EvaluateMathematically(LogicAdapter):
                 if is_chunk_float is False:
                     is_chunk_operator = self.is_operator(chunk)
 
-                    if not is_chunk_operator is False:
+                    if is_chunk_operator is not False:
                         string += str(is_chunk_operator) + ' '
                 else:
                     string += str(is_chunk_float) + ' '

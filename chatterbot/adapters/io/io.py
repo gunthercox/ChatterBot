@@ -20,4 +20,3 @@ class IOAdapter(Adapter):
         Returns an output value.
         """
         raise AdapterNotImplementedError()
-

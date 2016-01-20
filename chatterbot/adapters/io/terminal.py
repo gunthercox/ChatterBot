@@ -14,4 +14,3 @@ class TerminalAdapter(IOAdapter):
     def process_response(self, statement):
         print(statement.text)
         return statement.text
-

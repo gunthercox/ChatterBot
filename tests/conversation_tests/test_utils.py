@@ -16,4 +16,5 @@ class ConversationUtilsTests(TestCase):
         responses = get_response_statements(statement_list)
 
         self.assertEqual(len(responses), 2)
-
+        self.assertIn("This is a phone.", responses)
+        self.assertIn("A what?", responses)

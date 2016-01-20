@@ -9,8 +9,12 @@ class MongoDatabaseAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)
 
-        self.database_name = self.kwargs.get("database", "chatterbot-database")
-        self.database_uri = self.kwargs.get("database_uri", "mongodb://localhost:27017/")
+        self.database_name = self.kwargs.get(
+            "database", "chatterbot-database"
+        )
+        self.database_uri = self.kwargs.get(
+            "database_uri", "mongodb://localhost:27017/"
+        )
 
         # Use the default host and port
         self.client = MongoClient(self.database_uri)

@@ -35,5 +35,6 @@ class ClosestMatchAdapter(BaseMatchAdapter):
             limit=1
         )[0]
 
-        return confidence, next((s for s in statement_list if s.text == closest_match), None)
-
+        return confidence, next(
+            (s for s in statement_list if s.text == closest_match), None
+        )

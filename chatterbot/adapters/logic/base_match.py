@@ -71,4 +71,3 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
             response = self.context.storage.get_random()
 
         return confidence, response
-
