@@ -17,7 +17,8 @@ class TimeLogicAdapter(LogicAdapter):
             ("do you know the time", 0),
             ("it is time to go to sleep", 0),
             ("what is your favorite color", 0),
-            ("i had a great time", 0)
+            ("i had a great time", 0),
+            ("what is", 0)
         ]
 
         self.classifier = NaiveBayesClassifier(training_data)
