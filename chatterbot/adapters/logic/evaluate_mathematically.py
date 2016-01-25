@@ -25,11 +25,11 @@ class EvaluateMathematically(LogicAdapter):
         input_text = statement.text
 
         # Getting the mathematical terms within the input statement
-        expression = self.simplify_chunks(self.normalize(input_text))
+        expression = str(self.simplify_chunks(self.normalize(input_text)))
 
         # Returning important information
         try:
-            expression += '= ' + str(eval(expression))
+            expression += "= " + str(eval(expression))
 
             # return a confidence of 1 if the expression could be evaluated
             return 1, Statement(expression)
