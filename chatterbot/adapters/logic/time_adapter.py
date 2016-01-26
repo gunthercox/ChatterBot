@@ -21,7 +21,8 @@ class TimeLogicAdapter(LogicAdapter):
             ("what is", 0)
         ]
 
-        self.classifier = NaiveBayes_Classifier(self.training_data)
+        self.classifier = NaiveBayes_Classifier()
+        self.classifier.train(self.training_data)
 
     def process(self, statement):
         now = datetime.now()

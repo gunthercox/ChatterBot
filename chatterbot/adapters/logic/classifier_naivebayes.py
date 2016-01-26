@@ -2,8 +2,8 @@ from textblob.classifiers import NaiveBayesClassifier
 from .base_classifier import ClassifierAdapter
 
 class NaiveBayes_Classifier(ClassifierAdapter):
-    def __init__(self, training_data):
-        self.train(training_data)
+    def __init__(self):
+        pass
 
     def train(self, training_data):
         """
