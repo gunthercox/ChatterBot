@@ -26,8 +26,14 @@ class ChatBot(Adaptation):
             "chatterbot.adapters.io.TerminalAdapter"
         )
 
+        io_adapters = kwargs.get("io_adapters", [
+            io_adapter
+        ])
+
         self.add_adapter(storage_adapter, **kwargs)
-        self.add_adapter(io_adapter, **kwargs)
+
+        for adapter in io_adapters:
+            self.add_adapter(adapter, **kwargs)
 
         for adapter in logic_adapters:
             self.add_adapter(adapter, **kwargs)
@@ -39,10 +45,6 @@ class ChatBot(Adaptation):
     @property
     def storage(self):
         return self.storage_adapters[0]
-
-    @property
-    def io(self):
-        return self.io_adapters[0]
 
     def get_last_statement(self):
         """
