@@ -114,7 +114,10 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
                 closest_similarity = similarity
                 closest_statement = statement
 
-        confidence = closest_similarity / total_similarity
+        try:
+            confidence = closest_similarity / total_similarity
+        except:
+            confidence = 0
 
         return confidence, next(
             (s for s in statement_list if s.text == closest_statement), None
