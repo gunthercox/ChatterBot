@@ -1,9 +1,9 @@
 from chatterbot.adapters.exceptions import EmptyDatasetException
 from .base_match import BaseMatchAdapter
 
-from chatterbot.utils.pos_tagger import NLTKPOSTagger
-from chatterbot.utils.stop_words import NLTKStopWordsManager
-from chatterbot.utils.word_net import NLTKWordnet
+from chatterbot.utils.pos_tagger import POSTagger
+from chatterbot.utils.stop_words import StopWordsManager
+from chatterbot.utils.word_net import Wordnet
 
 
 class ClosestMeaningAdapter(BaseMatchAdapter):
@@ -11,9 +11,9 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
     def __init__(self, **kwargs):
         super(ClosestMeaningAdapter, self).__init__(**kwargs)
 
-        self.wordnet = NLTKWordnet()
-        self.tagger = NLTKPOSTagger()
-        self.stopwords = NLTKStopWordsManager()
+        self.wordnet = Wordnet()
+        self.tagger = POSTagger()
+        self.stopwords = StopWordsManager()
 
     def get_tokens(self, text, exclude_stop_words=True):
         """

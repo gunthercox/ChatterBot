@@ -1,7 +1,7 @@
 from nltk.corpus import wordnet
 
 
-class NLTKWordnet():
+class Wordnet():
     def __init__(self):
         from nltk.data import find
         from nltk import download

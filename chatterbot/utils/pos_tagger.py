@@ -1,7 +1,7 @@
 from nltk import word_tokenize
 
 
-class NLTKPOSTagger():
+class POSTagger():
     def __init__(self):
         from nltk.data import find
         from nltk import download

@@ -1,7 +1,7 @@
 from nltk.corpus import stopwords
 
 
-class NLTKStopWordsManager():
+class StopWordsManager():
     def __init__(self):
         from nltk.data import find
         from nltk import download
