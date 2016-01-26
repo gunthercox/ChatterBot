@@ -37,3 +37,41 @@ class ClosestMatchAdapterTests(TestCase):
 
         self.assertEqual("What... is your quest?", match)
 
+    def test_confidence_exact_match(self):
+        possible_choices = [
+            Statement("What is your quest?", in_response_to=[Response("What is your quest?")])
+        ]
+
+        statement = Statement("What is your quest?")
+
+        confidence, match = self.adapter.get(
+            statement, possible_choices
+        )
+
+        self.assertEqual(confidence, 1)
+
+    def test_confidence_half_match(self):
+        possible_choices = [
+            Statement("xxyy", in_response_to=[Response("xxyy")])
+        ]
+
+        statement = Statement("wwxx")
+
+        confidence, match = self.adapter.get(
+            statement, possible_choices
+        )
+
+        self.assertEqual(confidence, 0.5)
+
+    def test_confidence_no_match(self):
+        possible_choices = [
+            Statement("xxx", in_response_to=[Response("xxx")])
+        ]
+
+        statement = Statement("yyy")
+
+        confidence, match = self.adapter.get(
+            statement, possible_choices
+        )
+
+        self.assertEqual(confidence, 0)

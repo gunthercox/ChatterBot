@@ -35,6 +35,9 @@ class ClosestMatchAdapter(BaseMatchAdapter):
             limit=1
         )[0]
 
+        # Convert the confidence integer to a percent
+        confidence /= 100.0
+
         return confidence, next(
             (s for s in statement_list if s.text == closest_match), None
         )
