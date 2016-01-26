@@ -1,34 +1,19 @@
 from chatterbot.adapters.exceptions import EmptyDatasetException
 from .base_match import BaseMatchAdapter
 
-from nltk.corpus import wordnet
-from nltk.corpus import stopwords
-from nltk import word_tokenize
+from chatterbot.utils.pos_tagger import NLTKPOSTagger
+from chatterbot.utils.stop_words import NLTKStopWordsManager
+from chatterbot.utils.word_net import NLTKWordnet
 
 
 class ClosestMeaningAdapter(BaseMatchAdapter):
 
     def __init__(self, **kwargs):
         super(ClosestMeaningAdapter, self).__init__(**kwargs)
-        from nltk.data import find
-        from nltk import download
 
-        # Download data if needed
-
-        try:
-            find('wordnet.zip')
-        except LookupError:
-            download('wordnet')
-
-        try:
-            find('stopwords.zip')
-        except LookupError:
-            download('stopwords')
-
-        try:
-            find('punkt.zip')
-        except LookupError:
-            download('punkt')
+        self.wordnet = NLTKWordnet()
+        self.tagger = NLTKPOSTagger()
+        self.stopwords = NLTKStopWordsManager()
 
     def get_tokens(self, text, exclude_stop_words=True):
         """
@@ -38,11 +23,11 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
         is True.
         """
         lower = text.lower()
-        tokens = word_tokenize(lower)
+        tokens = self.tagger.tokenize(lower)
 
         # Remove any stop words from the string
         if exclude_stop_words:
-            excluded_words = stopwords.words("english")
+            excluded_words = self.stopwords.words("english")
 
             tokens = set(tokens) - set(excluded_words)
 
@@ -64,8 +49,8 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
         # Get the highest matching value for each possible combination of words
         for combination in itertools.product(*[tokens1, tokens2]):
 
-            synset1 = wordnet.synsets(combination[0])
-            synset2 = wordnet.synsets(combination[1])
+            synset1 = self.wordnet.synsets(combination[0])
+            synset2 = self.wordnet.synsets(combination[1])
 
             if synset1 and synset2:
 
