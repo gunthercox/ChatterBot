@@ -20,6 +20,7 @@ class MacOSXTTS(IOAdapter):
         Speak the response.
         """
         cmd = ['say', str(statement.text)]
-        subprocess.call(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+        if platform.system().lower() == 'darwin':
+            subprocess.call(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
 
         return statement.text
