@@ -4,6 +4,9 @@ from unittest import TestCase
 from chatterbot.utils.clean import clean_whitespace
 from chatterbot.utils.clean import clean
 from chatterbot.utils.module_loading import import_module
+from chatterbot.utils.pos_tagger import POSTagger
+from chatterbot.utils.stop_words import StopWordsManager
+from chatterbot.utils.word_net import Wordnet
 
 
 class UtilityTests(TestCase):
@@ -12,6 +15,24 @@ class UtilityTests(TestCase):
         datetime = import_module("datetime.datetime")
         self.assertTrue(hasattr(datetime, 'now'))
 
+    def test_pos_tagger(self):
+        pos_tagger = POSTagger()
+        tokens = pos_tagger.tokenize("what time is it")
+
+        self.assertEqual(tokens, ['what', 'time', 'is', 'it'])
+
+    def test_stop_words(self):
+        stopwords_manager = StopWordsManager()
+        words = stopwords_manager.words("english")
+        test_case = set(["too"]) - set(words)
+
+        self.assertEqual(test_case, set([]))
+
+    def test_word_net(self):
+        wordnet = Wordnet()
+        synsets = wordnet.synsets('test')
+
+        self.assertEqual(0.06666666666666667, synsets[0].path_similarity(synsets[1]))
 
 class CleanWhitespaceTests(TestCase):
 
@@ -61,4 +82,3 @@ class CleanTests(TestCase):
         normal_text = "Kluft skrams infor pa federal electoral groe"
 
         self.assertEqual(clean_text, normal_text)
-
