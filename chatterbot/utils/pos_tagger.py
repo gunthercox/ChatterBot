@@ -1,7 +1,9 @@
 from nltk import word_tokenize
+from nltk import pos_tag
 
 
 class POSTagger():
+
     def __init__(self):
         from nltk.data import find
         from nltk import download
@@ -19,3 +21,10 @@ class POSTagger():
         """
 
         return word_tokenize(text)
+
+    def tag(self, tokens):
+        """
+        Takes a set of tokens and returns the tagged tokens.
+        """
+
+        return pos_tag(tokens)
