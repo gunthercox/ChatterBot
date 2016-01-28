@@ -7,6 +7,7 @@ bot = ChatBot("Terminal",
     logic_adapters=[
         "chatterbot.adapters.logic.EvaluateMathematically",
         "chatterbot.adapters.logic.TimeLogicAdapter",
+        "chatterbot.adapters.logic.DeveloperAssistant",
         "chatterbot.adapters.logic.ClosestMatchAdapter"
     ],
     io_adapters=[
