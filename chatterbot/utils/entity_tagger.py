@@ -4,6 +4,11 @@ from chatterbot.utils.pos_tagger import POSTagger
 
 
 class NamedEntityTagger():
+    """
+    A wrapper class for ChatterBot's custom implementations
+    of:
+    1) Named Entity chunking
+    """
 
     def __init__(self):
         """
