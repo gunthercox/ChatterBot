@@ -13,6 +13,11 @@ class POSTagger():
         except LookupError:
             download('punkt')
 
+        try:
+            find('averaged_perceptron_tagger.zip')
+        except LookupError:
+            download('averaged_perceptron_tagger')
+
     def tokenize(self, text):
         """
         Takes an input string and tokenizes that text.

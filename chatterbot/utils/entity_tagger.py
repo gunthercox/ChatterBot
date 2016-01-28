@@ -9,6 +9,19 @@ class NamedEntityTagger():
         """
         Constructor to initialize instance variables.
         """
+        from nltk.data import find
+        from nltk import download
+
+        try:
+            find('words.zip')
+        except LookupError:
+            download('words')
+
+        try:
+            find('maxent_ne_chunker.zip')
+        except LookupError:
+            download('maxent_ne_chunker')
+
         self.tagger = POSTagger()
 
     def ne_chunk(self, string):
