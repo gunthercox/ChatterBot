@@ -5,6 +5,10 @@ from jsondb import Database
 
 
 class JsonDatabaseAdapter(StorageAdapter):
+    """
+    The JsonDatabaseAdapter is an interface that allows ChatterBot
+    to store the conversation as a Json-encoded file.
+    """
 
     def __init__(self, **kwargs):
         super(JsonDatabaseAdapter, self).__init__(**kwargs)

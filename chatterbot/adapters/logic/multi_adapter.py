@@ -2,6 +2,12 @@ from .logic import LogicAdapter
 
 
 class MultiLogicAdapter(LogicAdapter):
+    """
+    MultiLogicAdapter allows ChatterBot to use multiple logic
+    adapters. It has methods that allow ChatterBot to add an
+    adapter, set the context, and process an input statement
+    to get a response.
+    """
 
     def __init__(self, **kwargs):
         super(MultiLogicAdapter, self).__init__(**kwargs)

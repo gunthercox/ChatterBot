@@ -4,6 +4,14 @@ from fuzzywuzzy import process
 
 
 class ClosestMatchAdapter(BaseMatchAdapter):
+    """
+    The ClosestMatchAdapter creates a response by
+    using fuzzywuzzy's process class to extract the most similar
+    response to the input. This adapter selects a response to an
+    input statement by selecting the closest known matching
+    statement based on the Levenshtein Distance between the text
+    of each statement.
+    """
 
     def get(self, input_statement, statement_list=None):
         """

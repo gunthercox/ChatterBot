@@ -2,6 +2,12 @@ from nltk import word_tokenize
 
 
 class POSTagger():
+    """
+    A custom-implementation of POS-taggers. Not many
+    features are supported at the moment, only:
+    1) tokenize: Returns the tokenized input text
+    """
+
     def __init__(self):
         from nltk.data import find
         from nltk import download
