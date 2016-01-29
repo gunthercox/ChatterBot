@@ -9,7 +9,9 @@ bot = ChatBot("Terminal",
         "chatterbot.adapters.logic.TimeLogicAdapter",
         "chatterbot.adapters.logic.ClosestMatchAdapter"
     ],
-    io_adapter="chatterbot.adapters.io.TerminalAdapter",
+    io_adapters=[
+        "chatterbot.adapters.io.TerminalAdapter"
+    ],
     database="../database.db")
 
 user_input = "Type something to begin..."

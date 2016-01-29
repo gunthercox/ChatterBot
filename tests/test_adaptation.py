@@ -22,8 +22,9 @@ class AdaptationTests(TestCase):
         self.assertEqual(len(self.adaptation.logic.adapters), count_before + 1)
 
     def test_add_io_adapter(self):
+        count_before = len(self.adaptation.io.adapters)
+
         self.adaptation.add_adapter(
             "chatterbot.adapters.io.TerminalAdapter"
         )
-        self.assertEqual(len(self.adaptation.io_adapters), 1)
-
+        self.assertEqual(len(self.adaptation.io.adapters), count_before + 1)

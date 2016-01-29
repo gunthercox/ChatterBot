@@ -3,6 +3,7 @@ from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.adapters.logic import LogicAdapter
 from chatterbot.adapters.io import IOAdapter
 from chatterbot.adapters.logic import MultiLogicAdapter
+from chatterbot.adapters.io import MultiIOAdapter
 from chatterbot.utils.module_loading import import_module
 
 
@@ -17,7 +18,8 @@ class Adaptation(object):
 
     def __init__(self, **kwargs):
         self.storage_adapters = []
-        self.io_adapters = []
+
+        self.io = MultiIOAdapter(**kwargs)
 
         self.logic = MultiLogicAdapter(**kwargs)
         self.logic.set_context(self)
@@ -35,6 +37,6 @@ class Adaptation(object):
         elif issubclass(NewAdapter, LogicAdapter):
             self.logic.add_adapter(adapter)
         elif issubclass(NewAdapter, IOAdapter):
-            self.io_adapters.append(adapter)
+            self.io.add_adapter(adapter)
         else:
             raise UnknownAdapterTypeException()
