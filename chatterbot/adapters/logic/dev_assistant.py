@@ -8,6 +8,12 @@ import subprocess
 
 
 class DeveloperAssistant(LogicAdapter):
+    """
+    The DeveloperAssistant logic adapter provides a set of tools
+    that can help a developer program. Currently, only the following
+    features are supported:
+    1) Running Python programs
+    """
 
     def __init__(self, **kwargs):
         super(DeveloperAssistant, self).__init__(**kwargs)
