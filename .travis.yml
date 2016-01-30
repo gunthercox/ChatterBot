@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 language: python
 
 python:
@@ -7,8 +7,12 @@ python:
   - '2.7'
   - pypy
 
+addons:
+  apt:
+    packages:
+    - numpy
+
 install:
-  - apt-get install python-numpy
   - pip install coveralls
   - pip install -r requirements.txt
 
