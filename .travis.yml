@@ -8,8 +8,8 @@ python:
   - pypy
 
 install:
+  - apt-get install python-numpy
   - pip install coveralls
-  - pip install nltk
   - pip install -r requirements.txt
 
 services:
