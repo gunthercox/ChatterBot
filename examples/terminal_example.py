@@ -12,7 +12,7 @@ bot = ChatBot("Terminal",
     io_adapters=[
         "chatterbot.adapters.io.TerminalAdapter"
     ],
-    database="../database.db")
+    database="database.db")
 
 user_input = "Type something to begin..."
 

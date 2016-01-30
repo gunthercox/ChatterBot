@@ -1,6 +1,8 @@
 from .adapters import Adaptation
 from .conversation import Statement
 
+import os
+
 
 class ChatBot(Adaptation):
 
@@ -9,6 +11,19 @@ class ChatBot(Adaptation):
 
         kwargs["name"] = name
         self.recent_statements = []
+
+        kwargs["database_dir"] = ""
+        if kwargs.get("database") is None:
+            kwargs["database_dir"] = "database_data/"
+            kwargs["database"] = "database.db"
+
+            if not os.path.exists(kwargs.get("database_dir")):
+                os.makedirs(kwargs.get("database_dir"))
+        elif "/" not in kwargs.get("database"):
+            kwargs["database_dir"] = "database_data/"
+
+            if not os.path.exists(kwargs.get("database_dir")):
+                os.makedirs(kwargs.get("database_dir"))
 
         storage_adapter = kwargs.get("storage_adapter",
             "chatterbot.adapters.storage.JsonDatabaseAdapter"

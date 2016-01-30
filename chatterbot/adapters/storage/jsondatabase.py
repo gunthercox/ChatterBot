@@ -9,7 +9,7 @@ class JsonDatabaseAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(JsonDatabaseAdapter, self).__init__(**kwargs)
 
-        database_path = self.kwargs.get("database", "database.db")
+        database_path = self.kwargs.get("database_dir") + self.kwargs.get("database", "database.db")
         self.database = Database(database_path)
 
     def _keys(self):
