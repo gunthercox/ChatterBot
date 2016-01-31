@@ -31,6 +31,10 @@ class WeatherLogicAdapter(LogicAdapter):
         longitude = self.get_longitude(user_input)
 
         if latitude is not "" and longitude is not "":
+            # @TODO: Add more options for getting weather. This could include
+            #   the current temperature, the current cloud cover, etc. This
+            #   might require removing the forecastio library (which is
+            #   probably a good idea).
             return 1, Statement("The forecast for tomorrow is: " + self.get_weather(latitude, longitude))
 
         return 0, Statement("")
