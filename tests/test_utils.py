@@ -38,8 +38,10 @@ class UtilityTests(TestCase):
     def test_ne_tagger(self):
         named_entity_tagger = NamedEntityTagger()
         named_entities = named_entity_tagger.ne_chunk("test one, two, and three.")
+        valid_check = named_entity_tagger.ne_chunk("New York Times")
 
         self.assertEqual(named_entities, [])
+        self.assertEqual(valid_check, ['New', 'York', 'Times'])
 
 class CleanWhitespaceTests(TestCase):
 
