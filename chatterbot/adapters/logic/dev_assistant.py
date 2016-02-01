@@ -24,6 +24,7 @@ class DeveloperAssistant(LogicAdapter):
 
         self.stopwords = StopWordsManager()
         self.tagger = POSTagger()
+        self.conversation = []
 
     def process(self, statement):
         """
@@ -37,6 +38,12 @@ class DeveloperAssistant(LogicAdapter):
         #   but should instead use some way to determine how likely it
         #   is that the user is interacting with this logic adapter.
         confidence = self.classify(statement.text)
+
+        # Getting the conversation
+        try:
+            self.conversation = self.context.conversation
+        except:
+            pass
 
         # Getting the stage of interaction with the user
         stage = self.determine_stage_of_interaction(statement)
@@ -62,7 +69,8 @@ class DeveloperAssistant(LogicAdapter):
         Classifies the incoming test to determine whether this logic adapter
         should be used to respond to the user's input.
         """
-
+        # @TODO: Restructure this to look in all conversation statements to
+        #   determine whether the developer assistant is called before this
         for token in self.tagger.tokenize(input_text):
             if "run" in token.lower():
                 return 1
@@ -79,12 +87,11 @@ class DeveloperAssistant(LogicAdapter):
         stage = 0
 
         # Parsing through the conversation with chatterbot looking for information
-        for conversation_index in xrange(len(self.context.conversation), -1, -1):
-            if conversation_index == len(self.context.conversation):
+        for conversation_index in range(0, len(self.conversation)):
+            if conversation_index == 0:
                 user_input = input_statement.text
             else:
-                user_input = self.context.conversation[conversation_index][0]
-            print("In for loop..." + user_input)
+                user_input = self.conversation[len(self.conversation) - conversation_index][0]
 
             if self.extract_name(user_input) is not "" and user_has_given_name == False:
                 user_has_given_name = True
