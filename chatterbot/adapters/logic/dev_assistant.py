@@ -21,6 +21,7 @@ class DeveloperAssistant(LogicAdapter):
         # Initializing variables
         self.program_path = ""
         self.program_name = ""
+        self.stage = 0
 
         self.stopwords = StopWordsManager()
         self.tagger = POSTagger()
@@ -33,11 +34,7 @@ class DeveloperAssistant(LogicAdapter):
         the request and determine the appropriate
         action to be used.
         """
-        # Getting the confidence of this adapter's ability to respond
-        # @TODO: This should not be as simple as a NaiveBayesClassifier
-        #   but should instead use some way to determine how likely it
-        #   is that the user is interacting with this logic adapter.
-        confidence = self.classify(statement.text)
+        confidence = 0
 
         # Getting the conversation
         try:
@@ -45,12 +42,13 @@ class DeveloperAssistant(LogicAdapter):
         except:
             pass
 
-        # Getting the stage of interaction with the user
-        stage = self.determine_stage_of_interaction(statement)
+        # Getting the stage of interaction with the user (assuming a command has not been executed)
+        if self.stage != 3:
+            confidence = self.determine_stage_of_interaction(statement)
 
-        if stage == 1:
+        if self.stage == 1:
             return confidence, Statement("What is the absolute path to " + self.program_name + "?")
-        elif stage == 3:
+        elif self.stage == 3:
             # Run program
             self.context.io.process_response(Statement("Running " + self.program_name + "..."))
             subprocess.Popen("python " + self.program_path + self.program_name, shell=True)
@@ -58,55 +56,57 @@ class DeveloperAssistant(LogicAdapter):
             # Resetting global variables
             self.program_name = ""
             self.program_path = ""
+            self.stage = 0
 
             # Return a response
             return confidence, Statement("The program has finished running")
 
         return 0, Statement("")
 
-    def classify(self, input_text):
-        """
-        Classifies the incoming test to determine whether this logic adapter
-        should be used to respond to the user's input.
-        """
-        # @TODO: Restructure this to look in all conversation statements to
-        #   determine whether the developer assistant is called before this
-        for token in self.tagger.tokenize(input_text):
-            if "run" in token.lower():
-                return 1
-
-        return 0
-
     def determine_stage_of_interaction(self, input_statement):
         """
         Determines at which point in the interaction with
         the user chatterbot is.
         """
-        user_has_given_name = False
-        user_has_given_path = False
-        stage = 0
+        confidence = 0
+
+        length = len(self.conversation)
+        if length == 0:
+            length = 1
 
         # Parsing through the conversation with chatterbot looking for information
-        for conversation_index in range(0, len(self.conversation)):
+        # @TODO: Find a way to store run programs --> Currently there is an
+        #   issue where if the user tries to run multiple programs in a single
+        #   ChatterBot instance, it will not always pick the correct program.
+        #   To fix this, the previous programs run need to be saved & only the
+        #   most recent program in the conversation log needs to be saved.
+        user_input = ""
+        for conversation_index in range(0, length):
             if conversation_index == 0:
                 user_input = input_statement.text
             else:
-                user_input = self.conversation[len(self.conversation) - conversation_index][0]
+                user_input = self.conversation[length - conversation_index][0]
 
-            if self.extract_name(user_input) is not "" and user_has_given_name == False:
-                user_has_given_name = True
-                stage += 1
-                self.program_name = self.extract_name(user_input)
+            if self.program_name is "":
+                extracted_name = self.extract_name(user_input)
+                if extracted_name is not "":
+                    self.program_name = extracted_name
+                    self.stage += 1
 
-            if self.extract_path(user_input) is not "" and user_has_given_path == False:
-                user_has_given_path = True
-                stage += 2
-                self.program_path = self.extract_path(user_input)
+            if self.program_path is "":
+                extracted_path = self.extract_path(user_input)
+                if extracted_path is not "":
+                    self.program_path = extracted_path
+                    self.stage += 2
 
-        print("name: " + self.program_name)
-        print("stage: " + str(stage))
+        if self.stage != 0:
+            confidence = 1
 
-        return stage
+        print( self.stage )
+        print( "name: " + self.program_name )
+        print( "path: " + self.program_path )
+
+        return confidence
 
     def extract_name(self, user_input):
         """
