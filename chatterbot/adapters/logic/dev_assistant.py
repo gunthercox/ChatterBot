@@ -102,10 +102,6 @@ class DeveloperAssistant(LogicAdapter):
         if self.stage != 0:
             confidence = 1
 
-        print( self.stage )
-        print( "name: " + self.program_name )
-        print( "path: " + self.program_path )
-
         return confidence
 
     def extract_name(self, user_input):
@@ -122,7 +118,10 @@ class DeveloperAssistant(LogicAdapter):
         has_asked_run = False
         for token in self.tagger.tokenize(user_input):
             if has_asked_run:
-                name = token
+                if "/" in token:
+                    name = token.split("/")[len(token.split("/")) - 1]
+                else:
+                    name = token
                 break
 
             if "run" in token:
@@ -142,7 +141,11 @@ class DeveloperAssistant(LogicAdapter):
         #   easily with the current implementation)
         for word in self.tagger.tokenize(user_input):
             if "/" in word:
-                path = word
+                if word.endswith("/"):
+                    path = word
+                else:
+                    split = word.split("/")
+                    path = "/".join(split[:len(split) - 1]) + "/"
                 break
 
         return path
