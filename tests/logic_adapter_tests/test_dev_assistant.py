@@ -8,7 +8,13 @@ class DeveloperAssistantTests(TestCase):
     def setUp(self):
         self.adapter = DeveloperAssistant()
 
-    def test_positive_input(self):
+    def test_positive_input_single_statement(self):
+        statement = Statement("run /main/tester.py")
+        confidence, response = self.adapter.process(statement)
+
+        self.assertEqual(confidence, 1)
+
+    def test_positive_input_multi_statement(self):
         statement = Statement("run tester.py")
         confidence, response = self.adapter.process(statement)
 
