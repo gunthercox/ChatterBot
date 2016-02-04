@@ -14,13 +14,12 @@ class ChatBot(Adaptation):
 
         kwargs["database_dir"] = ""
         if kwargs.get("database") is None:
-            kwargs["database_dir"] = "database_data/"
-            kwargs["database"] = "database.db"
+            kwargs["database_dir"] = "generated_data/"
 
             if not os.path.exists(kwargs.get("database_dir")):
                 os.makedirs(kwargs.get("database_dir"))
         elif "/" not in kwargs.get("database"):
-            kwargs["database_dir"] = "database_data/"
+            kwargs["database_dir"] = "generated_data/"
 
             if not os.path.exists(kwargs.get("database_dir")):
                 os.makedirs(kwargs.get("database_dir"))
