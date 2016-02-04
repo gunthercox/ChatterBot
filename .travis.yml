@@ -1,4 +1,4 @@
-sudo: false
+sudo: true
 language: python
 
 python:
@@ -7,9 +7,13 @@ python:
   - '2.7'
   - pypy
 
+addons:
+  apt:
+    packages:
+    - numpy
+
 install:
   - pip install coveralls
-  - pip install nltk
   - pip install -r requirements.txt
 
 services:

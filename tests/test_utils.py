@@ -7,6 +7,7 @@ from chatterbot.utils.module_loading import import_module
 from chatterbot.utils.pos_tagger import POSTagger
 from chatterbot.utils.stop_words import StopWordsManager
 from chatterbot.utils.word_net import Wordnet
+from chatterbot.utils.entity_tagger import NamedEntityTagger
 
 
 class UtilityTests(TestCase):
@@ -33,6 +34,14 @@ class UtilityTests(TestCase):
         synsets = wordnet.synsets('test')
 
         self.assertEqual(0.06666666666666667, synsets[0].path_similarity(synsets[1]))
+
+    def test_ne_tagger(self):
+        named_entity_tagger = NamedEntityTagger()
+        named_entities = named_entity_tagger.ne_chunk("test one, two, and three.")
+        valid_check = named_entity_tagger.ne_chunk("New York Times")
+
+        self.assertEqual(named_entities, [])
+        self.assertEqual(valid_check, ['New', 'York', 'Times'])
 
 class CleanWhitespaceTests(TestCase):
 
