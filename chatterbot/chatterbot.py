@@ -9,6 +9,7 @@ class ChatBot(Adaptation):
 
         kwargs["name"] = name
         self.recent_statements = []
+        self.conversation = []
 
         storage_adapter = kwargs.get("storage_adapter",
             "chatterbot.adapters.storage.JsonDatabaseAdapter"
@@ -80,6 +81,9 @@ class ChatBot(Adaptation):
         self.storage.update(input_statement)
 
         self.recent_statements.append(response)
+
+        # Update the conversation variable with the latest communication
+        self.conversation.append([input_statement.text, response.text])
 
         # Process the response output with the IO adapter
         return self.io.process_response(response)
