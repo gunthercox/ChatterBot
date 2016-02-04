@@ -3,6 +3,10 @@ from chatterbot.utils.read_input import input_function
 
 
 class NoOutputAdapter(IOAdapter):
+    """
+    The NoOutputAdapter is a simple adapter that
+    doesn't display anything.
+    """
 
     def process_input(self):
         """

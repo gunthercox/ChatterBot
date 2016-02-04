@@ -5,6 +5,10 @@ from pymongo import MongoClient
 
 
 class MongoDatabaseAdapter(StorageAdapter):
+    """
+    The MongoDatabaseAdapter is an interface that allows ChatterBot
+    to store the conversation as a Mongo database.
+    """
 
     def __init__(self, **kwargs):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)

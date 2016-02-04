@@ -5,6 +5,9 @@ import twitter
 
 
 class TwitterAdapter(StorageAdapter):
+    """
+    The TwitterAdapter allows ChatterBot to read tweets from twitter.
+    """
 
     def __init__(self, **kwargs):
         super(TwitterAdapter, self).__init__(**kwargs)

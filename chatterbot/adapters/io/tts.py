@@ -7,6 +7,9 @@ import subprocess
 
 
 class MacOSXTTS(IOAdapter):
+    """
+    A TTS engine using Mac's built-in say command.
+    """
 
     def process_input(self):
         """

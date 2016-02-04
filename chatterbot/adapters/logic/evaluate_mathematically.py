@@ -7,6 +7,19 @@ import decimal
 
 
 class EvaluateMathematically(LogicAdapter):
+    """
+    The EvaluateMathematically logic adapter parses input to
+    determine whether the user is asking a question that requires
+    math to be done. If so, EvaluateMathematically goes through a
+    set of steps to parse the input and extract the equation that
+    must be solved. The steps, in order, are:
+
+    1) Normalize input: Remove punctuation and other irrelevant data
+    2) Convert words to numbers
+    3) Extract the equation
+    4) Simplify the equation
+    5) Solve the equation & return result
+    """
 
     def can_process(self, statement):
         """
