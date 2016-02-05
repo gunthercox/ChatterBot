@@ -7,6 +7,8 @@ de conversação construído em Python o que possibilita a geração de resposta
 baseada em coleções de conversas conhecidas. A arquitetura do ChatterBot
 é independente da língua, desta forma é possível treiná-lo em qualquer língua.
 
+*Leia em outras línguas: [English](readme.md)*
+
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
