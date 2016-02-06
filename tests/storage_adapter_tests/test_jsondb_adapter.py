@@ -163,6 +163,27 @@ class JsonDatabaseAdapterTestCase(JsonAdapterTestCase):
 
         self.assertEqual(len(results), 2)
 
+    def test_remove(self):
+        text = "Sometimes you have to run before you can walk."
+        statement = Statement(text)
+        self.adapter.update(statement)
+        self.adapter.remove(statement.text)
+        result = self.adapter.find(text)
+
+        self.assertIsNone(result)
+
+    def test_remove_response(self):
+        text = "Sometimes you have to run before you can walk."
+        statement = Statement(
+            "A test flight is not recommended at this design phase.",
+            in_response_to=[Response(text)]
+        )
+        self.adapter.update(statement)
+        self.adapter.remove(statement.text)
+        results = self.adapter.filter(in_response_to__contains=text)
+
+        self.assertEqual(results, [])
+
 
 class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
 

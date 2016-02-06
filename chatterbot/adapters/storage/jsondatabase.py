@@ -35,6 +35,18 @@ class JsonDatabaseAdapter(StorageAdapter):
 
         return Statement(statement_text, **values)
 
+    def remove(self, statement_text):
+        """
+        Removes the statement that matches the input text.
+        Removes any responses from statements if the response text matches the
+        input text.
+        """
+        for statement in self.filter(in_response_to__contains=statement_text):
+            statement.remove_response(statement_text)
+            self.update(statement)
+
+        self.database.delete(statement_text)
+
     def deserialize_responses(self, response_list):
         """
         Takes the list of response items and returns the

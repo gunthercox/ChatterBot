@@ -14,7 +14,7 @@ class MongoStorageIntegrationTests(StorageIntegrationTests, ChatBotTestCase):
         # Skip these tests if a mongo client is not running
         try:
             client = MongoClient(
-                serverSelectionTimeoutMS=0.5
+                serverSelectionTimeoutMS=0.2
             )
             client.server_info()
 
