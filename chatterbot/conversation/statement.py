@@ -32,20 +32,18 @@ class Statement(object):
     def add_extra_data(self, key, value):
         self.extra_data[key] = value
 
-    def add_response(self, statement):
+    def add_response(self, response):
         """
-        Add the statement to the list if it does not already exist.
+        Add the response to the list if it does not already exist.
         """
         updated = False
         for index in range(0, len(self.in_response_to)):
-            if statement.text == self.in_response_to[index].text:
+            if response.text == self.in_response_to[index].text:
                 self.in_response_to[index].occurrence += 1
                 updated = True
 
         if not updated:
-            self.in_response_to.append(
-                Response(statement.text)
-            )
+            self.in_response_to.append(response)
 
     def remove_response(self, response_text):
         """

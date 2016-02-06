@@ -13,29 +13,19 @@ class StatementTests(TestCase):
         exists in the list of statements that another
         statement has been issued in response to.
         """
-        self.statement.add_response(Statement("Yo"))
+        self.statement.add_response(Response("Yo"))
         self.assertEqual(len(self.statement.in_response_to), 1)
-        self.assertIn(
-            Statement("Yo"),
-            self.statement.in_response_to
-        )
+        self.assertIn(Response("Yo"), self.statement.in_response_to)
 
     def test_update_response_list_new(self):
-        new_statement = Statement("Hello")
-        self.statement.add_response(new_statement)
-        self.assertTrue(
-            len(self.statement.in_response_to),
-            1
-        )
+        self.statement.add_response(Response("Hello"))
+        self.assertTrue(len(self.statement.in_response_to), 1)
 
     def test_update_response_list_existing(self):
-        previous_statement = Statement("Hello")
-        self.statement.add_response(previous_statement)
-        self.statement.add_response(previous_statement)
-        self.assertTrue(
-            len(self.statement.in_response_to),
-            1
-        )
+        response = Response("Hello")
+        self.statement.add_response(response)
+        self.statement.add_response(response)
+        self.assertTrue(len(self.statement.in_response_to), 1)
 
     def test_remove_response_exists(self):
         self.statement.add_response(Response("Testing"))
@@ -59,25 +49,22 @@ class StatementTests(TestCase):
         should be added to the response list and the occurence count
         for that response should be set to 1.
         """
-        statement = Statement("This is a test.")
+        response = Response("This is a test.")
 
-        self.statement.add_response(statement)
-        self.assertTrue(
-            self.statement.get_response_count(statement),
-            1
-        )
+        self.statement.add_response(response)
+        self.assertTrue(self.statement.get_response_count(response), 1)
 
     def test_occurrence_count_for_existing_statement(self):
-        self.statement.add_response(self.statement)
-        self.statement.add_response(self.statement)
+        self.statement.add_response(Response("ABC"))
+        self.statement.add_response(Response("ABC"))
         self.assertTrue(
-            self.statement.get_response_count(self.statement),
+            self.statement.get_response_count(Response("ABC")),
             2
         )
 
     def test_occurrence_count_incremented(self):
-        self.statement.add_response(self.statement)
-        self.statement.add_response(self.statement)
+        self.statement.add_response(Response("ABC"))
+        self.statement.add_response(Response("ABC"))
 
         self.assertEqual(len(self.statement.in_response_to), 1)
         self.assertEqual(self.statement.in_response_to[0].occurrence, 2)
