@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Response
 
 
 class StatementTests(TestCase):
@@ -37,6 +37,16 @@ class StatementTests(TestCase):
             1
         )
 
+    def test_remove_response_exists(self):
+        self.statement.add_response(Response("Testing"))
+        removed = self.statement.remove_response("Testing")
+        self.assertTrue(removed)
+
+    def test_remove_response_does_not_exist(self):
+        self.statement.add_response(Response("Testing"))
+        removed = self.statement.remove_response("Test")
+        self.assertFalse(removed)
+
     def test_serializer(self):
         data = self.statement.serialize()
         self.assertEqual(self.statement.text, data["text"])
@@ -71,4 +81,3 @@ class StatementTests(TestCase):
 
         self.assertEqual(len(self.statement.in_response_to), 1)
         self.assertEqual(self.statement.in_response_to[0].occurrence, 2)
-

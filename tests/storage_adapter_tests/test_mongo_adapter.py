@@ -18,7 +18,7 @@ class MongoAdapterTestCase(TestCase):
         # Skip these tests if a mongo client is not running.
         try:
             client = MongoClient(
-                serverSelectionTimeoutMS=0.5
+                serverSelectionTimeoutMS=0.2
             )
             client.server_info()
 
@@ -173,6 +173,27 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         results = self.adapter.deserialize_responses(response_list)
 
         self.assertEqual(len(results), 2)
+
+    def test_remove(self):
+        text = "Sometimes you have to run before you can walk."
+        statement = Statement(text)
+        self.adapter.update(statement)
+        self.adapter.remove(statement.text)
+        result = self.adapter.find(text)
+
+        self.assertIsNone(result)
+
+    def test_remove_response(self):
+        text = "Sometimes you have to run before you can walk."
+        statement = Statement(
+            "A test flight is not recommended at this design phase.",
+            in_response_to=[Response(text)]
+        )
+        self.adapter.update(statement)
+        self.adapter.remove(statement.text)
+        results = self.adapter.filter(in_response_to__contains=text)
+
+        self.assertEqual(results, [])
 
 
 class MongoAdapterFilterTestCase(MongoAdapterTestCase):

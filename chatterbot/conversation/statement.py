@@ -47,6 +47,17 @@ class Statement(object):
                 Response(statement.text)
             )
 
+    def remove_response(self, response_text):
+        """
+        Removes a response from the statement's response list based
+        on the value of the response text.
+        """
+        for response in self.in_response_to:
+            if response_text == response.text:
+                self.in_response_to.remove(response)
+                return True
+        return False
+
     def get_response_count(self, statement):
         """
         Return the number of times the statement occurs in the database.
