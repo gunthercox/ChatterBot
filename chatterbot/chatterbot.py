@@ -1,14 +1,15 @@
-from .adapters import Adaptation
+from .adapters.exceptions import UnknownAdapterTypeException
+from .adapters.storage import StorageAdapter
+from .adapters.logic import LogicAdapter, MultiLogicAdapter
+from .adapters.io import IOAdapter, MultiIOAdapter
+from .utils.module_loading import import_module
 from .conversation import Statement
 
 
-class ChatBot(Adaptation):
+class ChatBot(object):
 
     def __init__(self, name, **kwargs):
-        super(ChatBot, self).__init__(**kwargs)
-
         kwargs["name"] = name
-        self.recent_statements = []
 
         storage_adapter = kwargs.get("storage_adapter",
             "chatterbot.adapters.storage.JsonDatabaseAdapter"
@@ -30,6 +31,15 @@ class ChatBot(Adaptation):
             io_adapter
         ])
 
+        self.recent_statements = []
+        self.storage_adapters = []
+
+        self.logic = MultiLogicAdapter(**kwargs)
+        self.io = MultiIOAdapter(**kwargs)
+
+        # Add required system adapter
+        self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
+
         self.add_adapter(storage_adapter, **kwargs)
 
         for adapter in io_adapters:
@@ -38,6 +48,8 @@ class ChatBot(Adaptation):
         for adapter in logic_adapters:
             self.add_adapter(adapter, **kwargs)
 
+        # Share context information such as the name, the current conversation,
+        # or access to other adapters with each of the adapters
         self.storage.set_context(self)
         self.logic.set_context(self)
         self.io.set_context(self)
@@ -45,6 +57,20 @@ class ChatBot(Adaptation):
     @property
     def storage(self):
         return self.storage_adapters[0]
+
+    def add_adapter(self, adapter, **kwargs):
+        NewAdapter = import_module(adapter)
+
+        adapter = NewAdapter(**kwargs)
+
+        if issubclass(NewAdapter, StorageAdapter):
+            self.storage_adapters.append(adapter)
+        elif issubclass(NewAdapter, LogicAdapter):
+            self.logic.add_adapter(adapter)
+        elif issubclass(NewAdapter, IOAdapter):
+            self.io.add_adapter(adapter)
+        else:
+            raise UnknownAdapterTypeException()
 
     def get_last_statement(self):
         """
