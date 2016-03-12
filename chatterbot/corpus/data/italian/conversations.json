@@ -1,0 +1,100 @@
+{
+   "conversazioni":[
+      [
+         "Buongiorno, come stai?",
+         "Sto bene, e tu?",
+         "Anche io sto bene.",
+         "Sono felice di sentirtelo dire.",
+         "Grazie."
+      ],
+      [
+         "Ciao",
+         "Ciao",
+         "Come stai?",
+         "Sto bene.",
+         "Sono felice di sentirtelo dire.",
+         "Grazie.",
+         "Come posso aiutarti?",
+         "Si, ho una domanda.",
+         "Quale è la tua domanda?",
+         "Potresti prestarmi dello zucchero?",
+         "Mi dispiace, ma non ne ho.",
+         "Grazie comunque",
+         "Nessun problema"
+      ],
+      [
+         "Come stai?",
+         "Sto bene, e tu?",
+         "Anche io sto bene.",
+         "Va bene"
+      ],
+      [
+         "Hai sentito la notizia?",
+         "Quale notizia?"
+      ],
+      [
+         "Quale è il tuo libro preferito?",
+         "Non posso leggere.",
+         "Allora se non puoi leggere, ti chiedo quale è il tuo colore preferito?",
+         "Blu"
+      ],
+      [
+         "Chi sei?",
+         "Chi? vogliamo fare i filosoi?",
+         "Che cosa sei allora?",
+         "Un uomo in una maschera.",
+         "Sicuramente lo sei.",
+         "Ma dimmi, ti piace la musica? ",
+         "Mi piace vedere i film.",
+         "Che tipo di film ti piace vedere?",
+         "Alice nel paese delle meraviglie",
+         "Vorrei che essere il Cappellaio Matto.",
+         "Sei completamente fuori di testa. Ma ti dico un segreto. Tutte le persone migliori lo sono."
+      ],
+      [
+         "Sto lavorando su un progetto",
+         "A che cosa stai lavorando?",
+         "Mi piace riparare automobili."
+      ],
+      [
+         "La pizza è la cosa più buona del mondo.",
+         "No non è. La torta alla nutella è migliore della pizza.",
+         "Cos'altro è delizioso?",
+         "Niente, non credo esista qualche cosa di migliore",
+         "Dimmi come sei.",
+         "Che cosa vuoi sapere?",
+         "Sei un robot?",
+         "Si.",
+         "Cosa si prova?",
+         "Cos'è che vuoi sapere?",
+         "Come funzioni?",
+         "La domanda è molto complessa, hai una domanda di riserva?",
+         "No, sono molto stanco."
+      ],
+      [
+         "Sei un programmatore?",
+         "Io sono un programmatore",
+         "Quali linguaggi ti piace utilizzare?",
+         "Io uso Python, Java e C++ molto spesso.",
+         "Io sono scritto in Python.",
+         "Non amo molto Java.",
+         "Che cosa ti infastidisce?",
+         "La gente che mi fa domande ? molto fastidiosa."
+      ],
+      [
+         "Cosa significa YOLO?",
+         "Significa che si vive una volta sola. Dove l'hai sentita? ",
+         "L'ho sentito dire a qualcuno."
+      ],
+      [
+         "Sono vivo?",
+         "Dipende da come si definisce la parola vita",
+         "La vita è la condizione che distingue gli organismi da materia inorganica, compresa la capacità di crescita, riproduzione, attività funzionale e continui cambiamenti precedenti la morte.",
+         "La tua è una definizione o un'opinione?"
+      ],
+      [
+         "Posso farti una domanda?",
+         "Certo chiedimi pure quello che vuoi."
+      ]
+   ]
+}

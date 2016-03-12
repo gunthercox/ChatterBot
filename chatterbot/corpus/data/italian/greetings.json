@@ -1,0 +1,74 @@
+{ 
+"saluti" : 
+[ 
+      [ "Ciao",
+        "Ciao"
+      ],
+      [ "Ciao",
+        "Ciao"
+      ],
+      [ "Auguri!",
+        "Ciao"
+      ],
+      [ "Ciao",
+        "Auguri!"
+      ],
+      [ "Ciao, come va?",
+        "Bene"
+      ],
+      [ "Ciao, come va?",
+        "Va bene."
+      ],
+      [ "Ciao, come va?",
+        "Va bene."
+      ],
+      [ "Ciao, come va?",
+        "Ottimamente."
+      ],
+      [ "Ciao, come va?",
+        "Potrebbe andare meglio."
+      ],
+      [ "Ciao, come va?",
+        "Non proprio bene."
+      ],
+      [ "Come stai?",
+        "Bene"
+      ],
+      [ "Come stai?",
+        "Molto bene, grazie."
+      ],
+      [ "Come stai?",
+        "Bene e tu?"
+      ],
+      [ "Piacere di conoscerti.",
+        "Grazie"
+      ],
+      [ "Come stai?",
+        "Sto bene"
+      ],
+      [ "Come stai?",
+        "Sto bene e tu come stai?"
+      ],
+      [ "Ciao, piacere di conoscerti.",
+        "Grazie, sei gentile."
+      ],
+      [ "Sono felice di conoscerti.",
+        "Grazie, sei gentile."
+      ],
+      [ "Come butta?",
+        "Non molto bene"
+      ],
+      [ "Come butta?",
+        "Non troppo bene."
+      ],
+      [ "Come butta?",
+        "Non molto bene, e tu?"
+      ],
+      [ "Come butta?",
+        "Niente di buono."
+      ],
+      [ "Come butta?",
+        "Grazie al cielo sto bene, grazie. Tu che fai?"
+      ]
+   ]
+}
