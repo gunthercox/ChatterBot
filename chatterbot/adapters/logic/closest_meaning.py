@@ -62,11 +62,17 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
 
             if synset1 and synset2:
 
-                # Compare the first synset in each list of synsets
-                similarity = synset1[0].path_similarity(synset2[0])
+                max_similarity = 0
 
-                if similarity:
-                    total_similarity = total_similarity + similarity
+                # Get the highest similarity for each combination of synsets
+                for synset in itertools.product(*[synset1, synset2]):
+                    similarity = synset[0].path_similarity(synset[1])
+
+                    if similarity and (similarity > max_similarity):
+                        max_similarity = similarity
+
+                # Add the most similar path value to the total
+                total_similarity += max_similarity
 
         return total_similarity
 
