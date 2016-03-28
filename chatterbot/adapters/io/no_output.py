@@ -8,7 +8,7 @@ class NoOutputAdapter(IOAdapter):
     doesn't display anything.
     """
 
-    def process_input(self):
+    def process_input(self, *args, **kwargs):
         """
         Read the user's input from the terminal.
         """

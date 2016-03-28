@@ -8,10 +8,16 @@ class JsonAdapter(IOAdapter):
     is useful for serialization and deserialization of statements.
     """
 
-    def process_input(self, input_json):
+    def process_input(self, *args, **kwargs):
         """
         Convert input json data into a statement object.
         """
+        if not args:
+            raise TypeError(
+                "process_input expects at least one positional argument"
+            )
+
+        input_json = args[0]
         text = input_json["text"]
         del(input_json["text"])
 

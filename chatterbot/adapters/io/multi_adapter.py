@@ -8,12 +8,12 @@ class MultiIOAdapter(IOAdapter):
 
         self.adapters = []
 
-    def process_input(self):
+    def process_input(self, *args, **kwargs):
         """
         Returns data retrieved from the input source.
         """
         if self.adapters is not []:
-            return self.adapters[0].process_input()
+            return self.adapters[0].process_input(*args, **kwargs)
 
     def process_response(self, statement):
         """
