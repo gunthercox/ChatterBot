@@ -23,7 +23,7 @@ class MultiIOAdapter(IOAdapter):
         for adapter in self.adapters:
             adapter.process_response(statement)
 
-        return statement.text
+        return self.adapters[0].process_response(statement)
 
     def add_adapter(self, adapter):
         self.adapters.append(adapter)
