@@ -1,31 +1,40 @@
+from chatterbot import ChatBot
+from settings import TWITTER
+
+
 '''
-Respond to mentions on twitter.
-The bot will follow the user who mentioned it and
-favorite the post in which the mention was made.
+To use this example, create a new file called settings.py.
+In settings.py define the following:
+
+TWITTER = {
+    "CONSUMER_KEY": "my-twitter-consumer-key",
+    "CONSUMER_SECRET": "my-twitter-consumer-secret",
+    "ACCESS_TOKEN": "my-access-token",
+    "ACCESS_TOKEN_SECRET": "my-access-token-secret"
+}
 '''
+
 
 chatbot = ChatBot("ChatterBot",
-    storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+    storage_adapter="chatterbot.adapters.storage.TwitterAdapter",
     logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
-    io_adapter="chatterbot.adapters.io.TwitterAdapter",
-    database="../database.db")
+    io_adapter="chatterbot.adapters.io.TerminalAdapter",
+    database="../database.db",
+    twitter_consumer_key=TWITTER["CONSUMER_KEY"],
+    twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],
+    twitter_access_token_key=TWITTER["ACCESS_TOKEN"],
+    twitter_access_token_secret=TWITTER["ACCESS_TOKEN_SECRET"]
+)
 
-for mention in chatbot.get_mentions():
+user_input = "Type something to begin..."
 
-    '''
-    Check to see if the post has been favorited
-    We will use this as a check for whether or not to respond to it.
-    Only respond to unfavorited mentions.
-    '''
+print(user_input)
 
-    if not mention["favorited"]:
-        screen_name = mention["user"]["screen_name"]
-        text = mention["text"]
-        response = chatbot.get_response(text)
+while True:
+    try:
+        user_input = chatbot.get_input()
+        bot_input = chatbot.get_response(user_input)
 
-        print(text)
-        print(response)
+    except (KeyboardInterrupt, EOFError, SystemExit):
+        break
 
-        chatbot.follow(screen_name)
-        chatbot.favorite(mention["id"])
-        chatbot.reply(mention["id"], response)
