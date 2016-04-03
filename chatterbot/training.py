@@ -9,7 +9,6 @@ class Trainer(object):
         self.corpus = Corpus()
 
     def train_from_list(self, conversation):
-
         recent_statements = []
 
         for text in conversation:

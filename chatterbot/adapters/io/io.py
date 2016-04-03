@@ -8,6 +8,12 @@ class IOAdapter(Adapter):
     that all IO (input-output) adapters should implement.
     """
 
+    def __init__(self, **kwargs):
+        super(IOAdapter, self).__init__(**kwargs)
+
+        # A temporary list of statements that have been processed by an adapter
+        self.statement_history = []
+
     def process_input(self, *args, **kwargs):
         """
         Returns data retrieved from the input source.
