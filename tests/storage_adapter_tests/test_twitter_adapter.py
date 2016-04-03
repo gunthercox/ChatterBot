@@ -72,9 +72,9 @@ class TwitterAdapterTestCase(TestCase):
         """
         self.adapter.drop()
 
-    def test_get_tweets(self):
+    def test_filter(self):
         statements = self.adapter.filter()
-        self.assertEqual(len(statements), 20)
+        self.assertEqual(len(statements), 1)
 
     def test_statement_not_found(self):
         """

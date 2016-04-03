@@ -43,9 +43,7 @@ class TwitterAdapter(StorageAdapter):
 
         # If no text parameter was given get a selection of recent tweets
         if not statement_text:
-            statements = []
-            for i in range(0, 20):
-                statements.append(self.get_random())
+            statements = self.get_random(number=20)
             return statements
 
         tweets = self.api.GetSearch(term=statement_text)
@@ -69,7 +67,7 @@ class TwitterAdapter(StorageAdapter):
 
         return None
 
-    def get_random(self):
+    def get_random(self, number=1):
         """
         Returns a random statement from the api.
         To generate a random tweet, search twitter for recent tweets
@@ -78,24 +76,30 @@ class TwitterAdapter(StorageAdapter):
         the selected random tweet, and make a second search request.
         Return one random tweet selected from the search results.
         """
+        statements = []
         tweets = self.api.GetSearch(term="random", count=5)
+
         tweet = random.choice(tweets)
 
         words = tweet.text.split()
         word = self.choose_word(words)
 
         # If a valid word is found, make a second search request
+        # TODO: What if a word is not found?
         if word:
-            tweets = self.api.GetSearch(term=word, count=5)
+            tweets = self.api.GetSearch(term=word, count=number)
             if tweets:
-                tweet = random.choice(tweets)
+                for tweet in tweets:
+                    # TODO: Handle non-ascii characters properly
+                    cleaned_text = ''.join(
+                        [i if ord(i) < 128 else ' ' for i in tweet.text]
+                    )
+                    statements.append(Statement(cleaned_text))
 
-        # TODO: Handle non-ascii characters properly
-        cleaned_text = ''.join(
-            [i if ord(i) < 128 else ' ' for i in tweet.text]
-        )
+        if number == 1:
+            return statements[0]
 
-        return Statement(cleaned_text)
+        return statements
 
     def drop(self):
         """
