@@ -13,20 +13,22 @@ class TwitterAdapter(StorageAdapter):
         super(TwitterAdapter, self).__init__(**kwargs)
 
         self.api = twitter.Api(
-            consumer_key=kwargs["twitter_consumer_key"],
-            consumer_secret=kwargs["twitter_consumer_secret"],
-            access_token_key=kwargs["twitter_access_token_key"],
-            access_token_secret=kwargs["twitter_access_token_secret"]
+            consumer_key=kwargs.get('twitter_consumer_key'),
+            consumer_secret=kwargs.get('twitter_consumer_secret'),
+            access_token_key=kwargs.get('twitter_access_token_key'),
+            access_token_secret=kwargs.get('twitter_access_token_secret')
         )
 
     def count(self):
         return 1
 
     def find(self, statement_text):
-        tweets = self.api.GetSearch(term=statement_text, count=20)
-        tweet = random.choice(tweets)
+        tweets = self.api.GetSearch(term=statement_text, count=1)
 
-        return Statement(tweet.text)
+        if tweets:
+            return Statement(tweets[0].text)
+
+        return None
 
     def filter(self, **kwargs):
         """
@@ -62,7 +64,7 @@ class TwitterAdapter(StorageAdapter):
         """
         for word in words:
             # If the word contains only letters with a length from 4 to 9
-            if word.isalpha() and (len(word) > 3 or len(word) <= 9):
+            if word.isalpha() and len(word) > 3 and len(word) <= 9:
                 return word
 
         return None
