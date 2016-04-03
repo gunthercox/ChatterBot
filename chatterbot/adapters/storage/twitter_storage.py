@@ -1,5 +1,5 @@
 from chatterbot.adapters.storage import StorageAdapter
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Response
 import random
 import twitter
 
@@ -26,7 +26,9 @@ class TwitterAdapter(StorageAdapter):
         tweets = self.api.GetSearch(term=statement_text, count=1)
 
         if tweets:
-            return Statement(tweets[0].text)
+            return Statement(tweets[0].text, in_response_to=[
+                Response(statement_text)
+            ])
 
         return None
 
@@ -49,7 +51,9 @@ class TwitterAdapter(StorageAdapter):
         tweets = self.api.GetSearch(term=statement_text)
         tweet = random.choice(tweets)
 
-        statement = Statement(tweet.text)
+        statement = Statement(tweet.text, in_response_to=[
+            Response(statement_text)
+        ])
 
         return [statement]
 
@@ -80,6 +84,7 @@ class TwitterAdapter(StorageAdapter):
         tweets = self.api.GetSearch(term="random", count=5)
 
         tweet = random.choice(tweets)
+        base_response = Response(text=tweet.text)
 
         words = tweet.text.split()
         word = self.choose_word(words)
@@ -94,10 +99,12 @@ class TwitterAdapter(StorageAdapter):
                     cleaned_text = ''.join(
                         [i if ord(i) < 128 else ' ' for i in tweet.text]
                     )
-                    statements.append(Statement(cleaned_text))
+                    statements.append(
+                        Statement(cleaned_text, in_response_to=[base_response])
+                    )
 
         if number == 1:
-            return statements[0]
+            return random.choice(statements)
 
         return statements
 
