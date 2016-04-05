@@ -20,8 +20,8 @@ class MultiIOAdapter(IOAdapter):
         Takes an input value.
         Returns an output value.
         """
-        for adapter in self.adapters:
-            adapter.process_response(statement)
+        for i in range(1, len(self.adapters)):
+            self.adapters[i].process_response(statement)
 
         return self.adapters[0].process_response(statement)
 

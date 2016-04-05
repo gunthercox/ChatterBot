@@ -56,5 +56,5 @@ setup(
         'Programming Language :: Python :: 3.5',
     ],
     test_suite='tests',
-    tests_require=[]
+    tests_require=['mock']
 )
