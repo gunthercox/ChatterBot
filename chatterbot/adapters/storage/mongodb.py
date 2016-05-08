@@ -29,6 +29,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         # The mongo collection of statement documents
         self.statements = self.database['statements']
 
+        # Set a requirement for the text attribute to be unique
+        self.statements.create_index('text', unique=True)
+
     def count(self):
         return self.statements.count()
 
