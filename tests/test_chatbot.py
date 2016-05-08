@@ -117,10 +117,18 @@ class MultiAdapterTests(ChatBotTestCase):
         )
         self.assertEqual(len(self.chatbot.logic.adapters), count_before + 1)
 
-    def test_add_io_adapter(self):
-        count_before = len(self.chatbot.io.adapters)
+    def test_add_input_adapter(self):
+        count_before = len(self.chatbot.input.adapters)
 
         self.chatbot.add_adapter(
-            "chatterbot.adapters.io.TerminalAdapter"
+            "chatterbot.adapters.input.TerminalAdapter"
         )
-        self.assertEqual(len(self.chatbot.io.adapters), count_before + 1)
+        self.assertEqual(len(self.chatbot.input.adapters), count_before + 1)
+
+    def test_add_output_adapter(self):
+        count_before = len(self.chatbot.output.adapters)
+
+        self.chatbot.add_adapter(
+            "chatterbot.adapters.output.TerminalAdapter"
+        )
+        self.assertEqual(len(self.chatbot.output.adapters), count_before + 1)

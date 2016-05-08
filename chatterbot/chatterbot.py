@@ -1,7 +1,8 @@
 from .adapters.exceptions import UnknownAdapterTypeException
 from .adapters.storage import StorageAdapter
 from .adapters.logic import LogicAdapter, MultiLogicAdapter
-from .adapters.io import IOAdapter, MultiIOAdapter
+from .adapters.input import InputAdapter, MultiInputAdapter
+from .adapters.output import OutputAdapter, MultiOutputAdapter
 from .utils.module_loading import import_module
 from .conversation import Statement
 
@@ -23,26 +24,38 @@ class ChatBot(object):
             logic_adapter
         ])
 
-        io_adapter = kwargs.get("io_adapter",
-            "chatterbot.adapters.io.TerminalAdapter"
+        input_adapter = kwargs.get("input_adapter",
+            "chatterbot.adapters.input.TerminalAdapter"
         )
 
-        io_adapters = kwargs.get("io_adapters", [
-            io_adapter
+        input_adapters = kwargs.get("input_adapters", [
+            input_adapter
+        ])
+
+        output_adapter = kwargs.get("output_adapter",
+            "chatterbot.adapters.output.TerminalAdapter"
+        )
+
+        output_adapters = kwargs.get("output_adapters", [
+            output_adapter
         ])
 
         self.recent_statements = []
         self.storage_adapters = []
 
         self.logic = MultiLogicAdapter(**kwargs)
-        self.io = MultiIOAdapter(**kwargs)
+        self.input = MultiInputAdapter(**kwargs)
+        self.output = MultiOutputAdapter(**kwargs)
 
         # Add required system adapter
         self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
 
         self.add_adapter(storage_adapter, **kwargs)
 
-        for adapter in io_adapters:
+        for adapter in input_adapters:
+            self.add_adapter(adapter, **kwargs)
+
+        for adapter in output_adapters:
             self.add_adapter(adapter, **kwargs)
 
         for adapter in logic_adapters:
@@ -52,7 +65,8 @@ class ChatBot(object):
         # or access to other adapters with each of the adapters
         self.storage.set_context(self)
         self.logic.set_context(self)
-        self.io.set_context(self)
+        self.input.set_context(self)
+        self.output.set_context(self)
 
     @property
     def storage(self):
@@ -67,8 +81,10 @@ class ChatBot(object):
             self.storage_adapters.append(adapter)
         elif issubclass(NewAdapter, LogicAdapter):
             self.logic.add_adapter(adapter)
-        elif issubclass(NewAdapter, IOAdapter):
-            self.io.add_adapter(adapter)
+        elif issubclass(NewAdapter, InputAdapter):
+            self.input.add_adapter(adapter)
+        elif issubclass(NewAdapter, OutputAdapter):
+            self.output.add_adapter(adapter)
         else:
             raise UnknownAdapterTypeException()
 
@@ -81,7 +97,7 @@ class ChatBot(object):
         return None
 
     def get_input(self):
-        return self.io.process_input()
+        return self.input.process_input()
 
     def get_response(self, input_text):
         """
@@ -108,7 +124,7 @@ class ChatBot(object):
         self.recent_statements.append(response)
 
         # Process the response output with the IO adapter
-        return self.io.process_response(response)
+        return self.output.process_response(response)
 
     def train(self, conversation=None, *args, **kwargs):
         """

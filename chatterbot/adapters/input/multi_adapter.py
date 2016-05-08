@@ -1,10 +1,10 @@
-from .io import IOAdapter
+from .input_adapter import InputAdapter
 
 
-class MultiIOAdapter(IOAdapter):
+class MultiInputAdapter(InputAdapter):
 
     def __init__(self, **kwargs):
-        super(MultiIOAdapter, self).__init__(**kwargs)
+        super(MultiInputAdapter, self).__init__(**kwargs)
 
         self.adapters = []
 
@@ -32,7 +32,7 @@ class MultiIOAdapter(IOAdapter):
         """
         Set the context for each of the contained io adapters.
         """
-        super(MultiIOAdapter, self).set_context(context)
+        super(MultiInputAdapter, self).set_context(context)
 
         for adapter in self.adapters:
             adapter.set_context(context)
