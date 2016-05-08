@@ -139,11 +139,13 @@ class MongoDatabaseAdapter(StorageAdapter):
             self.statements.replace_one({'text': statement.text}, data, True)
 
             # Make sure that an entry for each response is saved
-            for response_statement in statement.in_response_to:
-                response = self.find(response_statement.text)
-                if not response:
-                    response = Statement(response_statement.text)
-                    self.update(response)
+            for response in statement.in_response_to:
+                # $setOnInsert does nothing if the document is not created
+                self.statements.update_one(
+                    {'text': response.text},
+                    {'$setOnInsert': {'in_response_to': []}},
+                    upsert=True
+                )
 
         return statement
 
