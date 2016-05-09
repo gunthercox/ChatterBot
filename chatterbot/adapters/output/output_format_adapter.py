@@ -12,32 +12,14 @@ class OutputFormatAdapter(OutputAdapter):
 
     def __init__(self, *args, **kwargs):
         super(OutputFormatAdapter, self).__init__(**kwargs)
-        self.format = kwargs.get('format', 'object')
+        self.format = kwargs.get('output_format', 'object')
 
         if self.format not in VALID_FORMATS:
-            pass
-
-        if self.format == TEXT:
-            pass
-
-        if self.format == JSON:
-            # Convert input json data into a statement object
-            if not args and self.format == JSON:
-                # TODO subclass this error
-                raise TypeError(
-                    "process_input expects at least one positional argument"
+            raise self.UnrecognizedOutputFormatException(
+                'The output type {} is not a known valid format'.format(
+                    self.format
                 )
-
-            input_json = args[0]
-            text = input_json["text"]
-            del(input_json["text"])
-
-            return Statement(text, **input_json)
-
-        # TODO: Should this just be a parameter for the Terminal adapter?
-        # Read the user's input from the terminal.
-        user_input = input_function()
-        return Statement(user_input)
+            )
 
     def process_response(self, statement):
         if self.format == TEXT:
@@ -48,3 +30,13 @@ class OutputFormatAdapter(OutputAdapter):
 
         # Return the statement OBJECT by default
         return statement
+
+    class UnrecognizedOutputFormatException(Exception):
+        def __init__(self, message='The input format was not recognized.'):
+            super(
+                OutputFormatAdapter.UnrecognizedOutputFormatException,
+                self
+            ).__init__(message)
+
+        def __str__(self):
+            return self.message
