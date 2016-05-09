@@ -15,14 +15,14 @@ class VariableInputTypeAdapter(InputAdapter):
         super(VariableInputTypeAdapter, self).__init__(**kwargs)
 
     def detect_type(self, statement):
-        input_type = type(statement)
-
-        if input_type is Statement:
+        if isinstance(statement, Statement):
             return OBJECT
-        if input_type is str:
+        if isinstance(statement, str):
             return TEXT
-        if input_type is dict:
+        if isinstance(statement, dict):
             return JSON
+
+        input_type = type(statement)
 
         raise self.UnrecognizedInputFormatException(
             'The type {} is not recognized as a valid input type.'.format(

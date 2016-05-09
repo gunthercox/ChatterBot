@@ -24,21 +24,12 @@ class ChatBot(object):
             logic_adapter
         ])
 
-        input_adapter = kwargs.get("input_adapter",
-            "chatterbot.adapters.input.TerminalAdapter"
+        input_output_adapter_pairs = kwargs.get("io_adapter_pairs",
+            (
+                "chatterbot.adapters.input.TerminalAdapter",
+                "chatterbot.adapters.output.TerminalAdapter",
+            ),
         )
-
-        input_adapters = kwargs.get("input_adapters", [
-            input_adapter
-        ])
-
-        output_adapter = kwargs.get("output_adapter",
-            "chatterbot.adapters.output.TerminalAdapter"
-        )
-
-        output_adapters = kwargs.get("output_adapters", [
-            output_adapter
-        ])
 
         self.recent_statements = []
         self.storage_adapters = []
@@ -52,11 +43,32 @@ class ChatBot(object):
 
         self.add_adapter(storage_adapter, **kwargs)
 
-        for adapter in input_adapters:
-            self.add_adapter(adapter, **kwargs)
+        for adapter_pair in input_output_adapter_pairs:
 
-        for adapter in output_adapters:
-            self.add_adapter(adapter, **kwargs)
+            # Validate the input output adapter tuples
+
+            if len(adapter_pair) != 2:
+                raise self.InvalidAdapterPairException(
+                    'Expected list of tuples with each tuple a length of 2.'
+                )
+
+            input_adapter = adapter_pair[0]
+            output_adapter = adapter_pair[1]
+
+            # The first adapter must be an instance of an input adapter
+            if not issubclass(import_module(input_adapter), InputAdapter):
+                raise self.InvalidAdapterPairException(
+                    '{} is not an input adapter'.format(input_adapter)
+                )
+
+            # The second adapter must be an instance of an output adapter
+            if not issubclass(import_module(output_adapter), OutputAdapter):
+                raise self.InvalidAdapterPairException(
+                    '{} is not an output adapter'.format(output_adapter)
+                )
+
+            self.add_adapter(input_adapter, **kwargs)
+            self.add_adapter(output_adapter, **kwargs)
 
         for adapter in logic_adapters:
             self.add_adapter(adapter, **kwargs)
@@ -142,3 +154,10 @@ class ChatBot(object):
                 trainer.train_from_corpora(corpora)
         else:
             trainer.train_from_list(conversation)
+
+    class InvalidAdapterPairException(Exception):
+        def __init__(self, message='Recieved an unexpected pair of adapters.'):
+            super(ChatBot.InvalidAdapterPairException, self).__init__(message)
+
+        def __str__(self):
+            return self.message
