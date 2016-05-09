@@ -1,7 +1,8 @@
 from chatterbot.adapters.input import InputAdapter
-from chatterbot.utils.read_input import input_function
 from chatterbot.conversation import Statement
+import sys
 
+PY3 = sys.version_info[0] == 3
 
 JSON = 'json'
 TEXT = 'text'
@@ -15,9 +16,15 @@ class VariableInputTypeAdapter(InputAdapter):
         super(VariableInputTypeAdapter, self).__init__(**kwargs)
 
     def detect_type(self, statement):
+
+        if PY3:
+            string_types = str
+        else:
+            string_types = basestring
+
         if isinstance(statement, Statement):
             return OBJECT
-        if isinstance(statement, str):
+        if isinstance(statement, string_types):
             return TEXT
         if isinstance(statement, dict):
             return JSON

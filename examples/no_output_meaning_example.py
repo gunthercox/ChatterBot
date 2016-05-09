@@ -15,10 +15,7 @@ library. Please see the wiki for in-depth information on
 how to configure ChatterBot.
 '''
 
-user_input = "Type something to begin..."
-
-# To make this Python 2.x compatible, replace the print() with print "enter print text here"
-print(user_input)
+print("Type something to begin...")
 
 '''
 In this example we use a while loop combined with a try-except statement.
@@ -29,19 +26,11 @@ ctrl-c or ctrl-d on the keyboard.
 while True:
     try:
         '''
-        ChatterBot's get_input method uses io adapter to get new input for
-        the bot to respond to. In this example, the NoOutputAdapter gets the
-        input from the user's terminal. Other io adapters might retrieve input
-        differently, such as from various web APIs.
-        '''
-        user_input = bot.get_input()
-
-        '''
         The get_response method also uses the io adapter to determine how
         the bot's output should be returned. In the case of the NoOutputAdapter,
         the output is not printed to the terminal.
         '''
-        bot_input = bot.get_response(user_input)
+        bot_input = bot.get_response(None)
 
         print(bot_input)
 

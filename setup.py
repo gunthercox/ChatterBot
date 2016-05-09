@@ -27,7 +27,8 @@ setup(
         'chatterbot.adapters',
         'chatterbot.corpus',
         'chatterbot.conversation',
-        'chatterbot.adapters.io',
+        'chatterbot.adapters.input',
+        'chatterbot.adapters.output',
         'chatterbot.adapters.storage',
         'chatterbot.adapters.logic'
     ],

@@ -8,6 +8,18 @@ class MultiOutputAdapter(OutputAdapter):
 
         self.adapters = []
 
+    def add_adapter(self, adapter):
+        self.adapters.append(adapter)
+
+    def set_context(self, context):
+        """
+        Set the context for each of the contained output adapters.
+        """
+        super(MultiOutputAdapter, self).set_context(context)
+
+        for adapter in self.adapters:
+            adapter.set_context(context)
+
     def process_response(self, statement):
         """
         Takes an input value.
@@ -17,15 +29,3 @@ class MultiOutputAdapter(OutputAdapter):
             self.adapters[i].process_response(statement)
 
         return self.adapters[0].process_response(statement)
-
-    def add_adapter(self, adapter):
-        self.adapters.append(adapter)
-
-    def set_context(self, context):
-        """
-        Set the context for each of the contained io adapters.
-        """
-        super(MultiOutputAdapter, self).set_context(context)
-
-        for adapter in self.adapters:
-            adapter.set_context(context)

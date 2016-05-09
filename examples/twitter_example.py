@@ -26,14 +26,11 @@ chatbot = ChatBot("ChatterBot",
     twitter_access_token_secret=TWITTER["ACCESS_TOKEN_SECRET"]
 )
 
-user_input = "Type something to begin..."
-
-print(user_input)
+print("Type something to begin...")
 
 while True:
     try:
-        user_input = chatbot.get_input()
-        bot_input = chatbot.get_response(user_input)
+        bot_input = chatbot.get_response(None)
 
     except (KeyboardInterrupt, EOFError, SystemExit):
         break

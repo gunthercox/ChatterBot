@@ -24,7 +24,8 @@ class ChatBot(object):
             logic_adapter
         ])
 
-        input_output_adapter_pairs = kwargs.get("io_adapter_pairs",
+        input_output_adapter_pairs = kwargs.get(
+            "io_adapter_pairs",
             (
                 "chatterbot.adapters.input.TerminalAdapter",
                 "chatterbot.adapters.output.TerminalAdapter",
@@ -49,7 +50,10 @@ class ChatBot(object):
 
             if len(adapter_pair) != 2:
                 raise self.InvalidAdapterPairException(
-                    'Expected list of tuples with each tuple a length of 2.'
+                    'Expected list of tuples where each '
+                    'tuple has a length of 2, read {} instead.'.format(
+                        len(adapter_pair)
+                    )
                 )
 
             input_adapter = adapter_pair[0]
@@ -108,14 +112,11 @@ class ChatBot(object):
             return self.recent_statements[-1]
         return None
 
-    def get_input(self):
-        return self.input.process_input()
-
-    def get_response(self, input_text):
+    def get_response(self, input_item):
         """
         Return the bot's response based on the input.
         """
-        input_statement = Statement(input_text)
+        input_statement = self.input.process_input(input_item)
 
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
@@ -135,7 +136,7 @@ class ChatBot(object):
 
         self.recent_statements.append(response)
 
-        # Process the response output with the IO adapter
+        # Process the response output with the output adapter
         return self.output.process_response(response)
 
     def train(self, conversation=None, *args, **kwargs):

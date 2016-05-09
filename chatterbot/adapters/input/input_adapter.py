@@ -10,6 +10,6 @@ class InputAdapter(Adapter):
 
     def process_input(self, *args, **kwargs):
         """
-        Returns data retrieved from the input source.
+        Returns a statement object based on the input source.
         """
         raise AdapterNotImplementedError()
