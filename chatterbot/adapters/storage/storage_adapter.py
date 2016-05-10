@@ -61,3 +61,11 @@ class StorageAdapter(Adapter):
         Drop the database attached to a given adapter.
         """
         raise self.AdapterMethodNotImplementedError()
+
+    class EmptyDatabaseException(Exception):
+
+        def __init__(self, message="The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database."):
+            self.message = message
+
+        def __str__(self):
+            return self.message

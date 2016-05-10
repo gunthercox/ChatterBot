@@ -9,12 +9,10 @@ class ClosestMeaningAdapterTests(TestCase):
         self.adapter = ClosestMeaningAdapter()
 
     def test_no_choices(self):
-        from chatterbot.adapters.exceptions import EmptyDatasetException
-
         possible_choices = []
         statement = Statement("Hello")
 
-        with self.assertRaises(EmptyDatasetException):
+        with self.assertRaises(ClosestMeaningAdapter.EmptyDatasetException):
             self.adapter.get(statement, possible_choices)
 
     def test_get_closest_statement(self):

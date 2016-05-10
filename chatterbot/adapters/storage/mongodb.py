@@ -1,5 +1,4 @@
 from chatterbot.adapters.storage import StorageAdapter
-from chatterbot.adapters.exceptions import EmptyDatabaseException
 from chatterbot.conversation import Statement, Response
 from pymongo import MongoClient
 
@@ -151,7 +150,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         random_integer = randint(0, count - 1)
 
         if self.count() < 1:
-            raise EmptyDatabaseException()
+            raise self.EmptyDatabaseException()
 
         statement = self.statements.find().limit(1).skip(random_integer)
 
