@@ -15,24 +15,32 @@ class UtilityTests(TestCase):
         datetime = import_module("datetime.datetime")
         self.assertTrue(hasattr(datetime, 'now'))
 
-    def test_pos_tagger(self):
+
+class LanguageUtilityTests(TestCase):
+
+    def test_pos_tagger_tokenize(self):
         pos_tagger = POSTagger()
         tokens = pos_tagger.tokenize("what time is it")
 
         self.assertEqual(tokens, ['what', 'time', 'is', 'it'])
 
-    def test_stop_words(self):
+    def test_remove_stop_words(self):
         stopwords_manager = StopWordsManager()
-        words = stopwords_manager.words("english")
-        test_case = set(["too"]) - set(words)
 
-        self.assertEqual(test_case, set([]))
+        tokens = ['this', 'is', 'a', 'test', 'string']
+        words = stopwords_manager.remove_stopwords('english', tokens)
+
+        self.assertEqual(list(words), ['test', 'string'])
 
     def test_word_net(self):
         wordnet = Wordnet()
         synsets = wordnet.synsets('test')
 
-        self.assertEqual(0.06666666666666667, synsets[0].path_similarity(synsets[1]))
+        self.assertEqual(
+            0.06666666666666667,
+            synsets[0].path_similarity(synsets[1])
+        )
+
 
 class CleanWhitespaceTests(TestCase):
 

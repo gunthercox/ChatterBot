@@ -22,12 +22,11 @@ class StopWordsManager():
 
     def remove_stopwords(self, language, tokens):
         """
-        Takes a set of tokens and stopwords language
-        and returns the tokenized text minus the
-        stopwords.
+        Takes a language (i.e. 'english'), and a set of word tokens.
+        Returns the tokenized text with any stopwords removed.
         """
         stop_words = self.words(language)
-        tokens = set(tokens) - set(excluded_words)
+        tokens = set(tokens) - set(stop_words)
 
         return tokens
 
@@ -35,5 +34,4 @@ class StopWordsManager():
         """
         Returns the stopwords for the given language.
         """
-
         return stopwords.words(language)
