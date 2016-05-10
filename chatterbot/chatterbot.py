@@ -15,12 +15,8 @@ class ChatBot(object):
             "chatterbot.adapters.storage.JsonDatabaseAdapter"
         )
 
-        logic_adapter = kwargs.get("logic_adapter",
-            "chatterbot.adapters.logic.ClosestMatchAdapter"
-        )
-
         logic_adapters = kwargs.get("logic_adapters", [
-            logic_adapter
+            "chatterbot.adapters.logic.ClosestMatchAdapter"
         ])
 
         input_adapter = kwargs.get("input_adapter",

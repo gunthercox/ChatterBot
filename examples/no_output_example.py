@@ -4,8 +4,11 @@ from chatterbot import ChatBot
 # Create a new instance of a ChatBot
 bot = ChatBot("No Output",
     storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
-    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
-    io_adapter="chatterbot.adapters.io.NoOutputAdapter",
+    logic_adapters=[
+        "chatterbot.adapters.logic.ClosestMatchAdapter"
+    ],
+    input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
+    output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
     database="../database.db")
 
 '''

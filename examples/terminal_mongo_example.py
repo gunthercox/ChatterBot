@@ -4,9 +4,13 @@ from chatterbot import ChatBot
 # Create a new instance of a ChatBot
 bot = ChatBot("Terminal",
     storage_adapter="chatterbot.adapters.storage.MongoDatabaseAdapter",
-    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
-    io_adapter="chatterbot.adapters.io.TerminalAdapter",
-    database="chatterbot-database")
+    logic_adapters=[
+        "chatterbot.adapters.logic.ClosestMatchAdapter"
+    ],
+    input_adapter="chatterbot.adapters.input.TerminalAdapter",
+    output_adapter="chatterbot.adapters.output.TerminalAdapter",
+    database="chatterbot-database"
+)
 
 print("Type something to begin...")
 
@@ -27,4 +31,3 @@ while True:
 
     except (KeyboardInterrupt, EOFError, SystemExit):
         break
-

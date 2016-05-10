@@ -14,11 +14,13 @@ TWITTER = {
 }
 '''
 
-
 chatbot = ChatBot("ChatterBot",
     storage_adapter="chatterbot.adapters.storage.TwitterAdapter",
-    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
-    io_adapter="chatterbot.adapters.io.TerminalAdapter",
+    logic_adapters=[
+        "chatterbot.adapters.logic.ClosestMatchAdapter"
+    ],
+    input_adapter="chatterbot.adapters.input.TerminalAdapter",
+    output_adapter="chatterbot.adapters.output.TerminalAdapter",
     database="../database.db",
     twitter_consumer_key=TWITTER["CONSUMER_KEY"],
     twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],
@@ -34,4 +36,3 @@ while True:
 
     except (KeyboardInterrupt, EOFError, SystemExit):
         break
-

@@ -62,7 +62,9 @@ class AdapterValidationTests(ChatBotTestCase):
         with self.assertRaises(ChatBot.InvalidAdapterException):
             self.chatbot = ChatBot(
                 "Test Bot",
-                logic_adapter="chatterbot.adapters.input.TerminalAdapter",
+                logic_adapters=[
+                    "chatterbot.adapters.input.TerminalAdapter",
+                ],
                 database=self.database_path
             )
 

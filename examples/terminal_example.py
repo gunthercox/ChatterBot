@@ -14,13 +14,10 @@ bot = ChatBot("Terminal",
         "chatterbot.adapters.logic.TimeLogicAdapter",
         "chatterbot.adapters.logic.ClosestMatchAdapter"
     ],
-    io_adapter_pairs=[
-        (
-            "chatterbot.adapters.input.TerminalAdapter",
-            "chatterbot.adapters.output.TerminalAdapter",
-        ),
-    ],
-    database="../database.db")
+    input_adapter="chatterbot.adapters.input.TerminalAdapter",
+    output_adapter="chatterbot.adapters.output.TerminalAdapter",
+    database="../database.db"
+)
 
 # Text to prompt the user with initially
 user_input = "Type something to begin..."

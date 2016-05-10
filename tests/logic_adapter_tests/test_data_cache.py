@@ -37,7 +37,9 @@ class DataCachingTests(TestCase):
             "Test Bot",
             input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
             output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
-            logic_adapter="tests.logic_adapter_tests.test_data_cache.DummyMutatorLogicAdapter",
+            logic_adapters=[
+                "tests.logic_adapter_tests.test_data_cache.DummyMutatorLogicAdapter"
+            ],
             database=database_path
         )
 

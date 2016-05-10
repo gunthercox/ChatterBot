@@ -7,7 +7,8 @@ bot = ChatBot(
         "chatterbot.adapters.logic.EvaluateMathematically",
         "chatterbot.adapters.logic.TimeLogicAdapter"
     ],
-    io_adapter="chatterbot.adapters.io.NoOutputAdapter"
+    input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
+    output_adapter="chatterbot.adapters.output.OutputFormatAdapter"
 )
 
 # Print an example of getting one math based response
