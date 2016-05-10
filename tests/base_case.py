@@ -19,12 +19,8 @@ class ChatBotTestCase(TestCase):
 
         self.chatbot = ChatBot(
             "Test Bot",
-            io_adapter_pairs=[
-                (
-                    "chatterbot.adapters.input.VariableInputTypeAdapter",
-                    "chatterbot.adapters.output.OutputFormatAdapter",
-                )
-            ],
+            input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
+            output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
             output_format='text',
             database=database_path
         )

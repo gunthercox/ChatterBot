@@ -19,7 +19,7 @@ class StorageIntegrationTests(object):
         """
         self.chatbot.storage.read_only = True
 
-        input_text = "Who are you? The proud lord said."
+        input_text = "Who are you, the proud lord said?"
         exists_before = self.chatbot.storage.find(input_text)
 
         response = self.chatbot.get_response(input_text)

@@ -101,14 +101,6 @@ class ChatterBotResponseTests(ChatBotTestCase):
 
 class MultiAdapterTests(ChatBotTestCase):
 
-    def test_add_storage_adapter(self):
-        count_before = len(self.chatbot.storage_adapters)
-
-        self.chatbot.add_adapter(
-            "chatterbot.adapters.storage.JsonDatabaseAdapter"
-        )
-        self.assertEqual(len(self.chatbot.storage_adapters), count_before + 1)
-
     def test_add_logic_adapter(self):
         count_before = len(self.chatbot.logic.adapters)
 
@@ -116,19 +108,3 @@ class MultiAdapterTests(ChatBotTestCase):
             "chatterbot.adapters.logic.ClosestMatchAdapter"
         )
         self.assertEqual(len(self.chatbot.logic.adapters), count_before + 1)
-
-    def test_add_input_adapter(self):
-        count_before = len(self.chatbot.input.adapters)
-
-        self.chatbot.add_adapter(
-            "chatterbot.adapters.input.TerminalAdapter"
-        )
-        self.assertEqual(len(self.chatbot.input.adapters), count_before + 1)
-
-    def test_add_output_adapter(self):
-        count_before = len(self.chatbot.output.adapters)
-
-        self.chatbot.add_adapter(
-            "chatterbot.adapters.output.TerminalAdapter"
-        )
-        self.assertEqual(len(self.chatbot.output.adapters), count_before + 1)

@@ -23,12 +23,3 @@ class EmptyDatasetException(Exception):
 
     def __str__(self):
         return self.message
-
-
-class UnknownAdapterTypeException(Exception):
-
-    def __init__(self, message="The adapter type recieved was not a subclass of a known adapter type."):
-        self.message = message
-
-    def __str__(self):
-        return self.message

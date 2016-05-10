@@ -1,10 +1,9 @@
-from .adapters.exceptions import UnknownAdapterTypeException
 from .adapters.storage import StorageAdapter
 from .adapters.logic import LogicAdapter, MultiLogicAdapter
-from .adapters.input import InputAdapter, MultiInputAdapter
-from .adapters.output import OutputAdapter, MultiOutputAdapter
-from .utils.module_loading import import_module
+from .adapters.input import InputAdapter
+from .adapters.output import OutputAdapter
 from .conversation import Statement
+from .utils.module_loading import import_module
 
 
 class ChatBot(object):
@@ -24,55 +23,42 @@ class ChatBot(object):
             logic_adapter
         ])
 
+        input_adapter = kwargs.get("input_adapter",
+            "chatterbot.adapters.input.TerminalAdapter"
+        )
+
+        output_adapter = kwargs.get("output_adapter",
+            "chatterbot.adapters.output.TerminalAdapter"
+        )
+
         input_output_adapter_pairs = kwargs.get(
-            "io_adapter_pairs",
-            (
-                "chatterbot.adapters.input.TerminalAdapter",
-                "chatterbot.adapters.output.TerminalAdapter",
-            ),
+            "io_adapter_pairs"
         )
 
         self.recent_statements = []
-        self.storage_adapters = []
 
+        # The storage adapter must be an instance of StorageAdapter
+        self.validate_adapter_class(storage_adapter, StorageAdapter)
+
+        # The input adapter must be an instance of InputAdapter
+        self.validate_adapter_class(input_adapter, InputAdapter)
+
+        # The output adapter must be an instance of OutputAdapter
+        self.validate_adapter_class(output_adapter, OutputAdapter)
+
+        # TODO: test adapter validation
+
+        StorageAdapterClass = import_module(storage_adapter)
+        InputAdapterClass = import_module(input_adapter)
+        OutputAdapterClass = import_module(output_adapter)
+
+        self.storage = StorageAdapterClass(**kwargs)
         self.logic = MultiLogicAdapter(**kwargs)
-        self.input = MultiInputAdapter(**kwargs)
-        self.output = MultiOutputAdapter(**kwargs)
+        self.input = InputAdapterClass(**kwargs)
+        self.output = OutputAdapterClass(**kwargs)
 
-        # Add required system adapter
+        # Add required system logic adapter
         self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
-
-        self.add_adapter(storage_adapter, **kwargs)
-
-        for adapter_pair in input_output_adapter_pairs:
-
-            # Validate the input output adapter tuples
-
-            if len(adapter_pair) != 2:
-                raise self.InvalidAdapterPairException(
-                    'Expected list of tuples where each '
-                    'tuple has a length of 2, read {} instead.'.format(
-                        len(adapter_pair)
-                    )
-                )
-
-            input_adapter = adapter_pair[0]
-            output_adapter = adapter_pair[1]
-
-            # The first adapter must be an instance of an input adapter
-            if not issubclass(import_module(input_adapter), InputAdapter):
-                raise self.InvalidAdapterPairException(
-                    '{} is not an input adapter'.format(input_adapter)
-                )
-
-            # The second adapter must be an instance of an output adapter
-            if not issubclass(import_module(output_adapter), OutputAdapter):
-                raise self.InvalidAdapterPairException(
-                    '{} is not an output adapter'.format(output_adapter)
-                )
-
-            self.add_adapter(input_adapter, **kwargs)
-            self.add_adapter(output_adapter, **kwargs)
 
         for adapter in logic_adapters:
             self.add_adapter(adapter, **kwargs)
@@ -84,25 +70,35 @@ class ChatBot(object):
         self.input.set_context(self)
         self.output.set_context(self)
 
-    @property
-    def storage(self):
-        return self.storage_adapters[0]
-
     def add_adapter(self, adapter, **kwargs):
+        self.validate_adapter_class(adapter, LogicAdapter)
+
         NewAdapter = import_module(adapter)
-
         adapter = NewAdapter(**kwargs)
+        self.logic.add_adapter(adapter)
 
-        if issubclass(NewAdapter, StorageAdapter):
-            self.storage_adapters.append(adapter)
-        elif issubclass(NewAdapter, LogicAdapter):
-            self.logic.add_adapter(adapter)
-        elif issubclass(NewAdapter, InputAdapter):
-            self.input.add_adapter(adapter)
-        elif issubclass(NewAdapter, OutputAdapter):
-            self.output.add_adapter(adapter)
-        else:
-            raise UnknownAdapterTypeException()
+    def validate_adapter_class(self, validate_class, adapter_class):
+        """
+        Raises an exception if validate_class is
+        not a subclass of adapter_class.
+        """
+        from .adapters import Adapter
+
+        if not issubclass(import_module(validate_class), Adapter):
+            raise self.InvalidAdapterException(
+                '{} must be a subclass of {}'.format(
+                    validate_class,
+                    Adapter.__name__
+                )
+            )
+
+        if not issubclass(import_module(validate_class), adapter_class):
+            raise self.InvalidAdapterException(
+                '{} must be a subclass of {}'.format(
+                    validate_class,
+                    adapter_class.__name__
+                )
+            )
 
     def get_last_statement(self):
         """
@@ -156,9 +152,10 @@ class ChatBot(object):
         else:
             trainer.train_from_list(conversation)
 
-    class InvalidAdapterPairException(Exception):
-        def __init__(self, message='Recieved an unexpected pair of adapters.'):
-            super(ChatBot.InvalidAdapterPairException, self).__init__(message)
+    class InvalidAdapterException(Exception):
+
+        def __init__(self, message='Recieved an unexpected adapter setting.'):
+            super(ChatBot.InvalidAdapterException, self).__init__(message)
 
         def __str__(self):
             return self.message

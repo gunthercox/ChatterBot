@@ -1,6 +1,7 @@
 from unittest import SkipTest
 from tests.base_case import ChatBotTestCase
 from .base import StorageIntegrationTests
+from chatterbot.adapters.storage import MongoDatabaseAdapter
 
 
 class MongoStorageIntegrationTests(StorageIntegrationTests, ChatBotTestCase):
@@ -22,6 +23,4 @@ class MongoStorageIntegrationTests(StorageIntegrationTests, ChatBotTestCase):
             raise SkipTest("Unable to connect to mongo database.")
 
         self.chatbot.storage_adapters = []
-        self.chatbot.add_adapter(
-            "chatterbot.adapters.storage.MongoDatabaseAdapter"
-        )
+        self.chatbot.storage = MongoDatabaseAdapter()

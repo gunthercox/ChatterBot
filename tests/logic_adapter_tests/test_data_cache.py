@@ -35,12 +35,8 @@ class DataCachingTests(TestCase):
 
         self.chatbot = ChatBot(
             "Test Bot",
-            io_adapter_pairs=[
-                (
-                    "chatterbot.adapters.input.VariableInputTypeAdapter",
-                    "chatterbot.adapters.output.OutputFormatAdapter",
-                )
-            ],
+            input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
+            output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
             logic_adapter="tests.logic_adapter_tests.test_data_cache.DummyMutatorLogicAdapter",
             database=database_path
         )
