@@ -1,5 +1,4 @@
 from chatterbot.adapters import Adapter
-from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class LogicAdapter(Adapter):
@@ -22,4 +21,4 @@ class LogicAdapter(Adapter):
         Method that takes an input statement and returns
         a confidence value and a statement as output.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()

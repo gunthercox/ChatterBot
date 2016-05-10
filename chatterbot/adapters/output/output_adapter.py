@@ -1,5 +1,4 @@
 from chatterbot.adapters import Adapter
-from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class OutputAdapter(Adapter):
@@ -13,4 +12,4 @@ class OutputAdapter(Adapter):
         Takes an input value.
         Returns an output value.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()

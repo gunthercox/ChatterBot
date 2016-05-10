@@ -1,4 +1,4 @@
-from .logic import LogicAdapter
+from .logic_adapter import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot.utils.pos_tagger import POSTagger
 import re

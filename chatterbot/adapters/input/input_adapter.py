@@ -1,5 +1,4 @@
 from chatterbot.adapters import Adapter
-from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class InputAdapter(Adapter):
@@ -12,4 +11,4 @@ class InputAdapter(Adapter):
         """
         Returns a statement object based on the input source.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
