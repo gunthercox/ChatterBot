@@ -97,14 +97,3 @@ class ChatterBotResponseTests(ChatBotTestCase):
         self.assertEqual(second_response, self.test_statement.text)
         self.assertEqual(len(statement.in_response_to), 1)
         self.assertIn("Hi", statement.in_response_to)
-
-
-class MultiAdapterTests(ChatBotTestCase):
-
-    def test_add_logic_adapter(self):
-        count_before = len(self.chatbot.logic.adapters)
-
-        self.chatbot.add_adapter(
-            "chatterbot.adapters.logic.ClosestMatchAdapter"
-        )
-        self.assertEqual(len(self.chatbot.logic.adapters), count_before + 1)

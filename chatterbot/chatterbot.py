@@ -46,8 +46,6 @@ class ChatBot(object):
         # The output adapter must be an instance of OutputAdapter
         self.validate_adapter_class(output_adapter, OutputAdapter)
 
-        # TODO: test adapter validation
-
         StorageAdapterClass = import_module(storage_adapter)
         InputAdapterClass = import_module(input_adapter)
         OutputAdapterClass = import_module(output_adapter)

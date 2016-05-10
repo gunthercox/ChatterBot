@@ -12,7 +12,7 @@ class ChatBotTestCase(TestCase):
         if not os.path.exists(self.test_data_directory):
             os.makedirs(self.test_data_directory)
 
-        database_path = os.path.join(
+        self.database_path = os.path.join(
             self.test_data_directory,
             self.test_database_name
         )
@@ -22,7 +22,7 @@ class ChatBotTestCase(TestCase):
             input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
             output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
             output_format='text',
-            database=database_path
+            database=self.database_path
         )
 
     def random_string(self, start=0, end=9000):
