@@ -30,7 +30,10 @@ class LanguageUtilityTests(TestCase):
         tokens = ['this', 'is', 'a', 'test', 'string']
         words = stopwords_manager.remove_stopwords('english', tokens)
 
-        self.assertEqual(list(words), ['test', 'string'])
+        # This example list of words should end up with only two elements
+        self.assertEqual(len(words), 2)
+        self.assertIn('test', list(words))
+        self.assertIn('string', list(words))
 
     def test_word_net(self):
         wordnet = Wordnet()
