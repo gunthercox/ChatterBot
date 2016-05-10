@@ -53,7 +53,6 @@ class EvaluateMathematically(LogicAdapter):
         """
         Separates the incoming text.
         """
-
         string = ''
 
         for chunk in input_text.split():
@@ -81,7 +80,6 @@ class EvaluateMathematically(LogicAdapter):
         the float of the string. Otherwise,
         it returns False.
         """
-
         try:
             return decimal.Decimal(string)
         except decimal.DecimalException:
@@ -93,7 +91,6 @@ class EvaluateMathematically(LogicAdapter):
         the int of the string. Otherwise,
         it returns False.
         """
-
         try:
             return int(string)
         except:
@@ -102,10 +99,8 @@ class EvaluateMathematically(LogicAdapter):
     def is_operator(self, string):
         """
         If the string is an operator, returns
-        said operator. Otherwise, it returns
-        false.
+        said operator. Otherwise, it returns false.
         """
-
         if string in "+-/*^()":
             return string
         else:
@@ -138,9 +133,11 @@ class EvaluateMathematically(LogicAdapter):
         """
         Load language-specific data
         """
-
         if language == "english":
-            with open(os.path.join(os.path.dirname(__file__), 'data', "math_words_EN.json")) as data_file:
+            data_file = os.path.join(
+                os.path.dirname(__file__), 'data', 'math_words_EN.json'
+            )
+            with open(data_file) as data_file:
                 data = json.load(data_file)
             self.data = data
 
@@ -148,19 +145,30 @@ class EvaluateMathematically(LogicAdapter):
         """
         Substitutes numbers for words.
         """
-
         self.load_data("english")
 
         condensed_string = '_'.join(string.split())
 
         for word in self.data["words"]:
-            condensed_string = re.sub('_'.join(word.split(' ')), self.data["words"][word], condensed_string)
+            condensed_string = re.sub(
+                '_'.join(word.split(' ')),
+                self.data["words"][word],
+                condensed_string
+            )
 
         for number in self.data["numbers"]:
-            condensed_string = re.sub(number, str(self.data["numbers"][number]), condensed_string)
+            condensed_string = re.sub(
+                number,
+                str(self.data["numbers"][number]),
+                condensed_string
+            )
 
         for scale in self.data["scales"]:
-            condensed_string = re.sub("_" + scale, " " + self.data["scales"][scale], condensed_string)
+            condensed_string = re.sub(
+                "_" + scale,
+                " " + self.data["scales"][scale],
+                condensed_string
+            )
 
         condensed_string = condensed_string.split('_')
         for chunk_index in range(0, len(condensed_string)):
