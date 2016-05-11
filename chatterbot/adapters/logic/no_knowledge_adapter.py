@@ -1,4 +1,4 @@
-from .logic import LogicAdapter
+from .logic_adapter import LogicAdapter
 
 
 class NoKnowledgeAdapter(LogicAdapter):

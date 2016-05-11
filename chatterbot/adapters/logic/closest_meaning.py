@@ -1,4 +1,3 @@
-from chatterbot.adapters.exceptions import EmptyDatasetException
 from .base_match import BaseMatchAdapter
 
 from chatterbot.utils.pos_tagger import POSTagger
@@ -88,7 +87,7 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
                 # Use a randomly picked statement
                 return 0, self.context.storage.get_random()
             else:
-                raise EmptyDatasetException
+                raise self.EmptyDatasetException()
 
         # Get the text of each statement
         text_of_all_statements = []

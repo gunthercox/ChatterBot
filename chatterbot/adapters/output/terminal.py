@@ -1,11 +1,11 @@
-from chatterbot.adapters.io import IOAdapter
+from chatterbot.adapters.output import OutputAdapter
 from chatterbot.utils.read_input import input_function
 
 
-class NoOutputAdapter(IOAdapter):
+class TerminalAdapter(OutputAdapter):
     """
-    The NoOutputAdapter is a simple adapter that
-    doesn't display anything.
+    A simple adapter that allows ChatterBot to
+    communicate through the terminal.
     """
 
     def process_input(self, *args, **kwargs):
@@ -16,4 +16,8 @@ class NoOutputAdapter(IOAdapter):
         return user_input
 
     def process_response(self, statement):
+        """
+        Print the response to the user's input.
+        """
+        print(statement.text)
         return statement.text

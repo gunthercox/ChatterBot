@@ -9,12 +9,10 @@ class ClosestMatchAdapterTests(TestCase):
         self.adapter = ClosestMatchAdapter()
 
     def test_no_choices(self):
-        from chatterbot.adapters.exceptions import EmptyDatasetException
-
         possible_choices = []
         statement = Statement("What is your quest?")
 
-        with self.assertRaises(EmptyDatasetException):
+        with self.assertRaises(ClosestMatchAdapter.EmptyDatasetException):
             self.adapter.get(statement, possible_choices)
 
     def test_get_closest_statement(self):

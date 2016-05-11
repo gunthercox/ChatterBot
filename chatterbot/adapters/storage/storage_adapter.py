@@ -1,5 +1,4 @@
 from chatterbot.adapters import Adapter
-from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class StorageAdapter(Adapter):
@@ -18,13 +17,13 @@ class StorageAdapter(Adapter):
         """
         Return the number of entries in the database.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
 
     def find(self, statement_text):
         """
         Returns a object from the database if it exists
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
 
     def remove(self, statement_text):
         """
@@ -32,7 +31,7 @@ class StorageAdapter(Adapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
 
     def filter(self, **kwargs):
         """
@@ -42,23 +41,31 @@ class StorageAdapter(Adapter):
         all listed attributes and in which all values
         match for all listed attributes will be returned.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
 
     def update(self, statement):
         """
         Modifies an entry in the database.
         Creates an entry if one does not exist.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
 
     def get_random(self):
         """
         Returns a random statement from the database
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
 
     def drop(self):
         """
         Drop the database attached to a given adapter.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
+
+    class EmptyDatabaseException(Exception):
+
+        def __init__(self, message="The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database."):
+            self.message = message
+
+        def __str__(self):
+            return self.message

@@ -1,5 +1,4 @@
 from chatterbot.adapters.storage import StorageAdapter
-from chatterbot.adapters.exceptions import EmptyDatabaseException
 from chatterbot.conversation import Statement, Response
 from jsondb import Database
 
@@ -139,7 +138,7 @@ class JsonDatabaseAdapter(StorageAdapter):
         from random import choice
 
         if self.count() < 1:
-            raise EmptyDatabaseException()
+            raise self.EmptyDatabaseException()
 
         statement = choice(self._keys())
         return self.find(statement)

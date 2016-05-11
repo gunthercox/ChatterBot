@@ -1,5 +1,6 @@
 from tests.base_case import ChatBotTestCase
 from .base import StorageIntegrationTests
+from chatterbot.adapters.storage import JsonDatabaseAdapter
 
 
 class JsonStorageIntegrationTests(StorageIntegrationTests, ChatBotTestCase):
@@ -8,6 +9,4 @@ class JsonStorageIntegrationTests(StorageIntegrationTests, ChatBotTestCase):
         super(JsonStorageIntegrationTests, self).setUp()
 
         self.chatbot.storage_adapters = []
-        self.chatbot.add_adapter(
-            "chatterbot.adapters.storage.JsonDatabaseAdapter"
-        )
+        self.chatbot.storage = JsonDatabaseAdapter()

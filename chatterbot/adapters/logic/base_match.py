@@ -1,5 +1,4 @@
-from chatterbot.adapters.exceptions import AdapterNotImplementedError
-from .logic import LogicAdapter
+from .logic_adapter import LogicAdapter
 from .mixins import TieBreaking
 
 
@@ -42,7 +41,7 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
         This method should be overridden with one to select a match
         based on the input statement.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
 
     def can_process(self, statement):
         """

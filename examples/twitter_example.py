@@ -14,11 +14,13 @@ TWITTER = {
 }
 '''
 
-
 chatbot = ChatBot("ChatterBot",
     storage_adapter="chatterbot.adapters.storage.TwitterAdapter",
-    logic_adapter="chatterbot.adapters.logic.ClosestMatchAdapter",
-    io_adapter="chatterbot.adapters.io.TerminalAdapter",
+    logic_adapters=[
+        "chatterbot.adapters.logic.ClosestMatchAdapter"
+    ],
+    input_adapter="chatterbot.adapters.input.TerminalAdapter",
+    output_adapter="chatterbot.adapters.output.TerminalAdapter",
     database="../database.db",
     twitter_consumer_key=TWITTER["CONSUMER_KEY"],
     twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],
@@ -26,15 +28,11 @@ chatbot = ChatBot("ChatterBot",
     twitter_access_token_secret=TWITTER["ACCESS_TOKEN_SECRET"]
 )
 
-user_input = "Type something to begin..."
-
-print(user_input)
+print("Type something to begin...")
 
 while True:
     try:
-        user_input = chatbot.get_input()
-        bot_input = chatbot.get_response(user_input)
+        bot_input = chatbot.get_response(None)
 
     except (KeyboardInterrupt, EOFError, SystemExit):
         break
-

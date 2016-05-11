@@ -1,4 +1,4 @@
-from .logic import LogicAdapter
+from .logic_adapter import LogicAdapter
 from chatterbot.conversation import Statement
 from textblob.classifiers import NaiveBayesClassifier
 from datetime import datetime

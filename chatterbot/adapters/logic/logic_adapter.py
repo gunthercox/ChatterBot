@@ -1,5 +1,4 @@
 from chatterbot.adapters import Adapter
-from chatterbot.adapters.exceptions import AdapterNotImplementedError
 
 
 class LogicAdapter(Adapter):
@@ -22,4 +21,12 @@ class LogicAdapter(Adapter):
         Method that takes an input statement and returns
         a confidence value and a statement as output.
         """
-        raise AdapterNotImplementedError()
+        raise self.AdapterMethodNotImplementedError()
+
+    class EmptyDatasetException(Exception):
+
+        def __init__(self, message="An empty collection of elements was received when at least one entry was expected."):
+            self.message = message
+
+        def __str__(self):
+            return self.message

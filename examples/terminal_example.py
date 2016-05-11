@@ -1,5 +1,10 @@
 from chatterbot import ChatBot
 
+'''
+In this example we use a while loop combined with a try-except statement.
+This allows us to have a conversation with the chat bot until we press
+ctrl-c or ctrl-d on the keyboard.
+'''
 
 # Create a new instance of a ChatBot
 bot = ChatBot("Terminal",
@@ -9,37 +14,21 @@ bot = ChatBot("Terminal",
         "chatterbot.adapters.logic.TimeLogicAdapter",
         "chatterbot.adapters.logic.ClosestMatchAdapter"
     ],
-    io_adapters=[
-        "chatterbot.adapters.io.TerminalAdapter"
-    ],
-    database="../database.db")
+    input_adapter="chatterbot.adapters.input.TerminalAdapter",
+    output_adapter="chatterbot.adapters.output.TerminalAdapter",
+    database="../database.db"
+)
 
+# Text to prompt the user with initially
 user_input = "Type something to begin..."
 
 print(user_input)
 
-'''
-In this example we use a while loop combined with a try-except statement.
-This allows us to have a conversation with the chat bot until we press
-ctrl-c or ctrl-d on the keyboard.
-'''
-
 while True:
     try:
-        '''
-        ChatterBot's get_input method uses io adapter to get new input for
-        the bot to respond to. In this example, the TerminalAdapter gets the
-        input from the user's terminal. Other io adapters might retrieve input
-        differently, such as from various web APIs.
-        '''
-        user_input = bot.get_input()
-
-        '''
-        The get_response method also uses the io adapter to determine how
-        the bot's output should be returned. In the case of the TerminalAdapter,
-        the output is printed to the user's terminal.
-        '''
-        bot_input = bot.get_response(user_input)
+        # We pass None to this method because it expects a response.
+        # The TerminalAdapter will handle reading from the user's terminal.
+        bot_input = bot.get_response(None)
 
     except (KeyboardInterrupt, EOFError, SystemExit):
         break
