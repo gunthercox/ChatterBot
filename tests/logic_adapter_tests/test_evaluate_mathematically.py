@@ -1,12 +1,12 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import EvaluateMathematically
+from chatterbot.adapters.logic import MathematicalEvaluation
 from chatterbot.conversation import Statement
 
 
-class EvaluateMathematicallyTests(TestCase):
+class MathematicalEvaluationTests(TestCase):
 
     def setUp(self):
-        self.adapter = EvaluateMathematically()
+        self.adapter = MathematicalEvaluation()
 
     def test_can_process(self):
         statement = Statement("What is 10 + 10 + 10?")
@@ -47,12 +47,12 @@ class EvaluateMathematicallyTests(TestCase):
         self.assertIn("numbers", self.adapter.data)
 
 
-class MathematicalEvaluationTests(TestCase):
+class MathematicalEvaluationOperationTests(TestCase):
 
     def setUp(self):
         import sys
 
-        self.adapter = EvaluateMathematically()
+        self.adapter = MathematicalEvaluation()
 
         # Some tests may return decimals under python 3
         self.python_version = sys.version_info[0]

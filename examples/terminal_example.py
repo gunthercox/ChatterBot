@@ -10,7 +10,7 @@ ctrl-c or ctrl-d on the keyboard.
 bot = ChatBot("Terminal",
     storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
     logic_adapters=[
-        "chatterbot.adapters.logic.EvaluateMathematically",
+        "chatterbot.adapters.logic.MathematicalEvaluation",
         "chatterbot.adapters.logic.TimeLogicAdapter",
         "chatterbot.adapters.logic.ClosestMatchAdapter"
     ],
