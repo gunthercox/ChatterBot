@@ -134,6 +134,6 @@ we can exit the loop and stop the program when a user enters `ctrl+c`.
 This concludes this ChatterBot tutorial. Please see other sections of the
 documentation for more details and examples.
 
-Next: See :doc:`/examples`
+Next: See :doc:`./examples`
 
 .. _pip: https://pip.pypa.io/en/stable/installing/
