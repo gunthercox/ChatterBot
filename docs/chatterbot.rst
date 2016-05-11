@@ -1,0 +1,4 @@
+ChatterBot
+==========
+
+.. autofunction:: chatterbot.ChatBot
