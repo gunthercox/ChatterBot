@@ -6,11 +6,11 @@ import json
 import decimal
 
 
-class EvaluateMathematically(LogicAdapter):
+class MathematicalEvaluation(LogicAdapter):
     """
-    The EvaluateMathematically logic adapter parses input to
+    The MathematicalEvaluation logic adapter parses input to
     determine whether the user is asking a question that requires
-    math to be done. If so, EvaluateMathematically goes through a
+    math to be done. If so, MathematicalEvaluation goes through a
     set of steps to parse the input and extract the equation that
     must be solved. The steps, in order, are:
 

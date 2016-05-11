@@ -98,7 +98,7 @@ and returns a response to that statement.
 You can choose to use as many logic adapters as you would like.
 In this example we will use two logic adapters. The TimeLogicAdapter returns
 the current time when the input statement asks for it.
-The EvaluateMathematically adapter solves math problems that use basic
+The MathematicalEvaluation adapter solves math problems that use basic
 operations.
 
 .. code-block:: python
@@ -109,7 +109,7 @@ operations.
        input_adapter="chatterbot.adapters.input.TerminalAdapter",
        output_adapter="chatterbot.adapters.output.TerminalAdapter",
        logic_adapters=[
-           "chatterbot.adapters.logic.EvaluateMathematically",
+           "chatterbot.adapters.logic.MathematicalEvaluation",
            "chatterbot.adapters.logic.TimeLogicAdapter"
        ],
        database="./database.json"

@@ -4,7 +4,7 @@ from chatterbot import ChatBot
 bot = ChatBot(
     "Math & Time Bot",
     logic_adapters=[
-        "chatterbot.adapters.logic.EvaluateMathematically",
+        "chatterbot.adapters.logic.MathematicalEvaluation",
         "chatterbot.adapters.logic.TimeLogicAdapter"
     ],
     input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
