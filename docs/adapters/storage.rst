@@ -14,7 +14,7 @@ The storage adapter that your bot uses can be specified by setting the `storage_
    )
 
 Read Only Mode
-++++++++++++++
+--------------
 
 If you instantiate your chatterbot with the parameter `read_only=True`
 then the database will not be altered when input is given to the chatterbot.
