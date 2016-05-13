@@ -1,10 +1,5 @@
 from chatterbot import ChatBot
 
-'''
-In this example we use a while loop combined with a try-except statement.
-This allows us to have a conversation with the chat bot until we press
-ctrl-c or ctrl-d on the keyboard.
-'''
 
 # Create a new instance of a ChatBot
 bot = ChatBot("Terminal",
@@ -19,16 +14,15 @@ bot = ChatBot("Terminal",
     database="../database.db"
 )
 
-# Text to prompt the user with initially
-user_input = "Type something to begin..."
+print("Type something to begin...")
 
-print(user_input)
-
+# The following loop will execute each time the user enters input
 while True:
     try:
-        # We pass None to this method because it expects a response.
-        # The TerminalAdapter will handle reading from the user's terminal.
+        # We pass None to this method because the parameter
+        # is not used by the TerminalAdapter
         bot_input = bot.get_response(None)
 
+    # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
         break

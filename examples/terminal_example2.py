@@ -18,5 +18,6 @@ while True:
         bot_input = bot.get_response(None)
         print(bot_input)
 
+    # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
         break

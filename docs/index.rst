@@ -10,10 +10,10 @@ Contents:
 
    tutorial
    examples
-   chatterbot
+   training
    adapters/index
+   chatterbot
    conversations
-   corpus
    utils
 
 About ChatterBot
@@ -30,6 +30,11 @@ Simple Example
 .. literalinclude:: ../examples/basic_example.py
    :language: python
 
+Report an Issue
+===============
+
+Please direct all bug reports and feature requests to the project's issue
+tracker on `GitHub`_.
 
 Indices and tables
 ==================
@@ -38,3 +43,4 @@ Indices and tables
 * :ref:`modindex`
 * :ref:`search`
 
+.. _GitHub: https://github.com/gunthercox/ChatterBot

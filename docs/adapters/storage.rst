@@ -1,3 +1,4 @@
+================
 Storage Adapters
 ================
 
@@ -14,14 +15,14 @@ The storage adapter that your bot uses can be specified by setting the `storage_
    )
 
 Read Only Mode
---------------
+==============
 
 If you instantiate your chatterbot with the parameter `read_only=True`
 then the database will not be altered when input is given to the chatterbot.
 The `read_only` parameter is set to false by default.
 
 Json Database Adapter
----------------------
+=====================
 
 .. autofunction:: chatterbot.adapters.storage.JsonDatabaseAdapter
 
@@ -32,18 +33,35 @@ passed to the ChatterBot constructor. This storage adapter uses a local file
 database so this parameter is needed to specify the location of the file.
 
 Mongo Database Adapter
-----------------------
+======================
 
 .. autofunction:: chatterbot.adapters.storage.MongoDatabaseAdapter
 
 "chatterbot.adapters.storage.MongoDatabaseAdapter"
 
-The MongoDB Database adapter requires an additional parameter (`database`) to
-be passed to the ChatterBot constructor. This value will be the name of the
-database you choose to connect to.
+database
+--------
+
+The MongoDB Database adapter requires an additional parameter, `database`,
+to be passed to the ChatterBot constructor. This value will be the name
+of the database you choose to connect to.
+
+.. code-block:: python
+
+   database='chatterbot-database'
+
+database_uri
+------------
+
+If you need to connect to a remote instance of MongoDB, you
+can set the `database_uri` parameter to the uri of your database.
+
+.. code-block:: python
+
+   database_uri='mongodb://example.com:8100/'
 
 Creating a new storage adapter
-------------------------------
+==============================
 
 It is fairly easy to write your own storage adapter to connect to just about
 any database or storage endpoint. To get started, you will need to create a
