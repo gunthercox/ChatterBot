@@ -20,11 +20,11 @@ class ChatBot(object):
         ])
 
         input_adapter = kwargs.get("input_adapter",
-            "chatterbot.adapters.input.TerminalAdapter"
+            "chatterbot.adapters.input.VariableInputTypeAdapter"
         )
 
         output_adapter = kwargs.get("output_adapter",
-            "chatterbot.adapters.output.TerminalAdapter"
+            "chatterbot.adapters.output.OutputFormatAdapter"
         )
 
         input_output_adapter_pairs = kwargs.get(
