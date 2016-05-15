@@ -10,17 +10,14 @@ class ChatterBotTests(ChatBotTestCase):
         returns the last statement that was issued.
         """
         self.chatbot.recent_statements.append(
-            Statement("Test statement 1")
+            (Statement("Test statement 1"), Statement("Test response 1"), )
         )
         self.chatbot.recent_statements.append(
-            Statement("Test statement 2")
-        )
-        self.chatbot.recent_statements.append(
-            Statement("Test statement 3")
+            (Statement("Test statement 2"), Statement("Test response 2"), )
         )
 
         last_statement = self.chatbot.get_last_statement()
-        self.assertEqual(last_statement.text, "Test statement 3")
+        self.assertEqual(last_statement.text, "Test response 2")
 
 
 class ChatterBotResponseTests(ChatBotTestCase):
@@ -58,12 +55,12 @@ class ChatterBotResponseTests(ChatBotTestCase):
 
     def test_statement_added_to_recent_response_list(self):
         """
-        A new input statement should be added to the recent response list.
+        An input statement should be added to the recent response list.
         """
         statement_text = "Wow!"
         response = self.chatbot.get_response(statement_text)
 
-        self.assertIn(statement_text, self.chatbot.recent_statements)
+        self.assertIn(statement_text, self.chatbot.recent_statements[0])
         self.assertEqual(response, statement_text)
 
     def test_response_known(self):
