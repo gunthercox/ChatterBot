@@ -1,9 +1,12 @@
-sudo: false
 language: python
 
 python:
   - '3.4'
   - '2.7'
+
+os:
+  - linux
+  - windows
 
 install:
   - pip install coveralls
