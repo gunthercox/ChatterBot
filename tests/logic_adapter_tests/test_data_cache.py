@@ -1,5 +1,4 @@
-from unittest import TestCase
-from chatterbot import ChatBot
+from tests.base_case import ChatBotTestCase
 from chatterbot.adapters.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot.training.trainers import ListTrainer
@@ -20,29 +19,13 @@ class DummyMutatorLogicAdapter(LogicAdapter):
         return 1, statement
 
 
-class DataCachingTests(TestCase):
+class DataCachingTests(ChatBotTestCase):
 
     def setUp(self):
-        self.test_data_directory = 'test_data'
-        self.test_database_name = self.random_string() + ".db"
+        super(DataCachingTests, self).setUp()
 
-        if not os.path.exists(self.test_data_directory):
-            os.makedirs(self.test_data_directory)
-
-        database_path = os.path.join(
-            self.test_data_directory,
-            self.test_database_name
-        )
-
-        self.chatbot = ChatBot(
-            "Test Bot",
-            input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
-            output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
-            logic_adapters=[
-                "tests.logic_adapter_tests.test_data_cache.DummyMutatorLogicAdapter"
-            ],
-            database=database_path
-        )
+        self.chatbot.logic = DummyMutatorLogicAdapter()
+        self.chatbot.logic.set_context(self.chatbot)
 
         self.chatbot.set_trainer(ListTrainer)
 
@@ -50,26 +33,6 @@ class DataCachingTests(TestCase):
             "Hello",
             "How are you?"
         ])
-
-    def random_string(self, start=0, end=9000):
-        """
-        Generate a string based on a random number.
-        """
-        from random import randint
-        return str(randint(start, end))
-
-    def remove_data(self):
-        import shutil
-
-        if os.path.exists(self.test_data_directory):
-            shutil.rmtree(self.test_data_directory)
-
-    def tearDown(self):
-        """
-        Remove the test database.
-        """
-        self.chatbot.storage.drop()
-        self.remove_data()
 
     def test_additional_attributes_saved(self):
         """
