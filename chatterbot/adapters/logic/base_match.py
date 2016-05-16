@@ -31,8 +31,7 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
 
         # Check if the list is empty
         if not statement_list and self.has_storage_context:
-            all_statements = self.context.storage.filter()
-            statement_list = get_response_statements(all_statements)
+            statement_list = self.context.storage.get_response_statements()
 
         return statement_list
 

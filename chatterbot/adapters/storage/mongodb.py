@@ -172,6 +172,9 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.statements.remove({'text': statement_text})
 
+    def get_response_statements(self):
+        
+
     def drop(self):
         """
         Remove the database.
