@@ -1,7 +1,12 @@
 from tests.base_case import ChatBotTestCase
+from chatterbot.training.trainers import ChatterBotCorpusTrainer
 
 
-class CorpusTrainingTestCase(ChatBotTestCase):
+class ChatterBotCorpusTrainingTests(ChatBotTestCase):
+
+    def setUp(self):
+        super(ChatterBotCorpusTrainingTests, self).setUp()
+        self.chatbot.set_trainer(ChatterBotCorpusTrainer)
 
     def test_train_with_english_greeting_corpus(self):
         self.chatbot.train(

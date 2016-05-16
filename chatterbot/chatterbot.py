@@ -64,6 +64,8 @@ class ChatBot(object):
         self.input.set_context(self)
         self.output.set_context(self)
 
+        self.trainer = None
+
     def add_adapter(self, adapter, **kwargs):
         self.validate_adapter_class(adapter, LogicAdapter)
 
@@ -129,27 +131,31 @@ class ChatBot(object):
         # Process the response output with the output adapter
         return self.output.process_response(response)
 
-    def train(self, conversation=None, *args, **kwargs):
+    def set_trainer(self, training_class, **kwargs):
         """
-        Train the chatbot based on input data.
+        Set the module used to train the chatbot.
         """
-        from .training import Trainer
+        self.trainer = training_class(self.storage, **kwargs)
 
-        trainer = Trainer(self.storage)
-
-        if isinstance(conversation, str):
-            corpora = list(args)
-            corpora.append(conversation)
-
-            if corpora:
-                trainer.train_from_corpora(corpora)
-        else:
-            trainer.train_from_list(conversation)
+    @property
+    def train(self):
+        if not self.trainer:
+            raise self.TrainerInitializationException()
+        # Proxy method to the trainer
+        return self.trainer.train
 
     class InvalidAdapterException(Exception):
 
         def __init__(self, message='Recieved an unexpected adapter setting.'):
             super(ChatBot.InvalidAdapterException, self).__init__(message)
+
+        def __str__(self):
+            return self.message
+
+    class TrainerInitializationException(Exception):
+
+        def __init__(self, message='The `set_trainer` method must be called before calling `train`.'):
+            super(ChatBot.TrainerInitializationException, self).__init__(message)
 
         def __str__(self):
             return self.message

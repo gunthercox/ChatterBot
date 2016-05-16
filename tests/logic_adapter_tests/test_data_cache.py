@@ -2,6 +2,7 @@ from unittest import TestCase
 from chatterbot import ChatBot
 from chatterbot.adapters.logic import LogicAdapter
 from chatterbot.conversation import Statement
+from chatterbot.training.trainers import ListTrainer
 import os
 
 
@@ -42,6 +43,8 @@ class DataCachingTests(TestCase):
             ],
             database=database_path
         )
+
+        self.chatbot.set_trainer(ListTrainer)
 
         self.chatbot.train([
             "Hello",
