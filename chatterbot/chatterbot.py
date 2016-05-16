@@ -3,6 +3,7 @@ from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
 from .adapters.output import OutputAdapter
 from .conversation import Statement
+from .utils.queues import ResponseQueue
 from .utils.module_loading import import_module
 
 
@@ -31,7 +32,8 @@ class ChatBot(object):
             "io_adapter_pairs"
         )
 
-        self.recent_statements = []
+        # The last 10 statement inputs and outputs
+        self.recent_statements = ResponseQueue(maxsize=10)
 
         # The storage adapter must be an instance of StorageAdapter
         self.validate_adapter_class(storage_adapter, StorageAdapter)
@@ -98,8 +100,10 @@ class ChatBot(object):
         """
         Return the last statement that was received.
         """
-        if self.recent_statements:
-            return self.recent_statements[-1]
+        previous_interaction = self.recent_statements[-1]
+        if previous_interaction:
+            input_statement, output_statement = previous_interaction
+            return output_statement
         return None
 
     def get_response(self, input_item):
@@ -124,7 +128,9 @@ class ChatBot(object):
         # Update the database after selecting a response
         self.storage.update(input_statement)
 
-        self.recent_statements.append(response)
+        self.recent_statements.append(
+            (input_statement, response, )
+        )
 
         # Process the response output with the output adapter
         return self.output.process_response(response)
