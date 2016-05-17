@@ -1,6 +1,8 @@
 Conversations
 =============
 
+..  _conversation_statements:
+
 Statements
 ----------
 
@@ -9,6 +11,8 @@ Statements
 ChatterBot's statement objects represent either an input statement that the
 chat bot has recieved from a user, or an output statement that the chat bot
 has returned based on some input.
+
+..  _conversation_responses:
 
 Responses
 ---------
