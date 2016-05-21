@@ -4,7 +4,22 @@ from chatterbot.conversation import Statement, Response
 
 class ChatterBotTests(ChatBotTestCase):
 
-    def test_get_last_statement(self):
+    def test_get_last_conversance(self):
+        self.chatbot.recent_statements.append(
+            (Statement("Test statement 1"), Statement("Test response 1"), )
+        )
+        self.chatbot.recent_statements.append(
+            (Statement("Test statement 2"), Statement("Test response 2"), )
+        )
+
+        last_conversance = self.chatbot.get_last_conversance()
+        self.assertEqual(last_conversance[0].text, "Test statement 2")
+        self.assertEqual(last_conversance[1].text, "Test response 2")
+
+    def test_no_last_conversance(self):
+        self.assertIsNone(self.chatbot.get_last_conversance())
+
+    def test_get_last_response_statement(self):
         """
         Make sure that the get last statement method
         returns the last statement that was issued.
@@ -16,8 +31,29 @@ class ChatterBotTests(ChatBotTestCase):
             (Statement("Test statement 2"), Statement("Test response 2"), )
         )
 
-        last_statement = self.chatbot.get_last_statement()
+        last_statement = self.chatbot.get_last_response_statement()
         self.assertEqual(last_statement.text, "Test response 2")
+
+    def test_no_last_response_statement(self):
+        self.assertIsNone(self.chatbot.get_last_response_statement())
+
+    def test_get_last_input_statement(self):
+        """
+        Make sure that the get last statement method
+        returns the last statement that was issued.
+        """
+        self.chatbot.recent_statements.append(
+            (Statement("Test statement 1"), Statement("Test response 1"), )
+        )
+        self.chatbot.recent_statements.append(
+            (Statement("Test statement 2"), Statement("Test response 2"), )
+        )
+
+        last_statement = self.chatbot.get_last_input_statement()
+        self.assertEqual(last_statement.text, "Test statement 2")
+
+    def test_no_last_input_statement(self):
+        self.assertIsNone(self.chatbot.get_last_input_statement())
 
 
 class ChatterBotResponseTests(ChatBotTestCase):

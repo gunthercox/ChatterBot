@@ -98,14 +98,32 @@ class ChatBot(object):
                 )
             )
 
-    def get_last_statement(self):
+    def get_last_conversance(self):
+        """
+        Return the most recent input statement and response pair.
+        """
+        if not self.recent_statements.empty():
+            return self.recent_statements[-1]
+        return None
+
+    def get_last_response_statement(self):
         """
         Return the last statement that was received.
         """
-        previous_interaction = self.recent_statements[-1]
+        previous_interaction = self.get_last_conversance()
         if previous_interaction:
-            input_statement, output_statement = previous_interaction
-            return output_statement
+            # Return the output statement
+            return previous_interaction[1]
+        return None
+
+    def get_last_input_statement(self):
+        """
+        Return the last response that was given.
+        """
+        previous_interaction = self.get_last_conversance()
+        if previous_interaction:
+            # Return the input statement
+            return previous_interaction[0]
         return None
 
     def get_response(self, input_item):
@@ -122,7 +140,7 @@ class ChatBot(object):
         if existing_statement:
             input_statement = existing_statement
 
-        previous_statement = self.get_last_statement()
+        previous_statement = self.get_last_response_statement()
 
         if previous_statement:
             input_statement.add_response(previous_statement)
