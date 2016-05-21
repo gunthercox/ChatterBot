@@ -19,12 +19,16 @@ class ResponseQueue(object):
         self.queue.append(item)
 
     def __getitem__(self, index):
-        if self.queue:
-            return self.queue[index]
-        return None
+        return self.queue[index]
 
     def __contains__(self, item):
         """
         Check if an element is in this queue.
         """
         return item in self.queue
+
+    def empty(self):
+        """
+        Return True if the queue is empty, False otherwise.
+        """
+        return len(self.queue) == 0

@@ -15,6 +15,13 @@ class ResponseQueueTests(TestCase):
         self.queue.queue.append(0)
         self.assertIn(0, self.queue)
 
+    def test_empty(self):
+        self.assertTrue(self.queue.empty())
+
+    def test_not_empty(self):
+        self.queue.append(0)
+        self.assertFalse(self.queue.empty())        
+
     def test_maxsize(self):
         self.queue.append(0)
         self.queue.append(1)
