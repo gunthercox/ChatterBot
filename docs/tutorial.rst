@@ -1,8 +1,9 @@
+===================
 ChatterBot Tutorial
 ===================
 
 Installing ChatterBot
----------------------
+=====================
 
 The recommended method for installing ChatterBot is by using `pip`_.
 To install ChatterBot using pip run the following command in your terminal.
@@ -12,7 +13,7 @@ To install ChatterBot using pip run the following command in your terminal.
    pip install chatterbot
 
 Creating your first chat bot
-----------------------------
+============================
 
 Create a new file named `chatbot.py`.
 Then open `chatbot.py` in your editor of choice.
@@ -35,7 +36,7 @@ There is a few more parameters that we will want to specify
 before we run our program for the first time.
 
 Storage adapter
-+++++++++++++++
+---------------
 
 ChatterBot comes with built in adapter classes that allow it to connect
 to different types of databases. In this tutorial, we will be using the
@@ -72,7 +73,7 @@ if it does not already exist.
    the JsonDatabase adapter will be used automatically.
 
 Input and output adapters
-+++++++++++++++++++++++++
+-------------------------
 
 Next, we will add in parameters to specify the input and output terminal
 adapter. The input terminal adapter simply reads the user's input from
@@ -89,7 +90,7 @@ the terminal. The output terminal adapter print's the chat bot's response.
    )
 
 Logic adapters
-++++++++++++++
+--------------
 
 The `logic_adapters` parameter is a list of logic adapters.
 In ChatterBot, a logic adapter is a class that take's an input statement
@@ -116,7 +117,7 @@ operations.
    )
 
 Getting a response
-++++++++++++++++++
+------------------
 
 Next, you will want to create a while loop for your chat bot to run in.
 By breaking out of the loop when specific exceptions are triggered,

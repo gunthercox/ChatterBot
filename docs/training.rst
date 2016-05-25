@@ -6,6 +6,15 @@ ChatterBot has tools that simplify the process of training a bot instance.
 These tools range from simple utility methods that update relations of known
 statements, to a corpus of pre-loaded training data that you can use.
 
+..  _set_trainer:
+
+Setting the training class
+==========================
+
+ChatterBot comes with training classes built in, or you can create your own
+if needed. To use a training class you must import it and pass it to
+the `set_trainer()` method before calling `train()`.
+
 Training via list data
 ======================
 

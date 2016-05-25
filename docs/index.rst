@@ -8,6 +8,7 @@ Contents:
 .. toctree::
    :maxdepth: 2
 
+   quickstart
    tutorial
    examples
    training
