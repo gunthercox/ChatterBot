@@ -1,0 +1,35 @@
+{% extends '!layout.html' %}
+
+{% block footer %}
+<div class="footer">
+    <table style="margin: 0px auto;">
+        <tbody>
+            <tr>
+                <td style="text-align: center; padding: 30px;">
+                    <a href="http://stackoverflow.com/questions/tagged/chatterbot">
+                        <div>
+                            <img src="_static/so-icon.png">
+                        </div>
+                        <div>
+                            Ask a question under the
+                            chatterbot tag
+                        </div>
+                    </a>
+                </td>
+                <td style="text-align: center; padding: 30px;">
+                    <a href="https://github.com/gunthercox/ChatterBot/issues/new">
+                        <div>
+                            <img src="_static/github-mark.png">
+                        </div>
+                        <div>
+                            Report an issue on GitHub
+                        </div>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+{{ super() }}
+{% endblock %}
