@@ -37,7 +37,10 @@ pip install chatterbot
 
 ```
 from chatterbot import ChatBot
+from chatterbot.training.trainers import ChatterBotCorpusTrainer
+
 chatbot = ChatBot("Ron Obvious")
+chatbot.set_trainer(ChatterBotCorpusTrainer)
 
 # Train based on the english corpus
 chatbot.train("chatterbot.corpus.english")
@@ -68,10 +71,10 @@ chatbot.train("chatterbot.corpus.english.conversations")
 
 **Corpus contributions are welcome! Please make a pull request.**
 
-# Documentation
+# [Documentation](http://chatterbot.readthedocs.io/)
 
-View the [documentation](https://github.com/gunthercox/ChatterBot/wiki/)
-for using ChatterBot in the project wiki.
+View the [documentation](http://chatterbot.readthedocs.io/)
+for ChatterBot on Read the Docs.
 
 # Examples
 
@@ -80,12 +83,17 @@ directory in this project's repository.
 
 There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot).
 
-Have you created something cool using ChatterBot?  
+**Have you created something cool using ChatterBot?**
+
 Please add your creation to the [list of projects](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) using ChatterBot in the wiki.
 
 # Testing
 
 ChatterBot's built in tests can be run using nose.
+
+```
+nosetests
+```
 
 See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
 
