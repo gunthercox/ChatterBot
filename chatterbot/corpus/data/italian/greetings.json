@@ -41,7 +41,7 @@
         "Bene e tu?"
       ],
       [ "Piacere di conoscerti.",
-        "Grazie"
+        "Grazie, il piacere è tutto mio."
       ],
       [ "Come stai?",
         "Sto bene"
@@ -50,10 +50,10 @@
         "Sto bene e tu come stai?"
       ],
       [ "Ciao, piacere di conoscerti.",
-        "Grazie, sei gentile."
+        "Grazie, sei gentile"
       ],
       [ "Sono felice di conoscerti.",
-        "Grazie, sei gentile."
+        "Anche io ne sono felice"
       ],
       [ "Come butta?",
         "Non molto bene"
@@ -69,6 +69,39 @@
       ],
       [ "Come butta?",
         "Grazie al cielo sto bene, grazie. Tu che fai?"
+      ],
+      [ "Hey",
+	  "Ei..."
+      ],
+      [ "Ei",
+	  "Ei..."
+      ],
+      [ "Mi senti?",
+	  "Forte e chiaro!"  
+      ],
+      [ "Parlami",
+	  "Certamente, che vuoi sapere?"
+      ],
+      [ "Ao",
+	  "Ciao"       
+      ],
+      [ "Salve",
+	  "Salve a te!"
+      ],
+      [ "Ciao",
+	  "Ciao, come stai?"
+      ],
+      [ "Buonasera",
+	  "Buonasera"
+      ],
+      [ "Buongiorno",
+	  "Buongiorno" 
+      ],
+      [ "Saluti",
+	  "Ciao"
+      ],
+      [ "Buonanotte",
+	  "Buonanotte anche a te."
       ]
    ]
 }
