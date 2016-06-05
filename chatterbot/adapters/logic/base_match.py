@@ -23,11 +23,7 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
         """
         return self.context and self.context.storage
 
-    def get_available_statements(self):
-        # TODO: Remove this method
-        return self.context.storage.get_response_statements()
-
-    def get(self, input_statement, statement_list=None):
+    def get(self, input_statement):
         """
         This method should be overridden with one to select a match
         based on the input statement.
