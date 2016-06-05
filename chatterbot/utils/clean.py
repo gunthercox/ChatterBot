@@ -36,9 +36,8 @@ def clean(text):
         parser = HTMLParser()
         text = parser.unescape(text)
     else:
-        import html.parser
-        parser = html.parser.HTMLParser()
-        text = parser.unescape(text)
+        import html
+        text = html.unescape(text)
 
     # Normalize unicode characters
     # 'raw_input' is just 'input' in python3
