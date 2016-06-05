@@ -170,7 +170,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             statement.remove_response(statement_text)
             self.update(statement)
 
-        self.statements.remove({'text': statement_text})
+        self.statements.delete_one({'text': statement_text})
 
     def get_response_statements(self):
         """
