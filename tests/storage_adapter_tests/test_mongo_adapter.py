@@ -195,6 +195,27 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
         self.assertEqual(results, [])
 
+    def test_get_response_statements(self):
+        """
+        Test that we are able to get a list of only statements
+        that are known to be in response to another statement.
+        """
+        statement_list = [
+            Statement("What... is your quest?"),
+            Statement("This is a phone."),
+            Statement("A what?", in_response_to=[Response("This is a phone.")]),
+            Statement("A phone.", in_response_to=[Response("A what?")])
+        ]
+
+        for statement in statement_list:
+            self.adapter.update(statement)
+
+        responses = self.adapter.get_response_statements()
+
+        self.assertEqual(len(responses), 2)
+        self.assertIn("This is a phone.", responses)
+        self.assertIn("A what?", responses)
+
 
 class MongoAdapterFilterTestCase(MongoAdapterTestCase):
 
