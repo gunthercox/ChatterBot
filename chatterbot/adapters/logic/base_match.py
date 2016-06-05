@@ -23,17 +23,9 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
         """
         return self.context and self.context.storage
 
-    def get_available_statements(self, statement_list=None):
-        from chatterbot.conversation.utils import get_response_statements
-
-        if statement_list:
-            statement_list = get_response_statements(statement_list)
-
-        # Check if the list is empty
-        if not statement_list and self.has_storage_context:
-            statement_list = self.context.storage.get_response_statements()
-
-        return statement_list
+    def get_available_statements(self):
+        # TODO: Remove this method
+        return self.context.storage.get_response_statements()
 
     def get(self, input_statement, statement_list=None):
         """

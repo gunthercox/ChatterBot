@@ -75,12 +75,12 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
 
         return total_similarity
 
-    def get(self, input_statement, statement_list=None):
+    def get(self, input_statement):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
-        statement_list = self.get_available_statements(statement_list)
+        statement_list = self.get_available_statements()
 
         if not statement_list:
             if self.has_storage_context:
