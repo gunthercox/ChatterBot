@@ -10,6 +10,7 @@ os:
   - windows
 
 install:
+  - pip install codeclimate-test-reporter
   - pip install coveralls
   - pip install nltk
   - pip install -r requirements.txt
