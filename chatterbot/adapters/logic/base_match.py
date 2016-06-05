@@ -23,20 +23,7 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
         """
         return self.context and self.context.storage
 
-    def get_available_statements(self, statement_list=None):
-        from chatterbot.conversation.utils import get_response_statements
-
-        if statement_list:
-            statement_list = get_response_statements(statement_list)
-
-        # Check if the list is empty
-        if not statement_list and self.has_storage_context:
-            all_statements = self.context.storage.filter()
-            statement_list = get_response_statements(all_statements)
-
-        return statement_list
-
-    def get(self, input_statement, statement_list=None):
+    def get(self, input_statement):
         """
         This method should be overridden with one to select a match
         based on the input statement.

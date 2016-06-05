@@ -62,6 +62,32 @@ class StorageAdapter(Adapter):
         """
         raise self.AdapterMethodNotImplementedError()
 
+    def get_response_statements(self):
+        """
+        Return only statements that are in response to another statement.
+        A statement must exist which lists the closest matching statement in the
+        in_response_to field. Otherwise, the logic adapter may find a closest
+        matching statement that does not have a known response.
+
+        This method may be overridden by a child class to provide more a
+        efficient method to get these results.
+        """
+        statement_list = self.filter()
+
+        responses = set()
+        to_remove = list()
+        for statement in statement_list:
+            for response in statement.in_response_to:
+                responses.add(response.text)
+        for statement in statement_list:
+            if statement.text not in responses:
+                to_remove.append(statement)
+
+        for statement in to_remove:
+            statement_list.remove(statement)
+
+        return statement_list
+
     class EmptyDatabaseException(Exception):
 
         def __init__(self, message="The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database."):

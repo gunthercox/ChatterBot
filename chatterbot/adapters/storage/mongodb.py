@@ -172,6 +172,33 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.statements.remove({'text': statement_text})
 
+    def get_response_statements(self):
+        """
+        Return only statements that are in response to another statement.
+        A statement must exist which lists the closest matching statement in the
+        in_response_to field. Otherwise, the logic adapter may find a closest
+        matching statement that does not have a known response.
+        """
+        response_query = self.statements.distinct('in_response_to.text')
+        statement_query = self.statements.find({
+            'text': {
+                '$in': response_query
+            }
+        })
+
+        statement_list = list(statement_query)
+
+        statement_objects = []
+
+        for statement in statement_list:
+            values = dict(statement)
+            statement_text = values['text']
+
+            del(values['text'])
+            statement_objects.append(Statement(statement_text, **values))
+
+        return statement_objects
+
     def drop(self):
         """
         Remove the database.

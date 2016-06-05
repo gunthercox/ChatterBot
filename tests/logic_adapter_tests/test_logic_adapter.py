@@ -1,6 +1,7 @@
 from unittest import TestCase
 from chatterbot.adapters.logic import LogicAdapter
 
+
 class LogicAdapterTestCase(TestCase):
     """
     This test case is for the LogicAdapter base class.
