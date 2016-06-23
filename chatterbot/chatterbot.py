@@ -170,16 +170,16 @@ class ChatBot(object):
 
     class InvalidAdapterException(Exception):
 
-        def __init__(self, message='Recieved an unexpected adapter setting.'):
-            super(ChatBot.InvalidAdapterException, self).__init__(message)
+        def __init__(self, value='Recieved an unexpected adapter setting.'):
+            self.value = value
 
         def __str__(self):
-            return self.message
+            return repr(self.value)
 
     class TrainerInitializationException(Exception):
 
-        def __init__(self, message='The `set_trainer` method must be called before calling `train`.'):
-            super(ChatBot.TrainerInitializationException, self).__init__(message)
+        def __init__(self, value='The `set_trainer` method must be called before calling `train`.'):
+            self.value = value
 
         def __str__(self):
-            return self.message
+            return repr(self.value)

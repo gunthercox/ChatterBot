@@ -25,8 +25,8 @@ class LogicAdapter(Adapter):
 
     class EmptyDatasetException(Exception):
 
-        def __init__(self, message="An empty collection of elements was received when at least one entry was expected."):
-            self.message = message
+        def __init__(self, value="An empty set was received when at least one statement was expected."):
+            self.value = value
 
         def __str__(self):
-            return self.message
+            return repr(self.value)

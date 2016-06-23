@@ -1,33 +1,31 @@
 from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
-import sys
-
-PY3 = sys.version_info[0] == 3
-
-JSON = 'json'
-TEXT = 'text'
-OBJECT = 'object'
-VALID_FORMATS = (JSON, TEXT, OBJECT, )
 
 
 class VariableInputTypeAdapter(InputAdapter):
+
+    JSON = 'json'
+    TEXT = 'text'
+    OBJECT = 'object'
+    VALID_FORMATS = (JSON, TEXT, OBJECT, )
 
     def __init__(self, **kwargs):
         super(VariableInputTypeAdapter, self).__init__(**kwargs)
 
     def detect_type(self, statement):
+        import sys
 
-        if PY3:
+        if sys.version_info[0] == 3:
             string_types = str
         else:
             string_types = basestring
 
         if isinstance(statement, Statement):
-            return OBJECT
+            return self.OBJECT
         if isinstance(statement, string_types):
-            return TEXT
+            return self.TEXT
         if isinstance(statement, dict):
-            return JSON
+            return self.JSON
 
         input_type = type(statement)
 
@@ -41,15 +39,15 @@ class VariableInputTypeAdapter(InputAdapter):
         input_type = self.detect_type(statement)
 
         # Return the statement object without modification
-        if input_type == OBJECT:
+        if input_type == self.OBJECT:
             return statement
 
         # Convert the input string into a statement object
-        if input_type == TEXT:
+        if input_type == self.TEXT:
             return Statement(statement)
 
         # Convert input dictionary into a statement object
-        if input_type == JSON:
+        if input_type == self.JSON:
             input_json = dict(statement)
             text = input_json["text"]
             del(input_json["text"])
@@ -57,11 +55,13 @@ class VariableInputTypeAdapter(InputAdapter):
             return Statement(text, **input_json)
 
     class UnrecognizedInputFormatException(Exception):
-        def __init__(self, message='The input format was not recognized.'):
-            super(
-                VariableInputTypeAdapter.UnrecognizedInputFormatException,
-                self
-            ).__init__(message)
+        """
+        Exception raised when an input format is specified that is
+        not in the VariableInputTypeAdapter.VALID_FORMATS variable.
+        """
+
+        def __init__(self, value='The input format was not recognized.'):
+            self.value = value
 
         def __str__(self):
-            return self.message
+            return repr(self.value)
