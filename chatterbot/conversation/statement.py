@@ -1,7 +1,8 @@
-from .signature import Signature
-
-
 class Statement(object):
+    """
+    A statement represents a single spoken entity, sentence or
+    phrase that someone can say.
+    """
 
     def __init__(self, text, **kwargs):
         self.text = text
@@ -30,6 +31,10 @@ class Statement(object):
         return self.text == other
 
     def add_extra_data(self, key, value):
+        """
+        This method allows additional data to be stored on the
+        statement object.
+        """
         self.extra_data[key] = value
 
     def add_response(self, response):
@@ -83,11 +88,13 @@ class Statement(object):
 
 
 class Response(object):
+    """
+    A response represents an entity which response to a statement.
+    """
 
     def __init__(self, text, **kwargs):
         self.text = text
         self.occurrence = kwargs.get("occurrence", 1)
-        self.signatures = kwargs.get("signatures", [])
 
     def __str__(self):
         return self.text
@@ -104,17 +111,10 @@ class Response(object):
 
         return self.text == other
 
-    def add_signature(self, signature):
-        self.signatures.append(signature)
-
     def serialize(self):
         data = {}
 
         data["text"] = self.text
         data["occurrence"] = self.occurrence
-        data["signature"] = []
-
-        for signature in self.signatures:
-            data["signature"].append(signature.serialize())
 
         return data
