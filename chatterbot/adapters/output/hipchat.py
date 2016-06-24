@@ -4,6 +4,10 @@ import json
 
 
 class HipChat(OutputAdapter):
+    """
+    An output adapter that allows a ChatterBot instance to send
+    responses to a HipChat room.
+    """
 
     def __init__(self, **kwargs):
         super(HipChat, self).__init__(**kwargs)
@@ -20,7 +24,10 @@ class HipChat(OutputAdapter):
         }
 
     def send_message(self, room_id_or_name, message):
-        # https://www.hipchat.com/docs/apiv2/method/send_message
+        """
+        Send a message to a HipChat room.
+        https://www.hipchat.com/docs/apiv2/method/send_message
+        """
 
         message_url = "{}/v2/room/{}/message".format(
             self.hipchat_host,
@@ -38,7 +45,12 @@ class HipChat(OutputAdapter):
         return response.json()
 
     def reply_to_message(self):
-        # https://www.hipchat.com/docs/apiv2/method/reply_to_message
+        """
+        The HipChat api supports responding to a given message.
+        This may be a good feature to implement in the future to
+        help with multi-user conversations.
+        https://www.hipchat.com/docs/apiv2/method/reply_to_message
+        """
         pass
 
     def process_response(self, statement):

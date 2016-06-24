@@ -5,6 +5,10 @@ import requests
 
 
 class HipChat(InputAdapter):
+    """
+    An input adapter that allows a ChatterBot instance to get
+    input statements from a HipChat room.
+    """
 
     def __init__(self, **kwargs):
         super(HipChat, self).__init__(**kwargs)
@@ -40,7 +44,9 @@ class HipChat(InputAdapter):
         return results
 
     def view_recent_room_history(self, room_id_or_name, max_results=1):
-        # https://www.hipchat.com/docs/apiv2/method/view_recent_room_history
+        """
+        https://www.hipchat.com/docs/apiv2/method/view_recent_room_history
+        """
 
         recent_histroy_url = "{}/v2/room/{}/history?max-results={}".format(
             self.hipchat_host,

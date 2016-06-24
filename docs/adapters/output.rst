@@ -40,6 +40,28 @@ communicate with the chat bot.
        output_adapter="chatterbot.adapters.output.TerminalAdapter"
    )
 
+.. _hipchat-output-adapter:
+
+HipChat Adapter
+===============
+
+.. autofunction:: chatterbot.adapters.output.HipChat
+
+This is an output adapter that allows a ChatterBot instance to send responses
+to a `HipChat`_ room.
+
+Be sure to also see the documentation for the :ref:`HipChat input adapter <hipchat-input-adapter>`.
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       "My ChatterBot",
+       input_adapter="chatterbot.adapters.output.HipChat",
+       hipchat_host="https://mydomain.hipchat.com",
+       hipchat_room="my-room-name",
+       hipchat_access_token="my-hipchat-access-token",
+   )
+
 Mailgun adapter
 ===============
 
@@ -78,3 +100,4 @@ the chat bot's constructor.
 
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
 .. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
+.. _HipChat: https://www.hipchat.com/
