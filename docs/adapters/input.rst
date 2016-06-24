@@ -41,6 +41,28 @@ communicate with the chat bot.
        input_adapter="chatterbot.adapters.input.TerminalAdapter"
    )
 
+.. _hipchat-input-adapter:
+
+HipChat Adapter
+===============
+
+.. autofunction:: chatterbot.adapters.input.HipChat
+
+This is an input adapter that allows a ChatterBot instance to communicate
+through `HipChat`_.
+
+Be sure to also see the documentation for the :ref:`HipChat output adapter <hipchat-output-adapter>`.
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       "My ChatterBot",
+       input_adapter="chatterbot.adapters.input.HipChat",
+       hipchat_host="https://mydomain.hipchat.com",
+       hipchat_room="my-room-name",
+       hipchat_access_token="my-hipchat-access-token",
+   )
+
 Speech recognition
 ==================
 
@@ -67,3 +89,4 @@ the chat bot's constructor.
 .. _strings: https://docs.python.org/2/library/string.html
 .. _dictionaries: https://docs.python.org/2/tutorial/datastructures.html#dictionaries
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
+.. _HipChat: https://www.hipchat.com/
