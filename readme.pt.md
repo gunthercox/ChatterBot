@@ -52,7 +52,7 @@ chatbot.get_response("Olá, como você esta hoje?")
 # Treinando os dados
 
 ChatterBot vem com um módulo utilitário de dados que pode ser usado para treinar os robôs de chat.
-Neste momento existem dados de treinamento em Inglês e Português neste módulo. Contribuições de dados de treinamento adicionais
+Neste momento existem dados de treinamento em Inglês, Espanhol e Português neste módulo. Contribuições de dados de treinamento adicionais
 ou dados de treinamento em outras linguagem será muito bem vinda. Dê uma olhada nos arquivos de dados em [chatterbot/corpus](https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/corpus)
 se você estiver interesse em contribuir.
 

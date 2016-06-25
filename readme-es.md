@@ -43,7 +43,7 @@ chatbot.set_trainer(ChatterBotCorpusTrainer)
 chatbot.train("chatterbot.corpus.spanish")
 
 # Obtener una respuesta a una sentencia de entrada
-chatbot.get_response("Hola, ¿Que tal estas hoy?")")
+chatbot.get_response("Hola, ¿Que tal estas hoy?")
 
 ```
 
