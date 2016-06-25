@@ -10,3 +10,7 @@ For instructions on how to use these data sets, please refer to the [project doc
 All training data contained within this corpus is user contributed.
 
 If you are interested in contributing support for a new language please create a pull request. Additions are welcomed!
+
+*[Read in English](readme.md)*
+*[Leia em Português](readme.pt.md)*
+*[Leer en español](readme-es.md)*

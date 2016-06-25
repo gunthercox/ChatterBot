@@ -10,4 +10,6 @@ Todos os dados de treinamento contidos neste corpus é contribuição dos usuár
 
 Se você esta interessado em contribuir com o suporte a novas línguas por favor crie uma *pull request* . Adições são bem-vindas!
 
-*Leia em outra língua: [English](readme.md)*
+*[Read in English](readme.md)*
+*[Leia em Português](readme.pt.md)*
+*[Leer en español](readme-es.md)*
