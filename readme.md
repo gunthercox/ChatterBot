@@ -7,6 +7,10 @@ Python which makes it possible to generate responses based on collections of
 known conversations. The language independent design of ChatterBot allows it
 to be trained to speak any language.
 
+*[Read in English](readme.md)*
+*[Leia em Português](readme.pt.md)*
+*[Leer en español](readme-es.md)*
+
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
@@ -52,7 +56,7 @@ chatbot.get_response("Hello, how are you today?")
 # Training data
 
 Chatterbot comes with a data utility module that can be used to train chat bots.
-At the moment there is two languages, English and Portuguese training data in this module. Contributions
+At the moment there is three languages, English, Spanish and Portuguese training data in this module. Contributions
 of additional training data or training data in other languages would be greatly
 appreciated. Take a look at the data files in the
 [chatterbot/corpus](https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/corpus)

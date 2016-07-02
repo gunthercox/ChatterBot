@@ -7,7 +7,9 @@ de conversação construído em Python o que possibilita a geração de resposta
 baseada em coleções de conversas conhecidas. A arquitetura do ChatterBot
 é independente da língua, desta forma é possível treiná-lo em qualquer língua.
 
-*Leia em outras línguas: [English](readme.md)*
+*[Read in English](readme.md)*
+*[Leia em Português](readme.pt.md)*
+*[Leer en español](readme-es.md)*
 
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
@@ -50,7 +52,7 @@ chatbot.get_response("Olá, como você esta hoje?")
 # Treinando os dados
 
 ChatterBot vem com um módulo utilitário de dados que pode ser usado para treinar os robôs de chat.
-Neste momento existem dados de treinamento em Inglês e Português neste módulo. Contribuições de dados de treinamento adicionais
+Neste momento existem dados de treinamento em Inglês, Espanhol e Português neste módulo. Contribuições de dados de treinamento adicionais
 ou dados de treinamento em outras linguagem será muito bem vinda. Dê uma olhada nos arquivos de dados em [chatterbot/corpus](https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/corpus)
 se você estiver interesse em contribuir.
 
