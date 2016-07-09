@@ -22,7 +22,7 @@ Valid parameters for the output format are `text`, `json`, and `object`.
    chatbot = ChatBot(
        "My ChatterBot",
        output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
-       format='text'
+       output_format='text'
    )
 
 Terminal adapter
