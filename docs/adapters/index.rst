@@ -33,7 +33,8 @@ Adapter defaults
 ----------------
 
 By default, ChatterBot uses the `JsonDatabaseAdapter` adapter for storage,
-the `ClosestMatchAdapter` for logic, and the `TerminalAdapter` for input and output.
+the `ClosestMatchAdapter` for logic, the `VariableInputTypeAdapter` for input
+and the OutputFormatAdapter for output.
 
 Each adapter can be set by passing in the dot-notated import path to the constructor as shown.
 
@@ -42,8 +43,8 @@ Each adapter can be set by passing in the dot-notated import path to the constru
    bot = ChatBot(
        "Elsie",
        storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
-       input_adapter="chatterbot.adapters.input.TerminalAdapter",
-       output_adapter="chatterbot.adapters.output.TerminalAdapter",
+       input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
+       output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
        logic_adapters=[
            "chatterbot.adapters.logic.ClosestMatchAdapter"
        ],
