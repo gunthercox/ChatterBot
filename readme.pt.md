@@ -26,7 +26,7 @@ Um exemplo típico de entrada, será algo parecido com isso:
 
 ## Como funciona
 
-Uma instância não treinada do ChatterBot começão sem conhecimento de como se comunicar. Cada vez que o usuário entra com uma afirmação, a bibliote salve o texto que foi inserido e o texto em que a afirmação foi respondida. Conforme o ChatterBot recebe mais entradas o número de respostas que ele pode responder e a precisão de suas respostas em relação a afirmação de entrada cresce. O programa seleciona a resposta mais precisa procurando pela resposta mais próxima que combina com a afirmação de entrada, ele então retorna a resposta mais provável para a afirmação baseada na frequência que esta resposta é emitida pelao usuário que esta se comunicando com o robô.
+Uma instância não treinada do ChatterBot começão sem conhecimento de como se comunicar. Cada vez que o usuário entra com uma afirmação, a biblioteca salva o texto que foi inserido e o texto em que a afirmação foi respondida. Conforme o ChatterBot recebe mais entradas o número de respostas que ele pode responder e a precisão de suas respostas em relação a afirmação de entrada cresce. O programa seleciona a resposta mais precisa procurando pela resposta mais próxima que combina com a afirmação de entrada, ele então retorna a resposta mais provável para a afirmação baseada na frequência que esta resposta é emitida pelo usuário que esta se comunicando com o robô.
 
 ## Instalação
 
@@ -81,8 +81,7 @@ para usar o ChatterBot na wiki do projeto.
 Para consultar exemplos, veja o diretório de [exemplos](https://github.com/gunthercox/ChatterBot/tree/master/examples) no repositório
 deste projeto.
 
-There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot).
-Também existe exemplos em [Projeto Django usando o ChatterBot](https://github.com/gunthercox/django_chatterbot).
+Também existem exemplos em [Projeto Django usando o ChatterBot](https://github.com/gunthercox/django_chatterbot).
 
 Criou algo legal usando o ChatterBot?
 Por favor adicione a sua criação na [lista de projetos](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) usando o ChatterBot na Wiki.
