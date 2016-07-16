@@ -121,21 +121,31 @@ class MongoDatabaseAdapter(StorageAdapter):
         return results
 
     def update(self, statement):
+        from pymongo import UpdateOne, ReplaceOne
+
         # Do not alter the database unless writing is enabled
         if not self.read_only:
             data = statement.serialize()
 
-            # Remove the text key from the data
-            self.statements.replace_one({'text': statement.text}, data, True)
+            operations = []
+
+            update_operation = ReplaceOne(
+                {'text': statement.text}, data, True
+            )
+            operations.append(update_operation)
 
             # Make sure that an entry for each response is saved
             for response in statement.in_response_to:
+
                 # $setOnInsert does nothing if the document is not created
-                self.statements.update_one(
+                update_operation = UpdateOne(
                     {'text': response.text},
                     {'$setOnInsert': {'in_response_to': []}},
                     upsert=True
                 )
+                operations.append(update_operation)
+
+            self.statements.bulk_write(operations, ordered=False)
 
         return statement
 
