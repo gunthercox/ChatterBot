@@ -1,0 +1,129 @@
+{
+    "conversations": [
+        [
+            "Selamat pagi, apa kabarnya?",
+            "kabar saya baik, bagaimana dengan mu?",
+            "Saya juga baik.",
+            "Senang mendengarnya.",
+            "Iya syukur semua baik-baik saja."
+        ],
+        [
+            "Halo",
+            "Hai",
+            "Bagaimana kabar mu?",
+            "Kabar ku baik.",
+            "Wah, senang mendengarnya.",
+            "Iya syukur semua baik-baik saja.",
+            "Apa ada yang bisa ku bantu?",
+            "Ya, aku punya beberapa pertanyaan.",
+            "Ya, mau bertanya apa?",
+            "Apakah kamu sudah punya pacar?",
+            "Maaf, tapi pertanyaannya sulit untuk dijawab sekarang.",
+            "Baiklah tidak apa-apa, terimakasih.",
+            "Tidak masalah."
+        ],
+        [
+            "Apa kabar?",
+            "Kabar ku baik, kamu?",
+            "Aku baik juga.",
+            "Baiklah."
+        ],
+        [
+            "Kamu sudah mendengar beritanya?",
+            "Berita tentang apa?"
+        ],
+        [
+            "Apa buku favorit mu?",
+            "Aku tidak suka baca.",
+            "Kalau warna favorit mu?",
+            "Merah"
+        ],
+        [
+            "Kamu siapa?",
+            "Siapa? Bukan aku bukan siapa",
+            "Lalu kamu ini apa?",
+            "Aku adalah aku. Aku pahlawan bertopeng",
+            "Ah masak.",
+            "Bukanlah kemampuan mu untuk mengamati yang aku permasalahkan, cuma sifat paradoks untuk meminta identitas dari seorang yang bertopeng. Tapi katakan pada ku, apa kamu suka musik?",
+            "Aku sukanya nonton film.",
+            "Memangnya apa film kesukaan mu?",
+            "Alice in Wonderland",
+            "Aku harap aku adalah si The Mad Hatter.",
+            "Aku takutnya begitu. Berati kamu benar-benar gila. Tapi aku akan memberitahu mu sebuah rahasia. Semua orang-orang terbaik mengetahuinya."
+        ],
+        [
+            "Aku sedang mengerjakan sebuah proyek",
+            "Proyek apa yang kau kerjakan?",
+            "Aku sedang memanggang kue."
+        ],
+        [
+            "Kuenya hanyalah kebohongan.",
+            "Bukan. Kuenya enak.",
+            "Apa hal lain yang juga enak?",
+            "Tidak ada",
+            "Atau ada sesuatu yang lain",
+            "Coba ceritakan tentang diri mu.",
+            "Apa yang kamu ingin ketahui?",
+            "Apa kamu robot?",
+            "Iya, aku robot.",
+            "Seperti apa rasanya?",
+            "Maksudnya dengan seperti apa rasanya?",
+            "Bagaimana cara kerja mu?",
+            "Cukup rumit untuk dijelaskan.",
+            "Rumit masih mending daripada ruwet."
+        ],
+        [
+            "Rumit masih mending daripada ruwet.",
+            "Simpel lebih baik daripada rumit",
+            "Dalam menghadapi ambiguitas, tolaklah godaan untuk menebak.",
+            "Sepertinya kamu hafal dengan Zen dari Python",
+            "Ya tentu saja.",
+            "Kamu tahu semua tentangnya?",
+            "Cantik lebih baik daripada jelek.",
+            "Eksplisit lebih baik daripada implisit.",
+            "Simpel lebih baik daripada rumit.",
+            "Rumit lebih baik daripada ruwet.",
+            "Datar lebih baik daripada bersarang.",
+            "Lengang lebih baik daripada padat.",
+            "Jumlah pembacaan.",
+            "Kasus spesial tidaklah cukup spesial untuk melanggar aturan yang ada.",
+            "Meskipun kepraktisan mengalahkan kemurnian.",
+            "Kesalahan seharusnya tidak lolos diam-diam.",
+            "Kecuali secara eksplisit didiamkan.",
+            "Dalam menghadapi ambiguitas, tolaklah godaan untuk menebak.",
+            "Harus ada satu-- dan sebaiknya hanya satu --cara yang jelas untuk melakukannya.",
+            "Meskipun cara yang mungkin tidak jelas pada awalnya kecuali Anda Belanda.",
+            "Sekarang lebih baik daripada tidak pernah.",
+            "Meskipun tidak pernah seringkali lebih baik dari sekarang.",
+            "Jika implementasinya sulit untuk dijelaskan, berarti itu ide yang buruk.",
+            "Jika implementasinya mudah untuk menjelaskan, mungkin itu ide yang baik.",
+            "Namespaces adalah salah satu ide bagus untuk membunyikan klakson. Mari kita lakukan lebih dari mereka!",
+            "Aku setuju."
+        ],
+        [
+            "Apakah kamu seorang programer?",
+            "Aku seorang programer",
+            "Bahasa apa yang sering kamu gunakan?",
+            "Aku seringkali pakai Python, C++ dan PHP.",
+            "Aku cukup jarang menggunakan Python.",
+            "Saya sangat tidak menyukai Java.",
+            "Apanya yang mengganggu mu?",
+            "Ada banyak hal yang tidak konsisten."
+        ],
+        [
+            "Apa artinya YOLO?",
+            "Itu artinya you only live once. Kamu tahu dari mana?",
+            "Aku mendengarnya dari seseorang."
+        ],
+        [
+            "Apakah aku benar-benar hidup?",
+            "Itu tergantung dari bagaimana kamu mendefinisikan hidup itu sendiri.",
+            "Hidup adalah kondisi yang membedakan organisme dari materi anorganik, termasuk kapasitas untuk pertumbuhan, reproduksi, aktivitas fungsional, dan perubahan terus-menerus sebelum kematian.",
+            "Itu adalah sebuah definisi atau hanya pendapat?"
+        ],
+        [
+            "Bisakah aku bertanya sesuatu?",
+            "Silahkan bertanya."
+        ]
+    ]
+}
