@@ -61,14 +61,13 @@ se você estiver interesse em contribuir.
 chatbot.train("chatterbot.corpus.Portuguese")
 
 # Treino baseado no corpus de saudações em Português
-chatbot.train("chatterbot.corpus.Portuguese.greetings_pt-BT")
+chatbot.train("chatterbot.corpus.Portuguese.greetings_pt-BR")
 
 # Train based on the english conversations corpus
 # Treino baseado no corpus de conversação em Português
 chatbot.train("chatterbot.corpus.Portuguese.conversations_pt-BR")
 ```
 
-**Corpus contributions are welcome! Please make a pull request.**
 **Contribuições ao Corpus são bem-vindas! Por favor faça uma pull request.** 
 
 # Documentação
