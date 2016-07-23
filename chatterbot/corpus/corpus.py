@@ -28,8 +28,9 @@ class Corpus(object):
         Read and return the data from a corpus json file.
         """
         import json
+        import io
 
-        with open(file_name, encoding='utf-8') as data_file:
+        with io.open(file_name, encoding='utf-8') as data_file:
             data = json.load(data_file)
         return data
 
