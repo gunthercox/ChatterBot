@@ -13,3 +13,4 @@ Se você esta interessado em contribuir com o suporte a novas línguas por favor
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
 *[Leer en español](readme-es.md)*
+*[Lire en francais](readme-fr.md)*

@@ -11,3 +11,4 @@ Si usted está interesado en añadir soporte para un nuevo idioma, por favor cre
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
 *[Leer en español](readme-es.md)*
+*[Lire en francais](readme-fr.md)*
