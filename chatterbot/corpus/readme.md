@@ -14,3 +14,4 @@ If you are interested in contributing support for a new language please create a
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
 *[Leer en español](readme-es.md)*
+*[Lire en francais](readme-fr.md)*
