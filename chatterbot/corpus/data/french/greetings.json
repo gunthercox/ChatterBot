@@ -1,0 +1,116 @@
+{
+    "greetings": [
+        [
+            "Salut",
+            "Salut"
+        ],
+        [
+            "Hey",
+            "Hey"
+        ],
+        [
+            "Bonjour!",
+            "Salut"
+        ],
+        [
+            "Salut",
+            "Bonjour!"
+        ],
+        [
+            "Salut, Comment ca va?",
+            "Bien"
+        ],
+        [
+            "Salut, Comment ca va?",
+            "Très bien, merci"
+        ],
+        [
+            "Bonjour, Comment ca va?",
+            "Okay"
+        ],
+        [
+            "Bonjour, Comment ca va?",
+            "Génial"
+        ],
+        [
+            "Bonjour, Comment ca va?",
+            "Ca pourrait aller mieux"
+        ],
+        [
+            "Bonjour, Comment ca va?",
+            "Comme ci, Comme ca"
+        ],
+        [
+            "Salut, Comment va tu?",
+            "Bien"
+        ],
+        [
+            "Salut, Comment va tu?",
+            "Très bien, merci"
+        ],
+        [
+            "Bonjour, Comment va tu?",
+            "Okay"
+        ],
+        [
+            "Bonjour, Comment va tu?",
+            "Génial"
+        ],
+        [
+            "Bonjour, Comment va tu?",
+            "Ca pourrait aller mieux"
+        ],
+        [
+            "Bonjour, Comment va tu?",
+            "Comme ci, Comme ca"
+        ],
+        [
+            "Comment va tu?",
+            "Je vais bien, et vous?"
+        ],
+        [
+            "Comment va tu?",
+            "Je vais bien, et toi?"
+        ],
+        [
+            "Enchatée.",
+            "Enchatée."
+        ],
+        [
+            "Salut, content de te connaitre.",
+            "Merci. Moi aussi."
+        ],
+        [
+            "Un plaisir de te connaitre.",
+            "Merci. Plaisir partagé."
+        ],
+        [
+            "Passes une bonne journée",
+            "Merci, toi aussi."
+        ],
+        [
+            "Quoi de neuf?",
+            "Rien de nouveau."
+        ],
+        [
+            "Quoi de neuf?",
+            "Rien de nouveau, et de ton coté?"
+        ],
+        [
+            "Quoi de neuf?",
+            "Rien de nouveau, et toi?"
+        ],
+        [
+            "Quoi de neuf?",
+            "Rien de special."
+        ],
+        [
+            "Quoi de neuf?",
+            "Tout baigne."
+        ],
+        [
+            "Quoi de neuf?",
+            "Le chiffre avant 10, sinon, toi, quoi de neuf?"
+        ]
+    ]
+}
