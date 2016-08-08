@@ -3,10 +3,28 @@ from chatterbot.conversation import Statement, Response
 from pymongo import MongoClient
 
 
+class QueryEngine(object):
+
+    def not_in(self, statements, query=None):
+
+        if not query:
+            query = {}
+
+        if 'text' not in query:
+            query['text'] = {}
+
+        if '$nin' not in query['text']:
+            query['text']['$nin'] = {}
+
+        query['text']['$nin'].append(statements)
+
+        return query
+
+
 class MongoDatabaseAdapter(StorageAdapter):
     """
-    The MongoDatabaseAdapter is an interface that allows ChatterBot
-    to store the conversation as a MongoDB database.
+    The MongoDatabaseAdapter is an interface that allows
+    ChatterBot to store statements in a MongoDB database.
     """
 
     def __init__(self, **kwargs):
@@ -30,6 +48,9 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
+
+        self.query = QueryEngine()
+        self.base_query = kwargs.get('base_query', {})
 
     def count(self):
         return self.statements.count()
@@ -103,6 +124,7 @@ class MongoDatabaseAdapter(StorageAdapter):
                     }
 
         filter_parameters.update(contains_parameters)
+        filter_parameters.update(self.base_query)
 
         matches = self.statements.find(filter_parameters)
         matches = list(matches)
