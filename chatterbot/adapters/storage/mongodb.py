@@ -14,9 +14,9 @@ class QueryEngine(object):
             query['text'] = {}
 
         if '$nin' not in query['text']:
-            query['text']['$nin'] = {}
+            query['text']['$nin'] = []
 
-        query['text']['$nin'].append(statements)
+        query['text']['$nin'].extend(statements)
 
         return query
 
@@ -50,13 +50,16 @@ class MongoDatabaseAdapter(StorageAdapter):
         self.statements.create_index('text', unique=True)
 
         self.query = QueryEngine()
-        self.base_query = kwargs.get('base_query', {})
+        self.default_empty_query = {}
+        self.base_query = {}
 
     def count(self):
         return self.statements.count()
 
     def find(self, statement_text):
-        values = self.statements.find_one({'text': statement_text})
+        search_query = {'text': statement_text}
+        search_query.update(self.base_query)
+        values = self.statements.find_one()
 
         if not values:
             return None
@@ -123,8 +126,8 @@ class MongoDatabaseAdapter(StorageAdapter):
                         }
                     }
 
-        filter_parameters.update(contains_parameters)
         filter_parameters.update(self.base_query)
+        filter_parameters.update(contains_parameters)
 
         matches = self.statements.find(filter_parameters)
         matches = list(matches)
@@ -184,7 +187,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         random_integer = randint(0, count - 1)
 
-        statement = self.statements.find().limit(1).skip(random_integer)
+        statement = self.statements.find(self.base_query).limit(1).skip(random_integer)
 
         values = list(statement)[0]
         statement_text = values['text']
@@ -212,11 +215,15 @@ class MongoDatabaseAdapter(StorageAdapter):
         matching statement that does not have a known response.
         """
         response_query = self.statements.distinct('in_response_to.text')
-        statement_query = self.statements.find({
+
+        _statement_query = {
             'text': {
                 '$in': response_query
             }
-        })
+        }
+        _statement_query.update(self.base_query)
+
+        statement_query = self.statements.find(_statement_query)
 
         statement_list = list(statement_query)
 

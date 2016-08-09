@@ -12,6 +12,20 @@ class StorageAdapter(Adapter):
 
         self.kwargs = kwargs
         self.read_only = kwargs.get('read_only', False)
+        self.default_empty_query = {}
+        self.base_query = {}
+
+    def generate_base_query(self, context):
+        """
+        
+        """
+        query = self.default_empty_query
+
+        for Filter in context.filters:
+            filter_instance = Filter()
+            query = filter_instance.filter_selection(query, context)
+
+        self.base_query = query
 
     def count(self):
         """
