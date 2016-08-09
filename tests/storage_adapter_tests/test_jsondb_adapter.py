@@ -80,7 +80,7 @@ class JsonDatabaseAdapterTestCase(JsonAdapterTestCase):
 
         # Update the statement value
         statement.add_response(
-            Statement("New response")
+            Response("New response")
         )
         self.adapter.update(statement)
 
@@ -365,7 +365,7 @@ class ReadOnlyJsonDatabaseAdapterTestCase(JsonAdapterTestCase):
         self.adapter.read_only = True
 
         statement.add_response(
-            Statement("New response")
+            Response("New response")
         )
 
         self.adapter.update(statement)
