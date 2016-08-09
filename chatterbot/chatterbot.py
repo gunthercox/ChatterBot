@@ -2,7 +2,7 @@ from .adapters.storage import StorageAdapter
 from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
 from .adapters.output import OutputAdapter
-from .conversation import Statement
+from .conversation import Statement, Response
 from .utils.queues import ResponseQueue
 from .utils.module_loading import import_module
 
@@ -143,7 +143,9 @@ class ChatBot(object):
         previous_statement = self.get_last_response_statement()
 
         if previous_statement:
-            input_statement.add_response(previous_statement)
+            input_statement.add_response(
+                Response(previous_statement.text)
+            )
 
         # Update the database after selecting a response
         self.storage.update(input_statement)
