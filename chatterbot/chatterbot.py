@@ -46,21 +46,16 @@ class ChatBot(object):
         # The output adapter must be an instance of OutputAdapter
         self.validate_adapter_class(output_adapter, OutputAdapter)
 
-        self.filters = []
-
-        base_query = self.generate_base_query()
-
         StorageAdapterClass = import_module(storage_adapter)
         InputAdapterClass = import_module(input_adapter)
         OutputAdapterClass = import_module(output_adapter)
 
-        storage_kwargs = kwargs
-        storage_kwargs.update({'base_query': base_query})
-
-        self.storage = StorageAdapterClass(**storage_kwargs)
+        self.storage = StorageAdapterClass(**kwargs)
         self.logic = MultiLogicAdapter(**kwargs)
         self.input = InputAdapterClass(**kwargs)
         self.output = OutputAdapterClass(**kwargs)
+
+        self.filters = kwargs.get("filters", [])
 
         # Add required system logic adapter
         self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
@@ -84,18 +79,6 @@ class ChatBot(object):
         NewAdapter = import_module(adapter)
         adapter = NewAdapter(**kwargs)
         self.logic.add_adapter(adapter)
-
-    def generate_base_query(self):
-        """
-
-        """
-        query = None
-
-        for Filter in self.filters:
-            f = Filter()
-            f.filter_selection(query)
-
-        return query
 
     def validate_adapter_class(self, validate_class, adapter_class):
         """
@@ -154,6 +137,8 @@ class ChatBot(object):
         """
         input_statement = self.input.process_input(input_item)
         self.logger.info(u'Recieved input statement: {}'.format(input_statement.text))
+
+        self.storage.generate_base_query(self)
 
         existing_statement = self.storage.find(input_statement.text)
 
