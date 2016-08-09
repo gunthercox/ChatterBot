@@ -68,3 +68,7 @@ class StatementTests(TestCase):
 
         self.assertEqual(len(self.statement.in_response_to), 1)
         self.assertEqual(self.statement.in_response_to[0].occurrence, 2)
+
+    def test_add_non_response(self):
+        with self.assertRaises(Statement.InvalidTypeException):
+            self.statement.add_response(Statement("Blah"))

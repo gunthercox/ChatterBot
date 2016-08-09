@@ -1,4 +1,4 @@
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Response
 from chatterbot.corpus import Corpus
 
 
@@ -30,7 +30,9 @@ class ListTrainer(Trainer):
                 previous_statement = statement_history[-1]
 
             if previous_statement:
-                statement.add_response(previous_statement)
+                statement.add_response(
+                    Response(previous_statement.text)
+                )
 
             statement_history.append(statement)
             self.storage.update(statement)

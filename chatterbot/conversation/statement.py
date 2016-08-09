@@ -1,3 +1,6 @@
+from .response import Response
+
+
 class Statement(object):
     """
     A statement represents a single spoken entity, sentence or
@@ -41,6 +44,14 @@ class Statement(object):
         """
         Add the response to the list if it does not already exist.
         """
+        if not isinstance(response, Response):
+            raise Statement.InvalidTypeException(
+                'A {} was recieved when a {} instance was expected'.format(
+                    type(response),
+                    type(Response(''))
+                )
+            )
+
         updated = False
         for index in range(0, len(self.in_response_to)):
             if response.text == self.in_response_to[index].text:
@@ -86,35 +97,10 @@ class Statement(object):
 
         return data
 
+    class InvalidTypeException(Exception):
 
-class Response(object):
-    """
-    A response represents an entity which response to a statement.
-    """
+        def __init__(self, value='Recieved an unexpected value type.'):
+            self.value = value
 
-    def __init__(self, text, **kwargs):
-        self.text = text
-        self.occurrence = kwargs.get("occurrence", 1)
-
-    def __str__(self):
-        return self.text
-
-    def __repr__(self):
-        return "<Response text:%s>" % (self.text)
-
-    def __eq__(self, other):
-        if not other:
-            return False
-
-        if isinstance(other, Response):
-            return self.text == other.text
-
-        return self.text == other
-
-    def serialize(self):
-        data = {}
-
-        data["text"] = self.text
-        data["occurrence"] = self.occurrence
-
-        return data
+        def __str__(self):
+            return repr(self.value)
