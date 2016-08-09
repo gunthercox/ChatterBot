@@ -1,2 +1,2 @@
 from .statement import Statement
-from .statement import Response
+from .response import Response
