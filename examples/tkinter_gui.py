@@ -1,6 +1,10 @@
-import Tkinter as tk
-import ttk as ttk
-import ScrolledText
+import tkinter as tk
+try:
+    import ttk as ttk
+    import ScrolledText
+except ImportError:
+    import tkinter.ttk as ttk
+    import tkinter.scrolledtext as ScrolledText
 import time
 
 from chatterbot import ChatBot
