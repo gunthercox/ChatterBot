@@ -132,13 +132,13 @@ class ChatBot(object):
         """
         input_statement = self.input.process_input(input_item)
 
-        # Select a response to the input statement
-        confidence, response = self.logic.process(input_statement)
-
         existing_statement = self.storage.find(input_statement.text)
 
         if existing_statement:
             input_statement = existing_statement
+
+        # Select a response to the input statement
+        confidence, response = self.logic.process(input_statement)
 
         previous_statement = self.get_last_response_statement()
 
