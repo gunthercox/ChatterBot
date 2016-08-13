@@ -1,5 +1,5 @@
-from chatterbot.conversation import Statement, Response
-from chatterbot.corpus import Corpus
+from .conversation import Statement, Response
+from .corpus import Corpus
 
 
 class Trainer(object):
