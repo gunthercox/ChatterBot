@@ -36,7 +36,8 @@ class Corpus(object):
 
     def list_corpus_files(self, dotted_path):
         """
-
+        Return a list of file paths to each data file in
+        the specified corpus.
         """
         corpus_path = self.get_file_path(dotted_path)
         paths = []
