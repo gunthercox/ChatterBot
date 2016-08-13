@@ -24,7 +24,7 @@ class ClosestMeaningAdapterTests(TestCase):
 
     def test_no_choices(self):
         self.adapter.context.storage.filter = MagicMock(return_value=[])
-        statement = Statement("Hello")
+        statement = Statement('Hello')
 
         with self.assertRaises(ClosestMeaningAdapter.EmptyDatasetException):
             self.adapter.get(statement)
@@ -36,14 +36,31 @@ class ClosestMeaningAdapterTests(TestCase):
         filter out any statements that are not in response to a known statement.
         """
         possible_choices = [
-            Statement("This is a lovely bog.", in_response_to=[Response("This is a lovely bog.")]),
-            Statement("This is a beautiful swamp.", in_response_to=[Response("This is a beautiful swamp.")]),
-            Statement("It smells like swamp.", in_response_to=[Response("It smells like swamp.")])
+            Statement('This is a lovely bog.', in_response_to=[Response('This is a lovely bog.')]),
+            Statement('This is a beautiful swamp.', in_response_to=[Response('This is a beautiful swamp.')]),
+            Statement('It smells like swamp.', in_response_to=[Response('It smells like swamp.')])
         ]
-        self.adapter.context.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.context.storage.filter = MagicMock(
+            return_value=possible_choices
+        )
 
-        statement = Statement("This is a lovely swamp.")
+        statement = Statement('This is a lovely swamp.')
         confidence, match = self.adapter.get(statement)
 
-        self.assertEqual("This is a lovely bog.", match)
+        self.assertEqual('This is a lovely bog.', match)
+
+    def test_different_punctuation(self):
+        possible_choices = [
+            Statement('Who are you?'),
+            Statement('Are you good?'),
+            Statement('You are good')
+        ]
+        self.adapter.context.storage.get_response_statements = MagicMock(
+            return_value=possible_choices
+        )
+
+        statement = Statement('Are you good')
+        confidence, match = self.adapter.get(statement)
+
+        self.assertEqual('Are you good?', match)
 
