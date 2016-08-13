@@ -30,7 +30,6 @@ setup(
         'chatterbot.adapters.logic',
         'chatterbot.corpus',
         'chatterbot.conversation',
-        'chatterbot.training',
         'chatterbot.utils'
     ],
     package_dir={'chatterbot': 'chatterbot'},

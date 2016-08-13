@@ -30,7 +30,7 @@ Additional notes on training can be found in the :ref:`Training <set_trainer>` d
 
 .. code-block:: python
 
-   from chatterbot.training.trainers import ListTrainer
+   from chatterbot.trainers import ListTrainer
 
    conversation = [
        "Hello",

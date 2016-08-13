@@ -34,7 +34,7 @@ pip install chatterbot
 
 ```
 from chatterbot import ChatBot
-from chatterbot.training.trainers import ChatterBotCorpusTrainer
+from chatterbot.trainers import ChatterBotCorpusTrainer
 
 chatbot = ChatBot("Ron Obvious")
 chatbot.set_trainer(ChatterBotCorpusTrainer)

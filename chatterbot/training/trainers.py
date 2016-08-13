@@ -1,53 +1,32 @@
-from chatterbot.conversation import Statement, Response
-from chatterbot.corpus import Corpus
+from chatterbot.trainers import ListTrainer as NewListTrainer
+from chatterbot.trainers import ChatterBotCorpusTrainer as NewChatterBotCorpusTrainer
+from warnings import warn
 
 
-class Trainer(object):
+class DeprecationHelper(object):
+    def __init__(self, new_target):
+        self.new_target = new_target
 
-    def __init__(self, storage, **kwargs):
-        self.storage = storage
-        self.corpus = Corpus()
+    def __call__(self, *args, **kwargs):
+        self._warn()
+        return self.new_target(*args, **kwargs)
 
-    def train(self):
-        pass
-
-
-class ListTrainer(Trainer):
-
-    def get_or_create(self, statement_text):
-        """
-        Return a statement if it exists.
-        Create and return the statement if it does not exist.
-        """
-        statement = self.storage.find(statement_text)
-
-        if not statement:
-            statement = Statement(statement_text)
-
-        return statement
-
-    def train(self, conversation):
-        statement_history = []
-
-        for text in conversation:
-            statement = self.get_or_create(text)
-
-            if statement_history:
-                statement.add_response(
-                    Response(statement_history[-1].text)
-                )
-
-            statement_history.append(statement)
-            self.storage.update(statement)
+    def __getattr__(self, attr):
+        self._warn()
+        return getattr(self.new_target, attr)
 
 
-class ChatterBotCorpusTrainer(Trainer):
+class ListDeprecationHelper(DeprecationHelper):
 
-    def train(self, *corpora):
-        trainer = ListTrainer(self.storage)
+    def _warn(self):
+        warn('Deprecation Warning: Using `from chatterbot.training.trainers import ListTrainer` is deprecated. Use `from chatterbot.trainers import ListTrainer` instead.')
 
-        for corpus in corpora:
-            corpus_data = self.corpus.load_corpus(corpus)
-            for data in corpus_data:
-                for pair in data:
-                    trainer.train(pair)
+
+class CorpusDeprecationHelper(DeprecationHelper):
+
+    def _warn(self):
+        warn('Deprecation Warning: Using `from chatterbot.training.trainers import ChatterBotCorpusTrainer` is deprecated. Use `from chatterbot.trainers import ChatterBotCorpusTrainer` instead.')
+
+
+ListTrainer = ListDeprecationHelper(NewListTrainer)
+ChatterBotCorpusTrainer = CorpusDeprecationHelper(NewChatterBotCorpusTrainer)

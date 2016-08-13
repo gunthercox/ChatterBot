@@ -24,7 +24,7 @@ For example, if you were to run bot of the following training calls, then the re
 
 .. code-block:: python
 
-   from chatterbot.training.trainers import ListTrainer
+   from chatterbot.trainers import ListTrainer
 
    chatterbot = ChatBot("Training Example")
    chatterbot.set_trainer(ListTrainer)
@@ -61,7 +61,7 @@ data modules you want to use.
 
 .. code-block:: python
 
-   from chatterbot.training.trainers import ChatterBotCorpusTrainer
+   from chatterbot.trainers import ChatterBotCorpusTrainer
 
    chatterbot = ChatBot("Training Example")
    chatterbot.set_trainer(ChatterBotCorpusTrainer)
@@ -92,7 +92,7 @@ data files. You may choose to do this if you want to train your
 chat bot from a data source in a format that is not directly supported
 by ChatterBot.
 
-Your custom trainer should `chatterbot.training.trainers.Trainer` class.
+Your custom trainer should `chatterbot.trainers.Trainer` class.
 Your trainer will need to have a method named `train`, that can take any
 parameters you choose.
 
@@ -124,4 +124,4 @@ If you are interested in contributing a new language corpus, or adding a module 
 .. [1] https://en.wikipedia.org/wiki/Text_corpus
 
 .. _chatterbot/corpus/data: https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/corpus
-.. _`trainer classes on GitHub`: https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/training
+.. _`trainer classes on GitHub`: https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/trainers
