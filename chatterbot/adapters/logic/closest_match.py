@@ -1,5 +1,6 @@
+# -*- coding: utf-8 -*-
 from .base_match import BaseMatchAdapter
-from fuzzywuzzy import process
+from fuzzywuzzy import fuzz
 
 
 class ClosestMatchAdapter(BaseMatchAdapter):
@@ -26,25 +27,26 @@ class ClosestMatchAdapter(BaseMatchAdapter):
             else:
                 raise self.EmptyDatasetException()
 
-        # Get the text of each statement
-        text_of_all_statements = []
+        confidence = -1
+        closest_match = input_statement
+
+        # Find the closest matching known statement
         for statement in statement_list:
-            text_of_all_statements.append(statement.text)
+            ratio = fuzz.ratio(input_statement.text, statement.text)
 
-        # Check if an exact match exists
-        if input_statement.text in text_of_all_statements:
-            return 1, input_statement
+            if ratio > confidence:
+                confidence = ratio
+                closest_match = statement
 
-        # Get the closest matching statement from the database
-        closest_match, confidence = process.extract(
+        '''
+        closest_match, confidence = process.extractOne(
             input_statement.text,
-            text_of_all_statements,
-            limit=1
-        )[0]
+            text_of_all_statements
+        )
+        '''
 
         # Convert the confidence integer to a percent
         confidence /= 100.0
 
-        return confidence, next(
-            (s for s in statement_list if s.text == closest_match), None
-        )
+        return confidence, closest_match
+

@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .logic_adapter import LogicAdapter
 from .mixins import TieBreaking
 

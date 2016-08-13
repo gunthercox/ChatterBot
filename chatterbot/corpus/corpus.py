@@ -38,7 +38,6 @@ class Corpus(object):
         """
         Return the data contained within a specified corpus.
         """
-
         corpus_path = self.get_file_path(dotted_path)
 
         corpora = []
@@ -46,7 +45,7 @@ class Corpus(object):
         if os.path.isdir(corpus_path):
             for dirname, dirnames, filenames in os.walk(corpus_path):
                 for datafile in filenames:
-                    if datafile.endswith(".json"):
+                    if datafile.endswith('.json'):
 
                         corpus = self.read_corpus(
                             os.path.join(dirname, datafile)
