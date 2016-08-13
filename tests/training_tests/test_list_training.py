@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from tests.base_case import ChatBotTestCase
-from chatterbot.training.trainers import ListTrainer
+from chatterbot.trainers import ListTrainer
 
 
 class ListTrainingTests(ChatBotTestCase):

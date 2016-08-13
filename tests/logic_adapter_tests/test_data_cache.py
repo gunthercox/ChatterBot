@@ -1,7 +1,7 @@
 from tests.base_case import ChatBotTestCase
 from chatterbot.adapters.logic import LogicAdapter
 from chatterbot.conversation import Statement
-from chatterbot.training.trainers import ListTrainer
+from chatterbot.trainers import ListTrainer
 import os
 
 
