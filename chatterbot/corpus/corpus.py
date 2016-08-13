@@ -18,8 +18,8 @@ class Corpus(object):
 
         corpus_path = os.path.join(*parts)
 
-        if os.path.exists(corpus_path + ".json"):
-            corpus_path += ".json"
+        if os.path.exists(corpus_path + '.json'):
+            corpus_path += '.json'
 
         return corpus_path
 
@@ -34,27 +34,35 @@ class Corpus(object):
             data = json.load(data_file)
         return data
 
-    def load_corpus(self, dotted_path):
+    def list_corpus_files(self, dotted_path):
         """
-        Return the data contained within a specified corpus.
+        Return a list of file paths to each data file in
+        the specified corpus.
         """
         corpus_path = self.get_file_path(dotted_path)
-
-        corpora = []
+        paths = []
 
         if os.path.isdir(corpus_path):
             for dirname, dirnames, filenames in os.walk(corpus_path):
                 for datafile in filenames:
                     if datafile.endswith('.json'):
-
-                        corpus = self.read_corpus(
-                            os.path.join(dirname, datafile)
-                        )
-
-                        for key in list(corpus.keys()):
-                            corpora.append(corpus[key])
+                        paths.append(os.path.join(dirname, datafile))
         else:
-            corpus = self.read_corpus(corpus_path)
+            paths.append(corpus_path)
+
+        paths.sort()
+        return paths
+
+    def load_corpus(self, dotted_path):
+        """
+        Return the data contained within a specified corpus.
+        """
+        data_file_paths = self.list_corpus_files(dotted_path)
+
+        corpora = []
+
+        for file_path in data_file_paths:
+            corpus = self.read_corpus(file_path)
 
             for key in list(corpus.keys()):
                 corpora.append(corpus[key])
