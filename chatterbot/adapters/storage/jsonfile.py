@@ -1,6 +1,7 @@
 from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 from jsondb import Database
+import warnings
 
 
 class JsonFileStorageAdapter(StorageAdapter):
@@ -11,6 +12,11 @@ class JsonFileStorageAdapter(StorageAdapter):
 
     def __init__(self, **kwargs):
         super(JsonFileStorageAdapter, self).__init__(**kwargs)
+
+        warnings.warn(
+            'The JsonFileStorageAdapter is not recommended for production application environments.',
+            self.UnsuitableForProductionWarning
+        )
 
         database_path = self.kwargs.get("database", "database.db")
         self.database = Database(database_path)
@@ -152,6 +158,9 @@ class JsonFileStorageAdapter(StorageAdapter):
         if os.path.exists(self.database.path):
             os.remove(self.database.path)
 
+    class UnsuitableForProductionWarning(Warning):
+        pass
+
 
 class DeprecationHelper(object):
     def __init__(self, new_target):
@@ -169,8 +178,7 @@ class DeprecationHelper(object):
 class JsonDatabaseAdapterDeprecationHelper(DeprecationHelper):
 
     def _warn(self):
-        from warnings import warn
-        warn(
+        warnings.warn(
             'The JsonDatabaseAdapter has been renamed to JsonFileStorageAdapter. Please use the updated class name in your code.',
             DeprecationWarning
         )
