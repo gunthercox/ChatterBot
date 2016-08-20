@@ -38,13 +38,6 @@ class ClosestMatchAdapter(BaseMatchAdapter):
                 confidence = ratio
                 closest_match = statement
 
-        '''
-        closest_match, confidence = process.extractOne(
-            input_statement.text,
-            text_of_all_statements
-        )
-        '''
-
         # Convert the confidence integer to a percent
         confidence /= 100.0
 
