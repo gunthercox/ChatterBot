@@ -3,7 +3,7 @@ from chatterbot import ChatBot
 
 # Create a new instance of a ChatBot
 bot = ChatBot("Terminal",
-    storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+    storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
     logic_adapters=[
         "chatterbot.adapters.logic.MathematicalEvaluation",
         "chatterbot.adapters.logic.TimeLogicAdapter",

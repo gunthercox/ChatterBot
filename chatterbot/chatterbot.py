@@ -13,7 +13,7 @@ class ChatBot(object):
         kwargs["name"] = name
 
         storage_adapter = kwargs.get("storage_adapter",
-            "chatterbot.adapters.storage.JsonDatabaseAdapter"
+            "chatterbot.adapters.storage.JsonFileStorageAdapter"
         )
 
         logic_adapters = kwargs.get("logic_adapters", [

@@ -32,7 +32,7 @@ Each adapter can be accessed on the context object from within an adapter by ref
 Adapter defaults
 ----------------
 
-By default, ChatterBot uses the `JsonDatabaseAdapter` adapter for storage,
+By default, ChatterBot uses the `JsonFileStorageAdapter` adapter for storage,
 the `ClosestMatchAdapter` for logic, the `VariableInputTypeAdapter` for input
 and the OutputFormatAdapter for output.
 
@@ -42,7 +42,7 @@ Each adapter can be set by passing in the dot-notated import path to the constru
 
    bot = ChatBot(
        "Elsie",
-       storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+       storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
        input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
        output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
        logic_adapters=[

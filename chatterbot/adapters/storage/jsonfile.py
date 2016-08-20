@@ -3,14 +3,14 @@ from chatterbot.conversation import Statement, Response
 from jsondb import Database
 
 
-class JsonDatabaseAdapter(StorageAdapter):
+class JsonFileStorageAdapter(StorageAdapter):
     """
-    The JsonDatabaseAdapter is an interface that allows ChatterBot
-    to store the conversation as a Json-encoded file.
+    This adapter allows ChatterBot to store conversation
+    data in a file in JSON format.
     """
 
     def __init__(self, **kwargs):
-        super(JsonDatabaseAdapter, self).__init__(**kwargs)
+        super(JsonFileStorageAdapter, self).__init__(**kwargs)
 
         database_path = self.kwargs.get("database", "database.db")
         self.database = Database(database_path)
@@ -151,3 +151,29 @@ class JsonDatabaseAdapter(StorageAdapter):
 
         if os.path.exists(self.database.path):
             os.remove(self.database.path)
+
+
+class DeprecationHelper(object):
+    def __init__(self, new_target):
+        self.new_target = new_target
+
+    def __call__(self, *args, **kwargs):
+        self._warn()
+        return self.new_target(*args, **kwargs)
+
+    def __getattr__(self, attr):
+        self._warn()
+        return getattr(self.new_target, attr)
+
+
+class JsonDatabaseAdapterDeprecationHelper(DeprecationHelper):
+
+    def _warn(self):
+        from warnings import warn
+        warn(
+            'The JsonDatabaseAdapter has been renamed to JsonFileStorageAdapter. Please use the updated class name in your code.',
+            DeprecationWarning
+        )
+
+JsonDatabaseAdapter = JsonDatabaseAdapterDeprecationHelper(JsonFileStorageAdapter)
+

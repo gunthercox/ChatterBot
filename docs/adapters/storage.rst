@@ -11,7 +11,7 @@ The storage adapter that your bot uses can be specified by setting the `storage_
 
    chatbot = ChatBot(
        "My ChatterBot",
-       storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter"
+       storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter"
    )
 
 Read Only Mode
@@ -24,9 +24,9 @@ The `read_only` parameter is set to false by default.
 Json Database Adapter
 =====================
 
-.. autofunction:: chatterbot.adapters.storage.JsonDatabaseAdapter
+.. autofunction:: chatterbot.adapters.storage.JsonFileStorageAdapter
 
-"chatterbot.adapters.storage.JsonDatabaseAdapter"
+"chatterbot.adapters.storage.JsonFileStorageAdapter"
 
 The JSON Database adapter requires an additional parameter (`database`) to be
 passed to the ChatterBot constructor. This storage adapter uses a local file

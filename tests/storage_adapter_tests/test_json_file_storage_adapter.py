@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.storage import JsonDatabaseAdapter
+from chatterbot.adapters.storage import JsonFileStorageAdapter
 from chatterbot.conversation import Statement, Response
 
 
@@ -14,7 +14,7 @@ class JsonAdapterTestCase(TestCase):
         # Generate a random name for the database
         database_name = str(randint(0, 9000))
 
-        self.adapter = JsonDatabaseAdapter(database=database_name)
+        self.adapter = JsonFileStorageAdapter(database=database_name)
 
     def tearDown(self):
         """
@@ -23,7 +23,7 @@ class JsonAdapterTestCase(TestCase):
         self.adapter.drop()
 
 
-class JsonDatabaseAdapterTestCase(JsonAdapterTestCase):
+class JsonFileStorageAdapterTestCase(JsonAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -206,10 +206,10 @@ class JsonDatabaseAdapterTestCase(JsonAdapterTestCase):
         self.assertIn("A what?", responses)
 
 
-class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
+class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
 
     def setUp(self):
-        super(JsonDatabaseAdapterFilterTestCase, self).setUp()
+        super(JsonFileStorageAdapterFilterTestCase, self).setUp()
 
         self.statement1 = Statement(
             "Testing...",
@@ -347,7 +347,7 @@ class JsonDatabaseAdapterFilterTestCase(JsonAdapterTestCase):
         self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
-class ReadOnlyJsonDatabaseAdapterTestCase(JsonAdapterTestCase):
+class ReadOnlyJsonFileStorageAdapterTestCase(JsonAdapterTestCase):
 
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True

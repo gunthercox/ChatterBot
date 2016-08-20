@@ -16,7 +16,7 @@ class AdapterValidationTests(ChatBotTestCase):
         try:
             self.chatbot = ChatBot(
                 "Test Bot",
-                storage_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+                storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
                 database=self.database_path
             )
         except ChatBot.InvalidAdapterException:
@@ -26,7 +26,7 @@ class AdapterValidationTests(ChatBotTestCase):
         with self.assertRaises(ChatBot.InvalidAdapterException):
             self.chatbot = ChatBot(
                 "Test Bot",
-                input_adapter="chatterbot.adapters.storage.JsonDatabaseAdapter",
+                input_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
                 database=self.database_path
             )
 
