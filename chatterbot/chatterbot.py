@@ -3,6 +3,7 @@ from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
 from .adapters.output import OutputAdapter
 from .conversation import Statement, Response
+from .trainers import Trainer
 from .utils.queues import ResponseQueue
 from .utils.module_loading import import_module
 
@@ -66,7 +67,7 @@ class ChatBot(object):
         self.input.set_context(self)
         self.output.set_context(self)
 
-        self.trainer = None
+        self.trainer = Trainer(self.storage)
 
     def add_adapter(self, adapter, **kwargs):
         self.validate_adapter_class(adapter, LogicAdapter)
