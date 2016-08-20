@@ -19,13 +19,19 @@ class DeprecationHelper(object):
 class ListDeprecationHelper(DeprecationHelper):
 
     def _warn(self):
-        warn('Deprecation Warning: Using `from chatterbot.training.trainers import ListTrainer` is deprecated. Use `from chatterbot.trainers import ListTrainer` instead.')
+        warn(
+            'Using `from chatterbot.training.trainers import ListTrainer` is deprecated. Use `from chatterbot.trainers import ListTrainer` instead.',
+            DeprecationWarning
+        )
 
 
 class CorpusDeprecationHelper(DeprecationHelper):
 
     def _warn(self):
-        warn('Deprecation Warning: Using `from chatterbot.training.trainers import ChatterBotCorpusTrainer` is deprecated. Use `from chatterbot.trainers import ChatterBotCorpusTrainer` instead.')
+        warn(
+            'Deprecation Warning: Using `from chatterbot.training.trainers import ChatterBotCorpusTrainer` is deprecated. Use `from chatterbot.trainers import ChatterBotCorpusTrainer` instead.',
+            DeprecationWarning
+        )
 
 
 ListTrainer = ListDeprecationHelper(NewListTrainer)
