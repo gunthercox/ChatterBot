@@ -113,6 +113,22 @@ To explore what languages and sets of corpora are available, check out the `chat
 
 If you are interested in contributing a new language corpus, or adding a module to an existing language, please create a pull request. Contributions are welcomed!
 
+Exporting your chat bot's database as a training corpus
+=======================================================
+
+Now that you have created your chat bot and sent it out into the world, perhaps
+you are looking for a way to share what it has learned with other chat bots?
+ChatterBot's training module provides methods that allow you to export the
+content of your chat bot's database as a training corpus that can be used to
+train other chat bots.
+
+Here is an example:
+
+.. code-block:: python
+
+   chatbot = ChatBot("Export Example Bot")
+   chatbot.trainer.export_for_training('./export.json')
+
 .. glossary::
 
    corpus

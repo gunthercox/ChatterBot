@@ -8,8 +8,35 @@ class Trainer(object):
         self.storage = storage
         self.corpus = Corpus()
 
-    def train(self):
-        pass
+    def train(self, *args, **kwargs):
+        raise self.TrainerInitializationException()
+
+    class TrainerInitializationException(Exception):
+
+        def __init__(self, value='A training class bust be set using the `set_trainer` method before calling `train()`.'):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
+
+    def _generate_export_data(self):
+        result = []
+
+        for statement in self.storage.filter():
+            for response in statement.in_response_to:
+                result.append([response.text, statement.text])
+
+        return result
+
+    def export_for_training(self, file_path='./export.json'):
+        """
+        Create a file from the database that can be used to
+        train other chat bots.
+        """
+        from jsondb.db import Database
+        database = Database(file_path)
+        export = {'export': self._generate_export_data()}
+        database.data(dictionary=export)
 
 
 class ListTrainer(Trainer):
