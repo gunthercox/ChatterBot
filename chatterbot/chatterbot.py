@@ -6,6 +6,7 @@ from .conversation import Statement, Response
 from .trainers import Trainer
 from .utils.queues import ResponseQueue
 from .utils.module_loading import import_module
+import logging
 
 
 class ChatBot(object):
@@ -68,6 +69,7 @@ class ChatBot(object):
         self.output.set_context(self)
 
         self.trainer = Trainer(self.storage)
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     def add_adapter(self, adapter, **kwargs):
         self.validate_adapter_class(adapter, LogicAdapter)
@@ -132,14 +134,19 @@ class ChatBot(object):
         Return the bot's response based on the input.
         """
         input_statement = self.input.process_input(input_item)
+        self.logger.info(u'Recieved input statement: {}'.format(input_statement.text))
 
         existing_statement = self.storage.find(input_statement.text)
 
         if existing_statement:
+            self.logger.info(u'{} is a known statement'.format(input_statement.text))
             input_statement = existing_statement
+        else:
+            self.logger.info(u'{} is not a known statement'.format(input_statement.text))
 
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
+        self.logger.info(u'Selecting "{}" as response with a confidence of {}'.format(response.text, confidence))
 
         previous_statement = self.get_last_response_statement()
 
@@ -147,6 +154,10 @@ class ChatBot(object):
             input_statement.add_response(
                 Response(previous_statement.text)
             )
+            self.logger.info(u'Adding the previous statement "{}" as response to {}'.format(
+                previous_statement.text,
+                input_statement.text
+            ))
 
         # Update the database after selecting a response
         self.storage.update(input_statement)
