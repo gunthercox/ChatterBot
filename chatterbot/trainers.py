@@ -8,8 +8,16 @@ class Trainer(object):
         self.storage = storage
         self.corpus = Corpus()
 
-    def train(self):
-        pass
+    def train(self, *args, **kwargs):
+        raise self.TrainerInitializationException()
+
+    class TrainerInitializationException(Exception):
+
+        def __init__(self, value='A training class bust be set using the `set_trainer` method before calling `train()`.'):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
 
     def _generate_export_data(self):
         result = []

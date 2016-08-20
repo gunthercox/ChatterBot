@@ -166,22 +166,12 @@ class ChatBot(object):
 
     @property
     def train(self):
-        if not self.trainer:
-            raise self.TrainerInitializationException()
         # Proxy method to the trainer
         return self.trainer.train
 
     class InvalidAdapterException(Exception):
 
         def __init__(self, value='Recieved an unexpected adapter setting.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)
-
-    class TrainerInitializationException(Exception):
-
-        def __init__(self, value='The `set_trainer` method must be called before calling `train`.'):
             self.value = value
 
         def __str__(self):
