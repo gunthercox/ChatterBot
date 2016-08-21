@@ -64,3 +64,21 @@ class ClosestMeaningAdapterTests(TestCase):
 
         self.assertEqual('Are you good?', match)
 
+    def test_no_known_responses(self):
+        """
+        In the case that a match is selected which has no known responses.
+        In this case a random response will be returned, but the confidence
+        should be zero because it is a random choice.
+        """
+        self.adapter.context.storage.update = MagicMock()
+        self.adapter.context.storage.filter = MagicMock(
+            return_value=[]
+        )
+        self.adapter.context.storage.get_random = MagicMock(
+            return_value=Statement("Random")
+        )
+
+        confidence, match = self.adapter.process(Statement("Blah"))
+
+        self.assertEqual(confidence, 0)
+        self.assertEqual(match.text, "Random")
