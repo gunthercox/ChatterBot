@@ -53,8 +53,8 @@ Each adapter can be set by passing in the dot-notated import path to the constru
 Third Party Adapters
 --------------------
 
-`chatterbot-voice`_ - A text to speech (tts) and speech recognition adapter designed to use with ChatterBot.
-`chatterbot-weather`_ A ChatterBot logic adapter that returns information about the current weather.
+- `chatterbot-voice`_ - A text to speech (tts) and speech recognition adapter designed to use with ChatterBot.
+- `chatterbot-weather`_ A ChatterBot logic adapter that returns information about the current weather.
 
 .. _MongoDB: https://docs.mongodb.com/
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
