@@ -52,20 +52,20 @@ class MongoDatabaseAdapter(StorageAdapter):
 
     def deserialize_responses(self, response_list):
         """
-        Takes the list of response items and returns the
-        list converted to object versions of the responses.
+        Takes the list of response items and returns
+        the list converted to Response objects.
         """
-        in_response_to = []
+        proxy_statement = Statement("")
 
         for response in response_list:
             text = response["text"]
             del(response["text"])
 
-            in_response_to.append(
+            proxy_statement.add_response(
                 Response(text, **response)
             )
 
-        return in_response_to
+        return proxy_statement.in_response_to
 
     def filter(self, **kwargs):
         """
