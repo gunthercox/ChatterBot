@@ -1,5 +1,9 @@
 from chatterbot import ChatBot
+import logging
 
+
+# Uncomment the following line to enable verbose logging
+# logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
 bot = ChatBot("Terminal",

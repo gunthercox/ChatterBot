@@ -1,3 +1,6 @@
+import logging
+
+
 class TieBreaking(object):
     """
     TieBreaking determines which response should be used in the event
@@ -22,8 +25,11 @@ class TieBreaking(object):
         """
         Returns the statement with the greatest number of occurrences.
         """
+        logger = logging.getLogger(__name__)
         matching_response = None
         occurrence_count = -1
+
+        logger.info(u'Selecting response with greatest number of occurrences.')
 
         for statement in response_list:
             count = statement.get_response_count(input_statement)
@@ -40,6 +46,10 @@ class TieBreaking(object):
         """
         Return the first statement in the response list.
         """
+        logger = logging.getLogger(__name__)
+        logger.info(u'Selecting first response from list of {} options.'.format(
+            len(response_list)
+        ))
         return response_list[0]
 
     def get_random_response(self, response_list):
@@ -47,4 +57,8 @@ class TieBreaking(object):
         Choose a random response from the selection.
         """
         from random import choice
+        logger = logging.getLogger(__name__)
+        logger.info(u'Selecting a response from list of {} options.'.format(
+            len(response_list)
+        ))
         return choice(response_list)

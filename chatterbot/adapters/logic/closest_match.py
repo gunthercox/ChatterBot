@@ -5,7 +5,7 @@ from fuzzywuzzy import fuzz
 
 class ClosestMatchAdapter(BaseMatchAdapter):
     """
-    The ClosestMatchAdapter creates a response by
+    The ClosestMatchAdapter logic adapter creates a response by 
     using fuzzywuzzy's process class to extract the most similar
     response to the input. This adapter selects a response to an
     input statement by selecting the closest known matching
@@ -23,6 +23,10 @@ class ClosestMatchAdapter(BaseMatchAdapter):
         if not statement_list:
             if self.has_storage_context:
                 # Use a randomly picked statement
+                self.logger.info(
+                    u'No statements have known responses. ' +
+                    u'Choosing a random response to return.'
+                )
                 return 0, self.context.storage.get_random()
             else:
                 raise self.EmptyDatasetException()

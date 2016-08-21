@@ -1,9 +1,13 @@
+import logging
+
+
 class Adapter(object):
     """
-    An abstract superclass for all adapters
+    A superclass for all adapter classes.
     """
 
     def __init__(self, **kwargs):
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
         self.context = None
 
     def set_context(self, context):

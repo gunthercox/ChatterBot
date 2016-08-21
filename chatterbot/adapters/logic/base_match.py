@@ -43,6 +43,9 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
 
         # Select the closest match to the input statement
         confidence, closest_match = self.get(input_statement)
+        self.logger.info(u'Using "{}" as a close match to "{}"'.format(
+            input_statement.text, closest_match.text
+        ))
 
         # Save any updates made to the statement by the logic adapter
         self.context.storage.update(closest_match)
@@ -53,9 +56,20 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
         )
 
         if response_list:
+            self.logger.info(
+                u'Breaking tie between {} optimal responses.'.format(
+                    len(response_list)
+                )
+            )
             response = self.break_tie(response_list, self.tie_breaking_method)
+            self.logger.info(u'Tie broken. Using "{}"'.format(response.text))
         else:
             response = self.context.storage.get_random()
+            self.logger.info(
+                u'No response to "{}" found. Using a random response.'.format(
+                    closest_match.text
+                )
+            )
 
             # Set confidence to zero if a random response is selected
             confidence = 0
