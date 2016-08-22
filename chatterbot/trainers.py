@@ -13,7 +13,7 @@ class Trainer(object):
 
     class TrainerInitializationException(Exception):
 
-        def __init__(self, value='A training class bust be set using the `set_trainer` method before calling `train()`.'):
+        def __init__(self, value='A training class must be set using the `set_trainer` method before calling `train()`.'):
             self.value = value
 
         def __str__(self):

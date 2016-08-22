@@ -61,7 +61,7 @@ if it does not already exist.
 .. code-block:: python
 
    bot = ChatBot(
-       "Norman"
+       "Norman",
        storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
        database="./database.json"
    )
@@ -82,7 +82,7 @@ the terminal. The output terminal adapter print's the chat bot's response.
 .. code-block:: python
 
    bot = ChatBot(
-       "Norman"
+       "Norman",
        storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
        input_adapter="chatterbot.adapters.input.TerminalAdapter",
        output_adapter="chatterbot.adapters.output.TerminalAdapter",
@@ -105,7 +105,7 @@ operations.
 .. code-block:: python
 
    bot = ChatBot(
-       "Norman"
+       "Norman",
        storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
        input_adapter="chatterbot.adapters.input.TerminalAdapter",
        output_adapter="chatterbot.adapters.output.TerminalAdapter",
