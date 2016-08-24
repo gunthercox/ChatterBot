@@ -80,7 +80,7 @@ para usar o ChatterBot na wiki do projeto.
 Para consultar exemplos, veja o diretório de [exemplos](https://github.com/gunthercox/ChatterBot/tree/master/examples) no repositório
 deste projeto.
 
-Também existem exemplos em [Projeto Django usando o ChatterBot](https://github.com/gunthercox/django_chatterbot).
+Também existem exemplos em [Projeto Django usando o ChatterBot](https://github.com/gunthercox/django_chatterbot), e [Projeto Flask usando o ChatterBot](https://github.com/chamkank/flask-chatterbot).
 
 Criou algo legal usando o ChatterBot?
 Por favor adicione a sua criação na [lista de projetos](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) usando o ChatterBot na Wiki.
