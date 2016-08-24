@@ -157,10 +157,10 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         count = self.count()
 
-        random_integer = randint(0, count - 1)
-
-        if self.count() < 1:
+        if count < 1:
             raise self.EmptyDatabaseException()
+
+        random_integer = randint(0, count - 1)
 
         statement = self.statements.find().limit(1).skip(random_integer)
 
