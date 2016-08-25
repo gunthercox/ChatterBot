@@ -61,7 +61,7 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
                     len(response_list)
                 )
             )
-            response = self.break_tie(response_list, self.tie_breaking_method)
+            response = self.break_tie(input_statement,response_list, self.tie_breaking_method)
             self.logger.info(u'Tie broken. Using "{}"'.format(response.text))
         else:
             response = self.context.storage.get_random()
