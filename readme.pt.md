@@ -72,8 +72,8 @@ chatbot.train("chatterbot.corpus.Portuguese.conversations_pt-BR")
 
 # Documentação
 
-Veja a [documentação](https://github.com/gunthercox/ChatterBot/wiki/)
-para usar o ChatterBot na wiki do projeto.
+Veja a [documentação](http://chatterbot.readthedocs.io/)
+para ChatterBot em Read the Docs.
 
 # Exemplos
 
@@ -81,9 +81,6 @@ Para consultar exemplos, veja o diretório de [exemplos](https://github.com/gunt
 deste projeto.
 
 Também existem exemplos em [Projeto Django usando o ChatterBot](https://github.com/gunthercox/django_chatterbot), e [Projeto Flask usando o ChatterBot](https://github.com/chamkank/flask-chatterbot).
-
-Criou algo legal usando o ChatterBot?
-Por favor adicione a sua criação na [lista de projetos](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) usando o ChatterBot na Wiki.
 
 # Testando
 

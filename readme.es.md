@@ -75,10 +75,6 @@ Para ejemplos, véase el directorio [ejemplos](https://github.com/gunthercox/Cha
 
 También hay un ejemplo [de proyecto de Django usando chatterbot](https://github.com/gunthercox/django_chatterbot), y [de proyecto de Flask usando chatterbot](https://github.com/chamkank/flask-chatterbot).
 
-**¿Ha creado algo guay usando Chatterbot?**
-
-Por favor, añada su creación a la [lista de proyectos](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) que utilizan Chatterbot en el wiki.
-
 # Pruebas
 
 Chatterbot se puede "testear" usando nose.

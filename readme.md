@@ -87,10 +87,6 @@ directory in this project's repository.
 
 There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
 
-**Have you created something cool using ChatterBot?**
-
-Please add your creation to the [list of projects](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) using ChatterBot in the wiki.
-
 # Testing
 
 ChatterBot's built in tests can be run using nose.
