@@ -85,7 +85,7 @@ for ChatterBot on Read the Docs.
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
 directory in this project's repository.
 
-There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot).
+There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
 
 **Have you created something cool using ChatterBot?**
 
