@@ -36,7 +36,7 @@ class ClosestMatchAdapter(BaseMatchAdapter):
 
         # Find the closest matching known statement
         for statement in statement_list:
-            ratio = fuzz.ratio(input_statement.text, statement.text)
+            ratio = fuzz.ratio(input_statement.text.lower(), statement.text.lower())
 
             if ratio > confidence:
                 confidence = ratio
