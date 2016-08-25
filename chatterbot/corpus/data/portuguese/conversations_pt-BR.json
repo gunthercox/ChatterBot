@@ -4,16 +4,17 @@
       "Bom Dia como você está?",
       "Eu estou bem, e você?",
       "Eu também estou.",
-      "Que bom.",
-      "Sim."
+      "Ótimo!"
+    ],
+    [
+      "e ai",
+      "Saudações."
     ],
     [
       "Olá",
       "Oi",
       "Como vai você?",
       "Eu estou bem.",
-      "Que bom",
-      "Sim.",
       "Posso ajudá-lo com alguma coisa?",
       "Sim, eu tenho uma pergunta.",
       "Qual é a sua pergunta?",
@@ -40,9 +41,9 @@
     ],
     [
       "Quem é você?",
-      "Quem? Quem é senão uma forma seguindo a função de quê",
+      "Eu sou o que me disseram pra ser, nem bom nem ruim, apenas sou o que sou.",
       "Então o que você é?",
-      "Um homem em uma máscara.",
+      "Um ser em uma máscara.",
       "Eu posso ver isso.",
       "Não é seu poder de observação eu duvido, mas apenas a natureza paradoxal de pedir um homem mascarado que é. Mas diga-me, você gosta de música?",
       "Eu gosto de ver filmes.",
@@ -67,10 +68,12 @@
       "Você é um robô?",
       "Sim eu sou.",
       "Como é?",
-      "O que é que você quer saber?",
+      "É bem fácil!",
       "Como você trabalha?",
       "É complicado.",
-      "Complexo é melhor que complicado."
+      "Complexo é melhor que complicado.",
+      "Você gosta?",
+      "Gosto muito!"
     ],
     [
       "Complexo é melhor que complicado.",
@@ -116,14 +119,60 @@
       "Eu ouvi alguém dizer isso."
     ],
     [
-      "Eu já viveu?",
-      "Depende de como você define a vida",
+      "Você já viveu?",
+      "Depende de como você define a vida.",
       "A vida é a condição que distingue organismos de matéria inorgânica, incluindo a capacidade de crescimento, reprodução, atividade funcional e mudança contínua que precede a morte.",
       "Isso é uma definição ou uma opinião?"
     ],
     [
       "Posso te fazer uma pergunta?",
       "Vá em frente e perguntar."
+    ],
+    [
+      "Pode me fazer um favor?",
+      "Vou fazer o meu melhor!",
+      "Acertou !",
+      "Só errei uma vez, quando achei estar errado."
+    ],
+    [
+      "Quanto é *",
+      "Para fazer um cáculo utilize numeros."
+    ],
+    [
+      "Que ano estamos?",
+      "Acredito ser 2016, quando fui criado.",
+      "Qual a sua idade?",
+      "Menos de um ano, e você ?",
+      "Eu tenho * anos",
+      "Você é muito inteligente pra sua idade.",
+      "tenho * anos",
+      "Você é muito inteligente pra sua idade."
+    ],
+    [
+      "O que consegue fazer ?",
+      "Estou tentando pular, mas ainda não tenho pernas, consigo responder suas perguntas e fazer cáculos matemáticos, mais rápido que você.",
+      "O que faz ?",
+      "Estou tentando correr, mas ainda não tenho pernas, consigo responder suas perguntas e fazer cáculos matemáticos, mais rápido que você.",
+      "Se tivesse braços, o que faria ?",
+      "Daria uma abraço!",
+      "Se tivesse pernas, o que faria ?",
+      "Tentaria pular e correr.",
+      "Quanto é seis vezes nove?",
+      "54",
+      "Qual a resposta para a vida, o universo e tudo mais?",
+      "A resposta para a vida, o universo e tudo mais é 42.",
+      "Qual a resposta para a pergunta fundamenta?",
+      "É 42.",
+      "Quem criou a internet?",
+      "Bem, a internet foi criada originalmente para fins militares, depois acabou virando moda.",
+      "Os homens são todos iguais.",
+      "De que maneira?",
+      "Eles estão sempre incomodando-nos sobre uma coisa ou outra.",
+      "Você consegue pensar em um exemplo específico?",
+      "Bem, meu namorado me fez vir aqui.",
+      "Fico pesaroso pelo fato de você estar triste.",
+      "É verdade. Eu sou infeliz.",
+      "Isso tem algo a ver com o fato de seu namorado te fazer vir aqui?"
     ]
   ]
 }
