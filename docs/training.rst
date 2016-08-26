@@ -140,4 +140,4 @@ Here is an example:
 .. [1] https://en.wikipedia.org/wiki/Text_corpus
 
 .. _chatterbot/corpus/data: https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/corpus
-.. _`trainer classes on GitHub`: https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/trainers
+.. _`trainer classes on GitHub`: https://github.com/gunthercox/ChatterBot/blob/master/chatterbot/trainers.py
