@@ -12,3 +12,7 @@ settings.py
 
 # Sphinx docs
 docs/_build/
+
+# IntelliJ
+.idea
+*.iml

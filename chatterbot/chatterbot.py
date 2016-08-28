@@ -140,6 +140,8 @@ class ChatBot(object):
 
         if existing_statement:
             self.logger.info(u'{} is a known statement'.format(input_statement.text))
+            if input_statement.extra_data:
+                existing_statement.extra_data.update(input_statement.extra_data)
             input_statement = existing_statement
         else:
             self.logger.info(u'{} is not a known statement'.format(input_statement.text))
@@ -147,6 +149,8 @@ class ChatBot(object):
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
         self.logger.info(u'Selecting "{}" as response with a confidence of {}'.format(response.text, confidence))
+        if input_statement.extra_data:
+            response.extra_data.update(input_statement.extra_data)
 
         previous_statement = self.get_last_response_statement()
 
