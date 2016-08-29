@@ -13,7 +13,7 @@ class POSTagger():
         from nltk import download
 
         try:
-            find('punkt.zip')
+            find('tokenizers/punkt')
         except LookupError:
             download('punkt')
 

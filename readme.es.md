@@ -73,11 +73,7 @@ Ver la [documentación](http://chatterbot.readthedocs.io/) para chatterbot en Le
 
 Para ejemplos, véase el directorio [ejemplos](https://github.com/gunthercox/ChatterBot/tree/master/examples) en el repositorio de este proyecto.
 
-También hay un ejemplo [de proyecto de Django usando chatterbot](https://github.com/gunthercox/django_chatterbot) .
-
-**¿Ha creado algo guay usando Chatterbot?**
-
-Por favor, añada su creación a la [lista de proyectos](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) que utilizan Chatterbot en el wiki.
+También hay un ejemplo [de proyecto de Django usando chatterbot](https://github.com/gunthercox/django_chatterbot), y [de proyecto de Flask usando chatterbot](https://github.com/chamkank/flask-chatterbot).
 
 # Pruebas
 
