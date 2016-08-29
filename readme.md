@@ -17,6 +17,7 @@ to be trained to speak any language.
 [![Documentation Status](https://readthedocs.org/projects/chatterbot/badge/?version=latest)](http://chatterbot.readthedocs.io/en/latest/?badge=latest)
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
 [![Code Climate](https://codeclimate.com/github/gunthercox/ChatterBot/badges/gpa.svg)](https://codeclimate.com/github/gunthercox/ChatterBot)
+[![Join the chat at https://gitter.im/chatter_bot/Lobby](https://badges.gitter.im/chatter_bot/Lobby.svg)](https://gitter.im/chatter_bot/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 An example of typical input would be something like this:
 
@@ -85,11 +86,7 @@ for ChatterBot on Read the Docs.
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
 directory in this project's repository.
 
-There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot).
-
-**Have you created something cool using ChatterBot?**
-
-Please add your creation to the [list of projects](https://github.com/gunthercox/ChatterBot/wiki/ChatterBot-Showcase) using ChatterBot in the wiki.
+There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
 
 # Testing
 

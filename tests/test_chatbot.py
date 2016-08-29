@@ -130,3 +130,21 @@ class ChatterBotResponseTests(ChatBotTestCase):
         self.assertEqual(second_response, self.test_statement.text)
         self.assertEqual(len(statement.in_response_to), 1)
         self.assertIn("Hi", statement.in_response_to)
+
+    def test_response_extra_data(self):
+        """
+        If an input statement has data contained in the
+        `extra_data` attribute of a statement object,
+        that data should saved with the input statement.
+        """
+        self.test_statement.add_extra_data("test", 1)
+        self.chatbot.get_response(
+            self.test_statement
+        )
+
+        saved_statement = self.chatbot.storage.find(
+            self.test_statement.text
+        )
+
+        self.assertIn("test", saved_statement.extra_data)
+        self.assertEqual(1, saved_statement.extra_data["test"])
