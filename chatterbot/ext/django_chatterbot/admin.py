@@ -9,7 +9,7 @@ class StatementAdmin(admin.ModelAdmin):
 
 
 class ResponseAdmin(admin.ModelAdmin):
-    list_display = ('text', 'occurrence', )
+    list_display = ('statement', 'occurrence', )
 
 
 admin.site.register(Statement, StatementAdmin)

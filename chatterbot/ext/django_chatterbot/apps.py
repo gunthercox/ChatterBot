@@ -1,11 +1,12 @@
 from django.apps import AppConfig
-from chatterbot.ext.django_chatterbot import settings as chatterbot_settings
 
 
-class DjangoChatterbotConfig(AppConfig):
+class DjangoChatterBotConfig(AppConfig):
 
     name = 'chatterbot.ext.django_chatterbot'
+    label = 'django_chatterbot'
     verbose_name = 'Django ChatterBot'
 
     def ready(self):
-        chatterbot_settings.patch_all()
+        from chatterbot.ext.django_chatterbot import settings
+        settings.patch_all()
