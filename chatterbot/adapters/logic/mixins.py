@@ -7,7 +7,7 @@ class TieBreaking(object):
     that multiple responses are generated within a logic adapter.
     """
 
-    def break_tie(self, statement_list, method):
+    def break_tie(self, input_statement, statement_list, method):
 
         METHODS = {
             "first_response": self.get_first_response,
@@ -16,10 +16,10 @@ class TieBreaking(object):
         }
 
         if method in METHODS:
-            return METHODS[method](statement_list)
+            return METHODS[method](input_statement, statement_list)
 
         # Default to the first method if an invalid method is passed in
-        return METHODS["first_response"](statement_list)
+        return METHODS["first_response"](input_statement, statement_list)
 
     def get_most_frequent_response(self, input_statement, response_list):
         """
@@ -42,7 +42,7 @@ class TieBreaking(object):
         # Choose the most commonly occuring matching response
         return matching_response
 
-    def get_first_response(self, response_list):
+    def get_first_response(self, input_statement, response_list):
         """
         Return the first statement in the response list.
         """
@@ -52,7 +52,7 @@ class TieBreaking(object):
         ))
         return response_list[0]
 
-    def get_random_response(self, response_list):
+    def get_random_response(self, input_statement, response_list):
         """
         Choose a random response from the selection.
         """
