@@ -1,11 +1,10 @@
 from unittest import TestCase
-from ..base_case import ChatBotTestCase
+
 from chatterbot.adapters.logic.mixins import TieBreaking
 from chatterbot.conversation import Statement, Response
 
 
 class TieBreakingTests(TestCase):
-
     def setUp(self):
         self.mixin = TieBreaking()
 
@@ -31,7 +30,7 @@ class TieBreakingTests(TestCase):
             Statement("A quest.")
         ]
 
-        output = self.mixin.get_first_response(statement_list)
+        output = self.mixin.get_first_response(Statement("Hello"), statement_list)
 
         self.assertEqual("What... is your quest?", output)
 
@@ -41,8 +40,6 @@ class TieBreakingTests(TestCase):
             Statement("A what?"),
             Statement("A phone.")
         ]
-
-        output = self.mixin.get_random_response(statement_list)
+        output = self.mixin.get_random_response(Statement("Hello"), statement_list)
 
         self.assertTrue(output)
-
