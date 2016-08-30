@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
-from .base_match import BaseMatchAdapter
 from fuzzywuzzy import fuzz
+
+from .base_match import BaseMatchAdapter
 
 
 class ClosestMatchAdapter(BaseMatchAdapter):
@@ -46,4 +47,3 @@ class ClosestMatchAdapter(BaseMatchAdapter):
         confidence /= 100.0
 
         return confidence, closest_match
-
