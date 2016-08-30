@@ -40,7 +40,6 @@ class TieBreakingTests(TestCase):
             Statement("A what?"),
             Statement("A phone.")
         ]
-
         output = self.mixin.get_random_response(Statement("Hello"), statement_list)
 
         self.assertTrue(output)

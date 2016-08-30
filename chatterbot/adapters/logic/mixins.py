@@ -17,7 +17,6 @@ class TieBreaking(object):
 
         if method in METHODS:
             return METHODS[method](input_statement, statement_list)
-
         # Default to the first method if an invalid method is passed in
         return METHODS["first_response"](statement_list)
 
