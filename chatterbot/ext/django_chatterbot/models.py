@@ -25,5 +25,5 @@ class Response(models.Model):
 
     unique_together = (('statement', 'response'),)
 
-    occurrence = models.PositiveIntegerField()
+    occurrence = models.PositiveIntegerField(default=0)
 

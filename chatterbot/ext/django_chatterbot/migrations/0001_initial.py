@@ -17,7 +17,7 @@ class Migration(migrations.Migration):
             name='Response',
             fields=[
                 ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('occurrence', models.PositiveIntegerField()),
+                ('occurrence', models.PositiveIntegerField(default=0)),
             ],
         ),
         migrations.CreateModel(
