@@ -17,9 +17,10 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         statement = Statement(statement_model.text)
 
-        for response_object in statement_model.in_response_to:
+        for response_object in statement_model.in_response_to.all():
             statement.add_response(Response(
-                response_object.response.text
+                response_object.response.text,
+                occurrence=response_object.occurrence
             ))
 
         return statement
@@ -41,6 +42,25 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
 
+        kwargs_copy = kwargs.copy()
+
+        for kwarg in kwargs_copy:
+            value = kwargs[kwarg]
+            del kwargs[kwarg]
+            kwarg = kwarg.replace('__contains', '__response__text')
+            kwargs[kwarg] = value
+
+        if 'in_response_to' in kwargs:
+            responses = kwargs['in_response_to']
+            del kwargs['in_response_to']
+
+            if responses:
+                kwargs['in_response_to__response__text__in'] = []
+                for response in responses:
+                    kwargs['in_response_to__response__text__in'].append(response.text)
+            else:
+                kwargs['in_response_to'] = None
+
         statement_objects = StatementModel.objects.filter(**kwargs)
 
         results = []
@@ -60,13 +80,15 @@ class DjangoStorageAdapter(StorageAdapter):
             )
 
             for response in statement.in_response_to:
-                response_statement = StatementModel.objects.get_or_create(
+                response_statement, created = StatementModel.objects.get_or_create(
                     text=response.text
                 )
-                django_statement.in_response_to.get_or_create(
+                response_object, created = django_statement.in_response_to.get_or_create(
                     statement=statement,
                     response=response_statement
                 )
+                response_object.occurrence = response.occurrence
+                response_object.save()
 
             django_statement.save()
 
@@ -79,6 +101,24 @@ class DjangoStorageAdapter(StorageAdapter):
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         statement = StatementModel.objects.order_by('?').first()
         return self.model_to_object(statement)
+
+    def remove(self, statement_text):
+        """
+        Removes the statement that matches the input text.
+        Removes any responses from statements if the response text matches the
+        input text.
+        """
+        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
+        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
+        from django.db.models import Q
+        statements = StatementModel.objects.filter(text=statement_text)
+
+        responses = ResponseModel.objects.filter(
+            Q(statement__text=statement_text) | Q(response__text=statement_text)
+        )
+
+        responses.delete()
+        statements.delete()
 
     def drop(self):
         """
