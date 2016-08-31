@@ -40,33 +40,13 @@ class DjangoStorageAdapter(StorageAdapter):
         that match the parameters specified.
         """
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
-        filter_parameters = kwargs.copy()
-        contains_parameters = {}
 
-        # Exclude special arguments from the kwargs
-        for parameter in kwargs:
-            if "__" in parameter:
-                del(filter_parameters[parameter])
-
-                kwarg_parts = parameter.split("__")
-
-                if kwarg_parts[1] == "contains":
-                    key = kwarg_parts[0]
-                    value = kwargs[parameter]
-                    contains_parameters[key] = {'$elemMatch': {'$elemMatch': {'$in':[value]}}}
-
-        filter_parameters.update(contains_parameters)
-
-        matches = self.statements.find(filter_parameters)
-        matches = list(matches)
+        statement_objects = StatementModel.objects.filter(**kwargs)
 
         results = []
 
-        for match in matches:
-            statement_text = match['text']
-            del(match['text'])
-            results.append(Statement(statement_text, **match))
+        for statement_object in statement_objects:
+            results.append(self.model_to_object(statement_object))
 
         return results
 
@@ -83,7 +63,7 @@ class DjangoStorageAdapter(StorageAdapter):
                 response_statement = StatementModel.objects.get_or_create(
                     text=response.text
                 )
-                django_statement.in_response_to.get_or_create(#ResponseModel(
+                django_statement.in_response_to.get_or_create(
                     statement=statement,
                     response=response_statement
                 )
