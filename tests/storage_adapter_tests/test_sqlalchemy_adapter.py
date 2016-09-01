@@ -32,7 +32,7 @@ class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         Test that None is returned by the find method
         when a matching statement is not found.
         """
-        self.assertEqual(self.adapter.find("Non-existant"), None)
+        self.assertIsNone(self.adapter.find("Non-existant"))
 
     def test_statement_found(self):
         """
@@ -43,7 +43,7 @@ class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.adapter.update(statement)
 
         found_statement = self.adapter.find("New statement")
-        self.assertNotEqual(found_statement, None)
+        self.assertIsNotNone(found_statement)
         self.assertEqual(found_statement.text, statement.text)
 
     def test_update_adds_new_statement(self):
@@ -51,7 +51,7 @@ class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.adapter.update(statement)
 
         statement_found = self.adapter.find("New statement")
-        self.assertNotEqual(statement_found, None)
+        self.assertIsNotNone(statement_found)
         self.assertEqual(statement_found.text, statement.text)
 
     def test_update_modifies_existing_statement(self):
@@ -340,7 +340,7 @@ class ReadOnlySQLAlchemyDataabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.adapter.update(statement)
 
         statement_found = self.adapter.find("New statement")
-        self.assertEqual(statement_found, None)
+        self.assertIsNone(statement_found)
 
     def test_update_does_not_modify_existing_statement(self):
         statement = Statement("New statement")
