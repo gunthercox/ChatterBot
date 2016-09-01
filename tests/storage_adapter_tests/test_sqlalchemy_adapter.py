@@ -329,7 +329,7 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
         found = self.adapter.filter(text=statement.text)
 
         self.assertEqual(len(found[0].in_response_to), 1)
-        self.assertEqual(type(found[0].in_response_to[0]), Response)
+        self.assertIsInstance(found[0].in_response_to[0], Response)
 
 
 class ReadOnlySQLAlchemyDataabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
