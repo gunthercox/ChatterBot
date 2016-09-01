@@ -194,7 +194,7 @@ class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
 
 class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
     def setUp(self):
-        super(SQLAlchemyAdapterTestCase, self).setUp()
+        super(SQLAlchemyStorageAdapterFilterTestCase, self).setUp()
 
         self.statement1 = Statement(
             "Testing...",
