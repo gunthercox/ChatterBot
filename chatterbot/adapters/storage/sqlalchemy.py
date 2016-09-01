@@ -137,7 +137,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Session = sessionmaker(bind=self.engine)
         session = Session()
 
-        std = session.query(StatementTable).filter_by(text=statement_text).firs()
+        std = session.query(StatementTable).filter_by(text=statement_text).first()
         session.delete(std)
         session.commit()
 
