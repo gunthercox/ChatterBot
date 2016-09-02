@@ -136,18 +136,25 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         session = Session()
         return session
 
+    def __statement_filter(self, session, **kwargs):
+        """
+        Apply filter opeartion on StatementTable
+
+        rtype: query
+        """
+        _query = session.query(StatementTable)
+        return _query.filter_by(**kwargs)
+
     def find(self, statement_text):
         """
-        Returns a object from the database if it exists
+        Returns a statement if it exists otherwise None
         """
         session = self.__get_session()
-
-        std = session.query(StatementTable).filter_by(text=statement_text).first()
-
-        if std:
-            return std.get_statement()
-        else:
-            return None
+        query = self.__statement_filter(session, **{"text": statement_text})
+        record = query.first()
+        if record:
+            return record.get_statement()
+        return None
 
     def remove(self, statement_text):
         """
@@ -155,11 +162,10 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
-
         session = self.__get_session()
-
-        std = session.query(StatementTable).filter_by(text=statement_text).first()
-        session.delete(std)
+        query = self.__statement_filter(session, **{"text": statement_text})
+        record = query.first()
+        session.delete(record)
 
         if not self.read_only:
             session.commit()
@@ -198,16 +204,18 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Creates an entry if one does not exist.
         """
 
+        session = self.__get_session()
         if statement:
-            session = self.__get_session()
-            std = session.query(StatementTable).filter_by(text=statement.text).first()
-            if std:
+            query = self.__statement_filter(session, **{"text": statement.text})
+            record = query.first()
+
+            if record:
                 # update
                 if statement.text:
-                    std.text = statement.text
+                    record.text = statement.text
                 if statement.extra_data:
-                    std.extra_data = dict[statement.extra_data]
-                session.add(std)
+                    record.extra_data = dict[statement.extra_data]
+                session.add(record)
             else:
                 session.add(get_statement_table(statement))
 
