@@ -31,7 +31,7 @@ services:
 script:
   - nosetests --with-coverage --cover-package=chatterbot
   - pip install .
-  - examples/django_app/manage.py test
+  - python examples/django_app/manage.py test examples/django_app/
 
 after_success:
   - coveralls
