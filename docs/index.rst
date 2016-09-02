@@ -17,6 +17,7 @@ Contents:
    conversations
    utils
    about
+   django
 
 About ChatterBot
 ================

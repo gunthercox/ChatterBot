@@ -7,8 +7,9 @@ lib
 *.swp
 *.egg-info
 
-database.db
-settings.py
+# Database files
+*.sqlite3
+*.db
 
 # Sphinx docs
 docs/_build/
@@ -16,3 +17,5 @@ docs/_build/
 # IntelliJ
 .idea
 *.iml
+
+examples/settings.py

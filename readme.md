@@ -96,6 +96,13 @@ ChatterBot's built in tests can be run using nose.
 nosetests
 ```
 
+Tests for Django integration have been included in the example Django app and
+can be run with:
+
+```
+python examples/django_app/manage.py test
+```
+
 See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
 
 # History
