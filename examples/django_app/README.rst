@@ -1,41 +1,18 @@
-=================
-Django ChatterBot
-=================
+=========================
+ChatterBot Django Example
+=========================
 
-This is a Django project that makes it possible to create a simple chat bot web
-app using Django_, `Django REST framework`_ and ChatterBot_.
+This is an example Django app that shows how to create a simple chat bot web
+app using Django_ and ChatterBot_.
 
-Installation
-------------
+Documentation
+-------------
 
-   pip install django chatterbot
+Start the Django app by running `python manage.py runserver 0.0.0.0:8000`
 
-Quick start
------------
-
-1. Add ChatterBot's Django app module to your INSTALLED_APPS setting like this:
-
-   INSTALLED_APPS = (
-       ...
-       'chatterbot.ext.django_chatterbot',
-   )
-
-2. Include the URLconf in your project urls.py like this:
-   from chatterbot.ext.django_chatterbot import urls as chatterbot_urls
-
-   urlpatterns = [
-       ...
-       url(r'^api/chatterbot/', include(chatterbot_urls, namespace='chatterbot')),
-   ]
-
-3. Run `python manage.py migrate` to create the chatterbot models.
-
-4. Start your Django app `python manage.py runserver 0.0.0.0:8000`
-
-5. POST to http://127.0.0.1:8000/api/chatterbot/ to start a conversation.
-
-   {'text': 'Hello, how are you?'}
+Further documentation on getting set up with Django and ChatterBot can be
+found in the `ChatterBot documentation`_.
 
 .. _Django: https://www.djangoproject.com
-.. _Django REST framework: http://www.django-rest-framework.org
 .. _ChatterBot: https://github.com/gunthercox/ChatterBot
+.. _ChatterBot documentation: http://chatterbot.readthedocs.io/en/latest/django.html
