@@ -62,8 +62,6 @@ class ResponseTable(Base):
         occ = {"occurrence": self.occurrence}
         return Response(text=self.text, **occ)
 
-def poi(s):
-    return s*s
 
 def get_statement_table(statement):
     responses = list(map(get_response_table, statement.in_response_to))
