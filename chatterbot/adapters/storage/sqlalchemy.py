@@ -183,17 +183,17 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         filter_parameters = kwargs.copy()
 
         session = self.__get_session()
-        stmts = []
+        statements = []
         for fp in filter_parameters:
             _like = filter_parameters[fp]
             _response_query = session.query(ResponseTable)
             query = _response_query.filter(ResponseTable.text_search.like('%' + _like + '%'))
-            stmts.extend(query.all())
+            statements.extend(query.all())
 
         results = []
-        for st in stmts:
-            if st and st.statement_table:
-                results.append(st.statement_table.get_statement())
+        for statement in statements:
+            if statement and statement.statement_table:
+                results.append(statement.statement_table.get_statement())
 
         return results
 
