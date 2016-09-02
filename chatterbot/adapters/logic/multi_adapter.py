@@ -25,9 +25,22 @@ class MultiLogicAdapter(LogicAdapter):
         for adapter in self.adapters:
             if adapter.can_process(statement):
                 confidence, output = adapter.process(statement)
+
+                self.logger.info(
+                    u'{} selected "{}" as a response with a confidence of {}'.format(
+                         str(adapter.__class__), output.text, confidence
+                    )
+                )
+
                 if confidence > max_confidence:
                     result = output
                     max_confidence = confidence
+            else:
+                self.logger.info(
+                    u'Not processing the statement using {}'.format(
+                        str(adapter.__class__)
+                    )
+                )
 
         return max_confidence, result
 

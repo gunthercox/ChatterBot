@@ -149,6 +149,7 @@ class ChatBot(object):
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
         self.logger.info(u'Selecting "{}" as response with a confidence of {}'.format(response.text, confidence))
+
         if input_statement.extra_data:
             response.extra_data.update(input_statement.extra_data)
 
