@@ -125,23 +125,22 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
         Return the number of entries in the database.
         """
-        session = self.get_session()
+        session = self.__get_session()
         return session.query(StatementTable).count()
 
-    def get_session(self):
+    def __get_session(self):
         """
         :rtype: Session
         """
         Session = sessionmaker(bind=self.engine)
         session = Session()
-
         return session
 
     def find(self, statement_text):
         """
         Returns a object from the database if it exists
         """
-        session = self.get_session()
+        session = self.__get_session()
 
         std = session.query(StatementTable).filter_by(text=statement_text).first()
 
@@ -157,7 +156,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         the input text.
         """
 
-        session = self.get_session()
+        session = self.__get_session()
 
         std = session.query(StatementTable).filter_by(text=statement_text).first()
         session.delete(std)
@@ -179,7 +178,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
 
         filter_parameters = kwargs.copy()
 
-        session = self.get_session()
+        session = self.__get_session()
         session.query()
         stmts = []
         for fp in filter_parameters:
@@ -200,7 +199,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
 
         if statement:
-            session = self.get_session()
+            session = self.__get_session()
             std = session.query(StatementTable).filter_by(text=statement.text).first()
             if std:
                 # update
@@ -226,7 +225,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             raise self.EmptyDatabaseException()
 
         rand = random.randrange(0, count)
-        session = self.get_session()
+        session = self.__get_session()
         stmt = session.query(StatementTable)[rand]
 
         return stmt.get_statement()
