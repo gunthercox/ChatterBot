@@ -1,10 +1,12 @@
 import json
+import random
 
 from sqlalchemy import Column, ForeignKey
+from sqlalchemy import PickleType
 from sqlalchemy import String
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.orm import sessionmaker
 
 from chatterbot.adapters.storage import StorageAdapter
@@ -14,44 +16,62 @@ from chatterbot.conversation import Statement
 Base = declarative_base()
 
 
+def get_statement_table_data(context):
+    print(context.get_statement)
+    pass
+
+
 class StatementTable(Base):
     __tablename__ = 'StatementTable'
 
+    def get_statement(self):
+        stmt = Statement(self.text, **self.extra_data)
+        for resp in self.in_response_to:
+            stmt.add_response(resp.get_response())
+        return stmt
+
+    def get_statement_serialized(context):
+        params = context.current_parameters
+        del (params['text_search'])
+        return json.dumps(params)
+
     # id = Column(Integer)
     text = Column(String, primary_key=True)
-    extra_data = Column(String)
-    in_response_to = relationship("ResponseTable", back_populates="statementTable")
-
-    # in_response_to = relationship("Response", backref="response", order_by="Response.id")
-    def get_statement(self):
-        return Statement(self.text, self.in_response_to.text,
-                         self.extra_data)
-
-        # def __init__(self, text, extra_data, in_response_to):
-        #     std = StatementTable
-        #     std.text = st1.text
-        #     std.extra_data = st1.extra_data
-        #     # if statement.in_response_to:
-        #     # self.in_response_to = statement.in_response_to
-        #     # self.extra_data =
-        #     return std
+    extra_data = Column(PickleType)
+    # in_response_to = relationship("ResponseTable", back_populates="statement_table")
+    text_search = Column(String, primary_key=True, default=get_statement_serialized)
 
 
 class ResponseTable(Base):
     __tablename__ = 'ResponseTable'
 
+    def get_reponse_serialized(context):
+        params = context.current_parameters
+        del (params['text_search'])
+        return json.dumps(params)
+
     # id = Column(Integer)
     text = Column(String, primary_key=True)
     occurrence = Column(String)
     statement_text = Column(String, ForeignKey('StatementTable.text'))
-    statementTable = relationship("StatementTable", back_populates="in_response_to")
-
-    # def __init__(self, response):
-    #     self.text = response.text
-    #     self.occurrence = response.occurrence
+    statement_table = relationship("StatementTable", backref=backref('in_response_to'), cascade="all, delete-orphan",
+                                   single_parent=True)
+    text_search = Column(String, primary_key=True, default=get_reponse_serialized)
 
     def get_response(self):
-        return Response(self.text, self.occurrence)
+        occ = {"occurrence": self.occurrence}
+        return Response(text=self.text, **occ)
+
+
+def get_statement_table(statement):
+    responses = []
+    for resp in statement.in_response_to:
+        responses.append(get_response_table(resp))
+    return StatementTable(text=statement.text, in_response_to=responses, extra_data=statement.extra_data)
+
+
+def get_response_table(response):
+    return ResponseTable(text=response.text, occurrence=response.occurrence)
 
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
@@ -105,25 +125,28 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
         Return the number of entries in the database.
         """
+        session = self.get_session()
+        return session.query(StatementTable).count()
+
+    def get_session(self):
+        """
+        :rtype: Session
+        """
         Session = sessionmaker(bind=self.engine)
         session = Session()
 
-        return session.query(StatementTable).count()
+        return session
 
     def find(self, statement_text):
         """
         Returns a object from the database if it exists
         """
-        Session = sessionmaker(bind=self.engine)
-        session = Session()
+        session = self.get_session()
 
         std = session.query(StatementTable).filter_by(text=statement_text).first()
-        # extra_data = json.loads(std.extra_data)
-        # if extra_data:
-        # extra_data = dict[extra_data]
-        # TODO Extra data
+
         if std:
-            return Statement(std.text)
+            return std.get_statement()
         else:
             return None
 
@@ -134,14 +157,16 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         the input text.
         """
 
-        Session = sessionmaker(bind=self.engine)
-        session = Session()
+        session = self.get_session()
 
         std = session.query(StatementTable).filter_by(text=statement_text).first()
         session.delete(std)
-        session.commit()
 
-        # raise self.AdapterMethodNotImplementedError()
+        if not self.read_only:
+            session.commit()
+        else:
+            session.rollback()
+            # raise self.AdapterMethodNotImplementedError()
 
     def filter(self, **kwargs):
         """
@@ -152,7 +177,21 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         match for all listed attributes will be returned.
         """
 
-        raise self.AdapterMethodNotImplementedError()
+        filter_parameters = kwargs.copy()
+
+        session = self.get_session()
+        session.query()
+        stmts = []
+        for fp in filter_parameters:
+            stmts.extend(session.query(ResponseTable).filter(
+                ResponseTable.text_search.like('%' + filter_parameters[fp] + '%')).all())
+
+        results = []
+        for st in stmts:
+            if st and st.statement_table:
+                results.append(st.statement_table.get_statement())
+
+        return results
 
     def update(self, statement):
         """
@@ -161,31 +200,39 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
 
         if statement:
-            Session = sessionmaker(bind=self.engine)
-            session = Session()
+            session = self.get_session()
             std = session.query(StatementTable).filter_by(text=statement.text).first()
             if std:
                 # update
                 if statement.text:
                     std.text = statement.text
                 if statement.extra_data:
-                    std.extra_data = json.dumps(statement.extra_data)
+                    std.extra_data = dict[statement.extra_data]
                 session.add(std)
             else:
-                session.add(StatementTable(text=statement.text))
+                session.add(get_statement_table(statement))
 
+        if not self.read_only:
             session.commit()
-
-            # raise self.AdapterMethodNotImplementedError()
+        else:
+            session.rollback()
 
     def get_random(self):
         """
         Returns a random statement from the database
         """
-        raise self.AdapterMethodNotImplementedError()
+        count = self.count()
+        if count < 1:
+            raise self.EmptyDatabaseException()
+
+        rand = random.randrange(0, count)
+        session = self.get_session()
+        stmt = session.query(StatementTable)[rand]
+
+        return stmt.get_statement()
 
     def drop(self):
         """
         Drop the database attached to a given adapter.
         """
-        raise self.AdapterMethodNotImplementedError()
+        Base.metadata.drop_all(self.engine)

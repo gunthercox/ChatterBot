@@ -140,15 +140,6 @@ class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(len(response.in_response_to), 1)
         self.assertEqual(response.in_response_to[0].occurrence, 2)
 
-    def test_deserialize_responses(self):
-        response_list = [
-            {"text": "Test", "occurrence": 3},
-            {"text": "Testing", "occurrence": 1},
-        ]
-        results = self.adapter.deserialize_responses(response_list)
-
-        self.assertEqual(len(results), 2)
-
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."
         statement = Statement(text)
@@ -332,7 +323,7 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
         self.assertIsInstance(found[0].in_response_to[0], Response)
 
 
-class ReadOnlySQLAlchemyDataabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
 
