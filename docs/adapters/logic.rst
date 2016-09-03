@@ -22,31 +22,31 @@ take priority.
    )
 
 Closest Match Adapter
----------------------
+=====================
 
 .. autofunction:: chatterbot.adapters.logic.ClosestMatchAdapter
 
 The `ClosestMatchAdapter` selects a response based on the closest know match to a given statement.
 
 How it works
-++++++++++++
+------------
 
 The closest match algorithm determines the similarity between the input statement and a set of known statements. For example, there is a 65% similarity between the statements _"where is the post office?"_ and _"looking for the post office"_. The closest match algorithm selects the highest matching known statements and returns a response based on that selection.
 
 Closest Meaning Adapter
------------------------
+=======================
 
 .. autofunction:: chatterbot.adapters.logic.ClosestMeaningAdapter
 
 The `ClosestMeaningAdapter` selects a response based on how closely two statements match each other based on the closeness of the synsets of each word in the word matrix formed by both sentences.
 
 How it works
-++++++++++++
+------------
 
 The closest meaning algorithm uses the [wordnet](http://www.nltk.org/howto/wordnet.html) functionality of [nltk](www.nltk.org) to determine the similarity of two statements based on the path similarity between each token of each statement. This is essentially an evaluation of the closeness of synonyms. The statement that has the closest path similarity of synsets to the input statement is returned.
 
 Time Logic Adapter
-------------------
+==================
 
 .. autofunction:: chatterbot.adapters.logic.TimeLogicAdapter
 
@@ -54,13 +54,13 @@ The `TimeLogicAdapter` identifies statements in which a question about the curre
 If a matching question is detected, then a response containing the current time is returned.
 
 Example
-+++++++
+-------
 
 | User: What time is it?
 | Bot: The current time is 4:45PM.  
 
 Mathematical Evaluation Adapter
----------------------------------
+===============================
 
 .. autofunction:: chatterbot.adapters.logic.MathematicalEvaluation
 
@@ -70,51 +70,8 @@ then it returns a response containing the result.
 This adapter is able to handle any combination of word and numeric operators.
 
 Example
-+++++++
+-------
 
 | User: What is four plus four?  
 | Bot: (4 + 4) = 8
-
-Creating a new logic adapter
-----------------------------
-
-You can write your own logic adapters by creating a new class that
-inherits from `LogicAdapter` and overides the overrides necessary
-methods established in the base `LogicAdapter` class.
-
-.. autofunction:: chatterbot.adapters.logic.LogicAdapter
-
-.. code-block:: python
-
-   from chatterbot.adapters.logic import LogicAdapter
-
-   class MyLogicAdapter(LogicAdapter):
-       def __init__(self, **kwargs):
-           """
-           The __init__ method is optional.
-           If you need to access any of the kwargs that were
-           passed into the ChatBot constructor this is where
-           you can do so.
-
-           (An API key might be an example of a parameter
-           you would want to access here.)
-           """
-
-       def can_process(self, statement):
-           """
-           This is a preliminary method that can be used to
-           check the input statement to see if a value can
-           possibly be returned when it is evaluated using
-           the adapter's process method.
-
-           This method returns true by default.
-           """
-           return True
-
-       def process(self, statement):
-           """
-           This method will receive the input statement.
-           Establish custom response selection logic here.
-           """
-           return selected_statement
 
