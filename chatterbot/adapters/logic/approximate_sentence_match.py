@@ -86,4 +86,4 @@ class ApproximateSentenceMatchAdapter(BaseMatchAdapter):
                 closest_match = statement
             else:
                 closest_match = statement
-        return 50, closest_match
+        return 0.5,closest_match
