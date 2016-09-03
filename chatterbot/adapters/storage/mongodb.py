@@ -216,7 +216,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         random_integer = randint(0, count - 1)
 
-        statements = self.statements.find(self.base_query.value()).limit(1).skip(random_integer)
+        statements = self.statements.find().limit(1).skip(random_integer)
 
         return self.mongo_to_object(list(statements)[0])
 
