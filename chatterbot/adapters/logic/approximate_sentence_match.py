@@ -48,7 +48,6 @@ class ApproximateSentenceMatchAdapter(BaseMatchAdapter):
 
     def is_ci_lemma_stopword_set_match(self,a, b, threshold=0.5):
         """Check if a and b are matches."""
-        print("ask",a)
         ratio = 0
         pos_a = map(self.get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a)))
         pos_b = map(self.get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b)))
