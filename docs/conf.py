@@ -7,7 +7,6 @@
 # containing dir.
 
 import sphinx_rtd_theme
-import chatterbot
 import sys
 import os
 
@@ -19,6 +18,8 @@ project_root = os.path.dirname(cwd)
 # This lets us ensure that the source package is imported, and that its
 # version is used.
 sys.path.insert(0, project_root)
+
+import chatterbot
 
 # If extensions (or modules to document with autodoc) are in another directory,
 # add these directories to sys.path here. If the directory is relative to the
