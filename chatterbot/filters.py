@@ -7,19 +7,9 @@ class Filter(object):
     filters should be subclassed.
     """
 
-    def filter_selection(self, query, context):
-        return query
+    def filter_selection(self, chatterbot):
+        return chatterbot.storage.base_query
 
-
-class StatementsWithResponsesFilter(Filter):
-    """
-    
-    """
-
-    def filter_selection(self, query, context):
-        # TODO
-
-        return query
 
 class RepetitiveResponseFilter(Filter):
     """
@@ -28,12 +18,18 @@ class RepetitiveResponseFilter(Filter):
     statements that it has recently said.
     """
 
-    def filter_selection(self, query, context):
+    def filter_selection(self, chatterbot):
 
-        # TODO
-        query = context.storage.query.not_in(
-            query,
-            self.recent_responses
+        if chatterbot.recent_statements.empty():
+            return chatterbot.storage.base_query
+
+        text_of_recent_responses = []
+
+        for statement, response in chatterbot.recent_statements:
+            text_of_recent_responses.append(response.text)
+
+        query = chatterbot.storage.base_query.statement_text_not_in(
+            text_of_recent_responses
         )
 
         return query
@@ -47,14 +43,18 @@ class LanguageFilter(Filter):
     """
 
     def __init__(self):
-        self.words = (
-            'dammit', 'retard', 'fuck', 'fucking',
-        )
-        # TODO: Load from data file
-        # TODO: Unzip/decrypt? data file on first use?
+        import os
+        import io
 
-    def filter_selection(self, query, context):
-        return context.storage.query.not_in(
-            self.words,
-            query
+        current_directory = os.path.dirname(__file__)
+        swear_words = os.path.join(
+            current_directory, 'corpus', 'data', 'english', 'swear_words.csv'
+        )
+
+        with io.open(swear_words, encoding='utf-8') as data_file:
+            self.words = data_file.read().split(',')
+
+    def filter_selection(self, chatterbot):
+        return chatterbot.storage.base_query.statement_text_not_in(
+            self.words
         )
