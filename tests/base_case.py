@@ -7,23 +7,17 @@ class ChatBotTestCase(TestCase):
 
     def setUp(self):
         self.test_data_directory = 'test_data'
-        self.test_database_name = self.random_string() + ".db"
+        self.test_database_name = self.random_string() + '.db'
 
-        if not os.path.exists(self.test_data_directory):
-            os.makedirs(self.test_data_directory)
+        self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
 
-        self.database_path = os.path.join(
-            self.test_data_directory,
-            self.test_database_name
-        )
-
-        self.chatbot = ChatBot(
-            "Test Bot",
-            input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
-            output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
-            output_format='text',
-            database=self.database_path
-        )
+    def get_kwargs(self):
+        return {
+            'input_adapter': 'chatterbot.adapters.input.VariableInputTypeAdapter',
+            'output_adapter': 'chatterbot.adapters.output.OutputFormatAdapter',
+            'output_format': 'text',
+            'database': self.create_test_data_directory()
+        }
 
     def random_string(self, start=0, end=9000):
         """
@@ -31,6 +25,15 @@ class ChatBotTestCase(TestCase):
         """
         from random import randint
         return str(randint(start, end))
+
+    def create_test_data_directory(self):
+        if not os.path.exists(self.test_data_directory):
+            os.makedirs(self.test_data_directory)
+
+        return os.path.join(
+            self.test_data_directory,
+            self.test_database_name
+        )
 
     def remove_test_data(self):
         import shutil
