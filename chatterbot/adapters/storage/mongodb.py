@@ -3,12 +3,30 @@ from chatterbot.conversation import Statement, Response
 from pymongo import MongoClient
 
 
-class QueryEngine(object):
+class Query(object):
 
-    def not_in(self, statements, query=None):
+    def __init__(self, query={}):
+        self.query = query
 
-        if not query:
-            query = {}
+    def value(self):
+        return self.query.copy()
+
+    def raw(self, data):
+        query = self.query.copy()
+
+        query.update(data)
+
+        return Query(query)
+
+    def statement_text_equals(self, statement_text):
+        query = self.query.copy()
+
+        query['text'] = statement_text
+
+        return Query(query)
+
+    def statement_text_not_in(self, statements):
+        query = self.query.copy()
 
         if 'text' not in query:
             query['text'] = {}
@@ -18,7 +36,27 @@ class QueryEngine(object):
 
         query['text']['$nin'].extend(statements)
 
-        return query
+        return Query(query)
+
+    def statement_response_list_contains(self, statement_text):
+        query = self.query.copy()
+
+        if 'in_response_to' not in query:
+            query['in_response_to'] = {}
+
+        if '$elemMatch' not in query['in_response_to']:
+            query['in_response_to']['$elemMatch'] = {}
+
+        query['in_response_to']['$elemMatch']['text'] = statement_text
+
+        return Query(query)
+
+    def statement_response_list_equals(self, response_list):
+        query = self.query.copy()
+
+        query['in_response_to'] = response_list
+
+        return Query(query)
 
 
 class MongoDatabaseAdapter(StorageAdapter):
@@ -49,17 +87,16 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
 
-        self.query = QueryEngine()
-        self.default_empty_query = {}
-        self.base_query = {}
+        self.adapter_supports_queries = True
+        self.base_query = Query()
 
     def count(self):
         return self.statements.count()
 
     def find(self, statement_text):
-        search_query = {'text': statement_text}
-        search_query.update(self.base_query)
-        values = self.statements.find_one()
+        query = self.base_query.statement_text_equals(statement_text)
+
+        values = self.statements.find_one(query.value())
 
         if not values:
             return None
@@ -67,10 +104,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         del(values['text'])
 
         # Build the objects for the response list
-        response_list = self.deserialize_responses(
-            values["in_response_to"]
+        values['in_response_to'] = self.deserialize_responses(
+            values['in_response_to']
         )
-        values["in_response_to"] = response_list
 
         return Statement(statement_text, **values)
 
@@ -96,50 +132,36 @@ class MongoDatabaseAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
-        filter_parameters = kwargs.copy()
-        contains_parameters = {}
+        query = self.base_query
 
         # Convert Response objects to data
-        if "in_response_to" in filter_parameters:
-            response_objects = filter_parameters["in_response_to"]
+        if 'in_response_to' in kwargs:
             serialized_responses = []
-            for response in response_objects:
-                serialized_responses.append(response.serialize())
+            for response in kwargs['in_response_to']:
+                serialized_responses.append({'text': response.text})
 
-            filter_parameters["in_response_to"] = serialized_responses
+            query = query.statement_response_list_equals(serialized_responses)
+            del(kwargs['in_response_to'])
 
-        # Exclude special arguments from the kwargs
-        for parameter in kwargs:
+        if 'in_response_to__contains' in kwargs:
+            query = query.statement_response_list_contains(
+                kwargs['in_response_to__contains']
+            )
+            del(kwargs['in_response_to__contains'])
 
-            if "__" in parameter:
-                del(filter_parameters[parameter])
+        query = query.raw(kwargs)
 
-                kwarg_parts = parameter.split("__")
-
-                if kwarg_parts[1] == "contains":
-                    key = kwarg_parts[0]
-                    value = kwargs[parameter]
-
-                    contains_parameters[key] = {
-                        '$elemMatch': {
-                            'text': value
-                        }
-                    }
-
-        filter_parameters.update(self.base_query)
-        filter_parameters.update(contains_parameters)
-
-        matches = self.statements.find(filter_parameters)
-        matches = list(matches)
+        matches = self.statements.find(query.value())
 
         results = []
 
-        for match in matches:
+        for match in list(matches):
             statement_text = match['text']
             del(match['text'])
 
-            response_list = self.deserialize_responses(match["in_response_to"])
-            match["in_response_to"] = response_list
+            match['in_response_to'] = self.deserialize_responses(
+                match['in_response_to']
+            )
 
             results.append(Statement(statement_text, **match))
 
@@ -187,7 +209,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         random_integer = randint(0, count - 1)
 
-        statement = self.statements.find(self.base_query).limit(1).skip(random_integer)
+        statement = self.statements.find(self.base_query.value()).limit(1).skip(random_integer)
 
         values = list(statement)[0]
         statement_text = values['text']
@@ -216,12 +238,15 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         response_query = self.statements.distinct('in_response_to.text')
 
+        print self.base_query.value()
+
         _statement_query = {
             'text': {
                 '$in': response_query
             }
         }
-        _statement_query.update(self.base_query)
+
+        _statement_query.update(self.base_query.value())
 
         statement_query = self.statements.find(_statement_query)
 
