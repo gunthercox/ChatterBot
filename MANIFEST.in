@@ -3,7 +3,7 @@ include readme.md
 include requirements.txt
 
 recursive-include chatterbot/corpus/* *.json
-recursive-include chatterbot/adapters/* *.json
+recursive-include chatterbot/corpus/* *.data
 
 recursive-exclude * *.pyc
 recursive-exclude * *.py~
