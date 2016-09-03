@@ -45,6 +45,33 @@ How it works
 
 The closest meaning algorithm uses the [wordnet](http://www.nltk.org/howto/wordnet.html) functionality of [nltk](www.nltk.org) to determine the similarity of two statements based on the path similarity between each token of each statement. This is essentially an evaluation of the closeness of synonyms. The statement that has the closest path similarity of synsets to the input statement is returned.
 
+Approximate Sentence Match Adapter
+----------------------------------
+
+.. autofunction:: chatterbot.adapters.logic.ApproximateSentenceMatchAdapter
+
+The `ApproximateSentenceMatchAdapter` calculates a Jaccard index and give result to a given statement.
+
+How it works
+++++++++++++
+
+The Jaccard index is composed of a numerator and denominator.
+  In the numerator, we count the number of items that are shared between the sets.
+  In the denominator, we count the total number of items across both sets.
+  Let's say we define sentences to be equivalent if 50% or more of their tokens are equivalent. Here are two sample sentences:
+
+      The young cat is hungry.
+      The cat is very hungry.
+
+  When we parse these sentences to remove stopwords, we end up with the following two sets:
+
+      {young, cat, hungry}
+      {cat, very, hungry}
+
+  In our example above, our intersection is {cat, hungry}, which has count of two.
+  The union of the sets is {young, cat, very, hungry}, which has a count of four.
+  Therefore, our Jaccard similarity index is two divided by four, or 50%.
+
 Time Logic Adapter
 ==================
 
@@ -57,7 +84,7 @@ Example
 -------
 
 | User: What time is it?
-| Bot: The current time is 4:45PM.  
+| Bot: The current time is 4:45PM.
 
 Mathematical Evaluation Adapter
 ===============================
@@ -72,6 +99,6 @@ This adapter is able to handle any combination of word and numeric operators.
 Example
 -------
 
-| User: What is four plus four?  
+| User: What is four plus four?
 | Bot: (4 + 4) = 8
 
