@@ -12,20 +12,18 @@ class StorageAdapter(Adapter):
 
         self.kwargs = kwargs
         self.read_only = kwargs.get('read_only', False)
-        self.default_empty_query = {}
-        self.base_query = {}
+        self.adapter_supports_queries = False
 
-    def generate_base_query(self, context):
+    def generate_base_query(self, chatterbot):
         """
-        
+        Create a base query for the storage adapter.
         """
-        query = self.default_empty_query
-
-        for Filter in context.filters:
-            filter_instance = Filter()
-            query = filter_instance.filter_selection(query, context)
-
-        self.base_query = query
+        if self.adapter_supports_queries:
+            for Filter in chatterbot.filters:
+                filter_instance = Filter()
+                self.base_query = filter_instance.filter_selection(
+                    self.base_query, chatterbot
+                )
 
     def count(self):
         """
