@@ -83,5 +83,7 @@ class ApproximateSentenceMatchAdapter(BaseMatchAdapter):
         # Find the  matching known statement
         for statement in statement_list:
             ratio = self.is_ci_lemma_stopword_set_match(input_statement.text, statement.text)
+            if ratio:
+                closest_match = statement
             closest_match = statement
         return 50, closest_match
