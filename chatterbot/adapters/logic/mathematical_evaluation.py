@@ -21,6 +21,35 @@ class MathematicalEvaluation(LogicAdapter):
     5) Solve the equation & return result
     """
 
+    def __init__(self, **kwargs):
+        super(MathematicalEvaluation, self).__init__(**kwargs)
+
+        language = kwargs.get('math_words_language', 'english')
+        self.math_words = self.get_language_data(language)
+
+    def get_language_data(self, language):
+        """
+        Load language-specific data
+        """
+        from chatterbot.corpus import Corpus
+
+        corpus = Corpus()
+
+        math_words_data_file_path = corpus.get_file_path(
+            'chatterbot.corpus.{}.math_words'.format(language),
+            extension='data'
+        )
+
+        try:
+            with open(math_words_data_file_path) as data:
+                return json.load(data)
+        except IOError:
+            raise self.UnrecognizedLanguageException(
+                'A math_words data file was not found for `{}` at `{}`.'.format(
+                    language, math_words_data_file_path
+                )
+            )
+
     def can_process(self, statement):
         """
         Determines whether it is appropriate for this
@@ -129,44 +158,30 @@ class MathematicalEvaluation(LogicAdapter):
         # Returning normalized text
         return string
 
-    def load_data(self, language):
-        """
-        Load language-specific data
-        """
-        if language == "english":
-            data_file = os.path.join(
-                os.path.dirname(__file__), 'data', 'math_words_EN.json'
-            )
-            with open(data_file) as data_file:
-                data = json.load(data_file)
-            self.data = data
-
     def substitute_words(self, string):
         """
         Substitutes numbers for words.
         """
-        self.load_data("english")
-
         condensed_string = '_'.join(string.split())
 
-        for word in self.data["words"]:
+        for word in self.math_words["words"]:
             condensed_string = re.sub(
                 '_'.join(word.split(' ')),
-                self.data["words"][word],
+                self.math_words["words"][word],
                 condensed_string
             )
 
-        for number in self.data["numbers"]:
+        for number in self.math_words["numbers"]:
             condensed_string = re.sub(
                 number,
-                str(self.data["numbers"][number]),
+                str(self.math_words["numbers"][number]),
                 condensed_string
             )
 
-        for scale in self.data["scales"]:
+        for scale in self.math_words["scales"]:
             condensed_string = re.sub(
                 "_" + scale,
-                " " + self.data["scales"][scale],
+                " " + self.math_words["scales"][scale],
                 condensed_string
             )
 
@@ -197,3 +212,11 @@ class MathematicalEvaluation(LogicAdapter):
                 condensed_string[end_index] += " )"
 
         return ' '.join(condensed_string)
+
+    class UnrecognizedLanguageException(Exception):
+
+        def __init__(self, value='The specified language was not recognized'):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
