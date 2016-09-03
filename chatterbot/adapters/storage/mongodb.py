@@ -127,6 +127,20 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return proxy_statement.in_response_to
 
+    def mongo_to_object(self, statement_data):
+        """
+        Return Statement object when given data
+        returned from Mongo DB.
+        """
+        statement_text = statement_data['text']
+        del(statement_data['text'])
+
+        statement_data['in_response_to'] = self.deserialize_responses(
+            statement_data['in_response_to']
+        )
+
+        return Statement(statement_text, **statement_data)
+
     def filter(self, **kwargs):
         """
         Returns a list of statements in the database
@@ -156,14 +170,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         results = []
 
         for match in list(matches):
-            statement_text = match['text']
-            del(match['text'])
-
-            match['in_response_to'] = self.deserialize_responses(
-                match['in_response_to']
-            )
-
-            results.append(Statement(statement_text, **match))
+            results.append(self.mongo_to_object(match))
 
         return results
 
@@ -209,13 +216,9 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         random_integer = randint(0, count - 1)
 
-        statement = self.statements.find(self.base_query.value()).limit(1).skip(random_integer)
+        statements = self.statements.find(self.base_query.value()).limit(1).skip(random_integer)
 
-        values = list(statement)[0]
-        statement_text = values['text']
-
-        del(values['text'])
-        return Statement(statement_text, **values)
+        return self.mongo_to_object(list(statements)[0])
 
     def remove(self, statement_text):
         """
@@ -238,8 +241,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         response_query = self.statements.distinct('in_response_to.text')
 
-        print self.base_query.value()
-
         _statement_query = {
             'text': {
                 '$in': response_query
@@ -250,20 +251,10 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         statement_query = self.statements.find(_statement_query)
 
-        statement_list = list(statement_query)
-
         statement_objects = []
 
-        for statement in statement_list:
-            values = dict(statement)
-            statement_text = values['text']
-
-            del(values['text'])
-
-            response_list = self.deserialize_responses(values["in_response_to"])
-            values["in_response_to"] = response_list
-
-            statement_objects.append(Statement(statement_text, **values))
+        for statement in list(statement_query):
+            statement_objects.append(self.mongo_to_object(statement))
 
         return statement_objects
 
