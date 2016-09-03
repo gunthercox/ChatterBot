@@ -64,9 +64,7 @@ class ResponseTable(Base):
 
 
 def get_statement_table(statement):
-    responses = []
-    for resp in statement.in_response_to:
-        responses.append(get_response_table(resp))
+    responses = list(map(get_response_table, statement.in_response_to))
     return StatementTable(text=statement.text, in_response_to=responses, extra_data=statement.extra_data)
 
 
@@ -125,30 +123,36 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
         Return the number of entries in the database.
         """
-        session = self.get_session()
+        session = self.__get_session()
         return session.query(StatementTable).count()
 
-    def get_session(self):
+    def __get_session(self):
         """
         :rtype: Session
         """
         Session = sessionmaker(bind=self.engine)
         session = Session()
-
         return session
+
+    def __statement_filter(self, session, **kwargs):
+        """
+        Apply filter opeartion on StatementTable
+
+        rtype: query
+        """
+        _query = session.query(StatementTable)
+        return _query.filter_by(**kwargs)
 
     def find(self, statement_text):
         """
-        Returns a object from the database if it exists
+        Returns a statement if it exists otherwise None
         """
-        session = self.get_session()
-
-        std = session.query(StatementTable).filter_by(text=statement_text).first()
-
-        if std:
-            return std.get_statement()
-        else:
-            return None
+        session = self.__get_session()
+        query = self.__statement_filter(session, **{"text": statement_text})
+        record = query.first()
+        if record:
+            return record.get_statement()
+        return None
 
     def remove(self, statement_text):
         """
@@ -156,11 +160,10 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
-
-        session = self.get_session()
-
-        std = session.query(StatementTable).filter_by(text=statement_text).first()
-        session.delete(std)
+        session = self.__get_session()
+        query = self.__statement_filter(session, **{"text": statement_text})
+        record = query.first()
+        session.delete(record)
 
         if not self.read_only:
             session.commit()
@@ -179,17 +182,18 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
 
         filter_parameters = kwargs.copy()
 
-        session = self.get_session()
-        session.query()
-        stmts = []
+        session = self.__get_session()
+        statements = []
         for fp in filter_parameters:
-            stmts.extend(session.query(ResponseTable).filter(
-                ResponseTable.text_search.like('%' + filter_parameters[fp] + '%')).all())
+            _like = filter_parameters[fp]
+            _response_query = session.query(ResponseTable)
+            query = _response_query.filter(ResponseTable.text_search.like('%' + _like + '%'))
+            statements.extend(query.all())
 
         results = []
-        for st in stmts:
-            if st and st.statement_table:
-                results.append(st.statement_table.get_statement())
+        for statement in statements:
+            if statement and statement.statement_table:
+                results.append(statement.statement_table.get_statement())
 
         return results
 
@@ -199,16 +203,18 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Creates an entry if one does not exist.
         """
 
+        session = self.__get_session()
         if statement:
-            session = self.get_session()
-            std = session.query(StatementTable).filter_by(text=statement.text).first()
-            if std:
+            query = self.__statement_filter(session, **{"text": statement.text})
+            record = query.first()
+
+            if record:
                 # update
                 if statement.text:
-                    std.text = statement.text
+                    record.text = statement.text
                 if statement.extra_data:
-                    std.extra_data = dict[statement.extra_data]
-                session.add(std)
+                    record.extra_data = dict[statement.extra_data]
+                session.add(record)
             else:
                 session.add(get_statement_table(statement))
 
@@ -226,7 +232,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             raise self.EmptyDatabaseException()
 
         rand = random.randrange(0, count)
-        session = self.get_session()
+        session = self.__get_session()
         stmt = session.query(StatementTable)[rand]
 
         return stmt.get_statement()
