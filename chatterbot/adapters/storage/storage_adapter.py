@@ -21,9 +21,7 @@ class StorageAdapter(Adapter):
         if self.adapter_supports_queries:
             for Filter in chatterbot.filters:
                 filter_instance = Filter()
-                self.base_query = filter_instance.filter_selection(
-                    self.base_query, chatterbot
-                )
+                self.base_query = filter_instance.filter_selection(chatterbot)
 
     def count(self):
         """
