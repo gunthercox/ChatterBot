@@ -6,9 +6,6 @@ import os
 class ChatBotTestCase(TestCase):
 
     def setUp(self):
-        self.test_data_directory = 'test_data'
-        self.test_database_name = self.random_string() + '.db'
-
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
 
     def get_kwargs(self):
@@ -27,12 +24,15 @@ class ChatBotTestCase(TestCase):
         return str(randint(start, end))
 
     def create_test_data_directory(self):
+        self.test_data_directory = 'test_data'
+        test_database_name = self.random_string() + '.db'
+
         if not os.path.exists(self.test_data_directory):
             os.makedirs(self.test_data_directory)
 
         return os.path.join(
             self.test_data_directory,
-            self.test_database_name
+            test_database_name
         )
 
     def remove_test_data(self):
@@ -47,4 +47,30 @@ class ChatBotTestCase(TestCase):
         """
         self.chatbot.storage.drop()
         self.remove_test_data()
+
+
+class ChatBotMongoTestCase(ChatBotTestCase):
+
+    def setUp(self):
+        from pymongo.errors import ServerSelectionTimeoutError
+        from pymongo import MongoClient
+
+        # Skip these tests if a mongo client is not running
+        try:
+            client = MongoClient(
+                serverSelectionTimeoutMS=0.1
+            )
+            client.server_info()
+
+            self.chatbot = ChatBot('Tester Bot', **self.get_kwargs())
+
+        except ServerSelectionTimeoutError:
+            raise SkipTest('Unable to connect to Mongo DB.')
+
+    def get_kwargs(self):
+        kwargs = super(ChatBotMongoTestCase, self).get_kwargs()
+        kwargs['database'] = self.random_string()
+        kwargs['storage_adapter'] = 'chatterbot.adapters.storage.MongoDatabaseAdapter'
+        kwargs['output_format'] = 'object'
+        return kwargs
 

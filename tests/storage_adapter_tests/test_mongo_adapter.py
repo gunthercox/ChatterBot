@@ -15,10 +15,10 @@ class MongoAdapterTestCase(TestCase):
 
         database_name = "test_db"
 
-        # Skip these tests if a mongo client is not running.
+        # Skip these tests if a mongo client is not running
         try:
             client = MongoClient(
-                serverSelectionTimeoutMS=0.2
+                serverSelectionTimeoutMS=0.1
             )
             client.server_info()
 
