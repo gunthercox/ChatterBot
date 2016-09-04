@@ -9,7 +9,7 @@ to be trained to speak any language.
 
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
-*[Leer en español](readme-es.md)*
+*[Leer en español](readme.es.md)*
 
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
