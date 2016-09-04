@@ -34,27 +34,3 @@ class RepetitiveResponseFilter(Filter):
 
         return query
 
-
-class LanguageFilter(Filter):
-    """
-    A filter that excludes swear words and explicit
-    language from the selection of possible responses
-    that a chat bot can respond with.
-    """
-
-    def __init__(self):
-        import os
-        import io
-
-        current_directory = os.path.dirname(__file__)
-        swear_words = os.path.join(
-            current_directory, 'corpus', 'data', 'english', 'swear_words.csv'
-        )
-
-        with io.open(swear_words, encoding='utf-8') as data_file:
-            self.words = data_file.read().split(',')
-
-    def filter_selection(self, chatterbot):
-        return chatterbot.storage.base_query.statement_text_not_in(
-            self.words
-        )

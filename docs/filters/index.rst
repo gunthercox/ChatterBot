@@ -21,15 +21,3 @@ Repetitive response filter
        filters="chatterbot.filters.RepetitiveResponseFilter"
    )
 
-Language filter
-===============
-
-.. autofunction:: chatterbot.filters.LanguageFilter
-
-.. code-block:: python
-
-   chatbot = ChatBot(
-       "My ChatterBot",
-       filters="chatterbot.filters.LanguageFilter"
-   )
-
