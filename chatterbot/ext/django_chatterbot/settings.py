@@ -1,9 +1,8 @@
 from django.conf import settings
-#from chatterbot.trainers import ListTrainer
+
 
 CHATTERBOT = {
-    'NAME': 'ChatterBot',
-#    'TRAINER': ListTrainer
+    'NAME': 'ChatterBot'
 }
 
 def patch_all():

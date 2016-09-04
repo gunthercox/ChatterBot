@@ -57,7 +57,7 @@ Contents:
    conversations
    utils
    about
-   django
+   django/index
 
 Indices and tables
 ==================
