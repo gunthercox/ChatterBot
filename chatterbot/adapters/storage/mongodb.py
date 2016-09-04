@@ -25,6 +25,30 @@ class Query(object):
 
         return Query(query)
 
+    def statement_text_does_not_contain(self, word_list):
+        query = self.query.copy()
+
+        word_string = '|'.join(word_list).strip()
+
+        word_string = '{}'.format(word_string)
+
+        print 'regex-->', word_string
+
+        query = {
+            'in_response_to': {
+                '$elemMatch': {
+                    'text': {
+                        '$regex': '^((?!crap).)*$',
+
+                        # Option i allows for case insensitive search
+                        '$options' : 'i'
+                    }
+                }
+            }
+        }
+
+        return Query(query)
+
     def statement_text_not_in(self, statements):
         query = self.query.copy()
 
