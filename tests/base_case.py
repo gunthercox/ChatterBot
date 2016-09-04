@@ -13,7 +13,6 @@ class ChatBotTestCase(TestCase):
         return {
             'input_adapter': 'chatterbot.adapters.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.adapters.output.OutputFormatAdapter',
-            'output_format': 'text',
             'database': self.create_test_data_directory()
         }
 
@@ -72,6 +71,5 @@ class ChatBotMongoTestCase(ChatBotTestCase):
         kwargs = super(ChatBotMongoTestCase, self).get_kwargs()
         kwargs['database'] = self.random_string()
         kwargs['storage_adapter'] = 'chatterbot.adapters.storage.MongoDatabaseAdapter'
-        kwargs['output_format'] = 'object'
         return kwargs
 
