@@ -1,12 +1,16 @@
 # Filters set the base query that gets passed to the storage adapter
+import abc
+import six
 
 
+@six.add_metaclass(abc.ABCMeta)
 class Filter(object):
     """
     A base filter object from which all other
     filters should be subclassed.
     """
 
+    @abc.abstractmethod
     def filter_selection(self, chatterbot):
         return chatterbot.storage.base_query
 
