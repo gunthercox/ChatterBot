@@ -143,12 +143,12 @@ class ChatBot(object):
         existing_statement = self.storage.find(input_statement.text)
 
         if existing_statement:
-            self.logger.info(u'{} is a known statement'.format(input_statement.text))
+            self.logger.info(u'"{}" is a known statement'.format(input_statement.text))
             if input_statement.extra_data:
                 existing_statement.extra_data.update(input_statement.extra_data)
             input_statement = existing_statement
         else:
-            self.logger.info(u'{} is not a known statement'.format(input_statement.text))
+            self.logger.info(u'"{}" is not a known statement'.format(input_statement.text))
 
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
