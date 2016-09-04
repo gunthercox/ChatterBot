@@ -3,6 +3,7 @@ build
 dist
 include
 lib
+venv
 *.pyc
 *.swp
 *.egg-info

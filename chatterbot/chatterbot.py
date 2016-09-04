@@ -55,6 +55,8 @@ class ChatBot(object):
         self.input = InputAdapterClass(**kwargs)
         self.output = OutputAdapterClass(**kwargs)
 
+        self.filters = kwargs.get("filters", [])
+
         # Add required system logic adapter
         self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
 
@@ -135,6 +137,8 @@ class ChatBot(object):
         """
         input_statement = self.input.process_input(input_item)
         self.logger.info(u'Recieved input statement: {}'.format(input_statement.text))
+
+        self.storage.generate_base_query(self)
 
         existing_statement = self.storage.find(input_statement.text)
 
