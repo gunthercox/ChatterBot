@@ -6,7 +6,7 @@ from sqlalchemy import PickleType
 from sqlalchemy import String
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy.orm import relationship, backref
+from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
 from chatterbot.adapters.storage import StorageAdapter
@@ -14,11 +14,6 @@ from chatterbot.conversation import Response
 from chatterbot.conversation import Statement
 
 Base = declarative_base()
-
-
-def get_statement_table_data(context):
-    print(context.get_statement)
-    pass
 
 
 class StatementTable(Base):
@@ -38,7 +33,10 @@ class StatementTable(Base):
     # id = Column(Integer)
     text = Column(String, primary_key=True)
     extra_data = Column(PickleType)
-    # in_response_to = relationship("ResponseTable", back_populates="statement_table")
+    # Old: in_response_to = relationship("ResponseTable", back_populates="statement_table")
+    # relationship:
+    in_response_to = relationship("ResponseTable", back_populates="statement_table")
+
     text_search = Column(String, primary_key=True, default=get_statement_serialized)
 
 
@@ -54,8 +52,12 @@ class ResponseTable(Base):
     text = Column(String, primary_key=True)
     occurrence = Column(String)
     statement_text = Column(String, ForeignKey('StatementTable.text'))
-    statement_table = relationship("StatementTable", backref=backref('in_response_to'), cascade="all, delete-orphan",
-                                   single_parent=True)
+
+    # Old:  statement_table = relationship("StatementTable", backref=backref('in_response_to'), cascade="all, delete-orphan", single_parent=True)
+    # Test relationship:
+    statement_table = relationship("StatementTable", back_populates="in_response_to", cascade="all",
+                                   uselist=False)
+
     text_search = Column(String, primary_key=True, default=get_reponse_serialized)
 
     def get_response(self):
@@ -184,16 +186,38 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
 
         session = self.__get_session()
         statements = []
-        for fp in filter_parameters:
-            _like = filter_parameters[fp]
-            _response_query = session.query(ResponseTable)
-            query = _response_query.filter(ResponseTable.text_search.like('%' + _like + '%'))
-            statements.extend(query.all())
+
+        if len(filter_parameters) == 0:
+            _response_query = session.query(StatementTable)
+            statements.extend(_response_query.all())
+        else:
+            for fp in filter_parameters:
+                _like = filter_parameters[fp]
+                if fp == 'in_response_to':
+                    _response_query = session.query(StatementTable)
+                    if isinstance(_like, list):
+                        if len(_like) == 0:
+                            query = _response_query.filter(StatementTable.in_response_to == None,StatementTable.subject_id != None)
+                        else:
+                            query = _response_query.filter(StatementTable.in_response_to.contain(_like))
+                    else:
+                        query = _response_query.filter(StatementTable.in_response_to.like('%' + _like + '%'))
+
+
+                else:
+                    _response_query = session.query(ResponseTable)
+                    query = _response_query.filter(ResponseTable.text_search.like('%' + _like + '%'))
+
+                statements.extend(query.all())
 
         results = []
         for statement in statements:
-            if statement and statement.statement_table:
-                results.append(statement.statement_table.get_statement())
+            if isinstance(statement, ResponseTable):
+                if statement and statement.statement_table:
+                    results.append(statement.statement_table.get_statement())
+            else:
+                if statement:
+                    results.append(statement.get_statement())
 
         return results
 

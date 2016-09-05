@@ -16,3 +16,5 @@ docs/_build/
 # IntelliJ
 .idea
 *.iml
+*.
+chatterbot-database.db
