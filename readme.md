@@ -9,7 +9,7 @@ to be trained to speak any language.
 
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
-*[Leer en español](readme-es.md)*
+*[Leer en español](readme.es.md)*
 
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
@@ -94,6 +94,13 @@ ChatterBot's built in tests can be run using nose.
 
 ```
 nosetests
+```
+
+Tests for Django integration have been included in the example Django app and
+can be run with:
+
+```
+python examples/django_app/manage.py test
 ```
 
 See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.

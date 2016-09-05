@@ -15,10 +15,10 @@ class MongoAdapterTestCase(TestCase):
 
         database_name = "test_db"
 
-        # Skip these tests if a mongo client is not running.
+        # Skip these tests if a mongo client is not running
         try:
             client = MongoClient(
-                serverSelectionTimeoutMS=0.2
+                serverSelectionTimeoutMS=0.1
             )
             client.server_info()
 
@@ -173,6 +173,28 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         results = self.adapter.deserialize_responses(response_list)
 
         self.assertEqual(len(results), 2)
+
+    def test_mongo_to_object(self):
+        self.adapter.update(
+            Statement('Hello',
+                in_response_to=[
+                    Response('Hi', occurrence=3),
+                    Response('Hey', occurrence=6)
+                ]
+            )
+        )
+        statement_data = self.adapter.statements.find_one({'text': 'Hello'})
+
+        obj = self.adapter.mongo_to_object(statement_data)
+
+        self.assertEqual(type(obj), Statement)
+        self.assertEqual(len(obj.in_response_to), 2)
+        self.assertEqual(type(obj.in_response_to[0]), Response)
+        self.assertEqual(type(obj.in_response_to[1]), Response)
+        self.assertEqual(obj.in_response_to[0].text, 'Hi')
+        self.assertEqual(obj.in_response_to[0].occurrence, 3)
+        self.assertEqual(obj.in_response_to[1].text, 'Hey')
+        self.assertEqual(obj.in_response_to[1].occurrence, 6)
 
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."

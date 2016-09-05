@@ -6,7 +6,7 @@ Chatterbot es un robot machine-learning de diálogo conversacional basado en apr
 
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
-*[Leer en español](readme-es.md)*
+*[Leer en español](readme.es.md)*
 
 [![Versión del paquete](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/) [![requisitos Estado](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master) [![Estado de creación](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot) [![Estado de la documentación](https://readthedocs.org/projects/chatterbot/badge/?version=latest)](http://chatterbot.readthedocs.io/en/latest/?badge=latest) [![Estado de la cobertura](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot) [![código climático](https://codeclimate.com/github/gunthercox/ChatterBot/badges/gpa.svg)](https://codeclimate.com/github/gunthercox/ChatterBot)
 

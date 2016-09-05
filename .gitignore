@@ -3,12 +3,14 @@ build
 dist
 include
 lib
+venv
 *.pyc
 *.swp
 *.egg-info
 
-database.db
-settings.py
+# Database files
+*.sqlite3
+*.db
 
 # Sphinx docs
 docs/_build/
@@ -16,5 +18,5 @@ docs/_build/
 # IntelliJ
 .idea
 *.iml
-*.
-chatterbot-database.db
+
+examples/settings.py

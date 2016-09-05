@@ -1,0 +1,101 @@
+{% load staticfiles %}
+<!doctype html>
+<html>
+  <head>
+    <title>Django ChatterBot Example</title>
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
+
+    <!-- Alternate the background color of the output rows -->
+    <style>
+    .list-group-item:nth-child(even) {
+      background-color: #eee;
+    }
+    </style>
+  </head>
+  <body>
+
+    <div class="container">
+      <div class="page-header text-center">
+        <h1>Django ChatterBot Example</h1>
+      </div>
+
+      <div class="row">
+        <div class="col-xs-6 col-xs-offset-3">
+          <ul class="list-group js-chat-log">
+          </ul>
+
+          <div class="input-group input-group-lg">
+            <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
+            <span class="input-group-btn">
+              <button class="btn btn-primary js-say">Submit</button>
+            </span>
+          </div>
+          
+        </div>
+      </div>
+    </div>
+
+    <script src="{% static 'js/jquery.js' %}"></script>
+    <script src="{% static 'js/js.cookie.js' %}"></script>
+    <script src="{% static 'js/bootstrap.js' %}"></script>
+    <script>
+      var chatterbotUrl = '{% url "chatterbot:chatterbot" %}';
+      var csrftoken = Cookies.get('csrftoken');
+
+      function csrfSafeMethod(method) {
+        // these HTTP methods do not require CSRF protection
+        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+      }
+
+      $.ajaxSetup({
+        beforeSend: function(xhr, settings) {
+          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+          }
+        }
+      });
+
+      var $chatlog = $('.js-chat-log');
+      var $input = $('.js-text');
+      var $sayButton = $('.js-say');
+
+      var $rowTemplate = $('<li class="list-group-item"></li>');
+
+      function submitInput() {
+        var inputData = {
+          'text': $input.val()
+        }
+
+        var $submit = $.ajax({
+          type: 'POST',
+          url: chatterbotUrl,
+          data: inputData,
+        });
+
+        $submit.done(function(statement) {
+            var $row = $rowTemplate.clone();
+
+            $row.text(statement.text);
+            $chatlog.append($row);
+
+            $input.val('');
+        });
+
+        $submit.fail(function() {
+          // TODO: Handle errors
+        });
+      }
+
+      $sayButton.click(function() {
+        submitInput();
+      });
+
+      $input.keydown(function(event) {
+        // Submit the input when the enter button is pressed
+        if (event.keyCode == 13) {
+          submitInput();
+        }
+      });
+    </script>
+  </body>
+</html>

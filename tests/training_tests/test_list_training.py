@@ -31,7 +31,7 @@ class ListTrainingTests(ChatBotTestCase):
 
         response = self.chatbot.get_response("Thank you.")
 
-        self.assertEqual(response, "You are welcome.")
+        self.assertEqual(response.text, "You are welcome.")
 
     def test_training_increments_occurrence_count(self):
 
@@ -178,14 +178,14 @@ class ChatterBotResponseTests(ChatBotTestCase):
         input_text = "What... is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
-        self.assertIn("Blue", response)
+        self.assertIn("Blue", response.text)
 
     def test_answer_close_to_known_input(self):
 
         input_text = "What is your favourite colour?"
         response = self.chatbot.get_response(input_text)
 
-        self.assertIn("Blue", response)
+        self.assertIn("Blue", response.text)
 
     def test_match_has_no_response(self):
         """
@@ -196,13 +196,13 @@ class ChatterBotResponseTests(ChatBotTestCase):
         input_text = "Siri is my cat"
         response = self.chatbot.get_response(input_text)
 
-        self.assertGreater(len(response), 0)
+        self.assertGreater(len(response.text), 0)
 
     def test_empty_input(self):
         """
         If empty input is provided, anything may be returned.
         """
-        output = self.chatbot.get_response("")
+        response = self.chatbot.get_response("")
 
-        self.assertTrue(len(output) >= 0)
+        self.assertTrue(len(response.text) >= 0)
 

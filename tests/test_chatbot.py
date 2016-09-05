@@ -110,7 +110,7 @@ class ChatterBotResponseTests(ChatBotTestCase):
         self.chatbot.storage.update(self.test_statement)
 
         response = self.chatbot.get_response("Hi")
-        statement_object = self.chatbot.storage.find(response)
+        statement_object = self.chatbot.storage.find(response.text)
 
         self.assertEqual(response, self.test_statement.text)
         self.assertEqual(len(statement_object.in_response_to), 1)
@@ -122,7 +122,7 @@ class ChatterBotResponseTests(ChatBotTestCase):
         response = self.chatbot.get_response("Hi")
         # response = "Hello"
         second_response = self.chatbot.get_response("How are you?")
-        statement = self.chatbot.storage.find(second_response)
+        statement = self.chatbot.storage.find(second_response.text)
 
         # Make sure that the second response was saved to the database
         self.assertIsNotNone(self.chatbot.storage.find("How are you?"))

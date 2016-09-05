@@ -55,6 +55,8 @@ class ChatBot(object):
         self.input = InputAdapterClass(**kwargs)
         self.output = OutputAdapterClass(**kwargs)
 
+        self.filters = kwargs.get("filters", [])
+
         # Add required system logic adapter
         self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
 
@@ -136,19 +138,22 @@ class ChatBot(object):
         input_statement = self.input.process_input(input_item)
         self.logger.info(u'Recieved input statement: {}'.format(input_statement.text))
 
+        self.storage.generate_base_query(self)
+
         existing_statement = self.storage.find(input_statement.text)
 
         if existing_statement:
-            self.logger.info(u'{} is a known statement'.format(input_statement.text))
+            self.logger.info(u'"{}" is a known statement'.format(input_statement.text))
             if input_statement.extra_data:
                 existing_statement.extra_data.update(input_statement.extra_data)
             input_statement = existing_statement
         else:
-            self.logger.info(u'{} is not a known statement'.format(input_statement.text))
+            self.logger.info(u'"{}" is not a known statement'.format(input_statement.text))
 
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
         self.logger.info(u'Selecting "{}" as response with a confidence of {}'.format(response.text, confidence))
+
         if input_statement.extra_data:
             response.extra_data.update(input_statement.extra_data)
 

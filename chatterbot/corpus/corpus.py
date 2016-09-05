@@ -7,7 +7,7 @@ class Corpus(object):
         current_directory = os.path.dirname(__file__)
         self.data_directory = os.path.join(current_directory, 'data')
 
-    def get_file_path(self, dotted_path):
+    def get_file_path(self, dotted_path, extension='json'):
         """
         Reads a dotted file path and returns the file path.
         """
@@ -18,8 +18,8 @@ class Corpus(object):
 
         corpus_path = os.path.join(*parts)
 
-        if os.path.exists(corpus_path + '.json'):
-            corpus_path += '.json'
+        if os.path.exists(corpus_path + '.{}'.format(extension)):
+            corpus_path += '.{}'.format(extension)
 
         return corpus_path
 

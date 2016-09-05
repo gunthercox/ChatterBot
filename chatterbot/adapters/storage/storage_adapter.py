@@ -7,11 +7,21 @@ class StorageAdapter(Adapter):
     that all storage adapters should implement.
     """
 
-    def __init__(self, **kwargs):
+    def __init__(self, base_query=None, *args, **kwargs):
         super(StorageAdapter, self).__init__(**kwargs)
 
         self.kwargs = kwargs
-        self.read_only = kwargs.get("read_only", False)
+        self.read_only = kwargs.get('read_only', False)
+        self.adapter_supports_queries = False
+
+    def generate_base_query(self, chatterbot):
+        """
+        Create a base query for the storage adapter.
+        """
+        if self.adapter_supports_queries:
+            for Filter in chatterbot.filters:
+                filter_instance = Filter()
+                self.base_query = filter_instance.filter_selection(chatterbot)
 
     def count(self):
         """

@@ -1,4 +1,5 @@
 from chatterbot import ChatBot
+from chatterbot.filters import RepetitiveResponseFilter
 import logging
 
 
@@ -11,6 +12,9 @@ bot = ChatBot("Terminal",
     logic_adapters=[
         "chatterbot.adapters.logic.ClosestMatchAdapter"
     ],
+    filters=(
+        RepetitiveResponseFilter
+    ),
     input_adapter="chatterbot.adapters.input.TerminalAdapter",
     output_adapter="chatterbot.adapters.output.TerminalAdapter",
     database="chatterbot-database"

@@ -1,22 +1,4 @@
-Welcome to ChatterBot's documentation!
-======================================
-
 .. image:: ../graphics/banner.png
-
-Contents:
-
-.. toctree::
-   :maxdepth: 2
-
-   quickstart
-   tutorial
-   examples
-   training
-   adapters/index
-   chatterbot
-   conversations
-   utils
-   about
 
 About ChatterBot
 ================
@@ -40,13 +22,6 @@ Simple Example
 .. literalinclude:: ../examples/basic_example.py
    :language: python
 
-Training
-========
-
-ChatterBot comes with a data utility module that can be used to train chat bots.
-Lists of statements representing conversations can also be used for training.
-More information is available in the :ref:`training documentation <set_trainer>`
-
 Language Independence
 =====================
 
@@ -54,11 +29,35 @@ The language independent design of ChatterBot allows it to be trained to speak a
 Additionally, the machine-learning nature of ChatterBot allows an agent instance to improve
 it's own knowledge of possible responses as it interacts with humans and other sources of informative data.
 
+Training
+========
+
+ChatterBot comes with a data utility module that can be used to train chat bots.
+Lists of statements representing conversations can also be used for training.
+More information is available in the :ref:`training documentation <set_trainer>`
+
 Report an Issue
 ===============
 
 Please direct all bug reports and feature requests to the project's issue
 tracker on `GitHub`_.
+
+Contents:
+
+.. toctree::
+   :maxdepth: 2
+
+   quickstart
+   tutorial
+   examples
+   training
+   adapters/index
+   filters/index
+   chatterbot
+   conversations
+   utils
+   about
+   django/index
 
 Indices and tables
 ==================
