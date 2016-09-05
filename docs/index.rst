@@ -50,14 +50,15 @@ Contents:
    quickstart
    tutorial
    examples
+   about
    training
    adapters/index
    filters/index
    chatterbot
    conversations
    utils
-   about
    django/index
+   testing
 
 Indices and tables
 ==================
