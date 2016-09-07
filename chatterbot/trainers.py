@@ -13,8 +13,12 @@ class Trainer(object):
 
     class TrainerInitializationException(Exception):
 
-        def __init__(self, value='A training class must be set using the `set_trainer` method before calling `train()`.'):
-            self.value = value
+        def __init__(self, value=None):
+            default = (
+                'A training class must specified before calling train(). ' +
+                'See http://chatterbot.readthedocs.io/en/stable/training.html'
+            )
+            self.value = value or default
 
         def __str__(self):
             return repr(self.value)
