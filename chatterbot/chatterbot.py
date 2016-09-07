@@ -3,7 +3,6 @@ from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
 from .adapters.output import OutputAdapter
 from .conversation import Statement, Response
-from .trainers import Trainer
 from .utils.queues import ResponseQueue
 from .utils.module_loading import import_module
 import logging
@@ -12,26 +11,26 @@ import logging
 class ChatBot(object):
 
     def __init__(self, name, **kwargs):
-        kwargs["name"] = name
+        kwargs['name'] = name
 
-        storage_adapter = kwargs.get("storage_adapter",
-            "chatterbot.adapters.storage.JsonFileStorageAdapter"
+        storage_adapter = kwargs.get('storage_adapter',
+            'chatterbot.adapters.storage.JsonFileStorageAdapter'
         )
 
-        logic_adapters = kwargs.get("logic_adapters", [
-            "chatterbot.adapters.logic.ClosestMatchAdapter"
+        logic_adapters = kwargs.get('logic_adapters', [
+            'chatterbot.adapters.logic.ClosestMatchAdapter'
         ])
 
-        input_adapter = kwargs.get("input_adapter",
-            "chatterbot.adapters.input.VariableInputTypeAdapter"
+        input_adapter = kwargs.get('input_adapter',
+            'chatterbot.adapters.input.VariableInputTypeAdapter'
         )
 
-        output_adapter = kwargs.get("output_adapter",
-            "chatterbot.adapters.output.OutputFormatAdapter"
+        output_adapter = kwargs.get('output_adapter',
+            'chatterbot.adapters.output.OutputFormatAdapter'
         )
 
         input_output_adapter_pairs = kwargs.get(
-            "io_adapter_pairs"
+            'io_adapter_pairs'
         )
 
         # The last 10 statement inputs and outputs
@@ -55,10 +54,10 @@ class ChatBot(object):
         self.input = InputAdapterClass(**kwargs)
         self.output = OutputAdapterClass(**kwargs)
 
-        self.filters = kwargs.get("filters", [])
+        self.filters = kwargs.get('filters', [])
 
         # Add required system logic adapter
-        self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
+        self.add_adapter('chatterbot.adapters.logic.NoKnowledgeAdapter')
 
         for adapter in logic_adapters:
             self.add_adapter(adapter, **kwargs)
@@ -70,7 +69,11 @@ class ChatBot(object):
         self.input.set_context(self)
         self.output.set_context(self)
 
-        self.trainer = Trainer(self.storage)
+        # Use specified trainer or fall back to the default
+        trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')
+        TrainerClass = import_module(trainer)
+        self.trainer = TrainerClass(self.storage)
+
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     def add_adapter(self, adapter, **kwargs):
@@ -163,7 +166,7 @@ class ChatBot(object):
             input_statement.add_response(
                 Response(previous_statement.text)
             )
-            self.logger.info(u'Adding the previous statement "{}" as response to {}'.format(
+            self.logger.info(u'Adding the previous statement "{}" as response to "{}"'.format(
                 previous_statement.text,
                 input_statement.text
             ))
