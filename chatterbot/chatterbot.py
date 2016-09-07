@@ -29,10 +29,6 @@ class ChatBot(object):
             'chatterbot.adapters.output.OutputFormatAdapter'
         )
 
-        input_output_adapter_pairs = kwargs.get(
-            'io_adapter_pairs'
-        )
-
         # The last 10 statement inputs and outputs
         self.recent_statements = ResponseQueue(maxsize=10)
 
