@@ -185,7 +185,9 @@ class ChatBot(object):
 
     @property
     def train(self):
-        # Proxy method to the trainer
+        """
+        Proxy method to the chat bot's trainer class.
+        """
         return self.trainer.train
 
     class InvalidAdapterException(Exception):
