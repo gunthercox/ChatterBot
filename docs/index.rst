@@ -29,13 +29,6 @@ The language independent design of ChatterBot allows it to be trained to speak a
 Additionally, the machine-learning nature of ChatterBot allows an agent instance to improve
 it's own knowledge of possible responses as it interacts with humans and other sources of informative data.
 
-Training
-========
-
-ChatterBot comes with a data utility module that can be used to train chat bots.
-Lists of statements representing conversations can also be used for training.
-More information is available in the :ref:`training documentation <set_trainer>`
-
 Report an Issue
 ===============
 

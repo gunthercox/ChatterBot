@@ -34,10 +34,11 @@ pip install chatterbot
 
 ```
 from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
-chatbot = ChatBot("Ron Obvious")
-chatbot.set_trainer(ChatterBotCorpusTrainer)
+chatbot = ChatBot(
+    'Ron Obvious',
+    trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
+)
 
 # Enseñar de acuerdo al corpus español
 chatbot.train("chatterbot.corpus.spanish")

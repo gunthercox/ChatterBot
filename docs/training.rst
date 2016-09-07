@@ -2,7 +2,7 @@
 Training
 ========
 
-ChatterBot has tools that simplify the process of training a bot instance.
+ChatterBot has tools that simplify the process of training a chat bot instance.
 These tools range from simple utility methods that update relations of known
 statements, to a corpus of pre-loaded training data that you can use.
 
