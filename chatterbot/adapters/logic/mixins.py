@@ -10,16 +10,21 @@ class TieBreaking(object):
     def break_tie(self, input_statement, statement_list, method):
 
         METHODS = {
-            "first_response": self.get_first_response,
-            "random_response": self.get_random_response,
-            "most_frequent_response": self.get_most_frequent_response
+            'first_response': self.get_first_response,
+            'random_response': self.get_random_response,
+            'most_frequent_response': self.get_most_frequent_response
         }
 
         if method in METHODS:
             return METHODS[method](input_statement, statement_list)
 
         # Default to the first method if an invalid method is passed in
-        return METHODS["first_response"](input_statement, statement_list)
+        raise self.InvalidTieBreakingMethodException(
+            '"{}" is not a known tie breaking method. Valid options are: {}'.format(
+                method,
+                ', '.join(METHODS)
+            )
+        )
 
     def get_most_frequent_response(self, input_statement, response_list):
         """
@@ -62,3 +67,11 @@ class TieBreaking(object):
             len(response_list)
         ))
         return choice(response_list)
+
+    class InvalidTieBreakingMethodException(Exception):
+
+        def __init__(self, value='The tie breaking method provided was not valid.'):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
