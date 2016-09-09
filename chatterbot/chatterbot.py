@@ -11,6 +11,7 @@ import logging
 class ChatBot(object):
 
     def __init__(self, name, **kwargs):
+        self.name = name
         kwargs['name'] = name
 
         storage_adapter = kwargs.get('storage_adapter',
