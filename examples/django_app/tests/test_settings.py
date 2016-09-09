@@ -16,6 +16,6 @@ class SettingsTestCase(TestCase):
         response = self.client.get(api_url)
 
         self.assertEqual(response.status_code, 405)
-        self.assertIn('detail', response.content)
-        self.assertIn('name', response.content)
-        self.assertIn('Django ChatterBot Example', response.content)
+        self.assertIn('detail', str(response.content))
+        self.assertIn('name', str(response.content))
+        self.assertIn('Django ChatterBot Example', str(response.content))
