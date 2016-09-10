@@ -14,7 +14,7 @@ to be trained to speak any language.
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
-[![Documentation Status](https://readthedocs.org/projects/chatterbot/badge/?version=latest)](http://chatterbot.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/chatterbot/badge/?version=stable)](http://chatterbot.readthedocs.io/en/stable/?badge=stable)
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
 [![Code Climate](https://codeclimate.com/github/gunthercox/ChatterBot/badges/gpa.svg)](https://codeclimate.com/github/gunthercox/ChatterBot)
 [![Join the chat at https://gitter.im/chatter_bot/Lobby](https://badges.gitter.im/chatter_bot/Lobby.svg)](https://gitter.im/chatter_bot/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -42,10 +42,11 @@ pip install chatterbot
 
 ```
 from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
-chatbot = ChatBot("Ron Obvious")
-chatbot.set_trainer(ChatterBotCorpusTrainer)
+chatbot = ChatBot(
+    'Ron Obvious',
+    trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
+)
 
 # Train based on the english corpus
 chatbot.train("chatterbot.corpus.english")
@@ -84,26 +85,9 @@ for ChatterBot on Read the Docs.
 # Examples
 
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
-directory in this project's repository.
+directory in this project's git repository.
 
 There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
-
-# Testing
-
-ChatterBot's built in tests can be run using nose.
-
-```
-nosetests
-```
-
-Tests for Django integration have been included in the example Django app and
-can be run with:
-
-```
-python examples/django_app/manage.py test
-```
-
-See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
 
 # History
 

@@ -1,18 +1,12 @@
 from django.views.generic import View
 from django.http import JsonResponse
-from django.conf import settings
 from chatterbot import ChatBot
+from chatterbot.ext.django_chatterbot import settings
 
 
 class ChatterBotView(View):
 
-    chatterbot = ChatBot(
-        settings.CHATTERBOT['NAME'],
-        storage_adapter='chatterbot.adapters.storage.DjangoStorageAdapter',
-        input_adapter='chatterbot.adapters.input.VariableInputTypeAdapter',
-        output_adapter='chatterbot.adapters.output.OutputFormatAdapter',
-        output_format='json'
-    )
+    chatterbot = ChatBot(**settings.CHATTERBOT)
 
     def post(self, request, *args, **kwargs):
         input_statement = request.POST.get('text')
@@ -23,7 +17,8 @@ class ChatterBotView(View):
 
     def get(self, request, *args, **kwargs):
         data = {
-            'detail': 'You should make a POST request to this endpoint.'
+            'detail': 'You should make a POST request to this endpoint.',
+            'name': self.chatterbot.name
         }
 
         # Return a method not allowed response

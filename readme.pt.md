@@ -86,7 +86,7 @@ Também existem exemplos em [Projeto Django usando o ChatterBot](https://github.
 
 Os testes nativos do ChatterBot podem ser executados usando nose.
 
-Veja a [documentação do nose](https://nose.readthedocs.org/en/latest/) para mais informações.
+Veja a [documentação do nose](https://nose.readthedocs.org/) para mais informações.
 
 # História
 
