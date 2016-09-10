@@ -37,7 +37,7 @@ class MathematicalEvaluation(LogicAdapter):
 
         math_words_data_file_path = corpus.get_file_path(
             'chatterbot.corpus.{}.math_words'.format(language),
-            extension='data'
+            extension='json'
         )
 
         try:

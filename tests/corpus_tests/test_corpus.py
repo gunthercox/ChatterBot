@@ -21,7 +21,7 @@ class CorpusUtilsTestCase(TestCase):
     def test_read_corpus(self):
         corpus_path = os.path.join(
             self.corpus.data_directory,
-            'english', 'conversations.json'
+            'english', 'conversations.corpus.json'
         )
         data = self.corpus.read_corpus(corpus_path)
         self.assertIn('conversations', data)
