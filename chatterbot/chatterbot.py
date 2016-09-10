@@ -51,7 +51,8 @@ class ChatBot(object):
         self.input = InputAdapterClass(**kwargs)
         self.output = OutputAdapterClass(**kwargs)
 
-        self.filters = kwargs.get('filters', [])
+        filters = kwargs.get('filters', tuple())
+        self.filters = (import_module(F) for F in filters)
 
         # Add required system logic adapter
         self.add_adapter('chatterbot.adapters.logic.NoKnowledgeAdapter')
