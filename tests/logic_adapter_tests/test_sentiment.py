@@ -7,6 +7,9 @@ class SentimentAdapterTests(ChatBotTestCase):
 
     def setUp(self):
         super(SentimentAdapterTests, self).setUp()
+        from chatterbot.trainers import ListTrainer
+
+        self.chatbot.set_trainer(ListTrainer)
         self.adapter = SentimentAdapter()
         self.adapter.set_context(self.chatbot)
 
@@ -28,6 +31,7 @@ class SentimentAdapterTests(ChatBotTestCase):
     def test_close_input(self):
 
         self.chatbot.train([
+            'Do you like ice cream?',
             'I love ice cream',
             'That is great',
             'Thank you'
@@ -35,8 +39,6 @@ class SentimentAdapterTests(ChatBotTestCase):
 
         happy_statement = Statement('I like ice cream')
         confidence, response = self.adapter.process(happy_statement)
-
-        print response
 
         self.assertEqual(confidence, 0.2)
         self.assertEqual(response.text, 'That is great')

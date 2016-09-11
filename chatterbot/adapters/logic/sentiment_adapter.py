@@ -14,21 +14,27 @@ class SentimentAdapter(LogicAdapter):
         Return the difference between the input and response
         sentiment values.
         """
+        self.logger.info(
+            u'Comparing input equality of {} to response of {}.'.format(
+                input_sentiment, response_sentiment
+            )
+        )
         return abs(input_sentiment - response_sentiment)
 
     def process(self, statement):
         input_blob = TextBlob(statement.text)
         input_sentiment = input_blob.sentiment.polarity
 
-        response_list = self.context.storage.filter(
-            in_response_to__contains=statement.text
+        self.logger.info(
+            u'"{}" has a sentiment polarity of {}.'.format(
+                statement.text, input_sentiment
+            )
         )
 
-        if not response_list:
-            return 0, self.context.storage.get_random()
+        response_list = self.context.storage.filter()
 
         best_response = response_list[0]
-        max_closeness = 1
+        max_closeness = 0.0
 
         for response in response_list:
             blob = TextBlob(response.text)
@@ -39,7 +45,4 @@ class SentimentAdapter(LogicAdapter):
                 best_response = response
                 max_closeness = closeness
 
-        # The confidence is the percentage of closeness
-        confidence = 1.0 - max_closeness
-
-        return confidence, best_response
+        return max_closeness, best_response
