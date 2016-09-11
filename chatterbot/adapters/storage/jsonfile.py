@@ -160,28 +160,3 @@ class JsonFileStorageAdapter(StorageAdapter):
 
     class UnsuitableForProductionWarning(Warning):
         pass
-
-
-class DeprecationHelper(object):
-    def __init__(self, new_target):
-        self.new_target = new_target
-
-    def __call__(self, *args, **kwargs):
-        self._warn()
-        return self.new_target(*args, **kwargs)
-
-    def __getattr__(self, attr):
-        self._warn()
-        return getattr(self.new_target, attr)
-
-
-class JsonDatabaseAdapterDeprecationHelper(DeprecationHelper):
-
-    def _warn(self):
-        warnings.warn(
-            'The JsonDatabaseAdapter has been renamed to JsonFileStorageAdapter. Please use the updated class name in your code.',
-            DeprecationWarning
-        )
-
-JsonDatabaseAdapter = JsonDatabaseAdapterDeprecationHelper(JsonFileStorageAdapter)
-
