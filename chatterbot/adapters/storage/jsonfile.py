@@ -18,7 +18,7 @@ class JsonFileStorageAdapter(StorageAdapter):
             self.UnsuitableForProductionWarning
         )
 
-        database_path = self.kwargs.get("database", "database.db")
+        database_path = self.kwargs.get('database', 'database.db')
         self.database = Database(database_path)
 
     def _keys(self):
@@ -35,8 +35,9 @@ class JsonFileStorageAdapter(StorageAdapter):
             return None
 
         # Build the objects for the response list
-        response_list = self.deserialize_responses(values["in_response_to"])
-        values["in_response_to"] = response_list
+        values['in_response_to'] = self.deserialize_responses(
+            values['in_response_to']
+        )
 
         return Statement(statement_text, **values)
 
@@ -57,11 +58,11 @@ class JsonFileStorageAdapter(StorageAdapter):
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = Statement("")
+        proxy_statement = Statement('')
 
         for response in response_list:
-            text = response["text"]
-            del(response["text"])
+            text = response['text']
+            del(response['text'])
 
             proxy_statement.add_response(
                 Response(text, **response)
@@ -72,16 +73,16 @@ class JsonFileStorageAdapter(StorageAdapter):
     def _all_kwargs_match_values(self, kwarguments, values):
         for kwarg in kwarguments:
 
-            if "__" in kwarg:
-                kwarg_parts = kwarg.split("__")
+            if '__' in kwarg:
+                kwarg_parts = kwarg.split('__')
 
                 key = kwarg_parts[0]
                 identifier = kwarg_parts[1]
 
-                if identifier == "contains":
+                if identifier == 'contains':
                     text_values = []
                     for val in values[key]:
-                        text_values.append(val["text"])
+                        text_values.append(val['text'])
 
                     if (kwarguments[kwarg] not in text_values) and (
                             kwarguments[kwarg] not in values[key]):
@@ -104,17 +105,17 @@ class JsonFileStorageAdapter(StorageAdapter):
             values = self.database.data(key=key)
 
             # Add the text attribute to the values
-            values["text"] = key
+            values['text'] = key
 
             if self._all_kwargs_match_values(kwargs, values):
 
                 # Build the objects for the response list
-                in_response_to = values["in_response_to"]
-                response_list = self.deserialize_responses(in_response_to)
-                values["in_response_to"] = response_list
+                values['in_response_to'] = self.deserialize_responses(
+                    values['in_response_to']
+                )
 
                 # Remove the text attribute from the values
-                text = values.pop("text")
+                text = values.pop('text')
 
                 results.append(
                     Statement(text, **values)
