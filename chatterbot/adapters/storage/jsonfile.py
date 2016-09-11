@@ -34,12 +34,9 @@ class JsonFileStorageAdapter(StorageAdapter):
         if not values:
             return None
 
-        # Build the objects for the response list
-        values['in_response_to'] = self.deserialize_responses(
-            values['in_response_to']
-        )
+        values['text'] = statement_text
 
-        return Statement(statement_text, **values)
+        return self.json_to_object(values)
 
     def remove(self, statement_text):
         """
@@ -69,6 +66,18 @@ class JsonFileStorageAdapter(StorageAdapter):
             )
 
         return proxy_statement.in_response_to
+
+    def json_to_object(self, statement_data):
+
+        # Build the objects for the response list
+        statement_data['in_response_to'] = self.deserialize_responses(
+            statement_data['in_response_to']
+        )
+
+        # Remove the text attribute from the values
+        text = statement_data.pop('text')
+
+        return Statement(text, **statement_data)
 
     def _all_kwargs_match_values(self, kwarguments, values):
         for kwarg in kwarguments:
@@ -109,17 +118,7 @@ class JsonFileStorageAdapter(StorageAdapter):
 
             if self._all_kwargs_match_values(kwargs, values):
 
-                # Build the objects for the response list
-                values['in_response_to'] = self.deserialize_responses(
-                    values['in_response_to']
-                )
-
-                # Remove the text attribute from the values
-                text = values.pop('text')
-
-                results.append(
-                    Statement(text, **values)
-                )
+                results.append(self.json_to_object(values))
 
         return results
 
