@@ -1,7 +1,8 @@
+===============
 Utility Methods
 ===============
 
-ChatterBot has a utility module (`chatterbot.utils`) that contains
+ChatterBot has a utility module that contains
 a collection of miscellaneous but useful functions.
 
 Module Imports

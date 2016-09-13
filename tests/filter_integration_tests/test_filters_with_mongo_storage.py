@@ -8,7 +8,7 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
         from chatterbot.filters import RepetitiveResponseFilter
         from chatterbot.trainers import ListTrainer
 
-        self.chatbot.filters.append(RepetitiveResponseFilter)
+        self.chatbot.filters = (RepetitiveResponseFilter(), )
         self.chatbot.set_trainer(ListTrainer)
 
         self.chatbot.train([

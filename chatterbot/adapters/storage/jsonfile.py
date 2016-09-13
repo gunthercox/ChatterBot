@@ -18,7 +18,7 @@ class JsonFileStorageAdapter(StorageAdapter):
             self.UnsuitableForProductionWarning
         )
 
-        database_path = self.kwargs.get("database", "database.db")
+        database_path = self.kwargs.get('database', 'database.db')
         self.database = Database(database_path)
 
     def _keys(self):
@@ -34,11 +34,9 @@ class JsonFileStorageAdapter(StorageAdapter):
         if not values:
             return None
 
-        # Build the objects for the response list
-        response_list = self.deserialize_responses(values["in_response_to"])
-        values["in_response_to"] = response_list
+        values['text'] = statement_text
 
-        return Statement(statement_text, **values)
+        return self.json_to_object(values)
 
     def remove(self, statement_text):
         """
@@ -57,11 +55,11 @@ class JsonFileStorageAdapter(StorageAdapter):
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = Statement("")
+        proxy_statement = Statement('')
 
         for response in response_list:
-            text = response["text"]
-            del(response["text"])
+            text = response['text']
+            del(response['text'])
 
             proxy_statement.add_response(
                 Response(text, **response)
@@ -69,19 +67,31 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         return proxy_statement.in_response_to
 
+    def json_to_object(self, statement_data):
+
+        # Build the objects for the response list
+        statement_data['in_response_to'] = self.deserialize_responses(
+            statement_data['in_response_to']
+        )
+
+        # Remove the text attribute from the values
+        text = statement_data.pop('text')
+
+        return Statement(text, **statement_data)
+
     def _all_kwargs_match_values(self, kwarguments, values):
         for kwarg in kwarguments:
 
-            if "__" in kwarg:
-                kwarg_parts = kwarg.split("__")
+            if '__' in kwarg:
+                kwarg_parts = kwarg.split('__')
 
                 key = kwarg_parts[0]
                 identifier = kwarg_parts[1]
 
-                if identifier == "contains":
+                if identifier == 'contains':
                     text_values = []
                     for val in values[key]:
-                        text_values.append(val["text"])
+                        text_values.append(val['text'])
 
                     if (kwarguments[kwarg] not in text_values) and (
                             kwarguments[kwarg] not in values[key]):
@@ -104,21 +114,11 @@ class JsonFileStorageAdapter(StorageAdapter):
             values = self.database.data(key=key)
 
             # Add the text attribute to the values
-            values["text"] = key
+            values['text'] = key
 
             if self._all_kwargs_match_values(kwargs, values):
 
-                # Build the objects for the response list
-                in_response_to = values["in_response_to"]
-                response_list = self.deserialize_responses(in_response_to)
-                values["in_response_to"] = response_list
-
-                # Remove the text attribute from the values
-                text = values.pop("text")
-
-                results.append(
-                    Statement(text, **values)
-                )
+                results.append(self.json_to_object(values))
 
         return results
 
@@ -160,28 +160,3 @@ class JsonFileStorageAdapter(StorageAdapter):
 
     class UnsuitableForProductionWarning(Warning):
         pass
-
-
-class DeprecationHelper(object):
-    def __init__(self, new_target):
-        self.new_target = new_target
-
-    def __call__(self, *args, **kwargs):
-        self._warn()
-        return self.new_target(*args, **kwargs)
-
-    def __getattr__(self, attr):
-        self._warn()
-        return getattr(self.new_target, attr)
-
-
-class JsonDatabaseAdapterDeprecationHelper(DeprecationHelper):
-
-    def _warn(self):
-        warnings.warn(
-            'The JsonDatabaseAdapter has been renamed to JsonFileStorageAdapter. Please use the updated class name in your code.',
-            DeprecationWarning
-        )
-
-JsonDatabaseAdapter = JsonDatabaseAdapterDeprecationHelper(JsonFileStorageAdapter)
-

@@ -19,8 +19,7 @@ class StorageAdapter(Adapter):
         Create a base query for the storage adapter.
         """
         if self.adapter_supports_queries:
-            for Filter in chatterbot.filters:
-                filter_instance = Filter()
+            for filter_instance in chatterbot.filters:
                 self.base_query = filter_instance.filter_selection(chatterbot)
 
     def count(self):

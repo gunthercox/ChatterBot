@@ -51,7 +51,8 @@ class ChatBot(object):
         self.input = InputAdapterClass(**kwargs)
         self.output = OutputAdapterClass(**kwargs)
 
-        self.filters = kwargs.get('filters', [])
+        filters = kwargs.get('filters', tuple())
+        self.filters = (import_module(F)() for F in filters)
 
         # Add required system logic adapter
         self.add_adapter('chatterbot.adapters.logic.NoKnowledgeAdapter')
@@ -82,8 +83,16 @@ class ChatBot(object):
 
     def validate_adapter_class(self, validate_class, adapter_class):
         """
-        Raises an exception if validate_class is
-        not a subclass of adapter_class.
+        Raises an exception if validate_class is not a
+        subclass of adapter_class.
+
+        :param validate_class: The class to be validated.
+        :type validate_class: class
+
+        :param adapter_class: The class type to check against.
+        :type adapter_class: class
+
+        :raises: InvalidAdapterException
         """
         from .adapters import Adapter
 
@@ -134,6 +143,9 @@ class ChatBot(object):
     def get_response(self, input_item):
         """
         Return the bot's response based on the input.
+
+        :param input_item: An input value.
+        :returns: Statement -- the response to the input.
         """
         input_statement = self.input.process_input(input_item)
         self.logger.info(u'Recieved input statement: {}'.format(input_statement.text))
