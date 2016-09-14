@@ -8,7 +8,6 @@ class Statement(models.Model):
         unique=True,
         blank=False,
         null=False,
-        default='<empty>',
         max_length=255
     )
 
