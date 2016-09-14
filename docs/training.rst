@@ -3,8 +3,15 @@ Training
 ========
 
 ChatterBot has tools that simplify the process of training a chat bot instance.
-These tools range from simple utility methods that update relations of known
-statements, to a corpus of pre-loaded training data that you can use.
+ChatterBot's training process works by creating or building upon the graph data structure that represents the sets of
+known statements and responses. When a chat bot trainer is provided with a data set, it creates the necessary entries
+in the chat bot's knowledge graph so that the statement inputs and responses are correctly represented.
+
+Several trainers come built-in with ChaterBot. These utilities range from allowing you to update the knowledge graph
+based on a list of statements representing a conversation, to tools that allow you to train your bot based on a corpus
+of pre-loaded training data.
+
+The case that someone wants to create a custom training module typically comes up when they have data in some format that they want to train the bot with.
 
 ..  _set_trainer:
 
