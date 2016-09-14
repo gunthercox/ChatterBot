@@ -8,6 +8,7 @@ class Statement(models.Model):
         unique=True,
         blank=False,
         null=False,
+        default='<empty>',
         max_length=255
     )
 
@@ -47,5 +48,5 @@ class Response(models.Model):
     def __str__(self):
         s = self.statement.text if len(self.statement.text) <= 20 else self.statement.text[:17] + '...'
         s += ' => '
-        s += self.response.text if len(self.response.text) <= 40 else self.statement.text[:37] + '...'
+        s += self.response.text if len(self.response.text) <= 40 else self.response.text[:37] + '...'
         return s
