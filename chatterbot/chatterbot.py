@@ -14,22 +14,22 @@ class ChatBot(object):
         self.name = name
         kwargs['name'] = name
 
-        default_storage = {"storage_class": 'chatterbot.adapters.storage.JsonFileStorageAdapter'}
+        default_storage = {"adapter_class": 'chatterbot.adapters.storage.JsonFileStorageAdapter'}
         storage_kwargs = kwargs.get('storage_adapter', default_storage)
-        storage_adapter = storage_kwargs.get('storage_class')
+        storage_adapter = storage_kwargs.get('adapter_class')
         database = storage_kwargs.get('database')
 
-        default_logic = [{"logic_class": 'chatterbot.adapters.logic.ClosestMatchAdapter'}]
+        default_logic = [{"adapter_class": 'chatterbot.adapters.logic.ClosestMatchAdapter'}]
         logic_kwargs = kwargs.get('logic_adapters', default_logic)
-        logic_adapters = [dic['logic_class'] for dic in logic_kwargs]
+        logic_adapters = [dic['adapter_class'] for dic in logic_kwargs]
 
-        default_input = {"input_class": 'chatterbot.adapters.input.VariableInputTypeAdapter'}
+        default_input = {"adapter_class": 'chatterbot.adapters.input.VariableInputTypeAdapter'}
         input_kwargs = kwargs.get('input_adapter', default_input)
-        input_adapter = input_kwargs.get('input_class')
+        input_adapter = input_kwargs.get('adapter_class')
 
-        default_output = {"output_class": 'chatterbot.adapters.output.OutputFormatAdapter'}
+        default_output = {"adapter_class": 'chatterbot.adapters.output.OutputFormatAdapter'}
         output_kwargs = kwargs.get('output_adapter', default_output)
-        output_adapter = output_kwargs.get('output_class')
+        output_adapter = output_kwargs.get('adapter_class')
 
         # The last 10 statement inputs and outputs
         self.recent_statements = ResponseQueue(maxsize=10)
