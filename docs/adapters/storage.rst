@@ -21,8 +21,8 @@ If you instantiate your chatterbot with the parameter `read_only=True`
 then the database will not be altered when input is given to the chatterbot.
 The `read_only` parameter is set to false by default.
 
-Json Database Adapter
-=====================
+Json File Storage Adapter
+=========================
 
 .. autofunction:: chatterbot.adapters.storage.JsonFileStorageAdapter
 
@@ -31,6 +31,13 @@ Json Database Adapter
 The JSON Database adapter requires an additional parameter (`database`) to be
 passed to the ChatterBot constructor. This storage adapter uses a local file
 database so this parameter is needed to specify the location of the file.
+
+.. note::
+
+   The json file storage adapter will display an UnsuitableForProductionWarning
+   when it is initialized because it is not intended for use in large scale production
+   applications. You can silence this warning by setting `silence_performance_warning=True`
+   when initializing the adapter.
 
 Mongo Database Adapter
 ======================
