@@ -24,15 +24,18 @@ class JsonAdapterTestCase(TestCase):
 
 
 class JsonFileStorageAdapterTestCase(JsonAdapterTestCase):
-    
+
     def test_json_to_object(self):
         obj = self.adapter.json_to_object({
             'text': 'Test statement',
-            'in_response_to': []
+            'in_response_to': [
+                {'text', 'Test response'}
+            ]
         })
-        
+
         self.assertEqual(obj.text, 'Test statement')
-        self.assertEqual(obj.in_response_to, [])
+        self.assertEqual(len(obj.in_response_to), 1)
+        self.assertEqual(obj.in_response_to[0].text, 'Test response')
 
     def test_count_returns_zero(self):
         """
