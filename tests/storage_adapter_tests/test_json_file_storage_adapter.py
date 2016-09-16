@@ -29,7 +29,7 @@ class JsonFileStorageAdapterTestCase(JsonAdapterTestCase):
         data = {
             'text': 'Test statement',
             'in_response_to': [
-                {'text', 'Test response'}
+                {'text': 'Test response'}
             ]
         }
         obj = self.adapter.json_to_object(data)
