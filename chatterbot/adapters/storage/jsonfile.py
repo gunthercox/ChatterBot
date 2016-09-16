@@ -13,7 +13,7 @@ class JsonFileStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(JsonFileStorageAdapter, self).__init__(**kwargs)
 
-        if not kwargs.get('silence_performance_warning', False)
+        if not kwargs.get('silence_performance_warning', False):
             warnings.warn(
                 'The JsonFileStorageAdapter is not recommended for production application environments.',
                 self.UnsuitableForProductionWarning
