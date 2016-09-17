@@ -68,6 +68,9 @@ class JsonFileStorageAdapter(StorageAdapter):
         return proxy_statement.in_response_to
 
     def json_to_object(self, statement_data):
+        
+        # Don't modify the referenced object
+        statement_data = statement_data.copy()
 
         # Build the objects for the response list
         statement_data['in_response_to'] = self.deserialize_responses(
