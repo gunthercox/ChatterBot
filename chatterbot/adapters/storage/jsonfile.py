@@ -58,11 +58,12 @@ class JsonFileStorageAdapter(StorageAdapter):
         proxy_statement = Statement('')
 
         for response in response_list:
-            text = response['text']
-            del(response['text'])
+            data = response.copy()
+            text = data['text']
+            del(data['text'])
 
             proxy_statement.add_response(
-                Response(text, **response)
+                Response(text, **data)
             )
 
         return proxy_statement.in_response_to
