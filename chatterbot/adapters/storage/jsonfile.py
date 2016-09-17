@@ -13,10 +13,11 @@ class JsonFileStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(JsonFileStorageAdapter, self).__init__(**kwargs)
 
-        warnings.warn(
-            'The JsonFileStorageAdapter is not recommended for production application environments.',
-            self.UnsuitableForProductionWarning
-        )
+        if not kwargs.get('silence_performance_warning', False):
+            warnings.warn(
+                'The JsonFileStorageAdapter is not recommended for production application environments.',
+                self.UnsuitableForProductionWarning
+            )
 
         database_path = self.kwargs.get('database', 'database.db')
         self.database = Database(database_path)
