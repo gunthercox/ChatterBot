@@ -2,14 +2,30 @@ from django.views.generic import View
 from django.http import JsonResponse
 from chatterbot import ChatBot
 from chatterbot.ext.django_chatterbot import settings
+import json
 
 
 class ChatterBotView(View):
 
     chatterbot = ChatBot(**settings.CHATTERBOT)
 
+    def _serialize_recent_statements(self):
+        if self.chatterbot.recent_statements.empty():
+            return []
+
+        recent_statements = []
+
+        for statement, response in self.chatterbot.recent_statements:
+            recent_statements.append([statement.serialize(), response.serialize()])
+
+        return recent_statements
+
     def post(self, request, *args, **kwargs):
-        input_statement = request.POST.get('text')
+        if request.is_ajax():
+            data = json.loads(request.body)
+            input_statement = data.get('text')
+        else:
+            input_statement = request.POST.get('text')
 
         response_data = self.chatterbot.get_response(input_statement)
 
@@ -18,7 +34,8 @@ class ChatterBotView(View):
     def get(self, request, *args, **kwargs):
         data = {
             'detail': 'You should make a POST request to this endpoint.',
-            'name': self.chatterbot.name
+            'name': self.chatterbot.name,
+            'recent_statements': self._serialize_recent_statements()
         }
 
         # Return a method not allowed response
