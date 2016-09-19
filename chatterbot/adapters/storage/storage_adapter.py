@@ -12,7 +12,7 @@ class StorageAdapter(Adapter):
 
         self.kwargs = kwargs
         self.read_only = kwargs.get('read_only', False)
-        self.adapter_supports_queries = False
+        self.adapter_supports_queries = True
 
     def generate_base_query(self, chatterbot):
         """

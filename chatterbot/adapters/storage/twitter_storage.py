@@ -19,6 +19,8 @@ class TwitterAdapter(StorageAdapter):
             access_token_secret=kwargs.get('twitter_access_token_secret')
         )
 
+        self.adapter_supports_queries = False
+
     def count(self):
         return 1
 

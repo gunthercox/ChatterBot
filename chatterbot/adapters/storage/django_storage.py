@@ -7,6 +7,8 @@ class DjangoStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(DjangoStorageAdapter, self).__init__(**kwargs)
 
+        self.adapter_supports_queries = False
+
     def count(self):
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         return StatementModel.objects.count()

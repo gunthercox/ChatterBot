@@ -22,6 +22,8 @@ class JsonFileStorageAdapter(StorageAdapter):
         database_path = self.kwargs.get('database', 'database.db')
         self.database = Database(database_path)
 
+        self.adapter_supports_queries = False
+
     def _keys(self):
         # The value has to be cast as a list for Python 3 compatibility
         return list(self.database[0].keys())
