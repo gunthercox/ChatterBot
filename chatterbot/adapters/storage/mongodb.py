@@ -87,7 +87,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
 
-        self.adapter_supports_queries = True
         self.base_query = Query()
 
     def count(self):
