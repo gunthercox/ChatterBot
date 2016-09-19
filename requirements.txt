@@ -1,4 +1,4 @@
-fuzzywuzzy>=0.10,<0.12
+fuzzywuzzy>=0.12,<0.13
 jsondatabase>=0.1.1
 nltk<4.0.0
 pymongo>=3.3.0,<4.0.0
