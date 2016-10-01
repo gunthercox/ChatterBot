@@ -1,6 +1,8 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
+from django.utils.encoding import force_text
 import unittest
+import json
 
 
 class ApiIntegrationTestCase(TestCase):
@@ -17,8 +19,7 @@ class ApiIntegrationTestCase(TestCase):
         ChatterBotView.chatterbot.recent_statements.queue = []
 
     def _get_json(self, response):
-        import json
-        return json.loads(str(response.content))
+        return json.loads(force_text(response.content))
 
     def test_get_recent_statements_empty(self):
         response = self.client.get(self.api_url)
@@ -36,6 +37,8 @@ class ApiIntegrationTestCase(TestCase):
 
         response = self.client.get(self.api_url)
         data = self._get_json(response)
+
+        print(data['recent_statements'])
 
         self.assertIn('recent_statements', data)
         self.assertEqual(len(data['recent_statements']), 1)
