@@ -4,6 +4,11 @@ Logic Adapters
 
 Logic adapters determine the logic for how ChatterBot selects a responses to a given input statement.
 
+.. toctree::
+   :maxdepth: 2
+
+   multi-logic-adapter
+
 The logic adapter that your bot uses can be specified by setting the `logic_adapters` parameter to the import path of the logic adapter you want to use.
 
 It is possible to enter any number of logic adapters for your bot to use.
@@ -31,7 +36,7 @@ The `ClosestMatchAdapter` selects a response based on the closest know match to 
 How it works
 ------------
 
-The closest match algorithm determines the similarity between the input statement and a set of known statements. For example, there is a 65% similarity between the statements _"where is the post office?"_ and _"looking for the post office"_. The closest match algorithm selects the highest matching known statements and returns a response based on that selection.
+The closest match algorithm determines the similarity between the input statement and a set of known statements. For example, there is a 65% similarity between the statements *"where is the post office?"* and *"looking for the post office"*. The closest match algorithm selects the highest matching known statements and returns a response based on that selection.
 
 Closest Meaning Adapter
 =======================
@@ -43,7 +48,7 @@ The `ClosestMeaningAdapter` selects a response based on how closely two statemen
 How it works
 ------------
 
-The closest meaning algorithm uses the [wordnet](http://www.nltk.org/howto/wordnet.html) functionality of [nltk](www.nltk.org) to determine the similarity of two statements based on the path similarity between each token of each statement. This is essentially an evaluation of the closeness of synonyms. The statement that has the closest path similarity of synsets to the input statement is returned.
+The closest meaning algorithm uses the `wordnet`_ functionality of `NLTK`_ to determine the similarity of two statements based on the path similarity between each token of each statement. This is essentially an evaluation of the closeness of synonyms. The statement that has the closest path similarity of synsets to the input statement is returned.
 
 Approximate Sentence Match Adapter
 ----------------------------------
@@ -70,7 +75,7 @@ The Jaccard index is composed of a numerator and denominator.
 
   In our example above, our intersection is {cat, hungry}, which has count of two.
   The union of the sets is {young, cat, very, hungry}, which has a count of four.
-  Therefore, our Jaccard similarity index is two divided by four, or 50%.
+  Therefore, our `Jaccard similarity index`_ is two divided by four, or 50%.
 
 Time Logic Adapter
 ==================
@@ -102,3 +107,6 @@ Example
 | User: What is four plus four?
 | Bot: (4 + 4) = 8
 
+.. _wordnet: http://www.nltk.org/howto/wordnet.html
+.. _NLTK: http://www.nltk.org/
+.. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index

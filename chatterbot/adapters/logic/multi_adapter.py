@@ -18,6 +18,8 @@ class MultiLogicAdapter(LogicAdapter):
         """
         Returns the outout of a selection of logic adapters
         for a given input statement.
+
+        :param statement: The input statement to be processed.
         """
         result = None
         max_confidence = -1
@@ -45,6 +47,12 @@ class MultiLogicAdapter(LogicAdapter):
         return max_confidence, result
 
     def add_adapter(self, adapter):
+        """
+        Appends a logic adapter to the list of logic adapters being used.
+
+        :param adapter: The logic adapter to be added.
+        :type adapter: LogicAdapter
+        """
         self.adapters.append(adapter)
 
     def set_context(self, context):
