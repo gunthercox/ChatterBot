@@ -19,3 +19,14 @@ for cleaning and normalizing strings of text.
 .. autofunction:: chatterbot.utils.clean.clean_whitespace
 
 .. autofunction:: chatterbot.utils.clean.clean
+
+Terminal input
+--------------
+
+.. autofunction:: chatterbot.utils.read_input.input_function
+
+Queues
+------
+
+.. autoclass:: chatterbot.utils.queues.ResponseQueue
+   :members:

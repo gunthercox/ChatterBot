@@ -3,8 +3,8 @@ import sys
 
 def input_function():
     """
-    Normalize reading input between python 2 and 3.
-    'raw_input' is just 'input' in python3
+    Normalizes reading input between python 2 and 3.
+    The function 'raw_input' becomes 'input' in Python 3.
     """
     if sys.version_info[0] < 3:
         user_input = str(raw_input())

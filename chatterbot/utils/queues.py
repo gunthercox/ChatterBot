@@ -12,6 +12,9 @@ class ResponseQueue(object):
         self.queue = []
 
     def append(self, item):
+        """
+        Append an element at the end of the queue.
+        """
         if len(self.queue) == self.maxsize:
             # Remove an element from the top of the list
             self.queue.pop(0)
