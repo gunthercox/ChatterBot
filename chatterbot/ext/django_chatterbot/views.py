@@ -5,9 +5,12 @@ from chatterbot.ext.django_chatterbot import settings
 import json
 
 
-class ChatterBotView(View):
+class ChatterBotViewMixin(object):
 
     chatterbot = ChatBot(**settings.CHATTERBOT)
+
+
+class ChatterBotView(ChatterBotViewMixin, View):
 
     def _serialize_recent_statements(self):
         if self.chatterbot.recent_statements.empty():

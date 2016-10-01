@@ -1,6 +1,7 @@
 from django.test import TestCase
 from django.core.urlresolvers import reverse
 from django.utils.encoding import force_text
+from chatterbot.ext.django_chatterbot.views import ChatterBotView
 import unittest
 import json
 
@@ -11,12 +12,14 @@ class ApiIntegrationTestCase(TestCase):
         super(ApiIntegrationTestCase, self).setUp()
         self.api_url = reverse('chatterbot:chatterbot')
 
+        # Clear the response queue before tests
+        ChatterBotView.chatterbot.recent_statements.flush()
+
     def tearDown(self):
         super(ApiIntegrationTestCase, self).tearDown()
-        from chatterbot.ext.django_chatterbot.views import ChatterBotView
 
-        # Clear the response queue between tests
-        ChatterBotView.chatterbot.recent_statements.queue = []
+        # Clear the response queue after tests
+        ChatterBotView.chatterbot.recent_statements.flush()
 
     def _get_json(self, response):
         return json.loads(force_text(response.content))
@@ -37,8 +40,6 @@ class ApiIntegrationTestCase(TestCase):
 
         response = self.client.get(self.api_url)
         data = self._get_json(response)
-
-        print(data['recent_statements'])
 
         self.assertIn('recent_statements', data)
         self.assertEqual(len(data['recent_statements']), 1)

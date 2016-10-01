@@ -32,3 +32,9 @@ class ResponseQueue(object):
         Return True if the queue is empty, False otherwise.
         """
         return len(self.queue) == 0
+
+    def flush(self):
+        """
+        Remove all elements from the queue.
+        """
+        self.queue = []
