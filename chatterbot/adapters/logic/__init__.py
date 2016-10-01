@@ -6,3 +6,4 @@ from .multi_adapter import MultiLogicAdapter
 from .no_knowledge_adapter import NoKnowledgeAdapter
 from .mathematical_evaluation import MathematicalEvaluation
 from .approximate_sentence_match import ApproximateSentenceMatchAdapter
+from .sentiment_adapter import SentimentAdapter

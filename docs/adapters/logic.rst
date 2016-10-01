@@ -107,6 +107,14 @@ Example
 | User: What is four plus four?
 | Bot: (4 + 4) = 8
 
+SentimentAdapter
+================
+
+.. autofunction:: chatterbot.adapters.logic.SentimentAdapter
+
+This is a logic adapter that selects a response that has the closest matching
+sentiment value to the input.
+
 .. _wordnet: http://www.nltk.org/howto/wordnet.html
 .. _NLTK: http://www.nltk.org/
 .. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index
