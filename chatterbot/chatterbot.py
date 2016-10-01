@@ -81,6 +81,38 @@ class ChatBot(object):
         adapter = NewAdapter(**kwargs)
         self.logic.add_adapter(adapter)
 
+    def insert_logic_adapter(self, logic_adapter, insert_index, **kwargs):
+        """
+        Adds a logic adapter at a specified index.
+
+        :param logic_adapter: The string path to the logic adapter to add.
+        :type logic_adapter: class
+
+        :param insert_index: The index to insert the logic adapter into the list at.
+        :type insert_index: int
+
+        :raises: InvalidAdapterException
+        """
+        self.validate_adapter_class(logic_adapter, LogicAdapter)
+
+        NewAdapter = import_module(logic_adapter)
+        adapter = NewAdapter(**kwargs)
+
+        self.logic.adapters.insert(insert_index, adapter)
+
+    def remove_logic_adapter(self, adapter_name):
+        """
+        Removes a logic adapter from the chat bot.
+
+        :param adapter_name: The class name of the adapter to remove.
+        :type adapter_name: str
+        """
+        for index, adapter in enumerate(self.logic.adapters):
+            if adapter_name == type(adapter).__name__:
+                del(self.logic.adapters[index])
+                return True
+        return False
+
     def validate_adapter_class(self, validate_class, adapter_class):
         """
         Raises an exception if validate_class is not a
