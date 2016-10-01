@@ -18,7 +18,7 @@ class ApiIntegrationTestCase(TestCase):
 
     def _get_json(self, response):
         import json
-        return json.loads(response.content)
+        return json.loads(str(response.content))
 
     def test_get_recent_statements_empty(self):
         response = self.client.get(self.api_url)
@@ -41,4 +41,4 @@ class ApiIntegrationTestCase(TestCase):
         self.assertEqual(len(data['recent_statements']), 1)
         self.assertEqual(len(data['recent_statements'][0]), 2)
         self.assertIn('text', data['recent_statements'][0][0])
-        self.assertIn('text', data['recent_statements'][0][1])  
+        self.assertIn('text', data['recent_statements'][0][1])
