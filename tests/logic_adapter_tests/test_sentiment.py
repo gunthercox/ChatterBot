@@ -17,28 +17,28 @@ class SentimentAdapterTests(ChatBotTestCase):
 
         self.chatbot.train([
             'What is your favorite flavor of ice cream?',
-            'I love raspberry ice cream',
-            'That is great',
-            'Thank you'
+            'I enjoy raspberry ice cream.',
+            'I am glad to hear that.',
+            'Thank you.'
         ])
 
-        happy_statement = Statement('I love raspberry ice cream')
+        happy_statement = Statement('I enjoy raspberry ice cream.')
         confidence, response = self.adapter.process(happy_statement)
 
-        self.assertEqual(confidence, 0.7)
-        self.assertEqual(response.text, 'That is great')
+        self.assertEqual(confidence, 1)
+        self.assertEqual(response.text, 'I am glad to hear that.')
 
     def test_close_input(self):
 
         self.chatbot.train([
-            'Do you like ice cream?',
-            'I love ice cream',
-            'That is great',
-            'Thank you'
+            'What is your favorite flavor of ice cream?',
+            'I enjoy raspberry ice cream.',
+            'I am glad to hear that.',
+            'Thank you.'
         ])
 
-        happy_statement = Statement('I like ice cream')
+        happy_statement = Statement('I like raspberry ice cream.')
         confidence, response = self.adapter.process(happy_statement)
 
-        self.assertEqual(confidence, 0.2)
-        self.assertEqual(response.text, 'That is great')
+        self.assertEqual(confidence, 0.6)
+        self.assertEqual(response.text, 'I am glad to hear that.')
