@@ -103,3 +103,35 @@ class DateTimeParsingTestCases(TestCase):
     self.assertEqual(parser[0][1].strftime('%d'), this_week_day(base_date, 0).strftime('%d'))
     self.assertEqual(parser[1][1].strftime('%d'), this_week_day(base_date, 4).strftime('%d'))
     self.assertEqual(len(parser), 2)
+
+    input_text = 'First quarter of 2016'
+    parser = datetime_parsing(input_text)
+    self.assertIn(input_text, parser[0])
+    self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'), '01-01-2016')
+    self.assertEqual(parser[0][1][1].strftime('%d-%m-%Y'), '31-03-2016')
+    self.assertEqual(len(parser), 1)
+
+    input_text = 'Last quarter of 2015'
+    parser = datetime_parsing(input_text)
+    self.assertIn(input_text, parser[0])
+    self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'), '01-09-2015')
+    self.assertEqual(parser[0][1][1].strftime('%d-%m-%Y'), '31-12-2015')
+    self.assertEqual(len(parser), 1)
+
+    input_text = 'My birthday is on January 1st.'
+    parser = datetime_parsing(input_text)
+    self.assertIn('January 1st', parser[0])
+    self.assertEqual(parser[0][1].strftime('%d-%m-%Y'), '01-01-2016')
+    self.assertEqual(len(parser), 1)
+
+    input_text = 'My birthday is on January 1st 2014.'
+    parser = datetime_parsing(input_text)
+    self.assertIn('January 1st 2014', parser[0])
+    self.assertEqual(parser[0][1].strftime('%d-%m-%Y'), '01-01-2014')
+    self.assertEqual(len(parser), 1)
+
+    input_text = 'My birthday is on 2nd January 2014.'
+    parser = datetime_parsing(input_text)
+    self.assertIn('2nd January 2014', parser[0])
+    self.assertEqual(parser[0][1].strftime('%d-%m-%Y'), '02-01-2014')
+    self.assertEqual(len(parser), 1)
