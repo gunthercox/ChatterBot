@@ -21,6 +21,7 @@ re_duration = '(before|after|earlier|later|ago|from\snow)'
 re_year = "(?<=\s)\d{4}|^\d{4}"
 re_timeframe = 'this|next|following|previous|last'
 re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
+re_time = '(?P<hour>\d+)(\:(?P<minute>\d{2}))?(?P<convention>am|pm|a\.m\.|p\.m\.)?'
 
 # A list tuple of regular expressions / parser fn to match
 # The order of the match in this list matters, So always start with the widest match and narrow it down
@@ -28,39 +29,49 @@ regex = [
     (re.compile(
         r'''
         (
-            (?P<dow>%s) # day_names
-            [,\s]\s*(?P<day>\d{1,2}) # Any digit
-            \s+ # One or more space
-            (?P<month>%s) # Month names
-            \s+ # One or more space
-            (?P<year>%s) # Year
-        )
-        '''% (day_names, month_names, re_year),
-        (re.VERBOSE | re.IGNORECASE)
-        ),
-        lambda (m, base_date): datetime(
-                int(m.group('year')),
-                hashmonths[m.group('month').lower()],
-                int(m.group('day'))
-            )
-    ),
-    (re.compile(
-        r'''
-        (
+            ((?P<dow>%s)[,\s]\s*)? #Matches Monday, 12 Jan 2012, 12 Jan 2012 etc
             (?P<day>\d{1,2}) # Matches a digit
             [-\s] # One or more space
             (?P<month>%s) # Matches any month name
             [-\s] # Space
             (?P<year>\d{4}) # Year
+            ([,\s]\s*(%s))?
         )
-        '''% (month_names),
+        '''% (day_names, month_names, re_time),
+        (re.VERBOSE | re.IGNORECASE)
+        ),
+        lambda (m, base_date): datetime(
+                int(m.group('year') if m.group('year') else base_date.year),
+                hashmonths[m.group('month').strip().lower()],
+                int(m.group('day') if m.group('day') else 1),
+            ) + timedelta(**convertTimetoHourMinute(
+                m.group('hour'),
+                m.group('minute'),
+                m.group('convention')
+            ))
+    ),
+    (re.compile(
+        r'''
+        (
+            ((?P<dow>%s)[,\s][-\s]*)? #Matches Monday, Jan 12 2012, Jan 12 2012 etc
+            (?P<month>%s) # Matches any month name
+            [-\s] # Space
+            ((?P<day>\d{1,2})) # Matches a digit
+            ([-\s](?P<year>\d{4})) # Year
+            ([,\s]\s*(%s))?
+        )
+        '''% (day_names, month_names, re_time),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): datetime(
                 int(m.group('year') if m.group('year') else base_date.year),
                 hashmonths[m.group('month').strip().lower()],
                 int(m.group('day') if m.group('day') else 1)
-            )
+            ) + timedelta(**convertTimetoHourMinute(
+                m.group('hour'),
+                m.group('minute'),
+                m.group('convention')
+            ))
     ),
     (re.compile(
         r'''
@@ -68,18 +79,22 @@ regex = [
             (?P<month>%s) # Matches any month name
             [-\s] # One or more space
             (?P<day>\d{1,2}) # Matches a digit
-            (,\s)? # Space
-            [-\s]?
+            [-\s]\s*?
             (?P<year>\d{4}) # Year
+            ([,\s]\s*(%s))?
         )
-        '''% (month_names),
+        '''% (month_names, re_time),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): datetime(
                 int(m.group('year') if m.group('year') else base_date.year),
                 hashmonths[m.group('month').strip().lower()],
-                int(m.group('day') if m.group('day') else 1)
-            )
+                int(m.group('day') if m.group('day') else 1),
+            ) + timedelta(**convertTimetoHourMinute(
+                m.group('hour'),
+                m.group('minute'),
+                m.group('convention')
+            ))
     ),
     (re.compile(
         r'''
@@ -102,21 +117,11 @@ regex = [
     ),
     (re.compile(
         r'''
-        (?P<time>%s) # this, next, following, previous, last
-        \s+
-        (?P<dow>%s) # mon - fri
-        '''% (re_timeframe, day_names),
-        (re.VERBOSE | re.IGNORECASE),
-        ),
-        lambda (m, base_date): dateFromRelativeDay(base_date, m.group('time'), m.group('dow'))
-    ),
-    (re.compile(
-        r'''
         (
             (?P<ordinal>%s) # First quarter of 2014
             \s+
             quarter\sof
-            \s?
+            \s+
             (?P<year>%s)
         )
         '''% (re_ordinal, re_year),
@@ -135,8 +140,7 @@ regex = [
             (?P<ordinal>%s) # 1st January 2012
             \s+
             (?P<month>%s)
-            \s?
-            (?P<year>%s)?
+            ([,\s]\s*(?P<year>%s))?
         )
         '''% (re_ordinal, month_names, re_year),
         (re.VERBOSE | re.IGNORECASE)
@@ -154,8 +158,7 @@ regex = [
             \s+
             (?P<ordinal_value>\d+)
             (?P<ordinal>%s) # January 1st 2012
-            \s?
-            (?P<year>%s)?
+            ([,\s]\s*(?P<year>%s))?
         )
         '''% (month_names, re_ordinal, re_year),
         (re.VERBOSE | re.IGNORECASE)
@@ -178,8 +181,18 @@ regex = [
     ),
     (re.compile(
         r'''
+        (?P<time>%s) # this, next, following, previous, last
+        \s+
+        (?P<dow>%s) # mon - fri
+        '''% (re_timeframe, day_names),
+        (re.VERBOSE | re.IGNORECASE),
+        ),
+        lambda (m, base_date): dateFromRelativeDay(base_date, m.group('time'), m.group('dow'))
+    ),
+    (re.compile(
+        r'''
         (
-            (?P<day>\d{1,2}) # Matches a digit 12 January
+            (?P<day>\d{1,2}) # Day, Month
             [-\s] # One or more space
             (?P<month>%s)
         )
@@ -195,9 +208,9 @@ regex = [
     (re.compile(
         r'''
         (
-            (?P<month>%s)
+            (?P<month>%s) # Month, day
             [-\s] # One or more space
-            (?P<day>\d{1,2}) # Matches a digit January 12
+            ((?P<day>\d{1,2})\b) # Matches a digit January 12
         )
         '''% (month_names),
         (re.VERBOSE | re.IGNORECASE)
@@ -206,6 +219,22 @@ regex = [
                 base_date.year,
                 hashmonths[m.group('month').strip().lower()],
                 int(m.group('day') if m.group('day') else 1)
+            )
+    ),
+    (re.compile(
+        r'''
+        (
+            (?P<month>%s) # Month, year
+            [-\s] # One or more space
+            ((?P<year>\d{1,4})\b) # Matches a digit January 12
+        )
+        '''% (month_names),
+        (re.VERBOSE | re.IGNORECASE)
+        ),
+        lambda (m, base_date): datetime(
+                int(m.group('year')),
+                hashmonths[m.group('month').strip().lower()],
+                1
             )
     ),
     (re.compile(
@@ -321,6 +350,23 @@ def convert_string_to_number(value):
         return int(value)
     num_list = map(lambda s:hashnum(s), re.findall(numbers + '+', value, re.IGNORECASE))
     return sum(num_list)
+
+# Convert time to hour, minute
+def convertTimetoHourMinute(hour, minute, convention):
+    if hour is None:
+        hour = 0
+    if minute is None:
+        minute = 0
+    if convention is None:
+        convention = 'am'
+
+    hour = int(hour)
+    minute = int(minute)
+
+    if convention == 'pm':
+        hour+=12
+
+    return { 'hours': int(hour), 'minutes': int(minute) }
 
 # Quarter of a year
 def dateFromQuarter (base_date, ordinal, year):
