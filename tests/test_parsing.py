@@ -4,7 +4,7 @@ from datetime import timedelta, date, datetime
 from chatterbot.utils.parsing import datetime_parsing, this_week_day, previous_week_day, next_week_day, dateFromDuration
 
 """
-  Output of the parser is a tuple
+  Output of the parser is an array of tuples
   [match, value, (start, end)]
 """
 
@@ -95,3 +95,11 @@ class DateTimeParsingTestCases(TestCase):
     self.assertIn(input_text, parser[0])
     self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=2)).strftime('%d'))
     self.assertEqual(len(parser), 1)
+
+    input_text = 'Monday and Friday'
+    parser = datetime_parsing(input_text)
+    self.assertIn('Monday', parser[0])
+    self.assertIn('Friday', parser[1])
+    self.assertEqual(parser[0][1].strftime('%d'), this_week_day(base_date, 0).strftime('%d'))
+    self.assertEqual(parser[1][1].strftime('%d'), this_week_day(base_date, 4).strftime('%d'))
+    self.assertEqual(len(parser), 2)

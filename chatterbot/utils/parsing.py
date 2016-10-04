@@ -110,6 +110,17 @@ regex = [
     ),
     (re.compile(
         r'''
+        (?P<named_day>%s) # Mon - Sun
+        '''% (day_names),
+        (re.VERBOSE | re.IGNORECASE)
+        ),
+        lambda (m, base_date): this_week_day(
+            base_date,
+            hashweekdays[m.group('named_day').lower()]
+        )
+    ),
+    (re.compile(
+        r'''
         (?P<year>%s) # Year
         '''% (re_year),
         (re.VERBOSE | re.IGNORECASE)
@@ -332,7 +343,8 @@ hashweekdays = {
     'saturday': 5,
     'sat': 5,
     'sunday': 6,
-    'sun': 6}
+    'sun': 6
+}
 
 # Parses date
 def datetime_parsing (text, base_date = datetime.now()):
@@ -355,4 +367,4 @@ def datetime_parsing (text, base_date = datetime.now()):
     # To preserve order of the match, sort based on the start position
     return sorted(found_array, key = lambda match: match and match[2][0])
 
-# print datetime_parsing('2 yrs before and one year ago')
+print datetime_parsing('2 yrs before and one year ago and this monday and teh year is wednesday')
