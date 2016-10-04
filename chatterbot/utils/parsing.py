@@ -22,6 +22,7 @@ re_year = "(?<=\s)\d{4}|^\d{4}"
 re_timeframe = 'this|next|following|previous|last'
 re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
 re_time = '(?P<hour>\d+)(\:(?P<minute>\d{2}))?(?P<convention>am|pm|a\.m\.|p\.m\.)?'
+re_separator = 'of|at|on'
 
 # A list tuple of regular expressions / parser fn to match
 # The order of the match in this list matters, So always start with the widest match and narrow it down
@@ -31,13 +32,14 @@ regex = [
         (
             ((?P<dow>%s)[,\s]\s*)? #Matches Monday, 12 Jan 2012, 12 Jan 2012 etc
             (?P<day>\d{1,2}) # Matches a digit
+            (%s)?
             [-\s] # One or more space
             (?P<month>%s) # Matches any month name
             [-\s] # Space
             (?P<year>\d{4}) # Year
-            ([,\s]\s*(%s))?
+            ((\s|,\s|\s(%s))?\s*(%s))?
         )
-        '''% (day_names, month_names, re_time),
+        '''% (day_names, re_ordinal, month_names, re_separator, re_time),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): datetime(
@@ -57,10 +59,11 @@ regex = [
             (?P<month>%s) # Matches any month name
             [-\s] # Space
             ((?P<day>\d{1,2})) # Matches a digit
+            (%s)?
             ([-\s](?P<year>\d{4})) # Year
-            ([,\s]\s*(%s))?
+            ((\s|,\s|\s(%s))?\s*(%s))?
         )
-        '''% (day_names, month_names, re_time),
+        '''% (day_names, month_names, re_ordinal, re_separator, re_time),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): datetime(
@@ -79,11 +82,12 @@ regex = [
             (?P<month>%s) # Matches any month name
             [-\s] # One or more space
             (?P<day>\d{1,2}) # Matches a digit
+            (%s)?
             [-\s]\s*?
             (?P<year>\d{4}) # Year
-            ([,\s]\s*(%s))?
+            ((\s|,\s|\s(%s))?\s*(%s))?
         )
-        '''% (month_names, re_time),
+        '''% (month_names, re_ordinal, re_separator, re_time),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): datetime(
@@ -193,10 +197,11 @@ regex = [
         r'''
         (
             (?P<day>\d{1,2}) # Day, Month
+            (%s)
             [-\s] # One or more space
             (?P<month>%s)
         )
-        '''% (month_names),
+        '''% (re_ordinal, month_names),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): datetime(
@@ -211,8 +216,9 @@ regex = [
             (?P<month>%s) # Month, day
             [-\s] # One or more space
             ((?P<day>\d{1,2})\b) # Matches a digit January 12
+            (%s)?
         )
-        '''% (month_names),
+        '''% (month_names, re_ordinal),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): datetime(
@@ -366,7 +372,7 @@ def convertTimetoHourMinute(hour, minute, convention):
     if convention == 'pm':
         hour+=12
 
-    return { 'hours': int(hour), 'minutes': int(minute) }
+    return { 'hours': hour, 'minutes': minute }
 
 # Quarter of a year
 def dateFromQuarter (base_date, ordinal, year):
@@ -544,9 +550,6 @@ def datetime_parsing (text, base_date = datetime.now()):
     for r, fn in regex:
         for m in r.finditer(text):
             matches.append((m.group(), fn((m, base_date)), m.span()))
-        # print (r.pattern)
-    # print (text)
-    # print (matches)
     # Wrap the matched text with TAG element to prevent nested selections
     for match, value, spans in matches:
         subn = re.subn('(?!<TAG[^>]*?>)' + match + '(?![^<]*?</TAG>)', '<TAG>' + match + '</TAG>', text)
