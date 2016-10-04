@@ -2,6 +2,13 @@ import re
 from datetime import timedelta, date, datetime
 import calendar
 
+# Variations of dates that the parser can capture
+year_variations = ['year', 'years', 'yrs']
+day_variations = ['days', 'day']
+minute_variations = ['minute', 'minutes', 'mins']
+week_variations = ['weeks', 'week', 'wks']
+
+# Variables used for RegEx Matching
 day_names = 'monday|tuesday|wednesday|thursday|friday|saturday|sunday'
 month_names = 'january|february|march|april|may|june|july|august|september|october|november|december|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec'
 day_nearest_names = 'today|yesterday|tomorrow|tonight|tonite'
@@ -9,7 +16,7 @@ numbers = "(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten| \
                     eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen| \
                     eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty| \
                     ninety|hundred|thousand)"
-re_dmy = '(year|day|week|month|night|minute|min)'
+re_dmy = '(' + "|".join(day_variations + minute_variations + year_variations + week_variations) + ')'
 re_duration = '(before|after|earlier|later|ago|from\snow)'
 re_year = "((?<=\s)\d{4}|^\d{4})"
 re_timeframe = 'this|next|following|previous|last'
@@ -87,11 +94,11 @@ regex = [
         r'''
         (?P<time>%s) # this, next, following, previous, last
         \s+
-        (?P<dow>%s) # year, day, week, month, night, minute, min
+        (?P<dmy>%s) # year, day, week, month, night, minute, min
         '''% (re_timeframe, re_dmy),
         (re.VERBOSE | re.IGNORECASE),
         ),
-        lambda (m, base_date): dateFromRelativeWeekYear(base_date, m.group('time'), m.group('dow'))
+        lambda (m, base_date): dateFromRelativeWeekYear(base_date, m.group('time'), m.group('dmy'))
     ),
     (re.compile(
         r'''
@@ -206,12 +213,12 @@ def dateFromRelativeDay(base_date, time, dow):
 # Converts relative day to time
 # this tuesday, last tuesday
 def dateFromRelativeWeekYear(base_date, time, dow):
-    if dow == 'year' or dow == 'years':
+    if dow in year_variations:
         if time == 'this':
             return datetime(base_date.year, 1, 1)
         elif time == 'last' or time == 'previous':
             return datetime(base_date.year - 1, base_date.month, base_date.day)
-    elif dow == 'week' or dow == 'weeks':
+    elif dow in week_variations:
         if time == 'this':
             return base_date - timedelta(days=base_date.weekday())
         elif time == 'last' or time == 'previous':
@@ -236,13 +243,13 @@ def dateFromDuration(base_date, numberAsString, unit, duration, base_time = None
     if base_time != None:
         base_date = dateFromAdverb(base_date, base_time)
     num = convert_string_to_number(numberAsString)
-    if unit == 'day' or unit == 'days':
+    if unit in day_variations:
         args = {'days': num}
-    elif unit == 'minute' or unit == 'mins' or unit == 'minutes':
+    elif unit in minute_variations:
         args = {'minutes': num}
-    elif unit == 'week' or unit == 'weeks' or unit == 'wks':
+    elif unit in week_variations:
         args = {'weeks': num}
-    elif unit == 'year' or unit == 'years' or unit == 'yrs':
+    elif unit in year_variations:
         args = {'years': num}
 
     if duration == 'ago' or duration == 'before' or duration == 'earlier':
@@ -348,5 +355,4 @@ def datetime_parsing (text, base_date = datetime.now()):
     # To preserve order of the match, sort based on the start position
     return sorted(found_array, key = lambda match: match and match[2][0])
 
-
-print datetime_parsing('20 days from last monday')
+# print datetime_parsing('2 yrs before and one year ago')

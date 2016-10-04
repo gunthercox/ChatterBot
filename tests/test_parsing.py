@@ -89,3 +89,9 @@ class DateTimeParsingTestCases(TestCase):
     self.assertIn(input_text, parser[0])
     self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=0)).strftime('%d'))
     self.assertEqual(len(parser), 1)
+
+    input_text = '2 days before'
+    parser = datetime_parsing(input_text)
+    self.assertIn(input_text, parser[0])
+    self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=2)).strftime('%d'))
+    self.assertEqual(len(parser), 1)
