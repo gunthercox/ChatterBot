@@ -11,9 +11,9 @@ class ChatBotTestCase(TestCase):
 
     def get_kwargs(self):
         return {
-            'input_adapter': 'chatterbot.adapters.input.VariableInputTypeAdapter',
-            'output_adapter': 'chatterbot.adapters.output.OutputFormatAdapter',
-            'database': self.create_test_data_directory()
+                'input_adapter': {'adapter_class': 'chatterbot.adapters.input.VariableInputTypeAdapter'},
+                'output_adapter': {'adapter_class': 'chatterbot.adapters.output.OutputFormatAdapter'},
+                'database': self.create_test_data_directory()
         }
 
     def random_string(self, start=0, end=9000):

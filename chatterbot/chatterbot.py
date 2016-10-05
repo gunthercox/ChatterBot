@@ -14,21 +14,22 @@ class ChatBot(object):
         self.name = name
         kwargs['name'] = name
 
-        storage_adapter = kwargs.get('storage_adapter',
-            'chatterbot.adapters.storage.JsonFileStorageAdapter'
-        )
+        default_storage = {"adapter_class": 'chatterbot.adapters.storage.JsonFileStorageAdapter'}
+        storage_kwargs = kwargs.get('storage_adapter', default_storage)
+        storage_adapter = storage_kwargs.get('adapter_class')
+        database = storage_kwargs.get('database')
 
-        logic_adapters = kwargs.get('logic_adapters', [
-            'chatterbot.adapters.logic.ClosestMatchAdapter'
-        ])
+        default_logic = [{"adapter_class": 'chatterbot.adapters.logic.ClosestMatchAdapter'}]
+        logic_kwargs = kwargs.get('logic_adapters', default_logic)
+        logic_adapters = [dic['adapter_class'] for dic in logic_kwargs]
 
-        input_adapter = kwargs.get('input_adapter',
-            'chatterbot.adapters.input.VariableInputTypeAdapter'
-        )
+        default_input = {"adapter_class": 'chatterbot.adapters.input.VariableInputTypeAdapter'}
+        input_kwargs = kwargs.get('input_adapter', default_input)
+        input_adapter = input_kwargs.get('adapter_class')
 
-        output_adapter = kwargs.get('output_adapter',
-            'chatterbot.adapters.output.OutputFormatAdapter'
-        )
+        default_output = {"adapter_class": 'chatterbot.adapters.output.OutputFormatAdapter'}
+        output_kwargs = kwargs.get('output_adapter', default_output)
+        output_adapter = output_kwargs.get('adapter_class')
 
         # The last 10 statement inputs and outputs
         self.recent_statements = ResponseQueue(maxsize=10)
@@ -46,10 +47,14 @@ class ChatBot(object):
         InputAdapterClass = import_module(input_adapter)
         OutputAdapterClass = import_module(output_adapter)
 
-        self.storage = StorageAdapterClass(**kwargs)
-        self.logic = MultiLogicAdapter(**kwargs)
-        self.input = InputAdapterClass(**kwargs)
-        self.output = OutputAdapterClass(**kwargs)
+        self.storage = StorageAdapterClass(**storage_kwargs)
+        mapping = {"output_adapter": output_adapter,
+                    "input_adapter": input_adapter,
+                    'name': name,
+                    'database': database}
+        self.logic = MultiLogicAdapter(**mapping)
+        self.input = InputAdapterClass(**input_kwargs)
+        self.output = OutputAdapterClass(**output_kwargs)
 
         filters = kwargs.get('filters', tuple())
         self.filters = (import_module(F)() for F in filters)
@@ -58,7 +63,7 @@ class ChatBot(object):
         self.add_adapter('chatterbot.adapters.logic.NoKnowledgeAdapter')
 
         for adapter in logic_adapters:
-            self.add_adapter(adapter, **kwargs)
+            self.add_adapter(adapter, **mapping)
 
         # Share context information such as the name, the current conversation,
         # or access to other adapters with each of the adapters
@@ -68,7 +73,9 @@ class ChatBot(object):
         self.output.set_context(self)
 
         # Use specified trainer or fall back to the default
-        trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')
+        default_trainer = {'trainer_class': 'chatterbot.trainers.Trainer'}
+        trainer_kwargs = kwargs.get('trainer', default_trainer)
+        trainer = trainer_kwargs.get('trainer_class')
         TrainerClass = import_module(trainer)
         self.trainer = TrainerClass(self.storage)
 
