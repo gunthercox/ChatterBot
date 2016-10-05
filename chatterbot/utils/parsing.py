@@ -19,7 +19,7 @@ numbers = "(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten| \
 re_dmy = '(' + "|".join(day_variations + minute_variations + year_variations + week_variations) + ')'
 re_duration = '(before|after|earlier|later|ago|from\snow)'
 re_year = "(?<=\s)\d{4}|^\d{4}"
-re_timeframe = 'this|next|following|previous|last'
+re_timeframe = 'this|coming|next|following|previous|last'
 re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
 re_time = '(?P<hour>\d+)(\:(?P<minute>\d{2}))?(?P<convention>am|pm|a\.m\.|p\.m\.)?'
 re_separator = 'of|at|on'
@@ -107,8 +107,9 @@ regex = [
             (?P<unit>%s)s?\s # Matches days, months, years, weeks, minutes
             (?P<duration>%s) # before, after, earlier, later, ago, from now
             (\s*(?P<base_time>(%s)))?
+            ((\s|,\s|\s(%s))?\s*(%s))?
         )
-        '''% (numbers, re_dmy, re_duration, day_nearest_names),
+        '''% (numbers, re_dmy, re_duration, day_nearest_names, re_separator, re_time),
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda (m, base_date): dateFromDuration(
@@ -117,7 +118,11 @@ regex = [
             m.group('unit').lower(),
             m.group('duration').lower(),
             m.group('base_time')
-        )
+        ) + timedelta(**convertTimetoHourMinute(
+            m.group('hour'),
+            m.group('minute'),
+            m.group('convention')
+        ))
     ),
     (re.compile(
         r'''
@@ -178,20 +183,38 @@ regex = [
         (?P<time>%s) # this, next, following, previous, last
         \s+
         (?P<dmy>%s) # year, day, week, month, night, minute, min
-        '''% (re_timeframe, re_dmy),
+        ((\s|,\s|\s(%s))?\s*(%s))?
+        '''% (re_timeframe, re_dmy, re_separator, re_time),
         (re.VERBOSE | re.IGNORECASE),
         ),
-        lambda (m, base_date): dateFromRelativeWeekYear(base_date, m.group('time'), m.group('dmy'))
+        lambda (m, base_date): dateFromRelativeWeekYear(
+            base_date,
+            m.group('time'),
+            m.group('dmy')
+        ) + timedelta(**convertTimetoHourMinute(
+                m.group('hour'),
+                m.group('minute'),
+                m.group('convention')
+            ))
     ),
     (re.compile(
         r'''
         (?P<time>%s) # this, next, following, previous, last
         \s+
         (?P<dow>%s) # mon - fri
-        '''% (re_timeframe, day_names),
+        ((\s|,\s|\s(%s))?\s*(%s))?
+        '''% (re_timeframe, day_names, re_separator, re_time),
         (re.VERBOSE | re.IGNORECASE),
         ),
-        lambda (m, base_date): dateFromRelativeDay(base_date, m.group('time'), m.group('dow'))
+        lambda (m, base_date): dateFromRelativeDay(
+            base_date,
+            m.group('time'),
+            m.group('dow')
+        ) + timedelta(**convertTimetoHourMinute(
+                m.group('hour'),
+                m.group('minute'),
+                m.group('convention')
+            ))
     ),
     (re.compile(
         r'''
@@ -245,11 +268,36 @@ regex = [
     ),
     (re.compile(
         r'''
-        (?P<adverb>%s) # today, yesterday, tomorrow, tonight
-        '''% (day_nearest_names),
+        (
+            (?P<month>\d{1,2}) # MM/DD or MM/DD/YYYY
+            /
+            ((?P<day>\d{1,2}))
+            (/(?P<year>\d{1,4})\b)?
+        )
+        ''',
         (re.VERBOSE | re.IGNORECASE)
         ),
-        lambda (m, base_date): dateFromAdverb(base_date, m.group('adverb'))
+        lambda (m, base_date): datetime(
+                int(m.group('year') if m.group('year') else base_date.year),
+                int(m.group('month').strip()),
+                int(m.group('day'))
+            )
+    ),
+    (re.compile(
+        r'''
+        (?P<adverb>%s) # today, yesterday, tomorrow, tonight
+        ((\s|,\s|\s(%s))?\s*(%s))?
+        '''% (day_nearest_names, re_separator, re_time),
+        (re.VERBOSE | re.IGNORECASE)
+        ),
+        lambda (m, base_date): dateFromAdverb(
+            base_date,
+            m.group('adverb')
+        ) + timedelta(**convertTimetoHourMinute(
+                m.group('hour'),
+                m.group('minute'),
+                m.group('convention')
+            ))
     ),
     (re.compile(
         r'''
@@ -391,9 +439,11 @@ def dateFromQuarter (base_date, ordinal, year):
 # Converts relative day to time
 # this tuesday, last tuesday
 def dateFromRelativeDay(base_date, time, dow):
+    # Reset date to start of the day
+    base_date = datetime(base_date.year, base_date.month, base_date.day)
     time = time.lower()
     dow = dow.lower()
-    if time == 'this':
+    if time == 'this' or time == 'coming':
         # Else day of week
         num = hashweekdays[dow]
         return this_week_day(base_date, num)
@@ -409,27 +459,31 @@ def dateFromRelativeDay(base_date, time, dow):
 # Converts relative day to time
 # this tuesday, last tuesday
 def dateFromRelativeWeekYear(base_date, time, dow):
+    # Reset date to start of the day
+    d = datetime(base_date.year, base_date.month, base_date.day)
     if dow in year_variations:
-        if time == 'this':
-            return datetime(base_date.year, 1, 1)
+        if time == 'this' or time == 'coming':
+            return datetime(d.year, 1, 1)
         elif time == 'last' or time == 'previous':
-            return datetime(base_date.year - 1, base_date.month, base_date.day)
+            return datetime(d.year - 1, d.month, d.day)
     elif dow in week_variations:
         if time == 'this':
-            return base_date - timedelta(days=base_date.weekday())
+            return d - timedelta(days=d.weekday())
         elif time == 'last' or time == 'previous':
-            return base_date - timedelta(weeks=1)
+            return d - timedelta(weeks=1)
 
 # Convert Day adverbs to dates
 # Tomorrow => Date
 # Today => Date
 def dateFromAdverb(base_date, name):
+    # Reset date to start of the day
+    d = datetime(base_date.year, base_date.month, base_date.day)
     if name == 'today' or name == 'tonite' or name == 'tonight':
-        return datetime.today()
+        return d.today()
     elif name == 'yesterday':
-        return base_date - timedelta(days=1)
+        return d - timedelta(days=1)
     elif name == 'tomorrow' or name == 'tom':
-        return base_date + timedelta(days=1)
+        return d + timedelta(days=1)
 
 # Find dates from duration
 # Eg: 20 days from now
@@ -472,7 +526,7 @@ def this_week_day(base_date, weekday):
 
 # Finds coming weekday
 def previous_week_day(base_date, weekday):
-    day = base_date.today() - timedelta(days=1)
+    day = base_date - timedelta(days=1)
     while day.weekday() != weekday:
         day = day - timedelta(days=1)
     return day
