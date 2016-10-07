@@ -1,7 +1,7 @@
 from .base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
-from chatterbot.utils.trees import find_sequence_in_tree
-from chatterbot.utils.trees import StatementGraph
+from chatterbot.utils.graphs import find_sequence_in_tree
+from chatterbot.utils.graphs import StatementGraph
 
 
 class GraphTestCase(ChatBotTestCase):
