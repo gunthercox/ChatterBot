@@ -1,3 +1,20 @@
+class StatementGraph(object):
+    """
+    This object is a wrapper around chatterbot's storage backend
+    that makes it more convenient to traverse known statements as
+    a tree-like data structure.
+    """
+
+    def __init__(self, storage):
+        self.storage = storage
+
+    def get_child_nodes(self, statement):
+        return self.storage.filter(in_response_to__contains=statement.text)
+
+    def get_parent_nodes(self, statement):
+        return self.storage.find(statement.text).in_response_to
+
+
 def list_close_matches_for_statements(statements, all_known_statements, max_close_entries=10):
     """
     Takes a list of statements and returns a dictionary where each key is
@@ -29,12 +46,59 @@ def list_close_matches_for_statements(statements, all_known_statements, max_clos
     return close_entries
 
 
-def backtrack(storage, statement, max_permutation):
+def get_max_comparison(match_statement, statements):
+    max_value = -1
+    max_statement = None
+
+    for statement in statements:
+        value = match_statement.compare_to(statement)
+
+        if value > max_value:
+            max_value = value
+            max_statement = statement
+
+    return max_value, max_statement
+
+
+def backtrack(storage, statement, conversation, max_permutation):
     return 0, []
 
 
-def fortrack(storage, statement, max_permutation):
-    return 0, []
+def recursive_forward_best_match(storage, start_statement, search_statement, max_permutation):
+
+    statement_responses = storage.filter(in_response_to__contains=start_statement.text)
+
+    # Return the closeness of the response that has the greatest closeness
+    # to one of the next statements in the search sequence
+    if max_permutation == 0:
+
+        # Find the statement in the response selection that has the closest match to the first element in the conversation
+        max_comparison_value, max_comparison = get_max_comparison(search_statement, statement_responses)
+        return max_comparison_value, max_comparison
+
+    # TODO: Recursive case
+
+    '''
+    max_comparison_value, max_comparison = recursive_forward_best_match(
+        storage, start_statement, search_statement, max_permutation - 1
+    )
+    '''
+
+    return max_comparison_value, max_comparison
+
+
+def foretrack(storage, statement, conversation, max_permutation):
+
+    if len(conversation) == 1:
+
+        # Check ahead a depth of max_permutation nodes to see if a closer match to the statement exists
+        max_comparison_value, max_comparison = recursive_forward_best_match(
+            storage, statement, conversation[0], max_permutation
+        )
+
+        return max_comparison_value, [max_comparison]
+
+    return foretrack(storage, statement, conversation[1:], max_permutation - 1)
 
 
 def find_sequence_in_tree(storage, conversation, max_depth=100, max_permutation=0):
@@ -60,13 +124,24 @@ def find_sequence_in_tree(storage, conversation, max_depth=100, max_permutation=
 
         for match in matches:
 
-            # Forwards-track to check for the highest number of statements that
-            # also have a close match to next elements in the conversation.
-            count_ahead, statements_ahead = fortrack(storage, match, max_permutation)
+            match_value, match_statement = match
 
-            # Backtrack to check for the highest number of statements that
-            # also have a close match to previous elements in the conversation.
-            count_behind, statements_behind = backtrack(storage, match, max_permutation)
+            count_ahead = 0
+            count_behind = 0
+            statements_ahead = []
+            statements_behind = []
+
+            if index != 0:
+                # Forwards-track to check for the highest number of statements that
+                # also have a close match to next elements in the conversation.
+                next_conversation_parts = conversation[-1 * (index - 1):]
+                count_ahead, statements_ahead = foretrack(storage, match_statement, next_conversation_parts, max_permutation)
+
+            if index != len(conversation):
+                # Backtrack to check for the highest number of statements that
+                # also have a close match to previous elements in the conversation.
+                previous_conversation_parts = conversation[:index]
+                count_behind, statements_behind = backtrack(storage, match_statement, previous_conversation_parts, max_permutation)
 
             # Create a sum of the closeness of each of the adjacent element's closeness
             count = count_ahead + count_behind
