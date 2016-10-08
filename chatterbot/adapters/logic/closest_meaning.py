@@ -38,15 +38,6 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
             else:
                 raise self.EmptyDatasetException()
 
-        # Get the text of each statement
-        text_of_all_statements = []
-        for statement in statement_list:
-            text_of_all_statements.append(statement.text)
-
-        # Check if an exact match exists
-        if input_statement.text in text_of_all_statements:
-            return 1, input_statement
-
         closest_statement = None
         closest_similarity = -1
         total_similarity = 0
