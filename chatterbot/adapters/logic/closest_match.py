@@ -29,18 +29,18 @@ class ClosestMatchAdapter(BaseMatchAdapter):
             else:
                 raise self.EmptyDatasetException()
 
-        confidence = -1
         closest_match = input_statement
+        closest_similarity = -1
 
         # Find the closest matching known statement
         for statement in statement_list:
             ratio = fuzz.ratio(input_statement.text.lower(), statement.text.lower())
 
-            if ratio > confidence:
-                confidence = ratio
+            if ratio > closest_similarity:
+                closest_similarity = ratio
                 closest_match = statement
 
         # Convert the confidence integer to a percent
-        confidence /= 100.0
+        confidence = closest_similarity / 100.0
 
         return confidence, closest_match

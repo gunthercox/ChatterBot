@@ -38,7 +38,7 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
             else:
                 raise self.EmptyDatasetException()
 
-        closest_statement = None
+        closest_match = input_statement
         closest_similarity = -1
         total_similarity = 0
 
@@ -53,11 +53,11 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
 
             if similarity > closest_similarity:
                 closest_similarity = similarity
-                closest_statement = statement
+                closest_match = statement
 
         try:
             confidence = closest_similarity / total_similarity
         except:
             confidence = 0
 
-        return confidence, closest_statement
+        return confidence, closest_match
