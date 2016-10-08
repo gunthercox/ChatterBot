@@ -1,3 +1,4 @@
-nosetests
-coveralls
 codeclimate-test-reporter
+coveralls
+mock
+nosetests
