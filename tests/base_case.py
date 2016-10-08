@@ -13,7 +13,8 @@ class ChatBotTestCase(TestCase):
         return {
             'input_adapter': 'chatterbot.adapters.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.adapters.output.OutputFormatAdapter',
-            'database': self.create_test_data_directory()
+            'database': self.create_test_data_directory(),
+            'silence_performance_warning': True
         }
 
     def random_string(self, start=0, end=9000):
@@ -62,10 +63,10 @@ class ChatBotMongoTestCase(ChatBotTestCase):
             )
             client.server_info()
 
-            self.chatbot = ChatBot('Tester Bot', **self.get_kwargs())
-
         except ServerSelectionTimeoutError:
             raise SkipTest('Unable to connect to Mongo DB.')
+
+        super(ChatBotMongoTestCase, self).setUp()
 
     def get_kwargs(self):
         kwargs = super(ChatBotMongoTestCase, self).get_kwargs()

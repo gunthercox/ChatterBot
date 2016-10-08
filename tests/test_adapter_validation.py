@@ -13,7 +13,8 @@ class AdapterValidationTests(ChatBotTestCase):
             self.chatbot = ChatBot(
                 'Test Bot',
                 storage_adapter='chatterbot.adapters.input.TerminalAdapter',
-                database=self.database_path
+                database=self.database_path,
+                silence_performance_warning=True
             )
 
     def test_valid_storage_adapter(self):
