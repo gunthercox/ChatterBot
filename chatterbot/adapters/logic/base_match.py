@@ -11,10 +11,16 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
 
     def __init__(self, **kwargs):
         super(BaseMatchAdapter, self).__init__(**kwargs)
+        from chatterbot.conversation.comparisons import levenshtein_distance
 
         self.tie_breaking_method = kwargs.get(
             "tie_breaking_method",
             "first_response"
+        )
+
+        self.statement_comparison_function = kwargs.get(
+            'statement_comparison_function',
+            levenshtein_distance
         )
 
     @property

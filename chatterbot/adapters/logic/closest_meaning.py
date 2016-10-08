@@ -1,7 +1,4 @@
 from .base_match import BaseMatchAdapter
-from chatterbot.utils.pos_tagger import POSTagger
-from chatterbot.utils.stop_words import StopWordsManager
-from chatterbot.utils.word_net import Wordnet
 
 
 class ClosestMeaningAdapter(BaseMatchAdapter):
@@ -16,63 +13,12 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
 
     def __init__(self, **kwargs):
         super(ClosestMeaningAdapter, self).__init__(**kwargs)
+        from chatterbot.conversation.comparisons import synset_distance
 
-        self.wordnet = Wordnet()
-        self.tagger = POSTagger()
-        self.stopwords = StopWordsManager()
-
-    def get_tokens(self, text, exclude_stop_words=True):
-        """
-        Takes a string and converts it to a tuple
-        of each word. Skips common stop words such
-        as ("is, the, a, ...") is 'exclude_stop_words'
-        is True.
-        """
-        lower = text.lower()
-        tokens = self.tagger.tokenize(lower)
-
-        # Remove any stop words from the string
-        if exclude_stop_words:
-            excluded_words = self.stopwords.words("english")
-
-            tokens = set(tokens) - set(excluded_words)
-
-        return tokens
-
-    def get_similarity(self, string1, string2):
-        """
-        Calculate the similarity of two statements.
-        This is based on the total similarity between
-        each word in each sentence.
-        """
-        import itertools
-
-        tokens1 = self.get_tokens(string1)
-        tokens2 = self.get_tokens(string2)
-
-        total_similarity = 0
-
-        # Get the highest matching value for each possible combination of words
-        for combination in itertools.product(*[tokens1, tokens2]):
-
-            synset1 = self.wordnet.synsets(combination[0])
-            synset2 = self.wordnet.synsets(combination[1])
-
-            if synset1 and synset2:
-
-                max_similarity = 0
-
-                # Get the highest similarity for each combination of synsets
-                for synset in itertools.product(*[synset1, synset2]):
-                    similarity = synset[0].path_similarity(synset[1])
-
-                    if similarity and (similarity > max_similarity):
-                        max_similarity = similarity
-
-                # Add the most similar path value to the total
-                total_similarity += max_similarity
-
-        return total_similarity
+        self.statement_comparison_function = kwargs.get(
+            'statement_comparison_function',
+            synset_distance
+        )
 
     def get(self, input_statement):
         """
@@ -106,8 +52,11 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
         total_similarity = 0
 
         # For each option in the list of options
-        for statement in text_of_all_statements:
-            similarity = self.get_similarity(input_statement.text, statement)
+        for statement in statement_list:
+            similarity = self.statement_comparison_function(
+                input_statement,
+                statement
+            )
 
             total_similarity += similarity
 
@@ -120,6 +69,4 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
         except:
             confidence = 0
 
-        return confidence, next(
-            (s for s in statement_list if s.text == closest_statement), None
-        )
+        return confidence, closest_statement
