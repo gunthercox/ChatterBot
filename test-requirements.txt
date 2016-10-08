@@ -1,0 +1,3 @@
+nosetests
+coveralls
+codeclimate-test-reporter
