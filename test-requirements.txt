@@ -1,4 +1,4 @@
 codeclimate-test-reporter
 coveralls
 mock
-nosetests
+nose
