@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 from fuzzywuzzy import fuzz
-
 from .base_match import BaseMatchAdapter
 
 
 class ClosestMatchAdapter(BaseMatchAdapter):
     """
-    The ClosestMatchAdapter logic adapter creates a response by 
-    using fuzzywuzzy's process class to extract the most similar
-    response to the input. This adapter selects a response to an
-    input statement by selecting the closest known matching
-    statement based on the Levenshtein Distance between the text
+    The ClosestMatchAdapter logic adapter selects a known response
+    to an input by searching for a known statement that most closely
+    matches the input based on the Levenshtein Distance between the text
     of each statement.
     """
 
@@ -32,18 +29,18 @@ class ClosestMatchAdapter(BaseMatchAdapter):
             else:
                 raise self.EmptyDatasetException()
 
-        confidence = -1
         closest_match = input_statement
+        closest_similarity = -1
 
         # Find the closest matching known statement
         for statement in statement_list:
-            ratio = fuzz.ratio(input_statement.text.lower(), statement.text.lower())
+            similarity = self.compare_statements(input_statement, statement)
 
-            if ratio > confidence:
-                confidence = ratio
+            if similarity > closest_similarity:
+                closest_similarity = similarity
                 closest_match = statement
 
         # Convert the confidence integer to a percent
-        confidence /= 100.0
+        confidence = closest_similarity / 100.0
 
         return confidence, closest_match
