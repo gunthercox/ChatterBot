@@ -1,4 +1,5 @@
 from .logic_adapter import LogicAdapter
+from concurrent.futures import ThreadPoolExecutor
 
 
 class MultiLogicAdapter(LogicAdapter):
@@ -14,6 +15,29 @@ class MultiLogicAdapter(LogicAdapter):
 
         self.adapters = []
 
+    def get_usable_adapters(self, statement):
+        usable_adapters = []
+
+        for adapter in self.adapters:
+            if adapter.can_process(statement):
+                usable_adapters.append([adapter, statement])
+            else:
+                self.logger.info(
+                    u'Not processing the statement using {}'.format(
+                        str(adapter.__class__)
+                    )
+                )
+
+        return usable_adapters
+
+    def execute_adapter_process(self, values):
+        adapter = values[0]
+        statement = values[1]
+
+        confidence, output = adapter.process(statement)
+
+        return confidence, output, adapter
+
     def process(self, statement):
         """
         Returns the outout of a selection of logic adapters
@@ -24,9 +48,11 @@ class MultiLogicAdapter(LogicAdapter):
         result = None
         max_confidence = -1
 
-        for adapter in self.adapters:
-            if adapter.can_process(statement):
-                confidence, output = adapter.process(statement)
+        usable_adapters = self.get_usable_adapters(statement)
+
+        # with ProcessPoolExecutor(max_executors) as executor:
+        with ThreadPoolExecutor(max_workers=len(usable_adapters)) as executor:
+            for confidence, output, adapter in executor.map(self.execute_adapter_process, usable_adapters):
 
                 self.logger.info(
                     u'{} selected "{}" as a response with a confidence of {}'.format(
@@ -37,12 +63,6 @@ class MultiLogicAdapter(LogicAdapter):
                 if confidence > max_confidence:
                     result = output
                     max_confidence = confidence
-            else:
-                self.logger.info(
-                    u'Not processing the statement using {}'.format(
-                        str(adapter.__class__)
-                    )
-                )
 
         return max_confidence, result
 
