@@ -1,16 +1,13 @@
 # -*- coding: utf-8 -*-
 from fuzzywuzzy import fuzz
-
 from .base_match import BaseMatchAdapter
 
 
 class ClosestMatchAdapter(BaseMatchAdapter):
     """
-    The ClosestMatchAdapter logic adapter creates a response by 
-    using fuzzywuzzy's process class to extract the most similar
-    response to the input. This adapter selects a response to an
-    input statement by selecting the closest known matching
-    statement based on the Levenshtein Distance between the text
+    The ClosestMatchAdapter logic adapter selects a known response
+    to an input by searching for a known statement that most closely
+    matches the input based on the Levenshtein Distance between the text
     of each statement.
     """
 
