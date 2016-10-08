@@ -17,6 +17,7 @@ class Gitter(InputAdapter):
         self.gitter_host = kwargs.get('gitter_host', 'https://api.gitter.im/v1/')
         self.gitter_room = kwargs.get('gitter_room')
         self.gitter_api_token = kwargs.get('gitter_api_token')
+        self.only_respond_to_mentions = kwargs.get('gitter_only_respond_to_mentions', True)
 
         authorization_header = 'Bearer {}'.format(self.gitter_api_token)
 
@@ -30,6 +31,9 @@ class Gitter(InputAdapter):
         room_data = self.join_room(self.gitter_room)
         self.room_id = room_data.get('id')
 
+        user_data = self.get_user_data()
+        self.username = user_data[0].get('username')
+
     def join_room(self, room_name):
         endpoint = '{}rooms'.format(self.gitter_host)
         response = requests.post(
@@ -38,6 +42,14 @@ class Gitter(InputAdapter):
             data=json.dumps({
                 'uri': room_name
             })
+        )
+        return response.json()
+
+    def get_user_data(self):
+        endpoint = '{}user'.format(self.gitter_host)
+        response = requests.get(
+            endpoint,
+            headers=self.headers
         )
         return response.json()
 
@@ -62,34 +74,48 @@ class Gitter(InputAdapter):
             return data[0]
         return None
 
+    def _contains_mention(self, mentions):
+        for mention in mentions:
+            if self.username == mention.get('screenName'):
+                return True
+        return False
+
+    def should_respond(self, data):
+        """
+        Takes the API response data from a single message.
+        Returns true if the chat bot should respond.
+        """
+        if not data:
+            return False
+        elif self.only_respond_to_mentions:
+            if data['unread'] == True and self._contains_mention(data['mentions']):
+                return True
+        elif data['unread'] == True:
+            return True
+
+        return False
+
+    def remove_mentions(self, text):
+        """
+        Return a string that has no leading mentions.
+        """
+        import re
+        from chatterbot.utils.clean import clean_whitespace
+        text_without_mentions = re.sub(r'@\S+', '', text)
+        return clean_whitespace(text_without_mentions)
+
     def process_input(self, statement):
         new_message = False
-
-        input_statement = self.context.get_last_input_statement()
-        response_statement = self.context.get_last_response_statement()
-
-        if input_statement:
-            last_message_id = input_statement.extra_data.get(
-                'gitter_message_id', None
-            )
-            if last_message_id:
-                self.recent_message_ids.add(last_message_id)
-
-        if response_statement:
-            last_message_id = response_statement.extra_data.get(
-                'gitter_message_id', None
-            )
-            if last_message_id:
-                self.recent_message_ids.add(last_message_id)
 
         while not new_message:
             data = self.get_most_recent_message()
 
-            if data and data['unread'] == True:
+            if self.should_respond(data):
                 self.mark_messages_as_read([data['id']])
                 new_message = True
             sleep(3.5)
 
-        statement = Statement(data['text'])
+        text = self.remove_mentions(data['text'])
+        statement = Statement(text)
 
         return statement
