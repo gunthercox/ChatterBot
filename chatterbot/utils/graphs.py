@@ -60,28 +60,64 @@ def get_max_comparison(match_statement, statements):
     return max_value, max_statement
 
 
-def backtrack(storage, statement, conversation, max_search_distance):
-    return 0, []
+def recursive_parents_best_match(graph, start_statement, search_statement, max_search_distance):
+    statements = set([start_statement])
+    best_match = None
+    best_match_comparison = -1
+
+    while max_search_distance > 0:
+        max_search_distance -= 1
+        _statements = statements.copy()
+        for statement in _statements:
+            children = graph.get_parent_nodes(statement)
+            statements.update(children)
+
+    for statement in statements:
+        comparison = search_statement.compare_to(statement)
+
+        if comparison > best_match_comparison:
+            best_match_comparison = comparison
+            best_match = statement
+
+    return best_match_comparison, best_match
+
+def recursive_children_best_match(graph, start_statement, search_statement, max_search_distance):
+    """
+    Return the statement that has the greatest closeness
+    to one of the next statements in the search sequence
+    """
+
+    statements = set([start_statement])
+    best_match = None
+    best_match_comparison = -1
+
+    while max_search_distance > 0:
+        max_search_distance -= 1
+        _statements = statements.copy()
+        for statement in _statements:
+            children = graph.get_child_nodes(statement)
+            statements.update(children)
+
+    for statement in statements:
+        comparison = search_statement.compare_to(statement)
+
+        if comparison > best_match_comparison:
+            best_match_comparison = comparison
+            best_match = statement
+
+    return best_match_comparison, best_match
 
 
-def recursive_forward_best_match(graph, start_statement, search_statement, max_search_distance):
+def backtrack(graph, statement, conversation, max_search_distance):
 
-    # Return the closeness of the response that has the greatest closeness
-    # to one of the next statements in the search sequence
+    if len(conversation) == 1:
+        max_comparison_value, max_comparison = recursive_parents_best_match(
+            graph, statement, conversation[0], max_search_distance
+        )
 
-    stack = [(start_statement, [start_statement])]
+        return max_comparison_value, [max_comparison]
 
-    while stack:
-        (vertex, path) = stack.pop()
-        max_comparison = -1
-        for next in set(graph.get_child_nodes(vertex)) - set(path):
-            comparison = next.compare_to(search_statement)
-            if comparison > max_comparison:
-                max_comparison = comparison
-                yield comparison, path + [next]
-            else:
-                stack.append((next, path + [next]))
-        #max_search_distance -= 1
+    return backtrack(graph, statement, conversation[1:], max_search_distance - 1)
 
 
 def foretrack(graph, statement, conversation, max_search_distance):
@@ -89,23 +125,16 @@ def foretrack(graph, statement, conversation, max_search_distance):
     if len(conversation) == 1:
 
         # Check ahead a depth of max_search_distance nodes to see if a closer match to the statement exists
-        best_match = list(recursive_forward_best_match(
+        max_comparison_value, max_comparison = recursive_children_best_match(
             graph, statement, conversation[0], max_search_distance
-        ))
-
-        if len(best_match) > 1:
-            # TODO: Will this ever be the case?
-            print "best_match was > 1:", best_match
-        print ">>>", best_match
-
-        max_comparison_value, max_comparison = best_match[0]
+        )
 
         return max_comparison_value, [max_comparison]
 
     return foretrack(graph, statement, conversation[1:], max_search_distance - 1)
 
 
-def find_sequence_in_tree(storage, conversation, max_depth=100, max_search_distance=0):
+def find_sequence_in_tree(storage, conversation, max_depth=100, max_search_distance=1):
     """
     Method to find the closest match to a sequence of strings in
     a tree-like data structure.
@@ -146,7 +175,7 @@ def find_sequence_in_tree(storage, conversation, max_depth=100, max_search_dista
                 # Backtrack to check for the highest number of statements that
                 # also have a close match to previous elements in the conversation.
                 previous_conversation_parts = conversation[:index]
-                count_behind, statements_behind = backtrack(storage, match_statement, previous_conversation_parts, max_search_distance)
+                #count_behind, statements_behind = backtrack(storage, match_statement, previous_conversation_parts, max_search_distance)
 
             # Create a sum of the closeness of each of the adjacent element's closeness
             count = count_ahead + count_behind

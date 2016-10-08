@@ -123,13 +123,6 @@ class Statement(object):
 
         return 0
 
-    def get_stemmed_text(self):
-        # TODO
-        pass
-
-    def compare_to(self, other_statement):
-        return fuzz.ratio(self.text, other_statement.text)
-
     def serialize(self):
         """
         :returns: A dictionary representation of the statement object.
