@@ -34,10 +34,10 @@ class ClosestMatchAdapter(BaseMatchAdapter):
 
         # Find the closest matching known statement
         for statement in statement_list:
-            ratio = fuzz.ratio(input_statement.text.lower(), statement.text.lower())
+            similarity = self.compare_statements(input_statement, statement)
 
-            if ratio > closest_similarity:
-                closest_similarity = ratio
+            if similarity > closest_similarity:
+                closest_similarity = similarity
                 closest_match = statement
 
         # Convert the confidence integer to a percent

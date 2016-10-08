@@ -18,7 +18,7 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
             "first_response"
         )
 
-        self.statement_comparison_function = kwargs.get(
+        self.compare_statements = kwargs.get(
             'statement_comparison_function',
             levenshtein_distance
         )

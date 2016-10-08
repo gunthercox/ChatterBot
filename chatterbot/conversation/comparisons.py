@@ -1,7 +1,7 @@
 def levenshtein_distance(statement, other_statement):
     from fuzzywuzzy import fuzz
 
-    return fuzz.ratio(statement.text, other_statement.text)
+    return fuzz.ratio(statement.text.lower(), other_statement.text.lower())
 
 
 def synset_distance(statement, other_statement):

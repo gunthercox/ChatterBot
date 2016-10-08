@@ -8,7 +8,7 @@ class ApproximateSentenceMatchAdapter(BaseMatchAdapter):
         super(ClosestMatchAdapter, self).__init__(**kwargs)
         from chatterbot.conversation.comparisons import jaccard_similarity
 
-        self.statement_comparison_function = kwargs.get(
+        self.compare_statements = kwargs.get(
             'statement_comparison_function',
             jaccard_similarity
         )
@@ -31,10 +31,7 @@ class ApproximateSentenceMatchAdapter(BaseMatchAdapter):
         sentence_match = input_statement
         # Find the matching known statement
         for statement in statement_list:
-            ratio = self.statement_comparison_function(
-                input_statement.text,
-                statement.text
-            )
+            ratio = self.compare_statements(input_statement, statement)
             if ratio:
                 closest_match = statement
             else:

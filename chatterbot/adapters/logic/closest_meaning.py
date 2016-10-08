@@ -15,7 +15,7 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
         super(ClosestMeaningAdapter, self).__init__(**kwargs)
         from chatterbot.conversation.comparisons import synset_distance
 
-        self.statement_comparison_function = kwargs.get(
+        self.compare_statements = kwargs.get(
             'statement_comparison_function',
             synset_distance
         )
@@ -44,10 +44,7 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
 
         # For each option in the list of options
         for statement in statement_list:
-            similarity = self.statement_comparison_function(
-                input_statement,
-                statement
-            )
+            similarity = self.compare_statements(input_statement, statement)
 
             total_similarity += similarity
 
