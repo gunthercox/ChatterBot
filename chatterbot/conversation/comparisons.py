@@ -65,7 +65,9 @@ def synset_distance(statement, other_statement):
     return total_similarity
 
 
-def jaccard_similarity(self,a, b, threshold=0.5):
+def jaccard_similarity(a, b, threshold=0.5):
+    a = a.text
+    b = b.text
     """
     The Jaccard index is composed of a numerator and denominator.
     In the numerator, we count the number of items that are shared between the sets.
@@ -92,10 +94,10 @@ def jaccard_similarity(self,a, b, threshold=0.5):
     import string
 
     # Get default English stopwords and extend with punctuation
-    self.stopwords = nltk.corpus.stopwords.words('english')
-    self.stopwords.extend(string.punctuation)
-    self.stopwords.append('')
-    self.lemmatizer = nltk.stem.wordnet.WordNetLemmatizer()
+    stopwords = nltk.corpus.stopwords.words('english')
+    stopwords.extend(string.punctuation)
+    stopwords.append('')
+    lemmatizer = nltk.stem.wordnet.WordNetLemmatizer()
 
     def get_wordnet_pos(pos_tag):
         if pos_tag[1].startswith('J'):
@@ -112,10 +114,10 @@ def jaccard_similarity(self,a, b, threshold=0.5):
     ratio = 0
     pos_a = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a)))
     pos_b = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b)))
-    lemmae_a = [self.lemmatizer.lemmatize(token.lower().strip(string.punctuation), pos) for token, pos in pos_a \
-                    if pos == wordnet.NOUN and token.lower().strip(string.punctuation) not in self.stopwords]
-    lemmae_b = [self.lemmatizer.lemmatize(token.lower().strip(string.punctuation), pos) for token, pos in pos_b \
-                    if pos == wordnet.NOUN and token.lower().strip(string.punctuation) not in self.stopwords]
+    lemmae_a = [lemmatizer.lemmatize(token.lower().strip(string.punctuation), pos) for token, pos in pos_a \
+                    if pos == wordnet.NOUN and token.lower().strip(string.punctuation) not in stopwords]
+    lemmae_b = [lemmatizer.lemmatize(token.lower().strip(string.punctuation), pos) for token, pos in pos_b \
+                    if pos == wordnet.NOUN and token.lower().strip(string.punctuation) not in stopwords]
 
     # Calculate Jaccard similarity
     try:
