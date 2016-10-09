@@ -15,7 +15,7 @@ class TerminalAdapter(OutputAdapter):
         user_input = input_function()
         return user_input
 
-    def process_response(self, statement):
+    def process_response(self, statement, confidence=None):
         """
         Print the response to the user's input.
         """

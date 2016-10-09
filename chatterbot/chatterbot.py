@@ -220,7 +220,7 @@ class ChatBot(object):
         )
 
         # Process the response output with the output adapter
-        return self.output.process_response(response)
+        return self.output.process_response(response, confidence)
 
     def set_trainer(self, training_class, **kwargs):
         """
