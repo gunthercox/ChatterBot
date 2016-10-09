@@ -5,7 +5,7 @@ from .base_match import BaseMatchAdapter
 class ApproximateSentenceMatchAdapter(BaseMatchAdapter):
 
     def __init__(self, **kwargs):
-        super(ClosestMatchAdapter, self).__init__(**kwargs)
+        super(ApproximateSentenceMatchAdapter, self).__init__(**kwargs)
         from chatterbot.conversation.comparisons import jaccard_similarity
 
         self.compare_statements = kwargs.get(
