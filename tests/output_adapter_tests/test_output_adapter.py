@@ -15,4 +15,4 @@ class OutputAdapterTestCase(TestCase):
 
     def test_process_response(self):
         with self.assertRaises(OutputAdapter.AdapterMethodNotImplementedError):
-            self.adapter.process_response("")
+            self.adapter.process_response('', 0)

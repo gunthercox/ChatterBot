@@ -7,7 +7,7 @@ class OutputAdapter(Adapter):
     interface that all output adapters should implement.
     """
 
-    def process_response(self, input_value):
+    def process_response(self, input_value, confidence):
         """
         Takes an input value.
         Returns an output value.

@@ -20,7 +20,7 @@ class OutputFormatAdapter(OutputAdapter):
                 )
             )
 
-    def process_response(self, statement):
+    def process_response(self, statement, confidence=None):
         if self.format == self.TEXT:
             return statement.text
 

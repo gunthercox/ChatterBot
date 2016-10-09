@@ -53,7 +53,7 @@ class HipChat(OutputAdapter):
         """
         pass
 
-    def process_response(self, statement):
+    def process_response(self, statement, confidence=None):
         data = self.send_message(self.hipchat_room, statement.text)
 
         # Update the output statement with the message id
