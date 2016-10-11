@@ -173,7 +173,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement, force = False):
+    def update(self, statement, force=False):
         from pymongo import UpdateOne, ReplaceOne
 
         # Do not alter the database unless writing is enabled
