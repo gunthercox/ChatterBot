@@ -148,3 +148,29 @@ class ChatterBotResponseTests(ChatBotTestCase):
 
         self.assertIn("test", saved_statement.extra_data)
         self.assertEqual(1, saved_statement.extra_data["test"])
+
+
+class ChatBotConfigFileTestCase(ChatBotTestCase):
+
+    def setUp(self):
+        super(ChatBotConfigFileTestCase, self).setUp()
+        import json
+        self.config_file_path = './test-config.json'
+        self.data = self.get_kwargs()
+        self.data['name'] = 'Config Test'
+
+        with open(self.config_file_path, 'w+') as config_file:
+            json.dump(self.data, config_file)
+
+    def tearDown(self):
+        super(ChatBotConfigFileTestCase, self).tearDown()
+        import os
+
+        if os.path.exists(self.config_file_path):
+            os.remove(self.config_file_path)
+
+    def test_read_from_config_file(self):
+        from chatterbot import ChatBot
+        self.chatbot = ChatBot.from_config(self.config_file_path)
+
+        self.assertEqual(self.chatbot.name, self.data['name'])

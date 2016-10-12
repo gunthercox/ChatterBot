@@ -235,6 +235,16 @@ class ChatBot(object):
         """
         return self.trainer.train
 
+    @classmethod
+    def from_config(self, config_file_path):
+        import json
+        with open(config_file_path, 'r') as config_file:
+            data = json.load(config_file)
+
+        name = data.pop('name')
+
+        return ChatBot(name, **data)
+
     class InvalidAdapterException(Exception):
 
         def __init__(self, value='Recieved an unexpected adapter setting.'):
