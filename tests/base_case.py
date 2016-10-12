@@ -73,4 +73,3 @@ class ChatBotMongoTestCase(ChatBotTestCase):
         kwargs['database'] = self.random_string()
         kwargs['storage_adapter'] = 'chatterbot.adapters.storage.MongoDatabaseAdapter'
         return kwargs
-
