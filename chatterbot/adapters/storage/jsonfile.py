@@ -129,7 +129,7 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement):
+    def update(self, statement, **kwargs):
         # Do not alter the database unless writing is enabled
         if not self.read_only:
             data = statement.serialize()

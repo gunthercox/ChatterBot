@@ -173,11 +173,11 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement):
+    def update(self, statement, **kwargs):
         from pymongo import UpdateOne, ReplaceOne
-
+        force = kwargs.get('force', False)
         # Do not alter the database unless writing is enabled
-        if not self.read_only:
+        if not self.read_only or force == True:
             data = statement.serialize()
 
             operations = []

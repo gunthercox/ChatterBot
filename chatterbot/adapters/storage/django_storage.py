@@ -72,7 +72,7 @@ class DjangoStorageAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement):
+    def update(self, statement, **kwargs):
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
         # Do not alter the database unless writing is enabled
