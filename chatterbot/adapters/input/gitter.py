@@ -18,6 +18,7 @@ class Gitter(InputAdapter):
         self.gitter_room = kwargs.get('gitter_room')
         self.gitter_api_token = kwargs.get('gitter_api_token')
         self.only_respond_to_mentions = kwargs.get('gitter_only_respond_to_mentions', True)
+        self.sleep_time = kwargs.get('gitter_sleep_time', 4)
 
         authorization_header = 'Bearer {}'.format(self.gitter_api_token)
 
@@ -80,6 +81,7 @@ class Gitter(InputAdapter):
             response.status_code, endpoint
         ))
         self._validate_status_code(response)
+        return response.json()
 
     def get_most_recent_message(self):
         endpoint = '{}rooms/{}/chatMessages?limit=1'.format(self.gitter_host, self.room_id)
@@ -132,10 +134,11 @@ class Gitter(InputAdapter):
         while not new_message:
             data = self.get_most_recent_message()
             if self.should_respond(data):
+                print ">>>", self.should_respond(data)
                 self.mark_messages_as_read([data['id']])
                 new_message = True
             self.logger.info(u'')
-            sleep(4)
+            sleep(self.sleep_time)
 
         text = self.remove_mentions(data['text'])
         statement = Statement(text)
