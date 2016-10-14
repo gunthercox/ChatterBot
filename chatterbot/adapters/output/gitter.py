@@ -28,6 +28,11 @@ class Gitter(OutputAdapter):
         room_data = self.join_room(self.gitter_room)
         self.room_id = room_data.get('id')
 
+    def _validate_status_code(self, response):
+        code = response.status_code
+        if code not in [200, 201]:
+            raise Exception('{} status code recieved'.format(code))
+
     def join_room(self, room_name):
         endpoint = '{}rooms'.format(self.gitter_host)
         response = requests.post(
@@ -37,6 +42,10 @@ class Gitter(OutputAdapter):
                 'uri': room_name
             })
         )
+        self.logger.info(u'{} status joining room {}'.format(
+            response.status_code, endpoint
+        ))
+        self._validate_status_code(response)
         return response.json()
 
     def send_message(self, text):
@@ -51,6 +60,11 @@ class Gitter(OutputAdapter):
                 'text': text
             })
         )
+        self.logger.info(u'{} sending message to {}'.format(
+            response.status_code, endpoint
+        ))
+        self._validate_status_code(response)
+        return response.json()
 
     def process_response(self, statement, confidence=None):
         self.send_message(statement.text)
