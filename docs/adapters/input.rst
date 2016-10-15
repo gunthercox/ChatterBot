@@ -43,6 +43,22 @@ communicate with the chat bot.
 
 .. _hipchat-input-adapter:
 
+Gitter Adapter
+==============
+
+.. autofunction:: chatterbot.adapters.input.Gitter
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       "My ChatterBot",
+       input_adapter="chatterbot.adapters.input.Gitter",
+       gitter_api_token="my-gitter-api-token",
+       gitter_room="my-room-name",
+       gitter_only_respond_to_mentions=True,
+   )
+
+
 HipChat Adapter
 ===============
 

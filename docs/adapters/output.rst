@@ -42,6 +42,21 @@ communicate with the chat bot.
 
 .. _hipchat-output-adapter:
 
+Gitter Adapter
+==============
+
+.. autofunction:: chatterbot.adapters.output.Gitter
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       "My ChatterBot",
+       output_adapter="chatterbot.adapters.output.Gitter",
+       gitter_api_token="my-gitter-api-token",
+       gitter_room="my-room-name",
+       gitter_only_respond_to_mentions=True,
+   )
+
 HipChat Adapter
 ===============
 
@@ -56,7 +71,7 @@ Be sure to also see the documentation for the :ref:`HipChat input adapter <hipch
 
    chatbot = ChatBot(
        "My ChatterBot",
-       input_adapter="chatterbot.adapters.output.HipChat",
+       output_adapter="chatterbot.adapters.output.HipChat",
        hipchat_host="https://mydomain.hipchat.com",
        hipchat_room="my-room-name",
        hipchat_access_token="my-hipchat-access-token",
