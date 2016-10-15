@@ -39,7 +39,7 @@ class Gitter(InputAdapter):
     def _validate_status_code(self, response):
         code = response.status_code
         if code not in [200, 201]:
-            raise Exception('{} status code recieved'.format(code))
+            raise self.HTTPStatusException('{} status code recieved'.format(code))
 
     def join_room(self, room_name):
         endpoint = '{}rooms'.format(self.gitter_host)
@@ -134,7 +134,6 @@ class Gitter(InputAdapter):
         while not new_message:
             data = self.get_most_recent_message()
             if self.should_respond(data):
-                print ">>>", self.should_respond(data)
                 self.mark_messages_as_read([data['id']])
                 new_message = True
             self.logger.info(u'')
@@ -144,3 +143,15 @@ class Gitter(InputAdapter):
         statement = Statement(text)
 
         return statement
+
+    class HTTPStatusException(Exception):
+        """
+        Exception raised when unexpected non-success HTTP
+        status codes are returned in a response.
+        """
+
+        def __init__(self, value):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)

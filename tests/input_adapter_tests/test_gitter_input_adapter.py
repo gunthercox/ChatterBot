@@ -63,8 +63,21 @@ class GitterAdapterTests(TestCase):
 
         try:
             self.adapter._validate_status_code(response)
-        except Exception:
-            self.fail('Test raised Exception unexpectedly!')
+        except Gitter.HTTPStatusException:
+            self.fail('Test raised HTTPStatusException unexpectedly!')
+
+    def test_validate_response_201(self):
+        response = MockResponse(201, {})
+
+        try:
+            self.adapter._validate_status_code(response)
+        except Gitter.HTTPStatusException:
+            self.fail('Test raised HTTPStatusException unexpectedly!')
+
+    def test_response_status_code_not_ok(self):
+        response = MockResponse(404, {})
+        with self.assertRaises(Gitter.HTTPStatusException):
+            self.adapter._validate_status_code(response)
 
     def test_join_room(self):
         data = self.adapter.join_room('room_name')

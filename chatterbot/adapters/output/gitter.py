@@ -31,7 +31,7 @@ class Gitter(OutputAdapter):
     def _validate_status_code(self, response):
         code = response.status_code
         if code not in [200, 201]:
-            raise Exception('{} status code recieved'.format(code))
+            raise self.HTTPStatusException('{} status code recieved'.format(code))
 
     def join_room(self, room_name):
         endpoint = '{}rooms'.format(self.gitter_host)
@@ -69,3 +69,15 @@ class Gitter(OutputAdapter):
     def process_response(self, statement, confidence=None):
         self.send_message(statement.text)
         return statement
+
+    class HTTPStatusException(Exception):
+        """
+        Exception raised when unexpected non-success HTTP
+        status codes are returned in a response.
+        """
+
+        def __init__(self, value):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
