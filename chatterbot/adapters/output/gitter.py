@@ -1,6 +1,5 @@
 from chatterbot.adapters.output import OutputAdapter
 import requests
-import json
 
 
 class Gitter(OutputAdapter):
@@ -38,9 +37,7 @@ class Gitter(OutputAdapter):
         response = requests.post(
             endpoint,
             headers=self.headers,
-            data=json.dumps({
-                'uri': room_name
-            })
+            json={'uri': room_name}
         )
         self.logger.info(u'{} status joining room {}'.format(
             response.status_code, endpoint
@@ -56,9 +53,7 @@ class Gitter(OutputAdapter):
         response = requests.post(
             endpoint,
             headers=self.headers,
-            data=json.dumps({
-                'text': text
-            })
+            json={'text': text}
         )
         self.logger.info(u'{} sending message to {}'.format(
             response.status_code, endpoint

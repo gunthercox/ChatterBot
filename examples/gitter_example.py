@@ -1,11 +1,17 @@
 from chatterbot import ChatBot
 from settings import GITTER
+import logging
+
+
+# Uncomment the following line to enable verbose logging
+# logging.basicConfig(level=logging.INFO)
 
 
 chatbot = ChatBot(
     'GitterBot',
     gitter_room=GITTER['ROOM'],
     gitter_api_token=GITTER['API_TOKEN'],
+    gitter_only_respond_to_mentions=False,
     input_adapter='chatterbot.adapters.input.Gitter',
     output_adapter='chatterbot.adapters.output.Gitter',
     trainer='chatterbot.trainers.ChatterBotCorpusTrainer'

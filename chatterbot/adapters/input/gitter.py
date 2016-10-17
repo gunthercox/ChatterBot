@@ -2,7 +2,6 @@ from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
 from time import sleep
 import requests
-import json
 
 
 class Gitter(InputAdapter):
@@ -46,9 +45,7 @@ class Gitter(InputAdapter):
         response = requests.post(
             endpoint,
             headers=self.headers,
-            data=json.dumps({
-                'uri': room_name
-            })
+            json={'uri': room_name}
         )
         self.logger.info(u'{} joining room {}'.format(
             response.status_code, endpoint
@@ -73,9 +70,7 @@ class Gitter(InputAdapter):
         response = requests.post(
             endpoint,
             headers=self.headers,
-            data=json.dumps({
-                'chat': message_ids
-            })
+            json={'chat': message_ids}
         )
         self.logger.info(u'{} marking messages as read {}'.format(
             response.status_code, endpoint
