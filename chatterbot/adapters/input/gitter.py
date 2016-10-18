@@ -2,7 +2,6 @@ from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
 from time import sleep
 import requests
-import json
 
 
 class Gitter(InputAdapter):
@@ -18,6 +17,7 @@ class Gitter(InputAdapter):
         self.gitter_room = kwargs.get('gitter_room')
         self.gitter_api_token = kwargs.get('gitter_api_token')
         self.only_respond_to_mentions = kwargs.get('gitter_only_respond_to_mentions', True)
+        self.sleep_time = kwargs.get('gitter_sleep_time', 4)
 
         authorization_header = 'Bearer {}'.format(self.gitter_api_token)
 
@@ -35,15 +35,22 @@ class Gitter(InputAdapter):
         self.user_id = user_data[0].get('id')
         self.username = user_data[0].get('username')
 
+    def _validate_status_code(self, response):
+        code = response.status_code
+        if code not in [200, 201]:
+            raise self.HTTPStatusException('{} status code recieved'.format(code))
+
     def join_room(self, room_name):
         endpoint = '{}rooms'.format(self.gitter_host)
         response = requests.post(
             endpoint,
             headers=self.headers,
-            data=json.dumps({
-                'uri': room_name
-            })
+            json={'uri': room_name}
         )
+        self.logger.info(u'{} joining room {}'.format(
+            response.status_code, endpoint
+        ))
+        self._validate_status_code(response)
         return response.json()
 
     def get_user_data(self):
@@ -52,6 +59,10 @@ class Gitter(InputAdapter):
             endpoint,
             headers=self.headers
         )
+        self.logger.info(u'{} retrieving user data {}'.format(
+            response.status_code, endpoint
+        ))
+        self._validate_status_code(response)
         return response.json()
 
     def mark_messages_as_read(self, message_ids):
@@ -59,10 +70,13 @@ class Gitter(InputAdapter):
         response = requests.post(
             endpoint,
             headers=self.headers,
-            data=json.dumps({
-                'chat': message_ids
-            })
+            json={'chat': message_ids}
         )
+        self.logger.info(u'{} marking messages as read {}'.format(
+            response.status_code, endpoint
+        ))
+        self._validate_status_code(response)
+        return response.json()
 
     def get_most_recent_message(self):
         endpoint = '{}rooms/{}/chatMessages?limit=1'.format(self.gitter_host, self.room_id)
@@ -70,6 +84,10 @@ class Gitter(InputAdapter):
             endpoint,
             headers=self.headers
         )
+        self.logger.info(u'{} getting most recent message'.format(
+            response.status_code
+        ))
+        self._validate_status_code(response)
         data = response.json()
         if data:
             return data[0]
@@ -113,9 +131,22 @@ class Gitter(InputAdapter):
             if self.should_respond(data):
                 self.mark_messages_as_read([data['id']])
                 new_message = True
-            sleep(3.5)
+            self.logger.info(u'')
+            sleep(self.sleep_time)
 
         text = self.remove_mentions(data['text'])
         statement = Statement(text)
 
         return statement
+
+    class HTTPStatusException(Exception):
+        """
+        Exception raised when unexpected non-success HTTP
+        status codes are returned in a response.
+        """
+
+        def __init__(self, value):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
