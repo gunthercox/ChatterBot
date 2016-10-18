@@ -99,7 +99,7 @@ data files. You may choose to do this if you want to train your
 chat bot from a data source in a format that is not directly supported
 by ChatterBot.
 
-Your custom trainer should `chatterbot.trainers.Trainer` class.
+Your custom trainer should inherit `chatterbot.trainers.Trainer` class.
 Your trainer will need to have a method named `train`, that can take any
 parameters you choose.
 
