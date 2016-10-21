@@ -2,16 +2,6 @@
 ChatterBot Tutorial
 ===================
 
-Installing ChatterBot
-=====================
-
-The recommended method for installing ChatterBot is by using `pip`_.
-To install ChatterBot using pip run the following command in your terminal.
-
-.. code-block:: bash
-
-   pip install chatterbot
-
 Creating your first chat bot
 ============================
 
@@ -136,5 +126,3 @@ This concludes this ChatterBot tutorial. Please see other sections of the
 documentation for more details and examples.
 
 Next: See :doc:`./examples`
-
-.. _pip: https://pip.pypa.io/en/stable/installing/

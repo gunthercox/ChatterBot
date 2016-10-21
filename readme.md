@@ -82,6 +82,12 @@ chatbot.train("chatterbot.corpus.english.conversations")
 View the [documentation](http://chatterbot.readthedocs.io/)
 for ChatterBot on Read the Docs.
 
+To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
+
+```
+sphinx-build -b html docs/ build/
+```
+
 # Examples
 
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
