@@ -1,0 +1,4 @@
+/* Alternate the background color of the output rows */
+.list-group-item:nth-child(even) {
+    background-color: #eee;
+}
