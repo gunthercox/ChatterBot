@@ -9,6 +9,13 @@ See the `nose documentation`_ for more information.
 
    nosetests
 
+Note that nose also allows you to specify individual test cases to run.
+For example, the following command will run all tests in the test-module `tests/logic_adapter_tests`
+
+.. sourcecode:: sh
+
+   nosetests tests/logic_adapter_tests
+
 Tests for Django integration have been included in the example Django app and
 can be run with:
 

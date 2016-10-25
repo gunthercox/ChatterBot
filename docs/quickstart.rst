@@ -1,6 +1,6 @@
-===========
-Quick Start
-===========
+=================
+Quick Start Guide
+=================
 
 Create a new chat bot
 =====================

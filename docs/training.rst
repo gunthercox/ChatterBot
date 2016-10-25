@@ -99,7 +99,7 @@ data files. You may choose to do this if you want to train your
 chat bot from a data source in a format that is not directly supported
 by ChatterBot.
 
-Your custom trainer should `chatterbot.trainers.Trainer` class.
+Your custom trainer should inherit `chatterbot.trainers.Trainer` class.
 Your trainer will need to have a method named `train`, that can take any
 parameters you choose.
 
@@ -118,7 +118,9 @@ This is because each corpus is just a sample of various input statements and the
 
 To explore what languages and sets of corpora are available, check out the `chatterbot/corpus/data`_ directory in the repository.
 
-If you are interested in contributing a new language corpus, or adding a module to an existing language, please create a pull request. Contributions are welcomed!
+.. note::
+   If you are interested in contributing a new language corpus, or adding content to an existing language in the corpus,
+   please feel free to submit a pull request on ChatterBot's GitHub page. Contributions are welcomed!
 
 Exporting your chat bot's database as a training corpus
 =======================================================
