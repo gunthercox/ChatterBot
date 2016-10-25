@@ -25,7 +25,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
     def post(self, request, *args, **kwargs):
         if request.is_ajax():
-            data = json.loads(request.body)
+            data = json.loads(request.read().decode('utf-8'))
             input_statement = data.get('text')
         else:
             input_statement = request.POST.get('text')
