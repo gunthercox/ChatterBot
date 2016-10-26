@@ -1,7 +1,7 @@
 from nltk.corpus import wordnet
 
 
-class Wordnet():
+class Wordnet(object):
     """
     A custom-implementation of Wordnet. Not many
     features are supported at the moment, only:
