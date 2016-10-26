@@ -1,43 +1,62 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
-
 from chatterbot.utils.clean import clean_whitespace
 from chatterbot.utils.clean import clean
 from chatterbot.utils.module_loading import import_module
-from chatterbot.utils.pos_tagger import POSTagger
-from chatterbot.utils.stop_words import StopWordsManager
-from chatterbot.utils.word_net import Wordnet
 
 
 class UtilityTests(TestCase):
 
     def test_import_module(self):
-        datetime = import_module("datetime.datetime")
+        datetime = import_module('datetime.datetime')
         self.assertTrue(hasattr(datetime, 'now'))
 
 
-class LanguageUtilityTests(TestCase):
+class TokenizerTestCase(TestCase):
 
-    def test_pos_tagger_tokenize(self):
-        pos_tagger = POSTagger()
-        tokens = pos_tagger.tokenize("what time is it")
+    def setUp(self):
+        super(TokenizerTestCase, self).setUp()
+        from chatterbot.utils.tokenizer import Tokenizer
 
+        self.tokenizer = Tokenizer()
+
+    def test_get_tokens(self):
+        tokens = self.tokenizer.get_tokens('what time is it', exclude_stop_words=False)
         self.assertEqual(tokens, ['what', 'time', 'is', 'it'])
 
-    def test_remove_stop_words(self):
-        stopwords_manager = StopWordsManager()
+    def test_get_tokens_exclude_stop_words(self):
+        tokens = self.tokenizer.get_tokens('what time is it', exclude_stop_words=True)
+        self.assertEqual(tokens, {'time'})
 
+
+class StopWordsTestCase(TestCase):
+
+    def setUp(self):
+        super(StopWordsTestCase, self).setUp()
+        from chatterbot.utils.stop_words import StopWordsManager
+
+        self.stopwords_manager = StopWordsManager()
+
+    def test_remove_stop_words(self):
         tokens = ['this', 'is', 'a', 'test', 'string']
-        words = stopwords_manager.remove_stopwords('english', tokens)
+        words = self.stopwords_manager.remove_stopwords('english', tokens)
 
         # This example list of words should end up with only two elements
         self.assertEqual(len(words), 2)
         self.assertIn('test', list(words))
         self.assertIn('string', list(words))
 
-    def test_word_net(self):
-        wordnet = Wordnet()
-        synsets = wordnet.synsets('test')
+
+class WordnetTestCase(TestCase):
+
+    def setUp(self):
+        super(WordnetTestCase, self).setUp()
+        from chatterbot.utils.wordnet import Wordnet
+
+        self.wordnet = Wordnet()
+
+    def test_wordnet(self):
+        synsets = self.wordnet.synsets('test')
 
         self.assertEqual(
             0.06666666666666667,

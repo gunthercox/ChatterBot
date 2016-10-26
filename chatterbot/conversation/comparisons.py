@@ -1,4 +1,13 @@
+"""
+This module contains various text-comparison algorithms
+designed to compare one statement to another.
+"""
+
 def levenshtein_distance(statement, other_statement):
+    """
+    Compare two statements based on the Levenshtein distance
+    (fuzzy string comparison) of each statement's text.
+    """
     from fuzzywuzzy import fuzz
 
     return fuzz.ratio(statement.text.lower(), other_statement.text.lower())
@@ -7,38 +16,18 @@ def levenshtein_distance(statement, other_statement):
 def synset_distance(statement, other_statement):
     """
     Calculate the similarity of two statements.
-    This is based on the total similarity between
-    each word in each sentence.
+    This is based on the total maximum synset similarity
+    between each word in each sentence.
     """
-    from chatterbot.utils.pos_tagger import POSTagger
-    from chatterbot.utils.stop_words import StopWordsManager
-    from chatterbot.utils.word_net import Wordnet
+    from chatterbot.utils.wordnet import Wordnet
+    from chatterbot.utils.tokenizer import Tokenizer
     import itertools
 
     wordnet = Wordnet()
-    tagger = POSTagger()
-    stopwords = StopWordsManager()
+    tokenizer = Tokenizer()
 
-    def get_tokens(text, exclude_stop_words=True):
-        """
-        Takes a string and converts it to a tuple
-        of each word. Skips common stop words such
-        as ("is, the, a, ...") is 'exclude_stop_words'
-        is True.
-        """
-        lower = text.lower()
-        tokens = tagger.tokenize(lower)
-
-        # Remove any stop words from the string
-        if exclude_stop_words:
-            excluded_words = stopwords.words('english')
-
-            tokens = set(tokens) - set(excluded_words)
-
-        return tokens
-
-    tokens1 = get_tokens(statement.text)
-    tokens2 = get_tokens(other_statement.text)
+    tokens1 = tokenizer.get_tokens(statement.text)
+    tokens2 = tokenizer.get_tokens(other_statement.text)
 
     total_similarity = 0
 
@@ -89,7 +78,6 @@ def jaccard_similarity(a, b, threshold=0.5):
     Given our threshold above, we would consider this to be  a match
     """
     from nltk.corpus import wordnet
-    import nltk.corpus
     import nltk
     import string
 
