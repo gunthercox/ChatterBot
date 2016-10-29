@@ -1,22 +1,13 @@
-from chatterbot.adapters.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from textblob import TextBlob
-from .mixins import TieBreaking
+from .base_match import BaseMatchAdapter
 
 
-class SentimentAdapter(TieBreaking, LogicAdapter):
+class SentimentAdapter(BaseMatchAdapter):
     """
     This adapter selects a response with the closest
     matching sentiment value to the input statement.
     """
-
-    def __init__(self, **kwargs):
-        super(SentimentAdapter, self).__init__(**kwargs)
-
-        self.tie_breaking_method = kwargs.get(
-            'tie_breaking_method',
-            'first_response'
-        )
 
     def calculate_closeness(self, input_sentiment, response_sentiment):
         """
@@ -64,6 +55,6 @@ class SentimentAdapter(TieBreaking, LogicAdapter):
         )
 
         # Choose a response from the selection
-        response_statement = self.break_tie(input_statement, response_list, self.tie_breaking_method)
+        response_statement = self.select_response(input_statement, response_list)
 
         return confidence, response_statement
