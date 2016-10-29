@@ -11,10 +11,6 @@ import logging
 class ChatBot(object):
 
     def __init__(self, name, **kwargs):
-        """
-        :param name: The name of your chat bot.
-        :type name: str
-        """
         self.name = name
         kwargs['name'] = name
 
@@ -235,7 +231,7 @@ class ChatBot(object):
         :param training_class: The training class to use for the chat bot.
         :type training_class: chatterbot.trainers.Trainer
 
-        :param **kwargs: Any parameters that should be passed to the training class.
+        :param \**kwargs: Any parameters that should be passed to the training class.
         """
         self.trainer = training_class(self.storage, **kwargs)
 

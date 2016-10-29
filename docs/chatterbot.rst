@@ -11,96 +11,72 @@ user.
 .. autoclass:: chatterbot.ChatBot
    :members:
 
-Parameters
-==========
+   :param name: A name is the only required parameter for the ChatBot class.
+   :type name: str
 
-name
-----
+   :param storage_adapter: The import path to a storage adapter class.
+   :type storage_adapter: str
 
-A name is the only required parameter for the ChatBot class.
-This should be a string representing the name of your chat bot.
+   :param logic_adapters: A list of string paths to each logic adapter the bot uses.
+   :type logic_adapters: list
 
-.. code-block:: python
+   :param input_adapter: The import path to an input adapter class.
+   :type input_adapter: str
 
-   ChatBot('Northumberland')
+   :param output_adapter: The import path to an output adapter class.
+   :type output_adapter: str
 
-storage_adapter
----------------
+   :param trainer: The import path to the training class to be used with the chat bot.
+   :type trainer: str
 
-.. code-block:: python
+   :param filters: A list of import paths to filter classes to be used by the chat bot.
+   :type filters: list
 
-   ChatBot(
-       # ...
-       storage_adapter='my.storage.AdapterClass'
-   )
+   :param logger: A :code:`Logger` object.
+   :type logger: logging.Logger
 
-See the documentation on storage adapters for more information.
-
-logic_adapters
---------------
-
-.. code-block:: python
-
-   ChatBot(
-       # ...
-       storage_adapter='my.logic.AdapterClass'
-   )
-
-See the documentation on logic adapters for more information.
-
-input_adapter
--------------
+Example chat bot parameters
+===========================
 
 .. code-block:: python
 
    ChatBot(
-       # ...
-       storage_adapter='my.input.AdapterClass'
-   )
-
-See the documentation on input adapters for more information.
-
-output_adapter
---------------
-
-.. code-block:: python
-
-   ChatBot(
-       # ...
-       storage_adapter='my.output.AdapterClass'
-   )
-
-See the documentation on output adapters for more information.
-
-filters
--------
-
-.. code-block:: python
-
-   ChatBot(
-       # ...
+       'Northumberland',
+       storage_adapter='my.storage.AdapterClass',
+       logic_adapters=[
+           'my.logic.AdapterClass1',
+           'my.logic.AdapterClass2'
+       ],
+       input_adapter='my.input.AdapterClass',
+       output_adapter='my.output.AdapterClass',
+       trainer='my.trainer.TrainerClass',
        filters=[
            'my.filter.FilterClass1',
            'my.filter.FilterClass2'
-       ]
+       ],
+       logger=custom_logger
    )
 
-See the documentation on filters for more information.
 
-trainer
--------
+Enable logging
+==============
+
+ChatterBot has built in logging. You can enable ChatterBot's
+logging by setting the logging level at the top of your python code.
 
 .. code-block:: python
 
+   import logging
+
+   logging.basicConfig(level=logging.INFO)
+
    ChatBot(
        # ...
-       trainer='my.trainer.TrainerClass'
    )
 
-See the documentation on training for more information.
 
-logger
-------
+Using a custom logger
+=====================
 
 You can choose to use your own custom logging class with your chat bot.
 This can be useful when testing and debugging your code.
@@ -115,17 +91,3 @@ This can be useful when testing and debugging your code.
        # ...
        logger=custom_logger
    )
-
-Note that ChatterBot has built in info-level logging. You can enable ChatterBot's
-logging by setting the logging level to INFO at the top of your python code.
-
-.. code-block:: python
-
-   import logging
-
-   logging.basicConfig(level=logging.INFO)
-
-   ChatBot(
-       # ...
-   )
-
