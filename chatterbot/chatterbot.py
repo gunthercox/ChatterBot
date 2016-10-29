@@ -184,8 +184,7 @@ class ChatBot(object):
         :returns: A response to the input.
         :rtype: Statement
         """
-        input_statement = self.input.process_input(input_item)
-        self.logger.info(u'Recieved input statement: {}'.format(input_statement.text))
+        input_statement = self.input.process_input_statement(input_item)
 
         statement, response, confidence = self.generate_response(input_statement)
 
@@ -204,14 +203,6 @@ class ChatBot(object):
         Return a response based on a given input statement.
         """
         self.storage.generate_base_query(self)
-
-        existing_statement = self.storage.find(input_statement.text)
-
-        if existing_statement:
-            self.logger.info(u'"{}" is a known statement'.format(input_statement.text))
-            input_statement = existing_statement
-        else:
-            self.logger.info(u'"{}" is not a known statement'.format(input_statement.text))
 
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
