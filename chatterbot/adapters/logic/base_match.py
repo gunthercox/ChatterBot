@@ -1,27 +1,12 @@
 # -*- coding: utf-8 -*-
 from .logic_adapter import LogicAdapter
-from .mixins import TieBreaking
 
 
-class BaseMatchAdapter(TieBreaking, LogicAdapter):
+class BaseMatchAdapter(LogicAdapter):
     """
     This is a parent class used by the ClosestMatch and
     ClosestMeaning adapters.
     """
-
-    def __init__(self, **kwargs):
-        super(BaseMatchAdapter, self).__init__(**kwargs)
-        from chatterbot.conversation.comparisons import levenshtein_distance
-
-        self.tie_breaking_method = kwargs.get(
-            "tie_breaking_method",
-            "first_response"
-        )
-
-        self.compare_statements = kwargs.get(
-            'statement_comparison_function',
-            levenshtein_distance
-        )
 
     @property
     def has_storage_context(self):
@@ -39,9 +24,8 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
 
     def can_process(self, statement):
         """
-        Override the can_process method to check if the
-        storage context is available and there is at least
-        one statement in the database.
+        Check that the storage context is available and there
+        is at least one statement in the database.
         """
         return self.has_storage_context and self.context.storage.count()
 
@@ -63,21 +47,21 @@ class BaseMatchAdapter(TieBreaking, LogicAdapter):
 
         if response_list:
             self.logger.info(
-                u'Breaking tie between {} optimal responses.'.format(
+                u'Selecting response from {} optimal responses.'.format(
                     len(response_list)
                 )
             )
-            response = self.break_tie(input_statement, response_list, self.tie_breaking_method)
-            self.logger.info(u'Tie broken. Using "{}"'.format(response.text))
+            response = self.select_response(input_statement, response_list)
+            self.logger.info(u'Response selected. Using "{}"'.format(response.text))
         else:
             response = self.context.storage.get_random()
             self.logger.info(
-                u'No response to "{}" found. Using a random response.'.format(
+                u'No response to "{}" found. Selecting a random response.'.format(
                     closest_match.text
                 )
             )
 
-            # Set confidence to zero if a random response is selected
+            # Set confidence to zero because a random response is selected
             confidence = 0
 
         return confidence, response

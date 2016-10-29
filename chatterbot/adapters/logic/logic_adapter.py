@@ -7,6 +7,23 @@ class LogicAdapter(Adapter):
     that all logic adapters should implement.
     """
 
+    def __init__(self, **kwargs):
+        super(LogicAdapter, self).__init__(**kwargs)
+        from chatterbot.conversation.comparisons import levenshtein_distance
+        from chatterbot.conversation.response_selection import get_first_response
+
+        # By default, compare statements using Levenshtein distance
+        self.compare_statements = kwargs.get(
+            'statement_comparison_function',
+            levenshtein_distance
+        )
+
+        # By default, select the first available response
+        self.select_response = kwargs.get(
+            'response_selection_method',
+            get_first_response
+        )
+
     def can_process(self, statement):
         """
         A preliminary check that is called to determine if a
