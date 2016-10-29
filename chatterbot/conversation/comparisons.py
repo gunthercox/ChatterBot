@@ -7,6 +7,9 @@ def levenshtein_distance(statement, other_statement):
     """
     Compare two statements based on the Levenshtein distance
     (fuzzy string comparison) of each statement's text.
+
+    :return: The ratio of difference between the text of the statements.
+    :rtype: float
     """
     from fuzzywuzzy import fuzz
 
@@ -18,6 +21,9 @@ def synset_distance(statement, other_statement):
     Calculate the similarity of two statements.
     This is based on the total maximum synset similarity
     between each word in each sentence.
+
+    :return: The ratio of difference between the synset distance of both statements.
+    :rtype: float
     """
     from chatterbot.utils.wordnet import Wordnet
     from chatterbot.utils.tokenizer import Tokenizer
@@ -54,9 +60,7 @@ def synset_distance(statement, other_statement):
     return total_similarity
 
 
-def jaccard_similarity(a, b, threshold=0.5):
-    a = a.text
-    b = b.text
+def jaccard_similarity(statement, other_statement, threshold=0.5):
     """
     The Jaccard index is composed of a numerator and denominator.
     In the numerator, we count the number of items that are shared between the sets.
@@ -75,11 +79,14 @@ def jaccard_similarity(a, b, threshold=0.5):
     In our example above, our intersection is {cat, hungry}, which has count of two.
     The union of the sets is {young, cat, very, hungry}, which has a count of four.
     Therefore, our Jaccard similarity index is two divided by four, or 50%.
-    Given our threshold above, we would consider this to be  a match
+    Given our threshold above, we would consider this to be  a match.
     """
     from nltk.corpus import wordnet
     import nltk
     import string
+
+    a = statement.text
+    b = other_statement.text
 
     # Get default English stopwords and extend with punctuation
     stopwords = nltk.corpus.stopwords.words('english')

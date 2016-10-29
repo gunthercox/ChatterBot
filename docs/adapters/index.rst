@@ -13,6 +13,7 @@ these are storage adapters, input adapters, output adapters and logic adapters.
    logic
    create_a_logic_adapter
    response_selection
+   statement_comparison
    input
    output
 
