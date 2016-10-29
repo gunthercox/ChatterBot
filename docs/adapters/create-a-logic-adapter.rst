@@ -2,10 +2,13 @@ Creating a new logic adapter
 ============================
 
 You can write your own logic adapters by creating a new class that
-inherits from `LogicAdapter` and overides the overrides necessary
-methods established in the base `LogicAdapter` class.
+inherits from :code:`LogicAdapter` and overides the overrides necessary
+methods established in the base :code:`LogicAdapter` class.
 
 .. autofunction:: chatterbot.adapters.logic.LogicAdapter
+
+Example logic adapter
+---------------------
 
 .. code-block:: python
 
@@ -21,8 +24,11 @@ methods established in the base `LogicAdapter` class.
        def process(self, statement):
            return confidence, selected_statement
 
-LogicAdapter: process
+Logic adapter methods
 ---------------------
+
+.. autoclass:: chatterbot.adapters.logic.LogicAdapter
+   :members: process
 
 This method is where you must implement your logic for selecting a response to
 an input statement.
