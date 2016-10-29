@@ -12,7 +12,7 @@ these are storage adapters, input adapters, output adapters and logic adapters.
    storage
    logic
    create_a_logic_adapter
-   tie_breaking_method_mixins
+   response_selection
    input
    output
 
