@@ -11,6 +11,10 @@ import logging
 class ChatBot(object):
 
     def __init__(self, name, **kwargs):
+        """
+        :param name: The name of your chat bot.
+        :type name: str
+        """
         self.name = name
         kwargs['name'] = name
 
@@ -177,19 +181,34 @@ class ChatBot(object):
         Return the bot's response based on the input.
 
         :param input_item: An input value.
-        :returns: Statement -- the response to the input.
+        :returns: A response to the input.
+        :rtype: Statement
         """
         input_statement = self.input.process_input(input_item)
         self.logger.info(u'Recieved input statement: {}'.format(input_statement.text))
 
+        statement, response, confidence = self.generate_response(input_statement)
+
+        # Learn that the user's input was a valid response to the chat bot's previous output
+        self.learn_response(statement)
+
+        self.recent_statements.append(
+            (statement, response, )
+        )
+
+        # Process the response output with the output adapter
+        return self.output.process_response(response, confidence)
+
+    def generate_response(self, input_statement):
+        """
+        Return a response based on a given input statement.
+        """
         self.storage.generate_base_query(self)
 
         existing_statement = self.storage.find(input_statement.text)
 
         if existing_statement:
             self.logger.info(u'"{}" is a known statement'.format(input_statement.text))
-            if input_statement.extra_data:
-                existing_statement.extra_data.update(input_statement.extra_data)
             input_statement = existing_statement
         else:
             self.logger.info(u'"{}" is not a known statement'.format(input_statement.text))
@@ -198,33 +217,34 @@ class ChatBot(object):
         confidence, response = self.logic.process(input_statement)
         self.logger.info(u'Selecting "{}" as response with a confidence of {}'.format(response.text, confidence))
 
-        if input_statement.extra_data:
-            response.extra_data.update(input_statement.extra_data)
+        return input_statement, response, confidence
 
+    def learn_response(self, statement):
+        """
+        Learn that the statement provided is a valid response.
+        """
         previous_statement = self.get_last_response_statement()
 
         if previous_statement:
-            input_statement.add_response(
+            statement.add_response(
                 Response(previous_statement.text)
             )
-            self.logger.info(u'Adding the previous statement "{}" as response to "{}"'.format(
-                previous_statement.text,
-                input_statement.text
+            self.logger.info(u'Adding "{}" as a response to "{}"'.format(
+                statement.text,
+                previous_statement.text
             ))
 
         # Update the database after selecting a response
-        self.storage.update(input_statement)
-
-        self.recent_statements.append(
-            (input_statement, response, )
-        )
-
-        # Process the response output with the output adapter
-        return self.output.process_response(response, confidence)
+        self.storage.update(statement)
 
     def set_trainer(self, training_class, **kwargs):
         """
         Set the module used to train the chatbot.
+
+        :param training_class: The training class to use for the chat bot.
+        :type training_class: chatterbot.trainers.Trainer
+
+        :param **kwargs: Any parameters that should be passed to the training class.
         """
         self.trainer = training_class(self.storage, **kwargs)
 
