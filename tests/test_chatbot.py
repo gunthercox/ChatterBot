@@ -149,6 +149,20 @@ class ChatterBotResponseTests(ChatBotTestCase):
         self.assertIn("test", saved_statement.extra_data)
         self.assertEqual(1, saved_statement.extra_data["test"])
 
+    def test_generate_response(self):
+        statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
+        input_statement, response, confidence = self.chatbot.generate_response(statement)
+
+        self.assertEqual(input_statement, statement)
+        self.assertEqual(response, statement)
+        self.assertEqual(confidence, 1)
+
+    def test_learn_response(self):
+        statement = Statement('Hemoglobin is an oxygen-transport metalloprotein.')
+        self.chatbot.learn_response(statement)
+        exists = self.chatbot.storage.find(statement.text)
+
+        self.assertIsNotNone(exists)
 
 class ChatBotConfigFileTestCase(ChatBotTestCase):
 
