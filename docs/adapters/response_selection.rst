@@ -35,6 +35,7 @@ is shown bellow.
    from chatterbot.conversation.response_selection import get_most_frequent_response
 
    chatbot = ChatBot(
+       # ...
        response_selection_method=get_most_frequent_response
    )
 
