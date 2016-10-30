@@ -1,104 +1,104 @@
 {
-    "greetings": [
-        [
-            "Hallo",
-            "Hi"
-        ],
-        [
-            "Hi",
-            "Hallo"
-        ],
-        [
-            "Guten Morgen!",
-            "Hallo"
-        ],
-        [
-            "Hallo",
-            "Guten Tag!!"
-        ],
-        [
-            "Hi, wie geht es dir?",
-            "Mir geht es gut"
-        ],
-        [
-            "Hi, wie geht es dir?",
-            "Ganz okay"
-        ],
-        [
-            "Hi, wie geht es dir?",
-            "Super"
-        ],
-        [
-            "Hi, wie geht es dir?",
-            "Großartig"
-        ],
-        [
-            "Hi, wie geht es dir?",
-            "Könnte besser sein."
-        ],
-        [
-            "Hi, wie geht es dir?",
-            "Nicht so gut."
-        ],
-        [
-            "Wie geht es dir?",
-            "Gut."
-        ],
-        [
-            "Wie geht es dir?",
-            "ganz gut, danke."
-        ],
-        [
-            "How are you doing?",
-            "Fine, and you?"
-        ],
-        [
-            "Nice to meet you.",
-            "Thank you."
-        ],
-        [
-            "How do you do?",
-            "I'm doing well."
-        ],
-        [
-            "How do you do?",
-            "I'm doing well. How are you?"
-        ],
-        [
-            "Hi, nice to meet you.",
-            "Thank you. You too."
-        ],
-        [
-            "It is a pleasure to meet you.",
-            "Thank you. You too."
-        ],
-        [
-            "Top of the morning to you!",
-            "Thank you kindly."
-        ],
-        [
-            "Top of the morning to you!",
-            "And the rest of the day to you."
-        ],
-        [
-            "What's up?",
-            "Not much."
-        ],
-        [
-            "What's up?",
-            "Not too much."
-        ],
-        [
-            "What's up?",
-            "Not much, how about you?"
-        ],
-        [
-            "What's up?",
-            "Nothing much."
-        ],
-        [
-            "What's up?",
-            "The sky's up but I'm fine thanks. What about you?"
-        ]
+  "greetings": [
+    [
+      "Hallo",
+      "Hi"
+    ],
+    [
+      "Hi",
+      "Hallo"
+    ],
+    [
+      "Guten Morgen!",
+      "Hallo"
+    ],
+    [
+      "Hallo",
+      "Guten Tag!!"
+    ],
+    [
+      "Hi, wie geht es dir?",
+      "Mir geht es gut"
+    ],
+    [
+      "Hi, wie geht es dir?",
+      "Ganz okay"
+    ],
+    [
+      "Hi, wie geht es dir?",
+      "Super"
+    ],
+    [
+      "Hi, wie geht es dir?",
+      "Großartig"
+    ],
+    [
+      "Hi, wie geht es dir?",
+      "Könnte besser sein"
+    ],
+    [
+      "Hi, wie geht es dir?",
+      "Nicht so gut"
+    ],
+    [
+      "Wie geht es dir?",
+      "Gut"
+    ],
+    [
+      "Wie geht es dir?",
+      "Ganz gut, danke"
+    ],
+    [
+      "Wie geht es dir?",
+      "Gut, und dir?"
+    ],
+    [
+      "Schön dich zu sehen",
+      "Dankeschön."
+    ],
+    [
+      "Wie gehts?",
+      "Geht ganz gut"
+    ],
+    [
+      "Wie gehts?",
+      "Mir gehts gut. Wie geht es dir?"
+    ],
+    [
+      "Hi, schön dich zu treffen",
+      "Danke, gleichfalls."
+    ],
+    [
+      "Es ist eine Freude dich zu sehen",
+      "Dankeschö, freut mich auch"
+    ],
+    [
+      "Guten Morgen!",
+      "Danke dir"
+    ],
+    [
+      "Guten Morgen!",
+      "Guten Morgen!."
+    ],
+    [
+      "Was geht?",
+      "Nicht so viel"
+    ],
+    [
+      "Was geht?",
+      "Nicht wirklich viel"
+    ],
+    [
+      "Was geht?",
+      "Nicht viel, und bei dir?"
+    ],
+    [
+      "Was geht?",
+      "Nichts"
+    ],
+    [
+      "Was geht",
+      "Die Sonne scheint und mir geht es gut. Wie sieht es mit dir aus?"
     ]
+  ]
 }
