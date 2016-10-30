@@ -93,19 +93,3 @@ Access token key of twitter app.
 twitter_access_token_secret
 ---------------------------
 Access token secret of twitter app.
-
-Creating a new storage adapter
-==============================
-
-It is fairly easy to write your own storage adapter to connect to just about
-any database or storage endpoint. To get started, you will need to create a
-new class that inherits from `StorageAdapter` which is located in
-`chatterbot.adapters.storage`.
-
-.. autofunction:: chatterbot.adapters.storage.StorageAdapter
-
-You will then need to implement the interface established by the `StorageAdapter` class.
-
-.. literalinclude:: ../../chatterbot/adapters/storage/storage_adapter.py
-   :language: python
-

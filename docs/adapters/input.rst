@@ -85,23 +85,6 @@ Speech recognition
 Check out the `chatterbot-voice`_ package for more information on how to make
 your chat bot interact verbally with others.
 
-Creating your own input adapter
-===============================
-
-.. autofunction:: chatterbot.adapters.input.InputAdapter
-
-To create your own input adapter you must create a new class that
-inherits from the InputAdapter base class and you must override
-the `process_input` method to return a :ref:`Statement <conversation_statements>` object.
-
-Note that you may need to extend the `__init__` method of your custom input
-adapter if you intend to save a kwarg parameter that was passed into
-the chat bot's constructor.
-(An API key might be an example of a parameter you would want to access here.)
-
-.. literalinclude:: ../../chatterbot/adapters/input/input_adapter.py
-   :language: python
-
 .. _strings: https://docs.python.org/2/library/string.html
 .. _dictionaries: https://docs.python.org/2/tutorial/datastructures.html#dictionaries
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice

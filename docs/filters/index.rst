@@ -9,15 +9,19 @@ Filters are an efficient way to create base queries that can be passed to Chatte
 
    create_a_new_filter
 
-Repetitive response filter
-==========================
 
-.. autofunction:: chatterbot.filters.RepetitiveResponseFilter
+Setting filters
+===============
 
 .. code-block:: python
 
    chatbot = ChatBot(
        "My ChatterBot",
-       filters="chatterbot.filters.RepetitiveResponseFilter"
+       filters=["chatterbot.filters.RepetitiveResponseFilter"]
    )
 
+Filter classes
+==============
+
+.. autoclass:: chatterbot.filters.RepetitiveResponseFilter
+   :members:

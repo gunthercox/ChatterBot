@@ -95,24 +95,5 @@ Check out the `chatterbot-voice`_ package for more information on how to make
 your chat bot interact verbally with others.
 
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
-
-Creating your own output adapter
-================================
-
-.. autofunction:: chatterbot.adapters.output.OutputAdapter
-
-To create your own output adapter you must create a new class that
-inherits from the OutputAdapter base class and you must override
-the `process_response` method to return a :ref:`Statement <conversation_statements>` object.
-
-Note that you may need to extend the `__init__` method of your custom output
-adapter if you intend to save a kwarg parameter that was passed into
-the chat bot's constructor.
-(An API key might be an example of a parameter you would want to access here.)
-
-.. literalinclude:: ../../chatterbot/adapters/output/output_adapter.py
-   :language: python
-
-.. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
 .. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
 .. _HipChat: https://www.hipchat.com/

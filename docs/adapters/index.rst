@@ -9,12 +9,15 @@ these are storage adapters, input adapters, output adapters and logic adapters.
 .. toctree::
    :maxdepth: 2
 
-   storage
    logic
-   create_a_logic_adapter
-   tie_breaking_method_mixins
+   response_selection
+   create-a-logic-adapter
+   storage
+   create-a-storage-adapter
    input
+   create-an-input-adapter
    output
+   create-an-output-adapter
 
 Adapters types
 --------------
