@@ -11,10 +11,19 @@ class StopWordsManager(object):
     def __init__(self):
         from nltk.data import find
         from nltk import download
+        import os
 
         # Download the stopwords data only if it is not already downloaded
+        stopwords_path = None
+        if os.name == 'nt':
+            stopwords_path = os.path.join(os.getenv('APPDATA'), 'nltk_data',
+                                                'corpora', 'stopwords.zip')
+        else:
+            stopwords_path = os.path.join(os.path.expanduser('~'), 'nltk_data',
+                                                'corpora', 'stopwords.zip')
         try:
-            find('stopwords.zip')
+            if not os.path.isfile(stopwords_path):
+                find('stopwords.zip')
         except LookupError:
             download('stopwords')
 
