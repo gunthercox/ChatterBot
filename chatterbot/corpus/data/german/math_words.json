@@ -1,0 +1,51 @@
+{
+  "numbers" : {
+    "eins" : 1,
+    "zwei" : 2,
+    "drei" : 3,
+    "vier" : 4,
+    "fünf" : 5,
+    "sechs" : 6,
+    "sieben" : 7,
+    "acht" : 8,
+    "neun" : 9,
+    "zehn" : 10,
+    "elf" : 11,
+    "zwölf" : 12,
+    "dreizehn" : 13,
+    "vierzehn" : 14,
+    "fünfzehn" : 15,
+    "sechszehn" : 16,
+    "siebzehn" : 17,
+    "achtzehn" : 18,
+    "neunzehn" : 19,
+    "zwanzig" : 20,
+    "dreißig" : 30,
+    "vierzig" : 40,
+    "fünfzig" : 50,
+    "sechzig" : 60,
+    "siebzig" : 70,
+    "achtzig" : 80,
+    "neunzig" : 90
+  },
+  "words": {
+    "plus": "+",
+    "geteilt durch": "/",
+    "geteilt": "/",
+    "minus": "-",
+    "mal": "*",
+    "multipliziert mit": "*",
+    "im Quadrat": "^ 2",
+    "hoch zwei": "^ 2",
+    "quadriert": "^ 2",
+    "hoch": "^"
+  },
+  "scales": {
+    "hundert": "* 100",
+    "tausend": "* 1000",
+    "hunderttausend": "* 100000",
+    "million": "* 1000000",
+    "milliarde": "* 1000000000",
+    "billion": "* 1000000000000"
+  }
+}
