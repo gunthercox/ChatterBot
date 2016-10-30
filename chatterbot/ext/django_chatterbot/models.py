@@ -2,7 +2,9 @@ from django.db import models
 
 
 class Statement(models.Model):
-    """A short (<255) chat message, tweet, forum post, etc"""
+    """
+    A short (<255) chat message, tweet, forum post, etc.
+    """
 
     text = models.CharField(
         unique=True,
@@ -10,6 +12,8 @@ class Statement(models.Model):
         null=False,
         max_length=255
     )
+
+    extra_data = models.CharField(max_length=500)
 
     def __str__(self):
         if len(self.text.strip()) > 60:
@@ -20,7 +24,8 @@ class Statement(models.Model):
 
 
 class Response(models.Model):
-    """Connection between a response and the statement that triggered it
+    """
+    Connection between a response and the statement that triggered it.
 
     Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
 
