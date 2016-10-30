@@ -10,12 +10,8 @@ class Statement(object):
 
     def __init__(self, text, **kwargs):
         self.text = text
-        self.in_response_to = kwargs.get("in_response_to", [])
-
-        self.extra_data = {}
-
-        if "in_response_to" in kwargs:
-            del(kwargs["in_response_to"])
+        self.in_response_to = kwargs.pop('in_response_to', [])
+        self.extra_data = kwargs.pop('extra_data', {})
 
         self.extra_data.update(kwargs)
 
@@ -23,7 +19,7 @@ class Statement(object):
         return self.text
 
     def __repr__(self):
-        return "<Statement text:%s>" % (self.text)
+        return '<Statement text:%s>' % (self.text)
 
     def __eq__(self, other):
         if not other:
@@ -89,12 +85,12 @@ class Statement(object):
         """
         data = {}
 
-        data["text"] = self.text
-        data["in_response_to"] = []
-        data.update(self.extra_data)
+        data['text'] = self.text
+        data['in_response_to'] = []
+        data['extra_data'] = self.extra_data
 
         for response in self.in_response_to:
-            data["in_response_to"].append(response.serialize())
+            data['in_response_to'].append(response.serialize())
 
         return data
 

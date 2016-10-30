@@ -9,6 +9,12 @@ class ChatterBotViewMixin(object):
 
     chatterbot = ChatBot(**settings.CHATTERBOT)
 
+    def validate(self, data):
+        from django.core.exceptions import ValidationError
+
+        if 'text' not in data:
+            raise ValidationError('The attribute "text" is required.')
+
 
 class ChatterBotView(ChatterBotViewMixin, View):
 
@@ -24,13 +30,15 @@ class ChatterBotView(ChatterBotViewMixin, View):
         return recent_statements
 
     def post(self, request, *args, **kwargs):
-        if request.is_ajax():
-            data = json.loads(request.read().decode('utf-8'))
-            input_statement = data.get('text')
-        else:
-            input_statement = request.POST.get('text')
 
-        response_data = self.chatterbot.get_response(input_statement)
+        if request.is_ajax():
+            input_data = json.loads(request.read().decode('utf-8'))
+        else:
+            input_data = json.loads(request.body.decode('utf-8'))
+
+        self.validate(input_data)
+
+        response_data = self.chatterbot.get_response(input_data)
 
         return JsonResponse(response_data, status=200)
 

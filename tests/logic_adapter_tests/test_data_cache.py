@@ -12,7 +12,7 @@ class DummyMutatorLogicAdapter(LogicAdapter):
     """
 
     def process(self, statement):
-        statement.add_extra_data("pos_tags", "NN")
+        statement.add_extra_data('pos_tags', 'NN')
 
         self.context.storage.update(statement)
 
@@ -30,8 +30,8 @@ class DataCachingTests(ChatBotTestCase):
         self.chatbot.set_trainer(ListTrainer)
 
         self.chatbot.train([
-            "Hello",
-            "How are you?"
+            'Hello',
+            'How are you?'
         ])
 
     def test_additional_attributes_saved(self):
@@ -39,13 +39,11 @@ class DataCachingTests(ChatBotTestCase):
         Test that an additional data attribute can be added to the statement
         and that this attribute is saved.
         """
-        response = self.chatbot.get_response("Hello")
-        found_statement = self.chatbot.storage.find("Hello")
+        response = self.chatbot.get_response('Hello')
+        found_statement = self.chatbot.storage.find('Hello')
+        data = found_statement.serialize()
 
         self.assertIsNotNone(found_statement)
-        self.assertIn("pos_tags", found_statement.serialize())
-        self.assertEqual(
-            "NN",
-            found_statement.serialize()["pos_tags"]
-        )
-
+        self.assertIn('extra_data', data)
+        self.assertIn('pos_tags', data['extra_data'])
+        self.assertEqual('NN', data['extra_data']['pos_tags'])

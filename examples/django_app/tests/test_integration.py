@@ -34,7 +34,8 @@ class ApiIntegrationTestCase(TestCase):
     def test_get_recent_statements(self):
         response = self.client.post(
             self.api_url,
-            {'text': 'How are you?'},
+            data=json.dumps({'text': 'How are you?'}),
+            content_type='application/json',
             format='json'
         )
 
