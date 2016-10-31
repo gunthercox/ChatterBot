@@ -79,6 +79,17 @@ Be sure to also see the documentation for the :ref:`HipChat output adapter <hipc
        hipchat_access_token="my-hipchat-access-token",
    )
 
+Mailgun adapter
+===============
+
+.. autofunction:: chatterbot.adapters.input.Mailgun
+
+The Mailgun adapter allows a chat bot to recieve emails using
+the `Mailgun API`_.
+
+.. literalinclude:: ../../examples/mailgun.py
+   :language: python
+
 Speech recognition
 ==================
 
@@ -89,3 +100,4 @@ your chat bot interact verbally with others.
 .. _dictionaries: https://docs.python.org/2/tutorial/datastructures.html#dictionaries
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
 .. _HipChat: https://www.hipchat.com/
+.. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
