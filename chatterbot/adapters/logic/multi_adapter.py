@@ -1,4 +1,5 @@
 from .logic_adapter import LogicAdapter
+from collections import Counter
 
 
 class MultiLogicAdapter(LogicAdapter):
@@ -21,12 +22,14 @@ class MultiLogicAdapter(LogicAdapter):
 
         :param statement: The input statement to be processed.
         """
+        results = []
         result = None
         max_confidence = -1
 
         for adapter in self.adapters:
             if adapter.can_process(statement):
                 confidence, output = adapter.process(statement)
+                results.append((confidence, output, ))
 
                 self.logger.info(
                     u'{} selected "{}" as a response with a confidence of {}'.format(
@@ -44,7 +47,32 @@ class MultiLogicAdapter(LogicAdapter):
                     )
                 )
 
+        # If multiple adapters agree on the same statement,
+        # then that statement is more likely to be the correct response
+        if len(results) >= 3:
+            statements = [s[1] for s in results]
+            count = Counter(statements)
+            most_common = count.most_common()
+            if most_common[0][1] > 1:
+                result = most_common[0][0]
+                max_confidence = self.get_greatest_confidence(result, results)
+
         return max_confidence, result
+
+    def get_greatest_confidence(self, statement, options):
+        """
+        Returns the greatest confidence value for a statement that occurs
+        multiple times in the set of options.
+
+        :param statement: A statement object.
+        :param options: A tuple in the format of (confidence, statement).
+        """
+        values = []
+        for option in options:
+            if option[1] == statement:
+                values.append(option[0])
+
+        return max(values)
 
     def add_adapter(self, adapter):
         """
