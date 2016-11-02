@@ -66,30 +66,3 @@ can set the `database_uri` parameter to the uri of your database.
 .. code-block:: python
 
    database_uri='mongodb://example.com:8100/'
-
-Twitter Adapter
-==============================
-
-.. autofunction:: chatterbot.adapters.storage.TwitterAdapter
-
-"chatterbot.adapters.storage.TwitterAdapter"
-
-Create an app from you twiter acccount, Once created
-It will have following app credentails that are required to work with 
-TwitterAdapter.
-
-twitter_consumer_key
---------------------
-Consumer key of twitter app.
-
-twitter_consumer_secret
------------------------
-Consumer secret of twitter app.
-
-twitter_access_token_key
-------------------------
-Access token key of twitter app.
-
-twitter_access_token_secret
----------------------------
-Access token secret of twitter app.
