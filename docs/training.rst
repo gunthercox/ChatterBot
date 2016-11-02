@@ -15,6 +15,7 @@ The case that someone wants to create a custom training module typically comes u
 
 ..  _set_trainer:
 
+
 Setting the training class
 ==========================
 
@@ -22,8 +23,11 @@ ChatterBot comes with training classes built in, or you can create your own
 if needed. To use a training class you must import it and pass it to
 the `set_trainer()` method before calling `train()`.
 
+
 Training via list data
 ======================
+
+.. autofunction:: chatterbot.trainers.ListTrainer
 
 For the training, process, you will need to pass in a list of statements where the order of each statement is based on it's placement in a given conversation.
 
@@ -59,8 +63,11 @@ This will establish each item in the list as a possible response to it's predece
        "You are welcome.",
    ])
 
+
 Training with corpus data
 =========================
+
+.. autofunction:: chatterbot.trainers.ChatterBotCorpusTrainer
 
 ChatterBot comes with a corpus data and utility module that makes it easy to
 quickly train your bot to communicate. To do so, simply specify the corpus
@@ -91,6 +98,35 @@ conversations corpora then you would simply specify them.
        "chatterbot.corpus.english.conversations"
    )
 
+
+Training with the Twitter API
+=============================
+
+.. autofunction:: chatterbot.trainers.TwitterTrainer
+
+Create an new app using you twiter acccount. Once created,
+it will provide you with the following credentails that are
+required to work with the Twitter API.
+
++-------------------------------------+-------------------------------------+
+| Parameter                           | Description                         | 
++=====================================+=====================================+
+| :code:`twitter_consumer_key`        | Consumer key of twitter app.        |
++-------------------------------------+-------------------------------------+
+| :code:`twitter_consumer_secret`     | Consumer secret of twitter app.     | 
++-------------------------------------+-------------------------------------+
+| :code:`twitter_access_token_key`    | Access token key of twitter app.    | 
++-------------------------------------+-------------------------------------+
+| :code:`twitter_access_token_secret` | Access token secret of twitter app. | 
++-------------------------------------+-------------------------------------+
+
+Twitter training example
+------------------------
+
+.. literalinclude:: ../examples/twitter_training_example.py
+   :language: python
+
+
 Creating a new training class
 =============================
 
@@ -104,6 +140,7 @@ Your trainer will need to have a method named `train`, that can take any
 parameters you choose.
 
 Take a look at the existing `trainer classes on GitHub`_ for examples.
+
 
 The ChatterBot Corpus
 =====================
@@ -121,6 +158,7 @@ To explore what languages and sets of corpora are available, check out the `chat
 .. note::
    If you are interested in contributing a new language corpus, or adding content to an existing language in the corpus,
    please feel free to submit a pull request on ChatterBot's GitHub page. Contributions are welcomed!
+
 
 Exporting your chat bot's database as a training corpus
 =======================================================
