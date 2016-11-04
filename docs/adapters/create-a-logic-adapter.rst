@@ -1,18 +1,24 @@
+============================
 Creating a new logic adapter
 ============================
 
 You can write your own logic adapters by creating a new class that
-inherits from :code:`LogicAdapter` and overides the overrides necessary
-methods established in the base :code:`LogicAdapter` class.
+inherits from :code:`LogicAdapter` and overides the necessary
+methods established in the :code:`LogicAdapter` base class.
 
-.. autofunction:: chatterbot.adapters.logic.LogicAdapter
+Logic adapter methods
+=====================
+
+.. autoclass:: chatterbot.adapters.logic.LogicAdapter
+   :members:
 
 Example logic adapter
----------------------
+=====================
 
 .. code-block:: python
 
    from chatterbot.adapters.logic import LogicAdapter
+
 
    class MyLogicAdapter(LogicAdapter):
        def __init__(self, **kwargs):
@@ -22,52 +28,101 @@ Example logic adapter
            return True
 
        def process(self, statement):
+           import random
+
+           # Randomly select a confidence between 0 and 1
+           confidence = random.uniform(0, 1)
+
+           # For this example, we will just return the input as output
+           selected_statement = statement
+
            return confidence, selected_statement
 
-Logic adapter methods
----------------------
+Responding to specific input
+============================
 
-.. autoclass:: chatterbot.adapters.logic.LogicAdapter
-   :members: process
+If you want a particular logic adapter to only respond to a unique type of
+input, the best way to do this is by overriding the :code:`can_process`
+method on your own logic adapter.
 
-This method is where you must implement your logic for selecting a response to
-an input statement.
+Here is a simple example. Let's say that we only want this logic adapter to
+generate a response when the input statement starts with "Hey Mike". This
+way, statements such as "Hey Mike, what time is it?" will be processed,
+but statements such as "Do you know what time it is?" will not be processed.
 
-A confidence value and the selected response statement should be returned.
-The confidence value represents a rating of how accurate the logic adapter
-expects the selected response to be. Confidence scores are used to select
-the best response from multiple logic adapters.
+.. code-block:: python
 
-.. note::
+   def can_process(self, statement):
+       if statement.text.startswith('Hey Mike')
+           return True
+       else:
+           return False
 
-   The confidence value should be a number between 0 and 1 where 0 is the
-   lowest confidence level and 1 is the highest.
+Interacting with services
+=========================
 
-LogicAdapter: __init__
-----------------------
+In some cases, it is usefull to have a logic adapter that can interact with an external service or
+api in order to complete it's task. Here is an example that demonstrates how this could be done.
+For this example we will use a fictitious API endpoint that returns the current temperature.
 
-The __init__ method is optional for any logic adapter you create.
+.. code-block:: python
 
-.. note::
+   def can_process(self, statement):
+       """
+       Return true if the input statement contains
+       'what' and 'is' and 'temperature'.
+       """
+       words = ['what', 'is', 'temperature']
+       if all(x in statement.text.split() for x in words)
+           return True
+       else:
+           return False
 
-   If you override the `__init__` method on your logic adapter, you must
-   call super().
+   def process(self, statement):
+       from chatterbot.conversation import Statement
+       import requests
+
+       # Make a request to the temperature API
+       response = requests.get('https://api.temperature.com/current?units=celsius)
+       data = response.json()
+
+       # Let's base the confidence value on if the request was successful
+       if response.status_code == 200:
+           confidence = 1
+       else:
+           confidence = 0
+
+       temperature = data.get('temperature', 'unavailable')
+
+       response_statement = Statement('The current temperature is {}'.format(temperature))
+
+       return confidence, response_statement
+
+Providing extra arguments
+=========================
 
 All key word arguments that have been set in your ChatBot class's constructor
-will also be passed to the init method of each logic adapter. This allows you
-to access these variables if you need to use them in your logic adapter.
+will also be passed to the :code:`__init__` method of each logic adapter.
+This allows you to access these variables if you need to use them in your logic adapter.
 (An API key might be an example of a parameter you would want to access here.)
 
-LogicAdapter: can_process
--------------------------
+You can override the :code:`__init__` method on your logic adapter to store additional
+information passed to it by the ChatBot class.
 
-This is a preliminary method that can be used to check the input statement to
-see if a value can possibly be returned when it is evaluated using the
-adapter's process method.
 
-This method returns a boolean value.
+.. code-block:: python
 
-.. note::
+   class MyLogicAdapter(LogicAdapter):
+       def __init__(self, **kwargs):
+           super(MyLogicAdapter, self).__init__(kwargs)
 
-   This method returns true by default if you do not override it.
+           self.api_key = kwargs.get('secret_key')
 
+The :code:`secret_key` variable would then be passed to the ChatBot class as shown bellow.
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       # ...
+       secret_key='************************'
+    )

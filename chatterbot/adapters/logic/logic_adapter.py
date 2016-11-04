@@ -38,13 +38,27 @@ class LogicAdapter(Adapter):
         logic adapter can process a given statement. By default,
         this method returns true but it can be overridden in
         child classes as needed.
+
+        :rtype: bool
         """
         return True
 
     def process(self, statement):
         """
-        Method that takes an input statement and returns
-        a confidence value and a statement as output.
+        Override this method and implement your logic for selecting a response to an input statement.
+
+        A confidence value and the selected response statement should be returned.
+        The confidence value represents a rating of how accurate the logic adapter
+        expects the selected response to be. Confidence scores are used to select
+        the best response from multiple logic adapters.
+
+        The confidence value should be a number between 0 and 1 where 0 is the
+        lowest confidence level and 1 is the highest.
+
+        :param statement: An input statement to be processed by the logic adapter.
+        :type statement: Statement
+
+        :rtype: float, Statement
         """
         raise self.AdapterMethodNotImplementedError()
 

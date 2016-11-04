@@ -1,8 +1,12 @@
 from chatterbot import ChatBot
 from settings import TWITTER
+import logging
 
 
 '''
+This example demonstrates how you can train your chat bot
+using data from Twitter.
+
 To use this example, create a new file called settings.py.
 In settings.py define the following:
 
@@ -14,25 +18,23 @@ TWITTER = {
 }
 '''
 
-chatbot = ChatBot("ChatterBot",
-    storage_adapter="chatterbot.adapters.storage.TwitterAdapter",
+# Comment out the following line to disable verbose logging
+logging.basicConfig(level=logging.INFO)
+
+chatbot = ChatBot("TwitterBot",
     logic_adapters=[
         "chatterbot.adapters.logic.ClosestMatchAdapter"
     ],
     input_adapter="chatterbot.adapters.input.TerminalAdapter",
     output_adapter="chatterbot.adapters.output.TerminalAdapter",
-    database="../database.db",
+    database="./twitter-database.db",
     twitter_consumer_key=TWITTER["CONSUMER_KEY"],
     twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],
     twitter_access_token_key=TWITTER["ACCESS_TOKEN"],
-    twitter_access_token_secret=TWITTER["ACCESS_TOKEN_SECRET"]
+    twitter_access_token_secret=TWITTER["ACCESS_TOKEN_SECRET"],
+    trainer="chatterbot.trainers.TwitterTrainer"
 )
 
-print("Type something to begin...")
+chatbot.train()
 
-while True:
-    try:
-        bot_input = chatbot.get_response(None)
-
-    except (KeyboardInterrupt, EOFError, SystemExit):
-        break
+chatbot.logger.info('Trained database generated successfully!')

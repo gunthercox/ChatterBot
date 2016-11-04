@@ -98,3 +98,14 @@ There is also an example [Django project using ChatterBot](https://github.com/gu
 # History
 
 See release notes for changes https://github.com/gunthercox/ChatterBot/releases
+
+# Development pattern for contributors
+
+1. [Create a fork](https://help.github.com/articles/fork-a-repo/) of
+   the [main ChatterBot repository](https://github.com/gunthercox/ChatterBot) on GitHub.
+2. Make your changes in a branch named something different from `master`, e.g. create
+   a new branch `my-pull-request`.
+3. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/).
+4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
+5. Use the projects [built-in automated testing](http://chatterbot.readthedocs.io/en/latest/testing.html)
+   to help make sure that your contribution is free from errors.
