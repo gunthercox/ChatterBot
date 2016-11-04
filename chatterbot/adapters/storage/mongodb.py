@@ -174,31 +174,40 @@ class MongoDatabaseAdapter(StorageAdapter):
         return results
 
     def update(self, statement, **kwargs):
-        from pymongo import UpdateOne, ReplaceOne
+        from pymongo import UpdateOne
+        from pymongo.errors import BulkWriteError
+
         force = kwargs.get('force', False)
         # Do not alter the database unless writing is enabled
-        if not self.read_only or force:
+        if force or not self.read_only:
             data = statement.serialize()
 
             operations = []
 
-            update_operation = ReplaceOne(
-                {'text': statement.text}, data, True
+            update_operation = UpdateOne(
+                {'text': statement.text},
+                {'$set': data},
+                upsert=True
             )
             operations.append(update_operation)
 
             # Make sure that an entry for each response is saved
-            for response in statement.in_response_to:
+            for response_dict in data.get('in_response_to', []):
+                response_text = response_dict.get('text')
 
                 # $setOnInsert does nothing if the document is not created
                 update_operation = UpdateOne(
-                    {'text': response.text},
-                    {'$setOnInsert': {'in_response_to': []}},
+                    {'text': response_text},
+                    {'$set': response_dict},
                     upsert=True
                 )
                 operations.append(update_operation)
 
-            self.statements.bulk_write(operations, ordered=False)
+            try:
+                self.statements.bulk_write(operations, ordered=False)
+            except BulkWriteError as bwe:
+                # Log the details of a bulk write error
+                self.logger.error(str(bwe.details))
 
         return statement
 
