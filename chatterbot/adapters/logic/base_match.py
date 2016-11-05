@@ -17,10 +17,34 @@ class BaseMatchAdapter(LogicAdapter):
 
     def get(self, input_statement):
         """
-        This method should be overridden with one to select a match
-        based on the input statement.
+        Takes a statement string and a list of statement strings.
+        Returns the closest matching statement from the list.
         """
-        raise self.AdapterMethodNotImplementedError()
+        statement_list = self.context.storage.get_response_statements()
+
+        if not statement_list:
+            if self.has_storage_context:
+                # Use a randomly picked statement
+                self.logger.info(
+                    u'No statements have known responses. ' +
+                    u'Choosing a random response to return.'
+                )
+                return 0, self.context.storage.get_random()
+            else:
+                raise self.EmptyDatasetException()
+
+        closest_match = input_statement
+        max_confidence = 0
+
+        # Find the closest matching known statement
+        for statement in statement_list:
+            confidence = self.compare_statements(input_statement, statement)
+
+            if confidence > max_confidence:
+                max_confidence = confidence
+                closest_match = statement
+
+        return max_confidence, closest_match
 
     def can_process(self, statement):
         """
