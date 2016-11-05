@@ -8,12 +8,15 @@ def levenshtein_distance(statement, other_statement):
     Compare two statements based on the Levenshtein distance
     (fuzzy string comparison) of each statement's text.
 
-    :return: The ratio of difference between the text of the statements.
+    :return: The percent of similarity between the text of the statements.
     :rtype: float
     """
     from fuzzywuzzy import fuzz
 
-    return fuzz.ratio(statement.text.lower(), other_statement.text.lower())
+    similarity = fuzz.ratio(statement.text.lower(), other_statement.text.lower())
+
+    # Convert the similarity from an integer to a percent
+    return similarity / 100.0
 
 
 def synset_distance(statement, other_statement):
@@ -22,7 +25,7 @@ def synset_distance(statement, other_statement):
     This is based on the total maximum synset similarity
     between each word in each sentence.
 
-    :return: The ratio of difference between the synset distance of both statements.
+    :return: The percent of similarity between the closest synset distance.
     :rtype: float
     """
     from chatterbot.utils.wordnet import Wordnet
@@ -36,6 +39,7 @@ def synset_distance(statement, other_statement):
     tokens2 = tokenizer.get_tokens(other_statement.text)
 
     total_similarity = 0
+    max_similarity = 0
 
     # Get the highest matching value for each possible combination of words
     for combination in itertools.product(*[tokens1, tokens2]):
@@ -45,8 +49,6 @@ def synset_distance(statement, other_statement):
 
         if synset1 and synset2:
 
-            max_similarity = 0
-
             # Get the highest similarity for each combination of synsets
             for synset in itertools.product(*[synset1, synset2]):
                 similarity = synset[0].path_similarity(synset[1])
@@ -54,10 +56,13 @@ def synset_distance(statement, other_statement):
                 if similarity and (similarity > max_similarity):
                     max_similarity = similarity
 
-            # Add the most similar path value to the total
-            total_similarity += max_similarity
+                    # Add the most similar path value to the total
+                    total_similarity += similarity
 
-    return total_similarity
+    if total_similarity == 0:
+        return 0
+
+    return max_similarity / total_similarity
 
 
 def jaccard_similarity(statement, other_statement, threshold=0.5):

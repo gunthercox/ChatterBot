@@ -39,22 +39,14 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
                 raise self.EmptyDatasetException()
 
         closest_match = input_statement
-        closest_similarity = -1
-        total_similarity = 0
+        max_confidence = 0
 
-        # For each option in the list of options
+        # Find the closest matching known statement
         for statement in statement_list:
-            similarity = self.compare_statements(input_statement, statement)
+            confidence = self.compare_statements(input_statement, statement)
 
-            total_similarity += similarity
-
-            if similarity > closest_similarity:
-                closest_similarity = similarity
+            if confidence > max_confidence:
+                max_confidence = confidence
                 closest_match = statement
 
-        try:
-            confidence = closest_similarity / total_similarity
-        except:
-            confidence = 0
-
-        return confidence, closest_match
+        return max_confidence, closest_match
