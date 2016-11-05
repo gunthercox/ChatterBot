@@ -38,8 +38,8 @@ def synset_distance(statement, other_statement):
     tokens1 = tokenizer.get_tokens(statement.text)
     tokens2 = tokenizer.get_tokens(other_statement.text)
 
-    total_similarity = 0
-    max_similarity = 0
+    total_similarity = 0.0
+    max_similarity = 0.0
 
     # Get the highest matching value for each possible combination of words
     for combination in itertools.product(*[tokens1, tokens2]):
