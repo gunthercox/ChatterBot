@@ -30,17 +30,14 @@ class ClosestMatchAdapter(BaseMatchAdapter):
                 raise self.EmptyDatasetException()
 
         closest_match = input_statement
-        closest_similarity = -1
+        max_confidence = 0
 
         # Find the closest matching known statement
         for statement in statement_list:
-            similarity = self.compare_statements(input_statement, statement)
+            confidence = self.compare_statements(input_statement, statement)
 
-            if similarity > closest_similarity:
-                closest_similarity = similarity
+            if confidence > max_confidence:
+                max_confidence = confidence
                 closest_match = statement
 
-        # Convert the confidence integer to a percent
-        confidence = closest_similarity / 100.0
-
-        return confidence, closest_match
+        return max_confidence, closest_match

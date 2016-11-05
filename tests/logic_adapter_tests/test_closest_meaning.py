@@ -38,7 +38,7 @@ class ClosestMeaningAdapterTests(TestCase):
         possible_choices = [
             Statement('This is a lovely bog.', in_response_to=[Response('This is a lovely bog.')]),
             Statement('This is a beautiful swamp.', in_response_to=[Response('This is a beautiful swamp.')]),
-            Statement('It smells like swamp.', in_response_to=[Response('It smells like swamp.')])
+            Statement('It smells like a swamp.', in_response_to=[Response('It smells like a swamp.')])
         ]
         self.adapter.context.storage.filter = MagicMock(
             return_value=possible_choices
