@@ -13,10 +13,12 @@ class Microsoft(OutputAdapter):
         super(Microsoft, self).__init__(**kwargs)
 
         self.directline_host = kwargs.get("directline_host")
-        self.direct_line_token_or_secret = kwargs.get("direct_line_token_or_secret")
+        self.direct_line_token_or_secret = kwargs.get\
+            ("direct_line_token_or_secret")
         self.conversation_id = kwargs.get("conversation_id")
 
-        authorization_header = 'BotConnector {}'.format(self.direct_line_token_or_secret)
+        authorization_header = 'BotConnector {}'.\
+            format(self.direct_line_token_or_secret)
 
         self.headers = {
             'Authorization': authorization_header,

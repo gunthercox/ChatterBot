@@ -19,11 +19,11 @@ class Microsoft(InputAdapter):
 
         # NOTE: Direct Line client credentials are different from your bot's
         # credentials
-        self.direct_line_token_or_secret = kwargs.get('
-                                                direct_line_token_or_secret')
+        self.direct_line_token_or_secret = kwargs.\
+            get('direct_line_token_or_secret')
 
-        authorization_header = 'BotConnector  {}'.
-                                    format(self.direct_line_token_or_secret)
+        authorization_header = 'BotConnector  {}'.\
+            format(self.direct_line_token_or_secret)
 
         self.headers = {
             'Authorization': authorization_header,
@@ -40,14 +40,15 @@ class Microsoft(InputAdapter):
 
     def _validate_status_code(self, response):
         code = response.status_code
-        if code not in [200, 201]:
-            raise self.HTTPStatusException('{} status code recieved'.format(code))
+        if not code == 200:
+            raise self.HTTPStatusException('{} status code recieved'.
+                                           format(code))
 
     def get_initial_ids(self):
         """
         Returns a list of the most recent message ids.
         """
-        data = self.get_most_recent_message(watermark=75)
+        data = self.get_most_recent_message(watermark='75')
 
         results = set()
 
@@ -76,7 +77,7 @@ class Microsoft(InputAdapter):
 
         response = requests.get(
             endpoint,
-            headers=self.headers
+            headers=self.hdeaders
         )
         self.logger.info(u'{} getting most recent message'.format(
             response.status_code
