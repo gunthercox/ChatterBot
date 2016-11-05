@@ -7,7 +7,7 @@ import requests
 class Microsoft(InputAdapter):
     """
     An input adapter that allows a ChatterBot instance to get
-    input statements from a Microsoft room using Directline client protocol.
+    input statements from a Microsoft Bot using *Directline client protocol*.
     https://docs.botframework.com/en-us/restapi/directline/#navtitle
     """
 
@@ -19,9 +19,11 @@ class Microsoft(InputAdapter):
 
         # NOTE: Direct Line client credentials are different from your bot's
         # credentials
-        self.direct_line_token = kwargs.get('direct_line_token')
+        self.direct_line_token_or_secret = kwargs.get('
+                                                direct_line_token_or_secret')
 
-        authorization_header = 'BotConnector  {}'.format(self.direct_line_token)
+        authorization_header = 'BotConnector  {}'.
+                                    format(self.direct_line_token_or_secret)
 
         self.headers = {
             'Authorization': authorization_header,
@@ -32,7 +34,8 @@ class Microsoft(InputAdapter):
 
         conversation_data = self.start_conversation()
         self.conversation_id = conversation_data.get('conversationId')
-        self.conversation_token = conversation_data.get('token')# This is a list of the messages that have been responded to
+        self.conversation_token = conversation_data.get('token')
+        # This is a list of the messages that have been responded to
         self.recent_message_ids = self.get_initial_ids()
 
     def _validate_status_code(self, response):
@@ -130,3 +133,4 @@ class Microsoft(InputAdapter):
 
         def __str__(self):
             return repr(self.value)
+

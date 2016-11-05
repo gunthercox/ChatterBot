@@ -6,17 +6,17 @@ import json
 class Microsoft(OutputAdapter):
     """
     An output adapter that allows a ChatterBot instance to send
-    responses to a HipChat room.
+    responses to a Micorsoft bot using *Direct Line client protocol*.
     """
 
     def __init__(self, **kwargs):
         super(Microsoft, self).__init__(**kwargs)
 
         self.directline_host = kwargs.get("directline_host")
-        self.direct_line_token = kwargs.get("direct_line_token")
+        self.direct_line_token_or_secret = kwargs.get("direct_line_token_or_secret")
         self.conversation_id = kwargs.get("conversation_id")
 
-        authorization_header = 'BotConnector  {}'.format(self.direct_line_token)
+        authorization_header = 'BotConnector {}'.format(self.direct_line_token_or_secret)
 
         self.headers = {
             'Authorization': authorization_header,
@@ -59,14 +59,11 @@ class Microsoft(OutputAdapter):
             })
         )
 
-        # Microsoft return 204 operation succeeded and no content was returned.
+        # Microsoft return 204 on operation succeeded and no content was returned.
         return self.get_most_recent_message()
 
     def process_response(self, statement, confidence=None):
         data = self.send_message(self.conversation_id, statement.text)
-
-
-
         # Update the output statement with the message id
         self.context.recent_statements[-1][1].add_extra_data(
             'microsoft_msg_id', data['id']
