@@ -70,6 +70,27 @@ def synset_distance(statement, other_statement):
     return max_similarity / max_possible_similarity
 
 
+def sentiment_comparison(statement, other_statement):
+    """
+    Calculate the similarity of two statements based on the closeness of
+    the sentiment value calculated for each statement.
+
+    :return: The percent of similarity between the sentiment value.
+    :rtype: float
+    """
+    from textblob import TextBlob
+
+    statement_blob = TextBlob(statement.text)
+    other_statement_blob = TextBlob(other_statement.text)
+
+    statement_sentiment = statement_blob.sentiment.polarity
+    other_statement_sentiment = other_statement_blob.sentiment.polarity
+
+    values = [statement_sentiment, other_statement_sentiment]
+    difference = max(values) - min(values)
+
+    return 1.0 - difference
+
 def jaccard_similarity(statement, other_statement, threshold=0.5):
     """
     The Jaccard index is composed of a numerator and denominator.
