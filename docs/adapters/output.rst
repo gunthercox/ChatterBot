@@ -77,6 +77,26 @@ Be sure to also see the documentation for the :ref:`HipChat input adapter <hipch
        hipchat_access_token="my-hipchat-access-token",
    )
 
+Microsoft Adapter
+===============
+
+.. autofunction:: chatterbot.adapters.output.Microsoft
+
+This is an output adapter that allows a ChatterBot instance to send responses
+to a `Microsoft`_ using *Direct Line protocol*.
+
+Be sure to also see the documentation for the :ref:`Microsoft input adapter <microsoft-input-adapter>`.
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       "My ChatterBot",
+       output_adapter="chatterbot.adapters.output.Microsoft",
+       direct_line_host="https://directline.botframework.com",
+       direct_line_conservationId="IEyJvnDULgn",
+       direct_line_access_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
+   )
+
 Mailgun adapter
 ===============
 
@@ -97,3 +117,4 @@ your chat bot interact verbally with others.
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
 .. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
 .. _HipChat: https://www.hipchat.com/
+.. _Microsoft: https://docs.botframework.com/en-us/restapi/directline/#/Conversations
