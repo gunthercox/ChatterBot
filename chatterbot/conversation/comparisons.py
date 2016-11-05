@@ -38,7 +38,15 @@ def synset_distance(statement, other_statement):
     tokens1 = tokenizer.get_tokens(statement.text)
     tokens2 = tokenizer.get_tokens(other_statement.text)
 
-    total_similarity = 0.0
+    # The maximum possible similarity is an exact match
+    # Because path_similarity returns a value between 0 and 1,
+    # max_possible_similarity is the number of words in the longer
+    # of the two input statements.
+    max_possible_similarity = max(
+        len(statement.text.split()),
+        len(other_statement.text.split())
+    )
+
     max_similarity = 0.0
 
     # Get the highest matching value for each possible combination of words
@@ -56,13 +64,10 @@ def synset_distance(statement, other_statement):
                 if similarity and (similarity > max_similarity):
                     max_similarity = similarity
 
-                    # Add the most similar path value to the total
-                    total_similarity += similarity
-
-    if total_similarity == 0:
+    if max_possible_similarity == 0:
         return 0
 
-    return max_similarity / total_similarity
+    return max_similarity / max_possible_similarity
 
 
 def jaccard_similarity(statement, other_statement, threshold=0.5):
