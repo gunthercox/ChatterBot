@@ -1,12 +1,17 @@
 from django.conf.urls import url
 from django.contrib import admin
-from .views import ChatterBotView
+from chatterbot.ext.django_chatterbot import views
 
 
 urlpatterns = [
     url(
         r'^$',
-        ChatterBotView.as_view(),
+        views.ChatterBotView.as_view(),
         name='chatterbot',
+    ),
+    url(
+        r'^/train/$',
+        views.ChatterBotTrainingView.as_view(),
+        name='train',
     ),
 ]
