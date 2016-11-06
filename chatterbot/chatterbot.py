@@ -42,23 +42,19 @@ class ChatBot(object):
         # The output adapter must be an instance of OutputAdapter
         self.validate_adapter_class(output_adapter, OutputAdapter)
 
-        StorageAdapterClass = import_module(storage_adapter)
-        InputAdapterClass = import_module(input_adapter)
-        OutputAdapterClass = import_module(output_adapter)
-
-        self.storage = StorageAdapterClass(**kwargs)
         self.logic = MultiLogicAdapter(**kwargs)
-        self.input = InputAdapterClass(**kwargs)
-        self.output = OutputAdapterClass(**kwargs)
+        self.storage = self.initialize_class(storage_adapter, **kwargs)
+        self.input = self.initialize_class(input_adapter, **kwargs)
+        self.output = self.initialize_class(output_adapter, **kwargs)
 
         filters = kwargs.get('filters', tuple())
         self.filters = (import_module(F)() for F in filters)
 
         # Add required system logic adapter
-        self.add_adapter('chatterbot.adapters.logic.NoKnowledgeAdapter')
+        self.add_logic_adapter('chatterbot.adapters.logic.NoKnowledgeAdapter')
 
         for adapter in logic_adapters:
-            self.add_adapter(adapter, **kwargs)
+            self.add_logic_adapter(adapter, **kwargs)
 
         # Share context information such as the name, the current conversation,
         # or access to other adapters with each of the adapters
@@ -74,11 +70,22 @@ class ChatBot(object):
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
-    def add_adapter(self, adapter, **kwargs):
-        self.validate_adapter_class(adapter, LogicAdapter)
+    def initialize_class(self, adapter_data, **kwargs):
 
-        NewAdapter = import_module(adapter)
-        adapter = NewAdapter(**kwargs)
+        if isinstance(adapter_data, dict):
+            import_path = adapter_data.pop('import_path')
+            adapter_data.update(kwargs)
+            Class = import_module(import_path)
+
+            return Class(**adapter_data)
+        else:
+            Class = import_module(adapter_data)
+
+            return Class(**kwargs)
+
+    def add_logic_adapter(self, adapter, **kwargs):
+        self.validate_adapter_class(adapter, LogicAdapter)
+        adapter = self.initialize_class(adapter, **kwargs)
         self.logic.add_adapter(adapter)
 
     def insert_logic_adapter(self, logic_adapter, insert_index, **kwargs):
@@ -127,6 +134,18 @@ class ChatBot(object):
         :raises: InvalidAdapterException
         """
         from .adapters import Adapter
+
+        # If a dictionary was passed in, check if it has an import_path attribute
+        if isinstance(validate_class, dict):
+            origional_data = validate_class.copy()
+            validate_class = validate_class.get('import_path')
+
+            if not validate_class:
+                raise self.InvalidAdapterException(
+                    'The dictionary {} must contain a value for "import_path"'.format(
+                        str(origional_data)
+                    )
+                )
 
         if not issubclass(import_module(validate_class), Adapter):
             raise self.InvalidAdapterException(

@@ -64,20 +64,38 @@ class AdapterValidationTests(ChatBotTestCase):
         except ChatBot.InvalidAdapterException:
             self.fail('Test raised InvalidAdapterException unexpectedly!')
 
+    def test_valid_adapter_dictionary(self):
+        kwargs = self.get_kwargs()
+        kwargs['storage_adapter'] = {
+            'import_path': 'chatterbot.adapters.storage.JsonFileStorageAdapter'
+        }
+        try:
+            self.chatbot = ChatBot('Test Bot', **kwargs)
+        except ChatBot.InvalidAdapterException:
+            self.fail('Test raised InvalidAdapterException unexpectedly!')
+
+    def test_invalid_adapter_dictionary(self):
+        kwargs = self.get_kwargs()
+        kwargs['storage_adapter'] = {
+            'import_path': 'chatterbot.adapters.logic.ClosestMatchAdapter'
+        }
+        with self.assertRaises(ChatBot.InvalidAdapterException):
+            self.chatbot = ChatBot('Test Bot', **kwargs)
+
 
 class MultiAdapterTests(ChatBotTestCase):
 
     def test_add_logic_adapter(self):
         count_before = len(self.chatbot.logic.adapters)
 
-        self.chatbot.add_adapter(
+        self.chatbot.add_logic_adapter(
             'chatterbot.adapters.logic.ClosestMatchAdapter'
         )
         self.assertEqual(len(self.chatbot.logic.adapters), count_before + 1)
 
     def test_insert_logic_adapter(self):
-        self.chatbot.add_adapter('chatterbot.adapters.logic.TimeLogicAdapter')
-        self.chatbot.add_adapter('chatterbot.adapters.logic.ClosestMatchAdapter')
+        self.chatbot.add_logic_adapter('chatterbot.adapters.logic.TimeLogicAdapter')
+        self.chatbot.add_logic_adapter('chatterbot.adapters.logic.ClosestMatchAdapter')
 
         self.chatbot.insert_logic_adapter('chatterbot.adapters.logic.MathematicalEvaluation', 1)
 
@@ -87,8 +105,8 @@ class MultiAdapterTests(ChatBotTestCase):
         )
 
     def test_remove_logic_adapter(self):
-        self.chatbot.add_adapter('chatterbot.adapters.logic.TimeLogicAdapter')
-        self.chatbot.add_adapter('chatterbot.adapters.logic.MathematicalEvaluation')
+        self.chatbot.add_logic_adapter('chatterbot.adapters.logic.TimeLogicAdapter')
+        self.chatbot.add_logic_adapter('chatterbot.adapters.logic.MathematicalEvaluation')
 
         adapter_count = len(self.chatbot.logic.adapters)
 
@@ -98,7 +116,7 @@ class MultiAdapterTests(ChatBotTestCase):
         self.assertEqual(len(self.chatbot.logic.adapters), adapter_count - 1)
 
     def test_remove_logic_adapter_not_found(self):
-        self.chatbot.add_adapter('chatterbot.adapters.logic.TimeLogicAdapter')
+        self.chatbot.add_logic_adapter('chatterbot.adapters.logic.TimeLogicAdapter')
 
         adapter_count = len(self.chatbot.logic.adapters)
 

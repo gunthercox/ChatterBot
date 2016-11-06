@@ -58,6 +58,44 @@ Example chat bot parameters
    )
 
 
+Example expanded chat bot parameters
+====================================
+
+It is also possible to pass parameters directly to individual adapters.
+To do this, you must use a dictionary that contains a key called :code:`import_path`
+which specifies the import path to the adapter class.
+
+.. code-block:: python
+
+   ChatBot(
+       'Leander Jenkins',
+       storage_adapter={
+           'import_path': 'my.storage.AdapterClass',
+           'database_name': 'my-database'
+       },
+       logic_adapters=[
+           {
+               'import_path': 'my.logic.AdapterClass1',
+               'statement_comparison_function': 'chatterbot.conversation.comparisons.levenshtein_distance'
+               'response_selection_method': 'chatterbot.conversation.response_selection.get_first_response'
+           },
+           {
+               'import_path': 'my.logic.AdapterClass2',
+               'statement_comparison_function': 'my.custom.comparison_function'
+               'response_selection_method': 'my.custom.selection_method'
+           }
+       ],
+       input_adapter={
+           'import_path': 'my.input.AdapterClass',
+           'api_key': '0000-1111-2222-3333-DDDD'
+       },
+       output_adapter={
+           'import_path': 'my.output.AdapterClass',
+           'api_key': '0000-1111-2222-3333-DDDD'
+       }
+   )
+
+
 Enable logging
 ==============
 
