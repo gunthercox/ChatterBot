@@ -4,32 +4,32 @@
             "Guten Morgen, wie geht es dir?",
             "Mir geht es gut und wie geht es dir?",
             "Mir geht es auch gut",
-            "Das ist schön zu hören.",
+            "Das ist schï¿½n zu hï¿½ren.",
             "Ja, das ist es"
         ],
-      [
-        "Hallo",
-        "Hi",
-        "Wie geht es dir?",
-        "Mir geht es sehr gut.",
-        "Das ist schön zu hören.",
-        "Ja, das ist es",
-        "Kann ich dir irgendwie helfen??",
-        "Ja, ich habe eine Frage",
-        "Was ist deine Frage?",
-        "Kann ich mit ein Stück Zucker leihen?",
-        "Tut mir leid, aber ich habe keines",
-        "Trotzdem danke",
-        "Kein Problem"
-      ],
-      [
-        "Wie geht es dir?",
-        "Mir geht es gut und wie geht es dir?",
-        "Mir geht es auch gut",
-        "Das ist schön"
-      ],
         [
-            "Hast du die Nachrichten gehört?",
+            "Hallo",
+            "Hi",
+            "Wie geht es dir?",
+            "Mir geht es sehr gut.",
+            "Das ist schï¿½n zu hï¿½ren.",
+            "Ja, das ist es",
+            "Kann ich dir irgendwie helfen??",
+            "Ja, ich habe eine Frage",
+            "Was ist deine Frage?",
+            "Kann ich mit ein Stï¿½ck Zucker leihen?",
+            "Tut mir leid, aber ich habe keines",
+            "Trotzdem danke",
+            "Kein Problem"
+        ],
+        [
+            "Wie geht es dir?",
+            "Mir geht es gut und wie geht es dir?",
+            "Mir geht es auch gut",
+            "Das ist schï¿½n"
+        ],
+        [
+            "Hast du die Nachrichten gehï¿½rt?",
             "Welche guten Nachrichten?"
         ],
         [
@@ -44,16 +44,16 @@
             "ich backe einen Kuchen"
         ],
         [
-            "Der Kuchen ist eine lüge.",
+            "Der Kuchen ist eine lï¿½ge.",
             "Nein ist er nicht. Er ist sehr lecker.",
             "Was ist noch lecker?",
             "Nichts",
-            "Erzähl mir etwas über dich.",
-            "Was möchtest du wissen?",
+            "Erzï¿½hl mir etwas ï¿½ber dich.",
+            "Was mï¿½chtest du wissen?",
             "Bist du ein Roboter?",
             "Ja, das bin ich",
             "Wie ist das?",
-            "Was möchtest du genau wissen?",
+            "Was mï¿½chtest du genau wissen?",
             "Wie funktionierst du?",
             "Das ist kompliziert",
             "Komplex ist besser als kompliziert"
@@ -64,17 +64,17 @@
             "Ja, ich bin ein Programmierer",
             "Welche Sprachen benutzt du gerne?",
             "Ich benutze oft Python, Java und C++.",
-            "Ich selbst benutze auch ein bisschen Python.",
+            "Ich selbst benutze auch ein bisschen Python."
         ],
         [
             "Was bedeutet YOLO?",
-            "Es bedeutet you only live once. Wo hast du das gehört?",
-            "Ich habe es jemanden sagen hören."
+            "Es bedeutet you only live once. Wo hast du das gehï¿½rt?",
+            "Ich habe es jemanden sagen hï¿½ren."
         ],
         [
           "Habe ich jemals gelebt?",
             "Das kommt darauf an, wie du Leben definierst.",
-            "Leben ist Vorraussetzung, dass ein Organismus von alleine wachsen kann, sich fortplanzen und auf Reize reagieren kann. Außerdem muss er Stoffwechsel betreiben und irgendwann stirbt er",           "Is that a definition or an opinion?"
+            "Leben ist Vorraussetzung, dass ein Organismus von alleine wachsen kann, sich fortplanzen und auf Reize reagieren kann. Auï¿½erdem muss er Stoffwechsel betreiben und irgendwann stirbt er",           "Is that a definition or an opinion?"
         ],
         [
             "Kann ich dich etwas fragen?",
