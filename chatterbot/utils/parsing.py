@@ -683,5 +683,3 @@ def datetime_parsing (text, base_date = datetime.now()):
 
     # To preserve order of the match, sort based on the start position
     return sorted(found_array, key = lambda match: match and match[2][0])
-
-print (datetime_parsing('end of the day'))
