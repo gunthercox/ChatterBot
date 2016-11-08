@@ -1,4 +1,5 @@
 from chatterbot.adapters import Adapter
+from chatterbot.utils.module_loading import import_module
 
 
 class LogicAdapter(Adapter):
@@ -19,6 +20,17 @@ class LogicAdapter(Adapter):
                 'See documentation for details: ' +
                 'http://chatterbot.readthedocs.io/en/latest/adapters/response_selection.html#setting-the-response-selection-method'
             )
+
+        # Import string module parameters
+        if 'statement_comparison_function' in kwargs:
+            import_path = kwargs.get('statement_comparison_function')
+            if isinstance(import_path, str):
+                kwargs['statement_comparison_function'] = import_module(import_path)
+
+        if 'response_selection_method' in kwargs:
+            import_path = kwargs.get('response_selection_method')
+            if isinstance(import_path, str):
+                kwargs['response_selection_method'] = import_module(import_path)
 
         # By default, compare statements using Levenshtein distance
         self.compare_statements = kwargs.get(
