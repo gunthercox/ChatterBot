@@ -12,7 +12,7 @@ os:
 env:
   - DJANGO_VERSION=1.8
   - DJANGO_VERSION=1.9
-#  - DJANGO_VERSION=1.10
+  - DJANGO_VERSION=1.10
 
 install:
   - pip install .
