@@ -23,7 +23,7 @@ numbers = "(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten| \
 re_dmy = '(' + "|".join(day_variations + minute_variations + year_variations + week_variations + month_variations) + ')'
 re_duration = '(before|after|earlier|later|ago|from\snow)'
 re_year = "(19|20)\d{2}|^(19|20)\d{2}"
-re_timeframe = 'this|coming|next|following|previous|last'
+re_timeframe = 'this|coming|next|following|previous|last|end\sof\sthe'
 re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
 re_time = '(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})|(?P<convention>am|pm))'
 re_separator = 'of|at|on'
@@ -505,9 +505,20 @@ def dateFromRelativeWeekYear(base_date, time, dow, ordinal = 1):
         if time == 'this' or time == 'coming':
             return datetime(d.year, 1, 1)
         elif time == 'last' or time == 'previous':
-            return datetime(d.year - 1, d.month, d.day)
+            return datetime(d.year - 1, d.month, 1)
         elif time == 'next' or time == 'following':
             return d + timedelta(d.year+1)
+        elif time == 'end of the':
+            return datetime(d.year, 12, 31)
+    elif dow in month_variations:
+        if time == 'this':
+            return datetime(d.year, d.month, d.day)
+        elif time == 'last' or time == 'previous':
+            return datetime(d.year, d.month - 1, d.day)
+        elif time == 'next' or time == 'following':
+            return datetime(d.year, d.month + 1, d.day)
+        elif time == 'end of the':
+            return datetime(d.year, d.month, calendar.monthrange(d.year, d.month)[1])
     elif dow in week_variations:
         if time == 'this':
             return d - timedelta(days=d.weekday())
@@ -515,6 +526,9 @@ def dateFromRelativeWeekYear(base_date, time, dow, ordinal = 1):
             return d - timedelta(weeks=1)
         elif time == 'next' or time == 'following':
             return d + timedelta(weeks=1)
+        elif time == 'end of the':
+            day_of_week = base_date.weekday()
+            return d + timedelta(days=6 - d.weekday())
     elif dow in day_variations:
         if time == 'this':
             return d
@@ -522,6 +536,8 @@ def dateFromRelativeWeekYear(base_date, time, dow, ordinal = 1):
             return d - timedelta(days=1)
         elif time == 'next' or time == 'following':
             return d + timedelta(days=1)
+        elif time == 'end of the':
+            return datetime(d.year, d.month, d.day, 23, 59, 59)
 
 # Convert Day adverbs to dates
 # Tomorrow => Date
