@@ -8,6 +8,7 @@ venv
 *.swp
 *.egg-info
 *.egg/*
+*.eggs/*
 
 # Database files
 *.sqlite3
