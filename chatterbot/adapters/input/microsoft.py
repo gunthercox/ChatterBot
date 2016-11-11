@@ -2,7 +2,8 @@ from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
 from time import sleep
 import requests
-
+from requests.packages.urllib3.exceptions import InsecureRequestWarning
+requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
 class Microsoft(InputAdapter):
     """
@@ -14,8 +15,7 @@ class Microsoft(InputAdapter):
     def __init__(self, **kwargs):
         super(Microsoft, self).__init__(**kwargs)
 
-        self.directline_host = kwargs.get('directline_host',
-                                      'https://directline.botframework.com')
+        self.directline_host = kwargs.get('directline_host')
 
         # NOTE: Direct Line client credentials are different from your bot's
         # credentials
@@ -35,8 +35,6 @@ class Microsoft(InputAdapter):
         conversation_data = self.start_conversation()
         self.conversation_id = conversation_data.get('conversationId')
         self.conversation_token = conversation_data.get('token')
-        # This is a list of the messages that have been responded to
-        self.recent_message_ids = self.get_initial_ids()
 
     def _validate_status_code(self, response):
         code = response.status_code
@@ -44,24 +42,12 @@ class Microsoft(InputAdapter):
             raise self.HTTPStatusException('{} status code recieved'.
                                            format(code))
 
-    def get_initial_ids(self):
-        """
-        Returns a list of the most recent message ids.
-        """
-        data = self.get_most_recent_message(watermark='75')
-
-        results = set()
-
-        for message in data['messages']:
-            results.add(message['id'])
-
-        return results
-
     def start_conversation(self):
         endpoint = '{host}/api/conversations'.format(host=self.directline_host)
         response = requests.post(
             endpoint,
             headers=self.headers,
+            verify=False
         )
         self.logger.info(u'{} starting conversation {}'.format(
             response.status_code, endpoint
@@ -69,57 +55,44 @@ class Microsoft(InputAdapter):
         self._validate_status_code(response)
         return response.json()
 
-    def get_most_recent_message(self, watermark='1'):
-        endpoint = '{host}/api/conversations/{id}/messages?watermark={watermark}'\
+    def get_most_recent_message(self):
+        endpoint = '{host}/api/conversations/{id}/messages'\
             .format(host=self.directline_host,
-                    id=self.conversation_id,
-                    watermark=watermark)
+                    id=self.conversation_id)
 
         response = requests.get(
             endpoint,
-            headers=self.hdeaders
+            headers=self.headers,
+            verify=False
         )
-        self.logger.info(u'{} getting most recent message'.format(
-            response.status_code
+
+        self.logger.info(u'{} retrieving most recent messages {}'.format(
+            response.status_code, endpoint
         ))
+
         self._validate_status_code(response)
+
         data = response.json()
-        if data["messages"]:
-            return data["messages"][0]
+
+        if data['messages']:
+            last_msg = int(data['watermark'])
+            return data['messages'][last_msg-1]
         return None
 
     def process_input(self, statement):
         new_message = False
-
-        input_statement = self.context.get_last_input_statement()
-        response_statement = self.context.get_last_response_statement()
-
-        if input_statement:
-            last_message_id = input_statement.extra_data.get('microsoft_msg_id',
-                                                             None)
-            if last_message_id:
-                self.recent_message_ids.add(last_message_id)
-
-        if response_statement:
-            last_message_id = response_statement.extra_data.\
-                get('microsoft_msg_id', None)
-            if last_message_id:
-                self.recent_message_ids.add(last_message_id)
-
+        data = None
         while not new_message:
             data = self.get_most_recent_message()
-
-            if data and data['id'] not in self.recent_message_ids:
-                self.recent_message_ids.add(data['id'])
+            if data and data['id']:
                 new_message = True
             else:
                 pass
             sleep(3.5)
 
         text = data['text']
-
         statement = Statement(text)
-        statement.add_extra_data('microsoft_msg_id', data['id'])
+        self.logger.info(u'processing user statement {}'.format(statement))
 
         return statement
 

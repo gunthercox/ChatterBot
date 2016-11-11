@@ -1,4 +1,5 @@
 from .input_adapter import InputAdapter
+from .microsoft import Microsoft
 from .gitter import Gitter
 from .hipchat import HipChat
 from .mailgun import Mailgun
