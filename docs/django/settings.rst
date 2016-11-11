@@ -12,6 +12,10 @@ You can edit the ChatterBot configuration through your Django settings.py file.
            'chatterbot.adapters.logic.MathematicalEvaluation',
            'chatterbot.adapters.logic.TimeLogicAdapter',
            'chatterbot.adapters.logic.ClosestMatchAdapter'
+       ],
+       'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
+       'training_data': [
+            'chatterbot.corpus.english.greetings'
        ]
    }
 
