@@ -1,5 +1,4 @@
 from .conversation import Statement, Response
-from .corpus import Corpus
 import logging
 
 
@@ -7,7 +6,6 @@ class Trainer(object):
 
     def __init__(self, storage, **kwargs):
         self.storage = storage
-        self.corpus = Corpus()
         self.logger = logging.getLogger(__name__)
 
     def train(self, *args, **kwargs):
@@ -76,8 +74,19 @@ class ListTrainer(Trainer):
 
 class ChatterBotCorpusTrainer(Trainer):
 
+    def __init__(self, storage, **kwargs):
+        super(ChatterBotCorpusTrainer, self).__init__(storage, **kwargs)
+        from .corpus import Corpus
+
+        self.corpus = Corpus()
+
     def train(self, *corpora):
         trainer = ListTrainer(self.storage)
+
+        # Allow a list of coupora to be passed instead of arguments
+        if len(corpora) == 1:
+            if isinstance(corpora[0], list):
+                corpora = corpora[0]
 
         for corpus in corpora:
             corpus_data = self.corpus.load_corpus(corpus)

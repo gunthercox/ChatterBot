@@ -10,6 +10,7 @@ Django applications.
    :maxdepth: 2
 
    settings
+   training
    views
 
 Installation

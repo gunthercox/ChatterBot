@@ -2,7 +2,6 @@ from .adapters.storage import StorageAdapter
 from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
 from .adapters.output import OutputAdapter
-from .conversation import Statement, Response
 from .utils.queues import ResponseQueue
 from .utils.module_loading import import_module
 import logging
@@ -67,6 +66,7 @@ class ChatBot(object):
         trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')
         TrainerClass = import_module(trainer)
         self.trainer = TrainerClass(self.storage, **kwargs)
+        self.training_data = kwargs.get('training_data')
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
@@ -228,6 +228,8 @@ class ChatBot(object):
         """
         Learn that the statement provided is a valid response.
         """
+        from .conversation import Response
+
         previous_statement = self.get_last_response_statement()
 
         if previous_statement:

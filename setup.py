@@ -33,6 +33,8 @@ setup(
         'chatterbot.ext',
         'chatterbot.ext.django_chatterbot',
         'chatterbot.ext.django_chatterbot.migrations',
+        'chatterbot.ext.django_chatterbot.management',
+        'chatterbot.ext.django_chatterbot.management.commands',
         'chatterbot.utils'
     ],
     package_dir={'chatterbot': 'chatterbot'},
