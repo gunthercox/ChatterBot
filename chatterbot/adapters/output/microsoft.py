@@ -25,23 +25,34 @@ class Microsoft(OutputAdapter):
             'Content-Type': 'application/json'
         }
 
-    def get_most_recent_message(self, watermark='1'):
-        endpoint = '{host}/api/conversations/{id}/messages?watermark={watermark}'\
+    def _validate_status_code(self, response):
+        status_code = response.status_code
+        if status_code not in [200, 204]:
+            raise self.HTTPStatusException('{} status code recieved'.
+                                           format(status_code))
+
+    def get_most_recent_message(self):
+        endpoint = '{host}/api/conversations/{id}/messages'\
             .format(host=self.directline_host,
-                    id=self.conversation_id,
-                    watermark=watermark)
+                    id=self.conversation_id)
 
         response = requests.get(
             endpoint,
-            headers=self.headers
+            headers=self.headers,
+            verify=False
         )
-        self.logger.info(u'{} getting most recent message'.format(
-            response.status_code
+
+        self.logger.info(u'{} retrieving most recent messages {}'.format(
+            response.status_code, endpoint
         ))
+
         self._validate_status_code(response)
+
         data = response.json()
-        if data["messages"]:
-            return data["messages"][0]
+
+        if data['messages']:
+            last_msg = int(data['watermark'])
+            return data['messages'][last_msg-1]
         return None
 
     def send_message(self, conversation_id, message):
@@ -61,14 +72,26 @@ class Microsoft(OutputAdapter):
             })
         )
 
+        self.logger.info(u'{} sending message {}'.format(
+            response.status_code, message_url
+        ))
+        self._validate_status_code(response)
         # Microsoft return 204 on operation succeeded and no content was returned.
         return self.get_most_recent_message()
 
     def process_response(self, statement, confidence=None):
         data = self.send_message(self.conversation_id, statement.text)
-        # Update the output statement with the message id
-        self.context.recent_statements[-1][1].add_extra_data(
-            'microsoft_msg_id', data['id']
-        )
-
+        self.logger.info(u'processing user response {}'.format(data))
         return statement
+
+    class HTTPStatusException(Exception):
+        """
+        Exception raised when unexpected non-success HTTP
+        status codes are returned in a response.
+        """
+
+        def __init__(self, value):
+            self.value = value
+
+        def __str__(self):
+            return repr(self.value)
