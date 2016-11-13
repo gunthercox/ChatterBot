@@ -107,7 +107,7 @@ Be sure to also see the documentation for the :ref:`Microsoft output adapter <mi
        input_adapter="chatterbot.adapters.input.Microsoft",
        directline_host="https://directline.botframework.com",
        dirctline_conversation_id="IEyJvnDULgn",
-       directline_access_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
+       direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
    )
 
 Speech recognition

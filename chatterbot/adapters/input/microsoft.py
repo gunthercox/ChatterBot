@@ -15,7 +15,8 @@ class Microsoft(InputAdapter):
     def __init__(self, **kwargs):
         super(Microsoft, self).__init__(**kwargs)
 
-        self.directline_host = kwargs.get('directline_host')
+        self.directline_host = kwargs.get('directline_host', 
+                                          'https://directline.botframework.com')
 
         # NOTE: Direct Line client credentials are different from your bot's
         # credentials

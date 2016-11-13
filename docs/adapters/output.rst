@@ -94,7 +94,7 @@ Be sure to also see the documentation for the :ref:`Microsoft input adapter <mic
        output_adapter="chatterbot.adapters.output.Microsoft",
        direct_line_host="https://directline.botframework.com",
        direct_line_conservationId="IEyJvnDULgn",
-       direct_line_access_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
+       direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
    )
 
 Mailgun adapter

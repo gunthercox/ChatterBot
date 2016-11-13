@@ -12,7 +12,8 @@ class Microsoft(OutputAdapter):
     def __init__(self, **kwargs):
         super(Microsoft, self).__init__(**kwargs)
 
-        self.directline_host = kwargs.get("directline_host")
+        self.directline_host = kwargs.get('directline_host',
+                                          'https://directline.botframework.com')
         self.direct_line_token_or_secret = kwargs.get\
             ("direct_line_token_or_secret")
         self.conversation_id = kwargs.get("conversation_id")
