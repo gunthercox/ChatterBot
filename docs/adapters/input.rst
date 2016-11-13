@@ -90,6 +90,26 @@ the `Mailgun API`_.
 .. literalinclude:: ../../examples/mailgun.py
    :language: python
 
+MicrosotBot Adapter
+===================
+
+.. autofunction:: chatterbot.adapters.input.Microsoft
+
+This is an input adapter that allows a ChatterBot instance to communicate
+through `Microsoft`_ using *direct line client* protocol.
+
+Be sure to also see the documentation for the :ref:`Microsoft output adapter <microsoft-output-adapter>`.
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       "My ChatterBot",
+       input_adapter="chatterbot.adapters.input.Microsoft",
+       directline_host="https://directline.botframework.com",
+       dirctline_conversation_id="IEyJvnDULgn",
+       direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
+   )
+
 Speech recognition
 ==================
 
@@ -101,3 +121,4 @@ your chat bot interact verbally with others.
 .. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
 .. _HipChat: https://www.hipchat.com/
 .. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
+.. _Microsoft: https://docs.botframework.com/en-us/restapi/directline/#/Conversations
