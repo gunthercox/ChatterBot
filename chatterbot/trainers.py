@@ -272,8 +272,6 @@ class UbuntuCorpusTrainer(Trainer):
 
         self.logger.info('Starting file extraction')
 
-        extracted_directory_path = ''
-
         def track_progress(members):
             for member in members:
                 # this will be the current file being extracted
@@ -281,11 +279,11 @@ class UbuntuCorpusTrainer(Trainer):
                 print('Extracting {}'.format(member))
 
         with tarfile.open(file_path) as tar:
-            tar.extractall(members=track_progress(tar))
+            tar.extractall(path=self.data_directory, members=track_progress(tar))
 
         self.logger.info('File extraction complete')
 
-        return extracted_directory_path
+        return self.data_directory
 
     def train(self):
         import glob

@@ -19,16 +19,19 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
     def tearDown(self):
         super(UbuntuCorpusTrainerTestCase, self).tearDown()
+        import shutil
 
         # Clean up by removing the corpus data directory
-        os.removedirs(self.chatbot.trainer.data_directory)
+        if os.path.exists(self.chatbot.trainer.data_directory):
+            shutil.rmtree(self.chatbot.trainer.data_directory)
 
     def _create_test_corpus(self):
         """
         Create a small tar in a similar format to the
         Ubuntu corpus file in memory for testing.
         """
-        tar = tarfile.TarFile('ubuntu_corpus.tar', 'w')
+        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_corpus.tar')
+        tar = tarfile.TarFile(file_path, 'w')
 
         data1 = (
             b'2004-11-04T16:49:00.000Z	tom		jane : Hello\n' +
@@ -59,7 +62,14 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         tsv2.close()
         tar.close()
 
-        return os.path.realpath(tar.name)
+        return file_path
+
+    def _destroy_test_corpus(self):
+        """
+        Remove the test corpus file.
+        """
+        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_corpus.tar')
+        os.remove(file_path)
 
     def _mock_get_response(self, *args, **kwargs):
         """
@@ -120,6 +130,12 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         file_object_path = self._create_test_corpus()
         self.chatbot.trainer.extract(file_object_path)
+
+        self._destroy_test_corpus()
+        corpus_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs', '3')
+
+        self.assertTrue(os.path.exists(os.path.join(corpus_path, '1.tsv')))
+        self.assertTrue(os.path.exists(os.path.join(corpus_path, '2.tsv')))
 
     def test_train(self):
         """
