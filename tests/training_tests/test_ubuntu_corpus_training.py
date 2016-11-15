@@ -1,4 +1,5 @@
 from io import BytesIO
+import unittest
 import tarfile
 import os
 from mock import Mock
@@ -15,6 +16,12 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
     def setUp(self):
         super(UbuntuCorpusTrainerTestCase, self).setUp()
         self.chatbot.set_trainer(UbuntuCorpusTrainer)
+
+    def tearDown(self):
+        super(UbuntuCorpusTrainerTestCase, self).tearDown()
+
+        # Clean up by removing the corpus data directory
+        os.removedirs(self.chatbot.trainer.data_directory)
 
     def _create_test_corpus(self):
         """
@@ -54,29 +61,58 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
         return os.path.realpath(tar.name)
 
+    def _mock_get_response(self, *args, **kwargs):
+        """
+        Return a requests.Response object.
+        """
+        import requests
+        response = requests.Response()
+        response._content = b'Some response content'
+        response.headers['content-length'] = len(response.content)
+        return response
+
     def test_download(self):
         """
         Test the download function for the Ubuntu corpus trainer.
         """
         import requests
 
-        def mock_get_response(*args, **kwargs):
-            response = requests.Response()
-            response._content = b'Some response content'
-            response.headers['content-length'] = len(response.content)
-            return response
-
-        requests.get = Mock(side_effect=mock_get_response)
+        requests.get = Mock(side_effect=self._mock_get_response)
         download_url = 'https://example.com/download.tar'
-        # self.chatbot.trainer.requests.get = Mock()
         self.chatbot.trainer.download(download_url, show_status=False)
-        requests.get.assert_called_with(download_url, stream=True)
 
-    def test_download_does_not_exist(self):
+        file_name = download_url.split('/')[-1]
+        downloaded_file_path = os.path.join(self.chatbot.trainer.data_directory, file_name)
+
+        requests.get.assert_called_with(download_url, stream=True)
+        self.assertTrue(os.path.exists(downloaded_file_path))
+
+        # Remove the dummy download_url
+        os.remove(downloaded_file_path)
+
+    def test_download_file_exists(self):
         """
-        Test the case that the file being downloaded does not exist.
+        Test the case that the corpus file exists.
         """
-        pass
+        import requests
+
+        file_path = os.path.join(self.chatbot.trainer.data_directory, 'download.tar')
+        open(file_path, 'a').close()
+
+        requests.get = Mock(side_effect=self._mock_get_response)
+        download_url = 'https://example.com/download.tar'
+        self.chatbot.trainer.download(download_url, show_status=False)
+
+        # Remove the dummy download_url
+        os.remove(file_path)
+
+        self.assertFalse(requests.get.called)
+
+    def test_download_url_does_not_exist(self):
+        """
+        Test the case that the url being downloaded does not exist.
+        """
+        raise unittest.SkipTest('This test needs to be created.')
 
     def test_extract(self):
         """

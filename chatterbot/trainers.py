@@ -1,17 +1,27 @@
-from .conversation import Statement, Response
 import logging
+from .conversation import Statement, Response
 
 
 class Trainer(object):
+    """
+    Base class for all other trainer classes.
+    """
 
     def __init__(self, storage, **kwargs):
         self.storage = storage
         self.logger = logging.getLogger(__name__)
 
     def train(self, *args, **kwargs):
+        """
+        This class must be overridden by a class the inherits from 'Trainer'.
+        """
         raise self.TrainerInitializationException()
 
     class TrainerInitializationException(Exception):
+        """
+        Exception raised when a base class has not overridden
+        the required methods on the Trainer base class.
+        """
 
         def __init__(self, value=None):
             default = (
@@ -44,6 +54,10 @@ class Trainer(object):
 
 
 class ListTrainer(Trainer):
+    """
+    Allaows a chat bot to be trained using a list of strings
+    where the list represents a conversation.
+    """
 
     def get_or_create(self, statement_text):
         """
@@ -58,6 +72,10 @@ class ListTrainer(Trainer):
         return statement
 
     def train(self, conversation):
+        """
+        Train the chat bot based on the provided list of
+        statements that represents a single conversation.
+        """
         statement_history = []
 
         for text in conversation:
@@ -73,6 +91,10 @@ class ListTrainer(Trainer):
 
 
 class ChatterBotCorpusTrainer(Trainer):
+    """
+    Allows the chat bot to be trained using data from the
+    ChatterBot dialog corpus.
+    """
 
     def __init__(self, storage, **kwargs):
         super(ChatterBotCorpusTrainer, self).__init__(storage, **kwargs)
@@ -96,6 +118,10 @@ class ChatterBotCorpusTrainer(Trainer):
 
 
 class TwitterTrainer(Trainer):
+    """
+    Allows the chat bot to be trained using data
+    gathered from Twitter.
+    """
 
     def __init__(self, storage, **kwargs):
         super(TwitterTrainer, self).__init__(storage, **kwargs)
@@ -167,8 +193,8 @@ class TwitterTrainer(Trainer):
                     status = self.api.GetStatus(tweet.in_reply_to_status_id)
                     statement.add_response(Response(status.text))
                     statements.append(statement)
-                except TwitterError as e:
-                    self.logger.warning(str(e))
+                except TwitterError as error:
+                    self.logger.warning(str(error))
 
         self.logger.info('Adding {} tweets with responses'.format(len(statements)))
 
@@ -187,17 +213,37 @@ class UbuntuCorpusTrainer(Trainer):
     the Ubuntu Dialog Corpus.
     """
 
+    def __init__(self, storage, **kwargs):
+        super(UbuntuCorpusTrainer, self).__init__(storage, **kwargs)
+        import os
+
+        self.data_directory = kwargs.get(
+            'ubuntu_corpus_data_directory',
+            './data/'
+        )
+
+        # Create the data directory if it does not already exist
+        if not os.path.exists(self.data_directory):
+            os.makedirs(self.data_directory)
+
     def download(self, url, show_status=True):
         """
         Download a file from the given url.
         Show a progress indicator for the download status.
         Based on: http://stackoverflow.com/a/15645088/1547223
         """
+        import os
         import sys
         import requests
 
-        file_name = 'download.data'
-        with open(file_name, 'wb') as open_file:
+        file_name = url.split('/')[-1]
+        file_path = os.path.join(self.data_directory, file_name)
+
+        # Do not download the data if it already exists
+        if os.path.exists(file_path):
+            return file_path
+
+        with open(file_path, 'wb') as open_file:
             print('Downloading %s' % file_name)
             response = requests.get(url, stream=True)
             total_length = response.headers.get('content-length')
@@ -206,15 +252,17 @@ class UbuntuCorpusTrainer(Trainer):
                 # No content length header
                 open_file.write(response.content)
             else:
-                downloadl = 0
+                download = 0
                 total_length = int(total_length)
                 for data in response.iter_content(chunk_size=4096):
-                    downloadl += len(data)
+                    download += len(data)
                     open_file.write(data)
                     if show_status:
-                        done = int(50 * downloadl / total_length)
+                        done = int(50 * download / total_length)
                         sys.stdout.write('\r[%s%s]' % ('=' * done, ' ' * (50 - done)))
                         sys.stdout.flush()
+
+        return file_path
 
     def extract(self, file_path):
         """
