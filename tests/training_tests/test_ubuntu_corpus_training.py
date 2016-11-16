@@ -30,20 +30,20 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Create a small tar in a similar format to the
         Ubuntu corpus file in memory for testing.
         """
-        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_corpus.tar')
+        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
         tar = tarfile.TarFile(file_path, 'w')
 
         data1 = (
-            b'2004-11-04T16:49:00.000Z	tom		jane : Hello\n' +
-            b'2004-11-04T16:49:00.000Z	tom		jane : Is anyone there?\n' +
-            b'2004-11-04T16:49:00.000Z	jane	tom	I am good' +
+            b'2004-11-04T16:49:00.000Z	tom	jane	Hello\n' +
+            b'2004-11-04T16:49:00.000Z	tom	jane	Is anyone there?\n' +
+            b'2004-11-04T16:49:00.000Z	jane		Yes\n' +
             b'\n'
         )
 
         data2 = (
-            b'2004-11-04T16:49:00.000Z	tom		jane : Hello\n' +
-            b'2004-11-04T16:49:00.000Z	tom		jane : Is anyone there?\n' +
-            b'2004-11-04T16:49:00.000Z	jane	tom	I am good' +
+            b'2004-11-04T16:49:00.000Z	tom	jane	Hello\n' +
+            b'2004-11-04T16:49:00.000Z	tom		Is anyone there?\n' +
+            b'2004-11-04T16:49:00.000Z	jane		Yes\n' +
             b'\n'
         )
 
@@ -68,7 +68,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         Remove the test corpus file.
         """
-        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_corpus.tar')
+        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
         os.remove(file_path)
 
     def _mock_get_response(self, *args, **kwargs):
@@ -88,7 +88,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         import requests
 
         requests.get = Mock(side_effect=self._mock_get_response)
-        download_url = 'https://example.com/download.tar'
+        download_url = 'https://example.com/download.tgz'
         self.chatbot.trainer.download(download_url, show_status=False)
 
         file_name = download_url.split('/')[-1]
@@ -106,11 +106,11 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         import requests
 
-        file_path = os.path.join(self.chatbot.trainer.data_directory, 'download.tar')
+        file_path = os.path.join(self.chatbot.trainer.data_directory, 'download.tgz')
         open(file_path, 'a').close()
 
         requests.get = Mock(side_effect=self._mock_get_response)
-        download_url = 'https://example.com/download.tar'
+        download_url = 'https://example.com/download.tgz'
         self.chatbot.trainer.download(download_url, show_status=False)
 
         # Remove the dummy download_url
@@ -118,7 +118,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
         self.assertFalse(requests.get.called)
 
-    def test_download_url_does_not_exist(self):
+    def test_download_url_not_found(self):
         """
         Test the case that the url being downloaded does not exist.
         """
@@ -137,8 +137,27 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '1.tsv')))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '2.tsv')))
 
+    def test_already_extracted(self):
+        """
+        Test that extraction is only done if the compressed file
+        has not already been extracted.
+        """
+        file_object_path = self._create_test_corpus()
+        created = self.chatbot.trainer.extract(file_object_path)
+        not_created = self.chatbot.trainer.extract(file_object_path)
+        self._destroy_test_corpus()
+
+        self.assertTrue(created)
+        self.assertFalse(not_created)
+
     def test_train(self):
         """
         Test that the chat bot is trained using data from the Ubuntu Corpus.
         """
-        pass
+        path = self._create_test_corpus()
+
+        self.chatbot.train()
+        self._destroy_test_corpus()
+
+        response = self.chatbot.get_response('Is anyone there?')
+        self.assertEqual(response, 'Yes')
