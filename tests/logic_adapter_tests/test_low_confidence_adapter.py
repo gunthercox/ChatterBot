@@ -41,7 +41,7 @@ class LowConfidenceAdapterTestCase(TestCase):
 
     def test_high_confidence(self):
         """
-        Test the case that I high confidence response is known.
+        Test the case that a high confidence response is known.
         """
         statement = Statement('What is your quest?')
         confidence, match = self.adapter.process(statement)
