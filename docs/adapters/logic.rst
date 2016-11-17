@@ -136,6 +136,21 @@ Example usage
 .. literalinclude:: ../../examples/default_response_example.py
    :language: python
 
+
+Specific Response Adapter
+=========================
+
+If the input that the chat bot recieves, matches the input text specified
+for this adapter, the specified response will be returned.
+
+.. autofunction:: chatterbot.adapters.logic.SpecificResponseAdapter
+
+Example usage
+-------------
+
+.. literalinclude:: ../../examples/specific_response_example.py
+   :language: python
+
 .. _wordnet: http://www.nltk.org/howto/wordnet.html
 .. _NLTK: http://www.nltk.org/
 .. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index
