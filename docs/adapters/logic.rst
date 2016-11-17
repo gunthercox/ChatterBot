@@ -26,6 +26,7 @@ take priority.
        ]
    )
 
+
 Closest Match Adapter
 =====================
 
@@ -37,6 +38,7 @@ How it works
 ------------
 
 The closest match algorithm determines the similarity between the input statement and a set of known statements. For example, there is a 65% similarity between the statements *"where is the post office?"* and *"looking for the post office"*. The closest match algorithm selects the highest matching known statements and returns a response based on that selection.
+
 
 Closest Meaning Adapter
 =======================
@@ -50,15 +52,16 @@ How it works
 
 The closest meaning algorithm uses the `wordnet`_ functionality of `NLTK`_ to determine the similarity of two statements based on the path similarity between each token of each statement. This is essentially an evaluation of the closeness of synonyms. The statement that has the closest path similarity of synsets to the input statement is returned.
 
+
 Approximate Sentence Match Adapter
-----------------------------------
+==================================
 
 .. autofunction:: chatterbot.adapters.logic.ApproximateSentenceMatchAdapter
 
 The `ApproximateSentenceMatchAdapter` calculates a Jaccard index and give result to a given statement.
 
 How it works
-++++++++++++
+------------
 
 The Jaccard index is composed of a numerator and denominator.
   In the numerator, we count the number of items that are shared between the sets.
@@ -77,6 +80,7 @@ The Jaccard index is composed of a numerator and denominator.
   The union of the sets is {young, cat, very, hungry}, which has a count of four.
   Therefore, our `Jaccard similarity index`_ is two divided by four, or 50%.
 
+
 Time Logic Adapter
 ==================
 
@@ -90,6 +94,7 @@ Example
 
 | User: What time is it?
 | Bot: The current time is 4:45PM.
+
 
 Mathematical Evaluation Adapter
 ===============================
@@ -107,6 +112,7 @@ Example
 | User: What is four plus four?
 | Bot: (4 + 4) = 8
 
+
 SentimentAdapter
 ================
 
@@ -114,6 +120,21 @@ SentimentAdapter
 
 This is a logic adapter that selects a response that has the closest matching
 sentiment value to the input.
+
+
+Low Confidence Response Adapter
+===============================
+
+This adapter returns a specified default response if a response can not be
+determined with a high amount of confidence.
+
+.. autofunction:: chatterbot.adapters.logic.LowConfidenceAdapter
+
+Example usage
+-------------
+
+.. literalinclude:: ../../examples/default_response_example.py
+   :language: python
 
 .. _wordnet: http://www.nltk.org/howto/wordnet.html
 .. _NLTK: http://www.nltk.org/

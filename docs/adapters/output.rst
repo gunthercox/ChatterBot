@@ -78,14 +78,14 @@ Be sure to also see the documentation for the :ref:`HipChat input adapter <hipch
    )
 
 Microsoft Adapter
-===============
+=================
 
 .. autofunction:: chatterbot.adapters.output.Microsoft
 
 This is an output adapter that allows a ChatterBot instance to send responses
 to a `Microsoft`_ using *Direct Line protocol*.
 
-Be sure to also see the documentation for the :ref:`Microsoft input adapter <microsoft-input-adapter>`.
+Be sure to also see the documentation for the `Microsoft input adapter <microsoft-input-adapter>`_.
 
 .. code-block:: python
 
