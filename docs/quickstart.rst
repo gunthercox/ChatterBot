@@ -18,7 +18,7 @@ Create a new chat bot
 .. note::
 
    The only required parameter for the `ChatBot` is a name.
-   This can be any anything you want.
+   This can be anything you want.
 
 Training
 ========
