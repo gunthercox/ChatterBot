@@ -3,6 +3,7 @@ This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
 
+
 def levenshtein_distance(statement, other_statement):
     """
     Compare two statements based on the Levenshtein distance
@@ -11,12 +12,39 @@ def levenshtein_distance(statement, other_statement):
     :return: The percent of similarity between the text of the statements.
     :rtype: float
     """
-    from fuzzywuzzy import fuzz
+    import sys
+    import warnings
 
-    similarity = fuzz.ratio(statement.text.lower(), other_statement.text.lower())
+    # Use python-Levenshtein if available
+    try:
+        from Levenshtein.StringMatcher import StringMatcher as SequenceMatcher
+    except ImportError:
+        from difflib import SequenceMatcher
 
-    # Convert the similarity from an integer to a percent
-    return similarity / 100.0
+    PYTHON = sys.version_info[0]
+
+    # Return 0 if either statement has a falsy text value
+    if not statement.text or not statement.text:
+        return 0
+
+    # Get the lowercase version of both strings
+    if PYTHON < 3:
+        statement_text = unicode(statement.text.lower())
+        other_statement_text = unicode(other_statement.text.lower())
+    else:
+        statement_text = str(statement.text.lower())
+        other_statement_text = str(other_statement.text.lower())
+
+    similarity = SequenceMatcher(
+        None,
+        statement_text,
+        other_statement_text
+    )
+
+    # Calculate a decimal percent of the similarity
+    percent = int(round(100 * similarity.ratio())) / 100.0
+
+    return percent
 
 
 def synset_distance(statement, other_statement):
