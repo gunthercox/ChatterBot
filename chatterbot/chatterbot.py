@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from .adapters.storage import StorageAdapter
 from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
@@ -236,7 +237,7 @@ class ChatBot(object):
             statement.add_response(
                 Response(previous_statement.text)
             )
-            self.logger.info(u'Adding "{}" as a response to "{}"'.format(
+            self.logger.info('Adding "{}" as a response to "{}"'.format(
                 statement.text,
                 previous_statement.text
             ))

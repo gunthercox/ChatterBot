@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from chatterbot.conversation import Statement
 from .base_match import BaseMatchAdapter
 

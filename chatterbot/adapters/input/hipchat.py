@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
 from time import sleep
@@ -48,7 +49,7 @@ class HipChat(InputAdapter):
         https://www.hipchat.com/docs/apiv2/method/view_recent_room_history
         """
 
-        recent_histroy_url = "{}/v2/room/{}/history?max-results={}".format(
+        recent_histroy_url = '{}/v2/room/{}/history?max-results={}'.format(
             self.hipchat_host,
             room_id_or_name,
             max_results

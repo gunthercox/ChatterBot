@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
 import requests
@@ -23,7 +24,7 @@ class Mailgun(InputAdapter):
             params={
                 'begin': yesterday.isoformat(),
                 'ascending': 'yes',
-                'limit':  1
+                'limit': 1
             }
         )
 

@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters import Adapter
 from chatterbot.utils.module_loading import import_module
 
@@ -76,7 +77,7 @@ class LogicAdapter(Adapter):
 
     class EmptyDatasetException(Exception):
 
-        def __init__(self, value="An empty set was received when at least one statement was expected."):
+        def __init__(self, value='An empty set was received when at least one statement was expected.'):
             self.value = value
 
         def __str__(self):

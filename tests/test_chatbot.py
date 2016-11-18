@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from .base_case import ChatBotTestCase
 from chatterbot.conversation import Statement, Response
 
@@ -130,6 +131,13 @@ class ChatterBotResponseTests(ChatBotTestCase):
         self.assertEqual(second_response, self.test_statement.text)
         self.assertEqual(len(statement.in_response_to), 1)
         self.assertIn("Hi", statement.in_response_to)
+
+    def test_get_response_unicode(self):
+        """
+        Test the case that a unicode string is passed in.
+        """
+        response = self.chatbot.get_response(u'سلام')
+        self.assertGreater(len(response.text), 0)
 
     def test_response_extra_data(self):
         """
