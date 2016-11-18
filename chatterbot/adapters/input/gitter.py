@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
 from time import sleep
@@ -47,7 +48,7 @@ class Gitter(InputAdapter):
             headers=self.headers,
             json={'uri': room_name}
         )
-        self.logger.info(u'{} joining room {}'.format(
+        self.logger.info('{} joining room {}'.format(
             response.status_code, endpoint
         ))
         self._validate_status_code(response)
@@ -59,7 +60,7 @@ class Gitter(InputAdapter):
             endpoint,
             headers=self.headers
         )
-        self.logger.info(u'{} retrieving user data {}'.format(
+        self.logger.info('{} retrieving user data {}'.format(
             response.status_code, endpoint
         ))
         self._validate_status_code(response)
@@ -72,7 +73,7 @@ class Gitter(InputAdapter):
             headers=self.headers,
             json={'chat': message_ids}
         )
-        self.logger.info(u'{} marking messages as read {}'.format(
+        self.logger.info('{} marking messages as read {}'.format(
             response.status_code, endpoint
         ))
         self._validate_status_code(response)
@@ -84,7 +85,7 @@ class Gitter(InputAdapter):
             endpoint,
             headers=self.headers
         )
-        self.logger.info(u'{} getting most recent message'.format(
+        self.logger.info('{} getting most recent message'.format(
             response.status_code
         ))
         self._validate_status_code(response)
@@ -131,7 +132,6 @@ class Gitter(InputAdapter):
             if self.should_respond(data):
                 self.mark_messages_as_read([data['id']])
                 new_message = True
-            self.logger.info(u'')
             sleep(self.sleep_time)
 
         text = self.remove_mentions(data['text'])

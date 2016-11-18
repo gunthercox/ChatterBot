@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters.output import OutputAdapter
 import requests
 
@@ -39,7 +40,7 @@ class Gitter(OutputAdapter):
             headers=self.headers,
             json={'uri': room_name}
         )
-        self.logger.info(u'{} status joining room {}'.format(
+        self.logger.info('{} status joining room {}'.format(
             response.status_code, endpoint
         ))
         self._validate_status_code(response)
@@ -55,7 +56,7 @@ class Gitter(OutputAdapter):
             headers=self.headers,
             json={'text': text}
         )
-        self.logger.info(u'{} sending message to {}'.format(
+        self.logger.info('{} sending message to {}'.format(
             response.status_code, endpoint
         ))
         self._validate_status_code(response)

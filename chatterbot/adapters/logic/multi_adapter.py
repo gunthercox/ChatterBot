@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from .logic_adapter import LogicAdapter
 from collections import Counter
 
@@ -32,7 +33,7 @@ class MultiLogicAdapter(LogicAdapter):
                 results.append((confidence, output, ))
 
                 self.logger.info(
-                    u'{} selected "{}" as a response with a confidence of {}'.format(
+                    '{} selected "{}" as a response with a confidence of {}'.format(
                          str(adapter.__class__), output.text, confidence
                     )
                 )
@@ -42,7 +43,7 @@ class MultiLogicAdapter(LogicAdapter):
                     max_confidence = confidence
             else:
                 self.logger.info(
-                    u'Not processing the statement using {}'.format(
+                    'Not processing the statement using {}'.format(
                         str(adapter.__class__)
                     )
                 )

@@ -1,11 +1,12 @@
+# -*- coding: utf-8 -*-
+from chatterbot import ChatBot
+import logging
+
 """
 This example shows how to create a chat bot that
 will learn responses based on an additional feedback
 element from the user.
 """
-from chatterbot import ChatBot
-import logging
-
 
 # Uncomment the following line to enable verbose logging
 # logging.basicConfig(level=logging.INFO)

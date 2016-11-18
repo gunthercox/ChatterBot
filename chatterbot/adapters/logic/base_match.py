@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 from .logic_adapter import LogicAdapter
 
 
@@ -26,8 +26,8 @@ class BaseMatchAdapter(LogicAdapter):
             if self.has_storage_context:
                 # Use a randomly picked statement
                 self.logger.info(
-                    u'No statements have known responses. ' +
-                    u'Choosing a random response to return.'
+                    'No statements have known responses. ' +
+                    'Choosing a random response to return.'
                 )
                 return 0, self.context.storage.get_random()
             else:
@@ -57,7 +57,7 @@ class BaseMatchAdapter(LogicAdapter):
 
         # Select the closest match to the input statement
         confidence, closest_match = self.get(input_statement)
-        self.logger.info(u'Using "{}" as a close match to "{}"'.format(
+        self.logger.info('Using "{}" as a close match to "{}"'.format(
             input_statement.text, closest_match.text
         ))
 
@@ -71,16 +71,16 @@ class BaseMatchAdapter(LogicAdapter):
 
         if response_list:
             self.logger.info(
-                u'Selecting response from {} optimal responses.'.format(
+                'Selecting response from {} optimal responses.'.format(
                     len(response_list)
                 )
             )
             response = self.select_response(input_statement, response_list)
-            self.logger.info(u'Response selected. Using "{}"'.format(response.text))
+            self.logger.info('Response selected. Using "{}"'.format(response.text))
         else:
             response = self.context.storage.get_random()
             self.logger.info(
-                u'No response to "{}" found. Selecting a random response.'.format(
+                'No response to "{}" found. Selecting a random response.'.format(
                     closest_match.text
                 )
             )

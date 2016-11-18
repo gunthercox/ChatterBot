@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters.output import OutputAdapter
 import requests
 
@@ -8,11 +9,11 @@ class Mailgun(OutputAdapter):
         super(Mailgun, self).__init__(**kwargs)
 
         # Use the bot's name for the name of the sender
-        self.name = kwargs.get("name")
-        self.from_address = kwargs.get("mailgun_from_address")
-        self.api_key = kwargs.get("mailgun_api_key")
-        self.endpoint = kwargs.get("mailgun_api_endpoint")
-        self.recipients = kwargs.get("mailgun_recipients")
+        self.name = kwargs.get('name')
+        self.from_address = kwargs.get('mailgun_from_address')
+        self.api_key = kwargs.get('mailgun_api_key')
+        self.endpoint = kwargs.get('mailgun_api_endpoint')
+        self.recipients = kwargs.get('mailgun_recipients')
 
     def send_message(self, subject, text, from_address, recipients):
         """
@@ -23,19 +24,19 @@ class Mailgun(OutputAdapter):
         """
         return requests.post(
             self.endpoint,
-            auth=("api", self.api_key),
+            auth=('api', self.api_key),
             data={
-                "from": "%s <%s>" % (self.name, from_address),
-                "to": recipients,
-                "subject": subject,
-                "text": text
+                'from': '%s <%s>' % (self.name, from_address),
+                'to': recipients,
+                'subject': subject,
+                'text': text
             })
 
     def process_response(self, statement, confidence=None):
         """
         Send the response statement as an email.
         """
-        subject = "Message from %s" % (self.name)
+        subject = 'Message from %s' % (self.name)
 
         self.send_message(
             subject,

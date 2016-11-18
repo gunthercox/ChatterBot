@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters.output import OutputAdapter
 import requests
 import json
@@ -15,8 +16,8 @@ class Microsoft(OutputAdapter):
         self.directline_host = kwargs.get('directline_host',
                                           'https://directline.botframework.com')
         self.direct_line_token_or_secret = kwargs.get\
-            ("direct_line_token_or_secret")
-        self.conversation_id = kwargs.get("conversation_id")
+            ('direct_line_token_or_secret')
+        self.conversation_id = kwargs.get('conversation_id')
 
         authorization_header = 'BotConnector {}'.\
             format(self.direct_line_token_or_secret)
@@ -43,7 +44,7 @@ class Microsoft(OutputAdapter):
             verify=False
         )
 
-        self.logger.info(u'{} retrieving most recent messages {}'.format(
+        self.logger.info('{} retrieving most recent messages {}'.format(
             response.status_code, endpoint
         ))
 
@@ -73,7 +74,7 @@ class Microsoft(OutputAdapter):
             })
         )
 
-        self.logger.info(u'{} sending message {}'.format(
+        self.logger.info('{} sending message {}'.format(
             response.status_code, message_url
         ))
         self._validate_status_code(response)
@@ -82,7 +83,7 @@ class Microsoft(OutputAdapter):
 
     def process_response(self, statement, confidence=None):
         data = self.send_message(self.conversation_id, statement.text)
-        self.logger.info(u'processing user response {}'.format(data))
+        self.logger.info('processing user response {}'.format(data))
         return statement
 
     class HTTPStatusException(Exception):

@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
 from time import sleep
@@ -50,7 +51,7 @@ class Microsoft(InputAdapter):
             headers=self.headers,
             verify=False
         )
-        self.logger.info(u'{} starting conversation {}'.format(
+        self.logger.info('{} starting conversation {}'.format(
             response.status_code, endpoint
         ))
         self._validate_status_code(response)
@@ -67,7 +68,7 @@ class Microsoft(InputAdapter):
             verify=False
         )
 
-        self.logger.info(u'{} retrieving most recent messages {}'.format(
+        self.logger.info('{} retrieving most recent messages {}'.format(
             response.status_code, endpoint
         ))
 
@@ -93,7 +94,7 @@ class Microsoft(InputAdapter):
 
         text = data['text']
         statement = Statement(text)
-        self.logger.info(u'processing user statement {}'.format(statement))
+        self.logger.info('processing user statement {}'.format(statement))
 
         return statement
 

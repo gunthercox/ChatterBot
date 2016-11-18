@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 
 '''
