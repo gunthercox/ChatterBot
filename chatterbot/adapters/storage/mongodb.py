@@ -135,7 +135,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         del(statement_data['text'])
 
         statement_data['in_response_to'] = self.deserialize_responses(
-            statement_data['in_response_to']
+            statement_data.get('in_response_to', [])
         )
 
         return Statement(statement_text, **statement_data)
