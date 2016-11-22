@@ -196,6 +196,17 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         self.assertEqual(obj.in_response_to[1].text, 'Hey')
         self.assertEqual(obj.in_response_to[1].occurrence, 6)
 
+    def test_mongo_to_object_without_in_response_to(self):
+        """
+        Test that data can be converted to a response if it
+        does not have an in_response_to attribute.
+        """
+        obj = self.adapter.mongo_to_object({'text': 'Hello'})
+
+        self.assertEqual(type(obj), Statement)
+        self.assertEqual(obj.text, 'Hello')
+        self.assertEqual(len(obj.in_response_to), 0)
+
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."
         statement = Statement(text)
