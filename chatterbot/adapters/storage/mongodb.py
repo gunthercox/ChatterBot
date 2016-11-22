@@ -100,7 +100,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         if not values:
             return None
 
-        del(values['text'])
+        del values['text']
 
         # Build the objects for the response list
         values['in_response_to'] = self.deserialize_responses(
@@ -114,11 +114,11 @@ class MongoDatabaseAdapter(StorageAdapter):
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = Statement("")
+        proxy_statement = Statement('')
 
         for response in response_list:
-            text = response["text"]
-            del(response["text"])
+            text = response['text']
+            del response['text']
 
             proxy_statement.add_response(
                 Response(text, **response)
@@ -132,7 +132,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         returned from Mongo DB.
         """
         statement_text = statement_data['text']
-        del(statement_data['text'])
+        del statement_data['text']
 
         statement_data['in_response_to'] = self.deserialize_responses(
             statement_data.get('in_response_to', [])
@@ -154,13 +154,13 @@ class MongoDatabaseAdapter(StorageAdapter):
                 serialized_responses.append({'text': response.text})
 
             query = query.statement_response_list_equals(serialized_responses)
-            del(kwargs['in_response_to'])
+            del kwargs['in_response_to']
 
         if 'in_response_to__contains' in kwargs:
             query = query.statement_response_list_contains(
                 kwargs['in_response_to__contains']
             )
-            del(kwargs['in_response_to__contains'])
+            del kwargs['in_response_to__contains']
 
         query = query.raw(kwargs)
 
