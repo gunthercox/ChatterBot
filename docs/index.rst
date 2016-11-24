@@ -46,6 +46,7 @@ Contents:
    examples
    about
    training
+   corpus
    adapters/index
    filters/index
    chatterbot
