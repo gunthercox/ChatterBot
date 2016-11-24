@@ -90,8 +90,10 @@ the `Mailgun API`_.
 .. literalinclude:: ../../examples/mailgun.py
    :language: python
 
-MicrosotBot Adapter
-===================
+.. _microsoft-input-adapter:
+
+Microsot Bot Framework Adapter
+==============================
 
 .. autofunction:: chatterbot.adapters.input.Microsoft
 
