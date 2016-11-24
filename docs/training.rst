@@ -127,6 +127,20 @@ Twitter training example
    :language: python
 
 
+Training with the Ubuntu dialog corpus
+======================================
+
+.. autofunction:: chatterbot.trainers.UbuntuCorpusTrainer
+
+This training class makes it possible to train your chat bot using the Ubuntu
+dialog corpus. Becaue of the file size of the Ubuntu dialog corpus, the download
+and training process may take a considerable amount of time.
+
+This training class will handle the process of downloading the compressed corpus
+file and extracting it. If the file has already been downloaded, it will not be
+downloaded again. If the file is already extracted, it will not be extracted again.
+
+
 Creating a new training class
 =============================
 
