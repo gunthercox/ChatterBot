@@ -1,4 +1,5 @@
 codeclimate-test-reporter
 coveralls
+flake8
 mock
 nose
