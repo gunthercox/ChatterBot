@@ -11,7 +11,7 @@ class SentimentAdapterTests(ChatBotTestCase):
 
         self.chatbot.set_trainer(ListTrainer)
         self.adapter = SentimentAdapter()
-        self.adapter.set_context(self.chatbot)
+        self.adapter.set_chatbot(self.chatbot)
 
     def test_exact_input(self):
 

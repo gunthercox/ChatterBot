@@ -56,12 +56,12 @@ class ChatBot(object):
         for adapter in logic_adapters:
             self.add_logic_adapter(adapter, **kwargs)
 
-        # Share context information such as the name, the current conversation,
-        # or access to other adapters with each of the adapters
-        self.storage.set_context(self)
-        self.logic.set_context(self)
-        self.input.set_context(self)
-        self.output.set_context(self)
+        # Add the chatbot instance to each adapter to share information such as
+        # the name, the current conversation, or other adapters
+        self.storage.set_chatbot(self)
+        self.logic.set_chatbot(self)
+        self.input.set_chatbot(self)
+        self.output.set_chatbot(self)
 
         # Use specified trainer or fall back to the default
         trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')

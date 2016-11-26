@@ -5,7 +5,7 @@ from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 
 
-class MockContext(object):
+class MockChatBot(object):
     def __init__(self):
         self.storage = StorageAdapter()
 
@@ -19,11 +19,11 @@ class ClosestMatchAdapterTests(TestCase):
     def setUp(self):
         self.adapter = ClosestMatchAdapter()
 
-        # Add a mock storage adapter to the context
-        self.adapter.set_context(MockContext())
+        # Add a mock chatbot to the logic adapter
+        self.adapter.set_chatbot(MockChatBot())
 
     def test_no_choices(self):
-        self.adapter.context.storage.filter = MagicMock(return_value=[])
+        self.adapter.chatbot.storage.filter = MagicMock(return_value=[])
 
         statement = Statement("What is your quest?")
 
@@ -44,7 +44,7 @@ class ClosestMatchAdapterTests(TestCase):
             Statement("Yuck, black licorice jelly beans.", in_response_to=[Response("What is the meaning of life?")]),
             Statement("I hear you are going on a quest?", in_response_to=[Response("Who do you love?")]),
         ]
-        self.adapter.context.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
         statement = Statement("What is your quest?")
 
@@ -56,7 +56,7 @@ class ClosestMatchAdapterTests(TestCase):
         possible_choices = [
             Statement("What is your quest?", in_response_to=[Response("What is your quest?")])
         ]
-        self.adapter.context.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
         statement = Statement("What is your quest?")
         confidence, match = self.adapter.get(statement)
@@ -67,7 +67,7 @@ class ClosestMatchAdapterTests(TestCase):
         possible_choices = [
             Statement("xxyy", in_response_to=[Response("xxyy")])
         ]
-        self.adapter.context.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
         statement = Statement("wwxx")
         confidence, match = self.adapter.get(statement)
@@ -78,7 +78,7 @@ class ClosestMatchAdapterTests(TestCase):
         possible_choices = [
             Statement("xxx", in_response_to=[Response("xxx")])
         ]
-        self.adapter.context.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
         statement = Statement("yyy")
         confidence, match = self.adapter.get(statement)
@@ -91,11 +91,11 @@ class ClosestMatchAdapterTests(TestCase):
         In this case a random response will be returned, but the confidence
         should be zero because it is a random choice.
         """
-        self.adapter.context.storage.update = MagicMock()
-        self.adapter.context.storage.filter = MagicMock(
+        self.adapter.chatbot.storage.update = MagicMock()
+        self.adapter.chatbot.storage.filter = MagicMock(
             return_value=[]
         )
-        self.adapter.context.storage.get_random = MagicMock(
+        self.adapter.chatbot.storage.get_random = MagicMock(
             return_value=Statement("Random")
         )
 

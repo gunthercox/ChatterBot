@@ -27,12 +27,17 @@ Adapters types
 3. Output adapters - Provide methods that allow ChatterBot to return a response to a defined data source.
 4. Logic adapters - Define the logic that ChatterBot uses to respond to input it receives.
 
-Context
--------
+Accessing the chatbot instance
+-------------------------------
 
-When ChatterBot initializes each adapter, it sets an attribute named 'context'. The context variable makes it possible for each adapter to have access to all of the other adapters being used. Perhaps two input and output adapters need to share some information or maybe you want to give your logic adapter direct access to the storage adapter. These are just a few cases where this functionality is useful.
+When ChatterBot initializes each adapter, it sets an attribute named :code:`chatbot`.
+The chatbot variable makes it possible for each adapter to have access to all of the other adapters being used.
+Suppose two input and output adapters need to share some information or perhaps you want to give your logic adapter
+direct access to the storage adapter. These are just a few cases where this functionality is useful.
 
-Each adapter can be accessed on the context object from within an adapter by referencing `self.context`. Then, `self.context.storage` refers to the storage adapter, `self.context.input` refers to the input adapter, `self.context.output` refers to the current output adapter, and `self.context.logic` refers to the list of logic adapters.
+Each adapter can be accessed on the chatbot object from within an adapter by referencing `self.chatbot`.
+Then, :code:`self.chatbot.storage` refers to the storage adapter, :code:`self.chatbot.input` refers to the input adapter,
+:code:`self.chatbot.output` refers to the current output adapter, and :code:`self.chatbot.logic` refers to the logic adapters.
 
 Adapter defaults
 ----------------

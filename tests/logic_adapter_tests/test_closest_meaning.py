@@ -3,15 +3,7 @@ from mock import MagicMock, Mock
 from chatterbot.adapters.logic import ClosestMeaningAdapter
 from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
-
-
-class MockContext(object):
-    def __init__(self):
-        self.storage = StorageAdapter()
-
-        self.storage.get_random = Mock(
-            side_effect=ClosestMeaningAdapter.EmptyDatasetException()
-        )
+from tests.logic_adapter_tests.test_closest_match import MockChatBot
 
 
 class ClosestMeaningAdapterTests(TestCase):
@@ -19,11 +11,11 @@ class ClosestMeaningAdapterTests(TestCase):
     def setUp(self):
         self.adapter = ClosestMeaningAdapter()
 
-        # Add a mock storage adapter to the context
-        self.adapter.set_context(MockContext())
+        # Add a mock storage adapter to the logic adapter
+        self.adapter.set_chatbot(MockChatBot())
 
     def test_no_choices(self):
-        self.adapter.context.storage.filter = MagicMock(return_value=[])
+        self.adapter.chatbot.storage.filter = MagicMock(return_value=[])
         statement = Statement('Hello')
 
         with self.assertRaises(ClosestMeaningAdapter.EmptyDatasetException):
@@ -40,7 +32,7 @@ class ClosestMeaningAdapterTests(TestCase):
             Statement('This is a beautiful swamp.', in_response_to=[Response('This is a beautiful swamp.')]),
             Statement('It smells like a swamp.', in_response_to=[Response('It smells like a swamp.')])
         ]
-        self.adapter.context.storage.filter = MagicMock(
+        self.adapter.chatbot.storage.filter = MagicMock(
             return_value=possible_choices
         )
 
@@ -55,7 +47,7 @@ class ClosestMeaningAdapterTests(TestCase):
             Statement('Are you good?'),
             Statement('You are good')
         ]
-        self.adapter.context.storage.get_response_statements = MagicMock(
+        self.adapter.chatbot.storage.get_response_statements = MagicMock(
             return_value=possible_choices
         )
 
@@ -70,15 +62,15 @@ class ClosestMeaningAdapterTests(TestCase):
         In this case a random response will be returned, but the confidence
         should be zero because it is a random choice.
         """
-        self.adapter.context.storage.update = MagicMock()
-        self.adapter.context.storage.filter = MagicMock(
+        self.adapter.chatbot.storage.update = MagicMock()
+        self.adapter.chatbot.storage.filter = MagicMock(
             return_value=[]
         )
-        self.adapter.context.storage.get_random = MagicMock(
-            return_value=Statement("Random")
+        self.adapter.chatbot.storage.get_random = MagicMock(
+            return_value=Statement('Random')
         )
 
-        confidence, match = self.adapter.process(Statement("Blah"))
+        confidence, match = self.adapter.process(Statement('Blah'))
 
         self.assertEqual(confidence, 0)
-        self.assertEqual(match.text, "Random")
+        self.assertEqual(match.text, 'Random')

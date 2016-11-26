@@ -1,13 +1,13 @@
 from __future__ import unicode_literals
-from .logic_adapter import LogicAdapter
 from collections import Counter
+from .logic_adapter import LogicAdapter
 
 
 class MultiLogicAdapter(LogicAdapter):
     """
     MultiLogicAdapter allows ChatterBot to use multiple logic
     adapters. It has methods that allow ChatterBot to add an
-    adapter, set the context, and process an input statement
+    adapter, set the chat bot, and process an input statement
     to get a response.
     """
 
@@ -84,11 +84,11 @@ class MultiLogicAdapter(LogicAdapter):
         """
         self.adapters.append(adapter)
 
-    def set_context(self, context):
+    def set_chatbot(self, chatbot):
         """
-        Set the context for each of the contained logic adapters.
+        Set the chatbot for each of the contained logic adapters.
         """
-        super(MultiLogicAdapter, self).set_context(context)
+        super(MultiLogicAdapter, self).set_chatbot(chatbot)
 
         for adapter in self.adapters:
-            adapter.set_context(context)
+            adapter.set_chatbot(chatbot)
