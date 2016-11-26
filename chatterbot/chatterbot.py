@@ -1,11 +1,11 @@
 from __future__ import unicode_literals
+import logging
 from .adapters.storage import StorageAdapter
 from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
 from .adapters.output import OutputAdapter
-from .utils.queues import ResponseQueue
-from .utils.module_loading import import_module
-import logging
+from .tools.queues import ResponseQueue
+from .utils import import_module
 
 
 class ChatBot(object):
@@ -117,7 +117,7 @@ class ChatBot(object):
         """
         for index, adapter in enumerate(self.logic.adapters):
             if adapter_name == type(adapter).__name__:
-                del(self.logic.adapters[index])
+                del self.logic.adapters[index]
                 return True
         return False
 

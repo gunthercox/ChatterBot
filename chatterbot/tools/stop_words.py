@@ -16,11 +16,13 @@ class StopWordsManager(object):
         # Download the stopwords data only if it is not already downloaded
         stopwords_path = None
         if os.name == 'nt':
-            stopwords_path = os.path.join(os.getenv('APPDATA'), 'nltk_data',
-                                                'corpora', 'stopwords.zip')
+            stopwords_path = os.path.join(
+                os.getenv('APPDATA'), 'nltk_data', 'corpora', 'stopwords.zip'
+            )
         else:
-            stopwords_path = os.path.join(os.path.expanduser('~'), 'nltk_data',
-                                                'corpora', 'stopwords.zip')
+            stopwords_path = os.path.join(
+                os.path.expanduser('~'), 'nltk_data', 'corpora', 'stopwords.zip'
+            )
         try:
             if not os.path.isfile(stopwords_path):
                 find('stopwords.zip')

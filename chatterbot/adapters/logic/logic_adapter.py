@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from chatterbot.adapters import Adapter
-from chatterbot.utils.module_loading import import_module
+from chatterbot.utils import import_module
 
 
 class LogicAdapter(Adapter):

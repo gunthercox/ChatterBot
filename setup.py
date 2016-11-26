@@ -40,7 +40,7 @@ setup(
         'chatterbot.ext.django_chatterbot.migrations',
         'chatterbot.ext.django_chatterbot.management',
         'chatterbot.ext.django_chatterbot.management.commands',
-        'chatterbot.utils'
+        'chatterbot.tools'
     ],
     package_dir={'chatterbot': 'chatterbot'},
     include_package_data=True,

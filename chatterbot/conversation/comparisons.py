@@ -15,7 +15,6 @@ def levenshtein_distance(statement, other_statement):
     :rtype: float
     """
     import sys
-    import warnings
 
     # Use python-Levenshtein if available
     try:
@@ -58,8 +57,8 @@ def synset_distance(statement, other_statement):
     :return: The percent of similarity between the closest synset distance.
     :rtype: float
     """
-    from chatterbot.utils.wordnet import Wordnet
-    from chatterbot.utils.tokenizer import Tokenizer
+    from chatterbot.tools.wordnet import Wordnet
+    from chatterbot.tools.tokenizer import Tokenizer
     import itertools
 
     wordnet = Wordnet()
@@ -180,4 +179,4 @@ def jaccard_similarity(statement, other_statement, threshold=0.5):
         ratio = len(set(lemmae_a).intersection(lemmae_b)) / float(len(set(lemmae_a).union(lemmae_b)))
     except Exception as e:
         print('Error', e)
-    return (ratio >= threshold)
+    return ratio >= threshold

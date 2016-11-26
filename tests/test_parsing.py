@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
 from datetime import timedelta, date, datetime
-from chatterbot.utils.parsing import datetime_parsing, this_week_day, previous_week_day, next_week_day, dateFromDuration
+from chatterbot.tools.parsing import datetime_parsing, this_week_day, previous_week_day, next_week_day, dateFromDuration
 
 """
   Output of the parser is an array of tuples

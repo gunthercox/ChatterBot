@@ -1,9 +1,11 @@
 from __future__ import unicode_literals
 from chatterbot.adapters.output import OutputAdapter
-from chatterbot.utils.read_input import input_function
 
 
 class OutputFormatAdapter(OutputAdapter):
+    """
+    Return output from the bot in a specified format.
+    """
 
     JSON = 'json'
     TEXT = 'text'
@@ -11,6 +13,9 @@ class OutputFormatAdapter(OutputAdapter):
     VALID_FORMATS = (JSON, TEXT, OBJECT, )
 
     def __init__(self, *args, **kwargs):
+        """
+        Set the output format for this adapter.
+        """
         super(OutputFormatAdapter, self).__init__(**kwargs)
         self.format = kwargs.get('output_format', 'object')
 

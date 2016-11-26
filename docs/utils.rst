@@ -8,7 +8,7 @@ a collection of miscellaneous but useful functions.
 Module Imports
 --------------
 
-.. autofunction:: chatterbot.utils.module_loading.import_module
+.. autofunction:: chatterbot.utils.import_module
 
 String cleaning
 ---------------
@@ -16,17 +16,17 @@ String cleaning
 This package of utility contains methods that are usefull
 for cleaning and normalizing strings of text.
 
-.. autofunction:: chatterbot.utils.clean.clean_whitespace
+.. autofunction:: chatterbot.utils.clean_whitespace
 
-.. autofunction:: chatterbot.utils.clean.clean
+.. autofunction:: chatterbot.utils.clean
 
 Terminal input
 --------------
 
-.. autofunction:: chatterbot.utils.read_input.input_function
+.. autofunction:: chatterbot.utils.input_function
 
 Queues
 ------
 
-.. autoclass:: chatterbot.utils.queues.ResponseQueue
+.. autoclass:: chatterbot.tools.queues.ResponseQueue
    :members:

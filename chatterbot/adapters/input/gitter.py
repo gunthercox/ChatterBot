@@ -1,7 +1,7 @@
 from __future__ import unicode_literals
+from time import sleep
 from chatterbot.adapters.input import InputAdapter
 from chatterbot.conversation import Statement
-from time import sleep
 import requests
 
 
@@ -120,7 +120,7 @@ class Gitter(InputAdapter):
         Return a string that has no leading mentions.
         """
         import re
-        from chatterbot.utils.clean import clean_whitespace
+        from chatterbot.utils import clean_whitespace
         text_without_mentions = re.sub(r'@\S+', '', text)
         return clean_whitespace(text_without_mentions)
 

@@ -12,15 +12,17 @@ class Wordnet(object):
         from nltk.data import find
         from nltk import download
         import os
-        
+
         # Download the wordnet data only if it is not already downloaded
         wordnet_path = None
         if os.name == 'nt':
-            wordnet_path = os.path.join(os.getenv('APPDATA'), 'nltk_data',
-                                                'corpora', 'wordnet.zip')
+            wordnet_path = os.path.join(
+                os.getenv('APPDATA'), 'nltk_data', 'corpora', 'wordnet.zip'
+            )
         else:
-            wordnet_path = os.path.join(os.path.expanduser('~'), 'nltk_data',
-                                                'corpora', 'wordnet.zip')
+            wordnet_path = os.path.join(
+                os.path.expanduser('~'), 'nltk_data', 'corpora', 'wordnet.zip'
+            )
         try:
             if not os.path.isfile(wordnet_path):
                 find('wordnet.zip')
