@@ -9,7 +9,7 @@ methods established in the :code:`LogicAdapter` base class.
 Logic adapter methods
 =====================
 
-.. autoclass:: chatterbot.adapters.logic.LogicAdapter
+.. autoclass:: chatterbot.logic.LogicAdapter
    :members:
 
 Example logic adapter
@@ -17,7 +17,7 @@ Example logic adapter
 
 .. code-block:: python
 
-   from chatterbot.adapters.logic import LogicAdapter
+   from chatterbot.logic import LogicAdapter
 
 
    class MyLogicAdapter(LogicAdapter):

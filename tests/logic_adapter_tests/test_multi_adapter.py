@@ -1,7 +1,7 @@
 from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
-from chatterbot.adapters.logic import LogicAdapter
-from chatterbot.adapters.logic import MultiLogicAdapter
+from chatterbot.logic import LogicAdapter
+from chatterbot.logic import MultiLogicAdapter
 
 
 class TestAdapterA(LogicAdapter):

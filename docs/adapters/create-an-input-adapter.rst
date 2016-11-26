@@ -5,7 +5,7 @@ You can write your own storage adapters by creating a new class that
 inherits from :code:`InputAdapter` and overides the overrides necessary
 methods established in the base :code:`InputAdapter` class.
 
-.. autofunction:: chatterbot.adapters.input.InputAdapter
+.. autofunction:: chatterbot.input.InputAdapter
 
 To create your own input adapter you must override the :code:`process_input`
 method to return a :ref:`Statement <conversation_statements>` object.

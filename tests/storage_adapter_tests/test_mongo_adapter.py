@@ -1,6 +1,6 @@
 from unittest import TestCase
 from unittest import SkipTest
-from chatterbot.adapters.storage import MongoDatabaseAdapter
+from chatterbot.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement, Response
 
 

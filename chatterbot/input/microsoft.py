@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from chatterbot.adapters.input import InputAdapter
+from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
 from time import sleep
 import requests

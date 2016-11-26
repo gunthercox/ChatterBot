@@ -5,13 +5,13 @@ from chatterbot import ChatBot
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Default Response Example Bot',
-    storage_adapter='chatterbot.adapters.storage.JsonFileStorageAdapter',
+    storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
     logic_adapters=[
         {
-            'import_path': 'chatterbot.adapters.logic.ClosestMatchAdapter'
+            'import_path': 'chatterbot.logic.ClosestMatchAdapter'
         },
         {
-            'import_path': 'chatterbot.adapters.logic.LowConfidenceAdapter',
+            'import_path': 'chatterbot.logic.LowConfidenceAdapter',
             'threshold': 0.65,
             'default_response': 'I am sorry, but I do not understand.'
         }

@@ -8,14 +8,14 @@ import logging
 
 # Create a new instance of a ChatBot
 bot = ChatBot("Terminal",
-    storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
+    storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
     logic_adapters=[
-        "chatterbot.adapters.logic.MathematicalEvaluation",
-        "chatterbot.adapters.logic.TimeLogicAdapter",
-        "chatterbot.adapters.logic.ClosestMatchAdapter"
+        "chatterbot.logic.MathematicalEvaluation",
+        "chatterbot.logic.TimeLogicAdapter",
+        "chatterbot.logic.ClosestMatchAdapter"
     ],
-    input_adapter="chatterbot.adapters.input.TerminalAdapter",
-    output_adapter="chatterbot.adapters.output.TerminalAdapter",
+    input_adapter="chatterbot.input.TerminalAdapter",
+    output_adapter="chatterbot.output.TerminalAdapter",
     database="../database.db"
 )
 

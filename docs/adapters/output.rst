@@ -5,7 +5,7 @@ Output Adapters
 Output format adapter
 =====================
 
-.. autofunction:: chatterbot.adapters.output.OutputFormatAdapter
+.. autofunction:: chatterbot.output.OutputFormatAdapter
 
 The output format adapter allows the chat bot to return a response in
 a number of formats. By default, this adapter returns a :ref:`Statement <conversation_statements>`
@@ -21,14 +21,14 @@ Valid parameters for the output format are `text`, `json`, and `object`.
 
    chatbot = ChatBot(
        "My ChatterBot",
-       output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
+       output_adapter="chatterbot.output.OutputFormatAdapter",
        output_format='text'
    )
 
 Terminal adapter
 ================
 
-.. autofunction:: chatterbot.adapters.output.TerminalAdapter
+.. autofunction:: chatterbot.output.TerminalAdapter
 
 The output terminal adapter allows a user to type into their terminal to
 communicate with the chat bot.
@@ -37,7 +37,7 @@ communicate with the chat bot.
 
    chatbot = ChatBot(
        "My ChatterBot",
-       output_adapter="chatterbot.adapters.output.TerminalAdapter"
+       output_adapter="chatterbot.output.TerminalAdapter"
    )
 
 .. _hipchat-output-adapter:
@@ -45,13 +45,13 @@ communicate with the chat bot.
 Gitter Adapter
 ==============
 
-.. autofunction:: chatterbot.adapters.output.Gitter
+.. autofunction:: chatterbot.output.Gitter
 
 .. code-block:: python
 
    chatbot = ChatBot(
        "My ChatterBot",
-       output_adapter="chatterbot.adapters.output.Gitter",
+       output_adapter="chatterbot.output.Gitter",
        gitter_api_token="my-gitter-api-token",
        gitter_room="my-room-name",
        gitter_only_respond_to_mentions=True,
@@ -60,7 +60,7 @@ Gitter Adapter
 HipChat Adapter
 ===============
 
-.. autofunction:: chatterbot.adapters.output.HipChat
+.. autofunction:: chatterbot.output.HipChat
 
 This is an output adapter that allows a ChatterBot instance to send responses
 to a `HipChat`_ room.
@@ -71,7 +71,7 @@ Be sure to also see the documentation for the :ref:`HipChat input adapter <hipch
 
    chatbot = ChatBot(
        "My ChatterBot",
-       output_adapter="chatterbot.adapters.output.HipChat",
+       output_adapter="chatterbot.output.HipChat",
        hipchat_host="https://mydomain.hipchat.com",
        hipchat_room="my-room-name",
        hipchat_access_token="my-hipchat-access-token",
@@ -82,7 +82,7 @@ Be sure to also see the documentation for the :ref:`HipChat input adapter <hipch
 Microsoft Bot Framework Adapter
 ===============================
 
-.. autofunction:: chatterbot.adapters.output.Microsoft
+.. autofunction:: chatterbot.output.Microsoft
 
 This is an output adapter that allows a ChatterBot instance to send responses
 to a `Microsoft`_ using *Direct Line protocol*.
@@ -93,7 +93,7 @@ Be sure to also see the documentation for the :ref:`Microsoft input adapter <mic
 
    chatbot = ChatBot(
        "My ChatterBot",
-       output_adapter="chatterbot.adapters.output.Microsoft",
+       output_adapter="chatterbot.output.Microsoft",
        direct_line_host="https://directline.botframework.com",
        direct_line_conservationId="IEyJvnDULgn",
        direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
@@ -102,7 +102,7 @@ Be sure to also see the documentation for the :ref:`Microsoft input adapter <mic
 Mailgun adapter
 ===============
 
-.. autofunction:: chatterbot.adapters.output.Mailgun
+.. autofunction:: chatterbot.output.Mailgun
 
 The Mailgun adapter allows the chat bot to send emails using the
 `Mailgun API`_.

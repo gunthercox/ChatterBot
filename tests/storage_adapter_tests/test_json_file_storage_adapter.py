@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.storage import JsonFileStorageAdapter
+from chatterbot.storage import JsonFileStorageAdapter
 from chatterbot.conversation import Statement, Response
 
 

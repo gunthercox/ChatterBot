@@ -11,8 +11,8 @@ class ChatBotTestCase(TestCase):
 
     def get_kwargs(self):
         return {
-            'input_adapter': 'chatterbot.adapters.input.VariableInputTypeAdapter',
-            'output_adapter': 'chatterbot.adapters.output.OutputFormatAdapter',
+            'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
+            'output_adapter': 'chatterbot.output.OutputFormatAdapter',
             'database': self.create_test_data_directory(),
             'silence_performance_warning': True
         }
@@ -71,5 +71,5 @@ class ChatBotMongoTestCase(ChatBotTestCase):
     def get_kwargs(self):
         kwargs = super(ChatBotMongoTestCase, self).get_kwargs()
         kwargs['database'] = self.random_string()
-        kwargs['storage_adapter'] = 'chatterbot.adapters.storage.MongoDatabaseAdapter'
+        kwargs['storage_adapter'] = 'chatterbot.storage.MongoDatabaseAdapter'
         return kwargs

@@ -22,7 +22,7 @@ take priority.
    chatbot = ChatBot(
        "My ChatterBot",
        logic_adapters=[
-           "chatterbot.adapters.logic.ClosestMatchAdapter"
+           "chatterbot.logic.ClosestMatchAdapter"
        ]
    )
 
@@ -30,7 +30,7 @@ take priority.
 Closest Match Adapter
 =====================
 
-.. autofunction:: chatterbot.adapters.logic.ClosestMatchAdapter
+.. autofunction:: chatterbot.logic.ClosestMatchAdapter
 
 The `ClosestMatchAdapter` selects a response based on the closest know match to a given statement.
 
@@ -43,7 +43,7 @@ The closest match algorithm determines the similarity between the input statemen
 Closest Meaning Adapter
 =======================
 
-.. autofunction:: chatterbot.adapters.logic.ClosestMeaningAdapter
+.. autofunction:: chatterbot.logic.ClosestMeaningAdapter
 
 The `ClosestMeaningAdapter` selects a response based on how closely two statements match each other based on the closeness of the synsets of each word in the word matrix formed by both sentences.
 
@@ -56,7 +56,7 @@ The closest meaning algorithm uses the `wordnet`_ functionality of `NLTK`_ to de
 Approximate Sentence Match Adapter
 ==================================
 
-.. autofunction:: chatterbot.adapters.logic.ApproximateSentenceMatchAdapter
+.. autofunction:: chatterbot.logic.ApproximateSentenceMatchAdapter
 
 The `ApproximateSentenceMatchAdapter` calculates a Jaccard index and give result to a given statement.
 
@@ -84,7 +84,7 @@ The Jaccard index is composed of a numerator and denominator.
 Time Logic Adapter
 ==================
 
-.. autofunction:: chatterbot.adapters.logic.TimeLogicAdapter
+.. autofunction:: chatterbot.logic.TimeLogicAdapter
 
 The `TimeLogicAdapter` identifies statements in which a question about the current time is asked.
 If a matching question is detected, then a response containing the current time is returned.
@@ -99,7 +99,7 @@ Example
 Mathematical Evaluation Adapter
 ===============================
 
-.. autofunction:: chatterbot.adapters.logic.MathematicalEvaluation
+.. autofunction:: chatterbot.logic.MathematicalEvaluation
 
 The `MathematicalEvaluation` logic adapter checks a given statement to see if
 it contains a mathematical expression that can be evaluated. If one exists,
@@ -116,7 +116,7 @@ Example
 SentimentAdapter
 ================
 
-.. autofunction:: chatterbot.adapters.logic.SentimentAdapter
+.. autofunction:: chatterbot.logic.SentimentAdapter
 
 This is a logic adapter that selects a response that has the closest matching
 sentiment value to the input.
@@ -128,7 +128,7 @@ Low Confidence Response Adapter
 This adapter returns a specified default response if a response can not be
 determined with a high amount of confidence.
 
-.. autofunction:: chatterbot.adapters.logic.LowConfidenceAdapter
+.. autofunction:: chatterbot.logic.LowConfidenceAdapter
 
 Example usage
 -------------
@@ -143,7 +143,7 @@ Specific Response Adapter
 If the input that the chat bot recieves, matches the input text specified
 for this adapter, the specified response will be returned.
 
-.. autofunction:: chatterbot.adapters.logic.SpecificResponseAdapter
+.. autofunction:: chatterbot.logic.SpecificResponseAdapter
 
 Example usage
 -------------

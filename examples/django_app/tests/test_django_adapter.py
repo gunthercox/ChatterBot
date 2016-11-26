@@ -1,5 +1,5 @@
 from django.test import TestCase
-from chatterbot.adapters.storage import DjangoStorageAdapter
+from chatterbot.storage import DjangoStorageAdapter
 from chatterbot.conversation import Statement, Response
 import os
 

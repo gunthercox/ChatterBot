@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from chatterbot.adapters.output import OutputAdapter
+from .output_adapter import OutputAdapter
 import requests
 import json
 

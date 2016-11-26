@@ -1,5 +1,5 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.adapters.logic import SentimentAdapter
+from chatterbot.logic import SentimentAdapter
 from chatterbot.conversation import Statement
 
 

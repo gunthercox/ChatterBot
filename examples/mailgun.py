@@ -22,9 +22,9 @@ bot = ChatBot(
     mailgun_api_key=MAILGUN["CONSUMER_KEY"],
     mailgun_api_endpoint=MAILGUN["API_ENDPOINT"],
     mailgun_recipients=RECIPIENTS,
-    input_adapter="chatterbot.adapters.input.Mailgun",
-    output_adapter="chatterbot.adapters.output.Mailgun",
-    storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
+    input_adapter="chatterbot.input.Mailgun",
+    output_adapter="chatterbot.output.Mailgun",
+    storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
     database="../database.db"
 )
 

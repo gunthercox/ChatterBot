@@ -13,12 +13,12 @@ element from the user.
 
 # Create a new instance of a ChatBot
 bot = ChatBot('Feedback Learning Bot',
-    storage_adapter='chatterbot.adapters.storage.JsonFileStorageAdapter',
+    storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
     logic_adapters=[
-        'chatterbot.adapters.logic.ClosestMatchAdapter'
+        'chatterbot.logic.ClosestMatchAdapter'
     ],
-    input_adapter='chatterbot.adapters.input.TerminalAdapter',
-    output_adapter='chatterbot.adapters.output.TerminalAdapter'
+    input_adapter='chatterbot.input.TerminalAdapter',
+    output_adapter='chatterbot.output.TerminalAdapter'
 )
 
 def get_feedback():

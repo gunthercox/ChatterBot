@@ -52,7 +52,7 @@ if it does not already exist.
 
    bot = ChatBot(
        "Norman",
-       storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
+       storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
        database="./database.json"
    )
 
@@ -73,9 +73,9 @@ the terminal. The output terminal adapter print's the chat bot's response.
 
    bot = ChatBot(
        "Norman",
-       storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
-       input_adapter="chatterbot.adapters.input.TerminalAdapter",
-       output_adapter="chatterbot.adapters.output.TerminalAdapter",
+       storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
+       input_adapter="chatterbot.input.TerminalAdapter",
+       output_adapter="chatterbot.output.TerminalAdapter",
        database="./database.json"
    )
 
@@ -96,12 +96,12 @@ operations.
 
    bot = ChatBot(
        "Norman",
-       storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
-       input_adapter="chatterbot.adapters.input.TerminalAdapter",
-       output_adapter="chatterbot.adapters.output.TerminalAdapter",
+       storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
+       input_adapter="chatterbot.input.TerminalAdapter",
+       output_adapter="chatterbot.output.TerminalAdapter",
        logic_adapters=[
-           "chatterbot.adapters.logic.MathematicalEvaluation",
-           "chatterbot.adapters.logic.TimeLogicAdapter"
+           "chatterbot.logic.MathematicalEvaluation",
+           "chatterbot.logic.TimeLogicAdapter"
        ],
        database="./database.json"
    )

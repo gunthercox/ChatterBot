@@ -1,5 +1,5 @@
 from __future__ import unicode_literals
-from chatterbot.adapters.logic import LogicAdapter
+from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 import re
 import os

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import MathematicalEvaluation
+from chatterbot.logic import MathematicalEvaluation
 from chatterbot.conversation import Statement
 
 

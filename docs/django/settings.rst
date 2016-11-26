@@ -9,9 +9,9 @@ You can edit the ChatterBot configuration through your Django settings.py file.
    CHATTERBOT = {
        'name': 'Tech Support Bot',
        'logic_adapters': [
-           'chatterbot.adapters.logic.MathematicalEvaluation',
-           'chatterbot.adapters.logic.TimeLogicAdapter',
-           'chatterbot.adapters.logic.ClosestMatchAdapter'
+           'chatterbot.logic.MathematicalEvaluation',
+           'chatterbot.logic.TimeLogicAdapter',
+           'chatterbot.logic.ClosestMatchAdapter'
        ],
        'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
        'training_data': [

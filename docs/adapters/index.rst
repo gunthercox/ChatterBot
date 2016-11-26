@@ -52,11 +52,11 @@ Each adapter can be set by passing in the dot-notated import path to the constru
 
    bot = ChatBot(
        "Elsie",
-       storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
-       input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
-       output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
+       storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
+       input_adapter="chatterbot.input.VariableInputTypeAdapter",
+       output_adapter="chatterbot.output.OutputFormatAdapter",
        logic_adapters=[
-           "chatterbot.adapters.logic.ClosestMatchAdapter"
+           "chatterbot.logic.ClosestMatchAdapter"
        ],
    )
 
