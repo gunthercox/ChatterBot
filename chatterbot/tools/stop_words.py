@@ -1,33 +1,14 @@
 from nltk.corpus import stopwords
-
+from chatterbot.utils import nltk_download_corpus
 
 class StopWordsManager(object):
     """
     A stop words utility class.
-    1) remove_stopwords: Removes the stopwords of the
-        passed language from the tokens given
     """
 
     def __init__(self):
-        from nltk.data import find
-        from nltk import download
-        import os
-
         # Download the stopwords data only if it is not already downloaded
-        stopwords_path = None
-        if os.name == 'nt':
-            stopwords_path = os.path.join(
-                os.getenv('APPDATA'), 'nltk_data', 'corpora', 'stopwords.zip'
-            )
-        else:
-            stopwords_path = os.path.join(
-                os.path.expanduser('~'), 'nltk_data', 'corpora', 'stopwords.zip'
-            )
-        try:
-            if not os.path.isfile(stopwords_path):
-                find('stopwords.zip')
-        except LookupError:
-            download('stopwords')
+        nltk_download_corpus('stopwords')
 
     def remove_stopwords(self, language, tokens):
         """
