@@ -58,7 +58,7 @@ class HipChat(OutputAdapter):
         data = self.send_message(self.hipchat_room, statement.text)
 
         # Update the output statement with the message id
-        self.context.recent_statements[-1][1].add_extra_data(
+        self.chatbot.recent_statements[-1][1].add_extra_data(
             'hipchat_message_id', data['id']
         )
 

@@ -9,27 +9,27 @@ class BaseMatchAdapter(LogicAdapter):
     """
 
     @property
-    def has_storage_context(self):
+    def has_storage(self):
         """
-        Return true if the adapter has access to the storage adapter context.
+        Return true if the adapter has access to the chatbot's storage adapter.
         """
-        return self.context and self.context.storage
+        return self.chatbot and self.chatbot.storage
 
     def get(self, input_statement):
         """
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
-        statement_list = self.context.storage.get_response_statements()
+        statement_list = self.chatbot.storage.get_response_statements()
 
         if not statement_list:
-            if self.has_storage_context:
+            if self.has_storage:
                 # Use a randomly picked statement
                 self.logger.info(
                     'No statements have known responses. ' +
                     'Choosing a random response to return.'
                 )
-                return 0, self.context.storage.get_random()
+                return 0, self.chatbot.storage.get_random()
             else:
                 raise self.EmptyDatasetException()
 
@@ -48,10 +48,10 @@ class BaseMatchAdapter(LogicAdapter):
 
     def can_process(self, statement):
         """
-        Check that the storage context is available and there
-        is at least one statement in the database.
+        Check that the chatbot's storage adapter is available to the logic adapter
+        and there is at least one statement in the database.
         """
-        return self.has_storage_context and self.context.storage.count()
+        return self.has_storage and self.chatbot.storage.count()
 
     def process(self, input_statement):
 
@@ -62,10 +62,10 @@ class BaseMatchAdapter(LogicAdapter):
         ))
 
         # Save any updates made to the statement by the logic adapter
-        self.context.storage.update(closest_match)
+        self.chatbot.storage.update(closest_match)
 
         # Get all statements that are in response to the closest match
-        response_list = self.context.storage.filter(
+        response_list = self.chatbot.storage.filter(
             in_response_to__contains=closest_match.text
         )
 
@@ -78,7 +78,7 @@ class BaseMatchAdapter(LogicAdapter):
             response = self.select_response(input_statement, response_list)
             self.logger.info('Response selected. Using "{}"'.format(response.text))
         else:
-            response = self.context.storage.get_random()
+            response = self.chatbot.storage.get_random()
             self.logger.info(
                 'No response to "{}" found. Selecting a random response.'.format(
                     closest_match.text
