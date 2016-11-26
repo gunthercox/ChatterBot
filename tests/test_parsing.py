@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
 from datetime import timedelta, datetime
-from chatterbot.tools import parsing
+from chatterbot import parsing
 
 """
 Output of the parser is an array of tuples

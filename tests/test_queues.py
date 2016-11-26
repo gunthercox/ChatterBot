@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.tools.queues import ResponseQueue
+from chatterbot.queues import ResponseQueue
 
 
 class ResponseQueueTests(TestCase):
@@ -20,7 +20,7 @@ class ResponseQueueTests(TestCase):
 
     def test_not_empty(self):
         self.queue.append(0)
-        self.assertFalse(self.queue.empty())        
+        self.assertFalse(self.queue.empty())
 
     def test_maxsize(self):
         self.queue.append(0)

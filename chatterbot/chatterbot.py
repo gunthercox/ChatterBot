@@ -4,7 +4,7 @@ from .adapters.storage import StorageAdapter
 from .adapters.logic import LogicAdapter, MultiLogicAdapter
 from .adapters.input import InputAdapter
 from .adapters.output import OutputAdapter
-from .tools.queues import ResponseQueue
+from .queues import ResponseQueue
 from .utils import import_module
 
 
