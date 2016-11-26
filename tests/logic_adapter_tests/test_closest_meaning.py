@@ -20,6 +20,9 @@ class ClosestMeaningAdapterTests(TestCase):
         self.adapter.set_chatbot(MockChatBot())
 
     def test_no_choices(self):
+        """
+        An exception should be raised if there is no data in the database.
+        """
         self.adapter.chatbot.storage.filter = MagicMock(return_value=[])
         statement = Statement('Hello')
 

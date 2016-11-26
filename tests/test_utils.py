@@ -17,6 +17,7 @@ class UtilityTests(TestCase):
         from chatterbot.utils import nltk_download_corpus
 
         nltk_download_corpus('stopwords')
+
         tokens = ['this', 'is', 'a', 'test', 'string']
         words = utils.remove_stopwords(tokens, 'english')
 
