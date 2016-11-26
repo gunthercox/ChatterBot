@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.utils.queues import ResponseQueue
+from chatterbot.tools.queues import ResponseQueue
 
 
 class ResponseQueueTests(TestCase):

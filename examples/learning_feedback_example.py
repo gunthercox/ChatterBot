@@ -22,7 +22,7 @@ bot = ChatBot('Feedback Learning Bot',
 )
 
 def get_feedback():
-    from chatterbot.utils.read_input import input_function
+    from chatterbot.utils import input_function
 
     text = input_function()
 
