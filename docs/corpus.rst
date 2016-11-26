@@ -17,7 +17,7 @@ To explore what languages and sets of corpora are available, check out the `chat
 
 
 Exporting your chat bot's database as a training corpus
-=======================================================
+-------------------------------------------------------
 
 Now that you have created your chat bot and sent it out into the world, perhaps
 you are looking for a way to share what it has learned with other chat bots?

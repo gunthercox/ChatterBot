@@ -47,7 +47,10 @@ Contents:
    about
    training
    corpus
-   adapters/index
+   logic/index
+   input/index
+   output/index
+   storage/index
    filters/index
    chatterbot
    conversations

@@ -15,5 +15,5 @@ adapter if you intend to save a kwarg parameter that was passed into
 the chat bot's constructor.
 (An API key might be an example of a parameter you would want to access here.)
 
-.. literalinclude:: ../../chatterbot/adapters/input/input_adapter.py
+.. literalinclude:: ../../chatterbot/input/input_adapter.py
    :language: python

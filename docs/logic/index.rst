@@ -5,9 +5,11 @@ Logic Adapters
 Logic adapters determine the logic for how ChatterBot selects a responses to a given input statement.
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 1
 
    multi-logic-adapter
+   response_selection
+   create-a-logic-adapter
 
 The logic adapter that your bot uses can be specified by setting the `logic_adapters` parameter to the import path of the logic adapter you want to use.
 

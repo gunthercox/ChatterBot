@@ -5,6 +5,11 @@ Input Adapters
 ChatterBot's input adapters are designed to allow a chat bot to have a
 versatile method of receiving or retrieving input from a given source.
 
+.. toctree::
+   :maxdepth: 1
+
+   create-an-input-adapter
+
 The goal of a input adapter is to get input from some source, and then
 to convert it into a format that ChatterBot can understand. This format
 is the :ref:`Statement <conversation_statements>` object found in ChatterBot's

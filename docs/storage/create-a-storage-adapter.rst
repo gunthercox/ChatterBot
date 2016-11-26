@@ -9,5 +9,5 @@ methods established in the base :code:`StorageAdapter` class.
 
 You will then need to implement the interface established by the :code:`StorageAdapter` class.
 
-.. literalinclude:: ../../chatterbot/adapters/storage/storage_adapter.py
+.. literalinclude:: ../../chatterbot/storage/storage_adapter.py
    :language: python
