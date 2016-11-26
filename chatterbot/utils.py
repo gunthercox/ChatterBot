@@ -117,3 +117,20 @@ def nltk_download_corpus(corpus_name):
         downloaded = True
 
     return downloaded
+
+
+def remove_stopwords(tokens, language):
+    """
+    Takes a language (i.e. 'english'), and a set of word tokens.
+    Returns the tokenized text with any stopwords removed.
+    Stop words are words like "is, the, a, ..."
+    """
+    from nltk.corpus import stopwords
+
+    # Get the stopwords for the specified language
+    stop_words = stopwords.words(language)
+
+    # Remove the stop words from the set of word tokens
+    tokens = set(tokens) - set(stop_words)
+
+    return tokens

@@ -25,6 +25,15 @@ Terminal input
 
 .. autofunction:: chatterbot.utils.input_function
 
+Stopword removal
+----------------
+
+.. autofunction:: chatterbot.utils.remove_stopwords
+
+NLTK corpus downloader
+
+.. autofunction:: chatterbot.utils.nltk_download_corpus
+
 Queues
 ------
 

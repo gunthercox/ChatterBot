@@ -91,7 +91,6 @@ class ChatBot(object):
         """
         :param adapter_data: A string or dictionary containing a import_path attribute.
         """
-
         if isinstance(adapter_data, dict):
             import_path = adapter_data.pop('import_path')
             adapter_data.update(kwargs)

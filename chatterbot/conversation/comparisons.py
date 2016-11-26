@@ -58,13 +58,16 @@ def synset_distance(statement, other_statement):
     :rtype: float
     """
     from nltk.corpus import wordnet
-    from chatterbot.tools.tokenizer import Tokenizer
+    from nltk import word_tokenize
+    from chatterbot import utils
     import itertools
 
-    tokenizer = Tokenizer()
+    tokens1 = word_tokenize(statement.text.lower())
+    tokens2 = word_tokenize(other_statement.text.lower())
 
-    tokens1 = tokenizer.get_tokens(statement.text)
-    tokens2 = tokenizer.get_tokens(other_statement.text)
+    # Remove all stop words from the list of word tokens
+    tokens1 = utils.remove_stopwords(tokens1, language='english')
+    tokens2 = utils.remove_stopwords(tokens2, language='english')
 
     # The maximum possible similarity is an exact match
     # Because path_similarity returns a value between 0 and 1,
