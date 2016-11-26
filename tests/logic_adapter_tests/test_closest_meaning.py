@@ -1,7 +1,6 @@
 from unittest import TestCase
-from mock import MagicMock, Mock
+from mock import MagicMock
 from chatterbot.adapters.logic import ClosestMeaningAdapter
-from chatterbot.adapters.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 from tests.logic_adapter_tests.test_closest_match import MockChatBot
 
@@ -9,6 +8,12 @@ from tests.logic_adapter_tests.test_closest_match import MockChatBot
 class ClosestMeaningAdapterTests(TestCase):
 
     def setUp(self):
+        from chatterbot.utils import nltk_download_corpus
+
+        nltk_download_corpus('stopwords')
+        nltk_download_corpus('wordnet')
+        nltk_download_corpus('punkt')
+
         self.adapter = ClosestMeaningAdapter()
 
         # Add a mock storage adapter to the logic adapter
