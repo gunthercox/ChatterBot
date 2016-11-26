@@ -47,14 +47,14 @@ regex = [
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda m, base_date: datetime(
-                int(m.group('year') if m.group('year') else base_date.year),
-                hashmonths[m.group('month').strip().lower()],
-                int(m.group('day') if m.group('day') else 1),
-            ) + timedelta(**convertTimetoHourMinute(
-                m.group('hour'),
-                m.group('minute'),
-                m.group('convention')
-            ))
+            int(m.group('year') if m.group('year') else base_date.year),
+            hashmonths[m.group('month').strip().lower()],
+            int(m.group('day') if m.group('day') else 1),
+        ) + timedelta(**convertTimetoHourMinute(
+            m.group('hour'),
+            m.group('minute'),
+            m.group('convention')
+        ))
     ),
     (re.compile(
         r'''
@@ -71,14 +71,14 @@ regex = [
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda m, base_date: datetime(
-                int(m.group('year') if m.group('year') else base_date.year),
-                hashmonths[m.group('month').strip().lower()],
-                int(m.group('day') if m.group('day') else 1)
-            ) + timedelta(**convertTimetoHourMinute(
-                m.group('hour'),
-                m.group('minute'),
-                m.group('convention')
-            ))
+            int(m.group('year') if m.group('year') else base_date.year),
+            hashmonths[m.group('month').strip().lower()],
+            int(m.group('day') if m.group('day') else 1)
+        ) + timedelta(**convertTimetoHourMinute(
+            m.group('hour'),
+            m.group('minute'),
+            m.group('convention')
+        ))
     ),
     (re.compile(
         r'''
@@ -95,14 +95,14 @@ regex = [
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda m, base_date: datetime(
-                int(m.group('year') if m.group('year') else base_date.year),
-                hashmonths[m.group('month').strip().lower()],
-                int(m.group('day') if m.group('day') else 1),
-            ) + timedelta(**convertTimetoHourMinute(
-                m.group('hour'),
-                m.group('minute'),
-                m.group('convention')
-            ))
+            int(m.group('year') if m.group('year') else base_date.year),
+            hashmonths[m.group('month').strip().lower()],
+            int(m.group('day') if m.group('day') else 1),
+        ) + timedelta(**convertTimetoHourMinute(
+            m.group('hour'),
+            m.group('minute'),
+            m.group('convention')
+        ))
     ),
     (re.compile(
         r'''
@@ -159,10 +159,10 @@ regex = [
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda m, base_date: datetime(
-                int(m.group('year') if m.group('year') else base_date.year),
-                int(hashmonths[m.group('month').lower()] if m.group('month') else 1),
-                int(m.group('ordinal_value') if m.group('ordinal_value') else 1),
-            )
+            int(m.group('year') if m.group('year') else base_date.year),
+            int(hashmonths[m.group('month').lower()] if m.group('month') else 1),
+            int(m.group('ordinal_value') if m.group('ordinal_value') else 1),
+        )
     ),
     (re.compile(
         r'''
@@ -177,10 +177,10 @@ regex = [
         (re.VERBOSE | re.IGNORECASE)
         ),
         lambda m, base_date: datetime(
-                int(m.group('year') if m.group('year') else base_date.year),
-                int(hashmonths[m.group('month').lower()] if m.group('month') else 1),
-                int(m.group('ordinal_value') if m.group('ordinal_value') else 1),
-            )
+            int(m.group('year') if m.group('year') else base_date.year),
+            int(hashmonths[m.group('month').lower()] if m.group('month') else 1),
+            int(m.group('ordinal_value') if m.group('ordinal_value') else 1),
+        )
     ),
     (re.compile(
         r'''
@@ -198,10 +198,10 @@ regex = [
             m.group('dmy'),
             m.group('number')
         ) + timedelta(**convertTimetoHourMinute(
-                m.group('hour'),
-                m.group('minute'),
-                m.group('convention')
-            ))
+            m.group('hour'),
+            m.group('minute'),
+            m.group('convention')
+        ))
     ),
     (re.compile(
         r'''
@@ -217,10 +217,10 @@ regex = [
             m.group('time'),
             m.group('dow')
         ) + timedelta(**convertTimetoHourMinute(
-                m.group('hour'),
-                m.group('minute'),
-                m.group('convention')
-            ))
+            m.group('hour'),
+            m.group('minute'),
+            m.group('convention')
+        ))
     ),
     (re.compile(
         r'''
@@ -367,7 +367,7 @@ regex = [
             base_date.month,
             base_date.day,
             int(m.group('hour'))
-            )
+        )
     )
 ]
 
@@ -555,7 +555,7 @@ def dateFromAdverb(base_date, name):
 # Find dates from duration
 # Eg: 20 days from now
 # Doesnt support 20 days from last monday
-def dateFromDuration(base_date, numberAsString, unit, duration, base_time = None):
+def dateFromDuration(base_date, numberAsString, unit, duration, base_time=None):
     # Check if query is `2 days before yesterday` or `day before yesterday`
     if base_time != None:
         base_date = dateFromAdverb(base_date, base_time)
@@ -663,8 +663,10 @@ hashordinals = {
     'last': -1
 }
 
-# Parses date
-def datetime_parsing (text, base_date = datetime.now()):
+def datetime_parsing(text, base_date=datetime.now()):
+    """
+    Extract datetime objects from a string of text.
+    """
     matches = []
     found_array = []
 

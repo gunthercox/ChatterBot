@@ -34,8 +34,14 @@ NLTK corpus downloader
 
 .. autofunction:: chatterbot.utils.nltk_download_corpus
 
+
+Parsing datetime information
+----------------------------
+
+.. autofunction:: chatterbot.parsing.datetime_parsing
+
 Queues
 ------
 
-.. autoclass:: chatterbot.tools.queues.ResponseQueue
+.. autoclass:: chatterbot.queues.ResponseQueue
    :members:
