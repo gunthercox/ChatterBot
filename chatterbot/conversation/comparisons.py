@@ -57,11 +57,10 @@ def synset_distance(statement, other_statement):
     :return: The percent of similarity between the closest synset distance.
     :rtype: float
     """
-    from chatterbot.tools.wordnet import Wordnet
+    from nltk.corpus import wordnet
     from chatterbot.tools.tokenizer import Tokenizer
     import itertools
 
-    wordnet = Wordnet()
     tokenizer = Tokenizer()
 
     tokens1 = tokenizer.get_tokens(statement.text)

@@ -1,14 +1,7 @@
-from chatterbot.utils import nltk_download_corpus
-
-
 class Tokenizer(object):
     """
     A string tokenizaton utility class.
     """
-
-    def __init__(self):
-        # Download the punkt data only if it is not already downloaded
-        nltk_download_corpus('punkt')
 
     def get_tokens(self, text, language='english', exclude_stop_words=True):
         """

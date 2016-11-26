@@ -70,8 +70,27 @@ class ChatBot(object):
         self.training_data = kwargs.get('training_data')
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
+        self.initialize()
+
+    def initialize(self):
+        """
+        Do any work that needs to be done before the responses can be returned.
+        """
+        from .utils import nltk_download_corpus
+
+        # Download the stopwords data only if it is not already downloaded
+        nltk_download_corpus('stopwords')
+
+        # Download the wordnet data only if it is not already downloaded
+        nltk_download_corpus('wordnet')
+
+        # Download the punkt data only if it is not already downloaded
+        nltk_download_corpus('punkt')
 
     def initialize_class(self, adapter_data, **kwargs):
+        """
+        :param adapter_data: A string or dictionary containing a import_path attribute.
+        """
 
         if isinstance(adapter_data, dict):
             import_path = adapter_data.pop('import_path')
