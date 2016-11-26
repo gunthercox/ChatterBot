@@ -2,7 +2,6 @@
 """
 ChatterBot setup file.
 """
-
 from setuptools import setup
 
 
@@ -39,8 +38,7 @@ setup(
         'chatterbot.ext.django_chatterbot',
         'chatterbot.ext.django_chatterbot.migrations',
         'chatterbot.ext.django_chatterbot.management',
-        'chatterbot.ext.django_chatterbot.management.commands',
-        'chatterbot.tools'
+        'chatterbot.ext.django_chatterbot.management.commands'
     ],
     package_dir={'chatterbot': 'chatterbot'},
     include_package_data=True,
@@ -62,7 +60,6 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
