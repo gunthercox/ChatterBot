@@ -1,9 +1,9 @@
 from __future__ import unicode_literals
 import logging
-from .adapters.storage import StorageAdapter
-from .adapters.logic import LogicAdapter, MultiLogicAdapter
-from .adapters.input import InputAdapter
-from .adapters.output import OutputAdapter
+from .storage import StorageAdapter
+from .logic import LogicAdapter, MultiLogicAdapter
+from .input import InputAdapter
+from .output import OutputAdapter
 from .queues import ResponseQueue
 from .utils import import_module
 
@@ -15,19 +15,19 @@ class ChatBot(object):
         kwargs['name'] = name
 
         storage_adapter = kwargs.get('storage_adapter',
-            'chatterbot.adapters.storage.JsonFileStorageAdapter'
+            'chatterbot.storage.JsonFileStorageAdapter'
         )
 
         logic_adapters = kwargs.get('logic_adapters', [
-            'chatterbot.adapters.logic.ClosestMatchAdapter'
+            'chatterbot.logic.ClosestMatchAdapter'
         ])
 
         input_adapter = kwargs.get('input_adapter',
-            'chatterbot.adapters.input.VariableInputTypeAdapter'
+            'chatterbot.input.VariableInputTypeAdapter'
         )
 
         output_adapter = kwargs.get('output_adapter',
-            'chatterbot.adapters.output.OutputFormatAdapter'
+            'chatterbot.output.OutputFormatAdapter'
         )
 
         # The last 10 statement inputs and outputs
@@ -51,7 +51,7 @@ class ChatBot(object):
         self.filters = (import_module(F)() for F in filters)
 
         # Add required system logic adapter
-        self.add_logic_adapter('chatterbot.adapters.logic.NoKnowledgeAdapter')
+        self.add_logic_adapter('chatterbot.logic.NoKnowledgeAdapter')
 
         for adapter in logic_adapters:
             self.add_logic_adapter(adapter, **kwargs)
@@ -282,7 +282,10 @@ class ChatBot(object):
         return self.trainer.train
 
     @classmethod
-    def from_config(self, config_file_path):
+    def from_config(cls, config_file_path):
+        """
+        Create a new ChatBot instance from a JSON config file.
+        """
         import json
         with open(config_file_path, 'r') as config_file:
             data = json.load(config_file)
@@ -292,6 +295,10 @@ class ChatBot(object):
         return ChatBot(name, **data)
 
     class InvalidAdapterException(Exception):
+        """
+        An exception to be raised when an adapter of an unexpected class type
+        is recieved.
+        """
 
         def __init__(self, value='Recieved an unexpected adapter setting.'):
             self.value = value

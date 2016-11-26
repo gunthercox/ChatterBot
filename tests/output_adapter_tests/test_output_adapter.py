@@ -1,5 +1,6 @@
 from unittest import TestCase
-from chatterbot.adapters.output import OutputAdapter
+from chatterbot.output import OutputAdapter
+
 
 class OutputAdapterTestCase(TestCase):
     """

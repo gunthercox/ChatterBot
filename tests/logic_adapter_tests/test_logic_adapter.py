@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import LogicAdapter
+from chatterbot.logic import LogicAdapter
 
 
 class LogicAdapterTestCase(TestCase):

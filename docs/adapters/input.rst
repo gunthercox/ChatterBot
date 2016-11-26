@@ -13,7 +13,7 @@ is the :ref:`Statement <conversation_statements>` object found in ChatterBot's
 Variable input type adapter
 ===========================
 
-.. autofunction:: chatterbot.adapters.input.VariableInputTypeAdapter
+.. autofunction:: chatterbot.input.VariableInputTypeAdapter
 
 The variable input type adapter allows the chat bot to accept a number
 of different input types using the same adapter. This adapter accepts
@@ -23,13 +23,13 @@ strings_, dictionaries_ and :ref:`Statements <conversation_statements>`.
 
    chatbot = ChatBot(
        "My ChatterBot",
-       input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter"
+       input_adapter="chatterbot.input.VariableInputTypeAdapter"
    )
 
 Terminal adapter
 ================
 
-.. autofunction:: chatterbot.adapters.input.TerminalAdapter
+.. autofunction:: chatterbot.input.TerminalAdapter
 
 The input terminal adapter allows a user to type into their terminal to
 communicate with the chat bot.
@@ -38,7 +38,7 @@ communicate with the chat bot.
 
    chatbot = ChatBot(
        "My ChatterBot",
-       input_adapter="chatterbot.adapters.input.TerminalAdapter"
+       input_adapter="chatterbot.input.TerminalAdapter"
    )
 
 .. _hipchat-input-adapter:
@@ -46,13 +46,13 @@ communicate with the chat bot.
 Gitter Adapter
 ==============
 
-.. autofunction:: chatterbot.adapters.input.Gitter
+.. autofunction:: chatterbot.input.Gitter
 
 .. code-block:: python
 
    chatbot = ChatBot(
        "My ChatterBot",
-       input_adapter="chatterbot.adapters.input.Gitter",
+       input_adapter="chatterbot.input.Gitter",
        gitter_api_token="my-gitter-api-token",
        gitter_room="my-room-name",
        gitter_only_respond_to_mentions=True,
@@ -62,7 +62,7 @@ Gitter Adapter
 HipChat Adapter
 ===============
 
-.. autofunction:: chatterbot.adapters.input.HipChat
+.. autofunction:: chatterbot.input.HipChat
 
 This is an input adapter that allows a ChatterBot instance to communicate
 through `HipChat`_.
@@ -73,7 +73,7 @@ Be sure to also see the documentation for the :ref:`HipChat output adapter <hipc
 
    chatbot = ChatBot(
        "My ChatterBot",
-       input_adapter="chatterbot.adapters.input.HipChat",
+       input_adapter="chatterbot.input.HipChat",
        hipchat_host="https://mydomain.hipchat.com",
        hipchat_room="my-room-name",
        hipchat_access_token="my-hipchat-access-token",
@@ -82,7 +82,7 @@ Be sure to also see the documentation for the :ref:`HipChat output adapter <hipc
 Mailgun adapter
 ===============
 
-.. autofunction:: chatterbot.adapters.input.Mailgun
+.. autofunction:: chatterbot.input.Mailgun
 
 The Mailgun adapter allows a chat bot to recieve emails using
 the `Mailgun API`_.
@@ -95,7 +95,7 @@ the `Mailgun API`_.
 Microsot Bot Framework Adapter
 ==============================
 
-.. autofunction:: chatterbot.adapters.input.Microsoft
+.. autofunction:: chatterbot.input.Microsoft
 
 This is an input adapter that allows a ChatterBot instance to communicate
 through `Microsoft`_ using *direct line client* protocol.
@@ -106,7 +106,7 @@ Be sure to also see the documentation for the :ref:`Microsoft output adapter <mi
 
    chatbot = ChatBot(
        "My ChatterBot",
-       input_adapter="chatterbot.adapters.input.Microsoft",
+       input_adapter="chatterbot.input.Microsoft",
        directline_host="https://directline.botframework.com",
        dirctline_conversation_id="IEyJvnDULgn",
        direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",

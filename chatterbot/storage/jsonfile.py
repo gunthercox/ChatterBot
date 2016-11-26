@@ -1,7 +1,7 @@
-from chatterbot.adapters.storage import StorageAdapter
+import warnings
+from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 from jsondb import Database
-import warnings
 
 
 class JsonFileStorageAdapter(StorageAdapter):

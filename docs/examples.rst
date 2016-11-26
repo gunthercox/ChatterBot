@@ -24,7 +24,7 @@ the `storage_adapter` parameter.
 
 .. code-block:: python
 
-   storage_adapter="chatterbot.adapters.storage.MongoDatabaseAdapter"
+   storage_adapter="chatterbot.storage.MongoDatabaseAdapter"
 
 .. literalinclude:: ../examples/terminal_mongo_example.py
    :language: python

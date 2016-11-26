@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import SpecificResponseAdapter
+from chatterbot.logic import SpecificResponseAdapter
 from chatterbot.conversation import Statement
 
 

@@ -46,5 +46,5 @@ was generated for that response will be returned with it.
 Methods
 =======
 
-.. autoclass:: chatterbot.adapters.logic.multi_adapter.MultiLogicAdapter
+.. autoclass:: chatterbot.logic.multi_adapter.MultiLogicAdapter
    :members:

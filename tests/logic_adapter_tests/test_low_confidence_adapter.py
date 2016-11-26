@@ -1,6 +1,6 @@
 from unittest import TestCase
 from mock import MagicMock
-from chatterbot.adapters.logic import LowConfidenceAdapter
+from chatterbot.logic import LowConfidenceAdapter
 from chatterbot.conversation import Statement, Response
 from .test_closest_match import MockChatBot
 

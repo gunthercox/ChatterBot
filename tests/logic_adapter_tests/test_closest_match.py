@@ -1,7 +1,7 @@
 from unittest import TestCase
 from mock import MagicMock, Mock
-from chatterbot.adapters.logic import ClosestMatchAdapter
-from chatterbot.adapters.storage import StorageAdapter
+from chatterbot.logic import ClosestMatchAdapter
+from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 
 

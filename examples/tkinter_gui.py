@@ -19,12 +19,12 @@ class TkinterGUIExample(tk.Tk):
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.chatbot = ChatBot("No Output",
-            storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
+            storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
             logic_adapters=[
-                "chatterbot.adapters.logic.ClosestMatchAdapter"
+                "chatterbot.logic.ClosestMatchAdapter"
             ],
-            input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
-            output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
+            input_adapter="chatterbot.input.VariableInputTypeAdapter",
+            output_adapter="chatterbot.output.OutputFormatAdapter",
             database="../database.db"
         )
 

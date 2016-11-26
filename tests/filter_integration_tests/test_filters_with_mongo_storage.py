@@ -1,4 +1,4 @@
-from chatterbot.adapters.storage import MongoDatabaseAdapter
+from chatterbot.storage import MongoDatabaseAdapter
 from tests.base_case import ChatBotMongoTestCase
 
 

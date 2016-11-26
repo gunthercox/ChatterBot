@@ -1,6 +1,6 @@
 import os
 from tests.base_case import ChatBotTestCase
-from chatterbot.adapters.logic import LogicAdapter
+from chatterbot.logic import LogicAdapter
 from chatterbot.trainers import ListTrainer
 
 

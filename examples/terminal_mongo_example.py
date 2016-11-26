@@ -8,15 +8,15 @@ import logging
 
 # Create a new ChatBot instance
 bot = ChatBot('Terminal',
-    storage_adapter='chatterbot.adapters.storage.MongoDatabaseAdapter',
+    storage_adapter='chatterbot.storage.MongoDatabaseAdapter',
     logic_adapters=[
-        'chatterbot.adapters.logic.ClosestMatchAdapter'
+        'chatterbot.logic.ClosestMatchAdapter'
     ],
     filters=[
         'chatterbot.filters.RepetitiveResponseFilter'
     ],
-    input_adapter='chatterbot.adapters.input.TerminalAdapter',
-    output_adapter='chatterbot.adapters.output.TerminalAdapter',
+    input_adapter='chatterbot.input.TerminalAdapter',
+    output_adapter='chatterbot.output.TerminalAdapter',
     database='chatterbot-database'
 )
 
