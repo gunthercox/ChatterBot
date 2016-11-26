@@ -2,6 +2,11 @@
 Output Adapters
 ===============
 
+.. toctree::
+   :maxdepth: 1
+
+   create-an-output-adapter
+
 Output format adapter
 =====================
 
