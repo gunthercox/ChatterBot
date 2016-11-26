@@ -83,3 +83,37 @@ def input_function():
         user_input = input()
 
     return user_input
+
+
+def nltk_download_corpus(corpus_name):
+    """
+    Download the specified NLTK corpus file
+    unless it has already been downloaded.
+
+    Returns True if the corpus needed to be downloaded.
+    """
+    from nltk.data import find
+    from nltk import download
+    import os
+
+    # Download the wordnet data only if it is not already downloaded
+    zip_file = '{}.zip'.format(corpus_name)
+    downloaded = False
+    wordnet_path = None
+    if os.name == 'nt':
+        wordnet_path = os.path.join(
+            os.getenv('APPDATA'), 'nltk_data', 'corpora', zip_file
+        )
+    else:
+        wordnet_path = os.path.join(
+            os.path.expanduser('~'), 'nltk_data', 'corpora', zip_file
+        )
+
+    try:
+        if not os.path.isfile(wordnet_path):
+            find(zip_file)
+    except LookupError:
+        download('wordnet')
+        downloaded = True
+
+    return downloaded

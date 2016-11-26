@@ -1,4 +1,5 @@
 from nltk.corpus import wordnet
+from chatterbot.utils import nltk_download_corpus
 
 
 class Wordnet(object):
@@ -9,29 +10,11 @@ class Wordnet(object):
     """
 
     def __init__(self):
-        from nltk.data import find
-        from nltk import download
-        import os
-
         # Download the wordnet data only if it is not already downloaded
-        wordnet_path = None
-        if os.name == 'nt':
-            wordnet_path = os.path.join(
-                os.getenv('APPDATA'), 'nltk_data', 'corpora', 'wordnet.zip'
-            )
-        else:
-            wordnet_path = os.path.join(
-                os.path.expanduser('~'), 'nltk_data', 'corpora', 'wordnet.zip'
-            )
-        try:
-            if not os.path.isfile(wordnet_path):
-                find('wordnet.zip')
-        except LookupError:
-            download('wordnet')
+        nltk_download_corpus('wordnet')
 
     def synsets(self, token):
         """
-        Takes a token and returns the synsets for
-        it.
+        Takes a token and returns the synsets for it.
         """
         return wordnet.synsets(token)

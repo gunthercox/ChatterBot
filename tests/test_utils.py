@@ -9,6 +9,10 @@ class UtilityTests(TestCase):
         datetime = utils.import_module('datetime.datetime')
         self.assertTrue(hasattr(datetime, 'now'))
 
+    def test_nltk_download_corpus(self):
+        downloaded = utils.nltk_download_corpus('wordnet')
+        self.skipTest('Test needs to be created')
+
 
 class CleanWhitespaceTests(TestCase):
 

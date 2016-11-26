@@ -1,28 +1,14 @@
+from chatterbot.utils import nltk_download_corpus
+
+
 class Tokenizer(object):
     """
     A string tokenizaton utility class.
     """
 
     def __init__(self):
-        from nltk.data import find
-        from nltk import download
-        import os
-
         # Download the punkt data only if it is not already downloaded
-        punkt_path = None
-        if os.name == 'nt':
-            punkt_path = os.path.join(
-                os.getenv('APPDATA'), 'nltk_data', 'tokenizers', 'punkt.zip'
-            )
-        else:
-            punkt_path = os.path.join(
-                os.path.expanduser('~'), 'nltk_data', 'tokenizers', 'punkt.zip'
-            )
-        try:
-            if not os.path.isfile(punkt_path):
-                find('punkt.zip')
-        except LookupError:
-            download('punkt')
+        nltk_download_corpus('punkt')
 
     def get_tokens(self, text, language='english', exclude_stop_words=True):
         """
