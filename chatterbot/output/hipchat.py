@@ -52,13 +52,13 @@ class HipChat(OutputAdapter):
         help with multi-user conversations.
         https://www.hipchat.com/docs/apiv2/method/reply_to_message
         """
-        pass
+        raise self.AdapterMethodNotImplementedError()
 
-    def process_response(self, statement, confidence=None):
+    def process_response(self, statement, confidence=None, session_id=None):
         data = self.send_message(self.hipchat_room, statement.text)
 
         # Update the output statement with the message id
-        self.chatbot.recent_statements[-1][1].add_extra_data(
+        self.chatbot.conversation_sessions.get(session_id).conversations[-1][1].add_extra_data(
             'hipchat_message_id', data['id']
         )
 

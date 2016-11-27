@@ -26,7 +26,7 @@ class OutputFormatAdapter(OutputAdapter):
                 )
             )
 
-    def process_response(self, statement, confidence=None):
+    def process_response(self, statement, confidence=None, session_id=None):
         if self.format == self.TEXT:
             return statement.text
 
