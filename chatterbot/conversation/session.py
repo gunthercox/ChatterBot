@@ -39,6 +39,13 @@ class SessionManager(object):
         """
         return self.sessions[uid]
 
+    def update(self, session_id, conversance):
+        """
+        Add a conversance to a given session if the session exists.
+        """
+        if session_id in self.sessions:
+            self.sessions[session_id].conversation.append(conversance)
+
     def get_default(self):
         """
         Return the first and preferably only session.
@@ -49,9 +56,10 @@ class SessionManager(object):
         session_id = list(self.sessions.keys())[0]
         return self.sessions[session_id]
 
-    def update(self, session_id, conversance):
+    def update_default(self, conversance):
         """
-        Add a conversance to a given session if the session exists.
+        Add a conversance to the first and preferably only session.
         """
-        if session_id in self.sessions:
+        if self.sessions:
+            session_id = list(self.sessions.keys())[0]
             self.sessions[session_id].conversation.append(conversance)
