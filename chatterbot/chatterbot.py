@@ -4,34 +4,28 @@ from .storage import StorageAdapter
 from .logic import LogicAdapter, MultiLogicAdapter
 from .input import InputAdapter
 from .output import OutputAdapter
-from .queues import ResponseQueue
+from .conversation.session import SessionManager
 from .utils import import_module
 
 
 class ChatBot(object):
+    """
+    A conversational dialog ChatBot.
+    """
 
     def __init__(self, name, **kwargs):
         self.name = name
         kwargs['name'] = name
 
-        storage_adapter = kwargs.get('storage_adapter',
-            'chatterbot.storage.JsonFileStorageAdapter'
-        )
+        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.JsonFileStorageAdapter')
 
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.ClosestMatchAdapter'
         ])
 
-        input_adapter = kwargs.get('input_adapter',
-            'chatterbot.input.VariableInputTypeAdapter'
-        )
+        input_adapter = kwargs.get('input_adapter', 'chatterbot.input.VariableInputTypeAdapter')
 
-        output_adapter = kwargs.get('output_adapter',
-            'chatterbot.output.OutputFormatAdapter'
-        )
-
-        # The last 10 statement inputs and outputs
-        self.recent_statements = ResponseQueue(maxsize=10)
+        output_adapter = kwargs.get('output_adapter', 'chatterbot.output.OutputFormatAdapter')
 
         # The storage adapter must be an instance of StorageAdapter
         self.validate_adapter_class(storage_adapter, StorageAdapter)
@@ -69,6 +63,9 @@ class ChatBot(object):
         self.trainer = TrainerClass(self.storage, **kwargs)
         self.training_data = kwargs.get('training_data')
 
+        self.conversation_sessions = SessionManager()
+        self.default_session = self.conversation_sessions.new()
+
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
         self.initialize()
 
@@ -103,6 +100,9 @@ class ChatBot(object):
             return Class(**kwargs)
 
     def add_logic_adapter(self, adapter, **kwargs):
+        """
+        Add a logic adapter to the chat bot.
+        """
         self.validate_adapter_class(adapter, LogicAdapter)
         adapter = self.initialize_class(adapter, **kwargs)
         self.logic.add_adapter(adapter)
@@ -182,35 +182,7 @@ class ChatBot(object):
                 )
             )
 
-    def get_last_conversance(self):
-        """
-        Return the most recent input statement and response pair.
-        """
-        if not self.recent_statements.empty():
-            return self.recent_statements[-1]
-        return None
-
-    def get_last_response_statement(self):
-        """
-        Return the last statement that was received.
-        """
-        previous_interaction = self.get_last_conversance()
-        if previous_interaction:
-            # Return the output statement
-            return previous_interaction[1]
-        return None
-
-    def get_last_input_statement(self):
-        """
-        Return the last response that was given.
-        """
-        previous_interaction = self.get_last_conversance()
-        if previous_interaction:
-            # Return the input statement
-            return previous_interaction[0]
-        return None
-
-    def get_response(self, input_item):
+    def get_response(self, input_item, session_id=None):
         """
         Return the bot's response based on the input.
 
@@ -218,16 +190,20 @@ class ChatBot(object):
         :returns: A response to the input.
         :rtype: Statement
         """
+        if not session_id:
+            session_id = self.default_session.uuid
+
         input_statement = self.input.process_input_statement(input_item)
 
         statement, response, confidence = self.generate_response(input_statement)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
-        self.learn_response(statement)
+        previous_statement = self.conversation_sessions.get(
+            session_id
+        ).conversation.get_last_response_statement()
+        self.learn_response(statement, previous_statement)
 
-        self.recent_statements.append(
-            (statement, response, )
-        )
+        self.conversation_sessions.update(session_id, (statement, response, ))
 
         # Process the response output with the output adapter
         return self.output.process_response(response, confidence)
@@ -243,13 +219,11 @@ class ChatBot(object):
 
         return input_statement, response, confidence
 
-    def learn_response(self, statement):
+    def learn_response(self, statement, previous_statement):
         """
         Learn that the statement provided is a valid response.
         """
         from .conversation import Response
-
-        previous_statement = self.get_last_response_statement()
 
         if previous_statement:
             statement.add_response(
