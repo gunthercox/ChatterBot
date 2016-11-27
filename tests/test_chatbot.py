@@ -3,70 +3,16 @@ from .base_case import ChatBotTestCase
 from chatterbot.conversation import Statement, Response
 
 
-class ChatterBotTests(ChatBotTestCase):
-
-    def test_get_last_conversance(self):
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 1"), Statement("Test response 1"), )
-        )
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 2"), Statement("Test response 2"), )
-        )
-
-        last_conversance = self.chatbot.get_last_conversance()
-        self.assertEqual(last_conversance[0].text, "Test statement 2")
-        self.assertEqual(last_conversance[1].text, "Test response 2")
-
-    def test_no_last_conversance(self):
-        self.assertIsNone(self.chatbot.get_last_conversance())
-
-    def test_get_last_response_statement(self):
-        """
-        Make sure that the get last statement method
-        returns the last statement that was issued.
-        """
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 1"), Statement("Test response 1"), )
-        )
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 2"), Statement("Test response 2"), )
-        )
-
-        last_statement = self.chatbot.get_last_response_statement()
-        self.assertEqual(last_statement.text, "Test response 2")
-
-    def test_no_last_response_statement(self):
-        self.assertIsNone(self.chatbot.get_last_response_statement())
-
-    def test_get_last_input_statement(self):
-        """
-        Make sure that the get last statement method
-        returns the last statement that was issued.
-        """
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 1"), Statement("Test response 1"), )
-        )
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 2"), Statement("Test response 2"), )
-        )
-
-        last_statement = self.chatbot.get_last_input_statement()
-        self.assertEqual(last_statement.text, "Test statement 2")
-
-    def test_no_last_input_statement(self):
-        self.assertIsNone(self.chatbot.get_last_input_statement())
-
-
 class ChatterBotResponseTests(ChatBotTestCase):
 
     def setUp(self):
         super(ChatterBotResponseTests, self).setUp()
 
         response_list = [
-            Response("Hi")
+            Response('Hi')
         ]
 
-        self.test_statement = Statement("Hello", in_response_to=response_list)
+        self.test_statement = Statement('Hello', in_response_to=response_list)
 
     def test_empty_database(self):
         """
@@ -96,8 +42,9 @@ class ChatterBotResponseTests(ChatBotTestCase):
         """
         statement_text = "Wow!"
         response = self.chatbot.get_response(statement_text)
+        session = self.chatbot.conversation_sessions.get_default()
 
-        self.assertIn(statement_text, self.chatbot.recent_statements[0])
+        self.assertIn(statement_text, session.conversation[0])
         self.assertEqual(response, statement_text)
 
     def test_response_known(self):
@@ -166,11 +113,13 @@ class ChatterBotResponseTests(ChatBotTestCase):
         self.assertEqual(confidence, 1)
 
     def test_learn_response(self):
+        previous_response = Statement('Define Hemoglobin.')
         statement = Statement('Hemoglobin is an oxygen-transport metalloprotein.')
-        self.chatbot.learn_response(statement)
+        self.chatbot.learn_response(statement, previous_response)
         exists = self.chatbot.storage.find(statement.text)
 
         self.assertIsNotNone(exists)
+
 
 class ChatBotConfigFileTestCase(ChatBotTestCase):
 
