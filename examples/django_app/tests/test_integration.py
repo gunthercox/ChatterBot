@@ -24,14 +24,14 @@ class ApiIntegrationTestCase(TestCase):
     def _get_json(self, response):
         return json.loads(force_text(response.content))
 
-    def test_get_conversations_empty(self):
+    def test_get_conversation_empty(self):
         response = self.client.get(self.api_url)
         data = self._get_json(response)
 
-        self.assertIn('conversations', data)
-        self.assertEqual(len(data['conversations']), 0)
+        self.assertIn('conversation', data)
+        self.assertEqual(len(data['conversation']), 0)
 
-    def test_get_conversations(self):
+    def test_get_conversation(self):
         response = self.client.post(
             self.api_url,
             data=json.dumps({'text': 'How are you?'}),
@@ -42,8 +42,8 @@ class ApiIntegrationTestCase(TestCase):
         response = self.client.get(self.api_url)
         data = self._get_json(response)
 
-        self.assertIn('conversations', data)
-        self.assertEqual(len(data['conversations']), 1)
-        self.assertEqual(len(data['conversations'][0]), 2)
-        self.assertIn('text', data['conversations'][0][0])
-        self.assertIn('text', data['conversations'][0][1])
+        self.assertIn('conversation', data)
+        self.assertEqual(len(data['conversation']), 1)
+        self.assertEqual(len(data['conversation'][0]), 2)
+        self.assertIn('text', data['conversation'][0][0])
+        self.assertIn('text', data['conversation'][0][1])
