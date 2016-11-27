@@ -29,16 +29,16 @@ class ChatterBotView(ChatterBotViewMixin, View):
     Provide an API endpoint to interact with ChatterBot.
     """
 
-    def _serialize_recent_statements(self, session):
+    def _serialize_conversation(self, session):
         if session.conversations.empty():
             return []
 
-        recent_statements = []
+        conversation = []
 
         for statement, response in session.conversations:
-            recent_statements.append([statement.serialize(), response.serialize()])
+            conversation.append([statement.serialize(), response.serialize()])
 
-        return recent_statements
+        return conversation
 
     def post(self, request, *args, **kwargs):
         """
@@ -77,7 +77,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
         data = {
             'detail': 'You should make a POST request to this endpoint.',
             'name': self.chatterbot.name,
-            'recent_statements': self._serialize_recent_statements(chat_session_id)
+            'conversation': self._serialize_conversation(chat_session_id)
         }
 
         # Return a method not allowed response
