@@ -13,25 +13,25 @@ class ApiIntegrationTestCase(TestCase):
         self.api_url = reverse('chatterbot:chatterbot')
 
         # Clear the response queue before tests
-        ChatterBotView.chatterbot.recent_statements.flush()
+        ChatterBotView.chatterbot.conversation_sessions.get_default().conversations.flush()
 
     def tearDown(self):
         super(ApiIntegrationTestCase, self).tearDown()
 
         # Clear the response queue after tests
-        ChatterBotView.chatterbot.recent_statements.flush()
+        ChatterBotView.chatterbot.conversation_sessions.get_default().conversations.flush()
 
     def _get_json(self, response):
         return json.loads(force_text(response.content))
 
-    def test_get_recent_statements_empty(self):
+    def test_get_conversations_empty(self):
         response = self.client.get(self.api_url)
         data = self._get_json(response)
 
-        self.assertIn('recent_statements', data)
-        self.assertEqual(len(data['recent_statements']), 0)
+        self.assertIn('conversations', data)
+        self.assertEqual(len(data['conversations']), 0)
 
-    def test_get_recent_statements(self):
+    def test_get_conversations(self):
         response = self.client.post(
             self.api_url,
             data=json.dumps({'text': 'How are you?'}),
@@ -42,8 +42,8 @@ class ApiIntegrationTestCase(TestCase):
         response = self.client.get(self.api_url)
         data = self._get_json(response)
 
-        self.assertIn('recent_statements', data)
-        self.assertEqual(len(data['recent_statements']), 1)
-        self.assertEqual(len(data['recent_statements'][0]), 2)
-        self.assertIn('text', data['recent_statements'][0][0])
-        self.assertIn('text', data['recent_statements'][0][1])
+        self.assertIn('conversations', data)
+        self.assertEqual(len(data['conversations']), 1)
+        self.assertEqual(len(data['conversations'][0]), 2)
+        self.assertIn('text', data['conversations'][0][0])
+        self.assertIn('text', data['conversations'][0][1])
