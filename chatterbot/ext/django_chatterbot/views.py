@@ -68,3 +68,16 @@ class ChatterBotView(ChatterBotViewMixin, View):
         # Return a method not allowed response
         return JsonResponse(data, status=405)
 
+
+class ChatterBotTrainingView(ChatterBotViewMixin, View):
+
+    def post(self, request, *args, **kwargs):
+
+        if request.is_ajax():
+            input_data = json.loads(request.read().decode('utf-8'))
+        else:
+            input_data = json.loads(request.body.decode('utf-8'))
+
+        self.chatterbot.train(input_data)
+
+        return JsonResponse(status=200)
