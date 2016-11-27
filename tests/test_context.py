@@ -11,7 +11,9 @@ class AdapterTests(ChatBotTestCase):
         When one adapter modifies its chatbot instance,
         the change should be the same in all other adapters.
         """
-        self.chatbot.input.chatbot.recent_statements = [5]
-        data = self.chatbot.output.chatbot.recent_statements
+        self.chatbot.input.chatbot.conversation_sessions.update_default(
+            ('A', 'B', )
+        )
+        session = self.chatbot.output.chatbot.conversation_sessions.get_default()
 
-        self.assertIn(5, data)
+        self.assertIn(('A', 'B', ), session.conversation)

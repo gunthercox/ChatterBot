@@ -12,7 +12,8 @@ element from the user.
 # logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
-bot = ChatBot('Feedback Learning Bot',
+bot = ChatBot(
+    'Feedback Learning Bot',
     storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
     logic_adapters=[
         'chatterbot.logic.ClosestMatchAdapter'
@@ -51,7 +52,7 @@ while True:
 
         # Update the conversation history for the bot
         # It is important that this happens last, after the learning step
-        bot.recent_statements.append(
+        bot.conversation_sessions.update_default(
             (statement, response, )
         )
 
