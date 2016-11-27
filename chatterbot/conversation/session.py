@@ -29,20 +29,21 @@ class SessionManager(object):
         """
         session = Session()
 
-        self.sessions[session.uuid] = session
+        self.sessions[str(session.uuid)] = session
 
         return session
 
-    def get(self, uid):
+    def get(self, session_id):
         """
         Return a session given a unique identifier.
         """
-        return self.sessions[uid]
+        return self.sessions[str(session_id)]
 
     def update(self, session_id, conversance):
         """
         Add a conversance to a given session if the session exists.
         """
+        session_id = str(session_id)
         if session_id in self.sessions:
             self.sessions[session_id].conversation.append(conversance)
 
