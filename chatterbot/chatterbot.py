@@ -191,7 +191,7 @@ class ChatBot(object):
         :rtype: Statement
         """
         if not session_id:
-            session_id = self.default_session.uuid
+            session_id = str(self.default_session.uuid)
 
         input_statement = self.input.process_input_statement(input_item)
 
@@ -206,7 +206,7 @@ class ChatBot(object):
         self.conversation_sessions.update(session_id, (statement, response, ))
 
         # Process the response output with the output adapter
-        return self.output.process_response(response, confidence)
+        return self.output.process_response(response, confidence, session_id)
 
     def generate_response(self, input_statement):
         """

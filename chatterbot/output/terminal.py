@@ -8,7 +8,7 @@ class TerminalAdapter(OutputAdapter):
     communicate through the terminal.
     """
 
-    def process_response(self, statement, confidence=None):
+    def process_response(self, statement, confidence=None, session_id=None):
         """
         Print the response to the user's input.
         """
