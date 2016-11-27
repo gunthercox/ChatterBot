@@ -30,12 +30,12 @@ class ChatterBotView(ChatterBotViewMixin, View):
     """
 
     def _serialize_conversation(self, session):
-        if session.conversations.empty():
+        if session.conversation.empty():
             return []
 
         conversation = []
 
-        for statement, response in session.conversations:
+        for statement, response in session.conversation:
             conversation.append([statement.serialize(), response.serialize()])
 
         return conversation
@@ -44,7 +44,6 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         Return a response to the statement in the posted data.
         """
-
         if request.is_ajax():
             input_data = json.loads(request.read().decode('utf-8'))
         else:
@@ -54,12 +53,13 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         chat_session_id = request.session.get('chat_session_id')
         if chat_session_id:
-            session = self.chatterbot.conversation_sessions.get(chat_session_id)
+            chat_session = self.chatterbot.conversation_sessions.get(chat_session_id)
         else:
-            session = self.chatterbot.conversation_sessions.new()
-            request.session['chat_session_id'] = str(session.uuid)
+            chat_session = self.chatterbot.conversation_sessions.new()
+            chat_session_id = str(chat_session.uuid)
+            request.session['chat_session_id'] = chat_session_id
 
-        response_data = self.chatterbot.get_response(input_data)
+        response_data = self.chatterbot.get_response(input_data, chat_session_id)
 
         return JsonResponse(response_data, status=200)
 
@@ -69,15 +69,15 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         chat_session_id = request.session.get('chat_session_id')
         if chat_session_id:
-            session = self.chatterbot.conversation_sessions.get(chat_session_id)
+            chat_session = self.chatterbot.conversation_sessions.get(chat_session_id)
         else:
-            session = self.chatterbot.conversation_sessions.new()
-            request.session['chat_session_id'] = str(session.uuid)
+            chat_session = self.chatterbot.conversation_sessions.new()
+            request.session['chat_session_id'] = str(chat_session.uuid)
 
         data = {
             'detail': 'You should make a POST request to this endpoint.',
             'name': self.chatterbot.name,
-            'conversation': self._serialize_conversation(chat_session_id)
+            'conversation': self._serialize_conversation(chat_session)
         }
 
         # Return a method not allowed response
