@@ -8,19 +8,23 @@ class StorageAdapter(Adapter):
     """
 
     def __init__(self, base_query=None, *args, **kwargs):
+        """
+        Initialize common attributes shared by all storage adapters.
+        """
         super(StorageAdapter, self).__init__(**kwargs)
 
         self.kwargs = kwargs
         self.read_only = kwargs.get('read_only', False)
         self.adapter_supports_queries = True
+        self.base_query = None
 
-    def generate_base_query(self, chatterbot):
+    def generate_base_query(self, chatterbot, session_id):
         """
         Create a base query for the storage adapter.
         """
         if self.adapter_supports_queries:
             for filter_instance in chatterbot.filters:
-                self.base_query = filter_instance.filter_selection(chatterbot)
+                self.base_query = filter_instance.filter_selection(chatterbot, session_id)
 
     def count(self):
         """

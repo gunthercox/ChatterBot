@@ -195,7 +195,7 @@ class ChatBot(object):
 
         input_statement = self.input.process_input_statement(input_item)
 
-        statement, response, confidence = self.generate_response(input_statement)
+        statement, response, confidence = self.generate_response(input_statement, session_id)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.conversation_sessions.get(
@@ -208,11 +208,15 @@ class ChatBot(object):
         # Process the response output with the output adapter
         return self.output.process_response(response, confidence, session_id)
 
-    def generate_response(self, input_statement):
+    def generate_response(self, input_statement, session_id=None):
         """
         Return a response based on a given input statement.
         """
-        self.storage.generate_base_query(self)
+        if not session_id:
+            session = self.conversation_sessions.get_default()
+            session_id = str(session.uuid)
+
+        self.storage.generate_base_query(self, session_id)
 
         # Select a response to the input statement
         confidence, response = self.logic.process(input_statement)
