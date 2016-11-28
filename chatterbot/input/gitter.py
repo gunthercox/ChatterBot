@@ -2,7 +2,6 @@ from __future__ import unicode_literals
 from time import sleep
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
-import requests
 
 
 class Gitter(InputAdapter):
@@ -42,6 +41,11 @@ class Gitter(InputAdapter):
             raise self.HTTPStatusException('{} status code recieved'.format(code))
 
     def join_room(self, room_name):
+        """
+        Join the specified Gitter room.
+        """
+        import requests
+
         endpoint = '{}rooms'.format(self.gitter_host)
         response = requests.post(
             endpoint,
@@ -55,6 +59,8 @@ class Gitter(InputAdapter):
         return response.json()
 
     def get_user_data(self):
+        import requests
+
         endpoint = '{}user'.format(self.gitter_host)
         response = requests.get(
             endpoint,
@@ -67,7 +73,14 @@ class Gitter(InputAdapter):
         return response.json()
 
     def mark_messages_as_read(self, message_ids):
-        endpoint = '{}user/{}/rooms/{}/unreadItems'.format(self.gitter_host, self.user_id, self.room_id)
+        """
+        Mark the specified message ids as read.
+        """
+        import requests
+
+        endpoint = '{}user/{}/rooms/{}/unreadItems'.format(
+            self.gitter_host, self.user_id, self.room_id
+        )
         response = requests.post(
             endpoint,
             headers=self.headers,
@@ -80,6 +93,11 @@ class Gitter(InputAdapter):
         return response.json()
 
     def get_most_recent_message(self):
+        """
+        Get the most recent message from the Gitter room.
+        """
+        import requests
+
         endpoint = '{}rooms/{}/chatMessages?limit=1'.format(self.gitter_host, self.room_id)
         response = requests.get(
             endpoint,

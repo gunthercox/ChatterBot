@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
-from .output_adapter import OutputAdapter
-import requests
 import json
+from .output_adapter import OutputAdapter
 
 
 class HipChat(OutputAdapter):
@@ -29,6 +28,7 @@ class HipChat(OutputAdapter):
         Send a message to a HipChat room.
         https://www.hipchat.com/docs/apiv2/method/send_message
         """
+        import requests
 
         message_url = "{}/v2/room/{}/message".format(
             self.hipchat_host,

@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 from .output_adapter import OutputAdapter
-import requests
 
 
 class Gitter(OutputAdapter):
@@ -34,6 +33,11 @@ class Gitter(OutputAdapter):
             raise self.HTTPStatusException('{} status code recieved'.format(code))
 
     def join_room(self, room_name):
+        """
+        Join the specified Gitter room.
+        """
+        import requests
+
         endpoint = '{}rooms'.format(self.gitter_host)
         response = requests.post(
             endpoint,
@@ -50,6 +54,8 @@ class Gitter(OutputAdapter):
         """
         Send a message to a Gitter room.
         """
+        import requests
+
         endpoint = '{}rooms/{}/chatMessages'.format(self.gitter_host, self.room_id)
         response = requests.post(
             endpoint,

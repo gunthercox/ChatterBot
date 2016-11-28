@@ -1,8 +1,7 @@
 from __future__ import unicode_literals
+from time import sleep
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
-from time import sleep
-import requests
 
 
 class HipChat(InputAdapter):
@@ -48,6 +47,7 @@ class HipChat(InputAdapter):
         """
         https://www.hipchat.com/docs/apiv2/method/view_recent_room_history
         """
+        import requests
 
         recent_histroy_url = '{}/v2/room/{}/history?max-results={}'.format(
             self.hipchat_host,
@@ -63,6 +63,9 @@ class HipChat(InputAdapter):
         return response.json()
 
     def get_most_recent_message(self, room_id_or_name):
+        """
+        Return the most recent message from the HipChat room.
+        """
         data = self.view_recent_room_history(room_id_or_name)
 
         items = data['items']
@@ -72,7 +75,9 @@ class HipChat(InputAdapter):
         return items[-1]
 
     def process_input(self, statement):
-
+        """
+        Process input from the HipChat room.
+        """
         new_message = False
 
         input_statement = self.chatbot.get_last_input_statement()

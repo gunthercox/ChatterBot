@@ -1,7 +1,6 @@
 from __future__ import unicode_literals
-from .output_adapter import OutputAdapter
-import requests
 import json
+from .output_adapter import OutputAdapter
 
 
 class Microsoft(OutputAdapter):
@@ -13,14 +12,18 @@ class Microsoft(OutputAdapter):
     def __init__(self, **kwargs):
         super(Microsoft, self).__init__(**kwargs)
 
-        self.directline_host = kwargs.get('directline_host',
-                                          'https://directline.botframework.com')
-        self.direct_line_token_or_secret = kwargs.get\
-            ('direct_line_token_or_secret')
+        self.directline_host = kwargs.get(
+            'directline_host',
+            'https://directline.botframework.com'
+        )
+        self.direct_line_token_or_secret = kwargs.get(
+            'direct_line_token_or_secret'
+        )
         self.conversation_id = kwargs.get('conversation_id')
 
-        authorization_header = 'BotConnector {}'.\
-            format(self.direct_line_token_or_secret)
+        authorization_header = 'BotConnector {}'.format(
+            self.direct_line_token_or_secret
+        )
 
         self.headers = {
             'Authorization': authorization_header,
@@ -30,13 +33,17 @@ class Microsoft(OutputAdapter):
     def _validate_status_code(self, response):
         status_code = response.status_code
         if status_code not in [200, 204]:
-            raise self.HTTPStatusException('{} status code recieved'.
-                                           format(status_code))
+            raise self.HTTPStatusException('{} status code recieved'.format(status_code))
 
     def get_most_recent_message(self):
-        endpoint = '{host}/api/conversations/{id}/messages'\
-            .format(host=self.directline_host,
-                    id=self.conversation_id)
+        """
+        Return the most recently sent message.
+        """
+        import requests
+        endpoint = '{host}/api/conversations/{id}/messages'.format(
+            host=self.directline_host,
+            id=self.conversation_id
+        )
 
         response = requests.get(
             endpoint,
@@ -62,9 +69,12 @@ class Microsoft(OutputAdapter):
         Send a message to a HipChat room.
         https://www.hipchat.com/docs/apiv2/method/send_message
         """
+        import requests
 
-        message_url = "{host}/api/conversations/{conversationId}/messages".\
-            format(host=self.directline_host, conversationId=conversation_id)
+        message_url = "{host}/api/conversations/{conversationId}/messages".format(
+            host=self.directline_host,
+            conversationId=conversation_id
+        )
 
         response = requests.post(
             message_url,

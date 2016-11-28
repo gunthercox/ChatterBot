@@ -1,10 +1,8 @@
 from __future__ import unicode_literals
+from time import sleep
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
-from time import sleep
-import requests
-from requests.packages.urllib3.exceptions import InsecureRequestWarning
-requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
+
 
 class Microsoft(InputAdapter):
     """
@@ -15,9 +13,11 @@ class Microsoft(InputAdapter):
 
     def __init__(self, **kwargs):
         super(Microsoft, self).__init__(**kwargs)
+        import requests
+        from requests.packages.urllib3.exceptions import InsecureRequestWarning
+        requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.directline_host = kwargs.get('directline_host', 
-                                          'https://directline.botframework.com')
+        self.directline_host = kwargs.get('directline_host', 'https://directline.botframework.com')
 
         # NOTE: Direct Line client credentials are different from your bot's
         # credentials
@@ -45,6 +45,8 @@ class Microsoft(InputAdapter):
                                            format(code))
 
     def start_conversation(self):
+        import requests
+
         endpoint = '{host}/api/conversations'.format(host=self.directline_host)
         response = requests.post(
             endpoint,
@@ -58,6 +60,8 @@ class Microsoft(InputAdapter):
         return response.json()
 
     def get_most_recent_message(self):
+        import requests
+
         endpoint = '{host}/api/conversations/{id}/messages'\
             .format(host=self.directline_host,
                     id=self.conversation_id)
