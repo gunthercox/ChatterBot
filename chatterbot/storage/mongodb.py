@@ -1,6 +1,5 @@
 from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
-from pymongo import MongoClient
 
 
 class Query(object):
@@ -67,6 +66,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
     def __init__(self, **kwargs):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)
+        from pymongo import MongoClient
 
         self.database_name = self.kwargs.get(
             "database", "chatterbot-database"

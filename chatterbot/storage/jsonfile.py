@@ -1,7 +1,6 @@
 import warnings
 from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
-from jsondb import Database
 
 
 class JsonFileStorageAdapter(StorageAdapter):
@@ -12,6 +11,7 @@ class JsonFileStorageAdapter(StorageAdapter):
 
     def __init__(self, **kwargs):
         super(JsonFileStorageAdapter, self).__init__(**kwargs)
+        from jsondb import Database
 
         if not kwargs.get('silence_performance_warning', False):
             warnings.warn(
@@ -63,7 +63,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         for response in response_list:
             data = response.copy()
             text = data['text']
-            del(data['text'])
+            del data['text']
 
             proxy_statement.add_response(
                 Response(text, **data)
@@ -72,7 +72,10 @@ class JsonFileStorageAdapter(StorageAdapter):
         return proxy_statement.in_response_to
 
     def json_to_object(self, statement_data):
-        
+        """
+        Converts a dictionary-like object to a Statement object.
+        """
+
         # Don't modify the referenced object
         statement_data = statement_data.copy()
 
@@ -130,12 +133,15 @@ class JsonFileStorageAdapter(StorageAdapter):
         return results
 
     def update(self, statement, **kwargs):
+        """
+        Update a statement in the database.
+        """
         # Do not alter the database unless writing is enabled
         if not self.read_only:
             data = statement.serialize()
 
             # Remove the text key from the data
-            del(data['text'])
+            del data['text']
             self.database.data(key=statement.text, value=data)
 
             # Make sure that an entry for each response exists
