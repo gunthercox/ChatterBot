@@ -65,6 +65,67 @@ def import_module(dotted_path):
     return getattr(module, module_parts[-1])
 
 
+def initialize_class(data, **kwargs):
+    """
+    :param data: A string or dictionary containing a import_path attribute.
+    """
+    if isinstance(data, dict):
+        import_path = data.pop('import_path')
+        data.update(kwargs)
+        Class = import_module(import_path)
+
+        return Class(**data)
+    else:
+        Class = import_module(data)
+
+        return Class(**kwargs)
+
+
+def validate_adapter_class(validate_class, adapter_class):
+    """
+    Raises an exception if validate_class is not a
+    subclass of adapter_class.
+
+    :param validate_class: The class to be validated.
+    :type validate_class: class
+
+    :param adapter_class: The class type to check against.
+    :type adapter_class: class
+
+    :raises: InvalidAdapterException
+    """
+    from .adapters import Adapter
+    from .chatterbot import ChatBot
+
+    # If a dictionary was passed in, check if it has an import_path attribute
+    if isinstance(validate_class, dict):
+        origional_data = validate_class.copy()
+        validate_class = validate_class.get('import_path')
+
+        if not validate_class:
+            raise ChatBot.InvalidAdapterException(
+                'The dictionary {} must contain a value for "import_path"'.format(
+                    str(origional_data)
+                )
+            )
+
+    if not issubclass(import_module(validate_class), Adapter):
+        raise ChatBot.InvalidAdapterException(
+            '{} must be a subclass of {}'.format(
+                validate_class,
+                Adapter.__name__
+            )
+        )
+
+    if not issubclass(import_module(validate_class), adapter_class):
+        raise ChatBot.InvalidAdapterException(
+            '{} must be a subclass of {}'.format(
+                validate_class,
+                adapter_class.__name__
+            )
+        )
+
+
 def input_function():
     """
     Normalizes reading input between python 2 and 3.
