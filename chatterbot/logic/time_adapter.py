@@ -1,8 +1,6 @@
 from __future__ import unicode_literals
-from .logic_adapter import LogicAdapter
-from chatterbot.conversation import Statement
-from textblob.classifiers import NaiveBayesClassifier
 from datetime import datetime
+from .logic_adapter import LogicAdapter
 
 
 class TimeLogicAdapter(LogicAdapter):
@@ -12,6 +10,7 @@ class TimeLogicAdapter(LogicAdapter):
 
     def __init__(self, **kwargs):
         super(TimeLogicAdapter, self).__init__(**kwargs)
+        from textblob.classifiers import NaiveBayesClassifier
 
         training_data = [
             ('what time is it', 1),
@@ -27,6 +26,8 @@ class TimeLogicAdapter(LogicAdapter):
         self.classifier = NaiveBayesClassifier(training_data)
 
     def process(self, statement):
+        from chatterbot.conversation import Statement
+
         now = datetime.now()
 
         confidence = self.classifier.classify(statement.text.lower())
