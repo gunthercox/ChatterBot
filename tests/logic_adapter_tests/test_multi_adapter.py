@@ -35,9 +35,9 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
         statement, this statement should be returned with the
         highest confidence available from these matching options.
         """
-        self.adapter.add_adapter(TestAdapterA())
-        self.adapter.add_adapter(TestAdapterB())
-        self.adapter.add_adapter(TestAdapterC())
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterA')
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterB')
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterC')
 
         confidence, statement = self.adapter.process(Statement('Howdy!'))
 
@@ -56,9 +56,8 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
         self.assertEqual(value, 0.85)
 
     def test_add_adapter(self):
-        sub_adapter = TestAdapterA()
         adapter_count_before = len(self.adapter.adapters)
-        self.adapter.add_adapter(sub_adapter)
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterA')
         adapter_count_after = len(self.adapter.adapters)
 
         self.assertEqual(adapter_count_after, adapter_count_before + 1)
