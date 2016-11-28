@@ -39,9 +39,3 @@ Parsing datetime information
 ----------------------------
 
 .. autofunction:: chatterbot.parsing.datetime_parsing
-
-Queues
-------
-
-.. autoclass:: chatterbot.queues.ResponseQueue
-   :members:
