@@ -1,11 +1,13 @@
 from __future__ import unicode_literals
+import datetime
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
-import requests
-import datetime
 
 
 class Mailgun(InputAdapter):
+    """
+    Get input from Mailgun.
+    """
 
     def __init__(self, **kwargs):
         super(Mailgun, self).__init__(**kwargs)
@@ -17,6 +19,8 @@ class Mailgun(InputAdapter):
         self.endpoint = kwargs.get('mailgun_api_endpoint')
 
     def get_email_stored_events(self):
+        import requests
+
         yesterday = datetime.datetime.now() - datetime.timedelta(1)
         return requests.get(
             '{}/events'.format(self.endpoint),
@@ -38,13 +42,15 @@ class Mailgun(InputAdapter):
                     yield item['storage']['url']
 
     def get_message(self, url):
+        import requests
+
         return requests.get(
             url,
             auth=('api', self.api_key)
         )
 
     def process_input(self, statement):
-        urls = m.get_stored_email_urls()
+        urls = self.get_stored_email_urls()
         url = first(urls)
 
         response = self.get_message(url)

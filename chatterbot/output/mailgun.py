@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 from .output_adapter import OutputAdapter
-import requests
 
 
 class Mailgun(OutputAdapter):
@@ -22,6 +21,8 @@ class Mailgun(OutputAdapter):
         * from_email: The email address that the message will be sent from.
         * recipients: A list of recipient email addresses.
         """
+        import requests
+
         return requests.post(
             self.endpoint,
             auth=('api', self.api_key),
