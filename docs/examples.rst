@@ -1,10 +1,18 @@
+========
 Examples
 ========
 
 Several simple examples are available to help you get started with ChatterBot.
+Even more examples can be found in the `examples` directory in on GitHub: https://github.com/gunthercox/ChatterBot/tree/master/examples
+
+Simple Example
+==============
+
+.. literalinclude:: ../examples/basic_example.py
+   :language: python
 
 Terminal Example
-----------------
+================
 
 This example program shows how to create a simple terminal client
 that allows you to communicate with your chat bot by typing into
@@ -14,7 +22,7 @@ your terminal.
    :language: python
 
 Using MongoDB
--------------
+=============
 
 Before you can use ChatterBot's built in adapter for MongoDB,
 you will need to `install MongoDB`_. Make sure MongoDB is
