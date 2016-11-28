@@ -44,10 +44,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         Return a response to the statement in the posted data.
         """
-        if request.is_ajax():
-            input_data = json.loads(request.read().decode('utf-8'))
-        else:
-            input_data = json.loads(request.body.decode('utf-8'))
+        input_data = json.loads(request.read().decode('utf-8'))
 
         self.validate(input_data)
 
