@@ -54,6 +54,7 @@ Contents:
    filters/index
    chatterbot
    conversations
+   sessions
    utils
    django/index
    testing
