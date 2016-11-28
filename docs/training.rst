@@ -2,16 +2,17 @@
 Training
 ========
 
-ChatterBot has tools that simplify the process of training a chat bot instance.
+ChatterBot includes tools that help simplify the process of training a chat bot instance.
 ChatterBot's training process works by creating or building upon the graph data structure that represents the sets of
 known statements and responses. When a chat bot trainer is provided with a data set, it creates the necessary entries
 in the chat bot's knowledge graph so that the statement inputs and responses are correctly represented.
 
-Several trainers come built-in with ChaterBot. These utilities range from allowing you to update the knowledge graph
+Several training classes come built-in with ChaterBot. These utilities range from allowing you to update the knowledge graph
 based on a list of statements representing a conversation, to tools that allow you to train your bot based on a corpus
 of pre-loaded training data.
 
-The case that someone wants to create a custom training module typically comes up when they have data in some format that they want to train the bot with.
+The case that someone wants to create a custom training module typically comes up when they have data in some format
+that they want to train the bot with.
 
 ..  _set_trainer:
 
@@ -29,9 +30,11 @@ Training via list data
 
 .. autofunction:: chatterbot.trainers.ListTrainer
 
-For the training, process, you will need to pass in a list of statements where the order of each statement is based on it's placement in a given conversation.
+For the training, process, you will need to pass in a list of statements where the order of each statement is based
+on it's placement in a given conversation.
 
-For example, if you were to run bot of the following training calls, then the resulting chatterbot would respond to both statements of "Hi there!" and "Greetings!" by saying "Hello".
+For example, if you were to run bot of the following training calls, then the resulting chatterbot would respond to
+both statements of "Hi there!" and "Greetings!" by saying "Hello".
 
 .. code-block:: python
 
