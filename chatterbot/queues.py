@@ -20,6 +20,9 @@ class FixedSizeQueue(object):
 
         self.queue.append(item)
 
+    def __len__(self):
+        return len(self.queue)
+
     def __getitem__(self, index):
         return self.queue[index]
 
