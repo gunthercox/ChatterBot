@@ -109,15 +109,31 @@ def sentiment_comparison(statement, other_statement):
     :return: The percent of similarity between the sentiment value.
     :rtype: float
     """
-    from textblob import TextBlob
+    from nltk.sentiment.vader import SentimentIntensityAnalyzer
 
-    statement_blob = TextBlob(statement.text)
-    other_statement_blob = TextBlob(other_statement.text)
+    sentiment_analyzer = SentimentIntensityAnalyzer()
+    statement_polarity = sentiment_analyzer.polarity_scores(statement.text.lower())
+    statement2_polarity = sentiment_analyzer.polarity_scores(other_statement.text.lower())
 
-    statement_sentiment = statement_blob.sentiment.polarity
-    other_statement_sentiment = other_statement_blob.sentiment.polarity
+    statement_greatest_polarity = 'neu'
+    statement_greatest_score = -1
+    for polarity in sorted(statement_polarity):
+        if statement_polarity[polarity] > statement_greatest_score:
+            statement_greatest_polarity = polarity
+            statement_greatest_score = statement_polarity[polarity]
 
-    values = [statement_sentiment, other_statement_sentiment]
+    statement2_greatest_polarity = 'neu'
+    statement2_greatest_score = -1
+    for polarity in sorted(statement2_polarity):
+        if statement2_polarity[polarity] > statement2_greatest_score:
+            statement2_greatest_polarity = polarity
+            statement2_greatest_score = statement2_polarity[polarity]
+
+    # Check if the polarity if of a different type
+    if statement_greatest_polarity != statement2_greatest_polarity:
+        return 0
+
+    values = [statement_greatest_score, statement2_greatest_score]
     difference = max(values) - min(values)
 
     return 1.0 - difference
