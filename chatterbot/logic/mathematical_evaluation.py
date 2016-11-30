@@ -88,31 +88,11 @@ class MathematicalEvaluation(LogicAdapter):
         string = ''
 
         for chunk in input_text.split():
-
-            is_chunk_integer = self.is_integer(chunk)
-
-            if is_chunk_integer is False:
-                is_chunk_float = self.is_float(chunk)
-
-                if is_chunk_float is False:
-                    is_chunk_operator = self.is_operator(chunk)
-
-                    if is_chunk_operator is False:
-                        is_chunk_constant = self.is_constant(chunk)
-
-                        if is_chunk_constant is False:
-                            is_chunk_function = self.is_function(chunk)
-
-                            if is_chunk_function is not False:
-                                string += str(is_chunk_function) + ' '
-                        else:
-                            string += str(is_chunk_constant) + ' '
-                    else:
-                        string += str(is_chunk_operator) + ' '
-                else:
-                    string += str(is_chunk_float) + ' '
-            else:
-                string += str(is_chunk_integer) + ' '
+            for checker in ['is_integer', 'is_float', 'is_operator', 'is_constant', 'is_function']:
+                result = getattr(self, checker)(chunk)
+                if result is not False:
+                    string += str(result) + ' '
+                    break
 
         return string
 
