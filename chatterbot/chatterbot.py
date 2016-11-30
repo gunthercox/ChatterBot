@@ -73,14 +73,11 @@ class ChatBot(object):
         """
         from .utils import nltk_download_corpus
 
-        # Download the stopwords data only if it is not already downloaded
+        # Download required NLTK corpora if they have not already been downloaded
         nltk_download_corpus('stopwords')
-
-        # Download the wordnet data only if it is not already downloaded
         nltk_download_corpus('wordnet')
-
-        # Download the punkt data only if it is not already downloaded
         nltk_download_corpus('punkt')
+        nltk_download_corpus('vader_lexicon')
 
     def get_response(self, input_item, session_id=None):
         """

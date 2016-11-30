@@ -37,8 +37,8 @@ class SentimentAdapterTests(ChatBotTestCase):
             'Thank you.'
         ])
 
-        happy_statement = Statement('I like raspberry ice cream.')
+        happy_statement = Statement('I enjoy raspberry.')
         confidence, response = self.adapter.process(happy_statement)
 
-        self.assertEqual(confidence, 0.6)
         self.assertEqual(response.text, 'I am glad to hear that.')
+        self.assertAlmostEqual(confidence, 0.75, places=1)
