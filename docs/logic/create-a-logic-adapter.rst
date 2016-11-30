@@ -38,6 +38,32 @@ Example logic adapter
 
            return confidence, selected_statement
 
+Directory structure
+===================
+
+If you create your own logic adapter you will need to have it in a seperate file from your chat bot.
+Your directory setup should look something like the following:
+
+.. code-block:: text
+
+   project_directory
+   ├── cool_chatbot.py
+   └── cool_adapter.py
+
+Then assuming that you have a class named :code:`MyLogicAdapter` in your *cool_chatbot.py* file,
+you should be able to specify the following when you initialize your chat bot.
+
+.. code-block:: python
+
+   ChatBot(
+       # ...
+       logic_adapters=[
+           {
+               'import_path': 'cool_chatbot.MyLogicAdapter'
+           }
+       ]
+   )
+
 Responding to specific input
 ============================
 
