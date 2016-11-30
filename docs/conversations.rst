@@ -32,7 +32,7 @@ Statement-response relationship
 .. image:: _static/statement-response-relationship.svg
    :alt: ChatterBot statement-response relationship
 
-Each :code:`Statement: object has an :code:`in_response_to` reference which links the
+Each :code:`Statement` object has an :code:`in_response_to` reference which links the
 statement to a number of other statements that it has been learned to be in response to.
 The :code:`in_response_to` attribute is essentially a reference to all parent statements
 of the current statement.
