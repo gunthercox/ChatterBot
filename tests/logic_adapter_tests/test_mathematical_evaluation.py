@@ -127,3 +127,14 @@ class MathematicalEvaluationOperationTests(TestCase):
         statement = Statement('What is -100.5 * 20?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( -100.5 * 20 ) = -2010.0')
+
+    def test_constants(self):
+        statement = Statement('What is pi plus e ?')
+        confidence, response = self.adapter.process(statement)
+        self.assertEqual(response.text, '3.141693 + 2.718281 = 5.859974')
+
+    def test_math_functions(self):
+        statement = Statement('What is log ( 5 + 6 ) * sqrt ( 12 ) ?')
+        confidence, response = self.adapter.process(statement)
+        self.assertEqual(response.text, 'log ( ( 5 + ( 6 ) * sqrt ( ( 12 ) ) ) ) = 3.24977779033')
+

@@ -5,6 +5,7 @@ import re
 import os
 import json
 import decimal
+import numpy
 
 
 class MathematicalEvaluation(LogicAdapter):
@@ -21,6 +22,7 @@ class MathematicalEvaluation(LogicAdapter):
     4) Simplify the equation
     5) Solve the equation & return result
     """
+    functions = ['log', 'sqrt']
 
     def __init__(self, **kwargs):
         super(MathematicalEvaluation, self).__init__(**kwargs)
@@ -72,7 +74,7 @@ class MathematicalEvaluation(LogicAdapter):
 
         # Returning important information
         try:
-            expression += "= " + str(eval(expression))
+            expression += "= " + str(eval(expression, {f: getattr(numpy, f) for f in self.functions}))
 
             # return a confidence of 1 if the expression could be evaluated
             return 1, Statement(expression)
@@ -95,7 +97,17 @@ class MathematicalEvaluation(LogicAdapter):
                 if is_chunk_float is False:
                     is_chunk_operator = self.is_operator(chunk)
 
-                    if is_chunk_operator is not False:
+                    if is_chunk_operator is False:
+                        is_chunk_constant = self.is_constant(chunk)
+
+                        if is_chunk_constant is False:
+                            is_chunk_function = self.is_function(chunk)
+
+                            if is_chunk_function is not False:
+                                string += str(is_chunk_function) + ' '
+                        else:
+                            string += str(is_chunk_constant) + ' '
+                    else:
                         string += str(is_chunk_operator) + ' '
                 else:
                     string += str(is_chunk_float) + ' '
@@ -124,6 +136,27 @@ class MathematicalEvaluation(LogicAdapter):
         try:
             return int(string)
         except:
+            return False
+
+    def is_constant(self, string):
+        """
+        If the string is a mathematical constant, returns
+        said constant. Otherwise, it returns False.
+        """
+        constants = {
+            "pi": 3.141693,
+            "e": 2.718281
+        }
+        return constants.get(string, False)
+
+    def is_function(self, string):
+        """
+        If the string is an availbale mathematical function, returns
+        said function. Otherwise, it returns False.
+        """
+        if string in self.functions:
+            return string
+        else:
             return False
 
     def is_operator(self, string):
