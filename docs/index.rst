@@ -45,6 +45,7 @@ Process flow diagram
 ====================
 
 .. image:: _static/chatterbot-process-flow.svg
+   :alt: ChatterBot process flow diagram
 
 Contents:
 =========

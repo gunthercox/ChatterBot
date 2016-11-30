@@ -26,6 +26,21 @@ response to another statement.
 .. autoclass:: chatterbot.conversation.Response
    :members:
 
+Statement-response relationship
+===============================
+
+.. image:: _static/statement-response-relationship.svg
+   :alt: ChatterBot statement-response relationship
+
+Each :code:`Statement: object has an :code:`in_response_to` reference which links the
+statement to a number of other statements that it has been learned to be in response to.
+The :code:`in_response_to` attribute is essentially a reference to all parent statements
+of the current statement.
+
+The :code:`Response` object's :code:`occurrence` attribute indicates the number of times
+that the statement has been given as a response. This makes it possible for the chat bot
+to determine if a particular response is more commonly used than another.
+
 Statement comparison
 ====================
 
