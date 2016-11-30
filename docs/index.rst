@@ -31,13 +31,13 @@ How ChatterBot Works
 ChatterBot is a Python library designed to make it easy to create software that can engage in conversation.
 
 An :term:`untrained instance` of ChatterBot starts off with no knowledge of how to communicate.
-Each time a user enters a statement, the library saves the text that they entered and the text
+Each time a user enters a :term:`statement`, the library saves the text that they entered and the text
 that the statement was in response to. As ChatterBot receives more input the number of responses
 that it can reply and the accuracy of each response in relation to the input statement increase.
 
-The program selects the closest matching response by searching for the closest matching known
-statement that matches the input, it then returns the most likely response to that statement
-based on how frequently each response is issued by the people the bot communicates with.
+The program selects the closest matching :term:`response` by searching for the closest matching known
+statement that matches the input, it then chooses a response from the selection of known responses
+to that statement.
 
 ..  _process_flow_diagram:
 
@@ -84,6 +84,13 @@ Definitions
 
    untrained instance
       An untrained instance of the chat bot has an empty database.
+
+   statement
+      A single string of text representing something that can be said.
+
+   response
+      A single string of text that is uttered as an answer, a reply or
+      an acknowledgement to a statement.
 
 Indices and tables
 ==================
