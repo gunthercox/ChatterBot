@@ -1,5 +1,6 @@
 from .logic_adapter import LogicAdapter
 from .approximate_sentence_match import ApproximateSentenceMatchAdapter
+from .base_match import BaseMatchAdapter
 from .closest_match import ClosestMatchAdapter
 from .closest_meaning import ClosestMeaningAdapter
 from .low_confidence import LowConfidenceAdapter
