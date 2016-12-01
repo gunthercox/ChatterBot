@@ -23,4 +23,14 @@ can be run with:
 
    python examples/django_app/manage.py test
 
+Benchmark tests
+===============
+
+You can run a series of benchmark tests that test a variety of different chat bot configurations for
+performance by running the following command.
+
+.. sourcecode:: sh
+
+   python tests/benchmarks.py
+
 ..  _`nose documentation`: https://nose.readthedocs.org/en/latest/
