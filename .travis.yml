@@ -30,6 +30,7 @@ services:
 script:
   - nosetests --with-coverage --cover-package=chatterbot
   - python examples/django_app/manage.py test examples/django_app/
+  - python tests/benchmarks.py
 
 after_success:
   - coveralls
