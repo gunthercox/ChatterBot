@@ -86,8 +86,11 @@ class MathematicalEvaluation(LogicAdapter):
         Separates the incoming text.
         """
         string = ''
+        chunks = re.split(r"([\w\.-]+|[\(\)\*\+])", input_text)
+        chunks = [chunk.strip() for chunk in chunks]
+        chunks = [chunk for chunk in chunks if chunk != '']
 
-        for chunk in input_text.split():
+        for chunk in chunks:
             for checker in ['is_integer', 'is_float', 'is_operator', 'is_constant', 'is_function']:
                 result = getattr(self, checker)(chunk)
                 if result is not False:
