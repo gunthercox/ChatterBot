@@ -9,6 +9,9 @@ known statements and responses. When a chat bot trainer is provided with a data 
 it creates the necessary entries in the chat bot's knowledge graph so that the statement
 inputs and responses are correctly represented.
 
+.. image:: _static/training-graph.svg
+   :alt: ChatterBot training statement graph
+
 Several training classes come built-in with ChaterBot. These utilities range from allowing
 you to update the chat bot's databse knowledge graph based on a list of statements
 representing a conversation, to tools that allow you to train your bot based on a corpus of
