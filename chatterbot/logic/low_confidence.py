@@ -1,9 +1,9 @@
 from __future__ import unicode_literals
 from chatterbot.conversation import Statement
-from .base_match import BaseMatchAdapter
+from .best_match import BestMatch
 
 
-class LowConfidenceAdapter(BaseMatchAdapter):
+class LowConfidenceAdapter(BestMatch):
     """
     Returns a default response with a high confidence
     when a high confidence response is not known.

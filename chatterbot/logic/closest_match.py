@@ -1,7 +1,8 @@
-from .base_match import BaseMatchAdapter
+import warnings
+from .best_match import BestMatch
 
 
-class ClosestMatchAdapter(BaseMatchAdapter):
+class ClosestMatchAdapter(BestMatch):
     """
     The ClosestMatchAdapter logic adapter selects a known response
     to an input by searching for a known statement that most closely
@@ -16,4 +17,10 @@ class ClosestMatchAdapter(BaseMatchAdapter):
         self.compare_statements = kwargs.get(
             'statement_comparison_function',
             levenshtein_distance
+        )
+
+        warnings.warn(
+            'The ClosestMatchAdapter is deprecated. ' +
+            "Use 'chatterbot.logic.BestMatch' instead.",
+            DeprecationWarning
         )
