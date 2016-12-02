@@ -6,6 +6,10 @@ from tests.base_case import MockChatBot
 
 
 class BestMatchLevenshteinDistanceTestCase(TestCase):
+    """
+    Integration tests for the BestMatch logic adapter
+    using Levenshtein distance as a comparison function.
+    """
 
     def setUp(self):
         from chatterbot.conversation.comparisons import levenshtein_distance
