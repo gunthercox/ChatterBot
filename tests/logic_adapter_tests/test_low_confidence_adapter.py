@@ -2,7 +2,7 @@ from unittest import TestCase
 from mock import MagicMock
 from chatterbot.logic import LowConfidenceAdapter
 from chatterbot.conversation import Statement, Response
-from .test_closest_match import MockChatBot
+from tests.base_case import MockChatBot
 
 
 class LowConfidenceAdapterTestCase(TestCase):

@@ -1,23 +1,18 @@
 from unittest import TestCase
-from mock import MagicMock, Mock
-from chatterbot.logic import ClosestMatchAdapter
-from chatterbot.storage import StorageAdapter
+from mock import MagicMock
+from chatterbot.logic import BestMatch
 from chatterbot.conversation import Statement, Response
+from tests.base_case import MockChatBot
 
 
-class MockChatBot(object):
-    def __init__(self):
-        self.storage = StorageAdapter()
-
-        self.storage.get_random = Mock(
-            side_effect=ClosestMatchAdapter.EmptyDatasetException()
-        )
-
-
-class ClosestMatchAdapterTests(TestCase):
+class BestMatchLevenshteinDistanceTestCase(TestCase):
 
     def setUp(self):
-        self.adapter = ClosestMatchAdapter()
+        from chatterbot.conversation.comparisons import levenshtein_distance
+
+        self.adapter = BestMatch(
+            statement_comparison_function=levenshtein_distance
+        )
 
         # Add a mock chatbot to the logic adapter
         self.adapter.set_chatbot(MockChatBot())
@@ -27,7 +22,7 @@ class ClosestMatchAdapterTests(TestCase):
 
         statement = Statement("What is your quest?")
 
-        with self.assertRaises(ClosestMatchAdapter.EmptyDatasetException):
+        with self.assertRaises(BestMatch.EmptyDatasetException):
             self.adapter.get(statement)
 
     def test_get_closest_statement(self):
