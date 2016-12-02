@@ -1,6 +1,6 @@
 from .logic_adapter import LogicAdapter
 from .approximate_sentence_match import ApproximateSentenceMatchAdapter
-from .base_match import BaseMatchAdapter
+from .best_match import BestMatch
 from .closest_match import ClosestMatchAdapter
 from .closest_meaning import ClosestMeaningAdapter
 from .low_confidence import LowConfidenceAdapter
@@ -10,3 +10,5 @@ from .no_knowledge_adapter import NoKnowledgeAdapter
 from .sentiment_adapter import SentimentAdapter
 from .specific_response import SpecificResponseAdapter
 from .time_adapter import TimeLogicAdapter
+
+BaseMatchAdapter = BestMatch

@@ -2,10 +2,10 @@ from __future__ import unicode_literals
 from .logic_adapter import LogicAdapter
 
 
-class BaseMatchAdapter(LogicAdapter):
+class BestMatch(LogicAdapter):
     """
-    This is a parent class used by the ClosestMatch and
-    ClosestMeaning adapters.
+    A logic adater that returns a response based on known responses to the
+    closest matches to the input statement.
     """
 
     @property

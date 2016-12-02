@@ -1,7 +1,8 @@
-from .base_match import BaseMatchAdapter
+import warnings
+from .best_match import BestMatch
 
 
-class ClosestMeaningAdapter(BaseMatchAdapter):
+class ClosestMeaningAdapter(BestMatch):
     """
     This adapter selects a response by comparing the tokenized form of the
     input statement's text, with the tokenized form of possible matching
@@ -18,4 +19,11 @@ class ClosestMeaningAdapter(BaseMatchAdapter):
         self.compare_statements = kwargs.get(
             'statement_comparison_function',
             synset_distance
+        )
+
+        warnings.warn(
+            'The ClosestMeaningAdapter is deprecated. ' +
+            'See http://chatterbot.readthedocs.io/en/latest/logic/index.html#best-match-adapter ' +
+            'for details on how to update your code.',
+            DeprecationWarning
         )
