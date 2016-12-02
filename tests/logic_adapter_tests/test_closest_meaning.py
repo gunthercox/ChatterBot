@@ -2,7 +2,7 @@ from unittest import TestCase
 from mock import MagicMock
 from chatterbot.logic import ClosestMeaningAdapter
 from chatterbot.conversation import Statement, Response
-from tests.logic_adapter_tests.test_closest_match import MockChatBot
+from tests.base_case import MockChatBot
 
 
 class ClosestMeaningAdapterTests(TestCase):

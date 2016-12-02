@@ -1,7 +1,20 @@
 import os
+from mock import Mock
 from unittest import TestCase
 from unittest import SkipTest
 from chatterbot import ChatBot
+
+
+class MockChatBot(object):
+    def __init__(self):
+        from chatterbot.logic import LogicAdapter
+        from chatterbot.storage import StorageAdapter
+
+        self.storage = StorageAdapter()
+
+        self.storage.get_random = Mock(
+            side_effect=LogicAdapter.EmptyDatasetException()
+        )
 
 
 class ChatBotTestCase(TestCase):
