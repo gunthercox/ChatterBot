@@ -1,20 +1,26 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.logic import SentimentAdapter
+from chatterbot.logic import BestMatch
 from chatterbot.conversation import Statement
 
 
-class SentimentAdapterTests(ChatBotTestCase):
+class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
+    """
+    Integration tests for the BestMatch logic adapter
+    using the similarity of sentiment polarity as a comparison function.
+    """
 
     def setUp(self):
-        super(SentimentAdapterTests, self).setUp()
+        super(BestMatchSentimentComparisonTestCase, self).setUp()
         from chatterbot.trainers import ListTrainer
+        from chatterbot.conversation.comparisons import sentiment_comparison
 
         self.chatbot.set_trainer(ListTrainer)
-        self.adapter = SentimentAdapter()
+        self.adapter = BestMatch(
+            statement_comparison_function=sentiment_comparison
+        )
         self.adapter.set_chatbot(self.chatbot)
 
     def test_exact_input(self):
-
         self.chatbot.train([
             'What is your favorite flavor of ice cream?',
             'I enjoy raspberry ice cream.',

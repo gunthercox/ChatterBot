@@ -1,20 +1,27 @@
 from unittest import TestCase
 from mock import MagicMock
-from chatterbot.logic import ClosestMeaningAdapter
+from chatterbot.logic import BestMatch
 from chatterbot.conversation import Statement, Response
 from tests.base_case import MockChatBot
 
 
-class ClosestMeaningAdapterTests(TestCase):
+class BestMatchSynsetDistanceTestCase(TestCase):
+    """
+    Integration tests for the BestMatch logic adapter
+    using the synset_distance comparison function.
+    """
 
     def setUp(self):
         from chatterbot.utils import nltk_download_corpus
+        from chatterbot.conversation.comparisons import synset_distance
 
         nltk_download_corpus('stopwords')
         nltk_download_corpus('wordnet')
         nltk_download_corpus('punkt')
 
-        self.adapter = ClosestMeaningAdapter()
+        self.adapter = BestMatch(
+            statement_comparison_function=synset_distance
+        )
 
         # Add a mock storage adapter to the logic adapter
         self.adapter.set_chatbot(MockChatBot())
@@ -26,7 +33,7 @@ class ClosestMeaningAdapterTests(TestCase):
         self.adapter.chatbot.storage.filter = MagicMock(return_value=[])
         statement = Statement('Hello')
 
-        with self.assertRaises(ClosestMeaningAdapter.EmptyDatasetException):
+        with self.assertRaises(BestMatch.EmptyDatasetException):
             self.adapter.get(statement)
 
     def test_get_closest_statement(self):
