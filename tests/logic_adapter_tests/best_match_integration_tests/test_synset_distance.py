@@ -26,16 +26,6 @@ class BestMatchSynsetDistanceTestCase(TestCase):
         # Add a mock storage adapter to the logic adapter
         self.adapter.set_chatbot(MockChatBot())
 
-    def test_no_choices(self):
-        """
-        An exception should be raised if there is no data in the database.
-        """
-        self.adapter.chatbot.storage.filter = MagicMock(return_value=[])
-        statement = Statement('Hello')
-
-        with self.assertRaises(BestMatch.EmptyDatasetException):
-            self.adapter.get(statement)
-
     def test_get_closest_statement(self):
         """
         Note, the content of the in_response_to field for each of the
