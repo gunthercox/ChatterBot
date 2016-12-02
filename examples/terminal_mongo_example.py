@@ -10,7 +10,7 @@ import logging
 bot = ChatBot('Terminal',
     storage_adapter='chatterbot.storage.MongoDatabaseAdapter',
     logic_adapters=[
-        'chatterbot.logic.ClosestMatchAdapter'
+        'chatterbot.logic.BestMatch'
     ],
     filters=[
         'chatterbot.filters.RepetitiveResponseFilter'

@@ -58,7 +58,7 @@ class AdapterValidationTests(ChatBotTestCase):
 
     def test_valid_logic_adapter(self):
         kwargs = self.get_kwargs()
-        kwargs['logic_adapters'] = ['chatterbot.logic.ClosestMatchAdapter']
+        kwargs['logic_adapters'] = ['chatterbot.logic.BestMatch']
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)
         except ChatBot.InvalidAdapterException:
@@ -77,7 +77,7 @@ class AdapterValidationTests(ChatBotTestCase):
     def test_invalid_adapter_dictionary(self):
         kwargs = self.get_kwargs()
         kwargs['storage_adapter'] = {
-            'import_path': 'chatterbot.logic.ClosestMatchAdapter'
+            'import_path': 'chatterbot.logic.BestMatch'
         }
         with self.assertRaises(ChatBot.InvalidAdapterException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
@@ -89,13 +89,13 @@ class MultiAdapterTests(ChatBotTestCase):
         count_before = len(self.chatbot.logic.adapters)
 
         self.chatbot.logic.add_adapter(
-            'chatterbot.logic.ClosestMatchAdapter'
+            'chatterbot.logic.BestMatch'
         )
         self.assertEqual(len(self.chatbot.logic.adapters), count_before + 1)
 
     def test_insert_logic_adapter(self):
         self.chatbot.logic.add_adapter('chatterbot.logic.TimeLogicAdapter')
-        self.chatbot.logic.add_adapter('chatterbot.logic.ClosestMatchAdapter')
+        self.chatbot.logic.add_adapter('chatterbot.logic.BestMatch')
 
         self.chatbot.logic.insert_logic_adapter('chatterbot.logic.MathematicalEvaluation', 1)
 

@@ -20,7 +20,7 @@ class ChatBot(object):
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.JsonFileStorageAdapter')
 
         logic_adapters = kwargs.get('logic_adapters', [
-            'chatterbot.logic.ClosestMatchAdapter'
+            'chatterbot.logic.BestMatch'
         ])
 
         input_adapter = kwargs.get('input_adapter', 'chatterbot.input.VariableInputTypeAdapter')

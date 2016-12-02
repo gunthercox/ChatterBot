@@ -21,7 +21,7 @@ class TkinterGUIExample(tk.Tk):
         self.chatbot = ChatBot("No Output",
             storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
             logic_adapters=[
-                "chatterbot.logic.ClosestMatchAdapter"
+                "chatterbot.logic.BestMatch"
             ],
             input_adapter="chatterbot.input.VariableInputTypeAdapter",
             output_adapter="chatterbot.output.OutputFormatAdapter",
