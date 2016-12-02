@@ -16,9 +16,9 @@ class StringInitalizationTestCase(ChatBotTestCase):
         self.assertTrue(isinstance(self.chatbot.storage, JsonFileStorageAdapter))
 
     def test_logic_initialized(self):
-        from chatterbot.logic import ClosestMatchAdapter
+        from chatterbot.logic import BestMatch
         self.assertEqual(len(self.chatbot.logic.adapters), 1)
-        self.assertTrue(isinstance(self.chatbot.logic.adapters[0], ClosestMatchAdapter))
+        self.assertTrue(isinstance(self.chatbot.logic.adapters[0], BestMatch))
 
     def test_input_initialized(self):
         from chatterbot.input import VariableInputTypeAdapter
@@ -47,7 +47,7 @@ class DictionaryInitalizationTestCase(ChatBotTestCase):
             },
             'logic_adapters': [
                 {
-                    'import_path': 'chatterbot.logic.ClosestMatchAdapter',
+                    'import_path': 'chatterbot.logic.BestMatch',
                 },
                 {
                     'import_path': 'chatterbot.logic.MathematicalEvaluation',
@@ -60,10 +60,10 @@ class DictionaryInitalizationTestCase(ChatBotTestCase):
         self.assertTrue(isinstance(self.chatbot.storage, JsonFileStorageAdapter))
 
     def test_logic_initialized(self):
-        from chatterbot.logic import ClosestMatchAdapter
+        from chatterbot.logic import BestMatch
         from chatterbot.logic import MathematicalEvaluation
         self.assertEqual(len(self.chatbot.logic.adapters), 2)
-        self.assertTrue(isinstance(self.chatbot.logic.adapters[0], ClosestMatchAdapter))
+        self.assertTrue(isinstance(self.chatbot.logic.adapters[0], BestMatch))
         self.assertTrue(isinstance(self.chatbot.logic.adapters[1], MathematicalEvaluation))
 
     def test_input_initialized(self):

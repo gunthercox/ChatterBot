@@ -8,7 +8,7 @@ bot = ChatBot(
     storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
     logic_adapters=[
         {
-            'import_path': 'chatterbot.logic.ClosestMatchAdapter'
+            'import_path': 'chatterbot.logic.BestMatch'
         },
         {
             'import_path': 'chatterbot.logic.LowConfidenceAdapter',

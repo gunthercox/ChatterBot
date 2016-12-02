@@ -16,7 +16,7 @@ bot = ChatBot(
     'Feedback Learning Bot',
     storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
     logic_adapters=[
-        'chatterbot.logic.ClosestMatchAdapter'
+        'chatterbot.logic.BestMatch'
     ],
     input_adapter='chatterbot.input.TerminalAdapter',
     output_adapter='chatterbot.output.TerminalAdapter'
