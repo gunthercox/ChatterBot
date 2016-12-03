@@ -20,7 +20,7 @@ available options.
 Response selection methods
 ==========================
 
-.. automodule:: chatterbot.conversation.response_selection
+.. automodule:: chatterbot.response_selection
    :members:
 
 Use your own response selection method
@@ -48,7 +48,7 @@ is shown bellow.
 .. code-block:: python
 
    from chatterbot import ChatBot
-   from chatterbot.conversation.response_selection import get_most_frequent_response
+   from chatterbot.response_selection import get_most_frequent_response
 
    chatbot = ChatBot(
        # ...

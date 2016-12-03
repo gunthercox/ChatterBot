@@ -12,7 +12,7 @@ class ClosestMatchAdapter(BestMatch):
 
     def __init__(self, **kwargs):
         super(ClosestMatchAdapter, self).__init__(**kwargs)
-        from chatterbot.conversation.comparisons import levenshtein_distance
+        from chatterbot.comparisons import levenshtein_distance
 
         self.compare_statements = kwargs.get(
             'statement_comparison_function',

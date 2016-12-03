@@ -52,7 +52,7 @@ selects a response is based on it's ability to compare two statements
 to each other. There is a number of ways to do this, and ChatterBot
 comes with a handfull of method built in for you to use.
 
-.. automodule:: chatterbot.conversation.comparisons
+.. automodule:: chatterbot.comparisons
    :members:
 
 Use your own comparison function
@@ -82,7 +82,7 @@ is shown bellow.
 .. code-block:: python
 
    from chatterbot import ChatBot
-   from chatterbot.conversation.comparisons import levenshtein_distance
+   from chatterbot.comparisons import levenshtein_distance
 
    chatbot = ChatBot(
        # ...

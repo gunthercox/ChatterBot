@@ -11,7 +11,7 @@ class BestMatchTestCase(TestCase):
     """
 
     def setUp(self):
-        from chatterbot.conversation.comparisons import levenshtein_distance
+        from chatterbot.comparisons import levenshtein_distance
 
         self.adapter = BestMatch()
 

@@ -12,7 +12,7 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
     def setUp(self):
         super(BestMatchSentimentComparisonTestCase, self).setUp()
         from chatterbot.trainers import ListTrainer
-        from chatterbot.conversation.comparisons import sentiment_comparison
+        from chatterbot.comparisons import sentiment_comparison
 
         self.chatbot.set_trainer(ListTrainer)
         self.adapter = BestMatch(

@@ -11,8 +11,8 @@ class LogicAdapter(Adapter):
 
     def __init__(self, **kwargs):
         super(LogicAdapter, self).__init__(**kwargs)
-        from chatterbot.conversation.comparisons import levenshtein_distance
-        from chatterbot.conversation.response_selection import get_first_response
+        from chatterbot.comparisons import levenshtein_distance
+        from chatterbot.response_selection import get_first_response
 
         if 'tie_breaking_method' in kwargs:
             raise DeprecationWarning(
