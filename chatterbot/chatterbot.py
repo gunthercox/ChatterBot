@@ -1,10 +1,8 @@
 from __future__ import unicode_literals
 import logging
 from .storage import StorageAdapter
-from .logic import MultiLogicAdapter
 from .input import InputAdapter
 from .output import OutputAdapter
-from .conversation.session import SessionManager
 from . import utils
 
 
@@ -14,6 +12,9 @@ class ChatBot(object):
     """
 
     def __init__(self, name, **kwargs):
+        from .conversation.session import SessionManager
+        from .logic import MultiLogicAdapter
+
         self.name = name
         kwargs['name'] = name
 
