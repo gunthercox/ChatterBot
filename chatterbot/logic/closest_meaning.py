@@ -14,7 +14,7 @@ class ClosestMeaningAdapter(BestMatch):
 
     def __init__(self, **kwargs):
         super(ClosestMeaningAdapter, self).__init__(**kwargs)
-        from chatterbot.conversation.comparisons import synset_distance
+        from chatterbot.comparisons import synset_distance
 
         self.compare_statements = kwargs.get(
             'statement_comparison_function',
@@ -23,6 +23,6 @@ class ClosestMeaningAdapter(BestMatch):
 
         warnings.warn(
             'The ClosestMeaningAdapter is deprecated. ' +
-            'Use "chatterbot.logic.BestMatch" with response_selection_method="chatterbot.conversation.comparisons.synset_distance" instead.',
+            'Use "chatterbot.logic.BestMatch" with response_selection_method="chatterbot.comparisons.synset_distance" instead.',
             DeprecationWarning
         )

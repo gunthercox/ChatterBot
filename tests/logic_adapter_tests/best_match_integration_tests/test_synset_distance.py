@@ -13,7 +13,7 @@ class BestMatchSynsetDistanceTestCase(TestCase):
 
     def setUp(self):
         from chatterbot.utils import nltk_download_corpus
-        from chatterbot.conversation.comparisons import synset_distance
+        from chatterbot.comparisons import synset_distance
 
         nltk_download_corpus('stopwords')
         nltk_download_corpus('wordnet')

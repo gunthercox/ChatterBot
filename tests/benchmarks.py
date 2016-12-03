@@ -21,8 +21,8 @@ CONFIGURATIONS = [
         'logic_adapters': [
             {
                 'import_path': 'chatterbot.logic.BaseMatchAdapter',
-                'statement_comparison_function': 'chatterbot.conversation.comparisons.levenshtein_distance',
-                'response_selection_method': 'chatterbot.conversation.response_selection.get_first_response'
+                'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance',
+                'response_selection_method': 'chatterbot.response_selection.get_first_response'
             }
         ],
         'storage_adapter': {
@@ -35,8 +35,8 @@ CONFIGURATIONS = [
         'logic_adapters': [
             {
                 'import_path': 'chatterbot.logic.BaseMatchAdapter',
-                'statement_comparison_function': 'chatterbot.conversation.comparisons.synset_distance',
-                'response_selection_method': 'chatterbot.conversation.response_selection.get_first_response'
+                'statement_comparison_function': 'chatterbot.comparisons.synset_distance',
+                'response_selection_method': 'chatterbot.response_selection.get_first_response'
             }
         ],
         'storage_adapter': {
@@ -59,8 +59,8 @@ try:
             'logic_adapters': [
                 {
                     'import_path': 'chatterbot.logic.BaseMatchAdapter',
-                    'statement_comparison_function': 'chatterbot.conversation.comparisons.levenshtein_distance',
-                    'response_selection_method': 'chatterbot.conversation.response_selection.get_first_response'
+                    'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance',
+                    'response_selection_method': 'chatterbot.response_selection.get_first_response'
                 }
             ],
             'storage_adapter': 'chatterbot.storage.MongoDatabaseAdapter'
@@ -70,8 +70,8 @@ try:
             'logic_adapters': [
                 {
                     'import_path': 'chatterbot.logic.BaseMatchAdapter',
-                    'statement_comparison_function': 'chatterbot.conversation.comparisons.synset_distance',
-                    'response_selection_method': 'chatterbot.conversation.response_selection.get_first_response'
+                    'statement_comparison_function': 'chatterbot.comparisons.synset_distance',
+                    'response_selection_method': 'chatterbot.response_selection.get_first_response'
                 }
             ],
             'storage_adapter': 'chatterbot.storage.MongoDatabaseAdapter'

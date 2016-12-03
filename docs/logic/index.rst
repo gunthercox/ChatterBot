@@ -54,8 +54,8 @@ Setting parameters
        logic_adapters=[
            {
                "import_path": "chatterbot.logic.BestMatch",
-               "response_selection_method": "chatterbot.conversation.comparisons.levenshtein_distance",
-               "statement_comparison_function": "chatterbot.conversation.response_selection.get_first_response"
+               "response_selection_method": "chatterbot.comparisons.levenshtein_distance",
+               "statement_comparison_function": "chatterbot.response_selection.get_first_response"
            }
        ]
    )

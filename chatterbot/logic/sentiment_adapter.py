@@ -10,7 +10,7 @@ class SentimentAdapter(BestMatch):
 
     def __init__(self, **kwargs):
         super(SentimentAdapter, self).__init__(**kwargs)
-        from chatterbot.conversation.comparisons import sentiment_comparison
+        from chatterbot.comparisons import sentiment_comparison
 
         self.compare_statements = kwargs.get(
             'statement_comparison_function',
@@ -19,6 +19,6 @@ class SentimentAdapter(BestMatch):
 
         warnings.warn(
             'The SentimentAdapter is deprecated. ' +
-            'Use "chatterbot.logic.BestMatch" response_selection_method="chatterbot.conversation.comparisons.sentiment_comparison" instead.',
+            'Use "chatterbot.logic.BestMatch" response_selection_method="chatterbot.comparisons.sentiment_comparison" instead.',
             DeprecationWarning
         )
