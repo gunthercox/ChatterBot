@@ -15,7 +15,6 @@ class ApproximateSentenceMatchAdapter(BestMatch):
 
         warnings.warn(
             'The ApproximateSentenceMatchAdapter is deprecated. ' +
-            'See http://chatterbot.readthedocs.io/en/latest/logic/index.html#best-match-adapter ' +
-            'for details on how to update your code.',
+            'Use "chatterbot.logic.BestMatch" response_selection_method="chatterbot.conversation.comparisons.jaccard_similarity" instead.',
             DeprecationWarning
         )

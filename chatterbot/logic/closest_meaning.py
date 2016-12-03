@@ -23,7 +23,6 @@ class ClosestMeaningAdapter(BestMatch):
 
         warnings.warn(
             'The ClosestMeaningAdapter is deprecated. ' +
-            'See http://chatterbot.readthedocs.io/en/latest/logic/index.html#best-match-adapter ' +
-            'for details on how to update your code.',
+            'Use "chatterbot.logic.BestMatch" with response_selection_method="chatterbot.conversation.comparisons.synset_distance" instead.',
             DeprecationWarning
         )
