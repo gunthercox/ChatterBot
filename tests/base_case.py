@@ -20,6 +20,7 @@ class MockChatBot(object):
 class ChatBotTestCase(TestCase):
 
     def setUp(self):
+        self.test_data_directory = None
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
 
     def get_kwargs(self):
@@ -52,7 +53,7 @@ class ChatBotTestCase(TestCase):
     def remove_test_data(self):
         import shutil
 
-        if os.path.exists(self.test_data_directory):
+        if self.test_data_directory and os.path.exists(self.test_data_directory):
             shutil.rmtree(self.test_data_directory)
 
     def tearDown(self):

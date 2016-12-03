@@ -104,7 +104,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         # Build the objects for the response list
         values['in_response_to'] = self.deserialize_responses(
-            values['in_response_to']
+            values.get('in_response_to', [])
         )
 
         return Statement(statement_text, **values)
