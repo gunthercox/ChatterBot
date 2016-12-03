@@ -41,6 +41,8 @@ The :code:`Response` object's :code:`occurrence` attribute indicates the number 
 that the statement has been given as a response. This makes it possible for the chat bot
 to determine if a particular response is more commonly used than another.
 
+.. _statement-comparison:
+
 Statement comparison
 ====================
 
@@ -52,6 +54,22 @@ comes with a handfull of method built in for you to use.
 
 .. automodule:: chatterbot.conversation.comparisons
    :members:
+
+Use your own comparison function
+++++++++++++++++++++++++++++++++
+
+You can create your own comparison function and use it as long as the function takes two statements
+as parameters and returns a numeric value between 0 and 1. A 0 should represent the lowest possible
+similarity and a 1 should represent the highest possibel similarity.
+
+.. code-block:: python
+
+   def comparison_function(statement, other_statement):
+
+       # Your comparison logic
+
+       # Return your calculated value here
+       return 0.0
 
 Setting the comparison method
 -----------------------------
