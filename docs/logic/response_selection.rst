@@ -23,6 +23,20 @@ Response selection methods
 .. automodule:: chatterbot.conversation.response_selection
    :members:
 
+Use your own response selection method
+++++++++++++++++++++++++++++++++++++++
+
+You can create your own response selection method and use it as long as the function takes 
+two parameters (a statements and a list of statements). The method must return a statement.
+
+.. code-block:: python
+
+   def select_response(statement, statement_list):
+
+       # Your selection logic
+
+       return selected_statement
+
 Setting the response selection method
 =====================================
 
