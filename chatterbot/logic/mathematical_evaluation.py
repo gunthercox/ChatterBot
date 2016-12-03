@@ -82,7 +82,9 @@ class MathematicalEvaluation(LogicAdapter):
 
         # Returning important information
         try:
-            expression += "= " + str(eval(expression, {f: getattr(numpy, f) for f in self.functions}))
+            expression += "= " + str(
+                eval(expression, {f: getattr(numpy, f) for f in self.functions})
+            )
 
             # return a confidence of 1 if the expression could be evaluated
             return 1, Statement(expression)
