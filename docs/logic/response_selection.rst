@@ -15,6 +15,8 @@ To help with the selection of the response, several methods
 are build in to ChatterBot for selecting a response from the
 available options.
 
+.. _response-selection:
+
 Response selection methods
 ==========================
 

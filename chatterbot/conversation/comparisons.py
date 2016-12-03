@@ -9,7 +9,11 @@ designed to compare one statement to another.
 def levenshtein_distance(statement, other_statement):
     """
     Compare two statements based on the Levenshtein distance
-    (fuzzy string comparison) of each statement's text.
+    of each statement's text.
+
+    For example, there is a 65% similarity between the statements
+    "where is the post office?" and "looking for the post office"
+    based on the Levenshtein distance algorithm.
 
     :return: The percent of similarity between the text of the statements.
     :rtype: float
@@ -51,11 +55,17 @@ def levenshtein_distance(statement, other_statement):
 def synset_distance(statement, other_statement):
     """
     Calculate the similarity of two statements.
-    This is based on the total maximum synset similarity
-    between each word in each sentence.
+    This is based on the total maximum synset similarity between each word in each sentence.
+
+    This algorithm uses the `wordnet`_ functionality of `NLTK`_ to determine the similarity
+    of two statements based on the path similarity between each token of each statement.
+    This is essentially an evaluation of the closeness of synonyms.
 
     :return: The percent of similarity between the closest synset distance.
     :rtype: float
+
+    .. _wordnet: http://www.nltk.org/howto/wordnet.html
+    .. _NLTK: http://www.nltk.org/
     """
     from nltk.corpus import wordnet
     from nltk import word_tokenize
@@ -140,6 +150,8 @@ def sentiment_comparison(statement, other_statement):
 
 def jaccard_similarity(statement, other_statement, threshold=0.5):
     """
+    Calculates the similarity of two statements based on the Jaccard index.
+
     The Jaccard index is composed of a numerator and denominator.
     In the numerator, we count the number of items that are shared between the sets.
     In the denominator, we count the total number of items across both sets.
@@ -156,15 +168,17 @@ def jaccard_similarity(statement, other_statement, threshold=0.5):
 
     In our example above, our intersection is {cat, hungry}, which has count of two.
     The union of the sets is {young, cat, very, hungry}, which has a count of four.
-    Therefore, our Jaccard similarity index is two divided by four, or 50%.
-    Given our threshold above, we would consider this to be  a match.
+    Therefore, our `Jaccard similarity index`_ is two divided by four, or 50%.
+    Given our threshold above, we would consider this to be a match.
+
+    .. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index
     """
     from nltk.corpus import wordnet
     import nltk
     import string
 
-    a = statement.text
-    b = other_statement.text
+    a = statement.text.lower()
+    b = other_statement.text.lower()
 
     # Get default English stopwords and extend with punctuation
     stopwords = nltk.corpus.stopwords.words('english')
@@ -187,10 +201,10 @@ def jaccard_similarity(statement, other_statement, threshold=0.5):
     ratio = 0
     pos_a = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a)))
     pos_b = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b)))
-    lemmae_a = [lemmatizer.lemmatize(token.lower().strip(string.punctuation), pos) for token, pos in pos_a \
-                    if pos == wordnet.NOUN and token.lower().strip(string.punctuation) not in stopwords]
-    lemmae_b = [lemmatizer.lemmatize(token.lower().strip(string.punctuation), pos) for token, pos in pos_b \
-                    if pos == wordnet.NOUN and token.lower().strip(string.punctuation) not in stopwords]
+    lemmae_a = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_a \
+                    if pos == wordnet.NOUN and token.strip(string.punctuation) not in stopwords]
+    lemmae_b = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_b \
+                    if pos == wordnet.NOUN and token.strip(string.punctuation) not in stopwords]
 
     # Calculate Jaccard similarity
     try:
