@@ -19,7 +19,6 @@ class SentimentAdapter(BestMatch):
 
         warnings.warn(
             'The SentimentAdapter is deprecated. ' +
-            'See http://chatterbot.readthedocs.io/en/latest/logic/index.html#best-match-adapter ' +
-            'for details on how to update your code.',
+            'Use "chatterbot.logic.BestMatch" response_selection_method="chatterbot.conversation.comparisons.sentiment_comparison" instead.',
             DeprecationWarning
         )
