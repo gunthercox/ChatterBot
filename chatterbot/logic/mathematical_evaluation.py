@@ -29,6 +29,7 @@ class MathematicalEvaluation(LogicAdapter):
 
         language = kwargs.get('math_words_language', 'english')
         self.math_words = self.get_language_data(language)
+        self.cache = {}
 
     def get_language_data(self, language):
         """
@@ -59,6 +60,7 @@ class MathematicalEvaluation(LogicAdapter):
         adapter to respond to the user input.
         """
         confidence, response = self.process(statement)
+        self.cache[statement.text] = (confidence, response)
         return confidence == 1
 
     def process(self, statement):
@@ -69,12 +71,20 @@ class MathematicalEvaluation(LogicAdapter):
         """
         input_text = statement.text
 
+        # Use the result cached by the process method if it exists
+        if input_text in self.cache:
+            cached_result = self.cache[input_text]
+            self.cache = {}
+            return cached_result
+
         # Getting the mathematical terms within the input statement
         expression = str(self.simplify_chunks(self.normalize(input_text)))
 
         # Returning important information
         try:
-            expression += "= " + str(eval(expression, {f: getattr(numpy, f) for f in self.functions}))
+            expression += "= " + str(
+                eval(expression, {f: getattr(numpy, f) for f in self.functions})
+            )
 
             # return a confidence of 1 if the expression could be evaluated
             return 1, Statement(expression)
@@ -231,9 +241,7 @@ class MathematicalEvaluation(LogicAdapter):
         return ' '.join(condensed_string)
 
     class UnrecognizedLanguageException(Exception):
-
-        def __init__(self, value='The specified language was not recognized'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)
+        """
+        Exception raised when the specified language is not known.
+        """
+        pass
