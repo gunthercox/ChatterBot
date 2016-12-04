@@ -4,7 +4,7 @@ from datetime import timedelta, datetime
 from chatterbot import parsing
 
 
-class DateTimeParsingTestCases(TestCase):
+class DateTimeParsingFunctionIntegrationTestCases(TestCase):
     """
     Test the datetime parseing module.
 
@@ -13,7 +13,7 @@ class DateTimeParsingTestCases(TestCase):
     """
 
     def setUp(self):
-        super(DateTimeParsingTestCases, self).setUp()
+        super(DateTimeParsingFunctionIntegrationTestCases, self).setUp()
         self.base_date = datetime.now()
 
     def test_captured_pattern_is_on_date(self):
@@ -199,3 +199,37 @@ class DateTimeParsingTestCases(TestCase):
         self.assertIn('2nd January 2014', parser[0])
         self.assertEqual(parser[0][1].strftime('%d-%m-%Y'), '02-01-2014')
         self.assertEqual(len(parser), 1)
+
+
+class DateTimeParsingTestCases(TestCase):
+    """
+    Unit tests for datetime parsing functions.
+    """
+
+    def test_next_week_day(self):
+        base_date = datetime(2016, 12, 7, 10, 10, 52, 85280)
+        weekday = 2 # Wednesday
+        result = parsing.next_week_day(base_date, weekday)
+
+        self.assertEqual(result, datetime(2016, 12, 14, 10, 10, 52, 85280))
+
+    def test_previous_week_day(self):
+        base_date = datetime(2016, 12, 14, 10, 10, 52, 85280)
+        weekday = 2 # Wednesday
+        result = parsing.previous_week_day(base_date, weekday)
+
+        self.assertEqual(result, datetime(2016, 12, 7, 10, 10, 52, 85280))
+
+    def test_this_week_day_before_day(self):
+        base_date = datetime(2016, 12, 5, 10, 10, 52, 85280) # Monday
+        weekday = 2 # Wednesday
+        result = parsing.this_week_day(base_date, weekday)
+
+        self.assertEqual(result, datetime(2016, 12, 7, 10, 10, 52, 85280))
+
+    def test_this_week_day_after_day(self):
+        base_date = datetime(2016, 12, 9, 10, 10, 52, 85280) # Friday
+        weekday = 2 # Wednesday
+        result = parsing.this_week_day(base_date, weekday)
+
+        self.assertEqual(result, datetime(2016, 12, 14, 10, 10, 52, 85280))
