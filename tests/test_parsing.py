@@ -3,16 +3,18 @@ from unittest import TestCase
 from datetime import timedelta, datetime
 from chatterbot import parsing
 
-"""
-Output of the parser is an array of tuples
-[match, value, (start, end)]
-"""
 
 class DateTimeParsingTestCases(TestCase):
+    """
+    Test the datetime parseing module.
+
+    Output of the parser is an array of tuples
+    [match, value, (start, end)]
+    """
 
     def setUp(self):
-      super(DateTimeParsingTestCases, self).setUp()
-      self.base_date = datetime.now()
+        super(DateTimeParsingTestCases, self).setUp()
+        self.base_date = datetime.now()
 
     def test_captured_pattern_is_on_date(self):
         input_text = 'The event is on Monday 12 January 2012'
@@ -25,35 +27,52 @@ class DateTimeParsingTestCases(TestCase):
         input_text = 'This monday'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d-%m-%y'), parsing.this_week_day(self.base_date, 0).strftime('%d-%m-%y'))
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%y'),
+            parsing.this_week_day(self.base_date, 0).strftime('%d-%m-%y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_last_weekday(self):
         input_text = 'Last monday'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d-%m-%y'), parsing.previous_week_day(self.base_date, 0).strftime('%d-%m-%y'))
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%y'),
+            parsing.previous_week_day(self.base_date, 0).strftime('%d-%m-%y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_next_weekday(self):
         input_text = 'Next monday'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d-%m-%y'), parsing.next_week_day(self.base_date, 0).strftime('%d-%m-%y'))
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%y'),
+            parsing.next_week_day(self.base_date, 0).strftime('%d-%m-%y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_minutes_from_now(self):
         input_text = '25 minutes from now'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d-%m-%y'), parsing.dateFromDuration(self.base_date, 25, 'minutes', 'from now').strftime('%d-%m-%y'))
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%y'),
+            parsing.date_from_duration(
+                self.base_date, 25, 'minutes', 'from now'
+            ).strftime('%d-%m-%y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_days_later(self):
         input_text = '10 days later'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d-%m-%y'), parsing.dateFromDuration(self.base_date, 10, 'days', 'later').strftime('%d-%m-%y'))
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%y'),
+            parsing.date_from_duration(self.base_date, 10, 'days', 'later').strftime('%d-%m-%y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_year(self):
@@ -74,41 +93,59 @@ class DateTimeParsingTestCases(TestCase):
         input_text = 'tomorrow'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() + timedelta(days=1)).strftime('%d'))
+        self.assertEqual(
+            parser[0][1].strftime('%d'),
+            (datetime.today() + timedelta(days=1)).strftime('%d')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_yesterday(self):
         input_text = 'yesterday'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=1)).strftime('%d'))
+        self.assertEqual(
+            parser[0][1].strftime('%d'),
+            (datetime.today() - timedelta(days=1)).strftime('%d')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_before_yesterday(self):
         input_text = 'day before yesterday'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=2)).strftime('%d'))
+        self.assertEqual(
+            parser[0][1].strftime('%d'),
+            (datetime.today() - timedelta(days=2)).strftime('%d')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_before_today(self):
         input_text = 'day before today'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=1)).strftime('%d'))
+        self.assertEqual(
+            parser[0][1].strftime('%d'),
+            (datetime.today() - timedelta(days=1)).strftime('%d')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_before_tomorrow(self):
         input_text = 'day before tomorrow'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=0)).strftime('%d'))
+        self.assertEqual(
+            parser[0][1].strftime('%d'),
+            (datetime.today() - timedelta(days=0)).strftime('%d')
+        )
         self.assertEqual(len(parser), 1)
 
         input_text = '2 days before'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1].strftime('%d'), (datetime.today() - timedelta(days=2)).strftime('%d'))
+        self.assertEqual(
+            parser[0][1].strftime('%d'),
+            (datetime.today() - timedelta(days=2)).strftime('%d')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_two_days(self):
@@ -116,8 +153,14 @@ class DateTimeParsingTestCases(TestCase):
         parser = parsing.datetime_parsing(input_text)
         self.assertIn('Monday', parser[0])
         self.assertIn('Friday', parser[1])
-        self.assertEqual(parser[0][1].strftime('%d'), parsing.this_week_day(self.base_date, 0).strftime('%d'))
-        self.assertEqual(parser[1][1].strftime('%d'), parsing.this_week_day(self.base_date, 4).strftime('%d'))
+        self.assertEqual(
+            parser[0][1].strftime('%d'),
+            parsing.this_week_day(self.base_date, 0).strftime('%d')
+        )
+        self.assertEqual(
+            parser[1][1].strftime('%d'),
+            parsing.this_week_day(self.base_date, 4).strftime('%d')
+        )
         self.assertEqual(len(parser), 2)
 
     def test_captured_pattern_first_quarter_of_year(self):
