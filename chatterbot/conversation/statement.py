@@ -121,6 +121,14 @@ class Statement(object):
 
         return data
 
+    @property
+    def response_statement_cache(self):
+        """
+        This property is to allow ChatterBot Statement objects to
+        be swappable with Django Statement models.
+        """
+        return self.in_response_to
+
     class InvalidTypeException(Exception):
 
         def __init__(self, value='Recieved an unexpected value type.'):
