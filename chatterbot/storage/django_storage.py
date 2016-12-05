@@ -27,7 +27,7 @@ class DjangoStorageAdapter(StorageAdapter):
             extra_data=json.loads(statement_model.extra_data, encoding='utf8')
         )
 
-        for response_object in statement_model.in_response_to.all():
+        for response_object in statement_model.in_response.all():
             statement.add_response(Response(
                 response_object.response.text,
                 occurrence=response_object.occurrence
@@ -38,10 +38,7 @@ class DjangoStorageAdapter(StorageAdapter):
     def find(self, statement_text):
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         try:
-            statement = StatementModel.objects.get(
-                text=statement_text
-            )
-            return self.model_to_object(statement)
+            return StatementModel.objects.get(text=statement_text)
         except StatementModel.DoesNotExist as e:
             self.logger.info(str(e))
             return None
@@ -59,18 +56,19 @@ class DjangoStorageAdapter(StorageAdapter):
             value = kwargs[kwarg]
             del kwargs[kwarg]
             kwarg = kwarg.replace('__contains', '__response__text')
+            kwarg = kwarg.replace('in_response_to', 'in_response')
             kwargs[kwarg] = value
 
-        if 'in_response_to' in kwargs:
-            responses = kwargs['in_response_to']
-            del kwargs['in_response_to']
+        if 'in_response' in kwargs:
+            responses = kwargs['in_response']
+            del kwargs['in_response']
 
             if responses:
-                kwargs['in_response_to__response__text__in'] = []
+                kwargs['in_response__response__text__in'] = []
                 for response in responses:
-                    kwargs['in_response_to__response__text__in'].append(response.text)
+                    kwargs['in_response__response__text__in'].append(response.text)
             else:
-                kwargs['in_response_to'] = None
+                kwargs['in_response'] = None
 
         statement_objects = StatementModel.objects.filter(**kwargs)
 
@@ -90,14 +88,14 @@ class DjangoStorageAdapter(StorageAdapter):
         if not self.read_only:
             django_statement, created = StatementModel.objects.get_or_create(
                 text=statement.text,
-                extra_data=json.dumps(statement.extra_data)
             )
+            django_statement.extra_data = json.dumps(statement.extra_data)
 
             for response in statement.in_response_to:
                 response_statement, created = StatementModel.objects.get_or_create(
                     text=response.text
                 )
-                response_object, created = django_statement.in_response_to.get_or_create(
+                response_object, created = django_statement.in_response.get_or_create(
                     statement=statement,
                     response=response_statement
                 )

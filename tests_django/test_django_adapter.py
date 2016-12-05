@@ -94,20 +94,19 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         self.assertEqual(random_statement.text, statement.text)
 
     def test_find_returns_nested_responses(self):
-        response_list = [
-            Response("Yes"),
-            Response("No")
-        ]
         statement = Statement(
             "Do you like this?",
-            in_response_to=response_list
+            in_response_to=[
+                Response("Yes"),
+                Response("No")
+            ]
         )
         self.adapter.update(statement)
 
         result = self.adapter.find(statement.text)
 
-        self.assertIn("Yes", result.in_response_to)
-        self.assertIn("No", result.in_response_to)
+        self.assertTrue(result.in_response_to.filter(statement__text="Yes").exists())
+        self.assertTrue(result.in_response_to.filter(statement__text="No").exists())
 
     def test_multiple_responses_added_on_update(self):
         statement = Statement(
@@ -120,9 +119,9 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         self.adapter.update(statement)
         result = self.adapter.find(statement.text)
 
-        self.assertEqual(len(result.in_response_to), 2)
-        self.assertIn(statement.in_response_to[0], result.in_response_to)
-        self.assertIn(statement.in_response_to[1], result.in_response_to)
+        self.assertEqual(result.in_response_to.count(), 2)
+        self.assertTrue(result.in_response_to.filter(statement__text="Thank you.").exists())
+        self.assertTrue(result.in_response_to.filter(statement__text="Thanks.").exists())
 
     def test_update_saves_statement_with_multiple_responses(self):
         statement = Statement(

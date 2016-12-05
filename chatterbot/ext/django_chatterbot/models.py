@@ -1,4 +1,5 @@
 from django.db import models
+from .managers import StatementManager
 
 
 class Statement(models.Model):
@@ -15,12 +16,18 @@ class Statement(models.Model):
 
     extra_data = models.CharField(max_length=500)
 
+    objects = StatementManager()
+
     def __str__(self):
         if len(self.text.strip()) > 60:
             return '{}...'.format(self.text[:57])
         elif len(self.text.strip()) > 0:
             return self.text
         return '<empty>'
+
+    @property
+    def in_response_to(self):
+        return Response.objects.filter(statement=self)
 
     def add_extra_data(self, key, value):
         """
@@ -117,7 +124,7 @@ class Response(models.Model):
 
     statement = models.ForeignKey(
         'Statement',
-        related_name='in_response_to'
+        related_name='in_response'
     )
 
     response = models.ForeignKey(
@@ -128,6 +135,8 @@ class Response(models.Model):
     unique_together = (('statement', 'response'),)
 
     occurrence = models.PositiveIntegerField(default=1)
+
+    objects = StatementManager()
 
     def __str__(self):
         statement = self.statement.text
