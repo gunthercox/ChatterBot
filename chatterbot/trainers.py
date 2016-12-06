@@ -67,7 +67,7 @@ class Trainer(object):
 
 class ListTrainer(Trainer):
     """
-    Allaows a chat bot to be trained using a list of strings
+    Allows a chat bot to be trained using a list of strings
     where the list represents a conversation.
     """
 

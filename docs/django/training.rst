@@ -28,3 +28,5 @@ Django settings.
             'chatterbot.corpus.english.greetings'
        ]
    }
+
+See the documentation for the :ref:`training-classes` for other training class options that can be used here.

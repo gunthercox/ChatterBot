@@ -23,7 +23,6 @@ classes listed below.
 
 ..  _set_trainer:
 
-
 Setting the training class
 ==========================
 
@@ -31,9 +30,13 @@ ChatterBot comes with training classes built in, or you can create your own
 if needed. To use a training class you must import it and pass it to
 the `set_trainer()` method before calling `train()`.
 
+.. _training-classes:
+
+Training classes
+================
 
 Training via list data
-======================
+----------------------
 
 .. autofunction:: chatterbot.trainers.ListTrainer
 
@@ -75,7 +78,7 @@ This will establish each item in the list as a possible response to it's predece
 
 
 Training with corpus data
-=========================
+-------------------------
 
 .. autofunction:: chatterbot.trainers.ChatterBotCorpusTrainer
 
@@ -95,7 +98,7 @@ data modules you want to use.
    )
 
 Specifying corpus scope
------------------------
++++++++++++++++++++++++
 
 It is also possible to import individual subsets of ChatterBot's at once.
 For example, if you only wish to train based on the english greetings and
@@ -110,7 +113,7 @@ conversations corpora then you would simply specify them.
 
 
 Training with the Twitter API
-=============================
+-----------------------------
 
 .. autofunction:: chatterbot.trainers.TwitterTrainer
 
@@ -131,14 +134,14 @@ required to work with the Twitter API.
 +-------------------------------------+-------------------------------------+
 
 Twitter training example
-------------------------
+++++++++++++++++++++++++
 
 .. literalinclude:: ../examples/twitter_training_example.py
    :language: python
 
 
 Training with the Ubuntu dialog corpus
-======================================
+--------------------------------------
 
 .. autofunction:: chatterbot.trainers.UbuntuCorpusTrainer
 
