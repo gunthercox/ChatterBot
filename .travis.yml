@@ -28,8 +28,8 @@ services:
   - mongodb
 
 script:
-  - nosetests --with-coverage --cover-package=chatterbot
   - python examples/django_app/manage.py test examples/django_app/
+  - nosetests --with-coverage --cover-package=chatterbot
   - python tests/benchmarks.py
 
 after_success:
