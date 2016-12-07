@@ -7,6 +7,17 @@ class JsonFileStorageAdapter(StorageAdapter):
     """
     This adapter allows ChatterBot to store conversation
     data in a file in JSON format.
+
+    :keyword database: The path to the json file you wish to store data in.
+    :type database: str
+
+    :keyword silence_performance_warning: If set to True, the :code:`UnsuitableForProductionWarning`
+                                          will not be displayed.
+    :type silence_performance_warning: bool
+
+    :keyword read_only: If set to True, ChatterBot will not save information to the database.
+                        False by default.
+    :type read_only: bool
     """
 
     def __init__(self, **kwargs):
@@ -15,7 +26,7 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         if not kwargs.get('silence_performance_warning', False):
             warnings.warn(
-                'The JsonFileStorageAdapter is not recommended for production application environments.',
+                'The JsonFileStorageAdapter is not recommended for production environments.',
                 self.UnsuitableForProductionWarning
             )
 
@@ -172,4 +183,10 @@ class JsonFileStorageAdapter(StorageAdapter):
             os.remove(self.database.path)
 
     class UnsuitableForProductionWarning(Warning):
+        """
+        The json file storage adapter will display an :code:`UnsuitableForProductionWarning`
+        when it is initialized because it is not intended for use in large scale production
+        applications. You can silence this warning by setting
+        :code:`silence_performance_warning=True` when initializing the adapter.
+        """
         pass

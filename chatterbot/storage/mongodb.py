@@ -62,6 +62,25 @@ class MongoDatabaseAdapter(StorageAdapter):
     """
     The MongoDatabaseAdapter is an interface that allows
     ChatterBot to store statements in a MongoDB database.
+
+    :keyword database: The name of the database you wish to connect to.
+    :type database: str
+
+    .. code-block:: python
+
+       database='chatterbot-database'
+
+    :keyword database_uri: The URI of a remote instance of MongoDB.
+    :type database_uri: str
+
+    .. code-block:: python
+
+       database_uri='mongodb://example.com:8100/'
+
+
+    :keyword read_only: If set to True, ChatterBot will not save information to the database.
+                        False by default.
+    :type read_only: bool
     """
 
     def __init__(self, **kwargs):
