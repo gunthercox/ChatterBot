@@ -4,6 +4,10 @@ import json
 
 
 class DjangoStorageAdapter(StorageAdapter):
+    """
+    Storage adapter that allows ChatterBot to interact with
+    Django storage backends.
+    """
 
     def __init__(self, **kwargs):
         super(DjangoStorageAdapter, self).__init__(**kwargs)
@@ -11,6 +15,9 @@ class DjangoStorageAdapter(StorageAdapter):
         self.adapter_supports_queries = False
 
     def count(self):
+        """
+        Return the total number of statements in the database.
+        """
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         return StatementModel.objects.count()
 
@@ -77,6 +84,9 @@ class DjangoStorageAdapter(StorageAdapter):
         return results
 
     def update(self, statement, **kwargs):
+        """
+        Update the provided statement.
+        """
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
         # Do not alter the database unless writing is enabled
