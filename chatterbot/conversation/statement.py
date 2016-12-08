@@ -35,14 +35,29 @@ class Statement(object):
 
     def add_extra_data(self, key, value):
         """
-        This method allows additional data to be stored on the
-        statement object.
+        This method allows additional data to be stored on the statement object.
+
+        Typically this data is something that pertains just to this statement.
+        For example, a value stored here might be the tagged parts of speech for
+        each word in the statement text.
+
+            - key = 'pos_tags'
+            - value = [('Now', 'RB'), ('for', 'IN'), ('something', 'NN'), ('different', 'JJ')]
+
+        :param key: The key to use in the dictionary of extra data.
+        :type key: str
+
+        :param value: The value to set for the specified key.
         """
         self.extra_data[key] = value
 
     def add_response(self, response):
         """
-        Add the response to the list if it does not already exist.
+        Add the response to the list of statements that this statement is in response to.
+        If the response is already in the list, increment the occurrence count of that response.
+
+        :param response: The response to add.
+        :type response: chatterbot.conversation.response.Response
         """
         if not isinstance(response, Response):
             raise Statement.InvalidTypeException(
@@ -65,6 +80,9 @@ class Statement(object):
         """
         Removes a response from the statement's response list based
         on the value of the response text.
+
+        :param response_text: The text of the response to be removed.
+        :type response_text: str
         """
         for response in self.in_response_to:
             if response_text == response.text:
@@ -74,7 +92,14 @@ class Statement(object):
 
     def get_response_count(self, statement):
         """
-        Return the number of times the statement occurs in the database.
+        Find the number of times that the statement has been used
+        as a response to the current statement.
+
+        :param statement: The statement object to get the count for.
+        :type statement: chatterbot.conversation.statement.Statement
+
+        :returns: Return the number of times the statement has been used as a response.
+        :rtype: int
         """
         for response in self.in_response_to:
             if statement.text == response.text:
@@ -84,7 +109,8 @@ class Statement(object):
 
     def serialize(self):
         """
-        Returns a dictionary representation of the current object.
+        :returns: A dictionary representation of the statement object.
+        :rtype: dict
         """
         data = {}
 
