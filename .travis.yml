@@ -30,7 +30,7 @@ services:
 script:
   - python runtests.py
   - python examples/django_app/manage.py test examples/django_app/
-  - nosetests tests/ --with-coverage --cover-package=chatterbot
+  - nosetests --with-coverage --cover-package=chatterbot
   - python tests/benchmarks.py
 
 after_success:
