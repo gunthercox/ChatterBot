@@ -10,7 +10,7 @@ class ApiIntegrationTestCase(TestCase):
 
     def setUp(self):
         super(ApiIntegrationTestCase, self).setUp()
-        self.api_url = reverse('chatterbot:chatterbot')
+        self.api_url = reverse('chatterbot')
 
         # Clear the response queue before tests
         ChatterBotView.chatterbot.conversation_sessions.get_default().conversation.flush()

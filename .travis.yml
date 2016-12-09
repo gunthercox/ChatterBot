@@ -28,8 +28,9 @@ services:
   - mongodb
 
 script:
+  - python runtests.py
   - python examples/django_app/manage.py test examples/django_app/
-  - nosetests --with-coverage --cover-package=chatterbot
+  - nosetests tests/ --with-coverage --cover-package=chatterbot
   - python tests/benchmarks.py
 
 after_success:

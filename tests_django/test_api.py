@@ -7,7 +7,7 @@ class ApiTestCase(TestCase):
 
     def setUp(self):
         super(ApiTestCase, self).setUp()
-        self.api_url = reverse('chatterbot:chatterbot')
+        self.api_url = reverse('chatterbot')
 
     def test_post(self):
         """
