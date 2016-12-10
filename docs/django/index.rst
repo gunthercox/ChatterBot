@@ -1,6 +1,6 @@
-============================
-Using ChatterBot with Django
-============================
+==================
+Django integration
+==================
 
 ChatterBot has direct support for integration with Django. ChatterBot provides
 out of the box models and endpoints that allow you build ChatterBot powered
@@ -24,16 +24,21 @@ Install with pip
 
 For more details on installing Django, see the `Django documentation`_.
 
+Installed Apps
+--------------
 
 Add `chatterbot.ext.django_chatterbot` to your `INSTALLED_APPS`
 
 .. code-block:: python
 
    INSTALLED_APPS = (
-       ...
-       'chatterbot.ext.django_chatterbot',,
+       # ...
+       'chatterbot.ext.django_chatterbot',
    )
 
+
+API view
+--------
 
 If you need a ChatterBot API endpont you will want to add the following to your urls.py
 
@@ -43,6 +48,7 @@ If you need a ChatterBot API endpont you will want to add the following to your 
        ...
        url(r'^chatterbot/', include('chatterbot.ext.django_chatterbot.urls', namespace='chatterbot')),
    )
+
 
 Sync your database
 ------------------
