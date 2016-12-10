@@ -3,7 +3,7 @@ from django.db import models
 
 class Statement(models.Model):
     """
-    A short (<255) chat message, tweet, forum post, etc.
+    A short (<255) character message that is part of a dialog.
     """
 
     text = models.CharField(
@@ -50,7 +50,7 @@ class Response(models.Model):
     occurrence = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        s = self.statement.text if len(self.statement.text) <= 20 else self.statement.text[:17] + '...'
-        s += ' => '
-        s += self.response.text if len(self.response.text) <= 40 else self.response.text[:37] + '...'
-        return s
+        return '{} => {}'.format(
+            self.statement.text if len(self.statement.text) <= 20 else self.statement.text[:17] + '...',
+            self.response.text if len(self.response.text) <= 40 else self.response.text[:37] + '...'
+        )

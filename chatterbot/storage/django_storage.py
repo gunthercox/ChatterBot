@@ -1,9 +1,13 @@
+import json
 from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
-import json
 
 
 class DjangoStorageAdapter(StorageAdapter):
+    """
+    Storage adapter that allows ChatterBot to interact with
+    Django storage backends.
+    """
 
     def __init__(self, **kwargs):
         super(DjangoStorageAdapter, self).__init__(**kwargs)
@@ -39,6 +43,7 @@ class DjangoStorageAdapter(StorageAdapter):
             )
             return self.model_to_object(statement)
         except StatementModel.DoesNotExist as e:
+            self.logger.info(str(e))
             return None
 
     def filter(self, **kwargs):
@@ -77,8 +82,10 @@ class DjangoStorageAdapter(StorageAdapter):
         return results
 
     def update(self, statement, **kwargs):
+        """
+        Update the provided statement.
+        """
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
         # Do not alter the database unless writing is enabled
         if not self.read_only:
             django_statement, created = StatementModel.objects.get_or_create(

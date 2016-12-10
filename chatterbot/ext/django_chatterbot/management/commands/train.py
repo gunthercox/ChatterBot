@@ -2,6 +2,11 @@ from django.core.management.base import BaseCommand
 
 
 class Command(BaseCommand):
+    """
+    A Django management command for calling a
+    chat bot's training method.
+    """
+
     help = 'Trains the database used by the chat bot'
     can_import_settings = True
 
