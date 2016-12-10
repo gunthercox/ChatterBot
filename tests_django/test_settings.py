@@ -20,7 +20,8 @@ CHATTERBOT = {
     'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
     'training_data': [
         'chatterbot.corpus.english.greetings'
-    ]
+    ],
+    'initialize': False
 }
 
 ROOT_URLCONF = 'chatterbot.ext.django_chatterbot.urls'

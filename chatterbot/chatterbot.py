@@ -66,7 +66,9 @@ class ChatBot(object):
         self.default_session = self.conversation_sessions.new()
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
-        self.initialize()
+
+        if kwargs.get('initialize', True):
+            self.initialize()
 
     def initialize(self):
         """
