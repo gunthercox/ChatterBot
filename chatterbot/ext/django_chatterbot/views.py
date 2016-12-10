@@ -23,6 +23,20 @@ class ChatterBotViewMixin(object):
         if 'text' not in data:
             raise ValidationError('The attribute "text" is required.')
 
+    def get_chat_session(self, request):
+        """
+        Return the current session for the chat if one exists.
+        Create a new session if one does not exist.
+        """
+        chat_session_id = request.session.get('chat_session_id', None)
+        chat_session = self.chatterbot.conversation_sessions.get(chat_session_id, None)
+
+        if not chat_session:
+            chat_session = self.chatterbot.conversation_sessions.new()
+            request.session['chat_session_id'] = chat_session.id_string
+
+        return chat_session
+
 
 class ChatterBotView(ChatterBotViewMixin, View):
     """
@@ -48,15 +62,9 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         self.validate(input_data)
 
-        chat_session_id = request.session.get('chat_session_id')
-        if chat_session_id:
-            chat_session = self.chatterbot.conversation_sessions.get(chat_session_id)
-        else:
-            chat_session = self.chatterbot.conversation_sessions.new()
-            chat_session_id = str(chat_session.uuid)
-            request.session['chat_session_id'] = chat_session_id
+        chat_session = self.get_chat_session(request)
 
-        response_data = self.chatterbot.get_response(input_data, chat_session_id)
+        response_data = self.chatterbot.get_response(input_data, chat_session.id_string)
 
         return JsonResponse(response_data, status=200)
 
@@ -64,12 +72,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         Return data corresponding to the current conversation.
         """
-        chat_session_id = request.session.get('chat_session_id')
-        if chat_session_id:
-            chat_session = self.chatterbot.conversation_sessions.get(chat_session_id)
-        else:
-            chat_session = self.chatterbot.conversation_sessions.new()
-            request.session['chat_session_id'] = str(chat_session.uuid)
+        chat_session = self.get_chat_session(request)
 
         data = {
             'detail': 'You should make a POST request to this endpoint.',

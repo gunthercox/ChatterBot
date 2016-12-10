@@ -30,15 +30,15 @@ class SessionManager(object):
         """
         session = Session()
 
-        self.sessions[str(session.uuid)] = session
+        self.sessions[session.id_string] = session
 
         return session
 
-    def get(self, session_id):
+    def get(self, session_id, default=None):
         """
         Return a session given a unique identifier.
         """
-        return self.sessions[str(session_id)]
+        return self.sessions.get(str(session_id), default)
 
     def update(self, session_id, conversance):
         """

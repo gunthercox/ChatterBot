@@ -27,6 +27,16 @@ class SessionManagerTestCase(TestCase):
 
         self.assertEqual(session.id_string, returned_session.id_string)
 
+    def test_get_invalid_id(self):
+        returned_session = self.manager.get('--invalid--')
+
+        self.assertIsNone(returned_session)
+
+    def test_get_invalid_id_with_deafult(self):
+        returned_session = self.manager.get('--invalid--', 'default_value')
+
+        self.assertEqual(returned_session, 'default_value')
+
     def test_update(self):
         session = self.manager.new()
         self.manager.update(session.id_string, ('A', 'B', ))
