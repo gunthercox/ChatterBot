@@ -21,7 +21,7 @@ class VariableInputTypeAdapter(InputAdapter):
         else:
             string_types = basestring
 
-        if isinstance(statement, Statement):
+        if hasattr(statement, 'text'):
             return self.OBJECT
         if isinstance(statement, string_types):
             return self.TEXT
