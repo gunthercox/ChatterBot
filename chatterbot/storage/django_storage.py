@@ -31,6 +31,8 @@ class DjangoStorageAdapter(StorageAdapter):
         that match the parameters specified.
         """
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
+        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
+        from django.db.models import Q
 
         kwargs_copy = kwargs.copy()
 
@@ -52,7 +54,18 @@ class DjangoStorageAdapter(StorageAdapter):
             else:
                 kwargs['in_response'] = None
 
-        return StatementModel.objects.filter(**kwargs)
+        c = {}
+        if 'in_response__response__text' in kwargs:
+            value = kwargs['in_response__response__text']
+            # del kwargs['in_response__response__text']
+
+            r = []
+            responses = ResponseModel.objects.filter(statement__text=value)
+            for response in responses:
+                r.append(response.response.text)
+            c['text__in'] = r
+
+        return StatementModel.objects.filter(Q(**kwargs) | Q(**c))
 
     def update(self, statement, **kwargs):
         """

@@ -27,12 +27,13 @@ class LogicIntegrationTestCase(TestCase):
         statement2 = Statement(text='Yes')
         statement2.save()
 
-        response = Response(statement=statement2, response=statement1)
+        response = Response(statement=statement1, response=statement2)
         response.save()
 
         confidence, response = adapter.process(statement1)
 
         self.assertEqual(response.text, 'Yes')
+        self.assertEqual(confidence, 1)
 
     def test_low_confidence(self):
         from chatterbot.logic import LowConfidenceAdapter
