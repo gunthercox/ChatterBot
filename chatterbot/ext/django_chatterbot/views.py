@@ -66,6 +66,13 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         response_data = self.chatterbot.get_response(input_data, chat_session.id_string)
 
+        try:
+            unicode = unicode
+        except NameError:
+            # Must be python 3
+            unicode = str
+            basestring = (str, bytes)
+
         if isinstance(response_data, basestring):
             response_data = response_data.encode('utf8')
         else:
