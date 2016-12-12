@@ -9,7 +9,7 @@ import django.db.models.deletion
 class Migration(migrations.Migration):
 
     dependencies = [
-        ('django_chatterbot', '0002_statement_extra_data'),
+        ('django_chatterbot', '0003_change_occurrence_default'),
     ]
 
     operations = [

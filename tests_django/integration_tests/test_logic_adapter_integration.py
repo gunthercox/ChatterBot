@@ -15,6 +15,8 @@ class LogicIntegrationTestCase(TestCase):
 
         self.chatbot = ChatBot(**settings.CHATTERBOT)
 
+        Statement.objects.create(text='Default statement')
+
     def test_best_match(self):
         from chatterbot.logic import BestMatch
 
