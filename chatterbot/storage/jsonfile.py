@@ -177,14 +177,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         """
         Remove the json file database completely.
         """
-        import os
-
-        if self.database.path:
-            if os.path.exists(self.database.path):
-                os.remove(self.database.path)
-        else:
-            # Clear the in-memory data if there is no file path
-            self.database._data = {}
+        self.database.drop()
 
     class UnsuitableForProductionWarning(Warning):
         """
