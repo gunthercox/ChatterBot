@@ -78,7 +78,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
         else:
             response_data = unicode(response_data).encode('utf8')
 
-        response_data = {'text': response_data}
+        response_data = {'text': str(response_data)}
 
         return JsonResponse(response_data, status=200)
 
