@@ -2,12 +2,12 @@ from unittest import TestCase
 from mock import MagicMock
 from chatterbot.logic import LowConfidenceAdapter
 from chatterbot.conversation import Statement, Response
-from tests.base_case import MockChatBot
+from tests.base_case import ChatBotTestCase
 
 
-class LowConfidenceAdapterTestCase(TestCase):
+class LowConfidenceAdapterTestCase(ChatBotTestCase):
     """
-    Test cases for the LowConfidenceAdapter
+    Test cases for the LowConfidenceAdapter.
     """
 
     def setUp(self):
@@ -15,7 +15,7 @@ class LowConfidenceAdapterTestCase(TestCase):
         self.adapter = LowConfidenceAdapter()
 
         # Add a mock storage adapter to the logic adapter
-        self.adapter.set_chatbot(MockChatBot())
+        self.adapter.set_chatbot(self.chatbot)
 
         possible_choices = [
             Statement('Who do you love?', in_response_to=[

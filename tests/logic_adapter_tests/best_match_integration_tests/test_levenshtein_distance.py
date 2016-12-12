@@ -2,24 +2,23 @@ from unittest import TestCase
 from mock import MagicMock
 from chatterbot.logic import BestMatch
 from chatterbot.conversation import Statement, Response
-from tests.base_case import MockChatBot
+from tests.base_case import ChatBotTestCase
 
 
-class BestMatchLevenshteinDistanceTestCase(TestCase):
+class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
     """
     Integration tests for the BestMatch logic adapter
     using Levenshtein distance as a comparison function.
     """
 
     def setUp(self):
+        super(BestMatchLevenshteinDistanceTestCase, self).setUp()
         from chatterbot.comparisons import levenshtein_distance
 
         self.adapter = BestMatch(
             statement_comparison_function=levenshtein_distance
         )
-
-        # Add a mock chatbot to the logic adapter
-        self.adapter.set_chatbot(MockChatBot())
+        self.adapter.set_chatbot(self.chatbot)
 
     def test_get_closest_statement(self):
         """
@@ -83,9 +82,7 @@ class BestMatchLevenshteinDistanceTestCase(TestCase):
         should be zero because it is a random choice.
         """
         self.adapter.chatbot.storage.update = MagicMock()
-        self.adapter.chatbot.storage.filter = MagicMock(
-            return_value=[]
-        )
+        self.adapter.chatbot.storage.count = MagicMock(return_value=1)
         self.adapter.chatbot.storage.get_random = MagicMock(
             return_value=Statement("Random")
         )
