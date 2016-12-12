@@ -7,7 +7,7 @@ class StringInitalizationTestCase(ChatBotTestCase):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.output.OutputFormatAdapter',
-            'database': self.create_test_data_directory(),
+            'database': None,
             'silence_performance_warning': True
         }
 
@@ -35,7 +35,7 @@ class DictionaryInitalizationTestCase(ChatBotTestCase):
         return {
             'storage_adapter': {
                 'import_path': 'chatterbot.storage.JsonFileStorageAdapter',
-                'database': self.create_test_data_directory(),
+                'database': None,
                 'silence_performance_warning': True
             },
 

@@ -179,8 +179,12 @@ class JsonFileStorageAdapter(StorageAdapter):
         """
         import os
 
-        if os.path.exists(self.database.path):
-            os.remove(self.database.path)
+        if self.database.path:
+            if os.path.exists(self.database.path):
+                os.remove(self.database.path)
+        else:
+            # Clear the in-memory data if there is no file path
+            self.database._data = {}
 
     class UnsuitableForProductionWarning(Warning):
         """
