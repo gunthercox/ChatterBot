@@ -7,3 +7,4 @@ ratings:
 exclude_paths:
 - tests/*
 - examples/*
+- chatterbot/ext/django_chatterbot/migrations/*
