@@ -29,6 +29,9 @@ response to another statement.
 Statement-response relationship
 ===============================
 
+ChatterBot stores knowledge of conversations as statements. Each statement can have any
+number possible responses.
+
 .. image:: _static/statement-response-relationship.svg
    :alt: ChatterBot statement-response relationship
 
@@ -36,6 +39,9 @@ Each :code:`Statement` object has an :code:`in_response_to` reference which link
 statement to a number of other statements that it has been learned to be in response to.
 The :code:`in_response_to` attribute is essentially a reference to all parent statements
 of the current statement.
+
+.. image:: _static/statement-relationship.svg
+   :alt: ChatterBot statement relationship
 
 The :code:`Response` object's :code:`occurrence` attribute indicates the number of times
 that the statement has been given as a response. This makes it possible for the chat bot
