@@ -4,16 +4,9 @@ from .logic_adapter import LogicAdapter
 
 class BestMatch(LogicAdapter):
     """
-    A logic adater that returns a response based on known responses to the
-    closest matches to the input statement.
+    A logic adater that returns a response based on known responses to
+    the closest matches to the input statement.
     """
-
-    @property
-    def has_storage(self):
-        """
-        Return true if the adapter has access to the chatbot's storage adapter.
-        """
-        return self.chatbot and self.chatbot.storage
 
     def get(self, input_statement):
         """
@@ -23,7 +16,7 @@ class BestMatch(LogicAdapter):
         statement_list = self.chatbot.storage.get_response_statements()
 
         if not statement_list:
-            if self.has_storage:
+            if self.chatbot.storage.count():
                 # Use a randomly picked statement
                 self.logger.info(
                     'No statements have known responses. ' +
@@ -48,10 +41,10 @@ class BestMatch(LogicAdapter):
 
     def can_process(self, statement):
         """
-        Check that the chatbot's storage adapter is available to the logic adapter
-        and there is at least one statement in the database.
+        Check that the chatbot's storage adapter is available to the logic
+        adapter and there is at least one statement in the database.
         """
-        return self.has_storage and self.chatbot.storage.count()
+        return self.chatbot.storage.count()
 
     def process(self, input_statement):
 
