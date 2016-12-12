@@ -127,7 +127,7 @@ class Response(models.Model):
 
     unique_together = (('statement', 'response'),)
 
-    occurrence = models.PositiveIntegerField(default=0)
+    occurrence = models.PositiveIntegerField(default=1)
 
     def __str__(self):
         return '{} => {}'.format(
