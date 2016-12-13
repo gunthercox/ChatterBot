@@ -12,7 +12,7 @@ class ChatBotTestCase(TestCase):
     def get_kwargs(self):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
-            'output_adapter': 'chatterbot.output.OutputFormatAdapter',
+            'output_adapter': 'chatterbot.output.OutputAdapter',
             'database': None, # None runs the database in-memory
             'silence_performance_warning': True
         }

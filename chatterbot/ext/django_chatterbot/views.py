@@ -64,7 +64,8 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         chat_session = self.get_chat_session(request)
 
-        response_data = self.chatterbot.get_response(input_data, chat_session.id_string)
+        response = self.chatterbot.get_response(input_data, chat_session.id_string)
+        response_data = response.serialize()
 
         return JsonResponse(response_data, status=200)
 
