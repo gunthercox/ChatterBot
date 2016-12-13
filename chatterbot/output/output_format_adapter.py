@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import warnings
 from .output_adapter import OutputAdapter
 
 
@@ -19,7 +20,22 @@ class OutputFormatAdapter(OutputAdapter):
         super(OutputFormatAdapter, self).__init__(**kwargs)
         self.format = kwargs.get('output_format', 'object')
 
-        if self.format not in self.VALID_FORMATS:
+        if self.format == self.TEXT:
+            warnings.warn(
+                'OutputFormatAdapter is deprecated. Use OutputAdapter instead and get `.text` from the returned object.',
+                DeprecationWarning
+            )
+        elif self.format == self.JSON:
+            warnings.warn(
+                'OutputFormatAdapter is deprecated. Use OutputAdapter instead and call `.serialize()` from the returned object.',
+                DeprecationWarning
+            )
+        elif self.format == self.OBJECT:
+            warnings.warn(
+                'OutputFormatAdapter is deprecated. Use OutputAdapter instead.',
+                DeprecationWarning
+            )
+        elif self.format not in self.VALID_FORMATS:
             raise self.UnrecognizedOutputFormatException(
                 'The output type {} is not a known valid format'.format(
                     self.format
