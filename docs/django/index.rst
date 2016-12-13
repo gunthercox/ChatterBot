@@ -55,7 +55,7 @@ Sync your database
 
 .. sourcecode:: sh
 
-   python manage.py migrate chatterbot.ext.django_chatterbot
+   python manage.py migrate django_chatterbot
 
 .. note::
 
