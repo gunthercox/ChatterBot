@@ -26,7 +26,7 @@ class ChatBot(object):
 
         input_adapter = kwargs.get('input_adapter', 'chatterbot.input.VariableInputTypeAdapter')
 
-        output_adapter = kwargs.get('output_adapter', 'chatterbot.output.OutputFormatAdapter')
+        output_adapter = kwargs.get('output_adapter', 'chatterbot.output.OutputAdapter')
 
         # Check that each adapter is a valid subclass of it's respective parent
         utils.validate_adapter_class(storage_adapter, StorageAdapter)
