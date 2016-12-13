@@ -13,8 +13,6 @@ class Statement(object):
         self.in_response_to = kwargs.pop('in_response_to', [])
         self.extra_data = kwargs.pop('extra_data', {})
 
-        self.extra_data.update(kwargs)
-
     def __str__(self):
         return self.text
 
