@@ -6,7 +6,7 @@ class StringInitalizationTestCase(ChatBotTestCase):
     def get_kwargs(self):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
-            'output_adapter': 'chatterbot.output.OutputFormatAdapter',
+            'output_adapter': 'chatterbot.output.OutputAdapter',
             'database': None,
             'silence_performance_warning': True
         }
@@ -25,8 +25,8 @@ class StringInitalizationTestCase(ChatBotTestCase):
         self.assertTrue(isinstance(self.chatbot.input, VariableInputTypeAdapter))
 
     def test_output_initialized(self):
-        from chatterbot.output import OutputFormatAdapter
-        self.assertTrue(isinstance(self.chatbot.output, OutputFormatAdapter))
+        from chatterbot.output import OutputAdapter
+        self.assertTrue(isinstance(self.chatbot.output, OutputAdapter))
 
 
 class DictionaryInitalizationTestCase(ChatBotTestCase):
@@ -38,12 +38,11 @@ class DictionaryInitalizationTestCase(ChatBotTestCase):
                 'database': None,
                 'silence_performance_warning': True
             },
-
             'input_adapter': {
                 'import_path': 'chatterbot.input.VariableInputTypeAdapter'
             },
             'output_adapter': {
-                'import_path': 'chatterbot.output.OutputFormatAdapter'
+                'import_path': 'chatterbot.output.OutputAdapter'
             },
             'logic_adapters': [
                 {
@@ -71,5 +70,5 @@ class DictionaryInitalizationTestCase(ChatBotTestCase):
         self.assertTrue(isinstance(self.chatbot.input, VariableInputTypeAdapter))
 
     def test_output_initialized(self):
-        from chatterbot.output import OutputFormatAdapter
-        self.assertTrue(isinstance(self.chatbot.output, OutputFormatAdapter))
+        from chatterbot.output import OutputAdapter
+        self.assertTrue(isinstance(self.chatbot.output, OutputAdapter))

@@ -10,8 +10,7 @@ CHATTERBOT_DEFAULTS = {
     'name': 'ChatterBot',
     'storage_adapter': 'chatterbot.storage.DjangoStorageAdapter',
     'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
-    'output_adapter': 'chatterbot.output.OutputFormatAdapter',
-    'output_format': 'json'
+    'output_adapter': 'chatterbot.output.OutputAdapter'
 }
 
 CHATTERBOT = CHATTERBOT_DEFAULTS.copy()
