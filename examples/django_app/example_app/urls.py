@@ -5,8 +5,8 @@ from example_app.views import ChatterBotAppView
 
 
 urlpatterns = [
-    url(r'^$', ChatterBotAppView.as_view()),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^$', ChatterBotAppView.as_view(), name='main'),
+    url(r'^admin/', include(admin.site.urls), name='admin'),
     url(r'^api/chatterbot/', include(chatterbot_urls, namespace='chatterbot')),
 ]
 
