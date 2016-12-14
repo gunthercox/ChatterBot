@@ -5,7 +5,25 @@ from django.utils.encoding import force_text
 from chatterbot.ext.django_chatterbot.views import ChatterBotView
 
 
+class ViewTestCase(TestCase):
+
+    def setUp(self):
+        super(ViewTestCase, self).setUp()
+        self.url = reverse('main')
+
+    def test_get_main_page(self):
+        """
+        Test that the main page can be loaded.
+        """
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+
+
 class ApiTestCase(TestCase):
+    """
+    Tests to make sure that the ChatterBot app is
+    properly working with the Django example app.
+    """
 
     def setUp(self):
         super(ApiTestCase, self).setUp()
@@ -50,6 +68,10 @@ class ApiTestCase(TestCase):
 
 
 class ApiIntegrationTestCase(TestCase):
+    """
+    Test to make sure the ChatterBot API view works
+    properly with the example Django app.
+    """
 
     def setUp(self):
         super(ApiIntegrationTestCase, self).setUp()
