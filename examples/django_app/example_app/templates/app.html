@@ -20,10 +20,10 @@
 
         <div class="row">
           <div class="col-xs-6 offset-xs-3">
-            <ul class="list-group js-chat-log">
+            <ul class="list-group chat-log js-chat-log">
             </ul>
 
-            <div class="input-group input-group-lg">
+            <div class="input-group input-group-lg mt-1">
               <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
               <span class="input-group-btn">
                 <button class="btn btn-primary js-say">Submit</button>
@@ -88,6 +88,9 @@
 
             // Clear the input field
             $input.val('');
+
+            // Scroll to the bottom of the chat interface
+            $chatlog[0].scrollTop = $chatlog[0].scrollHeight;
         });
 
         $submit.fail(function() {
