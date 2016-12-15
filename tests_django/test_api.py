@@ -31,10 +31,12 @@ class ApiTestCase(TestCase):
         """
         Test Response is in JSON
         """
-        def is_json(myjson):
+        def is_json(content):
             try:
-                json_object = json.loads(myjson)
-            except ValueError, e:
+                if isinstance(content, bytes):
+                    content = content.decode(encoding='utf-8')
+                json_object = json.loads(content)
+            except ValueError:
                 return False
             return True
 
