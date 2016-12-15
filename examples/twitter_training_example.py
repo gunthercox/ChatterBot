@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 from settings import TWITTER
 import logging
@@ -23,10 +24,10 @@ logging.basicConfig(level=logging.INFO)
 
 chatbot = ChatBot("TwitterBot",
     logic_adapters=[
-        "chatterbot.adapters.logic.ClosestMatchAdapter"
+        "chatterbot.logic.BestMatch"
     ],
-    input_adapter="chatterbot.adapters.input.TerminalAdapter",
-    output_adapter="chatterbot.adapters.output.TerminalAdapter",
+    input_adapter="chatterbot.input.TerminalAdapter",
+    output_adapter="chatterbot.output.TerminalAdapter",
     database="./twitter-database.db",
     twitter_consumer_key=TWITTER["CONSUMER_KEY"],
     twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],

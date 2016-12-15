@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.storage import StorageAdapter
+from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 
 class StorageAdapterTestCase(TestCase):

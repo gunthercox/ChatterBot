@@ -1,7 +1,7 @@
 from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
-from chatterbot.adapters.logic import LogicAdapter
-from chatterbot.adapters.logic import MultiLogicAdapter
+from chatterbot.logic import LogicAdapter
+from chatterbot.logic import MultiLogicAdapter
 
 
 class TestAdapterA(LogicAdapter):
@@ -27,7 +27,7 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
     def setUp(self):
         super(MultiLogicAdapterTestCase, self).setUp()
         self.adapter = MultiLogicAdapter()
-        self.adapter.set_context(self.chatbot)
+        self.adapter.set_chatbot(self.chatbot)
 
     def test_sub_adapter_agreement(self):
         """
@@ -35,9 +35,9 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
         statement, this statement should be returned with the
         highest confidence available from these matching options.
         """
-        self.adapter.add_adapter(TestAdapterA())
-        self.adapter.add_adapter(TestAdapterB())
-        self.adapter.add_adapter(TestAdapterC())
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterA')
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterB')
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterC')
 
         confidence, statement = self.adapter.process(Statement('Howdy!'))
 
@@ -56,20 +56,19 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
         self.assertEqual(value, 0.85)
 
     def test_add_adapter(self):
-        sub_adapter = TestAdapterA()
         adapter_count_before = len(self.adapter.adapters)
-        self.adapter.add_adapter(sub_adapter)
+        self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterA')
         adapter_count_after = len(self.adapter.adapters)
 
         self.assertEqual(adapter_count_after, adapter_count_before + 1)
 
-    def test_set_context(self):
+    def test_set_chatbot(self):
         adapter = MultiLogicAdapter()
-        adapter.set_context(self.chatbot)
+        adapter.set_chatbot(self.chatbot)
 
-        # Test that the multi adapter's context is set
-        self.assertEqual(adapter.context, self.chatbot)
+        # Test that the multi adapter has acccess to the chat bot
+        self.assertEqual(adapter.chatbot, self.chatbot)
 
-        # Test that all sub adapters have the context set
+        # Test that all sub adapters have the chatbot set
         for sub_adapter in adapter.adapters:
-            self.assertEqual(sub_adapter.context, self.chatbot)
+            self.assertEqual(sub_adapter.chatbot, self.chatbot)

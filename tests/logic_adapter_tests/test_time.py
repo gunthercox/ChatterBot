@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import TimeLogicAdapter
+from chatterbot.logic import TimeLogicAdapter
 from chatterbot.conversation import Statement
 
 

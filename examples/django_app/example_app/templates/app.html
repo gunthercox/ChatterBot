@@ -8,25 +8,35 @@
   </head>
   <body>
 
+    {% include 'nav.html' %}
+
     <div class="container">
-      <div class="page-header text-center">
-        <h1>Django ChatterBot Example</h1>
-      </div>
 
-      <div class="row">
-        <div class="col-xs-6 col-xs-offset-3">
-          <ul class="list-group js-chat-log">
-          </ul>
+      <div class="jumbotron mt-1">
+        <h1 class="jumbotron-heading text-xs-center">Django ChatterBot Example</h1>
+        <p class="lead text-xs-center">
+          This is a web app that allows you to talk to ChatterBot.
+        </p>
 
-          <div class="input-group input-group-lg">
-            <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
-            <span class="input-group-btn">
-              <button class="btn btn-primary js-say">Submit</button>
-            </span>
+        <hr class="my-2">
+
+        <div class="row">
+          <div class="col-xs-6 offset-xs-3">
+            <ul class="list-group chat-log js-chat-log">
+            </ul>
+
+            <div class="input-group input-group-lg mt-1">
+              <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
+              <span class="input-group-btn">
+                <button class="btn btn-primary js-say">Submit</button>
+              </span>
+            </div>
+            
           </div>
-          
         </div>
+
       </div>
+
     </div>
 
     <script src="{% static 'js/jquery.js' %}"></script>
@@ -80,6 +90,9 @@
 
             // Clear the input field
             $input.val('');
+
+            // Scroll to the bottom of the chat interface
+            $chatlog[0].scrollTop = $chatlog[0].scrollHeight;
         });
 
         $submit.fail(function() {

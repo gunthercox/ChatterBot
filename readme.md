@@ -109,3 +109,7 @@ See release notes for changes https://github.com/gunthercox/ChatterBot/releases
 4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
 5. Use the projects [built-in automated testing](http://chatterbot.readthedocs.io/en/latest/testing.html)
    to help make sure that your contribution is free from errors.
+
+# License
+
+ChatterBot is licensed under th [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause).

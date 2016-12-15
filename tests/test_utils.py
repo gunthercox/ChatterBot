@@ -1,45 +1,25 @@
 # -*- coding: utf-8 -*-
 from unittest import TestCase
-from chatterbot.utils.clean import clean_whitespace
-from chatterbot.utils.clean import clean
-from chatterbot.utils.module_loading import import_module
+from chatterbot import utils
 
 
 class UtilityTests(TestCase):
 
     def test_import_module(self):
-        datetime = import_module('datetime.datetime')
+        datetime = utils.import_module('datetime.datetime')
         self.assertTrue(hasattr(datetime, 'now'))
 
-
-class TokenizerTestCase(TestCase):
-
-    def setUp(self):
-        super(TokenizerTestCase, self).setUp()
-        from chatterbot.utils.tokenizer import Tokenizer
-
-        self.tokenizer = Tokenizer()
-
-    def test_get_tokens(self):
-        tokens = self.tokenizer.get_tokens('what time is it', exclude_stop_words=False)
-        self.assertEqual(tokens, ['what', 'time', 'is', 'it'])
-
-    def test_get_tokens_exclude_stop_words(self):
-        tokens = self.tokenizer.get_tokens('what time is it', exclude_stop_words=True)
-        self.assertEqual(tokens, {'time'})
-
-
-class StopWordsTestCase(TestCase):
-
-    def setUp(self):
-        super(StopWordsTestCase, self).setUp()
-        from chatterbot.utils.stop_words import StopWordsManager
-
-        self.stopwords_manager = StopWordsManager()
+    def test_nltk_download_corpus(self):
+        downloaded = utils.nltk_download_corpus('wordnet')
+        self.skipTest('Test needs to be created')
 
     def test_remove_stop_words(self):
+        from chatterbot.utils import nltk_download_corpus
+
+        nltk_download_corpus('stopwords')
+
         tokens = ['this', 'is', 'a', 'test', 'string']
-        words = self.stopwords_manager.remove_stopwords('english', tokens)
+        words = utils.remove_stopwords(tokens, 'english')
 
         # This example list of words should end up with only two elements
         self.assertEqual(len(words), 2)
@@ -47,28 +27,11 @@ class StopWordsTestCase(TestCase):
         self.assertIn('string', list(words))
 
 
-class WordnetTestCase(TestCase):
-
-    def setUp(self):
-        super(WordnetTestCase, self).setUp()
-        from chatterbot.utils.wordnet import Wordnet
-
-        self.wordnet = Wordnet()
-
-    def test_wordnet(self):
-        synsets = self.wordnet.synsets('test')
-
-        self.assertEqual(
-            0.06666666666666667,
-            synsets[0].path_similarity(synsets[1])
-        )
-
-
 class CleanWhitespaceTests(TestCase):
 
     def test_clean_whitespace(self):
         text = '\tThe quick \nbrown fox \rjumps over \vthe \alazy \fdog\\.'
-        clean_text = clean_whitespace(text)
+        clean_text = utils.clean_whitespace(text)
         normal_text = 'The quick brown fox jumps over \vthe \alazy \fdog\\.'
 
         self.assertEqual(clean_text, normal_text)
@@ -76,7 +39,7 @@ class CleanWhitespaceTests(TestCase):
     def test_leading_or_trailing_whitespace_removed(self):
 
         text = '     The quick brown fox jumps over the lazy dog.   '
-        clean_text = clean_whitespace(text)
+        clean_text = utils.clean_whitespace(text)
         normal_text = 'The quick brown fox jumps over the lazy dog.'
 
         self.assertEqual(clean_text, normal_text)
@@ -84,7 +47,7 @@ class CleanWhitespaceTests(TestCase):
     def test_consecutive_spaces_removed(self):
 
         text = 'The       quick brown     fox      jumps over the lazy dog.'
-        clean_text = clean_whitespace(text)
+        clean_text = utils.clean_whitespace(text)
         normal_text = 'The quick brown fox jumps over the lazy dog.'
 
         self.assertEqual(clean_text, normal_text)
@@ -101,14 +64,14 @@ class CleanTests(TestCase):
         normal_text = 'The quick brown fox <b>jumps</b> over'
         ' the <a href="http://lazy.com">lazy</a> dog.'
 
-        clean_text = clean(text)
+        clean_text = utils.clean(text)
 
         self.assertEqual(clean_text, normal_text)
 
     def test_non_ascii_chars_replaced(self):
 
         text = u"Klüft skräms inför på fédéral électoral große"
-        clean_text = clean(text)
+        clean_text = utils.clean(text)
         normal_text = "Kluft skrams infor pa federal electoral groe"
 
         self.assertEqual(clean_text, normal_text)

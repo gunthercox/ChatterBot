@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.input import Mailgun
+from chatterbot.input import Mailgun
 
 
 class MailgunAdapterTests(TestCase):

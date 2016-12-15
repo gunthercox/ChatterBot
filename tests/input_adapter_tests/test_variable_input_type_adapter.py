@@ -1,6 +1,6 @@
 from unittest import TestCase
 from chatterbot.conversation import Statement
-from chatterbot.adapters.input import VariableInputTypeAdapter
+from chatterbot.input import VariableInputTypeAdapter
 
 
 class VariableInputTypeAdapterTests(TestCase):

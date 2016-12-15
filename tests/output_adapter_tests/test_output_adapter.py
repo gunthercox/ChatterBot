@@ -1,5 +1,6 @@
 from unittest import TestCase
-from chatterbot.adapters.output import OutputAdapter
+from chatterbot.output import OutputAdapter
+
 
 class OutputAdapterTestCase(TestCase):
     """
@@ -14,5 +15,8 @@ class OutputAdapterTestCase(TestCase):
         self.adapter = OutputAdapter()
 
     def test_process_response(self):
-        with self.assertRaises(OutputAdapter.AdapterMethodNotImplementedError):
-            self.adapter.process_response('', 0)
+        """
+        The value passed in for the statement parameter should be returned.
+        """
+        statement = self.adapter.process_response('_', 0)
+        self.assertEqual(statement, '_')

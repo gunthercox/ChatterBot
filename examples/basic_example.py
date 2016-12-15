@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 
 # Create a new chat bot named Charlie

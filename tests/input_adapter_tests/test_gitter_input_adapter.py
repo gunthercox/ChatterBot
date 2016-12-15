@@ -1,8 +1,8 @@
 from unittest import TestCase
 from mock import Mock
 from chatterbot.conversation import Statement
-from chatterbot.adapters.input import gitter
-from chatterbot.adapters.input import Gitter
+from chatterbot.input import gitter
+from chatterbot.input import Gitter
 
 
 class MockResponse(object):
