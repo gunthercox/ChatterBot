@@ -18,4 +18,9 @@ class Migration(migrations.Migration):
             name='statement',
             field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='in_response', to='django_chatterbot.Statement'),
         ),
+        migrations.AlterField(
+            model_name='response',
+            name='response',
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, related_name='responses', to='django_chatterbot.Statement'),
+        ),
     ]

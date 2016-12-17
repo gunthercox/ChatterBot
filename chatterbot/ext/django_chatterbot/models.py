@@ -128,7 +128,7 @@ class Response(models.Model):
 
     response = models.ForeignKey(
         'Statement',
-        related_name='+'
+        related_name='responses'
     )
 
     unique_together = (('statement', 'response'),)
