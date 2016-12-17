@@ -1,17 +1,14 @@
 from chatterbot import ChatBot
+from chatterbot.adapters import Adapter
 from .base_case import ChatBotTestCase
 
 
 class AdapterValidationTests(ChatBotTestCase):
 
-    def setUp(self):
-        super(AdapterValidationTests, self).setUp()
-        self.database_path = self.chatbot.storage.database.path
-
     def test_invalid_storage_adapter(self):
         kwargs = self.get_kwargs()
         kwargs['storage_adapter'] = 'chatterbot.input.TerminalAdapter'
-        with self.assertRaises(ChatBot.InvalidAdapterException):
+        with self.assertRaises(Adapter.InvalidAdapterTypeException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
 
     def test_valid_storage_adapter(self):
@@ -19,13 +16,13 @@ class AdapterValidationTests(ChatBotTestCase):
         kwargs['storage_adapter'] = 'chatterbot.storage.JsonFileStorageAdapter'
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)
-        except ChatBot.InvalidAdapterException:
+        except Adapter.InvalidAdapterTypeException:
             self.fail('Test raised InvalidAdapterException unexpectedly!')
 
     def test_invalid_input_adapter(self):
         kwargs = self.get_kwargs()
         kwargs['input_adapter'] = 'chatterbot.storage.JsonFileStorageAdapter'
-        with self.assertRaises(ChatBot.InvalidAdapterException):
+        with self.assertRaises(Adapter.InvalidAdapterTypeException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
 
     def test_valid_input_adapter(self):
@@ -33,13 +30,13 @@ class AdapterValidationTests(ChatBotTestCase):
         kwargs['input_adapter'] = 'chatterbot.input.TerminalAdapter'
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)
-        except ChatBot.InvalidAdapterException:
+        except Adapter.InvalidAdapterTypeException:
             self.fail('Test raised InvalidAdapterException unexpectedly!')
 
     def test_invalid_output_adapter(self):
         kwargs = self.get_kwargs()
         kwargs['output_adapter'] = 'chatterbot.input.TerminalAdapter'
-        with self.assertRaises(ChatBot.InvalidAdapterException):
+        with self.assertRaises(Adapter.InvalidAdapterTypeException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
 
     def test_valid_output_adapter(self):
@@ -47,13 +44,13 @@ class AdapterValidationTests(ChatBotTestCase):
         kwargs['output_adapter'] = 'chatterbot.output.TerminalAdapter'
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)
-        except ChatBot.InvalidAdapterException:
+        except Adapter.InvalidAdapterTypeException:
             self.fail('Test raised InvalidAdapterException unexpectedly!')
 
     def test_invalid_logic_adapter(self):
         kwargs = self.get_kwargs()
         kwargs['logic_adapters'] = ['chatterbot.input.TerminalAdapter']
-        with self.assertRaises(ChatBot.InvalidAdapterException):
+        with self.assertRaises(Adapter.InvalidAdapterTypeException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
 
     def test_valid_logic_adapter(self):
@@ -61,7 +58,7 @@ class AdapterValidationTests(ChatBotTestCase):
         kwargs['logic_adapters'] = ['chatterbot.logic.BestMatch']
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)
-        except ChatBot.InvalidAdapterException:
+        except Adapter.InvalidAdapterTypeException:
             self.fail('Test raised InvalidAdapterException unexpectedly!')
 
     def test_valid_adapter_dictionary(self):
@@ -71,7 +68,7 @@ class AdapterValidationTests(ChatBotTestCase):
         }
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)
-        except ChatBot.InvalidAdapterException:
+        except Adapter.InvalidAdapterTypeException:
             self.fail('Test raised InvalidAdapterException unexpectedly!')
 
     def test_invalid_adapter_dictionary(self):
@@ -79,7 +76,7 @@ class AdapterValidationTests(ChatBotTestCase):
         kwargs['storage_adapter'] = {
             'import_path': 'chatterbot.logic.BestMatch'
         }
-        with self.assertRaises(ChatBot.InvalidAdapterException):
+        with self.assertRaises(Adapter.InvalidAdapterTypeException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
 
 
