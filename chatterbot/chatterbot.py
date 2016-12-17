@@ -8,7 +8,7 @@ from . import utils
 
 class ChatBot(object):
     """
-    A conversational dialog ChatBot.
+    A conversational dialog chat bot.
     """
 
     def __init__(self, name, **kwargs):
@@ -171,14 +171,3 @@ class ChatBot(object):
         name = data.pop('name')
 
         return ChatBot(name, **data)
-
-    class InvalidAdapterException(Exception):
-        """
-        An exception to be raised when an adapter of an unexpected class type is recieved.
-        """
-
-        def __init__(self, value='Recieved an unexpected adapter setting.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)
