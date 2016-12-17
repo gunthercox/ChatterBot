@@ -91,7 +91,7 @@ class MultiAdapterTests(ChatBotTestCase):
         self.chatbot.logic.add_adapter(
             'chatterbot.logic.BestMatch'
         )
-        self.assertEqual(len(self.chatbot.logic.adapters), count_before + 1)
+        self.assertIsLength(self.chatbot.logic.adapters, count_before + 1)
 
     def test_insert_logic_adapter(self):
         self.chatbot.logic.add_adapter('chatterbot.logic.TimeLogicAdapter')
@@ -113,7 +113,7 @@ class MultiAdapterTests(ChatBotTestCase):
         removed = self.chatbot.logic.remove_logic_adapter('MathematicalEvaluation')
 
         self.assertTrue(removed)
-        self.assertEqual(len(self.chatbot.logic.adapters), adapter_count - 1)
+        self.assertIsLength(self.chatbot.logic.adapters, adapter_count - 1)
 
     def test_remove_logic_adapter_not_found(self):
         self.chatbot.logic.add_adapter('chatterbot.logic.TimeLogicAdapter')
@@ -123,4 +123,4 @@ class MultiAdapterTests(ChatBotTestCase):
         removed = self.chatbot.logic.remove_logic_adapter('MathematicalEvaluation')
 
         self.assertFalse(removed)
-        self.assertEqual(len(self.chatbot.logic.adapters), adapter_count)
+        self.assertIsLength(self.chatbot.logic.adapters, adapter_count)
