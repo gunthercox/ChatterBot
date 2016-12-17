@@ -1,9 +1,9 @@
-import logging
-
 """
 Response selection methods determines which response should be used in
 the event that multiple responses are generated within a logic adapter.
 """
+import logging
+
 
 def get_most_frequent_response(input_statement, response_list):
     """

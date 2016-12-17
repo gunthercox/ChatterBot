@@ -130,7 +130,9 @@ class Response(models.Model):
     occurrence = models.PositiveIntegerField(default=1)
 
     def __str__(self):
+        statement = self.statement.text
+        response = self.response.text
         return '{} => {}'.format(
-            self.statement.text if len(self.statement.text) <= 20 else self.statement.text[:17] + '...',
-            self.response.text if len(self.response.text) <= 40 else self.response.text[:37] + '...'
+            statement if len(statement) <= 20 else statement[:17] + '...',
+            response if len(response) <= 40 else response[:37] + '...'
         )
