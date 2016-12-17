@@ -148,6 +148,7 @@ def sentiment_comparison(statement, other_statement):
 
     return 1.0 - difference
 
+
 def jaccard_similarity(statement, other_statement, threshold=0.5):
     """
     Calculates the similarity of two statements based on the Jaccard index.

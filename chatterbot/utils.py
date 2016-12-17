@@ -2,6 +2,7 @@
 ChatterBot utility functions
 """
 
+
 def clean_whitespace(text):
     """
     Remove any extra whitespace and line breaks as needed.

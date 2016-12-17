@@ -61,7 +61,7 @@ class Microsoft(OutputAdapter):
 
         if data['messages']:
             last_msg = int(data['watermark'])
-            return data['messages'][last_msg-1]
+            return data['messages'][last_msg - 1]
         return None
 
     def send_message(self, conversation_id, message):
