@@ -53,18 +53,6 @@ class Statement(models.Model):
         """
         Add a response to this statement.
         """
-
-        '''
-        response, created = self.in_response.get_or_create(
-            statement=self,
-            response=statement
-        )
-
-        if created:
-            response.occurrence += 1
-            response.save()
-        '''
-
         self.response_statement_cache.append(statement)
 
     def remove_response(self, response_text):
