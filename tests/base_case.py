@@ -9,6 +9,15 @@ class ChatBotTestCase(TestCase):
         self.test_data_directory = None
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
 
+    def assertIsLength(self, item, length):
+        """
+        Assert that an iterable has the given length.
+        """
+        if len(item) != length:
+            raise AssertionError(
+                'Length {} is not equal to {}'.format(len(item), length)
+            )
+
     def get_kwargs(self):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
