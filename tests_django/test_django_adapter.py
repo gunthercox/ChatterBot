@@ -204,7 +204,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(self.statement1)
 
         results = self.adapter.filter(
-            in_response_to__response__text="Maybe"
+            in_response_to__contains="Maybe"
         )
         self.assertEqual(len(results), 0)
 

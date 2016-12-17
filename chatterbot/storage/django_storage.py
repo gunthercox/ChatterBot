@@ -33,12 +33,18 @@ class DjangoStorageAdapter(StorageAdapter):
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         from django.db.models import Q
 
+        RESPONSE_CONTAINS = 'in_response_to__contains'
+
+        if RESPONSE_CONTAINS in kwargs:
+            value = kwargs[RESPONSE_CONTAINS]
+            del kwargs[RESPONSE_CONTAINS]
+            kwargs['in_response__response__text'] = value
+
         kwargs_copy = kwargs.copy()
 
         for kwarg in kwargs_copy:
             value = kwargs[kwarg]
             del kwargs[kwarg]
-            kwarg = kwarg.replace('__contains', '__response__text')
             kwarg = kwarg.replace('in_response_to', 'in_response')
             kwargs[kwarg] = value
 
@@ -53,13 +59,12 @@ class DjangoStorageAdapter(StorageAdapter):
             else:
                 kwargs['in_response'] = None
 
-        c = {}
+        parameters = {}
         if 'in_response__response__text' in kwargs:
             value = kwargs['in_response__response__text']
+            parameters['responses__statement__text'] = value
 
-            c['responses__statement__text'] = value
-
-        return StatementModel.objects.filter(Q(**kwargs) | Q(**c))
+        return StatementModel.objects.filter(Q(**kwargs) | Q(**parameters))
 
     def update(self, statement, **kwargs):
         """
