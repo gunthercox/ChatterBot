@@ -139,7 +139,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Remove all data from the database.
         """
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel        
+        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
 
         StatementModel.objects.all().delete()
         ResponseModel.objects.all().delete()

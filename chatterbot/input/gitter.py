@@ -123,13 +123,16 @@ class Gitter(InputAdapter):
         Takes the API response data from a single message.
         Returns true if the chat bot should respond.
         """
-        if data and self.only_respond_to_mentions:
-            if data['unread'] == True and self._contains_mention(data['mentions']):
+        if data:
+            unread = data.get('unread', False)
+
+            if self.only_respond_to_mentions:
+                if unread and self._contains_mention(data['mentions']):
+                    return True
+                else:
+                    return False
+            elif unread:
                 return True
-            else:
-                return False
-        elif data and data['unread'] == True:
-            return True
 
         return False
 

@@ -606,7 +606,7 @@ def date_from_duration(base_date, number_as_string, unit, duration, base_time=No
     Currently does not support strings like "20 days from last monday".
     """
     # Check if query is `2 days before yesterday` or `day before yesterday`
-    if base_time != None:
+    if base_time is not None:
         base_date = date_from_adverb(base_date, base_time)
     num = convert_string_to_number(number_as_string)
     if unit in day_variations:
@@ -715,12 +715,13 @@ HASHWEEKDAYS = {
 # Ordinal to number
 HASHORDINALS = {
     'first': 1,
-    'second' : 2,
+    'second': 2,
     'third': 3,
     'fourth': 4,
     'forth': 4,
     'last': -1
 }
+
 
 def datetime_parsing(text, base_date=datetime.now()):
     """
