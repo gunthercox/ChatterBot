@@ -61,7 +61,7 @@ class ChatterBotResponseTests(ChatBotTestCase):
         statement_object = self.chatbot.storage.find(response.text)
 
         self.assertEqual(response, self.test_statement.text)
-        self.assertEqual(len(statement_object.in_response_to), 1)
+        self.assertIsLength(statement_object.in_response_to, 1)
         self.assertIn("Hi", statement_object.in_response_to)
 
     def test_second_response_format(self):
@@ -76,7 +76,7 @@ class ChatterBotResponseTests(ChatBotTestCase):
         self.assertIsNotNone(self.chatbot.storage.find("How are you?"))
 
         self.assertEqual(second_response, self.test_statement.text)
-        self.assertEqual(len(statement.in_response_to), 1)
+        self.assertIsLength(statement.in_response_to, 1)
         self.assertIn("Hi", statement.in_response_to)
 
     def test_get_response_unicode(self):
