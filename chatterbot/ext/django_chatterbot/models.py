@@ -114,11 +114,7 @@ class Response(models.Model):
     Connection between a response and the statement that triggered it.
 
     Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
-
-    Only the text and number of times it has occurred are currently stored.
-    Might be useful to store additional features like language, location(s)/region(s),
-    first created datetime(s), username, user full name, user gender, etc.
-    A the very least occurrences should be an FK to a meta-data table with this info.
+    The text and number of times the response has occurred are stored.
     """
 
     statement = models.ForeignKey(
