@@ -250,7 +250,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(self.statement1)
 
         results = self.adapter.filter(
-            in_response_to=[Response("Maybe")]
+            in_response_to="Maybe"
         )
         self.assertEqual(len(results), 0)
 

@@ -55,7 +55,7 @@ class DjangoStorageAdapter(StorageAdapter):
             if responses:
                 kwargs['in_response__response__text__in'] = []
                 for response in responses:
-                    kwargs['in_response__response__text__in'].append(response.response.text)
+                    kwargs['in_response__response__text__in'].append(response)
             else:
                 kwargs['in_response'] = None
 

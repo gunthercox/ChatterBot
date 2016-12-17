@@ -277,9 +277,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
     def test_filter_in_response_to_no_matches(self):
         self.adapter.update(self.statement1)
 
-        results = self.adapter.filter(
-            in_response_to=[Response("Maybe")]
-        )
+        results = self.adapter.filter(in_response_to="Maybe")
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):

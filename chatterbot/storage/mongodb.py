@@ -170,7 +170,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         if 'in_response_to' in kwargs:
             serialized_responses = []
             for response in kwargs['in_response_to']:
-                serialized_responses.append({'text': response.text})
+                serialized_responses.append({'text': response})
 
             query = query.statement_response_list_equals(serialized_responses)
             del kwargs['in_response_to']
