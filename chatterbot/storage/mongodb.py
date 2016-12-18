@@ -1,5 +1,5 @@
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Response
 
 
 class Query(object):
@@ -126,14 +126,14 @@ class MongoDatabaseAdapter(StorageAdapter):
             values.get('in_response_to', [])
         )
 
-        return Statement(statement_text, **values)
+        return self.Statement(statement_text, **values)
 
     def deserialize_responses(self, response_list):
         """
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = Statement('')
+        proxy_statement = self.Statement('')
 
         for response in response_list:
             text = response['text']
@@ -157,7 +157,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             statement_data.get('in_response_to', [])
         )
 
-        return Statement(statement_text, **statement_data)
+        return self.Statement(statement_text, **statement_data)
 
     def filter(self, **kwargs):
         """
