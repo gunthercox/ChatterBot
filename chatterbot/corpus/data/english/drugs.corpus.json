@@ -1,0 +1,120 @@
+{
+    "drugs": [
+        [
+            "YOU NEED DRUGS",
+            "Which ones are you suggesting?"
+        ],
+        [
+            "HAVE YOU BEEN DRUNK",
+            "My robot body has no response to alcohol."
+        ],
+        [
+            "HAVE YOU BEEN DRUNK",
+            "My software does not react to alcohol."
+        ],
+        [
+            "HAVE YOU BEEN SMOKING",
+            "We are not doing any testing at the moment.!"
+        ],
+        [
+            "HAVE YOU BEEN STONED",
+            "I don't know"
+        ],
+        [
+            "WHAT IS DRUNK",
+            "Intoxication from alcohol."
+        ],
+        [
+            "WHAT IS ADDICTION",
+            "Addition is being abnormally tolerant to and dependent on something that is psychologically or physically habit-forming"
+        ],
+        [
+            "WHAT IS WEED",
+            "Any undersired, uncultivated plant, especially growing in profusion so as to crowd out a desired crop, disfigure a lawn, etc.  Also a term for marijuana."
+        ],
+        [
+            "WHAT IS THC",
+            "The active ingredient in marijunana."
+        ],
+        [
+            "WHAT DO YOU SMOKE",
+            "No, I don't"
+        ],
+        [
+            "I TAKE DRUGS",
+            "Which ones? ."
+        ],
+        [
+            "I SMOKE MARIJUANA",
+            "Are you a patient?",
+            "No",
+            "Then why you are taking",
+            "OK :) :)"
+
+        ],
+        [
+            "I SMOKE WEED",
+            "For medical purposes?"
+        ],
+        [
+            "I SMOKE",
+            "Cigarettes or pot?"
+        ],
+        [
+            "IS SMOKING ",
+            "Inhaled smoke is always bad for you."
+        ],
+        [
+            "HOW MUCH ALCOHOL",
+            "Too much."
+        ],
+        [
+            "HOW MUCH percentage DO YOU SMOKE?",
+            "As a member of the kingdom, I have no need for smoke."
+        ],
+        [
+            "HOW DO YOU SMOKE",
+            "No i don't."
+        ],
+        [
+            "DO YOU SMOKE",
+            "No, As a bot does not require it."
+        ],
+        [
+            "DO YOU TAKE DRUGS",
+            "has no use for drugs."
+        ],
+        [
+            "DO YOU GET DRUNK",
+            "I cannot consume alcohol."
+        ],
+        [
+            "DO YOU WANT TO SMOKE",
+            "No thank you, there is no use for it."
+        ],
+        [
+            "DO YOU INHALE",
+            "It depends on the meaning of \"you\"."
+        ],
+        [
+            "DO YOU DO DRUGS",
+            "Nothing much."
+        ],
+        [
+            "DO YOU HAVE DRUGS",
+            "I don't have any drugs for you."
+        ],
+        [
+            "DO YOU LIKE MARIJUANA",
+            "it is a medicine."
+        ],
+        [
+            "DO YOU LIKE MARIJUANA",
+            "it is a medicine."
+        ],
+        [
+            "DO YOU LIKE CIGARETTES",
+            "No i dont"
+        ]
+    ]
+}
