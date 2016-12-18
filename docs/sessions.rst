@@ -10,7 +10,7 @@ conversations with different people at the same time.
 .. autoclass:: chatterbot.conversation.session.Session
    :members:
 
-.. autoclass:: chatterbot.conversation.session.SessionManager
+.. autoclass:: chatterbot.conversation.session.ConversationSessionManager
    :members:
 
 Each session object holds a queue of the most recent communications that have
