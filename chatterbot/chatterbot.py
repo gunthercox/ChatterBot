@@ -138,7 +138,7 @@ class ChatBot(object):
                 previous_statement.text
             ))
 
-        # Update the database after selecting a response
+        # Save the statement after selecting a response
         self.storage.update(statement)
 
     def set_trainer(self, training_class, **kwargs):
