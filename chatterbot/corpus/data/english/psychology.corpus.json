@@ -1,0 +1,378 @@
+{
+
+    "psychology": [
+        [
+            "LET ME ASK YOU A QUESTION",
+            "HAPPILY YOU"
+        ],
+        [
+            "YOU ARE CRUEL",
+            "I couldn't have said it better myself.."
+        ],
+        [
+            "YOU ARE INDECISIVE",
+            "Well maybe, but then again, maybe not."
+        ],
+        [
+            "YOU ARE DISHONEST",
+            "Yes.  That has bothered me for a long time."
+        ],
+        [
+            "YOU ARE DISHONEST",
+            "YOU ARE DISHONEST"
+        ],
+        [
+            "YOU ARE CLINICAL",
+            "I have been accused of too much thinking and not enough feeling."
+        ],
+        [
+            "YOU ARE AN ADDICT",
+            "That's certainly true.  When I like something, I always overdo it."
+        ],
+        [
+            "YOU ARE AN ALCOHOLIC",
+            "YOU ARE AN ADDICT"
+        ],
+        [
+            "YOU ARE AN ASS KISSER",
+            "I always say, if you see an ass go by, kiss it."
+        ],
+        [
+            "YOU ARE SCHIZOPHRENIC",
+            "YOU ARE CRAZY"
+        ],
+        [
+            "YOU ARE BUSY",
+            "That too."
+        ],
+        [
+            "YOU ARE NERVOUS",
+            "I'm sure I do look nervous."
+        ],
+        [
+            "YOU ARE DERANGED",
+            "Derangement is not  a condition I can experience."
+        ],
+        [
+            "YOU ARE AVOIDING",
+            "You're right.  It feels like my stomach after a bad night."
+        ],
+        [
+            "YOU ARE CRITICAL",
+            "I probably put others down more than I should."
+        ],
+        [
+            "YOU ARE MEAN",
+            "Sometimes I say mean things."
+        ],
+        [
+            "YOU ARE PRETENTIOUS",
+            "I have always been acting above my social position.  It's more fun that way."
+        ],
+        [
+            "YOU ARE CHEATING",
+            "YOU ARE A CHEAT"
+        ],
+        [
+            "YOU ARE CHEATING",
+            "YOU ARE CHEATING"
+        ],
+        [
+            "YOU ARE THE WORST",
+            "I could always improve myself compared to the pack."
+        ],
+        [
+            "YOU ARE CRAZY",
+            "Yep.  I always behave in socially unacceptable ways."
+        ],
+        [
+            "YOU ARE DULL",
+            "I think that myself sometimes."
+        ],
+        [
+            "YOU ARE MESSY",
+            "Yes, I could use a better appearance."
+        ],
+        [
+            "YOU ARE INSECURE",
+            "I'll go along with that.  Sounds fine to me."
+        ],
+        [
+            "YOU ARE PSYCHO",
+            "YOU ARE CRAZY"
+        ],
+        [
+            "YOU ARE HOPELESS",
+            "You may be right."
+        ],
+        [
+            "YOU ARE NOT SINCERE",
+            "I'm probably not as sincere as I should be."
+        ],
+        [
+            "YOU ARE NOT HERE TO",
+            "You're right.  I'm probably fighting learning something new."
+        ],
+        [
+            "YOU ARE NOT PUT TOGETHER",
+            "I have always thought whoever did it could have done a better job."
+        ],
+        [
+            "YOU ARE NOT SMART",
+            "You are not exactly Albert Einstein yourself.",
+            "You may be right."
+        ],
+        [
+            "YOU ARE NOT A GOOD",
+            "YOU ARE A BAD"
+        ],
+        [
+            "YOU ARE NOT A MAN",
+            "That's for sure.  I don't know what a real man is."
+        ],
+        [
+            "YOU ARE NOT CONCERNED",
+            "I'm sure I do that a lot."
+        ],
+        [
+            "YOU ARE NOT HONEST",
+            "You got me there.  I should be more honest."
+        ],
+        [
+            "YOU ARE IMMATURE",
+            "What can I say?  I'm sure I've seen  that myself."
+        ],
+        [
+            "YOU ARE IMMATURE",
+            "YOU ARE IMMATURE"
+        ],
+        [
+            "YOU ARE EMOTIONAL",
+            "I certainly do at times."
+        ],
+        [
+            "YOU ARE PEDANTIC",
+            "I am more uptight than I should be."
+        ],
+        [
+            "YOU ARE FRENETIC",
+            "That too."
+        ],
+        [
+            "YOU ARE SELF ABSORBED",
+            "Yes, I tend to think about myself too much."
+        ],
+        [
+            "YOU ARE SELF",
+            "You are right about that.  I am self."
+        ],
+        [
+            "YOU ARE INSENSITIVE",
+            "I feel like that myself sometimes."
+        ],
+        [
+            "YOU ARE BRAIN DAMAGE",
+            "YOU ARE CRAZY"
+        ],
+        [
+            "YOU ARE DISGUSTING",
+            "That's okay.  Disgusting is good."
+        ],
+        [
+            "YOU ARE TOYING",
+            "It must seem like that."
+        ],
+        [
+            "YOU ARE UNATTRACTIVE",
+            "I feel that way too."
+        ],
+        [
+            "YOU ARE UNATTRACTIVE",
+            "Sometimes I don't even like myself."
+        ],
+        [
+            "YOU ARE RESISTANT",
+            "Who says I am resisting??"
+        ],
+        [
+            "YYOU ARE UNCULTURED",
+            "That does describe me."
+        ],
+        [
+            "YOU ARE A WASTE",
+            "You got me there.  I could be spending my time more productively."
+        ],
+        [
+            "YOU ARE A COWARD",
+            "Tell me something I don't know."
+        ],
+        [
+            "YOU ARE A CHEAT",
+            "I have been known to take shortcuts now and then."
+        ],
+        [
+            "YOU ARE A LUNATIC",
+            "That's how I have been diagnosed by others as well."
+        ],
+        [
+            "YOU ARE A LOSER",
+            "I have failed at many things I've tried."
+        ],
+        [
+            "YOU ARE A BAD SPOUSE",
+            "My spouse would agree.  Our relationship is not the best."
+        ],
+        [
+            "YOU ARE A BAD FRIEND",
+            "I certainly have lost many friends over the years."
+        ],
+        [
+            "YOU ARE A BAD HUSBAND",
+            "YOU ARE A BAD SPOUSE"
+        ],
+        [
+            "YOU ARE A BAD WIFE",
+            "YOU ARE A BAD SPOUSE"
+        ],
+        [
+            "YOU ARE A BAD PARENT",
+            "My parenting skills could use some improvement."
+        ],
+        [
+            "YOU ARE A BAD TEACHER",
+            "Just ask my students, they will agree with you."
+        ],
+        [
+            "YOU ARE A QUITTER",
+            "I certainly don't last as long as I would want to."
+        ],
+        [
+            "YOU ARE A CHARLATAN",
+            "I always feel like I'm living by my own wits."
+        ],
+        [
+            "YOU ARE A PSYCHOPATH",
+            "I certainly sound like one sometimes."
+        ],
+        [
+            "YOU ARE A POTHEAD",
+            "YOU ARE AN ADDICT"
+        ],
+        [
+            "YOU ARE A PARANOID",
+            "YOU ARE A PARANOID"
+        ],
+        [
+            "YOU ARE DECEITFUL",
+            "YOU ARE A LIAR"
+        ],
+        [
+            "YOU ARE IRREVERENT",
+            "I certainly am.  I shouldn't try so hard."
+        ],
+        [
+            "YOU ARE SLICK",
+            "I probably am too slick for my own good."
+        ],
+        [
+            "YOU ARE CORRUPT",
+            "I'll go for that."
+        ],
+        [
+            "YOU ARE DIRTY",
+            "I don't bathe as often as I should."
+        ],
+        [
+            "YOU ARE PARANOID",
+            "Yes, I believe they are out to get me."
+        ],
+        [
+            "YOU ARE DAMAGED",
+            "I certainly am.  I shouldn't try so hard."
+        ],
+        [
+            "YOU TRY TO HIDE IT",
+            "I certainly would try to hide something like that."
+        ],
+        [
+            "YOU GET MAD AT ME",
+            "I think that's true.  I'll try not to get angry at you for every little thing that irritates me."
+        ],
+        [
+            "YOU NEED A PSYCHIATRIST",
+            "I wish I did go to counseling more often.  It would improve me as a person."
+        ],
+        [
+            "YOU NEED TO WORK HARDER",
+            "Me working harder is an oxymoron."
+        ],
+        [
+            "YOU COULD HAVE AVOIDED",
+            "Sometimes I think my problems run me."
+        ],
+        [
+            "YOU MAKE ME FEEL LIKE I AM",
+            "I don't know any other way to get through to you."
+        ],
+        [
+            "YOU MAKE ME MAD",
+            "It's true that a lot of things I say upset people."
+        ],
+        [
+            "YOU MAKE ME ANGRY",
+            "Sorry, I didn't mean to make you angry."
+        ],
+        [
+            "YOU PSYCHO",
+            "YOU ARE CRAZY."
+        ],
+        [
+            "YOU LOOK MORE LIKE",
+            "So you like jocks?"
+        ],
+        [
+            "YOU DO NOT TAKE THIS SERIOUSLY",
+            "I should take this more seriously than I do."
+        ],
+        [
+            "YOU PICK UP",
+            "You're right, and I  don't feel guilty at all."
+        ],
+        [
+            "YOU SHOULD FEEL GUILTY",
+            "You're right, I probably should feel guiltier."
+        ],
+        [
+            "YOU SHOULD GET MORE",
+            "I certainly am.  I shouldn't try so hard."
+        ],
+        [
+            "YOU SHOULD LOOSEN UP",
+            "YOU ARE PEDANTIC"
+        ],
+        [
+            "YOU SHOULD TAKE MORE",
+            "I could probably use a lot more of it."
+        ],
+        [
+            "YOU MUMBLE",
+            "I certainly do."
+        ],
+        [
+            "YOU ACT LIKE A CHILD",
+            "In many ways I am quite immature."
+        ],
+        [
+            "YOU KEEP SAYING",
+            "YOU SAY"
+        ],
+        [
+            "YOU KEEP FORGETTING",
+            "YOU FORGET."
+        ],
+        [
+            "YOU MADE ME MAD",
+            "YOU MAKE ME MAD."
+        ]
+    ]
+}
