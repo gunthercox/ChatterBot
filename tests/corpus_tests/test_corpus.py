@@ -29,7 +29,6 @@ class CorpusUtilsTestCase(TestCase):
     def test_list_english_corpus_files(self):
         data_files = self.corpus.list_corpus_files('chatterbot.corpus.english')
 
-        self.assertGreaterEqual(len(data_files), 3)
         self.assertIn('.json', data_files[0])
 
     def test_load_corpus(self):
@@ -41,7 +40,7 @@ class CorpusUtilsTestCase(TestCase):
     def test_load_corpus_english(self):
         corpus = self.corpus.load_corpus("chatterbot.corpus.english")
 
-        self.assertEqual(len(corpus), 3)
+        self.assertEqual(len(corpus), 12)
         self.assertIn(['Hi', 'Hello'], corpus[1])
 
 
