@@ -45,7 +45,7 @@ class StatementIntegrationTestCase(TestCase):
         self.object.add_response(ResponseObject('Hello'))
         model_response_statement = StatementModel.objects.create(text='Hello')
         self.model.save()
-        self.model.in_response_to.create(statement=self.model, response=model_response_statement)
+        self.model.in_response.create(statement=self.model, response=model_response_statement)
 
         object_removed = self.object.remove_response('Hello')
         model_removed = self.model.remove_response('Hello')
@@ -57,7 +57,7 @@ class StatementIntegrationTestCase(TestCase):
         self.object.add_response(ResponseObject('Hello', occurrence=2))
         model_response_statement = StatementModel.objects.create(text='Hello')
         self.model.save()
-        self.model.in_response_to.create(
+        self.model.in_response.create(
             statement=self.model, response=model_response_statement, occurrence=2
         )
 
@@ -72,3 +72,7 @@ class StatementIntegrationTestCase(TestCase):
         model_data = self.model.serialize()
 
         self.assertEqual(object_data, model_data)
+
+    def test_response_statement_cache(self):
+        self.assertTrue(hasattr(self.object, 'response_statement_cache'))
+        self.assertTrue(hasattr(self.model, 'response_statement_cache'))

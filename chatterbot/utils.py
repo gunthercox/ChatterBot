@@ -2,6 +2,7 @@
 ChatterBot utility functions
 """
 
+
 def clean_whitespace(text):
     """
     Remove any extra whitespace and line breaks as needed.
@@ -92,10 +93,9 @@ def validate_adapter_class(validate_class, adapter_class):
     :param adapter_class: The class type to check against.
     :type adapter_class: class
 
-    :raises: InvalidAdapterException
+    :raises: Adapter.InvalidAdapterTypeException
     """
     from .adapters import Adapter
-    from .chatterbot import ChatBot
 
     # If a dictionary was passed in, check if it has an import_path attribute
     if isinstance(validate_class, dict):
@@ -103,14 +103,14 @@ def validate_adapter_class(validate_class, adapter_class):
         validate_class = validate_class.get('import_path')
 
         if not validate_class:
-            raise ChatBot.InvalidAdapterException(
+            raise Adapter.InvalidAdapterTypeException(
                 'The dictionary {} must contain a value for "import_path"'.format(
                     str(origional_data)
                 )
             )
 
     if not issubclass(import_module(validate_class), Adapter):
-        raise ChatBot.InvalidAdapterException(
+        raise Adapter.InvalidAdapterTypeException(
             '{} must be a subclass of {}'.format(
                 validate_class,
                 Adapter.__name__
@@ -118,7 +118,7 @@ def validate_adapter_class(validate_class, adapter_class):
         )
 
     if not issubclass(import_module(validate_class), adapter_class):
-        raise ChatBot.InvalidAdapterException(
+        raise Adapter.InvalidAdapterTypeException(
             '{} must be a subclass of {}'.format(
                 validate_class,
                 adapter_class.__name__

@@ -148,6 +148,7 @@ def sentiment_comparison(statement, other_statement):
 
     return 1.0 - difference
 
+
 def jaccard_similarity(statement, other_statement, threshold=0.5):
     """
     Calculates the similarity of two statements based on the Jaccard index.
@@ -201,14 +202,14 @@ def jaccard_similarity(statement, other_statement, threshold=0.5):
     ratio = 0
     pos_a = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a)))
     pos_b = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b)))
-    lemmae_a = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_a \
-                    if pos == wordnet.NOUN and token.strip(string.punctuation) not in stopwords]
-    lemmae_b = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_b \
-                    if pos == wordnet.NOUN and token.strip(string.punctuation) not in stopwords]
+    lemma_a = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_a
+               if pos == wordnet.NOUN and token.strip(string.punctuation) not in stopwords]
+    lemma_b = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_b
+               if pos == wordnet.NOUN and token.strip(string.punctuation) not in stopwords]
 
     # Calculate Jaccard similarity
     try:
-        ratio = len(set(lemmae_a).intersection(lemmae_b)) / float(len(set(lemmae_a).union(lemmae_b)))
+        ratio = len(set(lemma_a).intersection(lemma_b)) / float(len(set(lemma_a).union(lemma_b)))
     except Exception as e:
         print('Error', e)
     return ratio >= threshold

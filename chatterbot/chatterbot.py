@@ -8,11 +8,11 @@ from . import utils
 
 class ChatBot(object):
     """
-    A conversational dialog ChatBot.
+    A conversational dialog chat bot.
     """
 
     def __init__(self, name, **kwargs):
-        from .conversation.session import SessionManager
+        from .conversation.session import ConversationSessionManager
         from .logic import MultiLogicAdapter
 
         self.name = name
@@ -62,7 +62,7 @@ class ChatBot(object):
         self.trainer = TrainerClass(self.storage, **kwargs)
         self.training_data = kwargs.get('training_data')
 
-        self.conversation_sessions = SessionManager()
+        self.conversation_sessions = ConversationSessionManager()
         self.default_session = self.conversation_sessions.new()
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
@@ -138,7 +138,7 @@ class ChatBot(object):
                 previous_statement.text
             ))
 
-        # Update the database after selecting a response
+        # Save the statement after selecting a response
         self.storage.update(statement)
 
     def set_trainer(self, training_class, **kwargs):
@@ -171,14 +171,3 @@ class ChatBot(object):
         name = data.pop('name')
 
         return ChatBot(name, **data)
-
-    class InvalidAdapterException(Exception):
-        """
-        An exception to be raised when an adapter of an unexpected class type is recieved.
-        """
-
-        def __init__(self, value='Recieved an unexpected adapter setting.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)

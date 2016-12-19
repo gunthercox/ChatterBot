@@ -3,6 +3,7 @@ from time import sleep
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
 
+
 class HipChat(InputAdapter):
     """
     An input adapter that allows a ChatterBot instance to get

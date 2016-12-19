@@ -82,7 +82,7 @@ class Microsoft(InputAdapter):
 
         if data['messages']:
             last_msg = int(data['watermark'])
-            return data['messages'][last_msg-1]
+            return data['messages'][last_msg - 1]
         return None
 
     def process_input(self, statement):
@@ -113,4 +113,3 @@ class Microsoft(InputAdapter):
 
         def __str__(self):
             return repr(self.value)
-

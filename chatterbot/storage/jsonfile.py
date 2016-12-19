@@ -1,6 +1,6 @@
 import warnings
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Response
 
 
 class JsonFileStorageAdapter(StorageAdapter):
@@ -69,7 +69,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = Statement('')
+        proxy_statement = self.Statement('')
 
         for response in response_list:
             data = response.copy()
@@ -98,7 +98,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         # Remove the text attribute from the values
         text = statement_data.pop('text')
 
-        return Statement(text, **statement_data)
+        return self.Statement(text, **statement_data)
 
     def _all_kwargs_match_values(self, kwarguments, values):
         for kwarg in kwarguments:
@@ -159,7 +159,7 @@ class JsonFileStorageAdapter(StorageAdapter):
             for response_statement in statement.in_response_to:
                 response = self.find(response_statement.text)
                 if not response:
-                    response = Statement(response_statement.text)
+                    response = self.Statement(response_statement.text)
                     self.update(response)
 
         return statement

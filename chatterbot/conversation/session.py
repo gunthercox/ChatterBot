@@ -16,7 +16,7 @@ class Session(object):
         self.conversation = ResponseQueue(maxsize=10)
 
 
-class SessionManager(object):
+class ConversationSessionManager(object):
     """
     Object to hold and manage multiple chat sessions.
     """

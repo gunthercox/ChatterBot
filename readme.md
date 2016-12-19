@@ -95,6 +95,9 @@ directory in this project's git repository.
 
 There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
 
+
+Chat with **chatterbot**? Try it from [here](https://chatterbot-live-example.herokuapp.com/). Hosted [GitHub Repo](https://github.com/vkosuri/chatterbot-live-example) 
+
 # History
 
 See release notes for changes https://github.com/gunthercox/ChatterBot/releases
