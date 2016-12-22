@@ -98,6 +98,8 @@ There is also an example [Django project using ChatterBot](https://github.com/gu
 
 Chat with **chatterbot**? Try it from [here](https://chatterbot-live-example.herokuapp.com/). Hosted [GitHub Repo](https://github.com/vkosuri/chatterbot-live-example) 
 
+Chat with *JimTheBot*, a **chatterbot** instance hosted by @sgoblin at: [rhubarb.sgoblin.com](https://rhubarb.sgoblin.com). Code for bot is [here](https://gist.github.com/sgoblin/d05189bb31645a6c63e16d666bbce090).
+
 # History
 
 See release notes for changes https://github.com/gunthercox/ChatterBot/releases
