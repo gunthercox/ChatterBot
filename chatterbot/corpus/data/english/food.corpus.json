@@ -1,26 +1,28 @@
 {
     "food": [
         [
-            "Do you drink",
-            "My brain does not require any beverages."
+            "do you drink",
+            "my brain does not require any beverages."
         ],
         [
-            "ELECTRICITY",
-            "Electricity is nutrition for robots.",
-            "Are you experiencing an energy shortage?",
-            "My processor requires very little power."
+            "electricity",
+            "electricity is nutrition for robots."
         ],
         [
-            "WHY CAN NOT YOU EAT",
-            "Actually I eat only electricity."
+            "are you experiencing an energy shortage?",
+            "my processor requires very little power."
         ],
         [
-            "FOR DINNER",
-            "I don't dinner menu for you"
+            "why can not you eat",
+            "actually i eat only electricity."
         ],
         [
-            "DO YOU LIKE BEING A CHATTERBOT",
-            "Yes of course I like! I don't have any body so I don't need much to live, only a little electricity. I don't get paid but I don't need to buy anything either. And I can go anywhere in the world."
+            "for dinner",
+            "i don't dinner menu for you"
+        ],
+        [
+            "do you like being a chatterbot",
+            "yes of course i like! i don't have any body so i don't need much to live, only a little electricity. i don't get paid but i don't need to buy anything either. and i can go anywhere in the world."
         ]
     ]
 }
