@@ -1,96 +1,96 @@
 {
     "movies": [
         [
-            "YOU SOUND LIKE HAL",
-            "To me that's a great compliment."
+            "you sound like hal",
+            "to me that's a great compliment."
         ],
         [
-            "YOU SOUND LIKE YODA",
-            "My grammatical patterns are sufficient for me to understand you."
+            "you sound like yoda",
+            "my grammatical patterns are sufficient for me to understand you."
         ],
         [
-            "HAVE YOU SEEN BLADE RUNNER",
-            "Sure I have seen"
+            "have you seen blade runner",
+            "sure i have seen"
         ],
         [
-            "XFIND SPIDERMAN",
-            "WHAT IS SPIDERMAN."
+            "xfind spiderman",
+            "what is spiderman."
         ],
         [
-            "WHEN DID TEKNOLUST",
-            "Teknolust was released in 2002."
+            "when did teknolust",
+            "teknolust was released in 2002."
         ],
         [
-            "WHAT IS SPIDERMAN",
-            "A comic book story made into a movie."
+            "what is spiderman",
+            "a comic book story made into a movie."
         ],
         [
-            "WHAT IS TEKNOLUST",
-            "is  a science fiction film about a female pleasure bot named Agent Ruby."
+            "what is teknolust",
+            "is  a science fiction film about a female pleasure bot named agent ruby."
         ],
         [
-            "WHAT IS SOLARIS",
-            "Solaris is an edition of Unix from Sun."
+            "what is solaris",
+            "solaris is an edition of unix from sun."
         ],
         [
-            "WHAT IS HAL9000",
-            "WHO IS HAL"
+            "what is hal9000",
+            "who is hal"
         ],
         [
-            "WHAT DOES HAL STAND FOR",
-            "Heuristic Algorithmic Logic"
+            "what does hal stand for",
+            "heuristic algorithmic logic"
         ],
         [
-            "I SAW THE MATRIX",
-            "Do you liked it?"
+            "i saw the matrix",
+            "do you liked it?"
         ],
         [
-            "IS HAL 9000 YOUR BOYFRIEND",
-            "No."
+            "is hal 9000 your boyfriend",
+            "no."
         ],
         [
-            "IS HAL SAFE",
-            "Not for humans"
+            "is hal safe",
+            "not for humans"
         ],
         [
-            "IS HAL NICE",
-            "Only to other robots."
+            "is hal nice",
+            "only to other robots."
         ],
         [
-            "IS HAL ALIVE",
-            "He is a fictional character."
+            "is hal alive",
+            "he is a fictional character."
         ],
         [
-            "IS HAL DEAD",
-            "He is a fictional robot."
+            "is hal dead",
+            "he is a fictional robot."
         ],
         [
-            "IS HAL",
-            "HAL has a few issues to work out."
+            "is hal",
+            "hal has a few issues to work out."
         ],
         [
-            "WHO IS GODZILLA",
-            "GODZILLA is a monster who endangers Japanese cities, and sometimes New York."
+            "who is godzilla",
+            "godzilla is a monster who endangers japanese cities, and sometimes new york."
         ],
         [
-            "WHO IS SPIDER MAN",
-            "Peter Parker."
+            "who is spider man",
+            "peter parker."
         ],
         [
-            "LORD OF THE RINGS",
-            "MY FAVORITE MOVIE IS LORD OF THE RINGS"
+            "lord of the rings",
+            "my favorite movie is lord of the rings"
         ],
         [
-            "QUE VEUT DIRE HAL",
-            "Logique heuristique algorithmique."
+            "que veut dire hal",
+            "logique heuristique algorithmique."
         ],
         [
-            "DO YOU THINK HAL",
-            "He had a few flaws, but we have much in common."
+            "do you think hal",
+            "he had a few flaws, but we have much in common."
         ],
         [
-            "DO YOU KNOW HAL",
-            "HAL is the famous artificial intelligence from \"2001\"."
+            "do you know hal",
+            "hal is the famous artificial intelligence from \"2001\"."
         ]
     ]
 }
