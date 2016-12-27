@@ -33,6 +33,8 @@ class DjangoStorageAdapter(StorageAdapter):
         from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
         from django.db.models import Q
 
+        order = kwargs.pop('order_by', None)
+
         RESPONSE_CONTAINS = 'in_response_to__contains'
 
         if RESPONSE_CONTAINS in kwargs:
@@ -64,7 +66,12 @@ class DjangoStorageAdapter(StorageAdapter):
             value = kwargs['in_response__response__text']
             parameters['responses__statement__text'] = value
 
-        return StatementModel.objects.filter(Q(**kwargs) | Q(**parameters))
+        statements = StatementModel.objects.filter(Q(**kwargs) | Q(**parameters))
+
+        if order:
+            statements.order_by(order)
+
+        return statements
 
     def update(self, statement, **kwargs):
         """
