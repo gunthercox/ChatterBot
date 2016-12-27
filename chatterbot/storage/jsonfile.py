@@ -129,7 +129,11 @@ class JsonFileStorageAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
+        from operator import attrgetter
+
         results = []
+
+        order = kwargs.pop('order_by', None)
 
         for key in self._keys():
             values = self.database.data(key=key)
@@ -140,6 +144,10 @@ class JsonFileStorageAdapter(StorageAdapter):
             if self._all_kwargs_match_values(kwargs, values):
 
                 results.append(self.json_to_object(values))
+
+        if order:
+            # Do an in place sort of the results
+            results.sort(key=attrgetter(order), reverse=False)
 
         return results
 

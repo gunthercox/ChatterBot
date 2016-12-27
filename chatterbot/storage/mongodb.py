@@ -88,10 +88,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         from pymongo import MongoClient
 
         self.database_name = self.kwargs.get(
-            "database", "chatterbot-database"
+            'database', 'chatterbot-database'
         )
         self.database_uri = self.kwargs.get(
-            "database_uri", "mongodb://localhost:27017/"
+            'database_uri', 'mongodb://localhost:27017/'
         )
 
         # Use the default host and port
@@ -164,7 +164,11 @@ class MongoDatabaseAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
+        import pymongo
+
         query = self.base_query
+
+        order_by = kwargs.pop('order_by', None)
 
         # Convert Response objects to data
         if 'in_response_to' in kwargs:
@@ -184,6 +188,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         query = query.raw(kwargs)
 
         matches = self.statements.find(query.value())
+
+        if order_by:
+            matches = matches.sort(order_by, pymongo.ASCENDING)
 
         results = []
 
