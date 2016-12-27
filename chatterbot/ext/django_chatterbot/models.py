@@ -3,7 +3,8 @@ from django.db import models
 
 class Statement(models.Model):
     """
-    A short (<255) character message that is part of a dialog.
+    A statement represents a single spoken entity, sentence or
+    phrase that someone can say.
     """
 
     text = models.CharField(
@@ -11,6 +12,11 @@ class Statement(models.Model):
         blank=False,
         null=False,
         max_length=255
+    )
+
+    created_at = models.DateTimeField(
+        auto_now_add=True,
+        help_text='The date and time that this statement was created at.'
     )
 
     extra_data = models.CharField(max_length=500)
