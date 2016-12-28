@@ -89,4 +89,4 @@ Consulte la [documentación de nose](https://nose.readthedocs.org/) para obtener
 
 # Historia
 
-Ver notas de cambios para la versión [https://github.com/gunthercox/ChatterBot/releases](https://github.com/gunthercox/ChatterBot/releases)
+Ver notas de cambios para la versión. [https://github.com/gunthercox/ChatterBot/releases](https://github.com/gunthercox/ChatterBot/releases)
