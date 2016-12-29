@@ -190,7 +190,14 @@ class MongoDatabaseAdapter(StorageAdapter):
         matches = self.statements.find(query.value())
 
         if order_by:
-            matches = matches.sort(order_by, pymongo.ASCENDING)
+
+            direction = pymongo.ASCENDING
+
+            # Sort so that newer datetimes appear first
+            if order_by == 'created_at':
+                direction = pymongo.DESCENDING
+
+            matches = matches.sort(order_by, direction)
 
         results = []
 

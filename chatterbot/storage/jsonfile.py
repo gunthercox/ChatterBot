@@ -133,7 +133,7 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         results = []
 
-        order = kwargs.pop('order_by', None)
+        order_by = kwargs.pop('order_by', None)
 
         for key in self._keys():
             values = self.database.data(key=key)
@@ -142,15 +142,15 @@ class JsonFileStorageAdapter(StorageAdapter):
             values['text'] = key
 
             if self._all_kwargs_match_values(kwargs, values):
-
                 results.append(self.json_to_object(values))
 
-        if order:
+        if order_by:
+
+            # Sort so that newer datetimes appear first
+            is_reverse = order_by == 'created_at'
+
             # Do an in place sort of the results
-            #results.sort(key=attrgetter(order), reverse=False)
-            #results.sort(key=lambda x: getattr(x, order))
-            #results = sorted(results, key=lambda x: getattr(x, order))
-            results = sorted(results, key=attrgetter(order), reverse=False)
+            results.sort(key=attrgetter(order_by), reverse=is_reverse)
 
         return results
 
