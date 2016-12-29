@@ -107,6 +107,7 @@ class Statement(models.Model):
 
         data['text'] = self.text
         data['in_response_to'] = []
+        data['created_at'] = self.created_at
         data['extra_data'] = json.loads(self.extra_data)
 
         for response in self.in_response.all():
