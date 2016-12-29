@@ -14,14 +14,6 @@ class LogicAdapter(Adapter):
         from chatterbot.comparisons import levenshtein_distance
         from chatterbot.response_selection import get_first_response
 
-        if 'tie_breaking_method' in kwargs:
-            raise DeprecationWarning(
-                'The parameter "tie_breaking_method" has been removed. ' +
-                'Instead, pass a callable to "response_selection_method". ' +
-                'See documentation for details: ' +
-                'http://chatterbot.readthedocs.io/en/latest/logic/response_selection.html#setting-the-response-selection-method'
-            )
-
         # Import string module parameters
         if 'statement_comparison_function' in kwargs:
             import_path = kwargs.get('statement_comparison_function')

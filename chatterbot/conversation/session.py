@@ -47,11 +47,3 @@ class ConversationSessionManager(object):
         session_id = str(session_id)
         if session_id in self.sessions:
             self.sessions[session_id].conversation.append(conversance)
-
-    def get_default(self):
-        import warnings
-        warnings.warn("get_default is deprecated. Use 'get' instead.", DeprecationWarning)
-
-    def update_default(self, conversance):
-        import warnings
-        warnings.warn("update_default is deprecated. Use 'update' instead.", DeprecationWarning)

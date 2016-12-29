@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.conversation import response_selection
+from chatterbot import response_selection
 from chatterbot.conversation import Statement, Response
 
 
