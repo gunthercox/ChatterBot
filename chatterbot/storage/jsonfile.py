@@ -145,9 +145,13 @@ class JsonFileStorageAdapter(StorageAdapter):
 
                 results.append(self.json_to_object(values))
 
+        def cmp_objs(a, b):
+            return getattr(a, order) == getattr(b, order)
+
         if order:
             # Do an in place sort of the results
-            results.sort(key=attrgetter(order), reverse=False)
+            #results.sort(key=attrgetter(order), reverse=False)
+            results.sort(cmp=cmp_objs)
 
         return results
 
