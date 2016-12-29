@@ -52,7 +52,8 @@ while True:
 
         # Update the conversation history for the bot
         # It is important that this happens last, after the learning step
-        bot.conversation_sessions.update_default(
+        bot.conversation_sessions.update(
+            bot.default_session.id_string,
             (statement, response, )
         )
 

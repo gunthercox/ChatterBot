@@ -113,7 +113,7 @@ class ChatBot(object):
         Return a response based on a given input statement.
         """
         if not session_id:
-            session = self.conversation_sessions.get_default()
+            session = self.conversation_sessions.get(self.default_session.id_string)
             session_id = str(session.uuid)
 
         self.storage.generate_base_query(self, session_id)
