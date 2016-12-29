@@ -148,7 +148,9 @@ class JsonFileStorageAdapter(StorageAdapter):
         if order:
             # Do an in place sort of the results
             #results.sort(key=attrgetter(order), reverse=False)
-            results.sort(cmp=lambda a, b: getattr(a, order) == getattr(b, order))
+            #results.sort(key=lambda x: getattr(x, order))
+            #results = sorted(results, key=lambda x: getattr(x, order))
+            results = sorted(results, key=attrgetter(order), reverse=False)
 
         return results
 

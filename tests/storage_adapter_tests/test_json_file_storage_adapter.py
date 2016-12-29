@@ -401,9 +401,12 @@ class JsonFileStorageOrderingTestCase(JsonAdapterTestCase):
 
         results = self.adapter.filter(order_by='created_at')
 
+        print(statement_a.created_at, statement_b.created_at)
+
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
         self.assertEqual(results[1], statement_b)
+        self.assertTrue(False)
 
 
 class ReadOnlyJsonFileStorageAdapterTestCase(JsonAdapterTestCase):
