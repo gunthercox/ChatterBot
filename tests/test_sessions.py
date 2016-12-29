@@ -48,17 +48,3 @@ class ConversationSessionManagerTestCase(TestCase):
         self.assertEqual(len(session_ids), 1)
         self.assertEqual(len(self.manager.get(session_id).conversation), 1)
         self.assertEqual(('A', 'B', ), self.manager.get(session_id).conversation[0])
-
-    def test_get_default(self):
-        session = self.manager.new()
-        returned_session = self.manager.get_default()
-
-        self.assertEqual(session.id_string, returned_session.id_string)
-
-    def test_update_default(self):
-        self.manager.new()
-        self.manager.update_default(('A', 'B', ))
-
-        self.assertEqual(len(self.manager.sessions.keys()), 1)
-        self.assertEqual(len(self.manager.get_default().conversation), 1)
-        self.assertEqual(('A', 'B', ), self.manager.get_default().conversation[0])

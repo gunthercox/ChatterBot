@@ -42,7 +42,9 @@ class ChatterBotResponseTests(ChatBotTestCase):
         """
         statement_text = "Wow!"
         response = self.chatbot.get_response(statement_text)
-        session = self.chatbot.conversation_sessions.get_default()
+        session = self.chatbot.conversation_sessions.get(
+            self.chatbot.default_session.id_string
+        )
 
         self.assertIn(statement_text, session.conversation[0])
         self.assertEqual(response, statement_text)

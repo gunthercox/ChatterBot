@@ -47,21 +47,3 @@ class ConversationSessionManager(object):
         session_id = str(session_id)
         if session_id in self.sessions:
             self.sessions[session_id].conversation.append(conversance)
-
-    def get_default(self):
-        """
-        Return the first and preferably only session.
-        """
-        if not self.sessions:
-            return None
-
-        session_id = list(self.sessions.keys())[0]
-        return self.sessions[session_id]
-
-    def update_default(self, conversance):
-        """
-        Add a conversance to the first and preferably only session.
-        """
-        if self.sessions:
-            session_id = list(self.sessions.keys())[0]
-            self.sessions[session_id].conversation.append(conversance)
