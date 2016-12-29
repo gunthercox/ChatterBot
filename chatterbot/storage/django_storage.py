@@ -69,7 +69,7 @@ class DjangoStorageAdapter(StorageAdapter):
         statements = StatementModel.objects.filter(Q(**kwargs) | Q(**parameters))
 
         if order:
-            statements.order_by(order)
+            statements = statements.order_by(order)
 
         return statements
 

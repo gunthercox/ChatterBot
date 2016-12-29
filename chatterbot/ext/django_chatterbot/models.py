@@ -1,4 +1,5 @@
 from django.db import models
+from django.utils import timezone
 
 
 class Statement(models.Model):
@@ -15,7 +16,7 @@ class Statement(models.Model):
     )
 
     created_at = models.DateTimeField(
-        auto_now_add=True,
+        default=timezone.now,
         help_text='The date and time that this statement was created at.'
     )
 
@@ -107,6 +108,7 @@ class Statement(models.Model):
 
         data['text'] = self.text
         data['in_response_to'] = []
+        data['created_at'] = self.created_at
         data['extra_data'] = json.loads(self.extra_data)
 
         for response in self.in_response.all():

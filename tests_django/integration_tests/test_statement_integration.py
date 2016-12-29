@@ -71,7 +71,11 @@ class StatementIntegrationTestCase(TestCase):
         object_data = self.object.serialize()
         model_data = self.model.serialize()
 
+        object_data_created_at = object_data.pop('created_at')
+        model_data_created_at = model_data.pop('created_at')
+
         self.assertEqual(object_data, model_data)
+        self.assertEqual(object_data_created_at.date(), model_data_created_at.date())
 
     def test_response_statement_cache(self):
         self.assertTrue(hasattr(self.object, 'response_statement_cache'))
