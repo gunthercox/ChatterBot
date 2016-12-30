@@ -1,4 +1,5 @@
 from django.test import TestCase
+from django.utils import timezone
 from chatterbot.conversation import Statement as StatementObject
 from chatterbot.conversation import Response as ResponseObject
 from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
@@ -12,8 +13,9 @@ class StatementIntegrationTestCase(TestCase):
 
     def setUp(self):
         super(StatementIntegrationTestCase, self).setUp()
-        self.object = StatementObject(text='_')
-        self.model = StatementModel(text='_')
+        date_created = timezone.now()
+        self.object = StatementObject(text='_', created_at=date_created)
+        self.model = StatementModel(text='_', created_at=date_created)
 
     def test_text(self):
         self.assertTrue(hasattr(self.object, 'text'))
