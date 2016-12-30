@@ -12,6 +12,7 @@ Django applications.
    settings
    training
    views
+   wsgi
 
 Installation
 ============
