@@ -162,7 +162,7 @@ Adapter defaults
 
 By default, ChatterBot uses the `JsonFileStorageAdapter` adapter for storage,
 the `BestMatch` for logic, the `VariableInputTypeAdapter` for input
-and the OutputFormatAdapter for output.
+and the `OutputAdapter` for output.
 
 Each adapter can be set by passing in the dot-notated import path to the constructor as shown.
 
@@ -172,7 +172,7 @@ Each adapter can be set by passing in the dot-notated import path to the constru
        "Elsie",
        storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
        input_adapter="chatterbot.input.VariableInputTypeAdapter",
-       output_adapter="chatterbot.output.OutputFormatAdapter",
+       output_adapter="chatterbot.output.OutputAdapter",
        logic_adapters=[
            "chatterbot.logic.BestMatch"
        ],

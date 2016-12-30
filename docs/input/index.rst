@@ -117,15 +117,8 @@ Be sure to also see the documentation for the :ref:`Microsoft output adapter <mi
        direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
    )
 
-Speech recognition
-==================
-
-Check out the `chatterbot-voice`_ package for more information on how to make
-your chat bot interact verbally with others.
-
 .. _strings: https://docs.python.org/2/library/string.html
 .. _dictionaries: https://docs.python.org/2/tutorial/datastructures.html#dictionaries
-.. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
 .. _HipChat: https://www.hipchat.com/
 .. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
 .. _Microsoft: https://docs.botframework.com/en-us/restapi/directline/#/Conversations
