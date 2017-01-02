@@ -29,4 +29,8 @@ Django settings.
        ]
    }
 
+.. note::
+
+   You can also specify paths to corpus files or directories of corpus files in the :code:`training_data` list.
+
 See the documentation for the :ref:`training-classes` for other training class options that can be used here.
