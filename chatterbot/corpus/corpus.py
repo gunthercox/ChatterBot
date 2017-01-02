@@ -11,6 +11,12 @@ class Corpus(object):
         """
         Reads a dotted file path and returns the file path.
         """
+
+        # If the operating system's file path seperator character is in the string
+        if os.sep in dotted_path or '/' in dotted_path:
+            # Assume the path is a valid file path
+            return dotted_path
+
         parts = dotted_path.split('.')
         if parts[0] == 'chatterbot':
             parts.pop(0)
