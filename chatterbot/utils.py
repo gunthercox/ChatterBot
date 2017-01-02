@@ -146,7 +146,7 @@ def input_function():
     return user_input
 
 
-def nltk_download_corpus(corpus_name):
+def nltk_download_corpus(resource_path):
     """
     Download the specified NLTK corpus file
     unless it has already been downloaded.
@@ -155,13 +155,24 @@ def nltk_download_corpus(corpus_name):
     """
     from nltk.data import find
     from nltk import download
+    from os.path import split
 
     # Download the wordnet data only if it is not already downloaded
-    zip_file = '{}.zip'.format(corpus_name)
+    _, corpus_name = split(resource_path)
+
+    ## From http://www.nltk.org/api/nltk.html ##
+    # When using find() to locate a directory contained in a zipfile,
+    # the resource name must end with the forward slash character.
+    # Otherwise, find() will not locate the directory.
+    ####
+    # Helps when resource_path=='sentiment/vader_lexicon''
+    if not resource_path.endswith('/'):
+        resource_path = resource_path + '/'
+
     downloaded = False
 
     try:
-        find(zip_file)
+        find(resource_path)
     except LookupError:
         download(corpus_name)
         downloaded = True

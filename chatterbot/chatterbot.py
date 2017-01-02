@@ -77,10 +77,10 @@ class ChatBot(object):
         from .utils import nltk_download_corpus
 
         # Download required NLTK corpora if they have not already been downloaded
-        nltk_download_corpus('stopwords')
-        nltk_download_corpus('wordnet')
-        nltk_download_corpus('punkt')
-        nltk_download_corpus('vader_lexicon')
+        nltk_download_corpus('corpora/stopwords')
+        nltk_download_corpus('corpora/wordnet')
+        nltk_download_corpus('tokenizers/punkt')
+        nltk_download_corpus('sentiment/vader_lexicon')
 
     def get_response(self, input_item, session_id=None):
         """
