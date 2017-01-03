@@ -51,7 +51,6 @@ class ChatBot(object):
 
         # Add the chatbot instance to each adapter to share information such as
         # the name, the current conversation, or other adapters
-        self.storage.set_chatbot(self)
         self.logic.set_chatbot(self)
         self.input.set_chatbot(self)
         self.output.set_chatbot(self)

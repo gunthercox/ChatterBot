@@ -109,14 +109,6 @@ def validate_adapter_class(validate_class, adapter_class):
                 )
             )
 
-    if not issubclass(import_module(validate_class), Adapter):
-        raise Adapter.InvalidAdapterTypeException(
-            '{} must be a subclass of {}'.format(
-                validate_class,
-                Adapter.__name__
-            )
-        )
-
     if not issubclass(import_module(validate_class), adapter_class):
         raise Adapter.InvalidAdapterTypeException(
             '{} must be a subclass of {}'.format(
