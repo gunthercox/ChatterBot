@@ -1,7 +1,7 @@
-from chatterbot.adapters import Adapter
+import logging
 
 
-class StorageAdapter(Adapter):
+class StorageAdapter(object):
     """
     This is an abstract class that represents the interface
     that all storage adapters should implement.
@@ -11,9 +11,8 @@ class StorageAdapter(Adapter):
         """
         Initialize common attributes shared by all storage adapters.
         """
-        super(StorageAdapter, self).__init__(**kwargs)
-
         self.kwargs = kwargs
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
         self.read_only = kwargs.get('read_only', False)
         self.adapter_supports_queries = True
         self.base_query = None
@@ -46,13 +45,17 @@ class StorageAdapter(Adapter):
         """
         Return the number of entries in the database.
         """
-        raise self.AdapterMethodNotImplementedError()
+        raise self.AdapterMethodNotImplementedError(
+            'The `count` method is not implemented by this adapter.'
+        )
 
     def find(self, statement_text):
         """
         Returns a object from the database if it exists
         """
-        raise self.AdapterMethodNotImplementedError()
+        raise self.AdapterMethodNotImplementedError(
+            'The `find` method is not implemented by this adapter.'
+        )
 
     def remove(self, statement_text):
         """
@@ -60,7 +63,9 @@ class StorageAdapter(Adapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
-        raise self.AdapterMethodNotImplementedError()
+        raise self.AdapterMethodNotImplementedError(
+            'The `remove` method is not implemented by this adapter.'
+        )
 
     def filter(self, **kwargs):
         """
@@ -70,26 +75,34 @@ class StorageAdapter(Adapter):
         all listed attributes and in which all values
         match for all listed attributes will be returned.
         """
-        raise self.AdapterMethodNotImplementedError()
+        raise self.AdapterMethodNotImplementedError(
+            'The `filter` method is not implemented by this adapter.'
+        )
 
     def update(self, statement):
         """
         Modifies an entry in the database.
         Creates an entry if one does not exist.
         """
-        raise self.AdapterMethodNotImplementedError()
+        raise self.AdapterMethodNotImplementedError(
+            'The `update` method is not implemented by this adapter.'
+        )
 
     def get_random(self):
         """
         Returns a random statement from the database
         """
-        raise self.AdapterMethodNotImplementedError()
+        raise self.AdapterMethodNotImplementedError(
+            'The `get_random` method is not implemented by this adapter.'
+        )
 
     def drop(self):
         """
         Drop the database attached to a given adapter.
         """
-        raise self.AdapterMethodNotImplementedError()
+        raise self.AdapterMethodNotImplementedError(
+            'The `drop` method is not implemented by this adapter.'
+        )
 
     def get_response_statements(self):
         """
@@ -119,8 +132,15 @@ class StorageAdapter(Adapter):
 
     class EmptyDatabaseException(Exception):
 
-        def __init__(self, value="The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database."):
+        def __init__(self, value='The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database.'):
             self.value = value
 
         def __str__(self):
             return repr(self.value)
+
+    class AdapterMethodNotImplementedError(NotImplementedError):
+        """
+        An exception to be raised when a storage adapter method has not been implemented.
+        Typically this indicates that the method should be implement in a subclass.
+        """
+        pass
