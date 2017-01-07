@@ -66,6 +66,9 @@ class ChatBot(object):
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
+        # Allow the bot to save input it receives so that it can learn
+        self.read_only = kwargs.get('read_only', False)
+
         if kwargs.get('initialize', True):
             self.initialize()
 
@@ -138,7 +141,8 @@ class ChatBot(object):
             ))
 
         # Save the statement after selecting a response
-        self.storage.update(statement)
+        if not self.read_only:
+            self.storage.update(statement)
 
     def set_trainer(self, training_class, **kwargs):
         """

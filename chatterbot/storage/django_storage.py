@@ -73,7 +73,7 @@ class DjangoStorageAdapter(StorageAdapter):
 
         return statements
 
-    def update(self, statement, **kwargs):
+    def update(self, statement):
         """
         Update the provided statement.
         """
@@ -81,28 +81,26 @@ class DjangoStorageAdapter(StorageAdapter):
 
         response_statement_cache = statement.response_statement_cache
 
-        # Do not alter the database unless writing is enabled
-        if not self.read_only:
-            statement, created = StatementModel.objects.get_or_create(text=statement.text)
-            statement.extra_data = getattr(statement, 'extra_data', '')
-            statement.save()
+        statement, created = StatementModel.objects.get_or_create(text=statement.text)
+        statement.extra_data = getattr(statement, 'extra_data', '')
+        statement.save()
 
-            for _response_statement in response_statement_cache:
+        for _response_statement in response_statement_cache:
 
-                response_statement, created = StatementModel.objects.get_or_create(
-                    text=_response_statement.text
-                )
-                response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
-                response_statement.save()
+            response_statement, created = StatementModel.objects.get_or_create(
+                text=_response_statement.text
+            )
+            response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
+            response_statement.save()
 
-                response, created = statement.in_response.get_or_create(
-                    statement=statement,
-                    response=response_statement
-                )
+            response, created = statement.in_response.get_or_create(
+                statement=statement,
+                response=response_statement
+            )
 
-                if not created:
-                    response.occurrence += 1
-                    response.save()
+            if not created:
+                response.occurrence += 1
+                response.save()
 
         return statement
 

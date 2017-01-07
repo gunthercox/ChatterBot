@@ -13,7 +13,6 @@ class StorageAdapter(object):
         """
         self.kwargs = kwargs
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
-        self.read_only = kwargs.get('read_only', False)
         self.adapter_supports_queries = True
         self.base_query = None
 
