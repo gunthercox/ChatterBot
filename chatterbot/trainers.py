@@ -87,7 +87,7 @@ class ListTrainer(Trainer):
                 )
 
             statement_history.append(statement)
-            self.storage.update(statement, force=True)
+            self.storage.update(statement)
 
 
 class ChatterBotCorpusTrainer(Trainer):
@@ -204,7 +204,7 @@ class TwitterTrainer(Trainer):
         for _ in range(0, 10):
             statements = self.get_statements()
             for statement in statements:
-                self.storage.update(statement, force=True)
+                self.storage.update(statement)
 
 
 class UbuntuCorpusTrainer(Trainer):
@@ -345,4 +345,4 @@ class UbuntuCorpusTrainer(Trainer):
                             )
 
                         statement_history.append(statement)
-                        self.storage.update(statement, force=True)
+                        self.storage.update(statement)

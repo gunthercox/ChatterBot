@@ -404,33 +404,3 @@ class JsonFileStorageOrderingTestCase(JsonAdapterTestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
         self.assertEqual(results[1], statement_b)
-
-
-class ReadOnlyJsonFileStorageAdapterTestCase(JsonAdapterTestCase):
-
-    def test_update_does_not_add_new_statement(self):
-        self.adapter.read_only = True
-
-        statement = Statement("New statement")
-        self.adapter.update(statement)
-
-        statement_found = self.adapter.find("New statement")
-        self.assertEqual(statement_found, None)
-
-    def test_update_does_not_modify_existing_statement(self):
-        statement = Statement("New statement")
-        self.adapter.update(statement)
-
-        self.adapter.read_only = True
-
-        statement.add_response(
-            Response("New response")
-        )
-
-        self.adapter.update(statement)
-
-        statement_found = self.adapter.find("New statement")
-        self.assertEqual(statement_found.text, statement.text)
-        self.assertEqual(
-            len(statement_found.in_response_to), 0
-        )

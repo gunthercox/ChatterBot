@@ -76,11 +76,6 @@ class MongoDatabaseAdapter(StorageAdapter):
     .. code-block:: python
 
        database_uri='mongodb://example.com:8100/'
-
-
-    :keyword read_only: If set to True, ChatterBot will not save information to the database.
-                        False by default.
-    :type read_only: bool
     """
 
     def __init__(self, **kwargs):
@@ -206,41 +201,38 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement, **kwargs):
+    def update(self, statement):
         from pymongo import UpdateOne
         from pymongo.errors import BulkWriteError
 
-        force = kwargs.get('force', False)
-        # Do not alter the database unless writing is enabled
-        if force or not self.read_only:
-            data = statement.serialize()
+        data = statement.serialize()
 
-            operations = []
+        operations = []
 
+        update_operation = UpdateOne(
+            {'text': statement.text},
+            {'$set': data},
+            upsert=True
+        )
+        operations.append(update_operation)
+
+        # Make sure that an entry for each response is saved
+        for response_dict in data.get('in_response_to', []):
+            response_text = response_dict.get('text')
+
+            # $setOnInsert does nothing if the document is not created
             update_operation = UpdateOne(
-                {'text': statement.text},
-                {'$set': data},
+                {'text': response_text},
+                {'$set': response_dict},
                 upsert=True
             )
             operations.append(update_operation)
 
-            # Make sure that an entry for each response is saved
-            for response_dict in data.get('in_response_to', []):
-                response_text = response_dict.get('text')
-
-                # $setOnInsert does nothing if the document is not created
-                update_operation = UpdateOne(
-                    {'text': response_text},
-                    {'$set': response_dict},
-                    upsert=True
-                )
-                operations.append(update_operation)
-
-            try:
-                self.statements.bulk_write(operations, ordered=False)
-            except BulkWriteError as bwe:
-                # Log the details of a bulk write error
-                self.logger.error(str(bwe.details))
+        try:
+            self.statements.bulk_write(operations, ordered=False)
+        except BulkWriteError as bwe:
+            # Log the details of a bulk write error
+            self.logger.error(str(bwe.details))
 
         return statement
 

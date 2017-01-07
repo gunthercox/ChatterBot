@@ -14,10 +14,6 @@ class JsonFileStorageAdapter(StorageAdapter):
     :keyword silence_performance_warning: If set to True, the :code:`UnsuitableForProductionWarning`
                                           will not be displayed.
     :type silence_performance_warning: bool
-
-    :keyword read_only: If set to True, ChatterBot will not save information to the database.
-                        False by default.
-    :type read_only: bool
     """
 
     def __init__(self, **kwargs):
@@ -154,24 +150,22 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement, **kwargs):
+    def update(self, statement):
         """
         Update a statement in the database.
         """
-        # Do not alter the database unless writing is enabled
-        if not self.read_only:
-            data = statement.serialize()
+        data = statement.serialize()
 
-            # Remove the text key from the data
-            del data['text']
-            self.database.data(key=statement.text, value=data)
+        # Remove the text key from the data
+        del data['text']
+        self.database.data(key=statement.text, value=data)
 
-            # Make sure that an entry for each response exists
-            for response_statement in statement.in_response_to:
-                response = self.find(response_statement.text)
-                if not response:
-                    response = self.Statement(response_statement.text)
-                    self.update(response)
+        # Make sure that an entry for each response exists
+        for response_statement in statement.in_response_to:
+            response = self.find(response_statement.text)
+            if not response:
+                response = self.Statement(response_statement.text)
+                self.update(response)
 
         return statement
 
