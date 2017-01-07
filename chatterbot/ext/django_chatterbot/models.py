@@ -146,3 +146,15 @@ class Response(models.Model):
             statement if len(statement) <= 20 else statement[:17] + '...',
             response if len(response) <= 40 else response[:37] + '...'
         )
+
+    def serialize(self):
+        """
+        :returns: A dictionary representation of the statement object.
+        :rtype: dict
+        """
+        data = {}
+
+        data['text'] = self.response.text
+        data['occurrence'] = self.occurrence
+
+        return data
