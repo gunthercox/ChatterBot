@@ -8,11 +8,11 @@ from . import utils
 
 class ChatBot(object):
     """
-    A conversational dialog ChatBot.
+    A conversational dialog chat bot.
     """
 
     def __init__(self, name, **kwargs):
-        from .conversation.session import SessionManager
+        from .conversation.session import ConversationSessionManager
         from .logic import MultiLogicAdapter
 
         self.name = name
@@ -51,7 +51,6 @@ class ChatBot(object):
 
         # Add the chatbot instance to each adapter to share information such as
         # the name, the current conversation, or other adapters
-        self.storage.set_chatbot(self)
         self.logic.set_chatbot(self)
         self.input.set_chatbot(self)
         self.output.set_chatbot(self)
@@ -62,10 +61,13 @@ class ChatBot(object):
         self.trainer = TrainerClass(self.storage, **kwargs)
         self.training_data = kwargs.get('training_data')
 
-        self.conversation_sessions = SessionManager()
+        self.conversation_sessions = ConversationSessionManager()
         self.default_session = self.conversation_sessions.new()
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
+
+        # Allow the bot to save input it receives so that it can learn
+        self.read_only = kwargs.get('read_only', False)
 
         if kwargs.get('initialize', True):
             self.initialize()
@@ -77,10 +79,10 @@ class ChatBot(object):
         from .utils import nltk_download_corpus
 
         # Download required NLTK corpora if they have not already been downloaded
-        nltk_download_corpus('stopwords')
-        nltk_download_corpus('wordnet')
-        nltk_download_corpus('punkt')
-        nltk_download_corpus('vader_lexicon')
+        nltk_download_corpus('corpora/stopwords')
+        nltk_download_corpus('corpora/wordnet')
+        nltk_download_corpus('tokenizers/punkt')
+        nltk_download_corpus('sentiment/vader_lexicon')
 
     def get_response(self, input_item, session_id=None):
         """
@@ -113,7 +115,7 @@ class ChatBot(object):
         Return a response based on a given input statement.
         """
         if not session_id:
-            session = self.conversation_sessions.get_default()
+            session = self.conversation_sessions.get(self.default_session.id_string)
             session_id = str(session.uuid)
 
         self.storage.generate_base_query(self, session_id)
@@ -138,8 +140,9 @@ class ChatBot(object):
                 previous_statement.text
             ))
 
-        # Update the database after selecting a response
-        self.storage.update(statement)
+        # Save the statement after selecting a response
+        if not self.read_only:
+            self.storage.update(statement)
 
     def set_trainer(self, training_class, **kwargs):
         """
@@ -171,14 +174,3 @@ class ChatBot(object):
         name = data.pop('name')
 
         return ChatBot(name, **data)
-
-    class InvalidAdapterException(Exception):
-        """
-        An exception to be raised when an adapter of an unexpected class type is recieved.
-        """
-
-        def __init__(self, value='Recieved an unexpected adapter setting.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)

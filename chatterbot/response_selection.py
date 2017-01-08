@@ -1,9 +1,9 @@
-import logging
-
 """
 Response selection methods determines which response should be used in
 the event that multiple responses are generated within a logic adapter.
 """
+import logging
+
 
 def get_most_frequent_response(input_statement, response_list):
     """
@@ -33,6 +33,7 @@ def get_most_frequent_response(input_statement, response_list):
     # Choose the most commonly occuring matching response
     return matching_response
 
+
 def get_first_response(input_statement, response_list):
     """
     :param input_statement: A statement, that closely matches an input to the chat bot.
@@ -49,6 +50,7 @@ def get_first_response(input_statement, response_list):
         len(response_list)
     ))
     return response_list[0]
+
 
 def get_random_response(input_statement, response_list):
     """

@@ -33,3 +33,9 @@ class Adapter(object):
 
         def __str__(self):
             return self.message
+
+    class InvalidAdapterTypeException(Exception):
+        """
+        An exception to be raised when an adapter of an unexpected class type is recieved.
+        """
+        pass

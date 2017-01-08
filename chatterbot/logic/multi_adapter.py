@@ -109,8 +109,6 @@ class MultiLogicAdapter(LogicAdapter):
 
         :param insert_index: The index to insert the logic adapter into the list at.
         :type insert_index: int
-
-        :raises: InvalidAdapterException
         """
         utils.validate_adapter_class(logic_adapter, LogicAdapter)
 

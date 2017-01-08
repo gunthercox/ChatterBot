@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from .response import Response
+from datetime import datetime
 
 
 class Statement(object):
@@ -11,7 +12,13 @@ class Statement(object):
     def __init__(self, text, **kwargs):
         self.text = text
         self.in_response_to = kwargs.pop('in_response_to', [])
+
+        # The date and time that this statement was created at
+        self.created_at = kwargs.pop('created_at', datetime.now())
+
         self.extra_data = kwargs.pop('extra_data', {})
+
+        self.storage = None
 
     def __str__(self):
         return self.text
@@ -30,6 +37,12 @@ class Statement(object):
             return self.text == other.text
 
         return self.text == other
+
+    def save(self):
+        """
+        Save the statement in the database.
+        """
+        self.storage.update(self)
 
     def add_extra_data(self, key, value):
         """
@@ -114,12 +127,21 @@ class Statement(object):
 
         data['text'] = self.text
         data['in_response_to'] = []
+        data['created_at'] = self.created_at
         data['extra_data'] = self.extra_data
 
         for response in self.in_response_to:
             data['in_response_to'].append(response.serialize())
 
         return data
+
+    @property
+    def response_statement_cache(self):
+        """
+        This property is to allow ChatterBot Statement objects to
+        be swappable with Django Statement models.
+        """
+        return self.in_response_to
 
     class InvalidTypeException(Exception):
 

@@ -180,10 +180,11 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_is_on_day(self):
-        input_text = 'My birthday is on January 1st.'
+        input_text = 'My birthday is on January 2nd.'
         parser = parsing.datetime_parsing(input_text)
-        self.assertIn('January 1st', parser[0])
-        self.assertEqual(parser[0][1].strftime('%d-%m-%Y'), '01-01-2016')
+        self.assertIn('January 2nd', parser[0])
+        self.assertEqual(parser[0][1].month, 1)
+        self.assertEqual(parser[0][1].day, 2)
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_is_on_day_of_year_variation1(self):

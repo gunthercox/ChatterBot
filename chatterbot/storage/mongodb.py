@@ -1,5 +1,5 @@
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Response
 
 
 class Query(object):
@@ -76,11 +76,6 @@ class MongoDatabaseAdapter(StorageAdapter):
     .. code-block:: python
 
        database_uri='mongodb://example.com:8100/'
-
-
-    :keyword read_only: If set to True, ChatterBot will not save information to the database.
-                        False by default.
-    :type read_only: bool
     """
 
     def __init__(self, **kwargs):
@@ -88,10 +83,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         from pymongo import MongoClient
 
         self.database_name = self.kwargs.get(
-            "database", "chatterbot-database"
+            'database', 'chatterbot-database'
         )
         self.database_uri = self.kwargs.get(
-            "database_uri", "mongodb://localhost:27017/"
+            'database_uri', 'mongodb://localhost:27017/'
         )
 
         # Use the default host and port
@@ -126,14 +121,14 @@ class MongoDatabaseAdapter(StorageAdapter):
             values.get('in_response_to', [])
         )
 
-        return Statement(statement_text, **values)
+        return self.Statement(statement_text, **values)
 
     def deserialize_responses(self, response_list):
         """
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = Statement('')
+        proxy_statement = self.Statement('')
 
         for response in response_list:
             text = response['text']
@@ -157,20 +152,24 @@ class MongoDatabaseAdapter(StorageAdapter):
             statement_data.get('in_response_to', [])
         )
 
-        return Statement(statement_text, **statement_data)
+        return self.Statement(statement_text, **statement_data)
 
     def filter(self, **kwargs):
         """
         Returns a list of statements in the database
         that match the parameters specified.
         """
+        import pymongo
+
         query = self.base_query
+
+        order_by = kwargs.pop('order_by', None)
 
         # Convert Response objects to data
         if 'in_response_to' in kwargs:
             serialized_responses = []
             for response in kwargs['in_response_to']:
-                serialized_responses.append({'text': response.text})
+                serialized_responses.append({'text': response})
 
             query = query.statement_response_list_equals(serialized_responses)
             del kwargs['in_response_to']
@@ -185,6 +184,16 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         matches = self.statements.find(query.value())
 
+        if order_by:
+
+            direction = pymongo.ASCENDING
+
+            # Sort so that newer datetimes appear first
+            if order_by == 'created_at':
+                direction = pymongo.DESCENDING
+
+            matches = matches.sort(order_by, direction)
+
         results = []
 
         for match in list(matches):
@@ -192,41 +201,38 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement, **kwargs):
+    def update(self, statement):
         from pymongo import UpdateOne
         from pymongo.errors import BulkWriteError
 
-        force = kwargs.get('force', False)
-        # Do not alter the database unless writing is enabled
-        if force or not self.read_only:
-            data = statement.serialize()
+        data = statement.serialize()
 
-            operations = []
+        operations = []
 
+        update_operation = UpdateOne(
+            {'text': statement.text},
+            {'$set': data},
+            upsert=True
+        )
+        operations.append(update_operation)
+
+        # Make sure that an entry for each response is saved
+        for response_dict in data.get('in_response_to', []):
+            response_text = response_dict.get('text')
+
+            # $setOnInsert does nothing if the document is not created
             update_operation = UpdateOne(
-                {'text': statement.text},
-                {'$set': data},
+                {'text': response_text},
+                {'$set': response_dict},
                 upsert=True
             )
             operations.append(update_operation)
 
-            # Make sure that an entry for each response is saved
-            for response_dict in data.get('in_response_to', []):
-                response_text = response_dict.get('text')
-
-                # $setOnInsert does nothing if the document is not created
-                update_operation = UpdateOne(
-                    {'text': response_text},
-                    {'$set': response_dict},
-                    upsert=True
-                )
-                operations.append(update_operation)
-
-            try:
-                self.statements.bulk_write(operations, ordered=False)
-            except BulkWriteError as bwe:
-                # Log the details of a bulk write error
-                self.logger.error(str(bwe.details))
+        try:
+            self.statements.bulk_write(operations, ordered=False)
+        except BulkWriteError as bwe:
+            # Log the details of a bulk write error
+            self.logger.error(str(bwe.details))
 
         return statement
 

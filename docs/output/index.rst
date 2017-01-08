@@ -10,24 +10,17 @@ Output Adapters
 Output format adapter
 =====================
 
-.. autofunction:: chatterbot.output.OutputFormatAdapter
+.. autofunction:: chatterbot.output.OutputAdapter
 
-The output format adapter allows the chat bot to return a response in
-a number of formats. By default, this adapter returns a :ref:`Statement <conversation_statements>`
-object.
-
-Valid parameters for the output format are `text`, `json`, and `object`.
-
-* If `text` is selected, the response will be in string format.
-* If `json` is selected, the response will be a dictionary.
-* If `object` is selected, the response will be a Statement object.
+The output adapter allows the chat bot to return a response in
+as a `Statement` object.
 
 .. code-block:: python
 
    chatbot = ChatBot(
        "My ChatterBot",
-       output_adapter="chatterbot.output.OutputFormatAdapter",
-       output_format='text'
+       output_adapter="chatterbot.output.OutputAdapter",
+       output_format="text"
    )
 
 Terminal adapter
@@ -115,13 +108,6 @@ The Mailgun adapter allows the chat bot to send emails using the
 .. literalinclude:: ../../examples/mailgun.py
    :language: python
 
-Speech synthesis
-================
-
-Check out the `chatterbot-voice`_ package for more information on how to make
-your chat bot interact verbally with others.
-
-.. _chatterbot-voice: https://github.com/gunthercox/chatterbot-voice
 .. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
 .. _HipChat: https://www.hipchat.com/
 .. _Microsoft: https://docs.botframework.com/en-us/restapi/directline/#/Conversations

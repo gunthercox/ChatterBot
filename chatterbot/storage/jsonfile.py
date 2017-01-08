@@ -1,6 +1,6 @@
 import warnings
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Response
 
 
 class JsonFileStorageAdapter(StorageAdapter):
@@ -14,10 +14,6 @@ class JsonFileStorageAdapter(StorageAdapter):
     :keyword silence_performance_warning: If set to True, the :code:`UnsuitableForProductionWarning`
                                           will not be displayed.
     :type silence_performance_warning: bool
-
-    :keyword read_only: If set to True, ChatterBot will not save information to the database.
-                        False by default.
-    :type read_only: bool
     """
 
     def __init__(self, **kwargs):
@@ -69,7 +65,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = Statement('')
+        proxy_statement = self.Statement('')
 
         for response in response_list:
             data = response.copy()
@@ -98,7 +94,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         # Remove the text attribute from the values
         text = statement_data.pop('text')
 
-        return Statement(text, **statement_data)
+        return self.Statement(text, **statement_data)
 
     def _all_kwargs_match_values(self, kwarguments, values):
         for kwarg in kwarguments:
@@ -129,7 +125,11 @@ class JsonFileStorageAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
+        from operator import attrgetter
+
         results = []
+
+        order_by = kwargs.pop('order_by', None)
 
         for key in self._keys():
             values = self.database.data(key=key)
@@ -138,29 +138,34 @@ class JsonFileStorageAdapter(StorageAdapter):
             values['text'] = key
 
             if self._all_kwargs_match_values(kwargs, values):
-
                 results.append(self.json_to_object(values))
+
+        if order_by:
+
+            # Sort so that newer datetimes appear first
+            is_reverse = order_by == 'created_at'
+
+            # Do an in place sort of the results
+            results.sort(key=attrgetter(order_by), reverse=is_reverse)
 
         return results
 
-    def update(self, statement, **kwargs):
+    def update(self, statement):
         """
         Update a statement in the database.
         """
-        # Do not alter the database unless writing is enabled
-        if not self.read_only:
-            data = statement.serialize()
+        data = statement.serialize()
 
-            # Remove the text key from the data
-            del data['text']
-            self.database.data(key=statement.text, value=data)
+        # Remove the text key from the data
+        del data['text']
+        self.database.data(key=statement.text, value=data)
 
-            # Make sure that an entry for each response exists
-            for response_statement in statement.in_response_to:
-                response = self.find(response_statement.text)
-                if not response:
-                    response = Statement(response_statement.text)
-                    self.update(response)
+        # Make sure that an entry for each response exists
+        for response_statement in statement.in_response_to:
+            response = self.find(response_statement.text)
+            if not response:
+                response = self.Statement(response_statement.text)
+                self.update(response)
 
         return statement
 

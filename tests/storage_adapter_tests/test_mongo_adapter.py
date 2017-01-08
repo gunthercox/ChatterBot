@@ -277,9 +277,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
     def test_filter_in_response_to_no_matches(self):
         self.adapter.update(self.statement1)
 
-        results = self.adapter.filter(
-            in_response_to=[Response("Maybe")]
-        )
+        results = self.adapter.filter(in_response_to="Maybe")
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -391,32 +389,44 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
-class ReadOnlyMongoDatabaseAdapterTestCase(MongoAdapterTestCase):
+class MongoOrderingTestCase(MongoAdapterTestCase):
+    """
+    Test cases for the ordering of sets of statements.
+    """
 
-    def test_update_does_not_add_new_statement(self):
-        self.adapter.read_only = True
+    def test_order_by_text(self):
+        statement_a = Statement(text='A is the first letter of the alphabet.')
+        statement_b = Statement(text='B is the second letter of the alphabet.')
 
-        statement = Statement("New statement")
-        self.adapter.update(statement)
+        self.adapter.update(statement_a)
+        self.adapter.update(statement_b)
 
-        statement_found = self.adapter.find("New statement")
-        self.assertEqual(statement_found, None)
+        results = self.adapter.filter(order_by='text')
 
-    def test_update_does_not_modify_existing_statement(self):
-        statement = Statement("New statement")
-        self.adapter.update(statement)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0], statement_a)
+        self.assertEqual(results[1], statement_b)
 
-        self.adapter.read_only = True
+    def test_order_by_created_at(self):
+        from datetime import datetime, timedelta
 
-        statement.add_response(
-            Response("New response")
+        today = datetime.now()
+        yesterday = datetime.now() - timedelta(days=1)
+
+        statement_a = Statement(
+            text='A is the first letter of the alphabet.',
+            created_at=today
         )
-        self.adapter.update(statement)
+        statement_b = Statement(
+            text='B is the second letter of the alphabet.',
+            created_at=yesterday
+        )
 
-        statement_found = self.adapter.find("New statement")
-        self.assertEqual(
-            statement_found.text, statement.text
-        )
-        self.assertEqual(
-            len(statement_found.in_response_to), 0
-        )
+        self.adapter.update(statement_a)
+        self.adapter.update(statement_b)
+
+        results = self.adapter.filter(order_by='created_at')
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0], statement_a)
+        self.assertEqual(results[1], statement_b)

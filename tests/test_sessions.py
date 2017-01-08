@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.conversation.session import Session, SessionManager
+from chatterbot.conversation.session import Session, ConversationSessionManager
 
 
 class SessionTestCase(TestCase):
@@ -8,11 +8,12 @@ class SessionTestCase(TestCase):
         session = Session()
         self.assertEqual(str(session.uuid), session.id_string)
 
-class SessionManagerTestCase(TestCase):
+
+class ConversationSessionManagerTestCase(TestCase):
 
     def setUp(self):
-        super(SessionManagerTestCase, self).setUp()
-        self.manager = SessionManager()
+        super(ConversationSessionManagerTestCase, self).setUp()
+        self.manager = ConversationSessionManager()
 
     def test_new(self):
         session = self.manager.new()
@@ -47,17 +48,3 @@ class SessionManagerTestCase(TestCase):
         self.assertEqual(len(session_ids), 1)
         self.assertEqual(len(self.manager.get(session_id).conversation), 1)
         self.assertEqual(('A', 'B', ), self.manager.get(session_id).conversation[0])
-
-    def test_get_default(self):
-        session = self.manager.new()
-        returned_session = self.manager.get_default()
-
-        self.assertEqual(session.id_string, returned_session.id_string)
-
-    def test_update_default(self):
-        self.manager.new()
-        self.manager.update_default(('A', 'B', ))
-
-        self.assertEqual(len(self.manager.sessions.keys()), 1)
-        self.assertEqual(len(self.manager.get_default().conversation), 1)
-        self.assertEqual(('A', 'B', ), self.manager.get_default().conversation[0])

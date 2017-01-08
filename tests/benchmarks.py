@@ -20,7 +20,7 @@ CONFIGURATIONS = [
         'description': 'Test the levenshtein distance comparison algorithm and file storage',
         'logic_adapters': [
             {
-                'import_path': 'chatterbot.logic.BaseMatchAdapter',
+                'import_path': 'chatterbot.logic.BestMatch',
                 'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance',
                 'response_selection_method': 'chatterbot.response_selection.get_first_response'
             }
@@ -34,7 +34,7 @@ CONFIGURATIONS = [
         'description': 'Test the synset distance comparison algorithm and file storage',
         'logic_adapters': [
             {
-                'import_path': 'chatterbot.logic.BaseMatchAdapter',
+                'import_path': 'chatterbot.logic.BestMatch',
                 'statement_comparison_function': 'chatterbot.comparisons.synset_distance',
                 'response_selection_method': 'chatterbot.response_selection.get_first_response'
             }
@@ -58,7 +58,7 @@ try:
             'description': 'Test the levenshtein distance comparison algorithm and Mongo DB storage',
             'logic_adapters': [
                 {
-                    'import_path': 'chatterbot.logic.BaseMatchAdapter',
+                    'import_path': 'chatterbot.logic.BestMatch',
                     'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance',
                     'response_selection_method': 'chatterbot.response_selection.get_first_response'
                 }
@@ -69,7 +69,7 @@ try:
             'description': 'Test the synset distance comparison algorithm and Mongo DB storage',
             'logic_adapters': [
                 {
-                    'import_path': 'chatterbot.logic.BaseMatchAdapter',
+                    'import_path': 'chatterbot.logic.BestMatch',
                     'statement_comparison_function': 'chatterbot.comparisons.synset_distance',
                     'response_selection_method': 'chatterbot.response_selection.get_first_response'
                 }

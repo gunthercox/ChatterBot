@@ -8,12 +8,12 @@ class OutputIntegrationTestCase(TestCase):
     function correctly when using Django.
     """
 
-    def test_output_format_adapter(self):
-        from chatterbot.output import OutputFormatAdapter
+    def test_output_adapter(self):
+        from chatterbot.output import OutputAdapter
 
-        adapter = OutputFormatAdapter()
+        adapter = OutputAdapter()
 
         statement = Statement(text='_')
-        result = adapter.process_response(statement)
+        result = adapter.process_response(statement, confidence=1)
 
         self.assertEqual(result.text, '_')

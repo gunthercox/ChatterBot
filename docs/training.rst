@@ -111,6 +111,15 @@ conversations corpora then you would simply specify them.
        "chatterbot.corpus.english.conversations"
    )
 
+You can also specify file paths to corpus files or directories of corpus files when calling the :code:`train` method.
+
+.. code-block:: python
+
+   chatterbot.train(
+       "./data/greetings_corpus/custom.corpus.json",
+       "./data/my_corpus/"
+   )
+
 
 Training with the Twitter API
 -----------------------------
