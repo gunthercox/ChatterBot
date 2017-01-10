@@ -82,14 +82,19 @@ class MathematicalEvaluation(LogicAdapter):
 
         # Returning important information
         try:
-            expression += "= " + str(
+            expression += '= ' + str(
                 eval(expression, {f: getattr(numpy, f) for f in self.functions})
             )
 
+            response = Statement(expression)
+            response.confidence = 1
+
             # return a confidence of 1 if the expression could be evaluated
-            return 1, Statement(expression)
+            return 1, response
         except:
-            return 0, Statement(expression)
+            response = Statement(expression)
+            response.confidence = 0
+            return 0, response
 
     def simplify_chunks(self, input_text):
         """

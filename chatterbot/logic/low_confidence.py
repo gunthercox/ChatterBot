@@ -32,4 +32,7 @@ class LowConfidenceAdapter(BestMatch):
         else:
             confidence = 0
 
-        return confidence, Statement(self.default_response)
+        response = Statement(self.default_response)
+        response.confidence = confidence
+
+        return confidence, response
