@@ -19,6 +19,8 @@ class NoKnowledgeAdapter(LogicAdapter):
         """
 
         if self.chatbot.storage.count():
-            return 0, statement
+            statement.confidence = 0
+        else:
+            statement.confidence = 1
 
-        return 1, statement
+        return statement.confidence, statement

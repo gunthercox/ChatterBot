@@ -22,6 +22,11 @@ class Statement(models.Model):
 
     extra_data = models.CharField(max_length=500)
 
+    # This is the confidence with which the chat bot believes
+    # this is an accurate response. This value is set when the
+    # statement is returned by the chat bot.
+    confidence = 0
+
     def __str__(self):
         if len(self.text.strip()) > 60:
             return '{}...'.format(self.text[:57])

@@ -28,4 +28,5 @@ class SpecificResponseAdapter(LogicAdapter):
         if statement == self.input_text:
             confidence = 1
 
+        self.response_statement.confidence = confidence
         return confidence, self.response_statement
