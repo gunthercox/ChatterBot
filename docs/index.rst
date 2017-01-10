@@ -70,6 +70,7 @@ Contents:
    utils
    django/index
    testing
+   encoding
 
 Report an Issue
 ===============
