@@ -23,6 +23,7 @@ class SpecificResponseAdapterTestCase(TestCase):
         confidence, match = self.adapter.process(statement)
 
         self.assertEqual(confidence, 1)
+        self.assertEqual(match.confidence, 1)
         self.assertEqual(match, self.adapter.response_statement)
 
     def test_not_exact_match(self):
@@ -33,4 +34,5 @@ class SpecificResponseAdapterTestCase(TestCase):
         confidence, match = self.adapter.process(statement)
 
         self.assertEqual(confidence, 0)
+        self.assertEqual(match.confidence, 0)
         self.assertEqual(match, self.adapter.response_statement)

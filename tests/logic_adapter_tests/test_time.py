@@ -13,6 +13,7 @@ class TimeAdapterTests(TestCase):
         confidence, response = self.adapter.process(statement)
 
         self.assertEqual(confidence, 1)
+        self.assertEqual(response.confidence, 1)
         self.assertIn("The current time is ", response.text)
 
     def test_negative_input(self):
@@ -20,5 +21,6 @@ class TimeAdapterTests(TestCase):
         confidence, response = self.adapter.process(statement)
 
         self.assertEqual(confidence, 0)
+        self.assertEqual(response.confidence, 0)
         self.assertIn("The current time is ", response.text)
 

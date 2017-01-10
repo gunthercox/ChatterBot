@@ -63,6 +63,7 @@ class MultiLogicAdapter(LogicAdapter):
                 result = most_common[0][0]
                 max_confidence = self.get_greatest_confidence(result, results)
 
+        result.confidence = max_confidence
         return max_confidence, result
 
     def get_greatest_confidence(self, statement, options):

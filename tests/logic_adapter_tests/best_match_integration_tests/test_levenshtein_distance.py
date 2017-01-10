@@ -52,6 +52,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         confidence, match = self.adapter.get(statement)
 
         self.assertEqual(confidence, 1)
+        self.assertEqual(match.confidence, 1)
 
     def test_confidence_half_match(self):
         possible_choices = [
@@ -63,6 +64,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         confidence, match = self.adapter.get(statement)
 
         self.assertEqual(confidence, 0.5)
+        self.assertEqual(match.confidence, 0.5)
 
     def test_confidence_no_match(self):
         possible_choices = [
@@ -74,6 +76,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         confidence, match = self.adapter.get(statement)
 
         self.assertEqual(confidence, 0)
+        self.assertEqual(match.confidence, 0)
 
     def test_no_known_responses(self):
         """
@@ -90,4 +93,5 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         confidence, match = self.adapter.process(Statement("Blah"))
 
         self.assertEqual(confidence, 0)
+        self.assertEqual(match.confidence, 0)
         self.assertEqual(match.text, "Random")

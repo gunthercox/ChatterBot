@@ -7,19 +7,25 @@ from chatterbot.logic import MultiLogicAdapter
 class TestAdapterA(LogicAdapter):
 
     def process(self, statement):
-        return 0.2, Statement('Good morning.')
+        response = Statement('Good morning.')
+        response.confidence = 0.2
+        return response.confidence, response
 
 
 class TestAdapterB(LogicAdapter):
 
     def process(self, statement):
-        return 0.5, Statement('Good morning.')
+        response = Statement('Good morning.')
+        response.confidence = 0.5
+        return response.confidence, response
 
 
 class TestAdapterC(LogicAdapter):
 
     def process(self, statement):
-        return 0.7, Statement('Good night.')
+        response = Statement('Good night.')
+        response.confidence = 0.7
+        return response.confidence, response
 
 
 class MultiLogicAdapterTestCase(ChatBotTestCase):
@@ -42,6 +48,7 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
         confidence, statement = self.adapter.process(Statement('Howdy!'))
 
         self.assertEqual(confidence, 0.5)
+        self.assertEqual(statement.confidence, 0.5)
         self.assertEqual(statement, 'Good morning.')
 
     def test_get_greatest_confidence(self):

@@ -23,10 +23,10 @@ class SpecificResponseAdapter(LogicAdapter):
         return False
 
     def process(self, statement):
-        confidence = 0
 
         if statement == self.input_text:
-            confidence = 1
+            self.response_statement.confidence = 1
+        else:
+            self.response_statement.confidence = 0
 
-        self.response_statement.confidence = confidence
-        return confidence, self.response_statement
+        return self.response_statement.confidence, self.response_statement
