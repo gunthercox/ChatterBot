@@ -14,6 +14,13 @@ has returned based on some input.
 .. autoclass:: chatterbot.conversation.Statement
    :members:
 
+   .. autoinstanceattribute:: chatterbot.conversation.Statement.confidence
+
+      ChatterBot's logic adapters assign a confidence score to the statement
+      before it is returned. The confidence score indicates the degree of
+      certainty with which the chat bot believes this is the correct response
+      to the given input. 
+
 ..  _conversation_responses:
 
 Responses

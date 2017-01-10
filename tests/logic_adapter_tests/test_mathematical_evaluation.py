@@ -65,20 +65,24 @@ class MathematicalEvaluationOperationTests(TestCase):
         statement = Statement('What is 100 + 54?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 + 54 ) = 154')
+        self.assertEqual(response.confidence, 1)
 
     def test_subtraction_operator(self):
         statement = Statement('What is 100 - 58?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 - 58 ) = 42')
+        self.assertEqual(response.confidence, 1)
 
     def test_multiplication_operator(self):
         statement = Statement('What is 100 * 20')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 * 20 ) = 2000')
+        self.assertEqual(response.confidence, 1)
 
     def test_division_operator(self):
         statement = Statement('What is 100 / 20')
         confidence, response = self.adapter.process(statement)
+        self.assertEqual(response.confidence, 1)
 
         if self.python_version <= 2:
             self.assertEqual(response.text, '( 100 / 20 ) = 5')
@@ -89,16 +93,19 @@ class MathematicalEvaluationOperationTests(TestCase):
         statement = Statement('What is 100 + ( 1000 * 2 )?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 + ( ( 1000 * ( 2 ) ) ) ) = 2100')
+        self.assertEqual(response.confidence, 1)
 
     def test_parenthesized_with_words(self):
         statement = Statement('What is four plus 100 + ( 100 * 2 )?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 4 + ( 100 + ( ( 100 * ( 2 ) ) ) ) ) = 304')
+        self.assertEqual(response.confidence, 1)
 
     def test_word_numbers_addition(self):
         statement = Statement('What is one hundred + four hundred?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 + 400 ) = 500')
+        self.assertEqual(response.confidence, 1)
 
     def test_word_division_operator(self):
         statement = Statement('What is 100 divided by 100?')
@@ -109,6 +116,8 @@ class MathematicalEvaluationOperationTests(TestCase):
         else:
             self.assertEqual(response.text, '( 100 / 100 ) = 1.0')
 
+        self.assertEqual(response.confidence, 1)
+
     def test_large_word_division_operator(self):
         statement = Statement('What is one thousand two hundred four divided by one hundred?')
         confidence, response = self.adapter.process(statement)
@@ -118,23 +127,29 @@ class MathematicalEvaluationOperationTests(TestCase):
         else:
             self.assertEqual(response.text, '( 1000 + 200 + 4 ) / ( 100 ) = 12.04')
 
+        self.assertEqual(response.confidence, 1)
+
     def test_negative_multiplication(self):
         statement = Statement('What is -105 * 5')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( -105 * 5 ) = -525')
+        self.assertEqual(response.confidence, 1)
 
     def test_negative_decimal_multiplication(self):
         statement = Statement('What is -100.5 * 20?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '( -100.5 * 20 ) = -2010.0')
+        self.assertEqual(response.confidence, 1)
 
     def test_constants(self):
         statement = Statement('What is pi plus e ?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, '3.141693 + 2.718281 = 5.859974')
+        self.assertEqual(response.confidence, 1)
 
     def test_math_functions(self):
         statement = Statement('What is log ( 5 + 6 ) * sqrt ( 12 ) ?')
         confidence, response = self.adapter.process(statement)
         self.assertEqual(response.text, 'log ( ( 5 + ( 6 ) * sqrt ( ( 12 ) ) ) ) = 3.24977779033')
+        self.assertEqual(response.confidence, 1)
 

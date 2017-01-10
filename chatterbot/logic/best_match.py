@@ -22,7 +22,9 @@ class BestMatch(LogicAdapter):
                     'No statements have known responses. ' +
                     'Choosing a random response to return.'
                 )
-                return 0, self.chatbot.storage.get_random()
+                random_response = self.chatbot.storage.get_random()
+                random_response.confidence = 0
+                return random_response.confidence, random_response
             else:
                 raise self.EmptyDatasetException()
 
@@ -37,6 +39,7 @@ class BestMatch(LogicAdapter):
                 max_confidence = confidence
                 closest_match = statement
 
+        closest_match.confidence = max_confidence
         return max_confidence, closest_match
 
     def can_process(self, statement):

@@ -47,6 +47,7 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         confidence, match = self.adapter.process(statement)
 
         self.assertEqual(confidence, 0)
+        self.assertEqual(match.confidence, 0)
         self.assertEqual(match, self.adapter.default_response)
 
     def test_low_confidence(self):
@@ -57,4 +58,5 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         confidence, match = self.adapter.process(statement)
 
         self.assertEqual(confidence, 1)
+        self.assertEqual(match.confidence, 1)
         self.assertEqual(match, self.adapter.default_response)

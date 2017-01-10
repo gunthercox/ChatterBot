@@ -35,6 +35,7 @@ class LogicIntegrationTestCase(TestCase):
         confidence, response = adapter.process(statement1)
 
         self.assertEqual(response.text, 'Yes')
+        self.assertEqual(response.confidence, 1)
         self.assertEqual(confidence, 1)
 
     def test_low_confidence(self):
@@ -60,6 +61,7 @@ class LogicIntegrationTestCase(TestCase):
         confidence, response = adapter.process(statement)
 
         self.assertEqual(response.text, '( 6 + 6 ) = 12')
+        self.assertEqual(response.confidence, 1)
 
     def test_time(self):
         from chatterbot.logic import TimeLogicAdapter
@@ -72,3 +74,4 @@ class LogicIntegrationTestCase(TestCase):
         confidence, response = adapter.process(statement)
 
         self.assertIn('The current time is', response.text)
+        self.assertEqual(response.confidence, 1)
