@@ -1,9 +1,6 @@
-================
-ChatterBot Setup
-================
-
-Installing ChatterBot
-=====================
+============
+Installation
+============
 
 The recommended method for installing ChatterBot is by using `pip`_.
 
