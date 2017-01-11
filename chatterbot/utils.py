@@ -11,15 +11,6 @@ def clean(text):
     import unicodedata
     import sys
 
-    # Replace HTML escape characters
-    if sys.version_info[0] < 3:
-        from HTMLParser import HTMLParser
-        parser = HTMLParser()
-        text = parser.unescape(text)
-    else:
-        import html
-        text = html.unescape(text)
-
     # Normalize unicode characters
     if sys.version_info[0] < 3:
         text = unicode(text)

@@ -18,3 +18,22 @@ def clean_whitespace(chatbot, statement):
     statement.text = re.sub(' +', ' ', statement.text)
 
     return statement
+
+
+def unescape_html(chatbot, statement):
+    """
+    Convert escaped html characters into unescaped html characters.
+    For example: &lt;b&gt; becomes <b>
+    """
+    import sys
+
+    # Replace HTML escape characters
+    if sys.version_info[0] < 3:
+        from HTMLParser import HTMLParser
+        html = HTMLParser()
+    else:
+        import html
+
+    statement.text = html.unescape(statement.text)
+
+    return statement

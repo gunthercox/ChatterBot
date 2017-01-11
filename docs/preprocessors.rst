@@ -24,6 +24,8 @@ ChatterBot comes with several preprocessors build in.
 
 .. autofunction:: chatterbot.preprocessors.clean_whitespace
 
+.. autofunction:: chatterbot.preprocessors.unescape_html
+
 
 Creating new preprocessors
 ==========================
