@@ -27,55 +27,52 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         filter out any statements that are not in response to a known statement.
         """
         possible_choices = [
-            Statement("Who do you love?", in_response_to=[Response("I hear you are going on a quest?")]),
-            Statement("What is the meaning of life?", in_response_to=[Response("Yuck, black licorice jelly beans.")]),
-            Statement("I am Iron Man.", in_response_to=[Response("What... is your quest?")]),
-            Statement("What... is your quest?", in_response_to=[Response("I am Iron Man.")]),
-            Statement("Yuck, black licorice jelly beans.", in_response_to=[Response("What is the meaning of life?")]),
-            Statement("I hear you are going on a quest?", in_response_to=[Response("Who do you love?")]),
+            Statement('Who do you love?', in_response_to=[Response('I hear you are going on a quest?')]),
+            Statement('What is the meaning of life?', in_response_to=[Response('Yuck, black licorice jelly beans.')]),
+            Statement('I am Iron Man.', in_response_to=[Response('What... is your quest?')]),
+            Statement('What... is your quest?', in_response_to=[Response('I am Iron Man.')]),
+            Statement('Yuck, black licorice jelly beans.', in_response_to=[Response('What is the meaning of life?')]),
+            Statement('I hear you are going on a quest?', in_response_to=[Response('Who do you love?')]),
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
-        statement = Statement("What is your quest?")
+        statement = Statement('What is your quest?')
 
-        confidence, match = self.adapter.get(statement)
+        match = self.adapter.get(statement)
 
-        self.assertEqual("What... is your quest?", match)
+        self.assertEqual('What... is your quest?', match)
 
     def test_confidence_exact_match(self):
         possible_choices = [
-            Statement("What is your quest?", in_response_to=[Response("What is your quest?")])
+            Statement('What is your quest?', in_response_to=[Response('What is your quest?')])
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
-        statement = Statement("What is your quest?")
-        confidence, match = self.adapter.get(statement)
+        statement = Statement('What is your quest?')
+        match = self.adapter.get(statement)
 
-        self.assertEqual(confidence, 1)
         self.assertEqual(match.confidence, 1)
 
     def test_confidence_half_match(self):
         possible_choices = [
-            Statement("xxyy", in_response_to=[Response("xxyy")])
+            Statement('xxyy', in_response_to=[Response('xxyy')])
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
-        statement = Statement("wwxx")
-        confidence, match = self.adapter.get(statement)
+        statement = Statement('wwxx')
+        match = self.adapter.get(statement)
 
-        self.assertEqual(confidence, 0.5)
         self.assertEqual(match.confidence, 0.5)
 
     def test_confidence_no_match(self):
         possible_choices = [
-            Statement("xxx", in_response_to=[Response("xxx")])
+            Statement('xxx', in_response_to=[Response('xxx')])
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
-        statement = Statement("yyy")
-        confidence, match = self.adapter.get(statement)
+        statement = Statement('yyy')
+        match = self.adapter.get(statement)
 
-        self.assertEqual(confidence, 0)
         self.assertEqual(match.confidence, 0)
 
     def test_no_known_responses(self):
@@ -87,11 +84,11 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         self.adapter.chatbot.storage.update = MagicMock()
         self.adapter.chatbot.storage.count = MagicMock(return_value=1)
         self.adapter.chatbot.storage.get_random = MagicMock(
-            return_value=Statement("Random")
+            return_value=Statement('Random')
         )
 
-        confidence, match = self.adapter.process(Statement("Blah"))
+        confidence, match = self.adapter.process(Statement('Blah'))
 
         self.assertEqual(confidence, 0)
         self.assertEqual(match.confidence, 0)
-        self.assertEqual(match.text, "Random")
+        self.assertEqual(match.text, 'Random')

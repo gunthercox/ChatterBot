@@ -42,7 +42,7 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
         )
 
         statement = Statement('This is a lovely swamp.')
-        confidence, match = self.adapter.get(statement)
+        match = self.adapter.get(statement)
 
         self.assertEqual('This is a lovely bog.', match)
 
@@ -57,7 +57,7 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
         )
 
         statement = Statement('Are you good')
-        confidence, match = self.adapter.get(statement)
+        match = self.adapter.get(statement)
 
         self.assertEqual('Are you good?', match)
 
