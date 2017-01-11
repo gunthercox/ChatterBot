@@ -64,3 +64,16 @@ class HTMLUnescapePreprocessorTestCase(ChatBotTestCase):
         cleaned = preprocessors.unescape_html(self.chatbot, statement)
 
         self.assertEqual(cleaned.text, normal_text)
+
+
+class ConvertToASCIIPreprocessorTestCase(ChatBotTestCase):
+    """
+    Make sure that ChatterBot's ASCII conversion preprocessor works as expected.
+    """
+
+    def test_convert_to_ascii(self):
+        statement = Statement(u'Klüft skräms inför på fédéral électoral große')
+        cleaned = preprocessors.convert_to_ascii(self.chatbot, statement)
+        normal_text = 'Kluft skrams infor pa federal electoral groe'
+
+        self.assertEqual(cleaned.text, normal_text)

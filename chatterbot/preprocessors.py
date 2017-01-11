@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 """
 Statement pre-processors.
 """
@@ -23,7 +24,7 @@ def clean_whitespace(chatbot, statement):
 def unescape_html(chatbot, statement):
     """
     Convert escaped html characters into unescaped html characters.
-    For example: &lt;b&gt; becomes <b>
+    For example: "&lt;b&gt;" becomes "<b>".
     """
     import sys
 
@@ -36,4 +37,23 @@ def unescape_html(chatbot, statement):
 
     statement.text = html.unescape(statement.text)
 
+    return statement
+
+
+def convert_to_ascii(chatbot, statement):
+    """
+    Converts unicode characters to ASCII character equivalents.
+    For example: "på fédéral" becomes "pa federal".
+    """
+    import unicodedata
+    import sys
+
+    # Normalize unicode characters
+    if sys.version_info[0] < 3:
+        statement.text = unicode(statement.text)
+
+    text = unicodedata.normalize('NFKD', statement.text)
+    text = text.encode('ascii', 'ignore').decode('utf-8')
+
+    statement.text = str(text)
     return statement

@@ -26,6 +26,8 @@ ChatterBot comes with several preprocessors build in.
 
 .. autofunction:: chatterbot.preprocessors.unescape_html
 
+.. autofunction:: chatterbot.preprocessors.convert_to_ascii
+
 
 Creating new preprocessors
 ==========================
