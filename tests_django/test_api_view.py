@@ -1,9 +1,7 @@
+import json
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from django.utils.encoding import force_text
 from chatterbot.ext.django_chatterbot.views import ChatterBotView
-import unittest
-import json
 
 
 class ApiIntegrationTestCase(TestCase):
@@ -26,6 +24,7 @@ class ApiIntegrationTestCase(TestCase):
         ).conversation.flush()
 
     def _get_json(self, response):
+        from django.utils.encoding import force_text
         return json.loads(force_text(response.content))
 
     def test_get_conversation_empty(self):
