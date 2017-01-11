@@ -29,19 +29,6 @@ class UtilityTests(TestCase):
 
 class CleanTests(TestCase):
 
-    def test_html_characters_restored(self):
-
-        # implicit concatenation
-        text = 'The quick brown fox &lt;b&gt;jumps&lt;/b&gt; over'
-        ' the <a href="http://lazy.com">lazy</a> dog.'
-
-        normal_text = 'The quick brown fox <b>jumps</b> over'
-        ' the <a href="http://lazy.com">lazy</a> dog.'
-
-        clean_text = utils.clean(text)
-
-        self.assertEqual(clean_text, normal_text)
-
     def test_non_ascii_chars_replaced(self):
 
         text = u"Klüft skräms inför på fédéral électoral große"

@@ -41,3 +41,26 @@ class CleanWhitespacePreprocessorTestCase(ChatBotTestCase):
         normal_text = 'The quick brown fox jumps over the lazy dog.'
 
         self.assertEqual(cleaned.text, normal_text)
+
+
+class HTMLUnescapePreprocessorTestCase(ChatBotTestCase):
+    """
+    Make sure that ChatterBot's html unescaping preprocessor works as expected.
+    """
+
+    def test_html_unescape(self):
+
+        # implicit concatenation
+        statement = Statement(
+            'The quick brown fox &lt;b&gt;jumps&lt;/b&gt; over'
+            ' the <a href="http://lazy.com">lazy</a> dog.'
+        )
+
+        normal_text = (
+            'The quick brown fox <b>jumps</b> over'
+            ' the <a href="http://lazy.com">lazy</a> dog.'
+        )
+
+        cleaned = preprocessors.unescape_html(self.chatbot, statement)
+
+        self.assertEqual(cleaned.text, normal_text)
