@@ -55,6 +55,16 @@ class ChatBot(object):
         self.input.set_chatbot(self)
         self.output.set_chatbot(self)
 
+        preprocessors = kwargs.get(
+            'preprocessors', [
+            'chatterbot.preprocessors.clean_whitespace'
+        ])
+
+        self.preprocessors = []
+
+        for preprocessor in preprocessors:
+            self.preprocessors.append(utils.import_module(preprocessor))
+
         # Use specified trainer or fall back to the default
         trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')
         TrainerClass = utils.import_module(trainer)
@@ -96,6 +106,10 @@ class ChatBot(object):
             session_id = str(self.default_session.uuid)
 
         input_statement = self.input.process_input_statement(input_item)
+
+        # Preprocess the input statement
+        for preprocessor in self.preprocessors:
+            input_statement = preprocessor(self, input_statement)
 
         statement, response, confidence = self.generate_response(input_statement, session_id)
 
