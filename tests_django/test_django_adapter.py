@@ -307,6 +307,22 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.assertEqual(len(found[0].in_response_to), 1)
         self.assertEqual(type(found[0].in_response_to[0]), ResponseModel)
 
+    def test_confidence(self):
+        """
+        Test that the confidence value is not saved to the database.
+        The confidence attribute on statements is intended to just hold
+        the confidence of the statement when it returned as a response to
+        some input. Because of that, the value of the confidence score
+        should never be stored in the database with the statement.
+        """
+        statement = StatementModel(text='Test statement')
+        statement.confidence = 0.5
+        statement.save()
+
+        statement_updated = StatementModel.objects.get(pk=statement.id)
+
+        self.assertEqual(statement_updated.confidence, 0)
+
 
 class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
     """
