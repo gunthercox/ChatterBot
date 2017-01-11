@@ -141,9 +141,12 @@ class Gitter(InputAdapter):
         Return a string that has no leading mentions.
         """
         import re
-        from chatterbot.utils import clean_whitespace
         text_without_mentions = re.sub(r'@\S+', '', text)
-        return clean_whitespace(text_without_mentions)
+
+        # Remove consecutive spaces
+        text_without_mentions = re.sub(' +', ' ', text_without_mentions.strip())
+
+        return text_without_mentions
 
     def process_input(self, statement):
         new_message = False

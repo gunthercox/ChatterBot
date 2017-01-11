@@ -27,32 +27,6 @@ class UtilityTests(TestCase):
         self.assertIn('string', list(words))
 
 
-class CleanWhitespaceTests(TestCase):
-
-    def test_clean_whitespace(self):
-        text = '\tThe quick \nbrown fox \rjumps over \vthe \alazy \fdog\\.'
-        clean_text = utils.clean_whitespace(text)
-        normal_text = 'The quick brown fox jumps over \vthe \alazy \fdog\\.'
-
-        self.assertEqual(clean_text, normal_text)
-
-    def test_leading_or_trailing_whitespace_removed(self):
-
-        text = '     The quick brown fox jumps over the lazy dog.   '
-        clean_text = utils.clean_whitespace(text)
-        normal_text = 'The quick brown fox jumps over the lazy dog.'
-
-        self.assertEqual(clean_text, normal_text)
-
-    def test_consecutive_spaces_removed(self):
-
-        text = 'The       quick brown     fox      jumps over the lazy dog.'
-        clean_text = utils.clean_whitespace(text)
-        normal_text = 'The quick brown fox jumps over the lazy dog.'
-
-        self.assertEqual(clean_text, normal_text)
-
-
 class CleanTests(TestCase):
 
     def test_html_characters_restored(self):
