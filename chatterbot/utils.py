@@ -3,22 +3,6 @@ ChatterBot utility functions
 """
 
 
-def clean(text):
-    """
-    A function for cleaning a string of text.
-    Returns valid ASCII characters.
-    """
-    import unicodedata
-    import sys
-
-    # Normalize unicode characters
-    if sys.version_info[0] < 3:
-        text = unicode(text)
-    text = unicodedata.normalize('NFKD', text).encode('ascii', 'ignore').decode('utf-8')
-
-    return str(text)
-
-
 def import_module(dotted_path):
     """
     Imports the specified module based on the

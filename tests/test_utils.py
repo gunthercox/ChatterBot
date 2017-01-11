@@ -25,14 +25,3 @@ class UtilityTests(TestCase):
         self.assertEqual(len(words), 2)
         self.assertIn('test', list(words))
         self.assertIn('string', list(words))
-
-
-class CleanTests(TestCase):
-
-    def test_non_ascii_chars_replaced(self):
-
-        text = u"Klüft skräms inför på fédéral électoral große"
-        clean_text = utils.clean(text)
-        normal_text = "Kluft skrams infor pa federal electoral groe"
-
-        self.assertEqual(clean_text, normal_text)
