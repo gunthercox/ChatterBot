@@ -16,8 +16,6 @@ String cleaning
 This package of utility contains methods that are usefull
 for cleaning and normalizing strings of text.
 
-.. autofunction:: chatterbot.utils.clean_whitespace
-
 .. autofunction:: chatterbot.utils.clean
 
 Terminal input

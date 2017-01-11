@@ -59,6 +59,7 @@ Contents:
    examples
    training
    corpus
+   preprocessors
    logic/index
    input/index
    output/index
