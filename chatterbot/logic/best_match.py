@@ -24,23 +24,22 @@ class BestMatch(LogicAdapter):
                 )
                 random_response = self.chatbot.storage.get_random()
                 random_response.confidence = 0
-                return random_response.confidence, random_response
+                return random_response
             else:
                 raise self.EmptyDatasetException()
 
         closest_match = input_statement
-        max_confidence = 0
+        closest_match.confidence = 0
 
         # Find the closest matching known statement
         for statement in statement_list:
             confidence = self.compare_statements(input_statement, statement)
 
-            if confidence > max_confidence:
-                max_confidence = confidence
+            if confidence > closest_match.confidence:
+                statement.confidence = confidence
                 closest_match = statement
 
-        closest_match.confidence = max_confidence
-        return max_confidence, closest_match
+        return closest_match
 
     def can_process(self, statement):
         """
@@ -52,13 +51,10 @@ class BestMatch(LogicAdapter):
     def process(self, input_statement):
 
         # Select the closest match to the input statement
-        confidence, closest_match = self.get(input_statement)
+        closest_match = self.get(input_statement)
         self.logger.info('Using "{}" as a close match to "{}"'.format(
             input_statement.text, closest_match.text
         ))
-
-        # Save any updates made to the statement by the logic adapter
-        self.chatbot.storage.update(closest_match)
 
         # Get all statements that are in response to the closest match
         response_list = self.chatbot.storage.filter(
@@ -72,6 +68,7 @@ class BestMatch(LogicAdapter):
                 )
             )
             response = self.select_response(input_statement, response_list)
+            response.confidence = closest_match.confidence
             self.logger.info('Response selected. Using "{}"'.format(response.text))
         else:
             response = self.chatbot.storage.get_random()
@@ -82,7 +79,6 @@ class BestMatch(LogicAdapter):
             )
 
             # Set confidence to zero because a random response is selected
-            confidence = 0
+            response.confidence = 0
 
-        response.confidence = confidence
-        return confidence, response
+        return response.confidence, response

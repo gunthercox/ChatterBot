@@ -13,10 +13,12 @@ class LowConfidenceAdapter(BestMatch):
         super(LowConfidenceAdapter, self).__init__(**kwargs)
 
         self.confidence_threshold = kwargs.get('threshold', 0.65)
-        self.default_response = kwargs.get(
-            'default_response',
-            "I'm sorry, I do not understand."
+
+        default_response = kwargs.get(
+            'default_response', "I'm sorry, I do not understand."
         )
+
+        self.default_response = Statement(text=default_response)
 
     def process(self, input_statement):
         """
@@ -24,15 +26,12 @@ class LowConfidenceAdapter(BestMatch):
         a high confidence response is not known.
         """
         # Select the closest match to the input statement
-        confidence, closest_match = self.get(input_statement)
+        closest_match = self.get(input_statement)
 
         # Confidence should be high only if it is less than the threshold
-        if confidence < self.confidence_threshold:
-            confidence = 1
+        if closest_match.confidence < self.confidence_threshold:
+            self.default_response.confidence = 1
         else:
-            confidence = 0
+            self.default_response.confidence = 0
 
-        response = Statement(self.default_response)
-        response.confidence = confidence
-
-        return confidence, response
+        return self.default_response.confidence, self.default_response
