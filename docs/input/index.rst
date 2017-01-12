@@ -31,8 +31,8 @@ strings_, dictionaries_ and :ref:`Statements <conversation_statements>`.
        input_adapter="chatterbot.input.VariableInputTypeAdapter"
    )
 
-Terminal adapter
-================
+Terminal input adapter
+======================
 
 .. autofunction:: chatterbot.input.TerminalAdapter
 
@@ -48,8 +48,8 @@ communicate with the chat bot.
 
 .. _hipchat-input-adapter:
 
-Gitter Adapter
-==============
+Gitter input adapter
+====================
 
 .. autofunction:: chatterbot.input.Gitter
 
@@ -64,8 +64,8 @@ Gitter Adapter
    )
 
 
-HipChat Adapter
-===============
+HipChat input adapter
+=====================
 
 .. autofunction:: chatterbot.input.HipChat
 
@@ -84,8 +84,8 @@ Be sure to also see the documentation for the :ref:`HipChat output adapter <hipc
        hipchat_access_token="my-hipchat-access-token",
    )
 
-Mailgun adapter
-===============
+Mailgun input adapter
+=====================
 
 .. autofunction:: chatterbot.input.Mailgun
 
@@ -97,8 +97,8 @@ the `Mailgun API`_.
 
 .. _microsoft-input-adapter:
 
-Microsot Bot Framework Adapter
-==============================
+Microsot Bot Framework input adapter
+====================================
 
 .. autofunction:: chatterbot.input.Microsoft
 

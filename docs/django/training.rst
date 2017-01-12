@@ -1,6 +1,6 @@
-========
-Training
-========
+===============
+Django Training
+===============
 
 Management command
 ==================

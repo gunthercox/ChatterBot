@@ -54,8 +54,8 @@ Unicode header
 
    # -*- coding: utf-8 -*-
 
-When to use
-+++++++++++
+When to use the unicode header
+++++++++++++++++++++++++++++++
 
 If your strings use escaped unicode characters (they looks like :code:`u'\u00b0C'`) then
 you do not need add the header. If your strings like :code:`'ØÆÅ'` then you are required
@@ -71,8 +71,8 @@ Unicode escape characters
    >>> print u'\u0420\u043e\u0441\u0441\u0438\u044f'
    Россия
 
-When to use
-+++++++++++
+When to use escape characters
++++++++++++++++++++++++++++++
 
 Prefix your strings with the unicode escape character :code:`u'...'` when you are
 using excaped unicode characters.
@@ -84,8 +84,8 @@ Import unicode literals from future
 
    from __future__ import unicode_literals
 
-When to use
-+++++++++++
+When to import unicode literals
++++++++++++++++++++++++++++++++
 
 Use this when you need to make sure that Python 3 code also works in Python 2.
 

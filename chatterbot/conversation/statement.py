@@ -73,7 +73,7 @@ class Statement(object):
         If the response is already in the list, increment the occurrence count of that response.
 
         :param response: The response to add.
-        :type response: chatterbot.conversation.response.Response
+        :type response: `Response`
         """
         if not isinstance(response, Response):
             raise Statement.InvalidTypeException(
@@ -112,7 +112,7 @@ class Statement(object):
         as a response to the current statement.
 
         :param statement: The statement object to get the count for.
-        :type statement: chatterbot.conversation.statement.Statement
+        :type statement: `Statement`
 
         :returns: Return the number of times the statement has been used as a response.
         :rtype: int

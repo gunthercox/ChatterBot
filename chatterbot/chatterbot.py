@@ -163,7 +163,7 @@ class ChatBot(object):
         Set the module used to train the chatbot.
 
         :param training_class: The training class to use for the chat bot.
-        :type training_class: chatterbot.trainers.Trainer
+        :type training_class: `Trainer`
 
         :param \**kwargs: Any parameters that should be passed to the training class.
         """

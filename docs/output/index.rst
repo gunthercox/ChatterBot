@@ -23,8 +23,8 @@ as a `Statement` object.
        output_format="text"
    )
 
-Terminal adapter
-================
+Terminal output adapter
+=======================
 
 .. autofunction:: chatterbot.output.TerminalAdapter
 
@@ -40,8 +40,8 @@ communicate with the chat bot.
 
 .. _hipchat-output-adapter:
 
-Gitter Adapter
-==============
+Gitter output adapter
+=====================
 
 .. autofunction:: chatterbot.output.Gitter
 
@@ -55,8 +55,8 @@ Gitter Adapter
        gitter_only_respond_to_mentions=True,
    )
 
-HipChat Adapter
-===============
+HipChat output adapter
+======================
 
 .. autofunction:: chatterbot.output.HipChat
 
@@ -77,8 +77,8 @@ Be sure to also see the documentation for the :ref:`HipChat input adapter <hipch
 
 .. _microsoft-output-adapter:
 
-Microsoft Bot Framework Adapter
-===============================
+Microsoft Bot Framework output adapter
+======================================
 
 .. autofunction:: chatterbot.output.Microsoft
 
@@ -97,8 +97,8 @@ Be sure to also see the documentation for the :ref:`Microsoft input adapter <mic
        direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
    )
 
-Mailgun adapter
-===============
+Mailgun output adapter
+======================
 
 .. autofunction:: chatterbot.output.Mailgun
 
