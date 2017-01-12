@@ -95,7 +95,7 @@ class MultiLogicAdapter(LogicAdapter):
         Appends a logic adapter to the list of logic adapters being used.
 
         :param adapter: The logic adapter to be added.
-        :type adapter: LogicAdapter
+        :type adapter: `LogicAdapter`
         """
         utils.validate_adapter_class(adapter, LogicAdapter)
         adapter = utils.initialize_class(adapter, **kwargs)
@@ -106,7 +106,7 @@ class MultiLogicAdapter(LogicAdapter):
         Adds a logic adapter at a specified index.
 
         :param logic_adapter: The string path to the logic adapter to add.
-        :type logic_adapter: class
+        :type logic_adapter: str
 
         :param insert_index: The index to insert the logic adapter into the list at.
         :type insert_index: int

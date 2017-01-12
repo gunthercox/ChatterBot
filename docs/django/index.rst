@@ -14,8 +14,8 @@ Django applications.
    views
    wsgi
 
-Installation
-============
+Install packages
+================
 
 Install with pip
 

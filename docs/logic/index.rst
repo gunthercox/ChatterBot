@@ -65,15 +65,9 @@ Setting parameters
    The values for :code:`response_selection_method` and :code:`statement_comparison_function` can be a string
    of the path to the function, or a callable.
 
-Comparison functions
---------------------
+    See the :ref:`statement-comparison` documentation for the list of functions included with ChatterBot.
 
-See the :ref:`statement-comparison` documentation for the list of functions included with ChatterBot.
-
-Response selection methods
---------------------------
-
-See the :ref:`response-selection` documentation for the list of response selection methods included with ChatterBot.
+    See the :ref:`response-selection` documentation for the list of response selection methods included with ChatterBot.
 
 
 Time Logic Adapter
@@ -83,9 +77,6 @@ Time Logic Adapter
 
 The :code:`TimeLogicAdapter` identifies statements in which a question about the current time is asked.
 If a matching question is detected, then a response containing the current time is returned.
-
-Example
--------
 
 .. code-block:: text
 
@@ -98,13 +89,10 @@ Mathematical Evaluation Adapter
 
 .. autofunction:: chatterbot.logic.MathematicalEvaluation
 
-The `MathematicalEvaluation` logic adapter checks a given statement to see if
-it contains a mathematical expression that can be evaluated. If one exists,
-then it returns a response containing the result.
+The :code:`MathematicalEvaluation` logic adapter checks a given statement to see if
+it contains a mathematical expression that can be evaluated.
+If one exists, then it returns a response containing the result.
 This adapter is able to handle any combination of word and numeric operators.
-
-Example
--------
 
 .. code-block:: text
 
@@ -120,8 +108,8 @@ determined with a high amount of confidence.
 
 .. autofunction:: chatterbot.logic.LowConfidenceAdapter
 
-Example usage
--------------
+Low confidence response example
+-------------------------------
 
 .. literalinclude:: ../../examples/default_response_example.py
    :language: python
@@ -135,8 +123,8 @@ for this adapter, the specified response will be returned.
 
 .. autofunction:: chatterbot.logic.SpecificResponseAdapter
 
-Example usage
--------------
+Specific response example
+-------------------------
 
 .. literalinclude:: ../../examples/specific_response_example.py
    :language: python
