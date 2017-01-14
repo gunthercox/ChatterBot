@@ -33,8 +33,8 @@
     "divisé par" : "/",
     "moins" : "-",
     "fois" : "*",
-    "équarri" : "^ 2",
-    "à la puissance" : "^"
+    "équarri" : "** 2",
+    "à la puissance" : "**"
   },
   "scales" : {
     "cent" : "* 100",
