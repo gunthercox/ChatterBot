@@ -59,7 +59,7 @@ class TwitterTrainerTestCase(ChatBotTestCase):
         self.trainer.api.GetStatus = MagicMock(side_effect=get_status_side_effect)
 
     def test_random_word(self):
-        word = self.trainer.random_word()
+        word = self.trainer.random_word('random')
 
         self.assertTrue(len(word) > 3)
 

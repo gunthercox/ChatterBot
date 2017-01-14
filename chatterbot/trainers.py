@@ -121,11 +121,17 @@ class TwitterTrainer(Trainer):
     """
     Allows the chat bot to be trained using data
     gathered from Twitter.
+
+    :param random_seed_word: The seed word to be used to get random tweets from the Twitter API.
+                             This parameter is optional. By default it is the word 'random'.
     """
 
     def __init__(self, storage, **kwargs):
         super(TwitterTrainer, self).__init__(storage, **kwargs)
         from twitter import Api as TwitterApi
+
+        # The word to be used as the first search term when searching for tweets
+        self.random_seed_word = kwargs.get('random_seed_word', 'random')
 
         self.api = TwitterApi(
             consumer_key=kwargs.get('twitter_consumer_key'),
@@ -134,7 +140,7 @@ class TwitterTrainer(Trainer):
             access_token_secret=kwargs.get('twitter_access_token_secret')
         )
 
-    def random_word(self, base_word='random'):
+    def random_word(self, base_word):
         """
         Generate a random word using the Twitter API.
 
@@ -181,7 +187,7 @@ class TwitterTrainer(Trainer):
         statements = []
 
         # Generate a random word
-        random_word = self.random_word()
+        random_word = self.random_word(self.random_seed_word)
 
         self.logger.info(u'Requesting 50 random tweets containing the word {}'.format(random_word))
         tweets = self.api.GetSearch(term=random_word, count=50)
