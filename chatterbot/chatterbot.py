@@ -39,7 +39,7 @@ class ChatBot(object):
         self.output = utils.initialize_class(output_adapter, **kwargs)
 
         filters = kwargs.get('filters', tuple())
-        self.filters = (utils.import_module(F)() for F in filters)
+        self.filters = tuple([utils.import_module(F)() for F in filters])
 
         # Add required system logic adapter
         self.logic.system_adapters.append(
