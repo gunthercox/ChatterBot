@@ -29,7 +29,7 @@ def levenshtein_distance(statement, other_statement):
     PYTHON = sys.version_info[0]
 
     # Return 0 if either statement has a falsy text value
-    if not statement.text or not statement.text:
+    if not statement.text or not other_statement.text:
         return 0
 
     # Get the lowercase version of both strings
