@@ -33,7 +33,7 @@ class Mailgun(OutputAdapter):
                 'text': text
             })
 
-    def process_response(self, statement, confidence=None, session_id=None):
+    def process_response(self, statement, session_id=None):
         """
         Send the response statement as an email.
         """
