@@ -89,6 +89,12 @@ class MathematicalEvaluationOperationTests(TestCase):
         else:
             self.assertEqual(response.text, '( 100 / 20 ) = 5.0')
 
+    def test_exponent_operator(self):
+        statement = Statement('What is 2 ^ 10')
+        confidence, response = self.adapter.process(statement)
+        self.assertEqual(response.text, '( 2 ^ 10 ) = 1024')
+        self.assertEqual(response.confidence, 1)
+
     def test_parenthesized_multiplication_and_addition(self):
         statement = Statement('What is 100 + ( 1000 * 2 )?')
         confidence, response = self.adapter.process(statement)
@@ -141,15 +147,27 @@ class MathematicalEvaluationOperationTests(TestCase):
         self.assertEqual(response.text, '( -100.5 * 20 ) = -2010.0')
         self.assertEqual(response.confidence, 1)
 
-    def test_constants(self):
-        statement = Statement('What is pi plus e ?')
+    def test_pi_constant(self):
+        statement = Statement('What is pi plus one ?')
         confidence, response = self.adapter.process(statement)
-        self.assertEqual(response.text, '3.141693 + 2.718281 = 5.859974')
+        self.assertEqual(response.text, '3.141693 + ( 1 ) = 4.141693')
         self.assertEqual(response.confidence, 1)
 
-    def test_math_functions(self):
-        statement = Statement('What is log ( 5 + 6 ) * sqrt ( 12 ) ?')
+    def test_e_constant(self):
+        statement = Statement('What is e plus one ?')
         confidence, response = self.adapter.process(statement)
-        self.assertEqual(response.text, 'log ( ( 5 + ( 6 ) * sqrt ( ( 12 ) ) ) ) = 3.24977779033')
+        self.assertEqual(response.text, '2.718281 + ( 1 ) = 3.718281')
+        self.assertEqual(response.confidence, 1)
+
+    def test_log_function(self):
+        statement = Statement('What is log 100 ?')
+        confidence, response = self.adapter.process(statement)
+        self.assertEqual(response.text, 'log ( 100 ) = 2.0')
+        self.assertEqual(response.confidence, 1)
+
+    def test_square_root_function(self):
+        statement = Statement('What is the sqrt 144 ?')
+        confidence, response = self.adapter.process(statement)
+        self.assertEqual(response.text, 'sqrt ( 144 ) = 12.0')
         self.assertEqual(response.confidence, 1)
 
