@@ -34,4 +34,4 @@ class LowConfidenceAdapter(BestMatch):
         else:
             self.default_response.confidence = 0
 
-        return self.default_response.confidence, self.default_response
+        return self.default_response

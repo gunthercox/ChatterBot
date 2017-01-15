@@ -64,9 +64,9 @@ class MathematicalEvaluation(LogicAdapter):
         Determines whether it is appropriate for this
         adapter to respond to the user input.
         """
-        confidence, response = self.process(statement)
-        self.cache[statement.text] = (confidence, response)
-        return confidence == 1
+        response = self.process(statement)
+        self.cache[statement.text] = response
+        return response.confidence == 1
 
     def process(self, statement):
         """
@@ -100,7 +100,7 @@ class MathematicalEvaluation(LogicAdapter):
         except:
             response.confidence = 0
 
-        return response.confidence, response
+        return response
 
     def simplify_chunks(self, input_text):
         """

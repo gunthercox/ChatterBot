@@ -14,15 +14,21 @@ class LogicAdapterTestCase(TestCase):
         super(LogicAdapterTestCase, self).setUp()
         self.adapter = LogicAdapter()
 
+    def test_class_name(self):
+        """
+        Test that the logic adapter can return its own class name.
+        """
+        self.assertEqual(self.adapter.class_name, 'LogicAdapter')
+
     def test_can_process(self):
         """
         This method should return true by default.
         """
-        self.assertTrue(self.adapter.can_process(""))
+        self.assertTrue(self.adapter.can_process(''))
 
     def test_process(self):
         with self.assertRaises(LogicAdapter.AdapterMethodNotImplementedError):
-            self.adapter.process("")
+            self.adapter.process('')
 
     def test_set_statement_comparison_function_string(self):
         adapter = LogicAdapter(

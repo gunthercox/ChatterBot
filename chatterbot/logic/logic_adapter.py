@@ -63,9 +63,17 @@ class LogicAdapter(Adapter):
         :param statement: An input statement to be processed by the logic adapter.
         :type statement: Statement
 
-        :rtype: float, Statement
+        :rtype: Statement
         """
         raise self.AdapterMethodNotImplementedError()
+
+    @property
+    def class_name(self):
+        """
+        Return the name of the current logic adapter class.
+        This is typically used for logging and debugging.
+        """
+        return str(self.__class__.__name__)
 
     class EmptyDatasetException(Exception):
 

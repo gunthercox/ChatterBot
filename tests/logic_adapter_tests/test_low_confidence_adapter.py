@@ -44,9 +44,8 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         Test the case that a high confidence response is known.
         """
         statement = Statement('What is your quest?')
-        confidence, match = self.adapter.process(statement)
+        match = self.adapter.process(statement)
 
-        self.assertEqual(confidence, 0)
         self.assertEqual(match.confidence, 0)
         self.assertEqual(match, self.adapter.default_response)
 
@@ -55,8 +54,7 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         Test the case that a high confidence response is not known.
         """
         statement = Statement('Is this a tomato?')
-        confidence, match = self.adapter.process(statement)
+        match = self.adapter.process(statement)
 
-        self.assertEqual(confidence, 1)
         self.assertEqual(match.confidence, 1)
         self.assertEqual(match, self.adapter.default_response)

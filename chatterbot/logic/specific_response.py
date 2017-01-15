@@ -29,4 +29,4 @@ class SpecificResponseAdapter(LogicAdapter):
         else:
             self.response_statement.confidence = 0
 
-        return self.response_statement.confidence, self.response_statement
+        return self.response_statement
