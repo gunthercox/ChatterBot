@@ -1,4 +1,5 @@
 from __future__ import unicode_literals
+import warnings
 from collections import Counter
 from chatterbot import utils
 from .logic_adapter import LogicAdapter
@@ -34,18 +35,29 @@ class MultiLogicAdapter(LogicAdapter):
 
         for adapter in self.get_adapters():
             if adapter.can_process(statement):
-                confidence, output = adapter.process(statement)
-                results.append((confidence, output, ))
+
+                output = adapter.process(statement)
+
+                if type(output) == tuple:
+                    warnings.warn(
+                        '{} returned two values when just a Statement object was expected. '
+                        'You should update your logic adapter to return just the Statement object. '
+                        'Make sure that statement.confidence is being set.'.format(adapter.class_name),
+                        DeprecationWarning
+                    )
+                    output = output[1]       
+
+                results.append((output.confidence, output, ))
 
                 self.logger.info(
                     '{} selected "{}" as a response with a confidence of {}'.format(
-                        str(adapter.__class__), output.text, confidence
+                        adapter.class_name, output.text, output.confidence
                     )
                 )
 
-                if confidence > max_confidence:
+                if output.confidence > max_confidence:
                     result = output
-                    max_confidence = confidence
+                    max_confidence = output.confidence
             else:
                 self.logger.info(
                     'Not processing the statement using {}'.format(
@@ -64,7 +76,7 @@ class MultiLogicAdapter(LogicAdapter):
                 max_confidence = self.get_greatest_confidence(result, results)
 
         result.confidence = max_confidence
-        return max_confidence, result
+        return result
 
     def get_greatest_confidence(self, statement, options):
         """

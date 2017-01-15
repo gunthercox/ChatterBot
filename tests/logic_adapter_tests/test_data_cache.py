@@ -14,8 +14,8 @@ class DummyMutatorLogicAdapter(LogicAdapter):
         statement.add_extra_data('pos_tags', 'NN')
 
         self.chatbot.storage.update(statement)
-
-        return 1, statement
+        statement.confidence = 1
+        return statement
 
 
 class DataCachingTests(ChatBotTestCase):

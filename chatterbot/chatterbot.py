@@ -135,9 +135,9 @@ class ChatBot(object):
         self.storage.generate_base_query(self, session_id)
 
         # Select a response to the input statement
-        confidence, response = self.logic.process(input_statement)
+        response = self.logic.process(input_statement)
 
-        return input_statement, response, confidence
+        return input_statement, response, response.confidence
 
     def learn_response(self, statement, previous_statement):
         """

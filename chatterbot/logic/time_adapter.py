@@ -63,4 +63,4 @@ class TimeLogicAdapter(LogicAdapter):
         response = Statement('The current time is ' + now.strftime('%I:%M %p'))
 
         response.confidence = confidence
-        return confidence, response
+        return response
