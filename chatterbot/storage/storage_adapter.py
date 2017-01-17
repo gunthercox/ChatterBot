@@ -1,4 +1,5 @@
 import logging
+import os
 
 
 class StorageAdapter(object):
@@ -16,21 +17,22 @@ class StorageAdapter(object):
         self.adapter_supports_queries = True
         self.base_query = None
 
-    @property
-    def Statement(self):
-        """
-        Create a storage-aware statement.
-        """
-        import os
+        # Set up the class for storage-aware statements and conversations
 
         if 'DJANGO_SETTINGS_MODULE' in os.environ:
-            from chatterbot.ext.django_chatterbot.models import Statement
-            return Statement
+            from chatterbot.ext.django_chatterbot.models import Statement, Conversation
+
+            self.Statement = Statement
+            self.Conversation = Conversation
         else:
             from chatterbot.conversation.statement import Statement
-            statement = Statement
-            statement.storage = self
-            return statement
+            from chatterbot.conversation.session import Conversation, ConversationSessionManager
+
+            self.Statement = Statement
+            self.Statement.storage = self
+
+            self.Conversation = Conversation
+            self.Conversation.objects = ConversationSessionManager(self)
 
     def generate_base_query(self, chatterbot, session_id):
         """

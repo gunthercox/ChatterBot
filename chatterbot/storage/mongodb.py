@@ -98,8 +98,8 @@ class MongoDatabaseAdapter(StorageAdapter):
         # The mongo collection of statement documents
         self.statements = self.database['statements']
 
-        # Set a requirement for the text attribute to be unique
-        self.statements.create_index('text', unique=True)
+        # The mongo collection of conversation documents
+        self.conversations = self.database['conversations']
 
         self.base_query = Query()
 
@@ -229,7 +229,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             operations.append(update_operation)
 
         try:
-            self.statements.bulk_write(operations, ordered=False)
+            self.database[statement.name].bulk_write(operations, ordered=False)
         except BulkWriteError as bwe:
             # Log the details of a bulk write error
             self.logger.error(str(bwe.details))

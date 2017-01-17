@@ -1,13 +1,16 @@
 # -*- coding: utf-8 -*-
 from .response import Response
 from datetime import datetime
+from .session import ModelMixin
 
 
-class Statement(object):
+class Statement(ModelMixin):
     """
     A statement represents a single spoken entity, sentence or
     phrase that someone can say.
     """
+
+    storage = None
 
     def __init__(self, text, **kwargs):
         self.text = text
@@ -22,8 +25,6 @@ class Statement(object):
         # this is an accurate response. This value is set when the
         # statement is returned by the chat bot.
         self.confidence = 0
-
-        self.storage = None
 
     def __str__(self):
         return self.text
