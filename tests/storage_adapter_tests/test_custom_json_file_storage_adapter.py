@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.storage import JsonFileStorageAdapter
+from chatterbot.storage import CustomJsonFileStorageAdapter
 from chatterbot.conversation import Statement, Response
 
 
@@ -14,7 +14,7 @@ class CustomJsonAdapterTestCase(TestCase):
         # Generate a random name for the database
         database_name = str(randint(0, 9000))
 
-        self.adapter = JsonFileStorageAdapter(
+        self.adapter = CustomJsonFileStorageAdapter(
             database=database_name,
             load_func="json.load",
             dump_func="json.dump"
@@ -27,7 +27,7 @@ class CustomJsonAdapterTestCase(TestCase):
         self.adapter.drop()
 
 
-class CustomJsonFileStorageAdapterTestCase(JsonAdapterTestCase):
+class CustomJsonFileStorageAdapterTestCase(CustomJsonAdapterTestCase):
 
     def test_json_to_object(self):
         data = {
@@ -223,7 +223,7 @@ class CustomJsonFileStorageAdapterTestCase(JsonAdapterTestCase):
         self.assertIn("A what?", responses)
 
 
-class CustomJsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
+class CustomJsonFileStorageAdapterFilterTestCase(CustomJsonAdapterTestCase):
 
     def setUp(self):
         super(JsonFileStorageAdapterFilterTestCase, self).setUp()
@@ -364,7 +364,7 @@ class CustomJsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
-class CustomJsonFileStorageOrderingTestCase(JsonAdapterTestCase):
+class CustomJsonFileStorageOrderingTestCase(CustomJsonAdapterTestCase):
     """
     Test cases for the ordering of sets of statements.
     """
