@@ -14,14 +14,14 @@ class DjangoStorageAdapter(StorageAdapter):
         self.adapter_supports_queries = False
 
     def count(self):
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        return StatementModel.objects.count()
+        from chatterbot.ext.django_chatterbot.models import Statement
+        return Statement.objects.count()
 
     def find(self, statement_text):
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
+        from chatterbot.ext.django_chatterbot.models import Statement
         try:
-            return StatementModel.objects.get(text=statement_text)
-        except StatementModel.DoesNotExist as e:
+            return Statement.objects.get(text=statement_text)
+        except Statement.DoesNotExist as e:
             self.logger.info(str(e))
             return None
 
@@ -30,7 +30,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
+        from chatterbot.ext.django_chatterbot.models import Statement
         from django.db.models import Q
 
         order = kwargs.pop('order_by', None)
@@ -66,7 +66,7 @@ class DjangoStorageAdapter(StorageAdapter):
             value = kwargs['in_response__response__text']
             parameters['responses__statement__text'] = value
 
-        statements = StatementModel.objects.filter(Q(**kwargs) | Q(**parameters))
+        statements = Statement.objects.filter(Q(**kwargs) | Q(**parameters))
 
         if order:
             statements = statements.order_by(order)
@@ -77,17 +77,17 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Update the provided statement.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
+        from chatterbot.ext.django_chatterbot.models import Statement
 
         response_statement_cache = statement.response_statement_cache
 
-        statement, created = StatementModel.objects.get_or_create(text=statement.text)
+        statement, created = Statement.objects.get_or_create(text=statement.text)
         statement.extra_data = getattr(statement, 'extra_data', '')
         statement.save()
 
         for _response_statement in response_statement_cache:
 
-            response_statement, created = StatementModel.objects.get_or_create(
+            response_statement, created = Statement.objects.get_or_create(
                 text=_response_statement.text
             )
             response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
@@ -108,8 +108,8 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Returns a random statement from the database
         """
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        return StatementModel.objects.order_by('?').first()
+        from chatterbot.ext.django_chatterbot.models import Statement
+        return Statement.objects.order_by('?').first()
 
     def remove(self, statement_text):
         """
@@ -117,12 +117,12 @@ class DjangoStorageAdapter(StorageAdapter):
         Removes any responses from statements if the response text matches the
         input text.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
+        from chatterbot.ext.django_chatterbot.models import Statement
+        from chatterbot.ext.django_chatterbot.models import Response
         from django.db.models import Q
-        statements = StatementModel.objects.filter(text=statement_text)
+        statements = Statement.objects.filter(text=statement_text)
 
-        responses = ResponseModel.objects.filter(
+        responses = Response.objects.filter(
             Q(statement__text=statement_text) | Q(response__text=statement_text)
         )
 
@@ -133,11 +133,11 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Remove all data from the database.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
+        from chatterbot.ext.django_chatterbot.models import Statement, Response, Conversation
 
-        StatementModel.objects.all().delete()
-        ResponseModel.objects.all().delete()
+        Statement.objects.all().delete()
+        Response.objects.all().delete()
+        Conversation.objects.all().delete()
 
     def get_response_statements(self):
         """
@@ -146,9 +146,8 @@ class DjangoStorageAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-        from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
+        from chatterbot.ext.django_chatterbot.models import Statement, Response
 
-        responses = ResponseModel.objects.all()
+        responses = Response.objects.all()
 
-        return StatementModel.objects.filter(in_response__in=responses)
+        return Statement.objects.filter(in_response__in=responses)
