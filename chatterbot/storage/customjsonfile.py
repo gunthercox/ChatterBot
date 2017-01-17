@@ -22,31 +22,33 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
         database_path = self.kwargs.get('database', 'database.db')
 
-		load_settings = self.kwargs.get("load_func", "json.load")
-		dump_settings = self.kwargs.get("dump_func", "json.dump")
+        load_settings = self.kwargs.get("load_func", "json.load")
+        dump_settings = self.kwargs.get("dump_func", "json.dump")
 
-		self.load = utils.import_module(load_settings)
+        self.load = utils.import_module(load_settings)
 
-		self.dump = utils.import_module(dump_settings)
+        self.dump = utils.import_module(dump_settings)
 
-		if not os.path.isfile(database_path):
-			self.database = {}
-			with open(database_path, "w") as f:
-				f.write("{}")
+        if not os.path.isfile(database_path):
+            self.database = {}
+            with open(database_path, "w") as f:
+                f.write("{}")
 
-		else:
-			with open(database_path) as f:
-				self.database = self.load(f)
+        else:
+            with open(database_path) as f:
+                self.database = self.load(f)
 
-		self._db_path = database_path
+        self._db_path = database_path
         self.adapter_supports_queries = False
-
-	def __del__(self):
-		self._save()
-		
-	def _save(self):
-		with open(self.db_path,"w") as f:
-			self.dump(f)
+        
+    def _save(self):
+        with open(self._db_path, "w") as f:
+            try:
+                # ujson is able to properly save and load datetime objects
+                self.dump(self.database, f) 
+            except TypeError:
+                # builtin json isn't
+                self.dump(self.database, f, default=lambda o: getattr(o,'__dict__',str(o))) 
 
     def _keys(self):
         # The value has to be cast as a list for Python 3 compatibility
@@ -60,16 +62,14 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
         if entry is None:
             self.database[statement_text] = {}
-			return None
-			
-		values = entry.get('in_response_to')
-		
-		if not values:
-			return None
+            return None
+            
+        if not entry:
+            return None
 
-        values['text'] = statement_text
+        entry['text'] = statement_text
 
-        return self.json_to_object(values)
+        return self.json_to_object(entry)
 
     def remove(self, statement_text):
         """
@@ -82,6 +82,7 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
             self.update(statement)
 
         del self.database[statement_text]
+        self._save()
 
     def deserialize_responses(self, response_list):
         """
@@ -156,12 +157,14 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
         for key in self._keys():
             values = self.database.get(key)
-			if values is None:
-				self.database["key"] = {}
-				values = {}
+            if values is None:
+                self.database["key"] = {}
+                values = {}
+                continue
 
             # Add the text attribute to the values
             values['text'] = key
+            values['in_response_to'] = []
 
             if self._all_kwargs_match_values(kwargs, values):
                 results.append(self.json_to_object(values))
@@ -184,7 +187,7 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
         # Remove the text key from the data
         del data['text']
-        self.database.[statement.text] = data
+        self.database[statement.text] = data
 
         # Make sure that an entry for each response exists
         for response_statement in statement.in_response_to:
@@ -209,4 +212,4 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
         Remove the json file database completely.
         """
         self.database = {}
-		open(self._db_path, "w").close()
+        open(self._db_path, "w").close()
