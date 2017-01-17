@@ -226,7 +226,7 @@ class CustomJsonFileStorageAdapterTestCase(CustomJsonAdapterTestCase):
 class CustomJsonFileStorageAdapterFilterTestCase(CustomJsonAdapterTestCase):
 
     def setUp(self):
-        super(JsonFileStorageAdapterFilterTestCase, self).setUp()
+        super(CustomJsonFileStorageAdapterFilterTestCase, self).setUp()
 
         self.statement1 = Statement(
             "Testing...",
