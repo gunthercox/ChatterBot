@@ -43,7 +43,8 @@ Training via list data
 For the training, process, you will need to pass in a list of statements where the order of each statement is based
 on it's placement in a given conversation.
 
-For example, if you were to run bot of the following training calls, then the resulting chatterbot would respond to
+For example, if you were to run bot of the following training calls, then the resulting chatterbot would creates 
+a default database in current directory with name ``database.db`` and cahtterbot will respond to
 both statements of "Hi there!" and "Greetings!" by saying "Hello".
 
 .. code-block:: python
