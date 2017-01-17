@@ -14,6 +14,6 @@ class OutputIntegrationTestCase(TestCase):
         adapter = OutputAdapter()
 
         statement = Statement(text='_')
-        result = adapter.process_response(statement, confidence=1)
+        result = adapter.process_response(statement)
 
         self.assertEqual(result.text, '_')

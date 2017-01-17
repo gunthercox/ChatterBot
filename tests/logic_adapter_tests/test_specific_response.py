@@ -20,9 +20,8 @@ class SpecificResponseAdapterTestCase(TestCase):
         Test the case that an exact match is given.
         """
         statement = Statement('Open sesame!')
-        confidence, match = self.adapter.process(statement)
+        match = self.adapter.process(statement)
 
-        self.assertEqual(confidence, 1)
         self.assertEqual(match.confidence, 1)
         self.assertEqual(match, self.adapter.response_statement)
 
@@ -31,8 +30,7 @@ class SpecificResponseAdapterTestCase(TestCase):
         Test the case that an exact match is not given.
         """
         statement = Statement('Open says me!')
-        confidence, match = self.adapter.process(statement)
+        match = self.adapter.process(statement)
 
-        self.assertEqual(confidence, 0)
         self.assertEqual(match.confidence, 0)
         self.assertEqual(match, self.adapter.response_statement)

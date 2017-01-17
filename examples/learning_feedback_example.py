@@ -41,14 +41,14 @@ print('Type something to begin...')
 while True:
     try:
         input_statement = bot.input.process_input_statement()
-        statement, response, confidence = bot.generate_response(input_statement)
+        statement, response = bot.generate_response(input_statement)
 
         print('\n Is "{}" this a coherent response to "{}"? \n'.format(response, input_statement))
 
         if get_feedback():
             bot.learn_response(response,input_statement)
 
-        bot.output.process_response(response, confidence)
+        bot.output.process_response(response)
 
         # Update the conversation history for the bot
         # It is important that this happens last, after the learning step

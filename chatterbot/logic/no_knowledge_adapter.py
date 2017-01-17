@@ -23,4 +23,4 @@ class NoKnowledgeAdapter(LogicAdapter):
         else:
             statement.confidence = 1
 
-        return statement.confidence, statement
+        return statement

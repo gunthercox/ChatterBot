@@ -111,7 +111,7 @@ class ChatBot(object):
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(self, input_statement)
 
-        statement, response, confidence = self.generate_response(input_statement, session_id)
+        statement, response = self.generate_response(input_statement, session_id)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.conversation_sessions.get(
@@ -122,7 +122,7 @@ class ChatBot(object):
         self.conversation_sessions.update(session_id, (statement, response, ))
 
         # Process the response output with the output adapter
-        return self.output.process_response(response, confidence, session_id)
+        return self.output.process_response(response, session_id)
 
     def generate_response(self, input_statement, session_id=None):
         """
@@ -135,9 +135,9 @@ class ChatBot(object):
         self.storage.generate_base_query(self, session_id)
 
         # Select a response to the input statement
-        confidence, response = self.logic.process(input_statement)
+        response = self.logic.process(input_statement)
 
-        return input_statement, response, confidence
+        return input_statement, response
 
     def learn_response(self, statement, previous_statement):
         """

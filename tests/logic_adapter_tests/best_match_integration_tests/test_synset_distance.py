@@ -73,8 +73,7 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
             return_value=Statement('Random')
         )
 
-        confidence, match = self.adapter.process(Statement('Blah'))
+        match = self.adapter.process(Statement('Blah'))
 
-        self.assertEqual(confidence, 0)
         self.assertEqual(match.confidence, 0)
         self.assertEqual(match.text, 'Random')

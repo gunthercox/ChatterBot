@@ -45,9 +45,8 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
         self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterB')
         self.adapter.add_adapter('tests.logic_adapter_tests.test_multi_adapter.TestAdapterC')
 
-        confidence, statement = self.adapter.process(Statement('Howdy!'))
+        statement = self.adapter.process(Statement('Howdy!'))
 
-        self.assertEqual(confidence, 0.5)
         self.assertEqual(statement.confidence, 0.5)
         self.assertEqual(statement, 'Good morning.')
 

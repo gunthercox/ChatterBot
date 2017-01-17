@@ -81,4 +81,4 @@ class BestMatch(LogicAdapter):
             # Set confidence to zero because a random response is selected
             response.confidence = 0
 
-        return response.confidence, response
+        return response

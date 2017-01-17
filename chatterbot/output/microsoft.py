@@ -91,7 +91,7 @@ class Microsoft(OutputAdapter):
         # Microsoft return 204 on operation succeeded and no content was returned.
         return self.get_most_recent_message()
 
-    def process_response(self, statement, confidence=None, session_id=None):
+    def process_response(self, statement, session_id=None):
         data = self.send_message(self.conversation_id, statement.text)
         self.logger.info('processing user response {}'.format(data))
         return statement

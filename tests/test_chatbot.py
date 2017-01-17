@@ -108,11 +108,11 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
     def test_generate_response(self):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
-        input_statement, response, confidence = self.chatbot.generate_response(statement)
+        input_statement, response = self.chatbot.generate_response(statement)
 
         self.assertEqual(input_statement, statement)
         self.assertEqual(response, statement)
-        self.assertEqual(confidence, 1)
+        self.assertEqual(response.confidence, 1)
 
     def test_learn_response(self):
         previous_response = Statement('Define Hemoglobin.')

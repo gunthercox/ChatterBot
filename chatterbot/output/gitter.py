@@ -68,7 +68,7 @@ class Gitter(OutputAdapter):
         self._validate_status_code(response)
         return response.json()
 
-    def process_response(self, statement, confidence=None, session_id=None):
+    def process_response(self, statement, session_id=None):
         self.send_message(statement.text)
         return statement
 
