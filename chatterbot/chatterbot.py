@@ -71,8 +71,8 @@ class ChatBot(object):
         self.trainer = TrainerClass(self.storage, **kwargs)
         self.training_data = kwargs.get('training_data')
 
-        self.conversation_sessions = ConversationSessionManager()
-        self.default_session = self.conversation_sessions.new()
+        self.conversation_sessions = ConversationSessionManager(self.storage)
+        self.default_session = self.storage.Conversation.objects.create()
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
@@ -103,7 +103,7 @@ class ChatBot(object):
         :rtype: Statement
         """
         if not session_id:
-            session_id = str(self.default_session.uuid)
+            session_id = self.default_session.id
 
         input_statement = self.input.process_input_statement(input_item)
 

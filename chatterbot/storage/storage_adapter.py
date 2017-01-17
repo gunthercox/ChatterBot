@@ -17,22 +17,29 @@ class StorageAdapter(object):
         self.adapter_supports_queries = True
         self.base_query = None
 
-    @property
-    def Statement(self):
-        """
-        Create a storage-aware statement.
-        """
+        # Set up the class for storage-aware statements and conversations
+
+        use_django_models = False
 
         if 'DJANGO_SETTINGS_MODULE' in os.environ:
             django_project = __import__(os.environ['DJANGO_SETTINGS_MODULE'])
-            if django_project.settings.CHATTERBOT['use_django_models'] is True:
-                from chatterbot.ext.django_chatterbot.models import Statement
-                return Statement
+            if django_project.settings.CHATTERBOT['use_django_models']:
+                use_django_models = True
 
-        from chatterbot.conversation.statement import Statement
-        statement = Statement
-        statement.storage = self
-        return statement
+        if use_django_models:
+            from chatterbot.ext.django_chatterbot.models import Statement, Conversation
+
+            self.Statement = Statement
+            self.Conversation = Conversation
+        else:
+            from chatterbot.conversation.statement import Statement
+            from chatterbot.conversation.session import Conversation, ConversationSessionManager
+
+            self.Statement = Statement
+            self.Statement.storage = self
+
+            self.Conversation = Conversation
+            self.Conversation.objects = ConversationSessionManager(self)
 
     def generate_base_query(self, chatterbot, session_id):
         """
