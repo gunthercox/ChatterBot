@@ -1,5 +1,6 @@
 from unittest import TestCase
 from chatterbot.conversation.session import Session, ConversationSessionManager
+from .base_case import ChatBotTestCase
 
 
 class SessionTestCase(TestCase):
@@ -9,11 +10,11 @@ class SessionTestCase(TestCase):
         self.assertEqual(str(session.uuid), session.id_string)
 
 
-class ConversationSessionManagerTestCase(TestCase):
+class ConversationSessionManagerTestCase(ChatBotTestCase):
 
     def setUp(self):
         super(ConversationSessionManagerTestCase, self).setUp()
-        self.manager = ConversationSessionManager()
+        self.manager = ConversationSessionManager(self.chatbot.storage)
 
     def test_new(self):
         session = self.manager.new()
