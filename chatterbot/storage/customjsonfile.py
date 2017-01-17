@@ -164,7 +164,8 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
             # Add the text attribute to the values
             values['text'] = key
-            values['in_response_to'] = []
+			if not 'in_response_to' in values:
+				values['in_response_to'] = []
 
             if self._all_kwargs_match_values(kwargs, values):
                 results.append(self.json_to_object(values))
