@@ -163,3 +163,18 @@ class Response(models.Model):
         data['occurrence'] = self.occurrence
 
         return data
+
+
+class Conversation(models.Model):
+    """
+    A sequence of statements representing a conversation.
+    """
+
+    root = models.OneToOneField(
+        'Statement',
+        related_name='conversation',
+        help_text='The initiating statement in a conversation.'
+    )
+
+    def __str__(self):
+        return str(self.id)
