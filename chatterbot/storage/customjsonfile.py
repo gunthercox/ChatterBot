@@ -22,8 +22,8 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
         database_path = self.kwargs.get('database', 'database.db')
 
-        load_settings = self.kwargs.get("load_func", "json.load")
-        dump_settings = self.kwargs.get("dump_func", "json.dump")
+        load_settings = self.kwargs.get("loads_func", "json.loads")
+        dump_settings = self.kwargs.get("dumps_func", "json.dumps")
 
         self.load = utils.import_module(load_settings)
 
@@ -36,19 +36,20 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
         else:
             with open(database_path) as f:
-                self.database = self.load(f)
+                self.database = self.loads(f.read())
 
         self._db_path = database_path
         self.adapter_supports_queries = False
         
     def _save(self):
+        try:
+            # ujson is able to properly save and load datetime objects
+            data = self.dumps(self.database)
+        except TypeError:
+            # builtin json isn't
+            data = self.dumps(self.database, default=lambda o: getattr(o,'__dict__',str(o)))
         with open(self._db_path, "w") as f:
-            try:
-                # ujson is able to properly save and load datetime objects
-                self.dump(self.database, f) 
-            except TypeError:
-                # builtin json isn't
-                self.dump(self.database, f, default=lambda o: getattr(o,'__dict__',str(o))) 
+            f.write(data)
 
     def _keys(self):
         # The value has to be cast as a list for Python 3 compatibility
