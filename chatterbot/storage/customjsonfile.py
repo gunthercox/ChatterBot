@@ -36,7 +36,7 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
 
         else:
             with open(database_path) as f:
-                self.database = self.loads(f.read())
+                self.database = self.load(f.read())
 
         self._db_path = database_path
         self.adapter_supports_queries = False
@@ -44,7 +44,7 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
     def _save(self):
         try:
             # ujson is able to properly save and load datetime objects
-            data = self.dumps(self.database)
+            data = self.dump(self.database)
         except TypeError:
             # builtin json isn't
             data = self.dumps(self.database, default=lambda o: getattr(o,'__dict__',str(o)))
