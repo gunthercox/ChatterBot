@@ -47,7 +47,7 @@ class CustomJsonFileStorageAdapter(StorageAdapter):
             data = self.dump(self.database)
         except TypeError:
             # builtin json isn't
-            data = self.dumps(self.database, default=lambda o: getattr(o,'__dict__',str(o)))
+            data = self.dump(self.database, default=lambda o: getattr(o,'__dict__',str(o)))
         with open(self._db_path, "w") as f:
             f.write(data)
 
