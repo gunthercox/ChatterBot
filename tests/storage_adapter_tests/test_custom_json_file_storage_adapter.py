@@ -16,8 +16,8 @@ class CustomJsonAdapterTestCase(TestCase):
 
         self.adapter = CustomJsonFileStorageAdapter(
             database=database_name,
-            load_func="json.load",
-            dump_func="json.dump"
+            load_func="json.loads",
+            dump_func="json.dumps"
         )
 
     def tearDown(self):
