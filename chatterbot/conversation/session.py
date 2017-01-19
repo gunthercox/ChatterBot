@@ -11,6 +11,7 @@ class Session(object):
         # A unique identifier for the chat session
         self.uuid = uuid.uuid1()
         self.id_string = str(self.uuid)
+        self.id = str(self.uuid)
 
         # The last 10 statement inputs and outputs
         self.conversation = ResponseQueue(maxsize=10)

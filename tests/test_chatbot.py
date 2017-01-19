@@ -108,7 +108,10 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
     def test_generate_response(self):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
-        input_statement, response = self.chatbot.generate_response(statement)
+        input_statement, response = self.chatbot.generate_response(
+            statement,
+            self.chatbot.default_session.id
+        )
 
         self.assertEqual(input_statement, statement)
         self.assertEqual(response, statement)
