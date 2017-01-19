@@ -124,14 +124,10 @@ class ChatBot(object):
         # Process the response output with the output adapter
         return self.output.process_response(response, session_id)
 
-    def generate_response(self, input_statement, session_id=None):
+    def generate_response(self, input_statement, session_id):
         """
         Return a response based on a given input statement.
         """
-        if not session_id:
-            session = self.conversation_sessions.get(self.default_session.id_string)
-            session_id = str(session.uuid)
-
         self.storage.generate_base_query(self, session_id)
 
         # Select a response to the input statement
