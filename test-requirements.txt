@@ -1,5 +1,6 @@
 codeclimate-test-reporter
 coveralls
+factory-boy>=2.8.1,2.9.0
 flake8
 mock
 nose
