@@ -1,17 +1,65 @@
 import uuid
 
 
-class Session(object):
+class ConversationModelMixin(object):
+
+    collection_name = 'conversations'
+
+    pk_field = 'id'
+    fields = ('id', )
+
+    def get_last_response_statement(self):
+        """
+        Return the last statement that was received.
+        """
+        if self.statements.exists():
+            # Return the output statement
+            return self.statements.latest('id')
+        return None
+
+    def get_last_input_statement(self):
+        """
+        Return the last response that was given.
+        """
+        if self.statements.count() > 1:
+            # Return the input statement
+            return self.statements[-2]
+        return None
+
+    def serialize(self):
+        statements = []
+
+        for statement in self.statements:
+            statements.append({'text': statement.text})
+
+        return {
+            'id': self.id,
+            'statements': statements
+        }
+
+
+class ConversationRelatedManager(object):
+
+    def __init__(self, session):
+        self.session = session
+
+    def exists(self):
+        return len(self.session.statements) > 0
+
+    def count(self):
+        return len(self.session.statements)
+
+    def latest(self, *args):
+        return self.session.conversation[-1]
+
+
+class Session(ConversationModelMixin):
     """
     A session is an ordered collection of statements
     that are related to each other.
     """
 
     objects = None
-    collection_name = 'conversations'
-
-    pk_field = 'id'
-    fields = (id, )
 
     def __init__(self, **kwargs):
         # A unique identifier for the chat session
@@ -19,36 +67,7 @@ class Session(object):
         self.id = kwargs.get('id', str(self.uuid))
 
         # The last 10 statement inputs and outputs
-        self.conversation = kwargs.get('conversation', [])
-
-    def get_last_response_statement(self):
-        """
-        Return the last statement that was received.
-        """
-        if self.conversation:
-            # Return the output statement
-            return self.conversation[-1]
-        return None
-
-    def get_last_input_statement(self):
-        """
-        Return the last response that was given.
-        """
-        if len(self.conversation) > 1:
-            # Return the input statement
-            return self.conversation[-2]
-        return None
-
-    def serialize(self):
-        statements = []
-
-        for statement in self.conversation:
-            statements.append({'text': statement.text})
-
-        return {
-            'id': self.id,
-            'conversation': statements
-        }
+        self.statements = kwargs.get('statements', [])
 
 
 class ConversationSessionManager(object):
@@ -77,16 +96,16 @@ class ConversationSessionManager(object):
         else:
             return default
 
-    def update(self, session_id, conversance):
+    def update(self, session_id, statement):
         """
-        Add a conversance to a given session if the session exists.
+        Add a statement to the specified conversation if the conversation exists.
         """
         results = self.storage.filter(self.storage.Conversation, id=session_id)
 
         # If the conversation exists
         if results:
             session = results[0]
-            session.conversation.append(conversance)
+            session.statements.add(statement)
             self.storage.update(session)
 
 

@@ -30,14 +30,14 @@ class ViewTestCase(TestCase):
             })
 
     def test_get_chat_session(self):
-        session = self.view.chatterbot.conversation_sessions.new()
+        session = self.view.chatterbot.conversation_sessions.create()
         mock_response = MockResponse(session.id)
         get_session = self.view.get_chat_session(mock_response)
 
         self.assertEqual(session.id, get_session.id)
 
     def test_get_chat_session_invalid(self):
-        mock_response = MockResponse('--invalid--')
+        mock_response = MockResponse(0)
         session = self.view.get_chat_session(mock_response)
 
         self.assertNotEqual(session.id, 'test-session-id')

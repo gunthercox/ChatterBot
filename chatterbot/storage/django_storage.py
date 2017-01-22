@@ -14,7 +14,6 @@ class DjangoStorageAdapter(StorageAdapter):
         self.adapter_supports_queries = False
 
     def count(self):
-        # TODO: Delete this method
         from chatterbot.ext.django_chatterbot.models import Statement
         return Statement.objects.count()
 
@@ -31,7 +30,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement
+        from chatterbot.ext.django_chatterbot.models import Statement, Conversation
         from django.db.models import Q
 
         order = kwargs.pop('order_by', None)
@@ -67,43 +66,50 @@ class DjangoStorageAdapter(StorageAdapter):
             value = kwargs['in_response__response__text']
             parameters['responses__statement__text'] = value
 
-        statements = Statement.objects.filter(Q(**kwargs) | Q(**parameters))
+        if obj.collection_name == 'statements':
+            results = Statement.objects.filter(Q(**kwargs) | Q(**parameters))
+        else:
+            results = Conversation.objects.filter(**kwargs)
 
         if order:
-            statements = statements.order_by(order)
+            results = results.order_by(order)
 
-        return statements
+        return results
 
-    def update(self, statement):
+    def update(self, obj):
         """
         Update the provided object.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement
+        from chatterbot.ext.django_chatterbot.models import Statement, Conversation
 
-        response_statement_cache = statement.response_statement_cache
+        if obj.collection_name == 'statements':
 
-        statement, created = Statement.objects.get_or_create(text=statement.text)
-        statement.extra_data = getattr(statement, 'extra_data', '')
-        statement.save()
+            response_statement_cache = obj.response_statement_cache
 
-        for _response_statement in response_statement_cache:
+            statement, created = Statement.objects.get_or_create(text=obj.text)
+            statement.extra_data = getattr(obj, 'extra_data', '')
+            statement.save()
 
-            response_statement, created = Statement.objects.get_or_create(
-                text=_response_statement.text
-            )
-            response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
-            response_statement.save()
+            for _response_statement in response_statement_cache:
 
-            response, created = statement.in_response.get_or_create(
-                statement=statement,
-                response=response_statement
-            )
+                response_statement, created = Statement.objects.get_or_create(
+                    text=_response_statement.text
+                )
+                response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
+                response_statement.save()
 
-            if not created:
-                response.occurrence += 1
-                response.save()
+                response, created = statement.in_response.get_or_create(
+                    statement=statement,
+                    response=response_statement
+                )
 
-        return statement
+                if not created:
+                    response.occurrence += 1
+                    response.save()
+        else:
+            obj.save()
+
+        return obj
 
     def get_random(self):
         """

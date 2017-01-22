@@ -3,19 +3,23 @@ from .response import Response
 from datetime import datetime
 
 
-class Statement(object):
-    """
-    A statement represents a single spoken entity, sentence or
-    phrase that someone can say.
-    """
+class StatementModelMixin(object):
 
-    storage = None
     collection_name = 'statements'
 
     pk_field = 'text'
     fields = (
         'text', 'created_at', 'in_response_to', 'extra_data',
     )
+
+
+class Statement(StatementModelMixin):
+    """
+    A statement represents a single spoken entity, sentence or
+    phrase that someone can say.
+    """
+
+    storage = None
 
     def __init__(self, text, **kwargs):
         self.text = text

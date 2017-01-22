@@ -72,7 +72,7 @@ class ChatBot(object):
         self.training_data = kwargs.get('training_data')
 
         self.conversation_sessions = ConversationSessionManager(self.storage)
-        self.default_session = self.storage.Conversation.objects.create()
+        self.default_session = None
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
@@ -102,28 +102,29 @@ class ChatBot(object):
         :returns: A response to the input.
         :rtype: Statement
         """
-        if not session_id:
-            session_id = self.default_session.id
-
         input_statement = self.input.process_input_statement(input_item)
 
         # Preprocess the input statement
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(self, input_statement)
 
-        statement, response = self.generate_response(input_statement, session_id)
+        if session_id:
+            session = self.conversation_sessions.get(session_id)
+        else:
+            session = self.get_or_create_default_conversation()
+
+        statement, response = self.generate_response(input_statement, session.id)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
-        previous_statement = self.conversation_sessions.get(
-            session_id
-        ).get_last_response_statement()
+        previous_statement = session.get_last_response_statement()
+
         self.learn_response(statement, previous_statement)
 
-        self.conversation_sessions.update(session_id, statement)
-        self.conversation_sessions.update(session_id, response)
+        self.conversation_sessions.update(session.id, statement)
+        self.conversation_sessions.update(session.id, response)
 
         # Process the response output with the output adapter
-        return self.output.process_response(response, session_id)
+        return self.output.process_response(response, session.id)
 
     def generate_response(self, input_statement, session_id):
         """
@@ -165,6 +166,17 @@ class ChatBot(object):
         :param \**kwargs: Any parameters that should be passed to the training class.
         """
         self.trainer = training_class(self.storage, **kwargs)
+
+    def get_or_create_default_conversation(self):
+        """
+        Get the default conversation session if it exists.
+        Otherwise create a new conversation.
+        This is a lazy function designed to only create the conversation if
+        a statement exists for it.
+        """
+        if not self.default_session:
+            self.default_session = self.storage.Conversation.objects.create()
+        return self.default_session
 
     @property
     def train(self):
