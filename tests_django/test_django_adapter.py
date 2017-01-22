@@ -154,7 +154,7 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
             StatementModel(text=text)
         )
         self.adapter.remove(statement.text)
-        results = self.adapter.filter(in_response_to__contains=text)
+        results = self.adapter.filter(StatementModel, in_response_to__contains=text)
 
         self.assertEqual(results.count(), 0)
 
@@ -196,14 +196,14 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
 
     def test_filter_text_no_matches(self):
         self.adapter.update(self.statement1)
-        results = self.adapter.filter(text="Howdy")
+        results = self.adapter.filter(StatementModel, text="Howdy")
 
         self.assertEqual(len(results), 0)
 
     def test_filter_in_response_to_no_matches(self):
         self.adapter.update(self.statement1)
 
-        results = self.adapter.filter(in_response_to="Maybe")
+        results = self.adapter.filter(StatementModel, in_response_to="Maybe")
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -213,7 +213,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
-        results = self.adapter.filter(in_response_to=[])
+        results = self.adapter.filter(StatementModel, in_response_to=[])
 
         self.assertEqual(results.count(), 2)
         self.assertTrue(results.filter(text=statement1.text).exists())
@@ -224,6 +224,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            StatementModel,
             in_response_to__contains="Why are you counting?"
         )
         self.assertEqual(results.count(), 1)
@@ -233,6 +234,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(self.statement1)
 
         results = self.adapter.filter(
+            StatementModel,
             in_response_to__contains="How do you do?"
         )
         self.assertEqual(results.count(), 0)
@@ -242,6 +244,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            StatementModel,
             text="Testing...",
             in_response_to__contains="Why are you counting?"
         )
@@ -254,6 +257,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            StatementModel,
             text="Test",
             in_response_to__contains="Not an existing response."
         )
@@ -270,7 +274,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
-        results = self.adapter.filter()
+        results = self.adapter.filter(StatementModel)
 
         self.assertEqual(len(results), 2)
 
@@ -282,6 +286,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         self.adapter.update(statement)
 
         response = self.adapter.filter(
+            StatementModel,
             in_response_to__contains="Thanks."
         )
 
@@ -302,7 +307,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
 
         self.adapter.update(statement)
 
-        found = self.adapter.filter(text=statement.text)
+        found = self.adapter.filter(StatementModel, text=statement.text)
 
         self.assertEqual(len(found[0].in_response_to), 1)
         self.assertEqual(type(found[0].in_response_to[0]), ResponseModel)
@@ -333,7 +338,7 @@ class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
         statement_a = StatementModel.objects.create(text='A is the first letter of the alphabet.')
         statement_b = StatementModel.objects.create(text='B is the second letter of the alphabet.')
 
-        results = self.adapter.filter(order_by='text')
+        results = self.adapter.filter(StatementModel, order_by='text')
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -345,7 +350,7 @@ class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
         statement_a = StatementModel.objects.create(text='A is the first letter of the alphabet.')
         statement_b = StatementModel.objects.create(text='B is the second letter of the alphabet.')
 
-        results = self.adapter.filter(order_by='created_at')
+        results = self.adapter.filter(StatementModel, order_by='created_at')
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)

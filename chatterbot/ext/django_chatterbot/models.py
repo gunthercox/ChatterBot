@@ -1,12 +1,16 @@
 from django.db import models
 from django.utils import timezone
+from chatterbot.conversation.session import ConversationModelMixin
+from chatterbot.conversation.statement import StatementModelMixin
 
 
-class Statement(models.Model):
+class Statement(StatementModelMixin, models.Model):
     """
     A statement represents a single spoken entity, sentence or
     phrase that someone can say.
     """
+
+    collection_name = 'statements'
 
     text = models.CharField(
         unique=True,
@@ -165,15 +169,18 @@ class Response(models.Model):
         return data
 
 
-class Conversation(models.Model):
+class Conversation(ConversationModelMixin, models.Model):
     """
     A sequence of statements representing a conversation.
     """
 
-    root = models.OneToOneField(
+    collection_name = 'conversations'
+
+    statements = models.ManyToManyField(
         'Statement',
         related_name='conversation',
-        help_text='The initiating statement in a conversation.'
+        null=True,
+        help_text='The statements in this conversation.'
     )
 
     def __str__(self):

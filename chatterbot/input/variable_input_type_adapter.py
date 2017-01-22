@@ -1,6 +1,5 @@
 from __future__ import unicode_literals
 from chatterbot.input import InputAdapter
-from chatterbot.conversation import Statement
 
 
 class VariableInputTypeAdapter(InputAdapter):
@@ -45,15 +44,15 @@ class VariableInputTypeAdapter(InputAdapter):
 
         # Convert the input string into a statement object
         if input_type == self.TEXT:
-            return Statement(statement)
+            return self.chatbot.storage.Statement(text=statement)
 
         # Convert input dictionary into a statement object
         if input_type == self.JSON:
             input_json = dict(statement)
-            text = input_json["text"]
-            del(input_json["text"])
+            text = input_json['text']
+            del input_json['text']
 
-            return Statement(text, **input_json)
+            return self.chatbot.storage.Statement(text=text, **input_json)
 
     class UnrecognizedInputFormatException(Exception):
         """

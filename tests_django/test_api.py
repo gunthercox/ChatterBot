@@ -27,7 +27,7 @@ class ApiTestCase(TestCase):
         self.assertIn('text', str(response.content))
         self.assertIn('in_response_to', str(response.content))
 
-    def test_response_is_in_json(self):
+    def test_response_is_json(self):
         """
         Test Response is in JSON
         """
