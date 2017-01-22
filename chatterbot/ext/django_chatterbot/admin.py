@@ -13,8 +13,7 @@ class ResponseAdmin(admin.ModelAdmin):
 
 
 class ConversationAdmin(admin.ModelAdmin):
-    list_display = ('statement', 'occurrence', )
-    list_display = ('root', )
+    pass
 
 
 admin.site.register(Statement, StatementAdmin)

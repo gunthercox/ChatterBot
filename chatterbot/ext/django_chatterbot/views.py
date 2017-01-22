@@ -32,7 +32,7 @@ class ChatterBotViewMixin(object):
         chat_session = self.chatterbot.conversation_sessions.get(chat_session_id, None)
 
         if not chat_session:
-            chat_session = self.chatterbot.conversation_sessions.new()
+            chat_session = self.chatterbot.conversation_sessions.create()
             request.session['chat_session_id'] = chat_session.id
 
         return chat_session
@@ -44,13 +44,11 @@ class ChatterBotView(ChatterBotViewMixin, View):
     """
 
     def _serialize_conversation(self, session):
-        if session.conversation.empty():
-            return []
-
         conversation = []
 
-        for statement, response in session.conversation:
-            conversation.append([statement.serialize(), response.serialize()])
+        if session.statements.exists():
+            for statement in session.conversation:
+                conversation.append(statement.serialize())
 
         return conversation
 
