@@ -134,19 +134,30 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return proxy_statement.in_response_to
 
-    def mongo_to_object(self, statement_data):
+    def mongo_to_object(self, object_data):
         """
         Return Statement object when given data
         returned from Mongo DB.
         """
-        statement_text = statement_data['text']
-        del statement_data['text']
+        if 'text' in object_data:
+            statement_text = object_data['text']
+            del object_data['text']
 
-        statement_data['in_response_to'] = self.deserialize_responses(
-            statement_data.get('in_response_to', [])
-        )
+            object_data['in_response_to'] = self.deserialize_responses(
+                object_data.get('in_response_to', [])
+            )
 
-        return self.Statement(statement_text, **statement_data)
+            return self.Statement(statement_text, **object_data)
+        else:
+            conversation = []
+
+            for statement_data in object_data.get('conversation'):
+                conversation.append(self.mongo_to_object(statement_data))
+
+            return self.Conversation(
+                id=object_data['id'],
+                conversation=conversation
+            )
 
     def filter(self, obj, **kwargs):
         """
@@ -204,7 +215,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         operations = []
 
         update_operation = UpdateOne(
-            {'text': obj.text},
+            {obj.pk_field: getattr(obj, obj.pk_field)},
             {'$set': data},
             upsert=True
         )

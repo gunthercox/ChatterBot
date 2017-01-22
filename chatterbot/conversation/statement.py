@@ -12,6 +12,11 @@ class Statement(object):
     storage = None
     collection_name = 'statements'
 
+    pk_field = 'text'
+    fields = (
+        'text', 'created_at', 'in_response_to', 'extra_data',
+    )
+
     def __init__(self, text, **kwargs):
         self.text = text
         self.in_response_to = kwargs.pop('in_response_to', [])
