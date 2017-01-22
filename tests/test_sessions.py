@@ -1,13 +1,49 @@
 from unittest import TestCase
+from chatterbot.conversation import Statement
 from chatterbot.conversation.session import Session, ConversationSessionManager
 from .base_case import ChatBotTestCase
 
 
 class SessionTestCase(TestCase):
 
+    def setUp(self):
+        super(SessionTestCase, self).setUp()
+        self.session = Session()
+
     def test_id(self):
-        session = Session()
-        self.assertEqual(str(session.uuid), session.id)
+        self.assertEqual(str(self.session.uuid), self.session.id)
+
+    def test_no_last_response_statement(self):
+        self.assertIsNone(self.session.get_last_response_statement())
+
+    def test_get_last_response_statement(self):
+        """
+        Make sure that the get last statement method
+        returns the last statement that was issued.
+        """
+        self.session.conversation.append(Statement('Test statement 1'))
+        self.session.conversation.append(Statement('Test response 1'))
+        self.session.conversation.append(Statement('Test statement 2'))
+        self.session.conversation.append(Statement('Test response 2'))
+
+        last_statement = self.session.get_last_response_statement()
+        self.assertEqual(last_statement, 'Test response 2')
+
+    def test_no_last_input_statement(self):
+        self.assertIsNone(self.session.get_last_input_statement())
+
+    def test_get_last_input_statement(self):
+        """
+        Make sure that the get last statement method
+        returns the last statement that was issued.
+        """
+        self.session.conversation.append(Statement('Test statement 1'))
+        self.session.conversation.append(Statement('Test response 1'))
+        self.session.conversation.append(Statement('Test statement 2'))
+        self.session.conversation.append(Statement('Test response 2'))
+
+        last_statement = self.session.get_last_input_statement()
+        self.assertEqual(last_statement, 'Test statement 2')
 
 
 class ConversationSessionManagerTestCase(ChatBotTestCase):
@@ -20,8 +56,7 @@ class ConversationSessionManagerTestCase(ChatBotTestCase):
         session = self.manager.new()
 
         self.assertTrue(isinstance(session, Session))
-        self.assertIn(session.id, self.manager.sessions)
-        self.assertEqual(session, self.manager.sessions[session.id])
+        self.assertEqual(session.id, self.manager.get(session.id).id)
 
     def test_get(self):
         session = self.manager.new()
@@ -41,11 +76,27 @@ class ConversationSessionManagerTestCase(ChatBotTestCase):
 
     def test_update(self):
         session = self.manager.new()
-        self.manager.update(session.id, ('A', 'B', ))
+        self.manager.update(session.id, Statement('A'))
 
-        session_ids = list(self.manager.sessions.keys())
-        session_id = session_ids[0]
+        session_ids =[]
+        for conversation in self.manager.storage.filter(self.manager.storage.Conversation):
+            session_ids.append(conversation.id)
 
-        self.assertEqual(len(session_ids), 1)
-        self.assertEqual(len(self.manager.get(session_id).conversation), 1)
-        self.assertEqual(('A', 'B', ), self.manager.get(session_id).conversation[0])
+        self.assertEqual(len(self.manager.get(session.id).conversation), 1)
+        self.assertEqual(Statement('A'), self.manager.get(session.id).conversation[0])
+
+    def test_modify_chatbot(self):
+        """
+        When one adapter modifies its chatbot instance,
+        the change should be the same in all other adapters.
+        """
+        session = self.chatbot.input.chatbot.conversation_sessions.new()
+        self.chatbot.input.chatbot.conversation_sessions.update(
+            session.id,
+            Statement('A')
+        )
+
+        session = self.chatbot.output.chatbot.conversation_sessions.get(session.id)
+
+        self.assertIn(Statement('A'), session.conversation)
+
