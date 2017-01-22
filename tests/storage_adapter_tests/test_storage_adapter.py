@@ -24,15 +24,15 @@ class StorageAdapterTestCase(TestCase):
 
     def test_filter(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
-            self.adapter.filter()
+            self.adapter.filter(None)
 
     def test_remove(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
-            self.adapter.remove('')
+            self.adapter.remove(None)
 
     def test_update(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
-            self.adapter.update('')
+            self.adapter.update(None)
 
     def test_get_random(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):

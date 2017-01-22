@@ -1,5 +1,4 @@
 from unittest import TestCase
-from mock import MagicMock
 from chatterbot.logic import LowConfidenceAdapter
 from chatterbot.conversation import Statement, Response
 from tests.base_case import ChatBotTestCase
@@ -37,7 +36,8 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
                 Response('Who do you love?')
             ]),
         ]
-        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
+        for choice in possible_choices:
+            self.adapter.chatbot.storage.update(choice)
 
     def test_high_confidence(self):
         """

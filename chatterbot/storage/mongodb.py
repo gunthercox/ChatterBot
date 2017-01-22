@@ -95,21 +95,15 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Specify the name of the database
         self.database = self.client[self.database_name]
 
-        # The mongo collection of statement documents
-        self.statements = self.database['statements']
-
-        # The mongo collection of conversation documents
-        self.conversations = self.database['conversations']
-
         self.base_query = Query()
 
     def count(self):
-        return self.statements.count()
+        return self.database['statements'].count()
 
     def find(self, statement_text):
         query = self.base_query.statement_text_equals(statement_text)
 
-        values = self.statements.find_one(query.value())
+        values = self.database['statements'].find_one(query.value())
 
         if not values:
             return None
@@ -154,7 +148,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return self.Statement(statement_text, **statement_data)
 
-    def filter(self, **kwargs):
+    def filter(self, obj, **kwargs):
         """
         Returns a list of statements in the database
         that match the parameters specified.
@@ -182,7 +176,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         query = query.raw(kwargs)
 
-        matches = self.statements.find(query.value())
+        matches = self.database[obj.collection_name].find(query.value())
 
         if order_by:
 
@@ -201,16 +195,16 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement):
+    def update(self, obj):
         from pymongo import UpdateOne
         from pymongo.errors import BulkWriteError
 
-        data = statement.serialize()
+        data = obj.serialize()
 
         operations = []
 
         update_operation = UpdateOne(
-            {'text': statement.text},
+            {'text': obj.text},
             {'$set': data},
             upsert=True
         )
@@ -229,12 +223,12 @@ class MongoDatabaseAdapter(StorageAdapter):
             operations.append(update_operation)
 
         try:
-            self.database[statement.name].bulk_write(operations, ordered=False)
+            self.database[obj.collection_name].bulk_write(operations, ordered=False)
         except BulkWriteError as bwe:
             # Log the details of a bulk write error
             self.logger.error(str(bwe.details))
 
-        return statement
+        return obj
 
     def get_random(self):
         """
@@ -249,21 +243,21 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         random_integer = randint(0, count - 1)
 
-        statements = self.statements.find().limit(1).skip(random_integer)
+        statements = self.database['statements'].find().limit(1).skip(random_integer)
 
         return self.mongo_to_object(list(statements)[0])
 
-    def remove(self, statement_text):
+    def remove(self, obj):
         """
         Removes the statement that matches the input text.
         Removes any responses from statements if the response text matches the
         input text.
         """
-        for statement in self.filter(in_response_to__contains=statement_text):
-            statement.remove_response(statement_text)
+        for statement in self.filter(obj, in_response_to__contains=obj.text):
+            statement.remove_response(obj.text)
             self.update(statement)
 
-        self.statements.delete_one({'text': statement_text})
+        self.database[obj.collection_name].delete_one({'text': obj.text})
 
     def get_response_statements(self):
         """
@@ -272,7 +266,8 @@ class MongoDatabaseAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        response_query = self.statements.distinct('in_response_to.text')
+        statements = self.database['statements']
+        response_query = statements.distinct('in_response_to.text')
 
         _statement_query = {
             'text': {
@@ -282,7 +277,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         _statement_query.update(self.base_query.value())
 
-        statement_query = self.statements.find(_statement_query)
+        statement_query = statements.find(_statement_query)
 
         statement_objects = []
 

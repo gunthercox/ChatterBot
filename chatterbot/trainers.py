@@ -48,7 +48,7 @@ class Trainer(object):
     def _generate_export_data(self):
         result = []
 
-        for statement in self.storage.filter():
+        for statement in self.storage.filter(self.storage.Statement):
             for response in statement.in_response_to:
                 result.append([response.text, statement.text])
 

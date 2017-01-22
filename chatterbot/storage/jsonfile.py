@@ -48,17 +48,17 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         return self.json_to_object(values)
 
-    def remove(self, statement_text):
+    def remove(self, obj):
         """
         Removes the statement that matches the input text.
         Removes any responses from statements if the response text matches the
         input text.
         """
-        for statement in self.filter(in_response_to__contains=statement_text):
-            statement.remove_response(statement_text)
+        for statement in self.filter(obj, in_response_to__contains=obj.text):
+            statement.remove_response(obj.text)
             self.update(statement)
 
-        self.database.delete(statement_text)
+        self.database.delete(obj.text)
 
     def deserialize_responses(self, response_list):
         """
@@ -120,7 +120,7 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         return True
 
-    def filter(self, **kwargs):
+    def filter(self, obj, **kwargs):
         """
         Returns a list of statements in the database
         that match the parameters specified.
@@ -150,24 +150,24 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         return results
 
-    def update(self, statement):
+    def update(self, obj):
         """
-        Update a statement in the database.
+        Update the object in the database.
         """
-        data = statement.serialize()
+        data = obj.serialize()
 
         # Remove the text key from the data
         del data['text']
-        self.database.data(key=statement.text, value=data)
+        self.database.data(key=obj.text, value=data)
 
         # Make sure that an entry for each response exists
-        for response_statement in statement.in_response_to:
+        for response_statement in obj.in_response_to:
             response = self.find(response_statement.text)
             if not response:
                 response = self.Statement(response_statement.text)
                 self.update(response)
 
-        return statement
+        return obj
 
     def get_random(self):
         from random import choice
