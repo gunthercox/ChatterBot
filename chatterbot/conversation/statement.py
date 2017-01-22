@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 from .response import Response
 from datetime import datetime
-from .session import ModelMixin
 
 
-class Statement(ModelMixin):
+class Statement(object):
     """
     A statement represents a single spoken entity, sentence or
     phrase that someone can say.
     """
 
     storage = None
+    collection_name = 'statements'
 
     def __init__(self, text, **kwargs):
         self.text = text
@@ -156,3 +156,17 @@ class Statement(ModelMixin):
 
         def __str__(self):
             return repr(self.value)
+
+
+class Statements(object):
+
+    model = Statement
+
+    def __init__(self, storage):
+        self.storage = storage
+
+    def filter(self, **kwargs):
+        return self.storage.filter(**kwargs)
+
+    def update(self, statement):
+        self.storage.update(statement)

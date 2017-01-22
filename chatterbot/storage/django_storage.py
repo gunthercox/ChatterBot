@@ -14,6 +14,7 @@ class DjangoStorageAdapter(StorageAdapter):
         self.adapter_supports_queries = False
 
     def count(self):
+        # TODO: Delete this method
         from chatterbot.ext.django_chatterbot.models import Statement
         return Statement.objects.count()
 
@@ -25,7 +26,7 @@ class DjangoStorageAdapter(StorageAdapter):
             self.logger.info(str(e))
             return None
 
-    def filter(self, **kwargs):
+    def filter(self, obj, **kwargs):
         """
         Returns a list of statements in the database
         that match the parameters specified.
@@ -75,7 +76,7 @@ class DjangoStorageAdapter(StorageAdapter):
 
     def update(self, statement):
         """
-        Update the provided statement.
+        Update the provided object.
         """
         from chatterbot.ext.django_chatterbot.models import Statement
 

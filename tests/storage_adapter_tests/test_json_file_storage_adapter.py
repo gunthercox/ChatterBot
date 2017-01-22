@@ -183,7 +183,7 @@ class JsonFileStorageAdapterTestCase(JsonAdapterTestCase):
         text = "Sometimes you have to run before you can walk."
         statement = Statement(text)
         self.adapter.update(statement)
-        self.adapter.remove(statement.text)
+        self.adapter.remove(statement)
         result = self.adapter.find(text)
 
         self.assertIsNone(result)
@@ -195,8 +195,8 @@ class JsonFileStorageAdapterTestCase(JsonAdapterTestCase):
             in_response_to=[Response(text)]
         )
         self.adapter.update(statement)
-        self.adapter.remove(statement.text)
-        results = self.adapter.filter(in_response_to__contains=text)
+        self.adapter.remove(statement)
+        results = self.adapter.filter(Statement, in_response_to__contains=text)
 
         self.assertEqual(results, [])
 
@@ -242,7 +242,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
 
     def test_filter_text_no_matches(self):
         self.adapter.update(self.statement1)
-        results = self.adapter.filter(text="Howdy")
+        results = self.adapter.filter(Statement, text="Howdy")
 
         self.assertEqual(len(results), 0)
 
@@ -250,6 +250,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(self.statement1)
 
         results = self.adapter.filter(
+            Statement,
             in_response_to="Maybe"
         )
         self.assertEqual(len(results), 0)
@@ -266,7 +267,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
-        results = self.adapter.filter(in_response_to=[])
+        results = self.adapter.filter(Statement, in_response_to=[])
         self.assertEqual(len(results), 2)
         self.assertIn(statement1, results)
         self.assertIn(statement2, results)
@@ -276,6 +277,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            Statement,
             in_response_to__contains="Why are you counting?"
         )
         self.assertEqual(len(results), 1)
@@ -285,6 +287,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(self.statement1)
 
         results = self.adapter.filter(
+            Statement,
             in_response_to__contains="How do you do?"
         )
         self.assertEqual(results, [])
@@ -294,6 +297,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            Statement,
             text="Testing...",
             in_response_to__contains="Why are you counting?"
         )
@@ -306,6 +310,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
+            Statement,
             text="Test",
             in_response_to__contains="Not an existing response."
         )
@@ -322,7 +327,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
-        results = self.adapter.filter()
+        results = self.adapter.filter(Statement)
 
         self.assertEqual(len(results), 2)
 
@@ -336,6 +341,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
         )
         self.adapter.update(statement)
         response = self.adapter.filter(
+            Statement,
             in_response_to__contains="Thanks."
         )
 
@@ -357,7 +363,7 @@ class JsonFileStorageAdapterFilterTestCase(JsonAdapterTestCase):
             ]
         )
         self.adapter.update(statement)
-        found = self.adapter.filter(text=statement.text)
+        found = self.adapter.filter(Statement, text=statement.text)
 
         self.assertEqual(len(found[0].in_response_to), 1)
         self.assertEqual(type(found[0].in_response_to[0]), Response)
@@ -375,7 +381,7 @@ class JsonFileStorageOrderingTestCase(JsonAdapterTestCase):
         self.adapter.update(statement_a)
         self.adapter.update(statement_b)
 
-        results = self.adapter.filter(order_by='text')
+        results = self.adapter.filter(Statement, order_by='text')
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -399,7 +405,7 @@ class JsonFileStorageOrderingTestCase(JsonAdapterTestCase):
         self.adapter.update(statement_a)
         self.adapter.update(statement_b)
 
-        results = self.adapter.filter(order_by='created_at')
+        results = self.adapter.filter(Statement, order_by='created_at')
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)

@@ -33,7 +33,7 @@ class ChatterBotViewMixin(object):
 
         if not chat_session:
             chat_session = self.chatterbot.conversation_sessions.new()
-            request.session['chat_session_id'] = chat_session.id_string
+            request.session['chat_session_id'] = chat_session.id
 
         return chat_session
 
@@ -64,7 +64,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         chat_session = self.get_chat_session(request)
 
-        response = self.chatterbot.get_response(input_data, chat_session.id_string)
+        response = self.chatterbot.get_response(input_data, chat_session.id)
         response_data = response.serialize()
 
         try:

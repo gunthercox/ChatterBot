@@ -58,6 +58,7 @@ class BestMatch(LogicAdapter):
 
         # Get all statements that are in response to the closest match
         response_list = self.chatbot.storage.filter(
+            self.chatbot.storage.Statement,
             in_response_to__contains=closest_match.text
         )
 

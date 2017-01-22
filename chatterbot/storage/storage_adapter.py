@@ -68,7 +68,7 @@ class StorageAdapter(object):
             'The `remove` method is not implemented by this adapter.'
         )
 
-    def filter(self, **kwargs):
+    def filter(self, obj, **kwargs):
         """
         Returns a list of objects from the database.
         The kwargs parameter can contain any number
@@ -80,7 +80,7 @@ class StorageAdapter(object):
             'The `filter` method is not implemented by this adapter.'
         )
 
-    def update(self, statement):
+    def update(self, obj):
         """
         Modifies an entry in the database.
         Creates an entry if one does not exist.
@@ -115,7 +115,8 @@ class StorageAdapter(object):
         This method may be overridden by a child class to provide more a
         efficient method to get these results.
         """
-        statement_list = self.filter()
+        from chatterbot.conversation import Statement
+        statement_list = self.filter(Statement)
 
         responses = set()
         to_remove = list()
