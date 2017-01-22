@@ -5,9 +5,9 @@ from .base_case import ChatBotTestCase
 
 class SessionTestCase(TestCase):
 
-    def test_id_string(self):
+    def test_id(self):
         session = Session()
-        self.assertEqual(str(session.uuid), session.id_string)
+        self.assertEqual(str(session.uuid), session.id)
 
 
 class ConversationSessionManagerTestCase(ChatBotTestCase):
@@ -20,14 +20,14 @@ class ConversationSessionManagerTestCase(ChatBotTestCase):
         session = self.manager.new()
 
         self.assertTrue(isinstance(session, Session))
-        self.assertIn(session.id_string, self.manager.sessions)
-        self.assertEqual(session, self.manager.sessions[session.id_string])
+        self.assertIn(session.id, self.manager.sessions)
+        self.assertEqual(session, self.manager.sessions[session.id])
 
     def test_get(self):
         session = self.manager.new()
-        returned_session = self.manager.get(session.id_string)
+        returned_session = self.manager.get(session.id)
 
-        self.assertEqual(session.id_string, returned_session.id_string)
+        self.assertEqual(session.id, returned_session.id)
 
     def test_get_invalid_id(self):
         returned_session = self.manager.get('--invalid--')
@@ -41,7 +41,7 @@ class ConversationSessionManagerTestCase(ChatBotTestCase):
 
     def test_update(self):
         session = self.manager.new()
-        self.manager.update(session.id_string, ('A', 'B', ))
+        self.manager.update(session.id, ('A', 'B', ))
 
         session_ids = list(self.manager.sessions.keys())
         session_id = session_ids[0]

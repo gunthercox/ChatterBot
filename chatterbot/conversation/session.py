@@ -2,39 +2,22 @@ import uuid
 from chatterbot.queues import ResponseQueue
 
 
-class ModelMixin(object):
-    """
-    TODO
-    """
-
-    @property
-    def name(self):
-        """
-        Return the name of the class in lowercase characters.
-        This will be used for the table or collection name in
-        the database.
-        """
-        return str(self.__class__.__name__).lower() + 's'
-
-
-class Session(ModelMixin):
+class Session(object):
     """
     A session is an ordered collection of statements
     that are related to each other.
     """
 
     objects = None
+    collection_name = 'conversations'
 
     def __init__(self):
         # A unique identifier for the chat session
         self.uuid = uuid.uuid1()
-        self.id_string = str(self.uuid)
         self.id = str(self.uuid)
 
         # The last 10 statement inputs and outputs
         self.conversation = ResponseQueue(maxsize=10)
-
-        self.objects = self.objects
 
 
 class ConversationSessionManager(object):

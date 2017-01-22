@@ -10,12 +10,12 @@ class AdapterTests(ChatBotTestCase):
         """
         session = self.chatbot.input.chatbot.conversation_sessions.new()
         self.chatbot.input.chatbot.conversation_sessions.update(
-            session.id_string,
+            session.id,
             ('A', 'B', )
         )
 
         session = self.chatbot.output.chatbot.conversation_sessions.get(
-            session.id_string
+            session.id
         )
 
         self.assertIn(('A', 'B', ), session.conversation)

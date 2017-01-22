@@ -44,6 +44,7 @@ class ListTrainingTests(ChatBotTestCase):
         self.chatbot.train(conversation)
 
         statements = self.chatbot.storage.filter(
+            self.chatbot.storage.Statement,
             in_response_to__contains="Do you like my hat?"
         )
         response = statements[0].in_response_to[0]

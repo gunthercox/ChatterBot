@@ -12,7 +12,7 @@ class ApiIntegrationTestCase(TestCase):
 
         # Clear the response queue before tests
         ChatterBotView.chatterbot.conversation_sessions.get(
-            ChatterBotView.chatterbot.default_session.id_string
+            ChatterBotView.chatterbot.default_session.id
         ).conversation.flush()
 
     def tearDown(self):
@@ -20,7 +20,7 @@ class ApiIntegrationTestCase(TestCase):
 
         # Clear the response queue after tests
         ChatterBotView.chatterbot.conversation_sessions.get(
-            ChatterBotView.chatterbot.default_session.id_string
+            ChatterBotView.chatterbot.default_session.id
         ).conversation.flush()
 
     def _get_json(self, response):

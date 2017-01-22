@@ -79,5 +79,5 @@ class TwitterTrainerTestCase(ChatBotTestCase):
     def test_train(self):
         self.trainer.train()
 
-        statement_created = self.trainer.storage.filter()
+        statement_created = self.trainer.storage.filter(self.trainer.storage.Statement)
         self.assertTrue(len(statement_created))
