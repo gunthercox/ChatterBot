@@ -116,10 +116,11 @@ class ChatBot(object):
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.conversation_sessions.get(
             session_id
-        ).conversation.get_last_response_statement()
+        ).get_last_response_statement()
         self.learn_response(statement, previous_statement)
 
-        self.conversation_sessions.update(session_id, (statement, response, ))
+        self.conversation_sessions.update(session_id, statement)
+        self.conversation_sessions.update(session_id, response)
 
         # Process the response output with the output adapter
         return self.output.process_response(response, session_id)

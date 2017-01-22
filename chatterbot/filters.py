@@ -28,13 +28,22 @@ class RepetitiveResponseFilter(Filter):
 
         session = chatterbot.conversation_sessions.get(session_id)
 
-        if session.conversation.empty():
+        # Check if a conversation of some length exists
+        if not len(session.conversation):
             return chatterbot.storage.base_query
 
         text_of_recent_responses = []
 
-        for statement, response in session.conversation:
-            text_of_recent_responses.append(response.text)
+        skip = True
+
+        for statement in session.conversation:
+
+            # Skip every other statement to only filter out the bot's responses
+            if skip:
+                skip = False
+            else:
+                skip = True
+                text_of_recent_responses.append(statement.text)
 
         query = chatterbot.storage.base_query.statement_text_not_in(
             text_of_recent_responses
