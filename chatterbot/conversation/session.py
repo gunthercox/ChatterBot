@@ -62,7 +62,7 @@ class StatementRelatedManager(object):
         self.statements.append(statement)
 
 
-class Session(ConversationModelMixin):
+class Conversation(ConversationModelMixin):
     """
     A single chat session.
     """
@@ -78,7 +78,7 @@ class Session(ConversationModelMixin):
         self.statements = StatementRelatedManager(statements)
 
 
-class ConversationSessionManager(object):
+class ConversationManager(object):
     """
     Object to hold and manage multiple chat sessions.
     """
@@ -118,5 +118,3 @@ class ConversationSessionManager(object):
             session.statements.add(statement)
             self.storage.update(session)
 
-
-Conversation = Session

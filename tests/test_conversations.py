@@ -1,14 +1,14 @@
 from unittest import TestCase
 from chatterbot.conversation import Statement
-from chatterbot.conversation.session import Session, ConversationSessionManager
+from chatterbot.conversation.session import Conversation, ConversationManager
 from .base_case import ChatBotTestCase
 
 
-class SessionTestCase(TestCase):
+class ConversationTestCase(TestCase):
 
     def setUp(self):
-        super(SessionTestCase, self).setUp()
-        self.conversation = Session()
+        super(ConversationTestCase, self).setUp()
+        self.conversation = Conversation()
 
     def test_id(self):
         self.assertEqual(str(self.conversation.uuid), self.conversation.id)
@@ -46,57 +46,57 @@ class SessionTestCase(TestCase):
         self.assertEqual(last_statement, 'Test statement 2')
 
 
-class ConversationSessionManagerTestCase(ChatBotTestCase):
+class ConversationManagerTestCase(ChatBotTestCase):
 
     def setUp(self):
-        super(ConversationSessionManagerTestCase, self).setUp()
-        self.manager = ConversationSessionManager(self.chatbot.storage)
+        super(ConversationManagerTestCase, self).setUp()
+        self.manager = ConversationManager(self.chatbot.storage)
 
     def test_new(self):
-        session = self.manager.create()
+        conversation = self.manager.create()
 
-        self.assertTrue(isinstance(session, Session))
-        self.assertEqual(session.id, self.manager.get(session.id).id)
+        self.assertTrue(isinstance(conversation, Conversation))
+        self.assertEqual(conversation.id, self.manager.get(conversation.id).id)
 
     def test_get(self):
-        session = self.manager.create()
-        returned_session = self.manager.get(session.id)
+        conversation = self.manager.create()
+        returned_conversation = self.manager.get(conversation.id)
 
-        self.assertEqual(session.id, returned_session.id)
+        self.assertEqual(conversation.id, returned_conversation.id)
 
     def test_get_invalid_id(self):
-        returned_session = self.manager.get('--invalid--')
+        returned_conversation = self.manager.get('--invalid--')
 
-        self.assertIsNone(returned_session)
+        self.assertIsNone(returned_conversation)
 
     def test_get_invalid_id_with_deafult(self):
-        returned_session = self.manager.get('--invalid--', 'default_value')
+        returned_conversation = self.manager.get('--invalid--', 'default_value')
 
-        self.assertEqual(returned_session, 'default_value')
+        self.assertEqual(returned_conversation, 'default_value')
 
     def test_update(self):
-        session = self.manager.create()
-        self.manager.update(session.id, Statement('A'))
+        conversation = self.manager.create()
+        self.manager.update(conversation.id, Statement('A'))
 
-        session_ids =[]
+        conversation_ids =[]
         for conversation in self.manager.storage.filter(self.manager.storage.Conversation):
-            session_ids.append(conversation.id)
+            conversation_ids.append(conversation.id)
 
-        self.assertEqual(self.manager.get(session.id).statements.count(), 1)
-        self.assertEqual(Statement('A'), self.manager.get(session.id).statements.first())
+        self.assertEqual(self.manager.get(conversation.id).statements.count(), 1)
+        self.assertEqual(Statement('A'), self.manager.get(conversation.id).statements.first())
 
     def test_modify_chatbot(self):
         """
         When one adapter modifies its chatbot instance,
         the change should be the same in all other adapters.
         """
-        session = self.chatbot.input.chatbot.conversation_sessions.create()
+        conversation = self.chatbot.input.chatbot.conversation_sessions.create()
         self.chatbot.input.chatbot.conversation_sessions.update(
-            session.id,
+            conversation.id,
             Statement('A')
         )
 
-        session = self.chatbot.output.chatbot.conversation_sessions.get(session.id)
+        conversation = self.chatbot.output.chatbot.conversation_sessions.get(conversation.id)
 
-        self.assertIn(Statement('A'), session.statements.all())
+        self.assertIn(Statement('A'), conversation.statements.all())
 

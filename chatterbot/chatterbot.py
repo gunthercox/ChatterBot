@@ -12,7 +12,7 @@ class ChatBot(object):
     """
 
     def __init__(self, name, **kwargs):
-        from .conversation.session import ConversationSessionManager
+        from .conversation.session import ConversationManager
         from .logic import MultiLogicAdapter
 
         self.name = name
@@ -71,7 +71,7 @@ class ChatBot(object):
         self.trainer = TrainerClass(self.storage, **kwargs)
         self.training_data = kwargs.get('training_data')
 
-        self.conversation_sessions = ConversationSessionManager(self.storage)
+        self.conversation_sessions = ConversationManager(self.storage)
         self.default_session = None
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
