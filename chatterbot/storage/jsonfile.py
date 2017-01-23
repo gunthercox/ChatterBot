@@ -105,13 +105,13 @@ class JsonFileStorageAdapter(StorageAdapter):
         else:
             statements = []
 
-            for statement_data in object_data['conversation']:
+            for statement_data in object_data['statements']:
                 text = statement_data.pop('text')
                 statements.append(self.Statement(text, **statement_data))
 
             return self.Conversation(
                 id=object_data['id'],
-                conversation=statements
+                statements=statements
             )
 
     def _all_kwargs_match_values(self, kwarguments, values):
