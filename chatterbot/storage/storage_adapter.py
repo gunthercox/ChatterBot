@@ -26,13 +26,13 @@ class StorageAdapter(object):
             self.Conversation = Conversation
         else:
             from chatterbot.conversation.statement import Statement
-            from chatterbot.conversation.session import Conversation, ConversationSessionManager
+            from chatterbot.conversation.session import Conversation, ConversationManager
 
             self.Statement = Statement
             self.Statement.storage = self
 
             self.Conversation = Conversation
-            self.Conversation.objects = ConversationSessionManager(self)
+            self.Conversation.objects = ConversationManager(self)
 
     def generate_base_query(self, chatterbot, session_id):
         """
