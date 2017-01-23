@@ -1,12 +1,14 @@
-from unittest import TestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
 from chatterbot.input import VariableInputTypeAdapter
 
 
-class VariableInputTypeAdapterTests(TestCase):
+class VariableInputTypeAdapterTests(ChatBotTestCase):
 
     def setUp(self):
+        super(VariableInputTypeAdapterTests, self).setUp()
         self.adapter = VariableInputTypeAdapter()
+        self.adapter.set_chatbot(self.chatbot)
 
     def test_statement_returned_dict(self):
         data = {
