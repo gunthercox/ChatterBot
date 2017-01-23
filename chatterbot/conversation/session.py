@@ -23,13 +23,13 @@ class ConversationModelMixin(object):
         """
         if self.statements.count() > 1:
             # Return the input statement
-            return self.statements[-2]
+            return self.statements.all()[-2]
         return None
 
     def serialize(self):
         statements = []
 
-        for statement in self.statements:
+        for statement in self.statements.all():
             statements.append({'text': statement.text})
 
         return {
@@ -38,19 +38,28 @@ class ConversationModelMixin(object):
         }
 
 
-class ConversationRelatedManager(object):
+class StatementRelatedManager(object):
 
-    def __init__(self, session):
-        self.session = session
+    def __init__(self, statements):
+        self.statements = statements
 
     def exists(self):
-        return len(self.session.statements) > 0
+        return len(self.statements) > 0
 
     def count(self):
-        return len(self.session.statements)
+        return len(self.statements)
+
+    def first(self):
+        return self.statements[0]
 
     def latest(self, *args):
-        return self.session.conversation[-1]
+        return self.statements[-1]
+
+    def all(self):
+        return self.statements
+
+    def add(self, statement):
+        self.statements.append(statement)
 
 
 class Session(ConversationModelMixin):
@@ -66,8 +75,8 @@ class Session(ConversationModelMixin):
         self.uuid = uuid.uuid1()
         self.id = kwargs.get('id', str(self.uuid))
 
-        # The last 10 statement inputs and outputs
-        self.statements = kwargs.get('statements', [])
+        statements = kwargs.get('statements', [])
+        self.statements = StatementRelatedManager(statements)
 
 
 class ConversationSessionManager(object):

@@ -149,14 +149,14 @@ class MongoDatabaseAdapter(StorageAdapter):
 
             return self.Statement(statement_text, **object_data)
         else:
-            conversation = []
+            statements = []
 
-            for statement_data in object_data.get('conversation'):
-                conversation.append(self.mongo_to_object(statement_data))
+            for statement_data in object_data.get('statements'):
+                statements.append(self.mongo_to_object(statement_data))
 
             return self.Conversation(
                 id=object_data['id'],
-                conversation=conversation
+                statements=statements
             )
 
     def filter(self, obj, **kwargs):
