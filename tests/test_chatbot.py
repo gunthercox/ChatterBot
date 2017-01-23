@@ -42,7 +42,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         statement_text = 'Wow!'
         response = self.chatbot.get_response(statement_text)
-        conversation = self.chatbot.get_or_create_default_conversation()
+        conversation = self.chatbot.storage.filter(self.chatbot.storage.Conversation)[0]
 
         self.assertIn(statement_text, conversation.statements.all())
         self.assertEqual(response, statement_text)
