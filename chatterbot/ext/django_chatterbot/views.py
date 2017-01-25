@@ -43,14 +43,13 @@ class ChatterBotView(ChatterBotViewMixin, View):
     Provide an API endpoint to interact with ChatterBot.
     """
 
-    def _serialize_conversation(self, session):
-        conversation = []
+    def _serialize_conversation(self, conversation):
+        statements = []
 
-        if session.statements.exists():
-            for statement in session.conversation:
-                conversation.append(statement.serialize())
+        for statement in conversation.statements.all():
+            statements.append(statement.serialize())
 
-        return conversation
+        return statements
 
     def post(self, request, *args, **kwargs):
         """
@@ -59,6 +58,11 @@ class ChatterBotView(ChatterBotViewMixin, View):
         input_data = json.loads(request.read().decode('utf-8'))
 
         self.validate(input_data)
+
+        # Convert the extra_data to a string to be stored by the Django model
+        if 'extra_data' in input_data:
+            extra_data = input_data['extra_data']
+            input_data['extra_data'] = json.dumps(extra_data)
 
         chat_session = self.get_chat_session(request)
 
