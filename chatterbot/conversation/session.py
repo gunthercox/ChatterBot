@@ -59,6 +59,7 @@ class StatementRelatedManager(object):
         return self.statements
 
     def add(self, statement):
+        # TODO: This needs to write to the database
         self.statements.append(statement)
 
 
@@ -77,6 +78,9 @@ class Conversation(ConversationModelMixin):
 
         statements = kwargs.get('statements', [])
         self.statements = StatementRelatedManager(statements)
+
+    def save(self):
+        self.objects.storage.update(self)
 
 
 class ConversationManager(object):
@@ -114,6 +118,7 @@ class ConversationManager(object):
         # If the conversation exists
         if results:
             session = results[0]
+            statement.save()
             session.statements.add(statement)
             self.storage.update(session)
 

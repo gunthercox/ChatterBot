@@ -13,7 +13,6 @@ class Statement(StatementModelMixin, models.Model):
     collection_name = 'statements'
 
     text = models.CharField(
-        unique=True,
         blank=False,
         null=False,
         max_length=255
