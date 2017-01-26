@@ -111,16 +111,3 @@ class ConversationManager(object):
         else:
             return default
 
-    def update(self, session_id, statement):
-        """
-        Add a statement to the specified conversation if the conversation exists.
-        """
-        results = self.storage.filter(self.storage.Conversation, id=session_id)
-
-        # If the conversation exists
-        if results:
-            session = results[0]
-            statement.save()
-            session.statements.add(statement)
-            self.storage.update(session)
-

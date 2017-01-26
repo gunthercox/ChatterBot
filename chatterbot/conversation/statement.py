@@ -165,17 +165,3 @@ class Statement(StatementModelMixin):
 
         def __str__(self):
             return repr(self.value)
-
-
-class Statements(object):
-
-    model = Statement
-
-    def __init__(self, storage):
-        self.storage = storage
-
-    def filter(self, **kwargs):
-        return self.storage.filter(**kwargs)
-
-    def update(self, statement):
-        self.storage.update(statement)

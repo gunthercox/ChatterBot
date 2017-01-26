@@ -121,8 +121,10 @@ class ChatBot(object):
         self.learn_response(statement, previous_statement)
 
         if not self.read_only:
-            self.conversation_sessions.update(session.id, statement)
-            self.conversation_sessions.update(session.id, response)
+            statement.save()
+            response.save()
+            session.statements.add(statement)
+            session.statements.add(response)
 
         # Process the response output with the output adapter
         return self.output.process_response(response, session.id)
