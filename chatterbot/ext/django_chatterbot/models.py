@@ -178,7 +178,6 @@ class Conversation(ConversationModelMixin, models.Model):
     statements = models.ManyToManyField(
         'Statement',
         related_name='conversation',
-        null=True,
         help_text='The statements in this conversation.'
     )
 

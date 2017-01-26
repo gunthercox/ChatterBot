@@ -75,20 +75,19 @@ class ApiIntegrationTestCase(TestCase):
 
     def setUp(self):
         super(ApiIntegrationTestCase, self).setUp()
+        from chatterbot.ext.django_chatterbot.models import Conversation
+
         self.api_url = reverse('chatterbot:chatterbot')
 
-        # Clear the response queue before tests
-        ChatterBotView.chatterbot.conversation_sessions.get(
-            ChatterBotView.chatterbot.default_session.id
-        ).conversation.flush()
+        # Clear the conversation history before tests
+        Conversation.objects.all().delete()
 
     def tearDown(self):
         super(ApiIntegrationTestCase, self).tearDown()
+        from chatterbot.ext.django_chatterbot.models import Conversation
 
-        # Clear the response queue after tests
-        ChatterBotView.chatterbot.conversation_sessions.get(
-            ChatterBotView.chatterbot.default_session.id
-        ).conversation.flush()
+        # Clear the conversation history after tests
+        Conversation.objects.all().delete()
 
     def _get_json(self, response):
         return json.loads(force_text(response.content))
@@ -111,8 +110,8 @@ class ApiIntegrationTestCase(TestCase):
         response = self.client.get(self.api_url)
         data = self._get_json(response)
 
+        print data['conversation']
+
         self.assertIn('conversation', data)
         self.assertEqual(len(data['conversation']), 1)
-        self.assertEqual(len(data['conversation'][0]), 2)
-        self.assertIn('text', data['conversation'][0][0])
-        self.assertIn('text', data['conversation'][0][1])
+        self.assertIn('text', data['conversation'][0])
