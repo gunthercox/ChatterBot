@@ -40,8 +40,9 @@ class ConversationModelMixin(object):
 
 class StatementRelatedManager(object):
 
-    def __init__(self, statements):
+    def __init__(self, conversation, statements):
         self.statements = statements
+        self.conversation = conversation
 
     def exists(self):
         return len(self.statements) > 0
@@ -59,8 +60,9 @@ class StatementRelatedManager(object):
         return self.statements
 
     def add(self, statement):
-        # TODO: This needs to write to the database
         self.statements.append(statement)
+        self.conversation.save()
+        
 
 
 class Conversation(ConversationModelMixin):
@@ -76,7 +78,7 @@ class Conversation(ConversationModelMixin):
         self.id = kwargs.get('id', str(self.uuid))
 
         statements = kwargs.get('statements', [])
-        self.statements = StatementRelatedManager(statements)
+        self.statements = StatementRelatedManager(self, statements)
 
     def save(self):
         self.objects.storage.update(self)

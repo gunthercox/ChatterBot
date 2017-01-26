@@ -31,9 +31,17 @@ class ApiIntegrationTestCase(TestCase):
         self.assertEqual(len(data['conversation']), 0)
 
     def test_get_conversation(self):
-        response = self.client.post(
+        from chatterbot.ext.django_chatterbot.models import Conversation
+        self.client.post(
             self.api_url,
             data=json.dumps({'text': 'How are you?'}),
+            content_type='application/json',
+            format='json'
+        )
+
+        self.client.post(
+            self.api_url,
+            data=json.dumps({'text': 'I am good'}),
             content_type='application/json',
             format='json'
         )
@@ -42,8 +50,6 @@ class ApiIntegrationTestCase(TestCase):
         data = self._get_json(response)
 
         self.assertIn('conversation', data)
-        self.assertEqual(len(data['conversation']), 4)
+        self.assertEqual(len(data['conversation']), 2)
         self.assertIn('text', data['conversation'][0])
         self.assertIn('text', data['conversation'][1])
-        self.assertIn('text', data['conversation'][2])
-        self.assertIn('text', data['conversation'][3])
