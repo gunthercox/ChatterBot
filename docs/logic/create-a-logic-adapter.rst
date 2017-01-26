@@ -140,7 +140,7 @@ information passed to it by the ChatBot class.
 
    class MyLogicAdapter(LogicAdapter):
        def __init__(self, **kwargs):
-           super(MyLogicAdapter, self).__init__(kwargs)
+           super(MyLogicAdapter, self).__init__(**kwargs)
 
            self.api_key = kwargs.get('secret_key')
 
