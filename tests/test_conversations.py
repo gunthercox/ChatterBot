@@ -74,29 +74,3 @@ class ConversationManagerTestCase(ChatBotTestCase):
 
         self.assertEqual(returned_conversation, 'default_value')
 
-    def test_update(self):
-        conversation = self.manager.create()
-        self.manager.update(conversation.id, Statement('A'))
-
-        conversation_ids =[]
-        for conversation in self.manager.storage.filter(self.manager.storage.Conversation):
-            conversation_ids.append(conversation.id)
-
-        self.assertEqual(self.manager.get(conversation.id).statements.count(), 1)
-        self.assertEqual(Statement('A'), self.manager.get(conversation.id).statements.first())
-
-    def test_modify_chatbot(self):
-        """
-        When one adapter modifies its chatbot instance,
-        the change should be the same in all other adapters.
-        """
-        conversation = self.chatbot.input.chatbot.conversation_sessions.create()
-        self.chatbot.input.chatbot.conversation_sessions.update(
-            conversation.id,
-            Statement('A')
-        )
-
-        conversation = self.chatbot.output.chatbot.conversation_sessions.get(conversation.id)
-
-        self.assertIn(Statement('A'), conversation.statements.all())
-
