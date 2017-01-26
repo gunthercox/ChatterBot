@@ -38,12 +38,17 @@ class ApiIntegrationTestCase(TestCase):
             format='json'
         )
 
+        self.client.post(
+            self.api_url,
+            data=json.dumps({'text': 'I am good'}),
+            content_type='application/json',
+            format='json'
+        )
+
         response = self.client.get(self.api_url)
         data = self._get_json(response)
 
         self.assertIn('conversation', data)
-        self.assertEqual(len(data['conversation']), 4)
+        self.assertEqual(len(data['conversation']), 2)
         self.assertIn('text', data['conversation'][0])
         self.assertIn('text', data['conversation'][1])
-        self.assertIn('text', data['conversation'][2])
-        self.assertIn('text', data['conversation'][3])
