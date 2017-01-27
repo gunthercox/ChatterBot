@@ -110,8 +110,6 @@ class ApiIntegrationTestCase(TestCase):
         response = self.client.get(self.api_url)
         data = self._get_json(response)
 
-        print data['conversation']
-
         self.assertIn('conversation', data)
         self.assertEqual(len(data['conversation']), 1)
         self.assertIn('text', data['conversation'][0])

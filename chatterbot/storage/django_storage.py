@@ -84,17 +84,22 @@ class DjangoStorageAdapter(StorageAdapter):
 
         if obj.collection_name == 'statements':
 
-            statement, created = Statement.objects.get_or_create(text=obj.text)
-            statement.extra_data = getattr(obj, 'extra_data', '')
-            statement.save()
+            existing_statements = Statement.objects.filter(text=obj.text)
+
+            if existing_statements.exists():
+                statement = existing_statements.first()
+                statement.extra_data = getattr(obj, 'extra_data', '')
+            else:
+                obj.save()
+                statement = obj
 
             for _response_statement in obj.response_statement_cache:
 
-                existing_statements = Statement.objects.filter(
+                existing_responses = Statement.objects.filter(
                     text=_response_statement.text
                 )
-                if existing_statements.exists():
-                    response_statement = existing_statements.first()
+                if existing_responses.exists():
+                    response_statement = existing_responses.first()
                 else:
                     response_statement = Statement(
                         text=_response_statement.text
