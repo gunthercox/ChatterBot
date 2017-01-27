@@ -1,5 +1,4 @@
 import logging
-from .conversation import Statement, Response
 
 
 class Trainer(object):
@@ -25,7 +24,7 @@ class Trainer(object):
         statement = self.storage.find(statement_text)
 
         if not statement:
-            statement = Statement(statement_text)
+            statement = self.storage.Statement(text=statement_text)
 
         return statement
 
@@ -83,7 +82,7 @@ class ListTrainer(Trainer):
 
             if statement_history:
                 statement.add_response(
-                    Response(statement_history[-1].text)
+                    self.storage.Response(statement_history[-1].text)
                 )
 
             statement_history.append(statement)
@@ -192,12 +191,12 @@ class TwitterTrainer(Trainer):
         self.logger.info(u'Requesting 50 random tweets containing the word {}'.format(random_word))
         tweets = self.api.GetSearch(term=random_word, count=50)
         for tweet in tweets:
-            statement = Statement(tweet.text)
+            statement = self.storage.Statement(text=tweet.text)
 
             if tweet.in_reply_to_status_id:
                 try:
                     status = self.api.GetStatus(tweet.in_reply_to_status_id)
-                    statement.add_response(Response(status.text))
+                    statement.add_response(self.storage.Response(status.text))
                     statements.append(statement)
                 except TwitterError as error:
                     self.logger.warning(str(error))
@@ -347,7 +346,7 @@ class UbuntuCorpusTrainer(Trainer):
 
                         if statement_history:
                             statement.add_response(
-                                Response(statement_history[-1].text)
+                                self.storage.Response(statement_history[-1].text)
                             )
 
                         statement_history.append(statement)

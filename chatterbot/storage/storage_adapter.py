@@ -21,18 +21,23 @@ class StorageAdapter(object):
 
         if 'DJANGO_SETTINGS_MODULE' in os.environ:
             from chatterbot.ext.django_chatterbot.models import Statement, Conversation
+            from chatterbot.conversation.response import Response
 
             self.Statement = Statement
             self.Conversation = Conversation
+            self.Response = Response
         else:
             from chatterbot.conversation.statement import Statement
             from chatterbot.conversation.session import Conversation, ConversationManager
+            from chatterbot.conversation.response import Response
 
             self.Statement = Statement
             self.Statement.storage = self
 
             self.Conversation = Conversation
             self.Conversation.objects = ConversationManager(self)
+
+            self.Response = Response
 
     def generate_base_query(self, chatterbot, session_id):
         """

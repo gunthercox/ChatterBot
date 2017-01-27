@@ -110,6 +110,9 @@ class ChatBot(object):
 
         if session_id:
             session = self.conversation_sessions.get(session_id)
+
+            if not session:
+                session = self.get_or_create_default_conversation()
         else:
             session = self.get_or_create_default_conversation()
 
@@ -118,12 +121,10 @@ class ChatBot(object):
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = session.get_last_response_statement()
 
-        self.learn_response(statement, previous_statement)
+        self.learn_response(statement, previous_statement, session)
 
         if not self.read_only:
-            statement.save()
             response.save()
-            session.statements.add(statement)
             session.statements.add(response)
 
         # Process the response output with the output adapter
@@ -140,15 +141,16 @@ class ChatBot(object):
 
         return input_statement, response
 
-    def learn_response(self, statement, previous_statement):
+    def learn_response(self, statement, previous_statement, session=None):
         """
         Learn that the statement provided is a valid response.
         """
-        from .conversation import Response
+        if not session:
+            session = self.get_or_create_default_conversation()
 
         if previous_statement:
             statement.add_response(
-                Response(previous_statement.text)
+                self.storage.Response(previous_statement.text)
             )
             self.logger.info('Adding "{}" as a response to "{}"'.format(
                 statement.text,
@@ -158,6 +160,7 @@ class ChatBot(object):
         # Save the statement after selecting a response
         if not self.read_only:
             self.storage.update(statement)
+            session.statements.add(statement)
 
     def set_trainer(self, training_class, **kwargs):
         """
