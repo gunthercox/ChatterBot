@@ -54,11 +54,11 @@ class HipChat(OutputAdapter):
         """
         raise self.AdapterMethodNotImplementedError()
 
-    def process_response(self, statement, session_id=None):
+    def process_response(self, statement, conversation_id=None):
         data = self.send_message(self.hipchat_room, statement.text)
 
         # Update the output statement with the message id
-        self.chatbot.conversation_sessions.get(session_id).conversation[-1][1].add_extra_data(
+        self.chatbot.conversations.get(conversation_id).conversation[-1][1].add_extra_data(
             'hipchat_message_id', data['id']
         )
 

@@ -10,8 +10,6 @@ class Statement(StatementModelMixin, models.Model):
     phrase that someone can say.
     """
 
-    collection_name = 'statements'
-
     text = models.CharField(
         blank=False,
         null=False,

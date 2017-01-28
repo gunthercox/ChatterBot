@@ -16,7 +16,7 @@ class HipChat(InputAdapter):
         self.hipchat_host = kwargs.get('hipchat_host')
         self.hipchat_access_token = kwargs.get('hipchat_access_token')
         self.hipchat_room = kwargs.get('hipchat_room')
-        self.session_id = str(self.chatbot.default_session.uuid)
+        self.conversation = self.chatbot.default_conversation
 
         authorization_header = 'Bearer {}'.format(self.hipchat_access_token)
 
@@ -81,10 +81,12 @@ class HipChat(InputAdapter):
         """
         new_message = False
 
-        input_statement = self.chatbot.conversation_sessions.get(
-            self.session_id).conversation.get_last_input_statement()
-        response_statement = self.chatbot.conversation_sessions.get(
-            self.session_id).conversation.get_last_response_statement()
+        input_statement = self.chatbot.conversations.get(
+            self.conversation.id
+        ).conversation.get_last_input_statement()
+        response_statement = self.chatbot.conversations.get(
+            self.conversation.id
+        ).conversation.get_last_response_statement()
 
         if input_statement:
             last_message_id = input_statement.extra_data.get(

@@ -22,8 +22,6 @@ bot = ChatBot(
     output_adapter='chatterbot.output.TerminalAdapter'
 )
 
-DEFAULT_SESSION_ID = bot.default_session.id
-
 
 def get_feedback():
     from chatterbot.utils import input_function
@@ -45,19 +43,22 @@ print('Type something to begin...')
 while True:
     try:
         input_statement = bot.input.process_input_statement()
-        statement, response = bot.generate_response(input_statement, DEFAULT_SESSION_ID)
+        statement, response = bot.generate_response(
+            input_statement,
+            bot.default_conversation.id
+        )
 
         print('\n Is "{}" this a coherent response to "{}"? \n'.format(response, input_statement))
 
         if get_feedback():
-            bot.learn_response(response,input_statement)
+            bot.learn_response(response, input_statement)
 
         bot.output.process_response(response)
 
         # Update the conversation history for the bot
         # It is important that this happens last, after the learning step
-        bot.conversation_sessions.update(
-            bot.default_session.id,
+        bot.conversations.update(
+            bot.default_conversation.id,
             (statement, response, )
         )
 

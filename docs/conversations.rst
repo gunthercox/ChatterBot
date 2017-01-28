@@ -2,6 +2,37 @@
 Conversations
 =============
 
+ChatterBot supports the ability to have multiple concurrent conversations.
+A conversation occurs when the chat bot interacts with a person, and supporting
+multiple conversations means that your chat bot can have multiple different
+conversations with different people at the same time.
+
+.. autoclass:: chatterbot.conversation.session.Conversation
+   :members:
+
+.. autoclass:: chatterbot.conversation.session.ConversationManager
+   :members:
+
+Conversation scope
+------------------
+
+If two :code:`ChatBot` instances are created, each will have conversations separate from each other.
+
+An chat bot's logic adapters can access any conversation as long as the unique identifier for the conversation is provided.
+
+Conversation example 
+--------------------
+
+The following example is taken from the Django :code:`ChatterBotView` built into ChatterBot.
+In this method, the unique identifiers for each conversation are being stored in Django's
+session objects. This allows different users who interact with the bot through different
+web browsers to have seperate conversations with the chat bot.
+
+.. literalinclude:: ../chatterbot/ext/django_chatterbot/views.py
+   :language: python
+   :pyobject: ChatterBotView.post
+   :dedent: 4
+
 ..  _conversation_statements:
 
 Statements

@@ -71,8 +71,8 @@ class ChatBot(object):
         self.trainer = TrainerClass(self.storage, **kwargs)
         self.training_data = kwargs.get('training_data')
 
-        self.conversation_sessions = ConversationManager(self.storage)
-        self.default_session = None
+        self.conversations = ConversationManager(self.storage)
+        self.default_conversation = None
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
@@ -94,7 +94,7 @@ class ChatBot(object):
         nltk_download_corpus('tokenizers/punkt')
         nltk_download_corpus('sentiment/vader_lexicon')
 
-    def get_response(self, input_item, session_id=None):
+    def get_response(self, input_item, conversation_id=None):
         """
         Return the bot's response based on the input.
 
@@ -108,45 +108,45 @@ class ChatBot(object):
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(self, input_statement)
 
-        if session_id:
-            session = self.conversation_sessions.get(session_id)
+        if conversation_id:
+            conversation = self.conversations.get(conversation_id)
 
-            if not session:
-                session = self.get_or_create_default_conversation()
+            if not conversation:
+                conversation = self.get_or_create_default_conversation()
         else:
-            session = self.get_or_create_default_conversation()
+            conversation = self.get_or_create_default_conversation()
 
-        statement, response = self.generate_response(input_statement, session.id)
+        statement, response = self.generate_response(input_statement, conversation.id)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
-        previous_statement = session.get_last_response_statement()
+        previous_statement = conversation.get_last_response_statement()
 
-        self.learn_response(statement, previous_statement, session)
+        self.learn_response(statement, previous_statement, conversation)
 
         if not self.read_only:
             response.save()
-            session.statements.add(response)
+            conversation.statements.add(response)
 
         # Process the response output with the output adapter
-        return self.output.process_response(response, session.id)
+        return self.output.process_response(response, conversation.id)
 
-    def generate_response(self, input_statement, session_id):
+    def generate_response(self, input_statement, conversation_id):
         """
         Return a response based on a given input statement.
         """
-        self.storage.generate_base_query(self, session_id)
+        self.storage.generate_base_query(self, conversation_id)
 
         # Select a response to the input statement
         response = self.logic.process(input_statement)
 
         return input_statement, response
 
-    def learn_response(self, statement, previous_statement, session=None):
+    def learn_response(self, statement, previous_statement, conversation=None):
         """
         Learn that the statement provided is a valid response.
         """
-        if not session:
-            session = self.get_or_create_default_conversation()
+        if not conversation:
+            conversation = self.get_or_create_default_conversation()
 
         if previous_statement:
             statement.add_response(
@@ -160,7 +160,7 @@ class ChatBot(object):
         # Save the statement after selecting a response
         if not self.read_only:
             self.storage.update(statement)
-            session.statements.add(statement)
+            conversation.statements.add(statement)
 
     def set_trainer(self, training_class, **kwargs):
         """
@@ -175,14 +175,14 @@ class ChatBot(object):
 
     def get_or_create_default_conversation(self):
         """
-        Get the default conversation session if it exists.
+        Get the default conversation if it exists.
         Otherwise create a new conversation.
         This is a lazy function designed to only create the conversation if
         a statement exists for it.
         """
-        if not self.default_session:
-            self.default_session = self.storage.Conversation.objects.create()
-        return self.default_session
+        if not self.default_conversation:
+            self.default_conversation = self.storage.Conversation.objects.create()
+        return self.default_conversation
 
     @property
     def train(self):
