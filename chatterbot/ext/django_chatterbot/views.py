@@ -67,20 +67,6 @@ class ChatterBotView(ChatterBotViewMixin, View):
         response = self.chatterbot.get_response(input_data, chat_session.id_string)
         response_data = response.serialize()
 
-        try:
-            unicode = unicode
-        except NameError:
-            # Must be python 3
-            unicode = str
-            basestring = (str, bytes)
-
-        if isinstance(response_data, basestring):
-            response_data = response_data.encode('utf8')
-        else:
-            response_data = unicode(response_data).encode('utf8')
-
-        response_data = {'text': str(response_data)}
-
         return JsonResponse(response_data, status=200)
 
     def get(self, request, *args, **kwargs):
