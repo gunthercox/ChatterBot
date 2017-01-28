@@ -2,7 +2,6 @@ import os
 from django.test import TestCase
 from chatterbot.storage import DjangoStorageAdapter
 from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
 
 
 class DjangoAdapterTestCase(TestCase):
@@ -89,16 +88,21 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         self.assertEqual(random_statement.text, statement.text)
 
     def test_find_returns_nested_responses(self):
-        statement = StatementModel.objects.create(text="Do you like this?")
-        statement.add_response(StatementModel(text="Yes"))
-        statement.add_response(StatementModel(text="No"))
+        question = StatementModel.objects.create(text='Do you like this?')
 
-        self.adapter.update(statement)
+        yes = StatementModel(text='Yes')
+        yes.in_response_to = question
+        yes.save()
 
-        result = self.adapter.find(statement.text)
+        no = StatementModel(text='No')
+        no.in_response_to = question
+        no.save()
 
-        self.assertTrue(result.in_response_to.filter(response__text="Yes").exists())
-        self.assertTrue(result.in_response_to.filter(response__text="No").exists())
+        result = self.adapter.find(question.text)
+        responses = result.responses()
+
+        self.assertTrue(responses.in_response_to.filter(text='Yes').exists())
+        self.assertTrue(responses.in_response_to.filter(text='No').exists())
 
     def test_multiple_responses_added_on_update(self):
         statement = StatementModel.objects.create(text="You are welcome.")
@@ -310,7 +314,7 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         found = self.adapter.filter(StatementModel, text=statement.text)
 
         self.assertEqual(len(found[0].in_response_to), 1)
-        self.assertEqual(type(found[0].in_response_to[0]), ResponseModel)
+        self.assertEqual(type(found[0].in_response_to[0]), StatementModel)
 
     def test_confidence(self):
         """

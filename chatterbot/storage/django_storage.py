@@ -126,6 +126,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Returns a random statement from the database
         """
         from chatterbot.ext.django_chatterbot.models import Statement
+
         return Statement.objects.order_by('?').first()
 
     def remove(self, statement_text):
@@ -135,25 +136,15 @@ class DjangoStorageAdapter(StorageAdapter):
         input text.
         """
         from chatterbot.ext.django_chatterbot.models import Statement
-        from chatterbot.ext.django_chatterbot.models import Response
-        from django.db.models import Q
-        statements = Statement.objects.filter(text=statement_text)
-
-        responses = Response.objects.filter(
-            Q(statement__text=statement_text) | Q(response__text=statement_text)
-        )
-
-        responses.delete()
-        statements.delete()
+        Statement.objects.filter(text=statement_text).delete()
 
     def drop(self):
         """
         Remove all data from the database.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement, Response, Conversation
+        from chatterbot.ext.django_chatterbot.models import Statement, Conversation
 
         Statement.objects.all().delete()
-        Response.objects.all().delete()
         Conversation.objects.all().delete()
 
     def get_response_statements(self):
@@ -163,8 +154,6 @@ class DjangoStorageAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement, Response
+        from chatterbot.ext.django_chatterbot.models import Statement
 
-        responses = Response.objects.all()
-
-        return Statement.objects.filter(in_response__in=responses)
+        return Statement.objects.filter(in_response_to__isnull=False)

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .base_case import ChatBotTestCase
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 
 
 class ChatterBotResponseTestCase(ChatBotTestCase):
@@ -8,11 +8,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def setUp(self):
         super(ChatterBotResponseTestCase, self).setUp()
 
-        response_list = [
-            Response('Hi')
-        ]
-
-        self.test_statement = Statement('Hello', in_response_to=response_list)
+        self.test_statement = Statement('Hello', in_response_to=Statement('Hi'))
 
     def test_empty_database(self):
         """
@@ -61,8 +57,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement_object = self.chatbot.storage.find(response.text)
 
         self.assertEqual(response, self.test_statement.text)
-        self.assertIsLength(statement_object.in_response_to, 1)
-        self.assertIn('Hi', statement_object.in_response_to)
+        self.assertEqual('Hi', statement_object.in_response_to)
 
     def test_second_response_format(self):
         self.chatbot.storage.update(self.test_statement)
@@ -76,8 +71,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIsNotNone(self.chatbot.storage.find('How are you?'))
 
         self.assertEqual(second_response, self.test_statement.text)
-        self.assertIsLength(statement.in_response_to, 1)
-        self.assertIn('Hi', statement.in_response_to)
+        self.assertEqual('Hi', statement.in_response_to)
 
     def test_get_response_unicode(self):
         """

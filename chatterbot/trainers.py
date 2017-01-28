@@ -48,8 +48,10 @@ class Trainer(object):
         result = []
 
         for statement in self.storage.filter(self.storage.Statement):
-            for response in statement.in_response_to:
-                result.append([response.text, statement.text])
+            if statement.in_response_to:
+                result.append([statement.text, statement.in_response_to.text])
+            else:
+                result.append([statement.text])
 
         return result
 
@@ -81,9 +83,7 @@ class ListTrainer(Trainer):
             statement = self.get_or_create(text)
 
             if statement_history:
-                statement.add_response(
-                    self.storage.Response(statement_history[-1].text)
-                )
+                statement.in_response_to = statement_history[-1]
 
             statement_history.append(statement)
             self.storage.update(statement)
@@ -196,7 +196,8 @@ class TwitterTrainer(Trainer):
             if tweet.in_reply_to_status_id:
                 try:
                     status = self.api.GetStatus(tweet.in_reply_to_status_id)
-                    statement.add_response(self.storage.Response(status.text))
+                    statement.in_response_to = self.storage.Statement(text=status.text)
+
                     statements.append(statement)
                 except TwitterError as error:
                     self.logger.warning(str(error))
@@ -345,9 +346,7 @@ class UbuntuCorpusTrainer(Trainer):
                             statement.add_extra_data('addressing_speaker', row[2])
 
                         if statement_history:
-                            statement.add_response(
-                                self.storage.Response(statement_history[-1].text)
-                            )
+                            statement.in_response_to = statement_history[-1]
 
                         statement_history.append(statement)
                         self.storage.update(statement)

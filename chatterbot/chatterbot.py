@@ -149,9 +149,7 @@ class ChatBot(object):
             session = self.get_or_create_default_conversation()
 
         if previous_statement:
-            statement.add_response(
-                self.storage.Response(previous_statement.text)
-            )
+            statement.in_response_to = previous_statement
             self.logger.info('Adding "{}" as a response to "{}"'.format(
                 statement.text,
                 previous_statement.text

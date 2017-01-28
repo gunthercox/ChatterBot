@@ -47,7 +47,7 @@ class ListTrainingTests(ChatBotTestCase):
             self.chatbot.storage.Statement,
             in_response_to__contains="Do you like my hat?"
         )
-        response = statements[0].in_response_to[0]
+        response = statements[0].in_response_to
 
         self.assertEqual(response.occurrence, 2)
 
@@ -77,22 +77,13 @@ class ListTrainingTests(ChatBotTestCase):
         # There should be a total of 9 statements in the database after training
         self.assertEqual(self.chatbot.storage.count(), 9)
 
-        # The first statement should be in response to another statement
-        self.assertEqual(
-            len(self.chatbot.storage.find(conversation[0]).in_response_to),
-            0
-        )
-
-        # The second statement should have one response
-        self.assertEqual(
-            len(self.chatbot.storage.find(conversation[1]).in_response_to),
-            1
-        )
+        # The first statement should not be in response to another statement
+        self.assertIsNone(self.chatbot.storage.find(conversation[0]).in_response_to)
 
         # The second statement should be in response to the first statement
-        self.assertIn(
+        self.assertEqual(
             conversation[0],
-            self.chatbot.storage.find(conversation[1]).in_response_to,
+            self.chatbot.storage.find(conversation[1]).in_response_to
         )
 
     def test_training_with_unicode_characters(self):
