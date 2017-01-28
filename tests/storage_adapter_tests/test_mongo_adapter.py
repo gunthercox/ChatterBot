@@ -1,7 +1,7 @@
 from unittest import TestCase
 from unittest import SkipTest
 from chatterbot.storage import MongoDatabaseAdapter
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 
 
 class MongoAdapterTestCase(TestCase):
@@ -90,9 +90,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         )
 
         # Update the statement value
-        statement.add_response(
-            Response("New response")
-        )
+        statement.in_response_to = Statement("New response")
         self.adapter.update(statement)
 
         # Check that the values have changed
@@ -165,14 +163,10 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         self.assertEqual(len(response.in_response_to), 1)
         self.assertEqual(response.in_response_to[0].occurrence, 2)
 
-    def test_deserialize_responses(self):
-        response_list = [
-            {"text": "Test", "occurrence": 3},
-            {"text": "Testing", "occurrence": 1},
-        ]
-        results = self.adapter.deserialize_responses(response_list)
+    def test_deserialize_response(self):
+        result = self.adapter.deserialize_responses({'text': 'Test'})
 
-        self.assertEqual(len(results), 2)
+        self.assertEqual(result.text, 'Test')
 
     def test_mongo_to_object(self):
         self.adapter.update(
@@ -385,9 +379,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         """
         statement = Statement(
             "The first is to help yourself, the second is to help others.",
-            in_response_to=[
-                Response("Why do people have two hands?")
-            ]
+            in_response_to=Statement("Why do people have two hands?")
         )
         self.adapter.update(statement)
         found = self.adapter.filter(Statement, text=statement.text)

@@ -1,6 +1,5 @@
 import warnings
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Response
 
 
 class JsonFileStorageAdapter(StorageAdapter):
@@ -34,14 +33,11 @@ class JsonFileStorageAdapter(StorageAdapter):
             'conversations': Database(conversation_database_path)
         }
 
-        self.adapter_supports_queries = False
-
-    def _keys(self, collection_name):
-        # The value has to be cast as a list for Python 3 compatibility
-        return list(self.database[collection_name][0].keys())
+        # Create the statements document as an empty list
+        # self.database['statements'] = []
 
     def count(self):
-        return len(self._keys('statements'))
+        return len(self.database['statements'].keys())
 
     def find(self, statement_text):
         values = self.database['statements'].data(key=statement_text)
@@ -65,24 +61,6 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         self.database['statements'].delete(obj.text)
 
-    def deserialize_responses(self, response_list):
-        """
-        Takes the list of response items and returns
-        the list converted to Response objects.
-        """
-        proxy_statement = self.Statement('')
-
-        for response in response_list:
-            data = response.copy()
-            text = data['text']
-            del data['text']
-
-            proxy_statement.add_response(
-                Response(text, **data)
-            )
-
-        return proxy_statement.in_response_to
-
     def json_to_object(self, object_data):
         """
         Converts a dictionary-like object to a Statement object.
@@ -94,8 +72,8 @@ class JsonFileStorageAdapter(StorageAdapter):
         if 'text' in object_data:
 
             # Build the objects for the response list
-            object_data['in_response_to'] = self.deserialize_responses(
-                object_data['in_response_to']
+            object_data['in_response_to'] = self.Statement(
+                **object_data['in_response_to']
             )
 
             # Remove the text attribute from the values
@@ -149,14 +127,10 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         order_by = kwargs.pop('order_by', None)
 
-        for key in self._keys(obj.collection_name):
-            values = self.database[obj.collection_name].data(key=key)
+        for statement in self.database['statements']:
 
-            # Add the text attribute to the values
-            values[obj.pk_field] = key
-
-            if self._all_kwargs_match_values(kwargs, values):
-                results.append(self.json_to_object(values))
+            if self._all_kwargs_match_values(kwargs, statement):
+                results.append(self.json_to_object(statement))
 
         if order_by:
 
@@ -175,16 +149,10 @@ class JsonFileStorageAdapter(StorageAdapter):
         data = obj.serialize()
 
         if 'text' in data:
-            # Remove the text key from the data
-            del data['text']
-            self.database['statements'].data(key=obj.text, value=data)
+            statements = self.database['statements']
+            statements.append(statement.serialize())
 
-            # Make sure that an entry for each response exists
-            for response_statement in obj.in_response_to:
-                response = self.find(response_statement.text)
-                if not response:
-                    response = self.Statement(response_statement.text)
-                    self.update(response)
+            self.database.data(key='statements', value=statements)
         else:
             del data['id']
             self.database['conversations'].data(key=obj.id, value=data)
@@ -197,8 +165,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         if self.count() < 1:
             raise self.EmptyDatabaseException()
 
-        statement = choice(self._keys('statements'))
-        return self.find(statement)
+        return choice(self.database['statements'])
 
     def drop(self):
         """

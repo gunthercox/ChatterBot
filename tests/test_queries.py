@@ -25,9 +25,8 @@ class MongoAdapterTestCase(TestCase):
         query = self.query.statement_response_list_contains('Hey')
 
         self.assertIn('in_response_to', query.value())
-        self.assertIn('$elemMatch', query.value()['in_response_to'])
-        self.assertIn('text', query.value()['in_response_to']['$elemMatch'])
-        self.assertEqual('Hey', query.value()['in_response_to']['$elemMatch']['text'])
+        self.assertIn('text', query.value()['in_response_to'])
+        self.assertEqual('Hey', query.value()['in_response_to']['text'])
 
     def test_statement_response_list_equals(self):
         query = self.query.statement_response_list_equals([])

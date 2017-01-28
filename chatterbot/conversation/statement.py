@@ -1,5 +1,4 @@
 # -*- coding: utf-8 -*-
-from .response import Response
 from datetime import datetime
 
 
@@ -13,6 +12,27 @@ class StatementModelMixin(object):
     )
 
 
+class StatementSerializer(object):
+
+    def serialize(self, obj):
+        """
+        :returns: A dictionary representation of the statement object.
+        :rtype: dict
+        """
+        data = {}
+
+        data['text'] = obj.text
+        if obj.in_response_to:
+            data['in_response_to'] = {'text': obj.in_response_to.text}
+        data['created_at'] = obj.created_at
+        data['extra_data'] = obj.extra_data
+
+        return data
+
+    def deserialize(self, data):
+        pass
+
+
 class Statement(StatementModelMixin):
     """
     A statement represents a single spoken entity, sentence or
@@ -23,7 +43,7 @@ class Statement(StatementModelMixin):
 
     def __init__(self, text, **kwargs):
         self.text = text
-        self.in_response_to = kwargs.pop('in_response_to', [])
+        self.in_response_to = kwargs.pop('in_response_to', None)
 
         # The date and time that this statement was created at
         self.created_at = kwargs.pop('created_at', datetime.now())
@@ -77,86 +97,9 @@ class Statement(StatementModelMixin):
         """
         self.extra_data[key] = value
 
-    def add_response(self, response):
-        """
-        Add the response to the list of statements that this statement is in response to.
-        If the response is already in the list, increment the occurrence count of that response.
-
-        :param response: The response to add.
-        :type response: `Response`
-        """
-        if not isinstance(response, Response):
-            raise Statement.InvalidTypeException(
-                'A {} was recieved when a {} instance was expected'.format(
-                    type(response),
-                    type(Response(''))
-                )
-            )
-
-        updated = False
-        for index in range(0, len(self.in_response_to)):
-            if response.text == self.in_response_to[index].text:
-                self.in_response_to[index].occurrence += 1
-                updated = True
-
-        if not updated:
-            self.in_response_to.append(response)
-
-    def remove_response(self, response_text):
-        """
-        Removes a response from the statement's response list based
-        on the value of the response text.
-
-        :param response_text: The text of the response to be removed.
-        :type response_text: str
-        """
-        for response in self.in_response_to:
-            if response_text == response.text:
-                self.in_response_to.remove(response)
-                return True
-        return False
-
-    def get_response_count(self, statement):
-        """
-        Find the number of times that the statement has been used
-        as a response to the current statement.
-
-        :param statement: The statement object to get the count for.
-        :type statement: `Statement`
-
-        :returns: Return the number of times the statement has been used as a response.
-        :rtype: int
-        """
-        for response in self.in_response_to:
-            if statement.text == response.text:
-                return response.occurrence
-
-        return 0
-
     def serialize(self):
-        """
-        :returns: A dictionary representation of the statement object.
-        :rtype: dict
-        """
-        data = {}
-
-        data['text'] = self.text
-        data['in_response_to'] = []
-        data['created_at'] = self.created_at
-        data['extra_data'] = self.extra_data
-
-        for response in self.in_response_to:
-            data['in_response_to'].append(response.serialize())
-
-        return data
-
-    @property
-    def response_statement_cache(self):
-        """
-        This property is to allow ChatterBot Statement objects to
-        be swappable with Django Statement models.
-        """
-        return self.in_response_to
+        serializer = StatementSerializer()
+        return serializer.serialize(self)
 
     class InvalidTypeException(Exception):
 

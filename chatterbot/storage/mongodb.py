@@ -1,5 +1,4 @@
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Response
 
 
 class Query(object):
@@ -43,17 +42,14 @@ class Query(object):
         if 'in_response_to' not in query:
             query['in_response_to'] = {}
 
-        if '$elemMatch' not in query['in_response_to']:
-            query['in_response_to']['$elemMatch'] = {}
-
-        query['in_response_to']['$elemMatch']['text'] = statement_text
+        query['in_response_to']['text'] = statement_text
 
         return Query(query)
 
-    def statement_response_list_equals(self, response_list):
+    def statement_response_list_equals(self, response):
         query = self.query.copy()
 
-        query['in_response_to'] = response_list
+        query['in_response_to'] = response
 
         return Query(query)
 
@@ -110,29 +106,22 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         del values['text']
 
-        # Build the objects for the response list
-        values['in_response_to'] = self.deserialize_responses(
-            values.get('in_response_to', [])
-        )
+        if 'in_response_to' in values:
+            values['in_response_to'] = self.deserialize_responses(
+                values['in_response_to']
+            )
 
         return self.Statement(statement_text, **values)
 
-    def deserialize_responses(self, response_list):
+    def deserialize_responses(self, statement_data):
         """
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = self.Statement('')
+        text = statement_data['text']
+        del statement_data['text']
 
-        for response in response_list:
-            text = response['text']
-            del response['text']
-
-            proxy_statement.add_response(
-                Response(text, **response)
-            )
-
-        return proxy_statement.in_response_to
+        return self.Statement(text, **statement_data)
 
     def mongo_to_object(self, object_data):
         """
@@ -143,9 +132,10 @@ class MongoDatabaseAdapter(StorageAdapter):
             statement_text = object_data['text']
             del object_data['text']
 
-            object_data['in_response_to'] = self.deserialize_responses(
-                object_data.get('in_response_to', [])
-            )
+            if 'in_response_to' in object_data:
+                object_data['in_response_to'] = self.deserialize_responses(
+                    object_data['in_response_to']
+                )
 
             return self.Statement(statement_text, **object_data)
         else:
@@ -170,11 +160,9 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         order_by = kwargs.pop('order_by', None)
 
-        # Convert Response objects to data
+        # Convert response statement objects to data
         if 'in_response_to' in kwargs:
-            serialized_responses = []
-            for response in kwargs['in_response_to']:
-                serialized_responses.append({'text': response})
+            serialized_response = {'text': kwargs['in_response_to']}
 
             query = query.statement_response_list_equals(serialized_responses)
             del kwargs['in_response_to']
@@ -221,14 +209,13 @@ class MongoDatabaseAdapter(StorageAdapter):
         )
         operations.append(update_operation)
 
-        # Make sure that an entry for each response is saved
-        for response_dict in data.get('in_response_to', []):
-            response_text = response_dict.get('text')
+        # Make sure that the response is saved
+        response_data = data.get('in_response_to', None)
 
-            # $setOnInsert does nothing if the document is not created
+        if response_data:
             update_operation = UpdateOne(
-                {'text': response_text},
-                {'$set': response_dict},
+                {'text': response_data['text']},
+                {'$set': response_data},
                 upsert=True
             )
             operations.append(update_operation)

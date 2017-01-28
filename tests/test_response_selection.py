@@ -1,16 +1,16 @@
 from unittest import TestCase
 from chatterbot import response_selection
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 
 
 class ResponseSelectionTests(TestCase):
 
     def test_get_most_frequent_response(self):
         statement_list = [
-            Statement('What... is your quest?', in_response_to=[Response('Hello', occurrence=2)]),
-            Statement('This is a phone.', in_response_to=[Response('Hello', occurrence=4)]),
-            Statement('A what?', in_response_to=[Response('Hello', occurrence=2)]),
-            Statement('A phone.', in_response_to=[Response('Hello', occurrence=1)])
+            Statement('What... is your quest?', in_response_to=Statement('Hello', occurrence=2)),
+            Statement('This is a phone.', in_response_to=Statement('Hello', occurrence=4)),
+            Statement('A what?', in_response_to=Statement('Hello', occurrence=2)),
+            Statement('A phone.', in_response_to=Statement('Hello', occurrence=1))
         ]
 
         output = response_selection.get_most_frequent_response(
