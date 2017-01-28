@@ -170,10 +170,10 @@ class Conversation(models.Model):
     A sequence of statements representing a conversation.
     """
 
-    root = models.OneToOneField(
+    statements = models.ManyToManyField(
         'Statement',
         related_name='conversation',
-        help_text='The initiating statement in a conversation.'
+        help_text='The statements in this conversation.'
     )
 
     def __str__(self):

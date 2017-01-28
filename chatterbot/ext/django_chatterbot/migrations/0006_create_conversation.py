@@ -27,7 +27,7 @@ class Migration(migrations.Migration):
         ),
         migrations.AddField(
             model_name='conversation',
-            name='root',
-            field=models.OneToOneField(help_text='The initiating statement in a conversation.', on_delete=django.db.models.deletion.CASCADE, related_name='conversation', to='django_chatterbot.Statement'),
+            name='statements',
+            field=models.ManyToManyField(help_text=b'The statements in this conversation.', related_name='conversation', to='django_chatterbot.Statement'),
         ),
     ]
