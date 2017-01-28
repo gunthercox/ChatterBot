@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import json
 from django.test import TestCase
 from django.core.urlresolvers import reverse
@@ -13,6 +14,9 @@ class ApiTestCase(TestCase):
         """
         Test that a response is returned.
         """
+        from datetime import datetime
+        from dateutil.parser import parse
+
         data = {
             'text': 'How are you?'
         }
@@ -23,25 +27,23 @@ class ApiTestCase(TestCase):
             format='json'
         )
 
+        content = json.loads(response.content.decode('utf-8'))
+
         self.assertEqual(response.status_code, 200)
-        self.assertIn('text', str(response.content))
-        self.assertIn('in_response_to', str(response.content))
+        self.assertIn('text', content)
+        self.assertGreater(len(content['text']), 1)
+        self.assertIn('in_response_to', content)
+        self.assertIn('created_at', content)
+        self.assertTrue(
+            isinstance(parse(content['created_at']), datetime)
+        )
 
-    def test_response_is_in_json(self):
+    def test_post_unicode(self):
         """
-        Test Response is in JSON
+        Test that a response is returned.
         """
-        def is_json(content):
-            try:
-                if isinstance(content, bytes):
-                    content = content.decode(encoding='utf-8')
-                json_object = json.loads(content)
-            except ValueError:
-                return False
-            return True
-
         data = {
-            'text': 'Is this JSON Data?'
+            'text': u'سلام'
         }
         response = self.client.post(
             self.api_url,
@@ -50,15 +52,19 @@ class ApiTestCase(TestCase):
             format='json'
         )
 
-        self.assertEqual(response.status_code, 200)
-        self.assertTrue(is_json(response.content))
+        content = json.loads(response.content.decode('utf-8'))
 
-    def test_unicode_post(self):
+        self.assertEqual(response.status_code, 200)
+        self.assertIn('text', content)
+        self.assertGreater(len(content['text']), 1)
+        self.assertIn('in_response_to', content)
+
+    def test_escaped_unicode_post(self):
         """
         Test that unicode reponse
         """
         data = {
-            'text' : u'\u2013'
+            'text' : '\u2013'
         }
         response = self.client.post(
             self.api_url,
@@ -97,6 +103,11 @@ class ApiTestCase(TestCase):
 
     def test_patch(self):
         response = self.client.patch(self.api_url)
+
+        self.assertEqual(response.status_code, 405)
+
+    def test_put(self):
+        response = self.client.put(self.api_url)
 
         self.assertEqual(response.status_code, 405)
 
