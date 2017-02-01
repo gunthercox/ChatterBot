@@ -37,7 +37,7 @@ class Trainer(object):
 
         def __init__(self, value=None):
             default = (
-                'A training class must specified before calling train(). ' +
+                'A training class must be specified before calling train(). ' +
                 'See http://chatterbot.readthedocs.io/en/stable/training.html'
             )
             self.value = value or default
