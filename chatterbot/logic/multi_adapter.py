@@ -60,9 +60,7 @@ class MultiLogicAdapter(LogicAdapter):
                     max_confidence = output.confidence
             else:
                 self.logger.info(
-                    'Not processing the statement using {}'.format(
-                        str(adapter.__class__)
-                    )
+                    'Not processing the statement using {}'.format(adapter.class_name)
                 )
 
         # If multiple adapters agree on the same statement,
