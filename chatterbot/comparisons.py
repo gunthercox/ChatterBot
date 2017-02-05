@@ -47,7 +47,7 @@ def levenshtein_distance(statement, other_statement):
     )
 
     # Calculate a decimal percent of the similarity
-    percent = int(round(100 * similarity.ratio())) / 100.0
+    percent = round(similarity.ratio(), 2)
 
     return percent
 
