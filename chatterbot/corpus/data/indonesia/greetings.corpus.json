@@ -1,6 +1,34 @@
 {
     "greetings": [
         [
+            "Assalamu'alaikum",
+            "Wa'alaikum salam warohmatullah"
+        ],
+        [
+            "Hi bro apa kabar?",
+            "Baik bro, gimana kabar lo bro?"
+        ],
+        [
+            "Baik juga bro",
+            "Syukur deh bro"
+        ],
+        [
+            "Selamat pagi",
+            "Pagi juga"
+        ],
+        [
+            "Selamat siang",
+            "Siang juga"
+        ],
+        [
+            "Selamat sore",
+            "Sore juga"
+        ],
+        [
+            "Selamat malam",
+            "Malam juga"
+        ],
+        [
             "Halo",
             "Hai"
         ],
@@ -98,7 +126,7 @@
         ],
         [
             "Apa kabar?",
-            "Cuacanya bagus dan aku juga baik-baik saja terimakasih. Kamu bagaimana?"
+            "Alhamdulillah baik, Kamu bagaimana?"
         ]
     ]
 }
