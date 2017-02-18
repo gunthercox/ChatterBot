@@ -150,4 +150,4 @@ class DjangoStorageAdapter(StorageAdapter):
 
         responses = Response.objects.all()
 
-        return Statement.objects.filter(response__in=responses)
+        return Statement.objects.filter(responses__in=responses)
