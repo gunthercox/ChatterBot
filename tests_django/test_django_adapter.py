@@ -177,8 +177,8 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         responses = self.adapter.get_response_statements()
 
         self.assertEqual(len(responses), 2)
-        self.assertTrue(responses.filter(in_response__response__text="This is a phone.").exists())
-        self.assertTrue(responses.filter(in_response__response__text="A what?").exists())
+        self.assertTrue(responses.filter(responses__response__text="This is a phone.").exists())
+        self.assertTrue(responses.filter(responses__response__text="A what?").exists())
 
 
 class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
