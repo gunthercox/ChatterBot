@@ -52,15 +52,15 @@ def levenshtein_distance(statement, other_statement):
     return percent
 
 
-def synset_distance(statement, other_statement):
+def synset_distance(statement, other_statement, lang='eng', language='english'):
     """
     Calculate the similarity of two statements.
     This is based on the total maximum synset similarity between each word in each sentence.
 
+
     This algorithm uses the `wordnet`_ functionality of `NLTK`_ to determine the similarity
     of two statements based on the path similarity between each token of each statement.
     This is essentially an evaluation of the closeness of synonyms.
-
     :return: The percent of similarity between the closest synset distance.
     :rtype: float
 
@@ -76,8 +76,8 @@ def synset_distance(statement, other_statement):
     tokens2 = word_tokenize(other_statement.text.lower())
 
     # Remove all stop words from the list of word tokens
-    tokens1 = utils.remove_stopwords(tokens1, language='english')
-    tokens2 = utils.remove_stopwords(tokens2, language='english')
+    tokens1 = utils.remove_stopwords(tokens1, language=language)
+    tokens2 = utils.remove_stopwords(tokens2, language=language)
 
     # The maximum possible similarity is an exact match
     # Because path_similarity returns a value between 0 and 1,
@@ -93,8 +93,8 @@ def synset_distance(statement, other_statement):
     # Get the highest matching value for each possible combination of words
     for combination in itertools.product(*[tokens1, tokens2]):
 
-        synset1 = wordnet.synsets(combination[0])
-        synset2 = wordnet.synsets(combination[1])
+        synset1 = wordnet.synsets(combination[0], lang=lang)
+        synset2 = wordnet.synsets(combination[1], lang=lang)
 
         if synset1 and synset2:
 
