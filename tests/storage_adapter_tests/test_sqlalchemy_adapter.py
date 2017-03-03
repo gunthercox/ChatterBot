@@ -9,7 +9,6 @@ class SQLAlchemyAdapterTestCase(TestCase):
     def setUp(self):
         self.adapter = SQLAlchemyDatabaseAdapter()
 
-
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
     def test_count_returns_zero(self):
         """
