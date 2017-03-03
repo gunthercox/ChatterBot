@@ -1,18 +1,21 @@
 from .base_case import ChatBotTestCase
 
 
-class ContextTests(ChatBotTestCase):
+class AdapterTests(ChatBotTestCase):
 
-    def setUp(self):
-        super(ContextTests, self).setUp()
-
-    def test_modify_context(self):
+    def test_modify_chatbot(self):
         """
-        When one adapter changes the context,
-        the change should be the same in all
-        other adapters.
+        When one adapter modifies its chatbot instance,
+        the change should be the same in all other adapters.
         """
-        self.chatbot.input.context.recent_statements = [5]
-        data = self.chatbot.output.context.recent_statements
+        session = self.chatbot.input.chatbot.conversation_sessions.new()
+        self.chatbot.input.chatbot.conversation_sessions.update(
+            session.id_string,
+            ('A', 'B', )
+        )
 
-        self.assertIn(5, data)
+        session = self.chatbot.output.chatbot.conversation_sessions.get(
+            session.id_string
+        )
+
+        self.assertIn(('A', 'B', ), session.conversation)

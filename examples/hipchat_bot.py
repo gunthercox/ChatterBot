@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 from settings import HIPCHAT
 
@@ -11,8 +12,8 @@ chatbot = ChatBot(
     hipchat_host=HIPCHAT['HOST'],
     hipchat_room=HIPCHAT['ROOM'],
     hipchat_access_token=HIPCHAT['ACCESS_TOKEN'],
-    input_adapter='chatterbot.adapters.input.HipChat',
-    output_adapter='chatterbot.adapters.output.HipChat',
+    input_adapter='chatterbot.input.HipChat',
+    output_adapter='chatterbot.output.HipChat',
     trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
 )
 

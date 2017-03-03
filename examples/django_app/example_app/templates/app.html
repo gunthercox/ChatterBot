@@ -4,35 +4,39 @@
   <head>
     <title>Django ChatterBot Example</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
-
-    <!-- Alternate the background color of the output rows -->
-    <style>
-    .list-group-item:nth-child(even) {
-      background-color: #eee;
-    }
-    </style>
+    <link rel="stylesheet" href="{% static 'css/custom.css' %}"/>
   </head>
   <body>
 
+    {% include 'nav.html' %}
+
     <div class="container">
-      <div class="page-header text-center">
-        <h1>Django ChatterBot Example</h1>
-      </div>
 
-      <div class="row">
-        <div class="col-xs-6 col-xs-offset-3">
-          <ul class="list-group js-chat-log">
-          </ul>
+      <div class="jumbotron mt-1">
+        <h1 class="jumbotron-heading text-xs-center">Django ChatterBot Example</h1>
+        <p class="lead text-xs-center">
+          This is a web app that allows you to talk to ChatterBot.
+        </p>
 
-          <div class="input-group input-group-lg">
-            <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
-            <span class="input-group-btn">
-              <button class="btn btn-primary js-say">Submit</button>
-            </span>
+        <hr class="my-2">
+
+        <div class="row">
+          <div class="col-xs-6 offset-xs-3">
+            <ul class="list-group chat-log js-chat-log">
+            </ul>
+
+            <div class="input-group input-group-lg mt-1">
+              <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
+              <span class="input-group-btn">
+                <button class="btn btn-primary js-say">Submit</button>
+              </span>
+            </div>
+            
           </div>
-          
         </div>
+
       </div>
+
     </div>
 
     <script src="{% static 'js/jquery.js' %}"></script>
@@ -59,26 +63,36 @@
       var $input = $('.js-text');
       var $sayButton = $('.js-say');
 
-      var $rowTemplate = $('<li class="list-group-item"></li>');
+      function createRow(text) {
+        var $row = $('<li class="list-group-item"></li>');
+
+        $row.text(text);
+        $chatlog.append($row);
+      }
 
       function submitInput() {
         var inputData = {
           'text': $input.val()
         }
 
+        // Display the user's input on the web page
+        createRow(inputData.text);
+
         var $submit = $.ajax({
           type: 'POST',
           url: chatterbotUrl,
-          data: inputData,
+          data: JSON.stringify(inputData),
+          contentType: 'application/json'
         });
 
         $submit.done(function(statement) {
-            var $row = $rowTemplate.clone();
+            createRow(statement.text);
 
-            $row.text(statement.text);
-            $chatlog.append($row);
-
+            // Clear the input field
             $input.val('');
+
+            // Scroll to the bottom of the chat interface
+            $chatlog[0].scrollTop = $chatlog[0].scrollHeight;
         });
 
         $submit.fail(function() {

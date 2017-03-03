@@ -1,19 +1,29 @@
 from unittest import TestCase
 from unittest import SkipTest
 from chatterbot import ChatBot
-import os
 
 
 class ChatBotTestCase(TestCase):
 
     def setUp(self):
+        self.test_data_directory = None
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
+
+    def assertIsLength(self, item, length):
+        """
+        Assert that an iterable has the given length.
+        """
+        if len(item) != length:
+            raise AssertionError(
+                'Length {} is not equal to {}'.format(len(item), length)
+            )
 
     def get_kwargs(self):
         return {
-            'input_adapter': 'chatterbot.adapters.input.VariableInputTypeAdapter',
-            'output_adapter': 'chatterbot.adapters.output.OutputFormatAdapter',
-            'database': self.create_test_data_directory()
+            'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
+            'output_adapter': 'chatterbot.output.OutputAdapter',
+            'database': None, # None runs the database in-memory
+            'silence_performance_warning': True
         }
 
     def random_string(self, start=0, end=9000):
@@ -23,30 +33,11 @@ class ChatBotTestCase(TestCase):
         from random import randint
         return str(randint(start, end))
 
-    def create_test_data_directory(self):
-        self.test_data_directory = 'test_data'
-        test_database_name = self.random_string() + '.db'
-
-        if not os.path.exists(self.test_data_directory):
-            os.makedirs(self.test_data_directory)
-
-        return os.path.join(
-            self.test_data_directory,
-            test_database_name
-        )
-
-    def remove_test_data(self):
-        import shutil
-
-        if os.path.exists(self.test_data_directory):
-            shutil.rmtree(self.test_data_directory)
-
     def tearDown(self):
         """
         Remove the test database.
         """
         self.chatbot.storage.drop()
-        self.remove_test_data()
 
 
 class ChatBotMongoTestCase(ChatBotTestCase):
@@ -62,14 +53,13 @@ class ChatBotMongoTestCase(ChatBotTestCase):
             )
             client.server_info()
 
-            self.chatbot = ChatBot('Tester Bot', **self.get_kwargs())
-
         except ServerSelectionTimeoutError:
             raise SkipTest('Unable to connect to Mongo DB.')
+
+        super(ChatBotMongoTestCase, self).setUp()
 
     def get_kwargs(self):
         kwargs = super(ChatBotMongoTestCase, self).get_kwargs()
         kwargs['database'] = self.random_string()
-        kwargs['storage_adapter'] = 'chatterbot.adapters.storage.MongoDatabaseAdapter'
+        kwargs['storage_adapter'] = 'chatterbot.storage.MongoDatabaseAdapter'
         return kwargs
-

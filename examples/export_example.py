@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 
 '''
@@ -14,4 +15,4 @@ chatbot = ChatBot(
 chatbot.train('chatterbot.corpus.english')
 
 # Now we can export the data to a file
-chatbot.trainer.export_for_training('./myfile.json')
+chatbot.trainer.export_for_training('./my_export.json')

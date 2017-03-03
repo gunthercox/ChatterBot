@@ -7,6 +7,8 @@ venv
 *.pyc
 *.swp
 *.egg-info
+*.egg/*
+*.eggs/*
 
 # Database files
 *.sqlite3
@@ -20,3 +22,4 @@ docs/_build/
 *.iml
 
 examples/settings.py
+examples/ubuntu_dialogs*

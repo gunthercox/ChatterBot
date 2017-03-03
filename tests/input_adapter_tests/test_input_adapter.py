@@ -1,7 +1,8 @@
-from unittest import TestCase
-from chatterbot.adapters.input import InputAdapter
+from tests.base_case import ChatBotTestCase
+from chatterbot.conversation import Statement
+from chatterbot.input import InputAdapter
 
-class InputAdapterTestCase(TestCase):
+class InputAdapterTestCase(ChatBotTestCase):
     """
     This test case is for the InputAdapter base class.
     Although this class is not intended for direct use,
@@ -16,3 +17,13 @@ class InputAdapterTestCase(TestCase):
     def test_process_response(self):
         with self.assertRaises(InputAdapter.AdapterMethodNotImplementedError):
             self.adapter.process_input()
+
+    def test_process_response_statement(self):
+        with self.assertRaises(InputAdapter.AdapterMethodNotImplementedError):
+            self.adapter.process_input_statement()
+
+    def test_process_response_statement_initialized(self):
+        self.adapter.chatbot = self.chatbot
+        self.adapter.process_input = lambda *args, **kwargs: Statement('Hi')
+        response = self.adapter.process_input_statement()
+        self.assertEqual(response, 'Hi')

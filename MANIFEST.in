@@ -5,5 +5,5 @@ include requirements.txt
 recursive-include chatterbot/corpus/* *.json
 recursive-include chatterbot/corpus/* *.csv
 
-recursive-exclude * *.pyc
-recursive-exclude * *.py~
+recursive-exclude * __pycache__
+recursive-exclude * *.py[co~]

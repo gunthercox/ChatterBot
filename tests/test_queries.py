@@ -4,7 +4,7 @@ from unittest import TestCase
 class MongoAdapterTestCase(TestCase):
 
     def setUp(self):
-        from chatterbot.adapters.storage.mongodb import Query
+        from chatterbot.storage.mongodb import Query
         self.query = Query()
 
     def test_statement_text_equals(self):

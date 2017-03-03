@@ -10,14 +10,13 @@ os:
   - windows
 
 env:
-  - DJANGO_VERSION=1.8.11
-  - DJANGO_VERSION=1.9.8
+  - DJANGO_VERSION=1.8
+  - DJANGO_VERSION=1.9
   - DJANGO_VERSION=1.10
 
 install:
-  - pip install codeclimate-test-reporter
-  - pip install coveralls
-  - pip install nltk
+  - pip install .
+  - pip install -r test-requirements.txt
   - pip install -r requirements.txt
   - pip install -q Django==$DJANGO_VERSION
 
@@ -29,9 +28,12 @@ services:
   - mongodb
 
 script:
-  - nosetests --with-coverage --cover-package=chatterbot
-  - pip install .
+  - python runtests.py
   - python examples/django_app/manage.py test examples/django_app/
+  - nosetests --with-coverage --cover-package=chatterbot
+  - nosetests examples
+  - sphinx-build -nW -b html ./docs/ ./build/
+  - python tests/benchmarks.py
 
 after_success:
   - coveralls
