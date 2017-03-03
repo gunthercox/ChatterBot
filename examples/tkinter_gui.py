@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 import tkinter as tk
 try:
     import ttk as ttk
@@ -12,18 +13,18 @@ from chatterbot import ChatBot
 class TkinterGUIExample(tk.Tk):
 
     def __init__(self, *args, **kwargs):
-        '''
+        """
         Create & set window variables.
-        '''
+        """
         tk.Tk.__init__(self, *args, **kwargs)
 
         self.chatbot = ChatBot("No Output",
-            storage_adapter="chatterbot.adapters.storage.JsonFileStorageAdapter",
+            storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
             logic_adapters=[
-                "chatterbot.adapters.logic.ClosestMatchAdapter"
+                "chatterbot.logic.BestMatch"
             ],
-            input_adapter="chatterbot.adapters.input.VariableInputTypeAdapter",
-            output_adapter="chatterbot.adapters.output.OutputFormatAdapter",
+            input_adapter="chatterbot.input.VariableInputTypeAdapter",
+            output_adapter="chatterbot.output.OutputAdapter",
             database="../database.db"
         )
 
@@ -32,9 +33,9 @@ class TkinterGUIExample(tk.Tk):
         self.initialize()
 
     def initialize(self):
-        '''
+        """
         Set window layout.
-        '''
+        """
         self.grid()
 
         self.respond = ttk.Button(self, text='Get Response', command=self.get_response)
@@ -50,10 +51,9 @@ class TkinterGUIExample(tk.Tk):
         self.conversation.grid(column=0, row=2, columnspan=2, sticky='nesw', padx=3, pady=3)
 
     def get_response(self):
-        '''
-        Get a response from the chatbot &
-        display it.
-        '''
+        """
+        Get a response from the chatbot and display it.
+        """
         user_input = self.usr_input.get()
         self.usr_input.delete(0, tk.END)
 

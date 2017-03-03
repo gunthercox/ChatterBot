@@ -1,26 +1,17 @@
-from unittest import SkipTest
-from tests.base_case import ChatBotTestCase
-from .base import StorageIntegrationTests
-from chatterbot.adapters.storage import MongoDatabaseAdapter
+from tests.base_case import ChatBotMongoTestCase
 
 
-class MongoStorageIntegrationTests(StorageIntegrationTests, ChatBotTestCase):
+class MongoStorageIntegrationTests(ChatBotMongoTestCase):
 
-    def setUp(self):
-        super(MongoStorageIntegrationTests, self).setUp()
+    def test_database_is_updated(self):
+        """
+        Test that the database is updated when read_only is set to false.
+        """
+        input_text = 'What is the airspeed velocity of an unladen swallow?'
+        exists_before = self.chatbot.storage.find(input_text)
 
-        from pymongo.errors import ServerSelectionTimeoutError
-        from pymongo import MongoClient
+        response = self.chatbot.get_response(input_text)
+        exists_after = self.chatbot.storage.find(input_text)
 
-        # Skip these tests if a mongo client is not running
-        try:
-            client = MongoClient(
-                serverSelectionTimeoutMS=0.2
-            )
-            client.server_info()
-
-        except ServerSelectionTimeoutError:
-            raise SkipTest("Unable to connect to mongo database.")
-
-        self.chatbot.storage_adapters = []
-        self.chatbot.storage = MongoDatabaseAdapter()
+        self.assertFalse(exists_before)
+        self.assertTrue(exists_after)

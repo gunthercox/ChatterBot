@@ -1,6 +1,6 @@
 from unittest import TestCase
 from chatterbot.conversation import Statement
-from chatterbot.adapters.input import TerminalAdapter
+from chatterbot.input import TerminalAdapter
 
 
 class TerminalAdapterTests(TestCase):

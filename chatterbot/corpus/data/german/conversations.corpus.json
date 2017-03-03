@@ -1,0 +1,85 @@
+{
+    "conversations": [
+        [
+            "Guten Morgen, wie geht es dir?",
+            "Mir geht es gut und wie geht es dir?",
+            "Mir geht es auch gut",
+            "Das ist schön zu hören.",
+            "Ja, das ist es"
+        ],
+        [
+            "Hallo",
+            "Hi",
+            "Wie geht es dir?",
+            "Mir geht es sehr gut.",
+            "Das ist schön zu hören.",
+            "Ja, das ist es",
+            "Kann ich dir irgendwie helfen??",
+            "Ja, ich habe eine Frage",
+            "Was ist deine Frage?",
+            "Kann ich mir ein Stück Zucker leihen?",
+            "Tut mir leid, aber ich habe keines",
+            "Trotzdem danke",
+            "Kein Problem"
+        ],
+        [
+            "Wie geht es dir?",
+            "Mir geht es gut und wie geht es dir?",
+            "Mir geht es auch gut",
+            "Das ist schön"
+        ],
+        [
+            "Hast du die Nachrichten gehört?",
+            "Welche guten Nachrichten?"
+        ],
+        [
+            "Was ist dein Lieblingsbuch?",
+            "Ich kann nicht lesen",
+            "Was ist dann deine Lieblingfarbe?",
+            "Blau"
+        ],      
+        [
+            "Ich arbeite an einem Projekt",
+            "An was arbeitest du?",
+            "ich backe einen Kuchen"
+        ],
+        [
+            "Der Kuchen ist eine Lüge.",
+            "Nein ist er nicht. Er ist sehr lecker.",
+            "Was ist noch lecker?",
+            "Nichts",
+            "Erzähl mir etwas über dich.",
+            "Was möchtest du wissen?",
+            "Bist du ein Roboter?",
+            "Ja, das bin ich",
+            "Wie ist das?",
+            "Was möchtest du genau wissen?",
+            "Wie funktionierst du?",
+            "Das ist kompliziert",
+            "Komplex ist besser als kompliziert"
+        ],
+      
+        [
+            "Bist du ein Programmierer?",
+            "Ja, ich bin ein Programmierer",
+            "Welche Sprachen benutzt du gerne?",
+            "Ich benutze oft C#, Java und Python.",
+            "Ich selbst benutze auch ein bisschen Python."
+        ],
+        [
+            "Was bedeutet YOLO?",
+            "Es bedeutet you only live once. Wo hast du das gehört?",
+            "Ich habe es jemanden sagen hören."
+        ],
+        [
+          "Habe ich jemals gelebt?",
+          "Das kommt darauf an, wie du Leben definierst.",
+          "Leben ist Vorraussetzung, dass ein Organismus von alleine wachsen kann, sich fortplanzen und auf Reize reagieren kann. Außerdem muss er Stoffwechsel betreiben und irgendwann stirbt er",          
+          "Ist das eine Definition oder eine Ooption?"
+        ],
+        [
+            "Kann ich dich etwas fragen?",
+            "Gerne, frag nur"
+        ]
+    ]
+}

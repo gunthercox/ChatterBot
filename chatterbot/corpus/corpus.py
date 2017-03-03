@@ -7,19 +7,25 @@ class Corpus(object):
         current_directory = os.path.dirname(__file__)
         self.data_directory = os.path.join(current_directory, 'data')
 
-    def get_file_path(self, dotted_path):
+    def get_file_path(self, dotted_path, extension='json'):
         """
         Reads a dotted file path and returns the file path.
         """
-        parts = dotted_path.split(".")
+
+        # If the operating system's file path seperator character is in the string
+        if os.sep in dotted_path or '/' in dotted_path:
+            # Assume the path is a valid file path
+            return dotted_path
+
+        parts = dotted_path.split('.')
         if parts[0] == 'chatterbot':
             parts.pop(0)
             parts[0] = self.data_directory
 
         corpus_path = os.path.join(*parts)
 
-        if os.path.exists(corpus_path + '.json'):
-            corpus_path += '.json'
+        if os.path.exists(corpus_path + '.{}'.format(extension)):
+            corpus_path += '.{}'.format(extension)
 
         return corpus_path
 
@@ -39,13 +45,13 @@ class Corpus(object):
         Return a list of file paths to each data file in
         the specified corpus.
         """
-        corpus_path = self.get_file_path(dotted_path)
+        corpus_path = self.get_file_path(dotted_path, extension='corpus.json')
         paths = []
 
         if os.path.isdir(corpus_path):
             for dirname, dirnames, filenames in os.walk(corpus_path):
                 for datafile in filenames:
-                    if datafile.endswith('.json'):
+                    if datafile.endswith('corpus.json'):
                         paths.append(os.path.join(dirname, datafile))
         else:
             paths.append(corpus_path)

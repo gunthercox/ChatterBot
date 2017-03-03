@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 import logging
 
@@ -6,17 +7,20 @@ import logging
 # logging.basicConfig(level=logging.INFO)
 
 # Create a new ChatBot instance
-bot = ChatBot("Terminal",
-    storage_adapter="chatterbot.adapters.storage.MongoDatabaseAdapter",
+bot = ChatBot('Terminal',
+    storage_adapter='chatterbot.storage.MongoDatabaseAdapter',
     logic_adapters=[
-        "chatterbot.adapters.logic.ClosestMatchAdapter"
+        'chatterbot.logic.BestMatch'
     ],
-    input_adapter="chatterbot.adapters.input.TerminalAdapter",
-    output_adapter="chatterbot.adapters.output.TerminalAdapter",
-    database="chatterbot-database"
+    filters=[
+        'chatterbot.filters.RepetitiveResponseFilter'
+    ],
+    input_adapter='chatterbot.input.TerminalAdapter',
+    output_adapter='chatterbot.output.TerminalAdapter',
+    database='chatterbot-database'
 )
 
-print("Type something to begin...")
+print('Type something to begin...')
 
 while True:
     try:

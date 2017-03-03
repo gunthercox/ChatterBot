@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.storage import StorageAdapter
+from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 
 class StorageAdapterTestCase(TestCase):
@@ -20,7 +20,7 @@ class StorageAdapterTestCase(TestCase):
 
     def test_find(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
-            self.adapter.find("")
+            self.adapter.find('')
 
     def test_filter(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
@@ -28,11 +28,11 @@ class StorageAdapterTestCase(TestCase):
 
     def test_remove(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
-            self.adapter.remove("")
+            self.adapter.remove('')
 
     def test_update(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
-            self.adapter.update("")
+            self.adapter.update('')
 
     def test_get_random(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):

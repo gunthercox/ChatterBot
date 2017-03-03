@@ -9,7 +9,7 @@ baseada em coleções de conversas conhecidas. A arquitetura do ChatterBot
 
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
-*[Leer en español](readme-es.md)*
+*[Leer en español](readme.es.md)*
 
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
@@ -86,7 +86,7 @@ Também existem exemplos em [Projeto Django usando o ChatterBot](https://github.
 
 Os testes nativos do ChatterBot podem ser executados usando nose.
 
-Veja a [documentação do nose](https://nose.readthedocs.org/en/latest/) para mais informações.
+Veja a [documentação do nose](https://nose.readthedocs.org/) para mais informações.
 
 # História
 

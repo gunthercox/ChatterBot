@@ -9,12 +9,12 @@ to be trained to speak any language.
 
 *[Read in English](readme.md)*
 *[Leia em Português](readme.pt.md)*
-*[Leer en español](readme-es.md)*
+*[Leer en español](readme.es.md)*
 
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Requirements Status](https://requires.io/github/gunthercox/ChatterBot/requirements.svg?branch=master)](https://requires.io/github/gunthercox/ChatterBot/requirements/?branch=master)
 [![Build Status](https://travis-ci.org/gunthercox/ChatterBot.svg?branch=master)](https://travis-ci.org/gunthercox/ChatterBot)
-[![Documentation Status](https://readthedocs.org/projects/chatterbot/badge/?version=latest)](http://chatterbot.readthedocs.io/en/latest/?badge=latest)
+[![Documentation Status](https://readthedocs.org/projects/chatterbot/badge/?version=stable)](http://chatterbot.readthedocs.io/en/stable/?badge=stable)
 [![Coverage Status](https://img.shields.io/coveralls/gunthercox/ChatterBot.svg)](https://coveralls.io/r/gunthercox/ChatterBot)
 [![Code Climate](https://codeclimate.com/github/gunthercox/ChatterBot/badges/gpa.svg)](https://codeclimate.com/github/gunthercox/ChatterBot)
 [![Join the chat at https://gitter.im/chatter_bot/Lobby](https://badges.gitter.im/chatter_bot/Lobby.svg)](https://gitter.im/chatter_bot/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
@@ -42,10 +42,11 @@ pip install chatterbot
 
 ```
 from chatterbot import ChatBot
-from chatterbot.trainers import ChatterBotCorpusTrainer
 
-chatbot = ChatBot("Ron Obvious")
-chatbot.set_trainer(ChatterBotCorpusTrainer)
+chatbot = ChatBot(
+    'Ron Obvious',
+    trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
+)
 
 # Train based on the english corpus
 chatbot.train("chatterbot.corpus.english")
@@ -81,23 +82,39 @@ chatbot.train("chatterbot.corpus.english.conversations")
 View the [documentation](http://chatterbot.readthedocs.io/)
 for ChatterBot on Read the Docs.
 
+To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
+
+```
+sphinx-build -b html docs/ build/
+```
+
 # Examples
 
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
-directory in this project's repository.
+directory in this project's git repository.
 
 There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
 
-# Testing
 
-ChatterBot's built in tests can be run using nose.
+Chat with **chatterbot**? Try it from [here](https://chatterbot-live-example.herokuapp.com/). Hosted [GitHub Repo](https://github.com/vkosuri/chatterbot-live-example) 
 
-```
-nosetests
-```
-
-See the [nose documentation](https://nose.readthedocs.org/en/latest/) for more information.
+Chat with *JimTheBot*, a **chatterbot** instance hosted by @sgoblin at: [rhubarb.sgoblin.com](https://rhubarb.sgoblin.com). Code for bot is [here](https://gist.github.com/sgoblin/d05189bb31645a6c63e16d666bbce090).
 
 # History
 
 See release notes for changes https://github.com/gunthercox/ChatterBot/releases
+
+# Development pattern for contributors
+
+1. [Create a fork](https://help.github.com/articles/fork-a-repo/) of
+   the [main ChatterBot repository](https://github.com/gunthercox/ChatterBot) on GitHub.
+2. Make your changes in a branch named something different from `master`, e.g. create
+   a new branch `my-pull-request`.
+3. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/).
+4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
+5. Use the projects [built-in automated testing](http://chatterbot.readthedocs.io/en/latest/testing.html)
+   to help make sure that your contribution is free from errors.
+
+# License
+
+ChatterBot is licensed under th [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause).

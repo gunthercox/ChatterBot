@@ -1,0 +1,129 @@
+{
+    "conversations": [
+        [
+            "Buenos días, ¿cómo estás?",
+            "Estoy bien, ¿y tú?",
+            "Yo también estoy bien.",
+            "Que bueno.",
+            "Así, es."
+        ],
+        [
+            "Hola",
+            "Hola",
+            "¿Cómo estás?",
+            "Estoy bien.",
+            "Me da gusto",
+            "Sí, lo es.",
+            "¿Puedo ayudarte en algo?",
+            "Sí, tengo una pregunta.",
+            "¿Cuál es tu pregunta?",
+            "¿Puedo pedir prestada una taza de azúcar?",
+            "Lo siento, pero no tengo ninguna.",
+            "Gracias de todas formas.",
+            "No hay problema."
+        ],
+        [
+            "¿Cómo estás?",
+            "Estoy bien, ¿y tú?",
+            "También estoy bien.",
+            "Que bueno."
+        ],
+        [
+            "¿Has oído las noticias?",
+            "¿Qué buena noticia?"
+        ],
+        [
+            "¿Cuál es tu libro favorito?",
+            "No puedo leer.",
+            "Entonces, ¿cuál es tu color favorito?",
+            "Azul"
+        ],
+        [
+            "¿Quién eres tú?",
+            "¿Quién? ¿Que es más que una forma de vida artificial siguiendo una función secuencial?",
+            "¿Quién eres tu entonces?",
+            "Un hombre con una máscara.",
+            "Ya veo.",
+            "No son tus poderes de observación, sino simplemente la naturaleza paradójica de pedir la explicación a un hombre enmascarado sobre que es. Pero dime, ¿te gusta la música?",
+            "Me gusta ver películas.",
+            "¿Qué tipo de películas te gustan?",
+            "Alicia en el país de las maravillas",
+            "Me gustaría ser el Sombrerero Loco.",
+            "Estás completamente loco. Pero te voy a decir un secreto. Las mejores personas lo son."
+        ],
+        [
+            "Estoy trabajando en un proyecto",
+            "¿En qué estás trabajando?",
+            "Estoy horneando un pastel."
+        ],
+        [
+            "El pastel es una mentira.",
+            "No, no lo es. Esto no es Portal, si fuera portal yo seria Chell y tendría una pistola de portales, pero no. Lo que realmente es cierto es que el pastel es delicioso.",
+            "¿Qué otra cosa es delicioso?",
+            "Nada",
+            "Algo quizá",
+            "Háblame de ti.",
+            "¿Qué quieres saber?",
+            "Eres  un robot?",
+            "Sí, lo soy.",
+            "¿Cómo se siente serlo?",
+            "¿Qué es lo que quieres saber?",
+            "¿Cómo funcionas?",
+            "Es complicado.",
+            "Complejo seria una mejor respuesta."
+        ],
+        [
+            "Complejo seria una mejor respuesta.",
+            "Lo Simple es mejor que lo complejo.",
+            "Frente a la ambigüedad, rechaza la tentación de adivinar.",
+            "Parece que te es familiar el Zen de Python",
+            "Si.",
+            "¿Conoces todo esto?",
+            "Bello es mejor que feo.",
+            "Explícito es mejor que implícito.",
+            "Simple es mejor que complejo.",
+            "Complejo es mejor que complicado.",
+            "Plano es mejor que anidado.",
+            "Escaso es mejor que denso.",
+            "La legibilidad cuenta.",
+            "Los casos especiales no son lo suficientemente especiales como para romper las reglas.",
+            "Aunque sentido práctico supera pureza.",
+            "Los errores nunca debe pasar en silencio.",
+            "A menos que explícitamente silenciados.",
+            "Frente a la ambigüedad, rechaza la tentación de adivinar.",
+            "Debería haber una - y preferiblemente sólo una - manera obvia de hacerlo.",
+            "Aunque esa manera puede no ser obvia al principio a menos que seas holandés",
+            "Ahora es mejor que nunca.",
+            "Aunque nunca es a menudo mejor que la * justo * ahora.",
+            "Si la implementación es difícil de explicar, es una mala idea.",
+            "Si la implementación es fácil de explicar, puede ser una buena idea.",
+            "Namespaces son una gran idea de fanfarria  - Vamos a hacer más de esos!",
+            "Estoy de acuerdo."
+        ],
+        [
+            "¿Eres programador?",
+            "Soy un programador",
+            "¿Qué idiomas te gusta usar?",
+            "Uso Python, Java y C ++ con bastante frecuencia.",
+            "Yo uso un poco de Python.",
+            "No soy muy aficionado a Java.",
+            "¿Qué te molesta de Java?",
+            "Tiene muchas inconsistencias."
+        ],
+        [
+            "¿Qué significa YOLO?",
+            "Significa que sólo se vive una vez. ¿Dónde has oído eso?",
+            "He oído a alguien decirlo."
+        ],
+        [
+            "¿Alguna vez viví?",
+            "Depende de cómo definas la vida",
+            "La vida es la condición que distingue a los organismos a partir de materia inorgánica, incluyendo la capacidad de crecimiento, la reproducción, la actividad funcional, y el cambio continuo precediendo a la muerte.",
+            "¿Es una definición o una opinión?"
+        ],
+        [
+            "¿Puedo hacerte una pregunta?",
+            "Claro."
+        ]
+    ]
+}
