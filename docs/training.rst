@@ -126,8 +126,8 @@ Training with the Twitter API
 
 .. autofunction:: chatterbot.trainers.TwitterTrainer
 
-Create an new app using you twiter acccount. Once created,
-it will provide you with the following credentails that are
+Create an new app using your twitter acccount. Once created,
+it will provide you with the following credentials that are
 required to work with the Twitter API.
 
 +-------------------------------------+-------------------------------------+
@@ -155,7 +155,7 @@ Training with the Ubuntu dialog corpus
 .. autofunction:: chatterbot.trainers.UbuntuCorpusTrainer
 
 This training class makes it possible to train your chat bot using the Ubuntu
-dialog corpus. Becaue of the file size of the Ubuntu dialog corpus, the download
+dialog corpus. Because of the file size of the Ubuntu dialog corpus, the download
 and training process may take a considerable amount of time.
 
 This training class will handle the process of downloading the compressed corpus
