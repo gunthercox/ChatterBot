@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import MathematicalEvaluation
+from chatterbot.logic import MathematicalEvaluation
 from chatterbot.conversation import Statement
 
 
@@ -63,67 +63,111 @@ class MathematicalEvaluationOperationTests(TestCase):
 
     def test_addition_operator(self):
         statement = Statement('What is 100 + 54?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 + 54 ) = 154')
+        self.assertEqual(response.confidence, 1)
 
     def test_subtraction_operator(self):
         statement = Statement('What is 100 - 58?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 - 58 ) = 42')
+        self.assertEqual(response.confidence, 1)
 
     def test_multiplication_operator(self):
         statement = Statement('What is 100 * 20')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 * 20 ) = 2000')
+        self.assertEqual(response.confidence, 1)
 
     def test_division_operator(self):
         statement = Statement('What is 100 / 20')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
+        self.assertEqual(response.confidence, 1)
 
         if self.python_version <= 2:
             self.assertEqual(response.text, '( 100 / 20 ) = 5')
         else:
             self.assertEqual(response.text, '( 100 / 20 ) = 5.0')
 
+    def test_exponent_operator(self):
+        statement = Statement('What is 2 ^ 10')
+        response = self.adapter.process(statement)
+        self.assertEqual(response.text, '( 2 ^ 10 ) = 1024')
+        self.assertEqual(response.confidence, 1)
+
     def test_parenthesized_multiplication_and_addition(self):
         statement = Statement('What is 100 + ( 1000 * 2 )?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 + ( ( 1000 * ( 2 ) ) ) ) = 2100')
+        self.assertEqual(response.confidence, 1)
 
     def test_parenthesized_with_words(self):
         statement = Statement('What is four plus 100 + ( 100 * 2 )?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 4 + ( 100 + ( ( 100 * ( 2 ) ) ) ) ) = 304')
+        self.assertEqual(response.confidence, 1)
 
     def test_word_numbers_addition(self):
         statement = Statement('What is one hundred + four hundred?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( 100 + 400 ) = 500')
+        self.assertEqual(response.confidence, 1)
 
     def test_word_division_operator(self):
         statement = Statement('What is 100 divided by 100?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
 
         if self.python_version <= 2:
             self.assertEqual(response.text, '( 100 / 100 ) = 1')
         else:
             self.assertEqual(response.text, '( 100 / 100 ) = 1.0')
 
+        self.assertEqual(response.confidence, 1)
+
     def test_large_word_division_operator(self):
         statement = Statement('What is one thousand two hundred four divided by one hundred?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
 
         if self.python_version <= 2:
             self.assertEqual(response.text, '( 1000 + 200 + 4 ) / ( 100 ) = 12')
         else:
             self.assertEqual(response.text, '( 1000 + 200 + 4 ) / ( 100 ) = 12.04')
 
+        self.assertEqual(response.confidence, 1)
+
     def test_negative_multiplication(self):
         statement = Statement('What is -105 * 5')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( -105 * 5 ) = -525')
+        self.assertEqual(response.confidence, 1)
 
     def test_negative_decimal_multiplication(self):
         statement = Statement('What is -100.5 * 20?')
-        confidence, response = self.adapter.process(statement)
+        response = self.adapter.process(statement)
         self.assertEqual(response.text, '( -100.5 * 20 ) = -2010.0')
+        self.assertEqual(response.confidence, 1)
+
+    def test_pi_constant(self):
+        statement = Statement('What is pi plus one ?')
+        response = self.adapter.process(statement)
+        self.assertEqual(response.text, '3.141693 + ( 1 ) = 4.141693')
+        self.assertEqual(response.confidence, 1)
+
+    def test_e_constant(self):
+        statement = Statement('What is e plus one ?')
+        response = self.adapter.process(statement)
+        self.assertEqual(response.text, '2.718281 + ( 1 ) = 3.718281')
+        self.assertEqual(response.confidence, 1)
+
+    def test_log_function(self):
+        statement = Statement('What is log 100 ?')
+        response = self.adapter.process(statement)
+        self.assertEqual(response.text, 'log ( 100 ) = 2.0')
+        self.assertEqual(response.confidence, 1)
+
+    def test_square_root_function(self):
+        statement = Statement('What is the sqrt 144 ?')
+        response = self.adapter.process(statement)
+        self.assertEqual(response.text, 'sqrt ( 144 ) = 12.0')
+        self.assertEqual(response.confidence, 1)
+

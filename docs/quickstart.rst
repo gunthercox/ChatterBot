@@ -20,8 +20,8 @@ Create a new chat bot
    The only required parameter for the `ChatBot` is a name.
    This can be anything you want.
 
-Training
-========
+Training your ChatBot
+=====================
 
 After creating a new ChatterBot instance it is also possible to train the bot.
 Training is a good way to ensure that the bot starts off with knowledge about

@@ -1,8 +1,8 @@
 from unittest import TestCase
 from mock import Mock
 from chatterbot.conversation import Statement
-from chatterbot.adapters.input import Microsoft
-from chatterbot.adapters.input import microsoft
+from chatterbot.input import Microsoft
+from chatterbot.input import microsoft
 
 
 class MockResponse(object):

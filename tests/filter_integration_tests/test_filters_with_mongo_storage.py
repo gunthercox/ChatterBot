@@ -1,10 +1,16 @@
-from chatterbot.adapters.storage import MongoDatabaseAdapter
+from chatterbot.storage import MongoDatabaseAdapter
 from tests.base_case import ChatBotMongoTestCase
 
 
 class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
+    """
+    Test case for the RepetitiveResponseFilter class.
+    """
 
     def test_filter_selection(self):
+        """
+        Test that repetitive responses are filtered out of the results.
+        """
         from chatterbot.filters import RepetitiveResponseFilter
         from chatterbot.trainers import ListTrainer
 
@@ -26,4 +32,3 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
 
         self.assertEqual(first_response.text, 'Hi')
         self.assertEqual(second_response.text, 'Hi, how are you?')
-

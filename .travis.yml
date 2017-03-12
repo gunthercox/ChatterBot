@@ -28,8 +28,12 @@ services:
   - mongodb
 
 script:
-  - nosetests --with-coverage --cover-package=chatterbot
+  - python runtests.py
   - python examples/django_app/manage.py test examples/django_app/
+  - nosetests --with-coverage --cover-package=chatterbot
+  - nosetests examples
+  - sphinx-build -nW -b html ./docs/ ./build/
+  - python tests/benchmarks.py
 
 after_success:
   - coveralls

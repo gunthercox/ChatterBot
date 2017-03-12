@@ -12,17 +12,21 @@ element from the user.
 # logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
-bot = ChatBot('Feedback Learning Bot',
-    storage_adapter='chatterbot.adapters.storage.JsonFileStorageAdapter',
+bot = ChatBot(
+    'Feedback Learning Bot',
+    storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
     logic_adapters=[
-        'chatterbot.adapters.logic.ClosestMatchAdapter'
+        'chatterbot.logic.BestMatch'
     ],
-    input_adapter='chatterbot.adapters.input.TerminalAdapter',
-    output_adapter='chatterbot.adapters.output.TerminalAdapter'
+    input_adapter='chatterbot.input.TerminalAdapter',
+    output_adapter='chatterbot.output.TerminalAdapter'
 )
 
+DEFAULT_SESSION_ID = bot.default_session.id
+
+
 def get_feedback():
-    from chatterbot.utils.read_input import input_function
+    from chatterbot.utils import input_function
 
     text = input_function()
 
@@ -34,24 +38,26 @@ def get_feedback():
         print('Please type either "Yes" or "No"')
         return get_feedback()
 
+
 print('Type something to begin...')
 
 # The following loop will execute each time the user enters input
 while True:
     try:
         input_statement = bot.input.process_input_statement()
-        statement, response, confidence = bot.generate_response(input_statement)
+        statement, response = bot.generate_response(input_statement, DEFAULT_SESSION_ID)
 
         print('\n Is "{}" this a coherent response to "{}"? \n'.format(response, input_statement))
 
         if get_feedback():
-            bot.learn_response(response)
+            bot.learn_response(response,input_statement)
 
-        bot.output.process_response(response, confidence)
+        bot.output.process_response(response)
 
         # Update the conversation history for the bot
         # It is important that this happens last, after the learning step
-        bot.recent_statements.append(
+        bot.conversation_sessions.update(
+            bot.default_session.id_string,
             (statement, response, )
         )
 

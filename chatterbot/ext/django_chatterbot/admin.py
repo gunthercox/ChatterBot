@@ -1,5 +1,5 @@
 from django.contrib import admin
-from chatterbot.ext.django_chatterbot.models import Statement, Response
+from chatterbot.ext.django_chatterbot.models import Statement, Response, Conversation
 
 
 class StatementAdmin(admin.ModelAdmin):
@@ -12,5 +12,10 @@ class ResponseAdmin(admin.ModelAdmin):
     list_display = ('statement', 'occurrence', )
 
 
+class ConversationAdmin(admin.ModelAdmin):
+    pass
+
+
 admin.site.register(Statement, StatementAdmin)
 admin.site.register(Response, ResponseAdmin)
+admin.site.register(Conversation, ConversationAdmin)

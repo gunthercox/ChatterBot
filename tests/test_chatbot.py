@@ -3,86 +3,32 @@ from .base_case import ChatBotTestCase
 from chatterbot.conversation import Statement, Response
 
 
-class ChatterBotTests(ChatBotTestCase):
-
-    def test_get_last_conversance(self):
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 1"), Statement("Test response 1"), )
-        )
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 2"), Statement("Test response 2"), )
-        )
-
-        last_conversance = self.chatbot.get_last_conversance()
-        self.assertEqual(last_conversance[0].text, "Test statement 2")
-        self.assertEqual(last_conversance[1].text, "Test response 2")
-
-    def test_no_last_conversance(self):
-        self.assertIsNone(self.chatbot.get_last_conversance())
-
-    def test_get_last_response_statement(self):
-        """
-        Make sure that the get last statement method
-        returns the last statement that was issued.
-        """
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 1"), Statement("Test response 1"), )
-        )
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 2"), Statement("Test response 2"), )
-        )
-
-        last_statement = self.chatbot.get_last_response_statement()
-        self.assertEqual(last_statement.text, "Test response 2")
-
-    def test_no_last_response_statement(self):
-        self.assertIsNone(self.chatbot.get_last_response_statement())
-
-    def test_get_last_input_statement(self):
-        """
-        Make sure that the get last statement method
-        returns the last statement that was issued.
-        """
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 1"), Statement("Test response 1"), )
-        )
-        self.chatbot.recent_statements.append(
-            (Statement("Test statement 2"), Statement("Test response 2"), )
-        )
-
-        last_statement = self.chatbot.get_last_input_statement()
-        self.assertEqual(last_statement.text, "Test statement 2")
-
-    def test_no_last_input_statement(self):
-        self.assertIsNone(self.chatbot.get_last_input_statement())
-
-
-class ChatterBotResponseTests(ChatBotTestCase):
+class ChatterBotResponseTestCase(ChatBotTestCase):
 
     def setUp(self):
-        super(ChatterBotResponseTests, self).setUp()
+        super(ChatterBotResponseTestCase, self).setUp()
 
         response_list = [
-            Response("Hi")
+            Response('Hi')
         ]
 
-        self.test_statement = Statement("Hello", in_response_to=response_list)
+        self.test_statement = Statement('Hello', in_response_to=response_list)
 
     def test_empty_database(self):
         """
         If there is no statements in the database, then the
         user's input is the only thing that can be returned.
         """
-        response = self.chatbot.get_response("How are you?")
+        response = self.chatbot.get_response('How are you?')
 
-        self.assertEqual("How are you?", response)
+        self.assertEqual('How are you?', response)
 
     def test_statement_saved_empty_database(self):
         """
         Test that when database is empty, the first
         statement is saved and returned as a response.
         """
-        statement_text = "Wow!"
+        statement_text = 'Wow!'
         response = self.chatbot.get_response(statement_text)
 
         saved_statement = self.chatbot.storage.find(statement_text)
@@ -94,43 +40,46 @@ class ChatterBotResponseTests(ChatBotTestCase):
         """
         An input statement should be added to the recent response list.
         """
-        statement_text = "Wow!"
+        statement_text = 'Wow!'
         response = self.chatbot.get_response(statement_text)
+        session = self.chatbot.conversation_sessions.get(
+            self.chatbot.default_session.id_string
+        )
 
-        self.assertIn(statement_text, self.chatbot.recent_statements[0])
+        self.assertIn(statement_text, session.conversation[0])
         self.assertEqual(response, statement_text)
 
     def test_response_known(self):
         self.chatbot.storage.update(self.test_statement)
 
-        response = self.chatbot.get_response("Hi")
+        response = self.chatbot.get_response('Hi')
 
         self.assertEqual(response, self.test_statement.text)
 
     def test_response_format(self):
         self.chatbot.storage.update(self.test_statement)
 
-        response = self.chatbot.get_response("Hi")
+        response = self.chatbot.get_response('Hi')
         statement_object = self.chatbot.storage.find(response.text)
 
         self.assertEqual(response, self.test_statement.text)
-        self.assertEqual(len(statement_object.in_response_to), 1)
-        self.assertIn("Hi", statement_object.in_response_to)
+        self.assertIsLength(statement_object.in_response_to, 1)
+        self.assertIn('Hi', statement_object.in_response_to)
 
     def test_second_response_format(self):
         self.chatbot.storage.update(self.test_statement)
 
-        response = self.chatbot.get_response("Hi")
-        # response = "Hello"
-        second_response = self.chatbot.get_response("How are you?")
+        response = self.chatbot.get_response('Hi')
+        # response = 'Hello'
+        second_response = self.chatbot.get_response('How are you?')
         statement = self.chatbot.storage.find(second_response.text)
 
         # Make sure that the second response was saved to the database
-        self.assertIsNotNone(self.chatbot.storage.find("How are you?"))
+        self.assertIsNotNone(self.chatbot.storage.find('How are you?'))
 
         self.assertEqual(second_response, self.test_statement.text)
-        self.assertEqual(len(statement.in_response_to), 1)
-        self.assertIn("Hi", statement.in_response_to)
+        self.assertIsLength(statement.in_response_to, 1)
+        self.assertIn('Hi', statement.in_response_to)
 
     def test_get_response_unicode(self):
         """
@@ -145,7 +94,7 @@ class ChatterBotResponseTests(ChatBotTestCase):
         `extra_data` attribute of a statement object,
         that data should saved with the input statement.
         """
-        self.test_statement.add_extra_data("test", 1)
+        self.test_statement.add_extra_data('test', 1)
         self.chatbot.get_response(
             self.test_statement
         )
@@ -154,23 +103,41 @@ class ChatterBotResponseTests(ChatBotTestCase):
             self.test_statement.text
         )
 
-        self.assertIn("test", saved_statement.extra_data)
-        self.assertEqual(1, saved_statement.extra_data["test"])
+        self.assertIn('test', saved_statement.extra_data)
+        self.assertEqual(1, saved_statement.extra_data['test'])
 
     def test_generate_response(self):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
-        input_statement, response, confidence = self.chatbot.generate_response(statement)
+        input_statement, response = self.chatbot.generate_response(
+            statement,
+            self.chatbot.default_session.id
+        )
 
         self.assertEqual(input_statement, statement)
         self.assertEqual(response, statement)
-        self.assertEqual(confidence, 1)
+        self.assertEqual(response.confidence, 1)
 
     def test_learn_response(self):
+        previous_response = Statement('Define Hemoglobin.')
         statement = Statement('Hemoglobin is an oxygen-transport metalloprotein.')
-        self.chatbot.learn_response(statement)
+        self.chatbot.learn_response(statement, previous_response)
         exists = self.chatbot.storage.find(statement.text)
 
         self.assertIsNotNone(exists)
+
+    def test_update_does_not_add_new_statement(self):
+        """
+        Test that a new statement is not learned if `read_only` is set to True.
+        """
+        self.chatbot.read_only = True
+        self.chatbot.storage.update(self.test_statement)
+
+        response = self.chatbot.get_response('Hi!')
+        statement_found = self.chatbot.storage.find('Hi!')
+
+        self.assertEqual(response, self.test_statement.text)
+        self.assertIsNone(statement_found)
+
 
 class ChatBotConfigFileTestCase(ChatBotTestCase):
 

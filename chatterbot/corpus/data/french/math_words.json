@@ -33,14 +33,14 @@
     "divisé par" : "/",
     "moins" : "-",
     "fois" : "*",
-    "équarri" : "^ 2",
-    "à la puissance" : "^"
+    "au carré" : "** 2",
+    "à la puissance" : "**"
   },
   "scales" : {
     "cent" : "* 100",
     "mille" : "* 1000",
     "un million" : "* 1000000",
     "un milliard" : "* 1000000000",
-    "billions de dollars" : "* 1000000000000"
+    "un billion" : "* 1000000000000"
   }
 }

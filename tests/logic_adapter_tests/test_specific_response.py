@@ -1,5 +1,5 @@
 from unittest import TestCase
-from chatterbot.adapters.logic import SpecificResponseAdapter
+from chatterbot.logic import SpecificResponseAdapter
 from chatterbot.conversation import Statement
 
 
@@ -20,9 +20,9 @@ class SpecificResponseAdapterTestCase(TestCase):
         Test the case that an exact match is given.
         """
         statement = Statement('Open sesame!')
-        confidence, match = self.adapter.process(statement)
+        match = self.adapter.process(statement)
 
-        self.assertEqual(confidence, 1)
+        self.assertEqual(match.confidence, 1)
         self.assertEqual(match, self.adapter.response_statement)
 
     def test_not_exact_match(self):
@@ -30,7 +30,7 @@ class SpecificResponseAdapterTestCase(TestCase):
         Test the case that an exact match is not given.
         """
         statement = Statement('Open says me!')
-        confidence, match = self.adapter.process(statement)
+        match = self.adapter.process(statement)
 
-        self.assertEqual(confidence, 0)
+        self.assertEqual(match.confidence, 0)
         self.assertEqual(match, self.adapter.response_statement)
