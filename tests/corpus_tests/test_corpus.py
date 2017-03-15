@@ -37,11 +37,6 @@ class CorpusUtilsTestCase(TestCase):
         self.assertEqual(len(corpus), 1)
         self.assertIn(['Hi', 'Hello'], corpus[0])
 
-    def test_load_corpus_english(self):
-        corpus = self.corpus.load_corpus("chatterbot.corpus.english")
-        self.assertEqual(len(corpus), 18)
-        self.assertIn(corpus[1], corpus)
-
 
 class CorpusLoadingTestCase(TestCase):
 
