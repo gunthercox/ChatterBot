@@ -10,6 +10,13 @@ class Statement(object):
     """
 
     def __init__(self, text, **kwargs):
+
+        # Try not to allow non-string types to be passed to statements
+        try:
+            text = str(text)
+        except UnicodeEncodeError:
+            pass
+
         self.text = text
         self.in_response_to = kwargs.pop('in_response_to', [])
 
