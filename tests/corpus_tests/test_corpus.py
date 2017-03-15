@@ -14,7 +14,7 @@ class CorpusUtilsTestCase(TestCase):
         """
         path = self.corpus.get_file_path('chatterbot.corpus.english')
         self.assertIn(
-            os.path.join('chatterbot', 'corpus', 'data', 'english'),
+            os.path.join('chatterbot_corpus', 'data', 'english'),
             path
         )
 

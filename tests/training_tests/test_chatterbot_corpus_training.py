@@ -35,11 +35,11 @@ class ChatterBotCorpusFilePathTestCase(ChatBotTestCase):
 
     def setUp(self):
         super(ChatterBotCorpusFilePathTestCase, self).setUp()
+        from chatterbot_corpus import corpus
         self.chatbot.set_trainer(ChatterBotCorpusTrainer)
 
-        current_directory = os.path.dirname(os.path.abspath(__file__))
-        base_directory = os.path.abspath(os.path.join(current_directory, os.pardir, os.pardir))
-        self.corpus_directory = os.path.join(base_directory, 'chatterbot', 'corpus', 'data')
+        corpus_data_directory = os.path.dirname(corpus.__file__)
+        self.corpus_directory = os.path.join(corpus_data_directory, 'data')
 
     def test_train_with_english_greeting_corpus(self):
         file_path = os.path.join(self.corpus_directory, 'english', 'greetings.corpus.json')
@@ -50,21 +50,23 @@ class ChatterBotCorpusFilePathTestCase(ChatBotTestCase):
 
     def test_train_with_multiple_corpora(self):
         self.chatbot.train(
-            'chatterbot/corpus/data/english/greetings.corpus.json',
-            'chatterbot/corpus/data/english/conversations.corpus.json'
+            os.path.join(self.corpus_directory, 'english', 'greetings.corpus.json'),
+            os.path.join(self.corpus_directory, 'english', 'conversations.corpus.json')
         )
         statement = self.chatbot.storage.find('Hello')
 
         self.assertIsNotNone(statement)
 
     def test_train_with_english_corpus(self):
-        self.chatbot.train('chatterbot/corpus/data/english')
+        file_path = os.path.join(self.corpus_directory, 'english')
+        self.chatbot.train(file_path)
         statement = self.chatbot.storage.find('Hello')
 
         self.assertIsNotNone(statement)
 
     def test_train_with_english_corpus_training_slash(self):
-        self.chatbot.train('chatterbot/corpus/data/english/')
+        file_path = os.path.join(self.corpus_directory, 'english') + '/'
+        self.chatbot.train(file_path)
         statement = self.chatbot.storage.find('Hello')
 
         self.assertIsNotNone(statement)
