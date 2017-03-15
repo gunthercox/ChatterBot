@@ -43,4 +43,9 @@ DATABASES = {
     }
 }
 
+# Using the MD5 password hasher improves test performance
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
+
 USE_TZ = True
