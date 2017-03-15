@@ -1,4 +1,5 @@
 import logging
+import os
 
 
 class StorageAdapter(object):
@@ -21,7 +22,6 @@ class StorageAdapter(object):
         """
         Create a storage-aware statement.
         """
-        import os
 
         if 'DJANGO_SETTINGS_MODULE' in os.environ:
             django_project = __import__(os.environ['DJANGO_SETTINGS_MODULE'])

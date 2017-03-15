@@ -35,7 +35,7 @@ class ApiIntegrationTestCase(TestCase):
         self.assertEqual(len(data['conversation']), 0)
 
     def test_get_conversation(self):
-        response = self.client.post(
+        self.client.post(
             self.api_url,
             data=json.dumps({'text': 'How are you?'}),
             content_type='application/json',

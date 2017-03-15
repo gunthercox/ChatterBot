@@ -1,7 +1,9 @@
 """
-Test Django settings
+Django settings for when tests are run.
 """
 import os
+
+DEBUG = True
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 

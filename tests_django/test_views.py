@@ -5,8 +5,8 @@ from chatterbot.ext.django_chatterbot.views import ChatterBotView
 
 class MockResponse(object):
 
-    def __init__(self, id_string):
-        self.session = {'chat_session_id': id_string}
+    def __init__(self, pk):
+        self.session = {'chat_session_id': pk}
 
 
 class ViewTestCase(TestCase):

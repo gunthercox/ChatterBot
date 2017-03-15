@@ -50,8 +50,8 @@ class VariableInputTypeAdapter(InputAdapter):
         # Convert input dictionary into a statement object
         if input_type == self.JSON:
             input_json = dict(statement)
-            text = input_json["text"]
-            del(input_json["text"])
+            text = input_json['text']
+            del(input_json['text'])
 
             return Statement(text, **input_json)
 
