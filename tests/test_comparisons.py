@@ -31,6 +31,18 @@ class LevenshteinDistanceTestCase(TestCase):
 
         self.assertEqual(value, 0)
 
+    def test_levenshtein_distance_statement_integer(self):
+        """
+        Test that an exception is not raised if a statement is initialized
+        with an integer value as its text attribute.
+        """
+        statement = Statement(2)
+        other_statement = Statement('Hello')
+
+        value = comparisons.levenshtein_distance(statement, other_statement)
+
+        self.assertEqual(value, 0)
+
     def test_exact_match_different_capitalization(self):
         """
         Test that text capitalization is ignored.
