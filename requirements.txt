@@ -1,4 +1,5 @@
-jsondatabase>=0.1.7
+chatterbot-corpus>=0.0.1,<1.0.0
+jsondatabase>=0.1.7,<1.0.0
 nltk>=3.2.0,<4.0.0
 pymongo>=3.3.0,<4.0.0
-python-twitter>=3.0
+python-twitter>=3.0.0,<4.0.0
