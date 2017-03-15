@@ -89,12 +89,7 @@ sphinx-build -b html docs/ build/
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
 directory in this project's git repository.
 
-There is also an example [Django project using ChatterBot](https://github.com/gunthercox/django_chatterbot), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
-
-
-Chat with **chatterbot**? Try it from [here](https://chatterbot-live-example.herokuapp.com/). Hosted [GitHub Repo](https://github.com/vkosuri/chatterbot-live-example) 
-
-Chat with *JimTheBot*, a **chatterbot** instance hosted by @sgoblin at: [rhubarb.sgoblin.com](https://rhubarb.sgoblin.com). Code for bot is [here](https://gist.github.com/sgoblin/d05189bb31645a6c63e16d666bbce090).
+There is also an example [Django project using ChatterBot](https://github.com/gunthercox/ChatterBot/tree/master/examples), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
 
 # History
 
