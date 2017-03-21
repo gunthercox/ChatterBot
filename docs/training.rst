@@ -13,7 +13,7 @@ inputs and responses are correctly represented.
    :alt: ChatterBot training statement graph
 
 Several training classes come built-in with ChaterBot. These utilities range from allowing
-you to update the chat bot's databse knowledge graph based on a list of statements
+you to update the chat bot's database knowledge graph based on a list of statements
 representing a conversation, to tools that allow you to train your bot based on a corpus of
 pre-loaded training data.
 
@@ -126,7 +126,7 @@ Training with the Twitter API
 
 .. autofunction:: chatterbot.trainers.TwitterTrainer
 
-Create an new app using your twitter acccount. Once created,
+Create an new app using your twitter account. Once created,
 it will provide you with the following credentials that are
 required to work with the Twitter API.
 
