@@ -2,7 +2,7 @@ Creating a new input adapter
 ==============================
 
 You can write your own storage adapters by creating a new class that
-inherits from :code:`InputAdapter` and overides the overrides necessary
+inherits from :code:`InputAdapter` and overrides the overrides necessary
 methods established in the base :code:`InputAdapter` class.
 
 .. autofunction:: chatterbot.input.InputAdapter

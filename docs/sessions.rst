@@ -14,8 +14,8 @@ conversations with different people at the same time.
    :members:
 
 Each session object holds a queue of the most recent communications that have
-occured durring that session. The queue holds tuples with two values each,
-the first value is the input that the bot recieved and the second value is the
+occurred during that session. The queue holds tuples with two values each,
+the first value is the input that the bot received and the second value is the
 response that the bot returned.
 
 .. autoclass:: chatterbot.queues.ResponseQueue
@@ -34,7 +34,7 @@ Session example
 The following example is taken from the Django :code:`ChatterBotView` built into ChatterBot.
 In this method, the unique identifiers for each chat session are being stored in Django's
 session objects. This allows different users who interact with the bot through different
-web browsers to have seperate conversations with the chat bot.
+web browsers to have separate conversations with the chat bot.
 
 .. literalinclude:: ../chatterbot/ext/django_chatterbot/views.py
    :language: python

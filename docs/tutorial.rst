@@ -149,7 +149,7 @@ You can speed up this process by training him with examples of existing conversa
        'You are welcome.',
    ])
 
-You can run the training process multiple times to reinforce prefered responses
+You can run the training process multiple times to reinforce preferred responses
 to particular input statements. You can also run the train command on a number
 of different example dialogs to increase the breadth of inputs that your chat
 bot can respond to.

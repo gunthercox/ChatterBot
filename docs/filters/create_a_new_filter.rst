@@ -3,7 +3,7 @@ How to create a new filter for ChatterBot
 =========================================
 
 This is the basic outline of the code that your filter will need to follow.
-Each filter shold inherit from ChatterBot's `Filter` class and implement a
+Each filter should inherit from ChatterBot's `Filter` class and implement a
 method called `filter_selection`. Everything else that your filter does is
 up to you.
 
