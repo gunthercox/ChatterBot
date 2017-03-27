@@ -35,8 +35,9 @@ Example logic adapter
 
            # For this example, we will just return the input as output
            selected_statement = statement
+           selected_statement.confidence = confidence
 
-           return confidence, selected_statement
+           return selected_statement
 
 Directory structure
 ===================
