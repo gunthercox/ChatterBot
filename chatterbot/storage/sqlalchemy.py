@@ -4,6 +4,7 @@ import random
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import PickleType
 from sqlalchemy import String
+from sqlalchemy import Integer
 from sqlalchemy import create_engine
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
@@ -50,7 +51,7 @@ class ResponseTable(Base):
 
     # id = Column(Integer)
     text = Column(String, primary_key=True)
-    occurrence = Column(String)
+    occurrence = Column(Integer)
     statement_text = Column(String, ForeignKey('StatementTable.text'))
 
     # Old:  statement_table = relationship("StatementTable", backref=backref('in_response_to'), cascade="all, delete-orphan", single_parent=True)
@@ -241,6 +242,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     record.text = statement.text
                 if statement.extra_data:
                     record.extra_data = dict[statement.extra_data]
+                if statement.in_response_to:
+                    record.in_response_to = list(map(get_response_table, statement.in_response_to))
                 session.add(record)
             else:
                 session.add(get_statement_table(statement))
