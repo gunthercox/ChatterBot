@@ -23,3 +23,5 @@ docs/_build/
 
 examples/settings.py
 examples/ubuntu_dialogs*
+.env
+.out
