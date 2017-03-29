@@ -10,9 +10,6 @@ class VariableInputTypeAdapter(InputAdapter):
     OBJECT = 'object'
     VALID_FORMATS = (JSON, TEXT, OBJECT, )
 
-    def __init__(self, **kwargs):
-        super(VariableInputTypeAdapter, self).__init__(**kwargs)
-
     def detect_type(self, statement):
         import sys
 
@@ -50,8 +47,8 @@ class VariableInputTypeAdapter(InputAdapter):
         # Convert input dictionary into a statement object
         if input_type == self.JSON:
             input_json = dict(statement)
-            text = input_json["text"]
-            del(input_json["text"])
+            text = input_json['text']
+            del input_json['text']
 
             return Statement(text, **input_json)
 

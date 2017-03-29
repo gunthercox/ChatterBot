@@ -44,7 +44,7 @@ setup(
     include_package_data=True,
     install_requires=REQUIREMENTS,
     license='BSD',
-    zip_safe=False,
+    zip_safe=True,
     platforms=['any'],
     keywords=['ChatterBot', 'chatbot', 'chat', 'bot'],
     classifiers=[

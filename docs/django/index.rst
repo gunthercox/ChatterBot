@@ -41,7 +41,7 @@ Add `chatterbot.ext.django_chatterbot` to your `INSTALLED_APPS`
 API view
 --------
 
-If you need a ChatterBot API endpont you will want to add the following to your urls.py
+If you need a ChatterBot API endpoint you will want to add the following to your urls.py
 
 .. code-block:: python
 

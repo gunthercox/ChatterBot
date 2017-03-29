@@ -118,7 +118,7 @@ Low confidence response example
 Specific Response Adapter
 =========================
 
-If the input that the chat bot recieves, matches the input text specified
+If the input that the chat bot receives, matches the input text specified
 for this adapter, the specified response will be returned.
 
 .. autofunction:: chatterbot.logic.SpecificResponseAdapter

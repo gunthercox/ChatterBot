@@ -3,7 +3,7 @@ Creating a new logic adapter
 ============================
 
 You can write your own logic adapters by creating a new class that
-inherits from :code:`LogicAdapter` and overides the necessary
+inherits from :code:`LogicAdapter` and overrides the necessary
 methods established in the :code:`LogicAdapter` base class.
 
 Logic adapter methods
@@ -35,13 +35,14 @@ Example logic adapter
 
            # For this example, we will just return the input as output
            selected_statement = statement
+           selected_statement.confidence = confidence
 
-           return confidence, selected_statement
+           return selected_statement
 
 Directory structure
 ===================
 
-If you create your own logic adapter you will need to have it in a seperate file from your chat bot.
+If you create your own logic adapter you will need to have it in a separate file from your chat bot.
 Your directory setup should look something like the following:
 
 .. code-block:: text
@@ -87,7 +88,7 @@ but statements such as "Do you know what time it is?" will not be processed.
 Interacting with services
 =========================
 
-In some cases, it is usefull to have a logic adapter that can interact with an external service or
+In some cases, it is useful to have a logic adapter that can interact with an external service or
 api in order to complete it's task. Here is an example that demonstrates how this could be done.
 For this example we will use a fictitious API endpoint that returns the current temperature.
 

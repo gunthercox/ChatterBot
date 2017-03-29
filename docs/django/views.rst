@@ -17,5 +17,5 @@ The endpoint expects a JSON request with the following data:
 .. note::
 
    You will need to include ChatterBot's urls in your django url configuration
-   before you can make requests to these views. See the setup instructons for
+   before you can make requests to these views. See the setup instructions for
    more details.

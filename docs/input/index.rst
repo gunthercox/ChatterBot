@@ -89,7 +89,7 @@ Mailgun input adapter
 
 .. autofunction:: chatterbot.input.Mailgun
 
-The Mailgun adapter allows a chat bot to recieve emails using
+The Mailgun adapter allows a chat bot to receive emails using
 the `Mailgun API`_.
 
 .. literalinclude:: ../../examples/mailgun.py
