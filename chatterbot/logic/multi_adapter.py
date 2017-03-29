@@ -45,7 +45,7 @@ class MultiLogicAdapter(LogicAdapter):
                         'Make sure that statement.confidence is being set.'.format(adapter.class_name),
                         DeprecationWarning
                     )
-                    output = output[1]       
+                    output = output[1]
 
                 results.append((output.confidence, output, ))
 

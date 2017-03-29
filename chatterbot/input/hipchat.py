@@ -13,12 +13,12 @@ class HipChat(InputAdapter):
     def __init__(self, **kwargs):
         super(HipChat, self).__init__(**kwargs)
 
-        self.hipchat_host = kwargs.get("hipchat_host")
-        self.hipchat_access_token = kwargs.get("hipchat_access_token")
-        self.hipchat_room = kwargs.get("hipchat_room")
+        self.hipchat_host = kwargs.get('hipchat_host')
+        self.hipchat_access_token = kwargs.get('hipchat_access_token')
+        self.hipchat_room = kwargs.get('hipchat_room')
         self.session_id = str(self.chatbot.default_session.uuid)
 
-        authorization_header = "Bearer {}".format(self.hipchat_access_token)
+        authorization_header = 'Bearer {}'.format(self.hipchat_access_token)
 
         self.headers = {
             'Authorization': authorization_header,

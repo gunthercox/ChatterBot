@@ -4,7 +4,8 @@ from chatterbot.queues import ResponseQueue
 
 class Session(object):
     """
-    A single chat session.
+    A session is an ordered collection of statements
+    that are related to each other.
     """
 
     def __init__(self):
@@ -27,7 +28,7 @@ class ConversationSessionManager(object):
 
     def new(self):
         """
-        Add a new chat session.
+        Create a new conversation.
         """
         session = Session()
 

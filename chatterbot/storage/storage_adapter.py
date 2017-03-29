@@ -1,4 +1,5 @@
 import logging
+import os
 
 
 class StorageAdapter(object):
@@ -21,16 +22,17 @@ class StorageAdapter(object):
         """
         Create a storage-aware statement.
         """
-        import os
 
         if 'DJANGO_SETTINGS_MODULE' in os.environ:
-            from chatterbot.ext.django_chatterbot.models import Statement
-            return Statement
-        else:
-            from chatterbot.conversation.statement import Statement
-            statement = Statement
-            statement.storage = self
-            return statement
+            django_project = __import__(os.environ['DJANGO_SETTINGS_MODULE'])
+            if django_project.settings.CHATTERBOT['use_django_models'] is True:
+                from chatterbot.ext.django_chatterbot.models import Statement
+                return Statement
+
+        from chatterbot.conversation.statement import Statement
+        statement = Statement
+        statement.storage = self
+        return statement
 
     def generate_base_query(self, chatterbot, session_id):
         """

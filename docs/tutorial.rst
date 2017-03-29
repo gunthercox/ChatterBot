@@ -48,7 +48,7 @@ this storage adapter very good for testing and debugging.
 .. warning::
 
    The JsonFileStorageAdapter is not intended for use with large amounts of
-   data. You may expirience serious performance problems if the size of
+   data. You may experience serious performance problems if the size of
    this database becomes too large.
 
 We will select the `JsonFileStorageAdapter` by specifying it in our chat
@@ -149,7 +149,7 @@ You can speed up this process by training him with examples of existing conversa
        'You are welcome.',
    ])
 
-You can run the training process multiple times to reinforce prefered responses
+You can run the training process multiple times to reinforce preferred responses
 to particular input statements. You can also run the train command on a number
 of different example dialogs to increase the breadth of inputs that your chat
 bot can respond to.

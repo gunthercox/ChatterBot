@@ -8,7 +8,7 @@ Statements
 ==========
 
 ChatterBot's statement objects represent either an input statement that the
-chat bot has recieved from a user, or an output statement that the chat bot
+chat bot has received from a user, or an output statement that the chat bot
 has returned based on some input.
 
 .. autoclass:: chatterbot.conversation.Statement
@@ -63,7 +63,7 @@ ChatterBot uses :code:`Statement` objects to hold information
 about things that can be said. An important part of how a chat bot
 selects a response is based on it's ability to compare two statements
 to each other. There is a number of ways to do this, and ChatterBot
-comes with a handfull of method built in for you to use.
+comes with a handful of method built in for you to use.
 
 .. automodule:: chatterbot.comparisons
    :members:
@@ -73,7 +73,7 @@ Use your own comparison function
 
 You can create your own comparison function and use it as long as the function takes two statements
 as parameters and returns a numeric value between 0 and 1. A 0 should represent the lowest possible
-similarity and a 1 should represent the highest possibel similarity.
+similarity and a 1 should represent the highest possible similarity.
 
 .. code-block:: python
 
