@@ -9,12 +9,11 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
 
-from chatterbot.adapters.storage import StorageAdapter
+from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Response
 from chatterbot.conversation import Statement
 
 Base = declarative_base()
-
 
 
 class StatementTable(Base):
@@ -157,6 +156,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             return record.get_statement()
         return None
 
+    read_only = False
+
     def remove(self, statement_text):
         """
         Removes the statement that matches the input text.
@@ -198,7 +199,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     _response_query = session.query(StatementTable)
                     if isinstance(_like, list):
                         if len(_like) == 0:
-                            query = _response_query.filter(StatementTable.in_response_to == None,StatementTable.subject_id != None)
+                            query = _response_query.filter(StatementTable.in_response_to == None,
+                                                           StatementTable.subject_id != None)
                         else:
                             query = _response_query.filter(StatementTable.in_response_to.contain(_like))
                     else:

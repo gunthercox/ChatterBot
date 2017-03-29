@@ -1,15 +1,16 @@
 from unittest import TestCase
 
-from chatterbot.adapters.storage.sqlalchemy import SQLAlchemyDatabaseAdapter
-from chatterbot.conversation import Response
-from chatterbot.conversation import Statement
+from chatterbot.conversation import Statement, Response
+from chatterbot.storage.sqlalchemy import SQLAlchemyDatabaseAdapter
 
 
 class SQLAlchemyAdapterTestCase(TestCase):
     def setUp(self):
         self.adapter = SQLAlchemyDatabaseAdapter()
 
+
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+
     def test_count_returns_zero(self):
         """
         The count method should return a value of 0
