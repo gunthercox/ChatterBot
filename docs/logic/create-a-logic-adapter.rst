@@ -110,7 +110,7 @@ For this example we will use a fictitious API endpoint that returns the current 
        import requests
 
        # Make a request to the temperature API
-       response = requests.get('https://api.temperature.com/current?units=celsius)
+       response = requests.get('https://api.temperature.com/current?units=celsius')
        data = response.json()
 
        # Let's base the confidence value on if the request was successful
