@@ -71,6 +71,7 @@ Contents:
    utils
    django/index
    testing
+   upgrading
    encoding
 
 Report an Issue
