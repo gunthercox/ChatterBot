@@ -153,6 +153,8 @@ class ChatBot(object):
         # Save the statement after selecting a response
         if not self.read_only:
             self.storage.update(statement)
+            if hasattr(self.storage, "_save"):
+                self.storage._save()
 
     def set_trainer(self, training_class, **kwargs):
         """
