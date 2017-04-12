@@ -1,0 +1,10 @@
+engines:
+  pep8:
+    enabled: true
+ratings:
+  paths:
+  - "**.py"
+exclude_paths:
+- tests/*
+- examples/*
+- chatterbot/ext/django_chatterbot/migrations/*

@@ -1,6 +1,6 @@
 from unittest import TestCase
 from unittest import SkipTest
-from chatterbot.adapters.storage import MongoDatabaseAdapter
+from chatterbot.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement, Response
 
 
@@ -15,10 +15,10 @@ class MongoAdapterTestCase(TestCase):
 
         database_name = "test_db"
 
-        # Skip these tests if a mongo client is not running.
+        # Skip these tests if a mongo client is not running
         try:
             client = MongoClient(
-                serverSelectionTimeoutMS=0.2
+                serverSelectionTimeoutMS=0.1
             )
             client.server_info()
 
@@ -174,6 +174,39 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
         self.assertEqual(len(results), 2)
 
+    def test_mongo_to_object(self):
+        self.adapter.update(
+            Statement('Hello',
+                in_response_to=[
+                    Response('Hi', occurrence=3),
+                    Response('Hey', occurrence=6)
+                ]
+            )
+        )
+        statement_data = self.adapter.statements.find_one({'text': 'Hello'})
+
+        obj = self.adapter.mongo_to_object(statement_data)
+
+        self.assertEqual(type(obj), Statement)
+        self.assertEqual(len(obj.in_response_to), 2)
+        self.assertEqual(type(obj.in_response_to[0]), Response)
+        self.assertEqual(type(obj.in_response_to[1]), Response)
+        self.assertEqual(obj.in_response_to[0].text, 'Hi')
+        self.assertEqual(obj.in_response_to[0].occurrence, 3)
+        self.assertEqual(obj.in_response_to[1].text, 'Hey')
+        self.assertEqual(obj.in_response_to[1].occurrence, 6)
+
+    def test_mongo_to_object_without_in_response_to(self):
+        """
+        Test that data can be converted to a response if it
+        does not have an in_response_to attribute.
+        """
+        obj = self.adapter.mongo_to_object({'text': 'Hello'})
+
+        self.assertEqual(type(obj), Statement)
+        self.assertEqual(obj.text, 'Hello')
+        self.assertEqual(len(obj.in_response_to), 0)
+
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."
         statement = Statement(text)
@@ -194,6 +227,27 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         results = self.adapter.filter(in_response_to__contains=text)
 
         self.assertEqual(results, [])
+
+    def test_get_response_statements(self):
+        """
+        Test that we are able to get a list of only statements
+        that are known to be in response to another statement.
+        """
+        statement_list = [
+            Statement("What... is your quest?"),
+            Statement("This is a phone."),
+            Statement("A what?", in_response_to=[Response("This is a phone.")]),
+            Statement("A phone.", in_response_to=[Response("A what?")])
+        ]
+
+        for statement in statement_list:
+            self.adapter.update(statement)
+
+        responses = self.adapter.get_response_statements()
+
+        self.assertEqual(len(responses), 2)
+        self.assertIn("This is a phone.", responses)
+        self.assertIn("A what?", responses)
 
 
 class MongoAdapterFilterTestCase(MongoAdapterTestCase):
@@ -223,9 +277,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
     def test_filter_in_response_to_no_matches(self):
         self.adapter.update(self.statement1)
 
-        results = self.adapter.filter(
-            in_response_to=[Response("Maybe")]
-        )
+        results = self.adapter.filter(in_response_to="Maybe")
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -337,32 +389,44 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.assertEqual(type(found[0].in_response_to[0]), Response)
 
 
-class ReadOnlyMongoDatabaseAdapterTestCase(MongoAdapterTestCase):
+class MongoOrderingTestCase(MongoAdapterTestCase):
+    """
+    Test cases for the ordering of sets of statements.
+    """
 
-    def test_update_does_not_add_new_statement(self):
-        self.adapter.read_only = True
+    def test_order_by_text(self):
+        statement_a = Statement(text='A is the first letter of the alphabet.')
+        statement_b = Statement(text='B is the second letter of the alphabet.')
 
-        statement = Statement("New statement")
-        self.adapter.update(statement)
+        self.adapter.update(statement_a)
+        self.adapter.update(statement_b)
 
-        statement_found = self.adapter.find("New statement")
-        self.assertEqual(statement_found, None)
+        results = self.adapter.filter(order_by='text')
 
-    def test_update_does_not_modify_existing_statement(self):
-        statement = Statement("New statement")
-        self.adapter.update(statement)
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0], statement_a)
+        self.assertEqual(results[1], statement_b)
 
-        self.adapter.read_only = True
+    def test_order_by_created_at(self):
+        from datetime import datetime, timedelta
 
-        statement.add_response(
-            Response("New response")
+        today = datetime.now()
+        yesterday = datetime.now() - timedelta(days=1)
+
+        statement_a = Statement(
+            text='A is the first letter of the alphabet.',
+            created_at=today
         )
-        self.adapter.update(statement)
+        statement_b = Statement(
+            text='B is the second letter of the alphabet.',
+            created_at=yesterday
+        )
 
-        statement_found = self.adapter.find("New statement")
-        self.assertEqual(
-            statement_found.text, statement.text
-        )
-        self.assertEqual(
-            len(statement_found.in_response_to), 0
-        )
+        self.adapter.update(statement_a)
+        self.adapter.update(statement_b)
+
+        results = self.adapter.filter(order_by='created_at')
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0], statement_a)
+        self.assertEqual(results[1], statement_b)
