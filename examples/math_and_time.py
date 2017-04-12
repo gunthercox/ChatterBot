@@ -1,13 +1,15 @@
+# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 
 
 bot = ChatBot(
     "Math & Time Bot",
     logic_adapters=[
-        "chatterbot.adapters.logic.EvaluateMathematically",
-        "chatterbot.adapters.logic.TimeLogicAdapter"
+        "chatterbot.logic.MathematicalEvaluation",
+        "chatterbot.logic.TimeLogicAdapter"
     ],
-    io_adapter="chatterbot.adapters.io.NoOutputAdapter"
+    input_adapter="chatterbot.input.VariableInputTypeAdapter",
+    output_adapter="chatterbot.output.OutputAdapter"
 )
 
 # Print an example of getting one math based response

@@ -1,0 +1,35 @@
+{% extends '!footer.html' %}
+
+{% block extrafooter %}
+<div class="footer">
+    <table style="margin: 0px auto;">
+        <tbody>
+            <tr>
+                <td style="text-align: center; padding: 30px;">
+                    <a href="http://stackoverflow.com/questions/tagged/chatterbot">
+                        <div>
+                            <img src="{{ pathto('_static/so-icon.png', True) }}">
+                        </div>
+                        <div>
+                            Ask a question under the<br/>
+                            chatterbot tag
+                        </div>
+                    </a>
+                </td>
+                <td style="text-align: center; padding: 30px;">
+                    <a href="https://github.com/gunthercox/ChatterBot/issues/new">
+                        <div>
+                            <img src="{{ pathto('_static/github-mark.png', True) }}">
+                        </div>
+                        <div>
+                            Report an issue on<br/>
+                            GitHub
+                        </div>
+                    </a>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+{{ super() }}
+{% endblock %}

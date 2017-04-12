@@ -1,3 +1,4 @@
+# -*- coding: utf-8 -*-
 from unittest import TestCase
 from chatterbot.conversation import Statement, Response
 
@@ -7,7 +8,7 @@ class StatementTests(TestCase):
     def setUp(self):
         self.statement = Statement("A test statement.")
 
-    def test_equality(self):
+    def test_list_equality(self):
         """
         It should be possible to check if a statement
         exists in the list of statements that another
@@ -16,6 +17,16 @@ class StatementTests(TestCase):
         self.statement.add_response(Response("Yo"))
         self.assertEqual(len(self.statement.in_response_to), 1)
         self.assertIn(Response("Yo"), self.statement.in_response_to)
+
+    def test_list_equality_unicode(self):
+        """
+        Test that it is possible to check if a statement
+        is in a list of other statements when the
+        statements text is unicode.
+        """
+        statements = [Statement("Hello"), Statement("我很好太感谢")]
+        statement = Statement("我很好太感谢")
+        self.assertIn(statement, statements)
 
     def test_update_response_list_new(self):
         self.statement.add_response(Response("Hello"))
@@ -68,3 +79,7 @@ class StatementTests(TestCase):
 
         self.assertEqual(len(self.statement.in_response_to), 1)
         self.assertEqual(self.statement.in_response_to[0].occurrence, 2)
+
+    def test_add_non_response(self):
+        with self.assertRaises(Statement.InvalidTypeException):
+            self.statement.add_response(Statement("Blah"))

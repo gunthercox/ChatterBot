@@ -1,41 +1,50 @@
 #!/usr/bin/env python
-
+"""
+ChatterBot setup file.
+"""
 from setuptools import setup
 
 
 # Dynamically retrieve the version information from the chatterbot module
-version = __import__('chatterbot').__version__
-author = __import__('chatterbot').__author__
-author_email = __import__('chatterbot').__email__
+CHATTERBOT = __import__('chatterbot')
+VERSION = CHATTERBOT.__version__
+AUTHOR = CHATTERBOT.__author__
+AUTHOR_EMAIL = CHATTERBOT.__email__
+URL = CHATTERBOT.__url__
+DESCRIPTION = CHATTERBOT.__doc__
 
-req = open('requirements.txt')
-requirements = req.readlines()
-req.close()
+with open('requirements.txt') as requirements:
+    REQUIREMENTS = requirements.readlines()
 
 setup(
     name='ChatterBot',
-    version=version,
-    url='https://github.com/gunthercox/ChatterBot',
+    version=VERSION,
+    url=URL,
+    download_url='{}/tarball/{}'.format(URL, VERSION),
     setup_requires=['setuptools-markdown'],
     long_description_markdown_filename='readme.md',
-    description='An open-source chat bot program written in Python.',
-    author=author,
-    author_email=author_email,
+    description=DESCRIPTION,
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
     packages=[
         'chatterbot',
-        'chatterbot.utils',
-        'chatterbot.adapters',
+        'chatterbot.input',
+        'chatterbot.output',
+        'chatterbot.storage',
+        'chatterbot.logic',
         'chatterbot.corpus',
         'chatterbot.conversation',
-        'chatterbot.adapters.io',
-        'chatterbot.adapters.storage',
-        'chatterbot.adapters.logic'
+        'chatterbot.ext',
+        'chatterbot.ext.django_chatterbot',
+        'chatterbot.ext.django_chatterbot.migrations',
+        'chatterbot.ext.django_chatterbot.management',
+        'chatterbot.ext.django_chatterbot.management.commands'
     ],
     package_dir={'chatterbot': 'chatterbot'},
     include_package_data=True,
-    install_requires=requirements,
+    install_requires=REQUIREMENTS,
     license='BSD',
-    zip_safe=False,
+    zip_safe=True,
     platforms=['any'],
     keywords=['ChatterBot', 'chatbot', 'chat', 'bot'],
     classifiers=[
@@ -51,10 +60,9 @@ setup(
         'Programming Language :: Python',
         'Programming Language :: Python :: 2.7',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.3',
         'Programming Language :: Python :: 3.4',
         'Programming Language :: Python :: 3.5',
     ],
     test_suite='tests',
-    tests_require=[]
+    tests_require=['mock']
 )

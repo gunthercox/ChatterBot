@@ -1,128 +1,186 @@
-from .adapters.exceptions import UnknownAdapterTypeException
-from .adapters.storage import StorageAdapter
-from .adapters.logic import LogicAdapter, MultiLogicAdapter
-from .adapters.io import IOAdapter, MultiIOAdapter
-from .utils.module_loading import import_module
-from .conversation import Statement
+from __future__ import unicode_literals
+import logging
+from .storage import StorageAdapter
+from .input import InputAdapter
+from .output import OutputAdapter
+from . import utils
 
 
 class ChatBot(object):
+    """
+    A conversational dialog chat bot.
+    """
 
     def __init__(self, name, **kwargs):
-        kwargs["name"] = name
+        from .conversation.session import ConversationSessionManager
+        from .logic import MultiLogicAdapter
 
-        storage_adapter = kwargs.get("storage_adapter",
-            "chatterbot.adapters.storage.JsonDatabaseAdapter"
-        )
+        self.name = name
+        kwargs['name'] = name
 
-        logic_adapter = kwargs.get("logic_adapter",
-            "chatterbot.adapters.logic.ClosestMatchAdapter"
-        )
+        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.JsonFileStorageAdapter')
 
-        logic_adapters = kwargs.get("logic_adapters", [
-            logic_adapter
+        logic_adapters = kwargs.get('logic_adapters', [
+            'chatterbot.logic.BestMatch'
         ])
 
-        io_adapter = kwargs.get("io_adapter",
-            "chatterbot.adapters.io.TerminalAdapter"
-        )
+        input_adapter = kwargs.get('input_adapter', 'chatterbot.input.VariableInputTypeAdapter')
 
-        io_adapters = kwargs.get("io_adapters", [
-            io_adapter
-        ])
+        output_adapter = kwargs.get('output_adapter', 'chatterbot.output.OutputAdapter')
 
-        self.recent_statements = []
-        self.storage_adapters = []
+        # Check that each adapter is a valid subclass of it's respective parent
+        utils.validate_adapter_class(storage_adapter, StorageAdapter)
+        utils.validate_adapter_class(input_adapter, InputAdapter)
+        utils.validate_adapter_class(output_adapter, OutputAdapter)
 
         self.logic = MultiLogicAdapter(**kwargs)
-        self.io = MultiIOAdapter(**kwargs)
+        self.storage = utils.initialize_class(storage_adapter, **kwargs)
+        self.input = utils.initialize_class(input_adapter, **kwargs)
+        self.output = utils.initialize_class(output_adapter, **kwargs)
 
-        # Add required system adapter
-        self.add_adapter("chatterbot.adapters.logic.NoKnowledgeAdapter")
+        filters = kwargs.get('filters', tuple())
+        self.filters = tuple([utils.import_module(F)() for F in filters])
 
-        self.add_adapter(storage_adapter, **kwargs)
-
-        for adapter in io_adapters:
-            self.add_adapter(adapter, **kwargs)
+        # Add required system logic adapter
+        self.logic.system_adapters.append(
+            utils.initialize_class('chatterbot.logic.NoKnowledgeAdapter', **kwargs)
+        )
 
         for adapter in logic_adapters:
-            self.add_adapter(adapter, **kwargs)
+            self.logic.add_adapter(adapter, **kwargs)
 
-        # Share context information such as the name, the current conversation,
-        # or access to other adapters with each of the adapters
-        self.storage.set_context(self)
-        self.logic.set_context(self)
-        self.io.set_context(self)
+        # Add the chatbot instance to each adapter to share information such as
+        # the name, the current conversation, or other adapters
+        self.logic.set_chatbot(self)
+        self.input.set_chatbot(self)
+        self.output.set_chatbot(self)
 
-    @property
-    def storage(self):
-        return self.storage_adapters[0]
+        preprocessors = kwargs.get(
+            'preprocessors', [
+            'chatterbot.preprocessors.clean_whitespace'
+        ])
 
-    def add_adapter(self, adapter, **kwargs):
-        NewAdapter = import_module(adapter)
+        self.preprocessors = []
 
-        adapter = NewAdapter(**kwargs)
+        for preprocessor in preprocessors:
+            self.preprocessors.append(utils.import_module(preprocessor))
 
-        if issubclass(NewAdapter, StorageAdapter):
-            self.storage_adapters.append(adapter)
-        elif issubclass(NewAdapter, LogicAdapter):
-            self.logic.add_adapter(adapter)
-        elif issubclass(NewAdapter, IOAdapter):
-            self.io.add_adapter(adapter)
-        else:
-            raise UnknownAdapterTypeException()
+        # Use specified trainer or fall back to the default
+        trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')
+        TrainerClass = utils.import_module(trainer)
+        self.trainer = TrainerClass(self.storage, **kwargs)
+        self.training_data = kwargs.get('training_data')
 
-    def get_last_statement(self):
+        self.conversation_sessions = ConversationSessionManager()
+        self.default_session = self.conversation_sessions.new()
+
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
+
+        # Allow the bot to save input it receives so that it can learn
+        self.read_only = kwargs.get('read_only', False)
+
+        if kwargs.get('initialize', True):
+            self.initialize()
+
+    def initialize(self):
         """
-        Return the last statement that was received.
+        Do any work that needs to be done before the responses can be returned.
         """
-        if self.recent_statements:
-            return self.recent_statements[-1]
-        return None
+        from .utils import nltk_download_corpus
 
-    def get_input(self):
-        return self.io.process_input()
+        # Download required NLTK corpora if they have not already been downloaded
+        nltk_download_corpus('corpora/stopwords')
+        nltk_download_corpus('corpora/wordnet')
+        nltk_download_corpus('tokenizers/punkt')
+        nltk_download_corpus('sentiment/vader_lexicon')
 
-    def get_response(self, input_text):
+    def get_response(self, input_item, session_id=None):
         """
         Return the bot's response based on the input.
+
+        :param input_item: An input value.
+        :returns: A response to the input.
+        :rtype: Statement
         """
-        input_statement = Statement(input_text)
+        if not session_id:
+            session_id = str(self.default_session.uuid)
+
+        input_statement = self.input.process_input_statement(input_item)
+
+        # Preprocess the input statement
+        for preprocessor in self.preprocessors:
+            input_statement = preprocessor(self, input_statement)
+
+        statement, response = self.generate_response(input_statement, session_id)
+
+        # Learn that the user's input was a valid response to the chat bot's previous output
+        previous_statement = self.conversation_sessions.get(
+            session_id
+        ).conversation.get_last_response_statement()
+        self.learn_response(statement, previous_statement)
+
+        self.conversation_sessions.update(session_id, (statement, response, ))
+
+        # Process the response output with the output adapter
+        return self.output.process_response(response, session_id)
+
+    def generate_response(self, input_statement, session_id):
+        """
+        Return a response based on a given input statement.
+        """
+        self.storage.generate_base_query(self, session_id)
 
         # Select a response to the input statement
-        confidence, response = self.logic.process(input_statement)
+        response = self.logic.process(input_statement)
 
-        existing_statement = self.storage.find(input_statement.text)
+        return input_statement, response
 
-        if existing_statement:
-            input_statement = existing_statement
-
-        previous_statement = self.get_last_statement()
+    def learn_response(self, statement, previous_statement):
+        """
+        Learn that the statement provided is a valid response.
+        """
+        from .conversation import Response
 
         if previous_statement:
-            input_statement.add_response(previous_statement)
+            statement.add_response(
+                Response(previous_statement.text)
+            )
+            self.logger.info('Adding "{}" as a response to "{}"'.format(
+                statement.text,
+                previous_statement.text
+            ))
 
-        # Update the database after selecting a response
-        self.storage.update(input_statement)
+        # Save the statement after selecting a response
+        if not self.read_only:
+            self.storage.update(statement)
 
-        self.recent_statements.append(response)
-
-        # Process the response output with the IO adapter
-        return self.io.process_response(response)
-
-    def train(self, conversation=None, *args, **kwargs):
+    def set_trainer(self, training_class, **kwargs):
         """
-        Train the chatbot based on input data.
+        Set the module used to train the chatbot.
+
+        :param training_class: The training class to use for the chat bot.
+        :type training_class: `Trainer`
+
+        :param \**kwargs: Any parameters that should be passed to the training class.
         """
-        from .training import Trainer
+        self.trainer = training_class(self.storage, **kwargs)
 
-        trainer = Trainer(self.storage)
+    @property
+    def train(self):
+        """
+        Proxy method to the chat bot's trainer class.
+        """
+        return self.trainer.train
 
-        if isinstance(conversation, str):
-            corpora = list(args)
-            corpora.append(conversation)
+    @classmethod
+    def from_config(cls, config_file_path):
+        """
+        Create a new ChatBot instance from a JSON config file.
+        """
+        import json
+        with open(config_file_path, 'r') as config_file:
+            data = json.load(config_file)
 
-            if corpora:
-                trainer.train_from_corpora(corpora)
-        else:
-            trainer.train_from_list(conversation)
+        name = data.pop('name')
+
+        return ChatBot(name, **data)
