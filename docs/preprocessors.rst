@@ -2,7 +2,7 @@
 Preprocessors
 =============
 
-ChatterBot's preprocessors are simple functions that modify the input statement
+ChatterBot's :term:`preprocessors` are simple functions that modify the input statement
 that a chat bot receives before the statement gets processed by the logic adaper.
 
 Here is an example of how to set preprocessors. The :code:`preprocessors`
@@ -37,3 +37,13 @@ with a few requirements.
 
 1. It must take two parameters, the first is a :code:`ChatBot` instance, the second is a :code:`Statement` instance.
 2. It must return a statement instance.
+
+Definitions
+===========
+
+.. glossary::
+
+   preprocessors
+      A member of a list of functions that can be used to modify text
+      input that the chat bot receives before the text is passed to
+      the logic adapter for processing.

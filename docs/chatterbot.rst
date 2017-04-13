@@ -3,10 +3,10 @@ ChatterBot
 ==========
 
 The main class :code:`ChatBot` is a connecting point between each of
-ChatterBot's adapters. In this class, an input statement is returned
-from the input adapter, processed and stored by the logic and storage
-adapters, and then passed to the output adapter to be returned to the
-user.
+ChatterBot's :term:`adapters`. In this class, an input statement is returned
+from the :term:`input adapter`, processed and stored by the :term:`logic adapter`
+and :term:`storage adapter`, and then passed to the output adapter to be returned
+to the user.
 
 .. autoclass:: chatterbot.ChatBot
    :members:
@@ -179,3 +179,20 @@ Each adapter can be set by passing in the dot-notated import path to the constru
    )
 
 .. _MongoDB: https://docs.mongodb.com/
+
+.. glossary::
+
+   adapters
+      A pluggable class that allows a ChatBot instance to execute some kind of functionality.
+
+   logic adapter
+      An adapter class that allows a ChatBot instance to select a response to 
+
+   storage adapter
+      A class that allows a chat bot to store information somewhere, such as a database.
+
+   input adapter
+      An adapter class that gets input from somewhere and provides it to the chat bot.
+
+   output adapter
+      An adapter class that returns a chat bot's response.
