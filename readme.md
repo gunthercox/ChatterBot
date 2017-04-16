@@ -36,7 +36,7 @@ pip install chatterbot
 
 ## Basic Usage
 
-```
+```python
 from chatterbot import ChatBot
 
 chatbot = ChatBot(
@@ -60,7 +60,7 @@ appreciated. Take a look at the data files in the
 [chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus)
 package if you are interested in contributing.
 
-```
+```python
 # Train based on the english corpus
 chatbot.train("chatterbot.corpus.english")
 
