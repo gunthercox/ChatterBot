@@ -2,6 +2,8 @@
 
 # ChatterBot
 
+[![Join the chat at https://gitter.im/chatter_bot/Lobby](https://badges.gitter.im/chatter_bot/Lobby.svg)](https://gitter.im/chatter_bot/Lobby?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
+
 ChatterBot is a machine-learning based conversational dialog engine build in
 Python which makes it possible to generate responses based on collections of
 known conversations. The language independent design of ChatterBot allows it
