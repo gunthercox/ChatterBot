@@ -1,7 +1,7 @@
 import json
 import random
 
-import sqlalchemy
+
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import PickleType
 from sqlalchemy import String
