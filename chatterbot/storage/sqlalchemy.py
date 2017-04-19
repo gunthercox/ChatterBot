@@ -18,7 +18,6 @@ from chatterbot.conversation import Statement
 
 Base = declarative_base()
 
-
 class StatementTable(Base):
     __tablename__ = 'StatementTable'
 
