@@ -1,7 +1,7 @@
 from unittest import TestCase
 
 from chatterbot.conversation import Statement, Response
-from chatterbot.storage.sqlalchemy import SQLAlchemyDatabaseAdapter
+from chatterbot.storage.sqlalchemy_storage import SQLAlchemyDatabaseAdapter
 
 
 class SQLAlchemyAdapterTestCase(TestCase):
@@ -230,7 +230,7 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
         self.assertIn(statement1, results)
         self.assertIn(statement2, results)
 
-    def test_filter_contains_result(self): 
+    def test_filter_contains_result(self):
         self.adapter.update(self.statement1)
         self.adapter.update(self.statement2)
 
