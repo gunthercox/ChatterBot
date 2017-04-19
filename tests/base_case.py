@@ -40,18 +40,6 @@ class ChatBotTestCase(TestCase):
         self.chatbot.storage.drop()
 
 
-
-
-class ChatBotSqlAlchemyTestCase(ChatBotTestCase):
-
-    def get_kwargs(self):
-        kwargs = super(ChatBotSqlAlchemyTestCase, self).get_kwargs()
-        kwargs['database'] = self.random_string()
-        kwargs['storage_adapter'] = 'chatterbot.storage.SQLAlchemyDatabaseAdapter'
-        return kwargs
-
-
-
 class ChatBotMongoTestCase(ChatBotTestCase):
 
     def setUp(self):
