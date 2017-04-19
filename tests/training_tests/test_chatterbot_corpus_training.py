@@ -30,7 +30,6 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
 
         self.assertIsNotNone(statement)
 
-
 class ChatterBotCorpusFilePathTestCase(ChatBotTestCase):
 
     def setUp(self):

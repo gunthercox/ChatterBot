@@ -6,11 +6,10 @@ from chatterbot.storage.sqlalchemy import SQLAlchemyDatabaseAdapter
 
 class SQLAlchemyAdapterTestCase(TestCase):
     def setUp(self):
-        self.adapter = SQLAlchemyDatabaseAdapter()
+        self.adapter = SQLAlchemyDatabaseAdapter(drop_create=True)
 
 
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
-
     def test_count_returns_zero(self):
         """
         The count method should return a value of 0

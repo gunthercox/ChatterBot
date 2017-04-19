@@ -1,11 +1,13 @@
 import json
 import random
 
+import sqlalchemy
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import PickleType
 from sqlalchemy import String
 from sqlalchemy import Integer
 from sqlalchemy import create_engine
+from sqlalchemy.exc import DatabaseError
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import relationship
 from sqlalchemy.orm import sessionmaker
@@ -31,13 +33,11 @@ class StatementTable(Base):
         del (params['text_search'])
         return json.dumps(params)
 
-    # id = Column(Integer)
+    id = Column(Integer)
     text = Column(String, primary_key=True)
     extra_data = Column(PickleType)
-    # Old: in_response_to = relationship("ResponseTable", back_populates="statement_table")
     # relationship:
     in_response_to = relationship("ResponseTable", back_populates="statement_table")
-
     text_search = Column(String, primary_key=True, default=get_statement_serialized)
 
 
@@ -49,21 +49,27 @@ class ResponseTable(Base):
         del (params['text_search'])
         return json.dumps(params)
 
-    # id = Column(Integer)
+    id = Column(Integer)
     text = Column(String, primary_key=True)
     occurrence = Column(Integer)
     statement_text = Column(String, ForeignKey('StatementTable.text'))
 
     # Old:  statement_table = relationship("StatementTable", backref=backref('in_response_to'), cascade="all, delete-orphan", single_parent=True)
     # Test relationship:
-    statement_table = relationship("StatementTable", back_populates="in_response_to", cascade="all",
-                                   uselist=False)
-
+    statement_table = relationship("StatementTable", back_populates="in_response_to", cascade="all", uselist=False)
     text_search = Column(String, primary_key=True, default=get_reponse_serialized)
 
     def get_response(self):
         occ = {"occurrence": self.occurrence}
         return Response(text=self.text, **occ)
+
+
+# # relational table  TO REMOVE
+# in_response_to = sqlalchemy.Table('in_responses_to',
+#                              Base.metadata,
+#                              sqlalchemy.Column('stmt_id', sqlalchemy.Integer, ForeignKey('StatementTable.id')),
+#                              sqlalchemy.Column('resp_id', sqlalchemy.Integer,
+#                                                sqlalchemy.ForeignKey('ResponseTable.id')))
 
 
 def get_statement_table(statement):
@@ -76,6 +82,9 @@ def get_response_table(response):
 
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
+    read_only = False
+    drop_create = False
+
     def __init__(self, **kwargs):
         super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
 
@@ -119,8 +128,17 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         # mapper(Statement, self.statement)
         # mapper(Response, self.response)
 
-        Base.metadata.drop_all(self.engine)
-        Base.metadata.create_all(self.engine)
+        self.read_only = self.kwargs.get(
+            "read_only", False
+        )
+
+        self.drop_create = self.kwargs.get(
+            "drop_create", False
+        )
+
+        if not self.read_only and self.drop_create:
+            Base.metadata.drop_all(self.engine)
+            Base.metadata.create_all(self.engine)
 
     def count(self):
         """
@@ -139,7 +157,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
 
     def __statement_filter(self, session, **kwargs):
         """
-        Apply filter opeartion on StatementTable
+        Apply filter operation on StatementTable
 
         rtype: query
         """
@@ -157,8 +175,6 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             return record.get_statement()
         return None
 
-    read_only = False
-
     def remove(self, statement_text):
         """
         Removes the statement that matches the input text.
@@ -170,11 +186,13 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         record = query.first()
         session.delete(record)
 
-        if not self.read_only:
-            session.commit()
-        else:
-            session.rollback()
-            # raise self.AdapterMethodNotImplementedError()
+        try:
+            if not self.read_only:
+                session.commit()
+            else:
+                session.rollback()
+        except DatabaseError as e:
+            self.logger.error(statement_text, str(e.orig))
 
     def filter(self, **kwargs):
         """
@@ -195,22 +213,27 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             statements.extend(_response_query.all())
         else:
             for fp in filter_parameters:
-                _like = filter_parameters[fp]
-                if fp == 'in_response_to':
+                _filter = filter_parameters[fp]
+                if fp in ['in_response_to', 'in_response_to__contains']:
                     _response_query = session.query(StatementTable)
-                    if isinstance(_like, list):
-                        if len(_like) == 0:
-                            query = _response_query.filter(StatementTable.in_response_to == None,
-                                                           StatementTable.subject_id != None)
+                    if isinstance(_filter, list):
+                        if len(_filter) == 0:
+                            query = _response_query.filter(
+                                StatementTable.in_response_to == None)  # Here must use == instead of is
                         else:
-                            query = _response_query.filter(StatementTable.in_response_to.contain(_like))
+                            for f in _filter:
+                                query = _response_query.filter(
+                                    StatementTable.in_response_to.contains(get_response_table(f)))
                     else:
-                        query = _response_query.filter(StatementTable.in_response_to.like('%' + _like + '%'))
-
+                        # if fp == 'in_response_to__contains':
+                        # FIXME Optimize... query = _response_query.filter(StatementTable.in_response_to.text('%' + _filter + '%'))
+                        query = _response_query.filter(StatementTable.in_response_to is not None)
+                        # else:
+                        # query = _response_query.filter(StatementTable.text_search == _filter)
 
                 else:
                     _response_query = session.query(ResponseTable)
-                    query = _response_query.filter(ResponseTable.text_search.like('%' + _like + '%'))
+                    query = _response_query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
 
                 statements.extend(query.all())
 
@@ -224,6 +247,63 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     results.append(statement.get_statement())
 
         return results
+
+    # def filter(self, **kwargs):
+    #     """
+    #     Returns a list of objects from the database.
+    #     The kwargs parameter can contain any number
+    #     of attributes. Only objects which contain
+    #     all listed attributes and in which all values
+    #     match for all listed attributes will be returned.
+    #     """
+    #
+    #     filter_parameters = kwargs.copy()
+    #
+    #     session = self.__get_session()
+    #     statements = []
+    #     _response_query = None
+    #
+    #     if len(filter_parameters) == 0:
+    #         _response_query = session.query(StatementTable)
+    #         statements.extend(_response_query.all())
+    #     else:
+    #         for fp in filter_parameters:
+    #             _filter = filter_parameters[fp]
+    #             if fp == 'in_response_to' or fp == 'in_response_to__contains':
+    #                 if _response_query:
+    #                     _response_query.join(StatementTable)
+    #                 else:
+    #                     _response_query = session.query(StatementTable)
+    #                 if isinstance(_filter, list):
+    #                     if len(_filter) == 0:
+    #                         query = _response_query.filter(StatementTable.in_response_to is None)
+    #                     else:
+    #                         # _in_response_tables = []
+    #                         # for respnse_table in _like:
+    #                         #     _in_response_tables.append(get_response_table(respnse_table))
+    #                         query = _response_query.filter(StatementTable.in_response_to.contains(_filter))
+    #                 else:
+    #                     query = _response_query.filter(StatementTable.in_response_to.like('%' + _filter + '%'))
+    #             else:
+    #                 if fp == 'text' or fp == 'text__contains':  # Text always use like
+    #                     _response_query = session.query(ResponseTable)
+    #                     # if fp == 'text__contains':
+    #                     query = _response_query.filter(ResponseTable.text.like('%' + _filter + '%'))
+    #                     # if fp == 'text':
+    #                     #     query = _response_query.filter(ResponseTable.text == _filter)
+    #
+    #         statements.extend(query.all())
+    #
+    #     results = []
+    #     for statement in statements:
+    #         if isinstance(statement, ResponseTable):
+    #             if statement and statement.statement_table:
+    #                 results.append(statement.statement_table.get_statement())
+    #         else:
+    #             if statement:
+    #                 results.append(statement.get_statement())
+    #
+    #     return results
 
     def update(self, statement):
         """
@@ -248,10 +328,14 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             else:
                 session.add(get_statement_table(statement))
 
-        if not self.read_only:
-            session.commit()
-        else:
-            session.rollback()
+            try:
+                if not self.read_only:
+                    session.commit()
+                else:
+                    session.rollback()
+            except DatabaseError as e:
+                pass
+                # self.logger.error(statement, str(e.orig))
 
     def get_random(self):
         """
