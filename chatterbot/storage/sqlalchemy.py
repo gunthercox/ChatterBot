@@ -18,6 +18,7 @@ from chatterbot.conversation import Statement
 
 Base = declarative_base()
 
+
 class StatementTable(Base):
     __tablename__ = 'StatementTable'
 
@@ -211,7 +212,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             _response_query = session.query(StatementTable)
             statements.extend(_response_query.all())
         else:
-            for fp in filter_parameters:
+            for i, fp in enumerate(filter_parameters):
                 _filter = filter_parameters[fp]
                 if fp in ['in_response_to', 'in_response_to__contains']:
                     _response_query = session.query(StatementTable)
@@ -224,17 +225,16 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                                 query = _response_query.filter(
                                     StatementTable.in_response_to.contains(get_response_table(f)))
                     else:
-                        # if fp == 'in_response_to__contains':
-                        # FIXME Optimize... query = _response_query.filter(StatementTable.in_response_to.text('%' + _filter + '%'))
-                        query = _response_query.filter(StatementTable.in_response_to is not None)
-                        # else:
-                        # query = _response_query.filter(StatementTable.text_search == _filter)
-
+                        if fp == 'in_response_to__contains':
+                            query = _response_query.join(ResponseTable).filter(ResponseTable.text == _filter)
+                        else:
+                            query = _response_query.filter(StatementTable.in_response_to == None)
                 else:
                     _response_query = session.query(ResponseTable)
                     query = _response_query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
 
-                statements.extend(query.all())
+                if len(filter_parameters) == i + 1:
+                    statements.extend(query.all())
 
         results = []
         for statement in statements:
