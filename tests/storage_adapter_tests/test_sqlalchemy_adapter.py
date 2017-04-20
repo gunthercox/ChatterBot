@@ -264,8 +264,8 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
         self.adapter.update(self.statement2)
 
         results = self.adapter.filter(
-            text="Testing...",
-            in_response_to__contains="Why are you counting?"
+            in_response_to__contains="Why are you counting?",
+            text="Testing..."
         )
 
         self.assertEqual(len(results), 1)

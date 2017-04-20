@@ -1,7 +1,6 @@
 import json
 import random
 
-
 from sqlalchemy import Column, ForeignKey
 from sqlalchemy import PickleType
 from sqlalchemy import String
@@ -207,7 +206,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
 
         session = self.__get_session()
         statements = []
-
+        # _response_query = None
+        _query = None
         if len(filter_parameters) == 0:
             _response_query = session.query(StatementTable)
             statements.extend(_response_query.all())
@@ -218,25 +218,31 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     _response_query = session.query(StatementTable)
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
-                            query = _response_query.filter(
+                            _query = _response_query.filter(
                                 StatementTable.in_response_to == None)  # Here must use == instead of is
                         else:
                             for f in _filter:
-                                query = _response_query.filter(
+                                _query = _response_query.filter(
                                     StatementTable.in_response_to.contains(get_response_table(f)))
                     else:
                         if fp == 'in_response_to__contains':
-                            query = _response_query.join(ResponseTable).filter(ResponseTable.text == _filter)
+                            _query = _response_query.join(ResponseTable).filter(ResponseTable.text == _filter)
                         else:
-                            query = _response_query.filter(StatementTable.in_response_to == None)
+                            _query = _response_query.filter(StatementTable.in_response_to == None)
                 else:
-                    _response_query = session.query(ResponseTable)
-                    query = _response_query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
+                    if _query:
+                        _query = _query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
+                    else:
+                        _response_query = session.query(ResponseTable)
+                        _query = _response_query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
 
+                if _query is None:
+                    return []
                 if len(filter_parameters) == i + 1:
-                    statements.extend(query.all())
+                    statements.extend(_query.all())
 
         results = []
+
         for statement in statements:
             if isinstance(statement, ResponseTable):
                 if statement and statement.statement_table:
