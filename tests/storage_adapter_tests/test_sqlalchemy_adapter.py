@@ -6,7 +6,18 @@ from chatterbot.storage.sqlalchemy_storage import SQLAlchemyDatabaseAdapter
 
 class SQLAlchemyAdapterTestCase(TestCase):
     def setUp(self):
-        self.adapter = SQLAlchemyDatabaseAdapter(drop_create=True)
+        """
+        Instantiate the adapter.
+        """
+        from random import randint
+
+        # Generate a random name for the database
+        database_name = str(randint(0, 9000))
+
+        self.adapter = SQLAlchemyDatabaseAdapter(
+            database='sqlite_' + database_name,
+            drop_create=True
+        )
 
 
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
