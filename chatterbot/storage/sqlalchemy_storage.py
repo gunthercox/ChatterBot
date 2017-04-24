@@ -6,60 +6,62 @@ from chatterbot.conversation import Response
 from chatterbot.conversation import Statement
 
 _base = None
+
 try:
     from sqlalchemy.ext.declarative import declarative_base
 
     _base = declarative_base()
-except:
+
+
+    class StatementTable(_base):
+        from sqlalchemy import Column, Integer, String, PickleType
+        from sqlalchemy.orm import relationship
+
+        __tablename__ = 'StatementTable'
+
+        def get_statement(self):
+            stmt = Statement(self.text, **self.extra_data)
+            for resp in self.in_response_to:
+                stmt.add_response(resp.get_response())
+            return stmt
+
+        def get_statement_serialized(context):
+            params = context.current_parameters
+            del (params['text_search'])
+            return json.dumps(params)
+
+        id = Column(Integer)
+        text = Column(String, primary_key=True)
+        extra_data = Column(PickleType)
+        # relationship:
+        in_response_to = relationship("ResponseTable", back_populates="statement_table")
+        text_search = Column(String, primary_key=True, default=get_statement_serialized)
+
+
+    class ResponseTable(_base):
+        from sqlalchemy import Column, Integer, String, ForeignKey
+        from sqlalchemy.orm import relationship
+        __tablename__ = 'ResponseTable'
+
+        def get_reponse_serialized(context):
+            params = context.current_parameters
+            del (params['text_search'])
+            return json.dumps(params)
+
+        id = Column(Integer)
+        text = Column(String, primary_key=True)
+        occurrence = Column(Integer)
+        statement_text = Column(String, ForeignKey('StatementTable.text'))
+
+        statement_table = relationship("StatementTable", back_populates="in_response_to", cascade="all", uselist=False)
+        text_search = Column(String, primary_key=True, default=get_reponse_serialized)
+
+        def get_response(self):
+            occ = {"occurrence": self.occurrence}
+            return Response(text=self.text, **occ)
+
+except ImportError:
     pass
-
-
-class StatementTable(_base):
-    from sqlalchemy import Column, Integer, String, PickleType
-    from sqlalchemy.orm import relationship
-
-    __tablename__ = 'StatementTable'
-
-    def get_statement(self):
-        stmt = Statement(self.text, **self.extra_data)
-        for resp in self.in_response_to:
-            stmt.add_response(resp.get_response())
-        return stmt
-
-    def get_statement_serialized(context):
-        params = context.current_parameters
-        del (params['text_search'])
-        return json.dumps(params)
-
-    id = Column(Integer)
-    text = Column(String, primary_key=True)
-    extra_data = Column(PickleType)
-    # relationship:
-    in_response_to = relationship("ResponseTable", back_populates="statement_table")
-    text_search = Column(String, primary_key=True, default=get_statement_serialized)
-
-
-class ResponseTable(_base):
-    from sqlalchemy import Column, Integer, String, ForeignKey
-    from sqlalchemy.orm import relationship
-    __tablename__ = 'ResponseTable'
-
-    def get_reponse_serialized(context):
-        params = context.current_parameters
-        del (params['text_search'])
-        return json.dumps(params)
-
-    id = Column(Integer)
-    text = Column(String, primary_key=True)
-    occurrence = Column(Integer)
-    statement_text = Column(String, ForeignKey('StatementTable.text'))
-
-    statement_table = relationship("StatementTable", back_populates="in_response_to", cascade="all", uselist=False)
-    text_search = Column(String, primary_key=True, default=get_reponse_serialized)
-
-    def get_response(self):
-        occ = {"occurrence": self.occurrence}
-        return Response(text=self.text, **occ)
 
 
 def get_statement_table(statement):
@@ -103,8 +105,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         )
 
         if not self.read_only and self.drop_create:
-            Base.metadata.drop_all(self.engine)
-            Base.metadata.create_all(self.engine)
+            _base.metadata.drop_all(self.engine)
+            _base.metadata.create_all(self.engine)
 
     def count(self):
         """
@@ -258,7 +260,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
         Drop the database attached to a given adapter.
         """
-        Base.metadata.drop_all(self.engine)
+        _base.metadata.drop_all(self.engine)
 
     def _session_finish(self, session, statement_text=None):
         from sqlalchemy.exc import DatabaseError
