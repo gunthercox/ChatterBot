@@ -73,6 +73,7 @@ Contents:
    testing
    upgrading
    encoding
+   developers
    glossary
 
 Report an Issue
