@@ -179,20 +179,3 @@ Each adapter can be set by passing in the dot-notated import path to the constru
    )
 
 .. _MongoDB: https://docs.mongodb.com/
-
-.. glossary::
-
-   adapters
-      A pluggable class that allows a ChatBot instance to execute some kind of functionality.
-
-   logic adapter
-      An adapter class that allows a ChatBot instance to select a response to 
-
-   storage adapter
-      A class that allows a chat bot to store information somewhere, such as a database.
-
-   input adapter
-      An adapter class that gets input from somewhere and provides it to the chat bot.
-
-   output adapter
-      An adapter class that returns a chat bot's response.
