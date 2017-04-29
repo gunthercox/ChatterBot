@@ -571,7 +571,7 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
             return relative_date + timedelta(weeks=1)
         elif time == 'end of the':
             day_of_week = base_date.weekday()
-            return relative_date + timedelta(days=6 - relative_date.weekday())
+            return day_of_week + timedelta(days=6 - relative_date.weekday())
     elif dow in day_variations:
         if time == 'this':
             return relative_date

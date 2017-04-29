@@ -57,8 +57,9 @@ class ChatBot(object):
 
         preprocessors = kwargs.get(
             'preprocessors', [
-            'chatterbot.preprocessors.clean_whitespace'
-        ])
+                'chatterbot.preprocessors.clean_whitespace'
+            ]
+        )
 
         self.preprocessors = []
 
