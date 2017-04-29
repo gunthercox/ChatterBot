@@ -73,27 +73,13 @@ Contents:
    testing
    upgrading
    encoding
+   glossary
 
 Report an Issue
 ===============
 
 Please direct all bug reports and feature requests to the project's issue
 tracker on `GitHub`_.
-
-Definitions
-===========
-
-.. glossary::
-
-   untrained instance
-      An untrained instance of the chat bot has an empty database.
-
-   statement
-      A single string of text representing something that can be said.
-
-   response
-      A single string of text that is uttered as an answer, a reply or
-      an acknowledgement to a statement.
 
 Indices and tables
 ==================
