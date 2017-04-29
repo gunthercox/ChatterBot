@@ -9,9 +9,9 @@ https://docs.botframework.com/en-us/restapi/directline/
 
 chatbot = ChatBot(
     'MicrosoftBot',
-    directline_host = Microsoft['directline_host'],
-    direct_line_token_or_secret = Microsoft['direct_line_token_or_secret'],
-    conversation_id = Microsoft['conversation_id'],
+    directline_host=Microsoft['directline_host'],
+    direct_line_token_or_secret=Microsoft['direct_line_token_or_secret'],
+    conversation_id=Microsoft['conversation_id'],
     input_adapter='chatterbot.input.Microsoft',
     output_adapter='chatterbot.output.Microsoft',
     trainer='chatterbot.trainers.ChatterBotCorpusTrainer'

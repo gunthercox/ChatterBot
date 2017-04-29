@@ -7,7 +7,8 @@ import logging
 # logging.basicConfig(level=logging.INFO)
 
 # Create a new ChatBot instance
-bot = ChatBot('Terminal',
+bot = ChatBot(
+    'Terminal',
     storage_adapter='chatterbot.storage.MongoDatabaseAdapter',
     logic_adapters=[
         'chatterbot.logic.BestMatch'

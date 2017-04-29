@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from chatterbot import ChatBot
 import tkinter as tk
 try:
     import ttk as ttk
@@ -8,7 +9,6 @@ except ImportError:
     import tkinter.scrolledtext as ScrolledText
 import time
 
-from chatterbot import ChatBot
 
 class TkinterGUIExample(tk.Tk):
 
@@ -18,7 +18,8 @@ class TkinterGUIExample(tk.Tk):
         """
         tk.Tk.__init__(self, *args, **kwargs)
 
-        self.chatbot = ChatBot("No Output",
+        self.chatbot = ChatBot(
+            "GUI Bot",
             storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
             logic_adapters=[
                 "chatterbot.logic.BestMatch"
@@ -66,6 +67,7 @@ class TkinterGUIExample(tk.Tk):
         self.conversation['state'] = 'disabled'
 
         time.sleep(0.5)
+
 
 gui_example = TkinterGUIExample()
 gui_example.mainloop()
