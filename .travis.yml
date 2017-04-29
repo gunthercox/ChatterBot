@@ -28,6 +28,7 @@ services:
   - mongodb
 
 script:
+  - flake8
   - python runtests.py
   - python examples/django_app/manage.py test examples/django_app/
   - nosetests --with-coverage --cover-package=chatterbot
