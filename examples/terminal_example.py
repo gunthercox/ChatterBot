@@ -7,7 +7,8 @@ import logging
 # logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
-bot = ChatBot("Terminal",
+bot = ChatBot(
+    "Terminal",
     storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
     logic_adapters=[
         "chatterbot.logic.MathematicalEvaluation",

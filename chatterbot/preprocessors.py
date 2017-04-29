@@ -3,6 +3,7 @@
 Statement pre-processors.
 """
 
+
 def clean_whitespace(chatbot, statement):
     """
     Remove any consecutive whitespace characters from the statement text.

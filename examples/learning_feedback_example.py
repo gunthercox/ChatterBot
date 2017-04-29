@@ -50,7 +50,7 @@ while True:
         print('\n Is "{}" this a coherent response to "{}"? \n'.format(response, input_statement))
 
         if get_feedback():
-            bot.learn_response(response,input_statement)
+            bot.learn_response(response, input_statement)
 
         bot.output.process_response(response)
 

@@ -22,7 +22,8 @@ TWITTER = {
 # Comment out the following line to disable verbose logging
 logging.basicConfig(level=logging.INFO)
 
-chatbot = ChatBot("TwitterBot",
+chatbot = ChatBot(
+    "TwitterBot",
     logic_adapters=[
         "chatterbot.logic.BestMatch"
     ],

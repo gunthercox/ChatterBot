@@ -64,7 +64,7 @@ class ApiTestCase(TestCase):
         Test that unicode reponse
         """
         data = {
-            'text' : '\u2013'
+            'text': '\u2013'
         }
         response = self.client.post(
             self.api_url,
