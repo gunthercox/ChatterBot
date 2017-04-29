@@ -9,7 +9,8 @@ Corpus language availability
 Corpus data is user contributed, but it is also not difficult to create one if you are familiar with the language.
 This is because each corpus is just a sample of various input statements and their responses for the bot to train itself with.
 
-To explore what languages and sets of corpora are available, check out the `chatterbot/corpus/data`_ directory in the repository.
+To explore what languages and collections of corpora are available,
+check out the `chatterbot_corpus/data`_ directory in the separate chatterbot-corpus repository.
 
 .. note::
    If you are interested in contributing a new language corpus, or adding content to an existing language in the corpus,
@@ -35,4 +36,4 @@ Here is an example:
 .. literalinclude:: ../examples/export_example.py
    :language: python
 
-.. _chatterbot/corpus/data: https://github.com/gunthercox/ChatterBot/tree/master/chatterbot/corpus
+.. _chatterbot_corpus/data: https://github.com/gunthercox/chatterbot-corpus/tree/master/chatterbot_corpus/data
