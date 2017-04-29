@@ -13,10 +13,10 @@ class VariableInputTypeAdapter(InputAdapter):
     def detect_type(self, statement):
         import sys
 
-        if sys.version_info[0] == 3:
-            string_types = str
+        if sys.version_info[0] < 3:
+            string_types = basestring # NOQA
         else:
-            string_types = basestring
+            string_types = str
 
         if hasattr(statement, 'text'):
             return self.OBJECT

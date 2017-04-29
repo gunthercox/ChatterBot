@@ -34,8 +34,8 @@ def levenshtein_distance(statement, other_statement):
 
     # Get the lowercase version of both strings
     if PYTHON < 3:
-        statement_text = unicode(statement.text.lower())
-        other_statement_text = unicode(other_statement.text.lower())
+        statement_text = unicode(statement.text.lower()) # NOQA
+        other_statement_text = unicode(other_statement.text.lower()) # NOQA
     else:
         statement_text = str(statement.text.lower())
         other_statement_text = str(other_statement.text.lower())

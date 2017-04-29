@@ -51,7 +51,7 @@ class Mailgun(InputAdapter):
 
     def process_input(self, statement):
         urls = self.get_stored_email_urls()
-        url = first(urls)
+        url = list(urls)[0]
 
         response = self.get_message(url)
         message = response.json()

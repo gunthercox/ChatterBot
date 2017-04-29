@@ -12,7 +12,6 @@ try:
 
     _base = declarative_base()
 
-
     class StatementTable(_base):
         from sqlalchemy import Column, Integer, String, PickleType
         from sqlalchemy.orm import relationship
@@ -36,7 +35,6 @@ try:
         # relationship:
         in_response_to = relationship("ResponseTable", back_populates="statement_table")
         text_search = Column(String, primary_key=True, default=get_statement_serialized)
-
 
     class ResponseTable(_base):
         from sqlalchemy import Column, Integer, String, ForeignKey
@@ -184,7 +182,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
-                                StatementTable.in_response_to == None)  # Here must use == instead of is
+                                StatementTable.in_response_to == None) # NOQA Here must use == instead of is
                         else:
                             for f in _filter:
                                 _query = _response_query.filter(
@@ -193,7 +191,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                         if fp == 'in_response_to__contains':
                             _query = _response_query.join(ResponseTable).filter(ResponseTable.text == _filter)
                         else:
-                            _query = _response_query.filter(StatementTable.in_response_to == None)
+                            _query = _response_query.filter(StatementTable.in_response_to == None) # NOQA
                 else:
                     if _query:
                         _query = _query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
