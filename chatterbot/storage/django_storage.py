@@ -1,5 +1,6 @@
 from chatterbot.storage import StorageAdapter
 
+
 class DjangoStorageAdapter(StorageAdapter):
     """
     Storage adapter that allows ChatterBot to interact with
