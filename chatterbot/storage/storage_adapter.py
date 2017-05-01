@@ -25,9 +25,11 @@ class StorageAdapter(object):
 
         if 'DJANGO_SETTINGS_MODULE' in os.environ:
             django_project = __import__(os.environ['DJANGO_SETTINGS_MODULE'])
-            if django_project.settings.CHATTERBOT['use_django_models'] is True:
-                from chatterbot.ext.django_chatterbot.models import Statement
-                return Statement
+            if 'use_django_models' in django_project.settings.CHATTERBOT:
+                if django_project.settings.CHATTERBOT['use_django_models'] is True:
+                    from django.apps import apps
+                    Statement = apps.get_model(django_project.settings.CHATTERBOT['django_app_name'], 'Statement')
+                    return Statement
 
         from chatterbot.conversation.statement import Statement
         statement = Statement
@@ -145,3 +147,4 @@ class StorageAdapter(object):
         Typically this indicates that the method should be implement in a subclass.
         """
         pass
+
