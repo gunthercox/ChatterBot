@@ -11,7 +11,8 @@ CHATTERBOT_DEFAULTS = {
     'storage_adapter': 'chatterbot.storage.DjangoStorageAdapter',
     'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
     'output_adapter': 'chatterbot.output.OutputAdapter',
-    'use_django_models': True
+    'use_django_models': True,
+    'django_app_name': 'django_chatterbot'
 }
 
 CHATTERBOT = CHATTERBOT_DEFAULTS.copy()
