@@ -42,6 +42,14 @@ have installed you can run the following command.
 
     python -m chatterbot --version
 
+Upgrading ChatterBot to the latest version
+==========================================
+
+.. toctree::
+   :maxdepth: 4
+
+   upgrading
+
 .. _git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 .. _pip: https://pip.pypa.io/en/stable/installing/
 .. _PyPi: https://pypi.python.org/pypi
