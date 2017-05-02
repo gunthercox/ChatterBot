@@ -70,7 +70,6 @@ Contents:
    sessions
    utils
    django/index
-   upgrading
    encoding
    development
    glossary
