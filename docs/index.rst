@@ -70,10 +70,9 @@ Contents:
    sessions
    utils
    django/index
-   testing
    upgrading
    encoding
-   developers
+   development
    glossary
 
 Report an Issue

@@ -1,6 +1,6 @@
-======
-Design
-======
+===========
+Development
+===========
 
 As the code for ChatterBot is written, the developers attempt to describe
 the logic and reasoning for the various decisions that go into creating the
@@ -18,3 +18,4 @@ Please pull gently.
 
     contributing
     releases
+    testing
