@@ -1,5 +1,5 @@
 ==================
-Django integration
+Django Integration
 ==================
 
 ChatterBot has direct support for integration with Django. ChatterBot provides
