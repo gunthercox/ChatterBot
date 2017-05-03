@@ -100,7 +100,7 @@ Enable logging
 ==============
 
 ChatterBot has built in logging. You can enable ChatterBot's
-logging by setting the logging level at the top of your python code.
+logging by setting the logging level in your code.
 
 .. code-block:: python
 
@@ -112,6 +112,8 @@ logging by setting the logging level at the top of your python code.
        # ...
    )
 
+The logging levels available are :code:`CRITICAL`, :code:`ERROR`, :code:`WARNING`, :code:`INFO`, :code:`DEBUG`, and :code:`NOTSET`.
+See the `Python logging documentation`_ for more information.
 
 Using a custom logger
 =====================
@@ -179,3 +181,4 @@ Each adapter can be set by passing in the dot-notated import path to the constru
    )
 
 .. _MongoDB: https://docs.mongodb.com/
+.. _`Python logging documentation`: https://docs.python.org/3/library/logging.html#logging-levels

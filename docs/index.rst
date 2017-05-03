@@ -58,7 +58,6 @@ Contents:
    tutorial
    examples
    training
-   corpus
    preprocessors
    logic/index
    input/index
@@ -69,6 +68,7 @@ Contents:
    conversations
    sessions
    utils
+   corpus
    django/index
    encoding
    development
