@@ -34,8 +34,8 @@ this is just a simple check that a unicode response can be processed.
 This test passes in both Python 2.7 and 3.x. It also verifies that
 ChatterBot *can* take unicode input without issue.
 
-Fixing encoding errors
-======================
+How do I fix Python encoding errors?
+====================================
 
 When working with string type data in Python, it is possible to encounter errors
 such as the following.
