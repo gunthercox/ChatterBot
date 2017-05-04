@@ -244,6 +244,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Drop the database attached to a given adapter.
         """
         Base.metadata.drop_all(self.engine)
+        self.session.close()
 
     def _session_finish(self, session, statement_text=None):
         from sqlalchemy.exc import DatabaseError
