@@ -5,14 +5,14 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Response
 from chatterbot.conversation import Statement
 
-_base = None
+Base = None
 
 try:
     from sqlalchemy.ext.declarative import declarative_base
 
-    _base = declarative_base()
+    Base = declarative_base()
 
-    class StatementTable(_base):
+    class StatementTable(Base):
         from sqlalchemy import Column, Integer, String, PickleType
         from sqlalchemy.orm import relationship
 
@@ -26,7 +26,7 @@ try:
 
         def get_statement_serialized(context):
             params = context.current_parameters
-            del (params['text_search'])
+            del params['text_search']
             return json.dumps(params)
 
         id = Column(Integer)
@@ -36,7 +36,7 @@ try:
         in_response_to = relationship("ResponseTable", back_populates="statement_table")
         text_search = Column(String, primary_key=True, default=get_statement_serialized)
 
-    class ResponseTable(_base):
+    class ResponseTable(Base):
         from sqlalchemy import Column, Integer, String, ForeignKey
         from sqlalchemy.orm import relationship
         __tablename__ = 'ResponseTable'
@@ -103,8 +103,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         )
 
         if not self.read_only and self.drop_create:
-            _base.metadata.drop_all(self.engine)
-            _base.metadata.create_all(self.engine)
+            Base.metadata.drop_all(self.engine)
+            Base.metadata.create_all(self.engine)
 
     def count(self):
         """
@@ -258,7 +258,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
         Drop the database attached to a given adapter.
         """
-        _base.metadata.drop_all(self.engine)
+        Base.metadata.drop_all(self.engine)
 
     def _session_finish(self, session, statement_text=None):
         from sqlalchemy.exc import DatabaseError
