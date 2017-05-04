@@ -17,60 +17,71 @@ class MockResponse(object):
 
 def mock_start_conversation(*args, **kwargs):
     url = args[0]
-    data = kwargs.get('data', {})
     endpoints = {
-        'https://directline.botframework.com/api/conversations'
-        :MockResponse(200, {"conversationId": "IEyJvnDULgn",
-                             "token": "xtFDtPemROU.dAA.MgBPAGUAUQBnADEAWgB2AGUAYwA3AA.oWyal9M70gE.XJEMr9FNGGI.6UCCu0-lLSLplLZ0MVDk_rMle7DItjF-KFSIUTUjUR8",
-                             "expires_in": 0
-        })
+        'https://directline.botframework.com/api/conversations': MockResponse(
+            200,
+            {
+                "conversationId": "IEyJvnDULgn",
+                "token": (
+                    "xtFDtPemROU.dAA.MgBPAGUAUQBnADEAWgB2AGUAYwA3AA.oWyal9M70"
+                    "gE.XJEMr9FNGGI.6UCCu0-lLSLplLZ0MVDk_rMle7DItjF-KFSIUTUjUR8"
+                ),
+                "expires_in": 0
+            }
+        )
     }
 
     return endpoints[url]
+
 
 def mock_send_message(*args, **kwargs):
     url = args[0]
-    data = kwargs.get('data', {})
+    directline_url = 'https://directline.botframework.com/api/conversations/IEyJvnDULgn/messages'
     endpoints = {
-        'https://directline.botframework.com/api/conversations/IEyJvnDULgn/messages'
-        :MockResponse(204, 'no content')
+        directline_url: MockResponse(204, 'no content')
     }
 
     return endpoints[url]
 
+
 def mock_get_message(*args, **kwargs):
     url = args[0]
-    data = kwargs.get('data', {})
+    directline_url = 'https://directline.botframework.com/api/conversations/IEyJvnDULgn/messages'
     endpoints = {
-        'https://directline.botframework.com/api/conversations/IEyJvnDULgn/messages'
-        :MockResponse(200, {
-          "messages": [
-            {
-              "id": "IEyJvnDULgn|000000000000000001",
-              "conversationId": "IEyJvnDULgn",
-              "created": "2016-11-04T15:26:57.9186086Z",
-              "from": "malli.kv2@gmail.com",
-              "images": [],
-              "attachments": [
+        directline_url: MockResponse(200, {
+            "messages": [
                 {
-                  "url": "/attachments/IEyJvnDULgn/000000000000000001/0/testregexp.txt?t=xtFDtPemROU.dAA.SQBFAHkASgB2AG4ARABVAEwAZwBuAC0AMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADAAMAAwADEA.67FrGrs20gE.-Hqfw5g3NgM.eJZ8WI_v78i1OBZ0zF4jLjuOpKrw2WF0PmqSgEhWIYw",
-                  "contentType": "text/plain"
+                    "id": "IEyJvnDULgn|000000000000000001",
+                    "conversationId": "IEyJvnDULgn",
+                    "created": "2016-11-04T15:26:57.9186086Z",
+                    "from": "malli.kv2@gmail.com",
+                    "images": [],
+                    "attachments": [
+                        {
+                            "url": (
+                                "/attachments/IEyJvnDULgn/000000000000000001/0/"
+                                "testregexp.txt?t=xtFDtPemROU.dAA.SQBFAHkASgB2A"
+                                "G4ARABVAEwAZwBuAC0AMAAwADAAMAAwADAAMAAwADAAMAA"
+                                "wADAAMAAwADAAMAAwADEA.67FrGrs20gE.-Hqfw5g3NgM."
+                                "eJZ8WI_v78i1OBZ0zF4jLjuOpKrw2WF0PmqSgEhWIYw"
+                            ),
+                            "contentType": "text/plain"
+                        }
+                    ],
+                    "eTag": "W/\"datetime'2016-11-04T15%3A26%3A58.3595526Z'\""
+                },
+                {
+                    "id": "IEyJvnDULgn|000000000000000002",
+                    "conversationId": "IEyJvnDULgn",
+                    "created": "2016-11-04T15:27:00.2245784Z",
+                    "from": "bc-directlinedocs-testbot",
+                    "text": "Hi! What is your name?",
+                    "images": [],
+                    "attachments": [],
+                    "eTag": "W/\"datetime'2016-11-04T15%3A27%3A00.663327Z'\""
                 }
-              ],
-              "eTag": "W/\"datetime'2016-11-04T15%3A26%3A58.3595526Z'\""
-            },
-            {
-              "id": "IEyJvnDULgn|000000000000000002",
-              "conversationId": "IEyJvnDULgn",
-              "created": "2016-11-04T15:27:00.2245784Z",
-              "from": "bc-directlinedocs-testbot",
-              "text": "Hi! What is your name?",
-              "images": [],
-              "attachments": [],
-              "eTag": "W/\"datetime'2016-11-04T15%3A27%3A00.663327Z'\""
-            }
-          ],
-          "watermark": "2"
+            ],
+            "watermark": "2"
         })
     }
 
