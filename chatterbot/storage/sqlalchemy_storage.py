@@ -43,6 +43,7 @@ class StatementTable(Base):
 class ResponseTable(Base):
     from sqlalchemy import Column, Integer, String, ForeignKey
     from sqlalchemy.orm import relationship
+
     __tablename__ = 'ResponseTable'
 
     def get_reponse_serialized(context):
@@ -73,12 +74,12 @@ def get_response_table(response):
 
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
-    read_only = False
 
     def __init__(self, **kwargs):
         super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
 
         from sqlalchemy import create_engine
+        from sqlalchemy.orm import sessionmaker
 
         self.database_name = self.kwargs.get(
             "database", "chatterbot-database"
@@ -103,22 +104,14 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         if not self.read_only and create:
             Base.metadata.create_all(self.engine)
 
+        Session = sessionmaker(bind=self.engine)
+        self.session = Session()
+
     def count(self):
         """
         Return the number of entries in the database.
         """
-        session = self.__get_session()
-        return session.query(StatementTable).count()
-
-    def __get_session(self):
-        """
-        :rtype: Session
-        """
-        from sqlalchemy.orm import sessionmaker
-
-        Session = sessionmaker(bind=self.engine)
-        session = Session()
-        return session
+        return self.session.query(StatementTable).count()
 
     def __statement_filter(self, session, **kwargs):
         """
@@ -133,8 +126,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
         Returns a statement if it exists otherwise None
         """
-        session = self.__get_session()
-        query = self.__statement_filter(session, **{"text": statement_text})
+        query = self.__statement_filter(self.session, **{"text": statement_text})
         record = query.first()
         if record:
             return record.get_statement()
@@ -146,12 +138,11 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
-        session = self.__get_session()
-        query = self.__statement_filter(session, **{"text": statement_text})
+        query = self.__statement_filter(self.session, **{"text": statement_text})
         record = query.first()
-        session.delete(record)
+        self.session.delete(record)
 
-        self._session_finish(session, statement_text)
+        self._session_finish(self.session, statement_text)
 
     def filter(self, **kwargs):
         """
@@ -164,18 +155,17 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
 
         filter_parameters = kwargs.copy()
 
-        session = self.__get_session()
         statements = []
         # _response_query = None
         _query = None
         if len(filter_parameters) == 0:
-            _response_query = session.query(StatementTable)
+            _response_query = self.session.query(StatementTable)
             statements.extend(_response_query.all())
         else:
             for i, fp in enumerate(filter_parameters):
                 _filter = filter_parameters[fp]
                 if fp in ['in_response_to', 'in_response_to__contains']:
-                    _response_query = session.query(StatementTable)
+                    _response_query = self.session.query(StatementTable)
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
@@ -193,7 +183,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     if _query:
                         _query = _query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
                     else:
-                        _response_query = session.query(ResponseTable)
+                        _response_query = self.session.query(ResponseTable)
                         _query = _response_query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
 
                 if _query is None:
@@ -218,9 +208,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Modifies an entry in the database.
         Creates an entry if one does not exist.
         """
-        session = self.__get_session()
         if statement:
-            query = self.__statement_filter(session, **{"text": statement.text})
+            query = self.__statement_filter(self.session, **{"text": statement.text})
             record = query.first()
 
             if record:
@@ -231,11 +220,11 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     record.extra_data = dict[statement.extra_data]
                 if statement.in_response_to:
                     record.in_response_to = list(map(get_response_table, statement.in_response_to))
-                session.add(record)
+                self.session.add(record)
             else:
-                session.add(get_statement_table(statement))
+                self.session.add(get_statement_table(statement))
 
-            self._session_finish(session)
+            self._session_finish(self.session)
 
     def get_random(self):
         """
@@ -246,8 +235,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             raise self.EmptyDatabaseException()
 
         rand = random.randrange(0, count)
-        session = self.__get_session()
-        stmt = session.query(StatementTable)[rand]
+        stmt = self.session.query(StatementTable)[rand]
 
         return stmt.get_statement()
 
