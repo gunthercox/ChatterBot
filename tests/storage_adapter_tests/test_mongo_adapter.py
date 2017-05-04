@@ -176,7 +176,8 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
     def test_mongo_to_object(self):
         self.adapter.update(
-            Statement('Hello',
+            Statement(
+                'Hello',
                 in_response_to=[
                     Response('Hi', occurrence=3),
                     Response('Hey', occurrence=6)

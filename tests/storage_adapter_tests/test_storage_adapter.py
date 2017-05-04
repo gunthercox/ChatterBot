@@ -2,6 +2,7 @@ from unittest import TestCase
 from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement, Response
 
+
 class StorageAdapterTestCase(TestCase):
     """
     This test case is for the StorageAdapter base class.
