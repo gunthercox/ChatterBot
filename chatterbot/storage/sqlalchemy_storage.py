@@ -102,7 +102,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         create = self.kwargs.get("create", False)
 
         if not self.read_only and create:
-            Base.metadata.create_all(self.engine)
+            self.create()
 
         Session = sessionmaker(bind=self.engine)
         self.session = Session()
@@ -244,7 +244,9 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Drop the database attached to a given adapter.
         """
         Base.metadata.drop_all(self.engine)
-        self.session.close()
+
+    def create(self):
+        Base.metadata.create_all(self.engine)
 
     def _session_finish(self, session, statement_text=None):
         from sqlalchemy.exc import DatabaseError

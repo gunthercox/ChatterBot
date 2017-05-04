@@ -5,22 +5,29 @@ from chatterbot.storage.sqlalchemy_storage import SQLAlchemyDatabaseAdapter
 
 class SQLAlchemyAdapterTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """
-        Instantiate the adapter.
+        Instantiate the adapter before any tests in the test case run.
         """
-        self.adapter = SQLAlchemyDatabaseAdapter(
-            database='testdb',
-            create=True
+        cls.adapter = SQLAlchemyDatabaseAdapter(
+            database='testdb'
         )
+
+    @classmethod
+    def tearDownClass(cls):
+        import os
+        cls.adapter.session.close()
+        os.remove('testdb.db')
+
+    def setUp(self):
+        self.adapter.create()
 
     def tearDown(self):
         """
-        Remove the test database.
+        Remove the content of the test database after every test.
         """
-        import os
         self.adapter.drop()
-        os.remove('testdb.db')
 
 
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
@@ -338,6 +345,13 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
 
 
 class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+
+    def setUp(self):
+        """
+        Make the adapter writable before every test.
+        """
+        super(ReadOnlySQLAlchemyDatabaseAdapterTestCase, self).setUp()
+        self.adapter.read_only = False
 
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
