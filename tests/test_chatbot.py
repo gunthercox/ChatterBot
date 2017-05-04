@@ -69,8 +69,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_second_response_format(self):
         self.chatbot.storage.update(self.test_statement)
 
-        response = self.chatbot.get_response('Hi')
-        # response = 'Hello'
+        self.chatbot.get_response('Hi')
+        # >>> 'Hello'
         second_response = self.chatbot.get_response('How are you?')
         statement = self.chatbot.storage.find(second_response.text)
 

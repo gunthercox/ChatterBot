@@ -154,7 +154,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         Test that the chat bot is trained using data from the Ubuntu Corpus.
         """
-        path = self._create_test_corpus()
+        self._create_test_corpus()
 
         self.chatbot.train()
         self._destroy_test_corpus()
