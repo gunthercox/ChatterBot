@@ -42,7 +42,8 @@ class ChatBotTestCase(TestCase):
 
 class ChatBotMongoTestCase(ChatBotTestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         from pymongo.errors import ServerSelectionTimeoutError
         from pymongo import MongoClient
 
@@ -55,8 +56,6 @@ class ChatBotMongoTestCase(ChatBotTestCase):
 
         except ServerSelectionTimeoutError:
             raise SkipTest('Unable to connect to Mongo DB.')
-
-        super(ChatBotMongoTestCase, self).setUp()
 
     def get_kwargs(self):
         kwargs = super(ChatBotMongoTestCase, self).get_kwargs()
