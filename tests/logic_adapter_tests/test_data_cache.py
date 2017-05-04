@@ -38,7 +38,7 @@ class DataCachingTests(ChatBotTestCase):
         Test that an additional data attribute can be added to the statement
         and that this attribute is saved.
         """
-        response = self.chatbot.get_response('Hello')
+        self.chatbot.get_response('Hello')
         found_statement = self.chatbot.storage.find('Hello')
         data = found_statement.serialize()
 
