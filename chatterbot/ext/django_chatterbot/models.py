@@ -2,10 +2,11 @@ from django.db import models
 from django.utils import timezone
 
 
-class Statement(models.Model):
+class AbstractBaseStatement(models.Model):
     """
-    A statement represents a single spoken entity, sentence or
-    phrase that someone can say.
+    The abstract base statement allows other models to
+    be created using the attributes that exist on the
+    default models.
     """
 
     text = models.CharField(
@@ -27,6 +28,9 @@ class Statement(models.Model):
     # statement is returned by the chat bot.
     confidence = 0
 
+    class Meta:
+        abstract = True
+
     def __str__(self):
         if len(self.text.strip()) > 60:
             return '{}...'.format(self.text[:57])
@@ -35,7 +39,7 @@ class Statement(models.Model):
         return '<empty>'
 
     def __init__(self, *args, **kwargs):
-        super(Statement, self).__init__(*args, **kwargs)
+        super(AbstractBaseStatement, self).__init__(*args, **kwargs)
 
         # Responses to be saved if the statement is updated with the storage adapter
         self.response_statement_cache = []
@@ -122,12 +126,11 @@ class Statement(models.Model):
         return data
 
 
-class Response(models.Model):
+class AbstractBaseResponse(models.Model):
     """
-    Connection between a response and the statement that triggered it.
-
-    Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
-    The text and number of times the response has occurred are stored.
+    The abstract base response allows other models to
+    be created using the attributes that exist on the
+    default models.
     """
 
     statement = models.ForeignKey(
@@ -143,6 +146,9 @@ class Response(models.Model):
     unique_together = (('statement', 'response'),)
 
     occurrence = models.PositiveIntegerField(default=1)
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         statement = self.statement.text
@@ -165,9 +171,11 @@ class Response(models.Model):
         return data
 
 
-class Conversation(models.Model):
+class AbstractBaseConversation(models.Model):
     """
-    A sequence of statements representing a conversation.
+    The abstract base conversation allows other models to
+    be created using the attributes that exist on the
+    default models.
     """
 
     statements = models.ManyToManyField(
@@ -176,5 +184,33 @@ class Conversation(models.Model):
         help_text='The statements in this conversation.'
     )
 
+    class Meta:
+        abstract = True
+
     def __str__(self):
         return str(self.id)
+
+
+class Statement(AbstractBaseStatement):
+    """
+    A statement represents a single spoken entity, sentence or
+    phrase that someone can say.
+    """
+    pass
+
+
+class Response(AbstractBaseResponse):
+    """
+    Connection between a response and the statement that triggered it.
+
+    Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
+    The text and number of times the response has occurred are stored.
+    """
+    pass
+
+
+class Conversation(AbstractBaseConversation):
+    """
+    A sequence of statements representing a conversation.
+    """
+    pass
