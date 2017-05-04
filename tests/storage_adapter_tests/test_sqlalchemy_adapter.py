@@ -1,26 +1,28 @@
 from unittest import TestCase
-
 from chatterbot.conversation import Statement, Response
 from chatterbot.storage.sqlalchemy_storage import SQLAlchemyDatabaseAdapter
 
 
 class SQLAlchemyAdapterTestCase(TestCase):
+
     def setUp(self):
         """
-        Instantiate the adapter.
+        Instantiate the adapter before any tests in the test case run.
         """
-        from random import randint
-
-        # Generate a random name for the database
-        database_name = str(randint(0, 9000))
-
         self.adapter = SQLAlchemyDatabaseAdapter(
-            database='sqlite_' + database_name,
+            database='testdb',
             drop_create=True
         )
 
+    def tearDown(self):
+        """
+        Remove the test database.
+        """
+        self.adapter.drop()
+
 
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+
     def test_count_returns_zero(self):
         """
         The count method should return a value of 0
@@ -334,6 +336,7 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
 
 
 class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
 
