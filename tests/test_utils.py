@@ -11,6 +11,7 @@ class UtilityTests(TestCase):
 
     def test_nltk_download_corpus(self):
         downloaded = utils.nltk_download_corpus('wordnet')
+        self.assertTrue(downloaded)
         self.skipTest('Test needs to be created')
 
     def test_remove_stop_words(self):

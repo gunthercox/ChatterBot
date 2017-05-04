@@ -209,28 +209,28 @@ class DateTimeParsingTestCases(TestCase):
 
     def test_next_week_day(self):
         base_date = datetime(2016, 12, 7, 10, 10, 52, 85280)
-        weekday = 2 # Wednesday
+        weekday = 2  # Wednesday
         result = parsing.next_week_day(base_date, weekday)
 
         self.assertEqual(result, datetime(2016, 12, 14, 10, 10, 52, 85280))
 
     def test_previous_week_day(self):
         base_date = datetime(2016, 12, 14, 10, 10, 52, 85280)
-        weekday = 2 # Wednesday
+        weekday = 2  # Wednesday
         result = parsing.previous_week_day(base_date, weekday)
 
         self.assertEqual(result, datetime(2016, 12, 7, 10, 10, 52, 85280))
 
     def test_this_week_day_before_day(self):
-        base_date = datetime(2016, 12, 5, 10, 10, 52, 85280) # Monday
-        weekday = 2 # Wednesday
+        base_date = datetime(2016, 12, 5, 10, 10, 52, 85280)  # Monday
+        weekday = 2  # Wednesday
         result = parsing.this_week_day(base_date, weekday)
 
         self.assertEqual(result, datetime(2016, 12, 7, 10, 10, 52, 85280))
 
     def test_this_week_day_after_day(self):
-        base_date = datetime(2016, 12, 9, 10, 10, 52, 85280) # Friday
-        weekday = 2 # Wednesday
+        base_date = datetime(2016, 12, 9, 10, 10, 52, 85280)  # Friday
+        weekday = 2  # Wednesday
         result = parsing.this_week_day(base_date, weekday)
 
         self.assertEqual(result, datetime(2016, 12, 14, 10, 10, 52, 85280))

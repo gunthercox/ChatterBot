@@ -22,7 +22,8 @@ class ChatBotTestCase(TestCase):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.output.OutputAdapter',
-            'database': None, # None runs the database in-memory
+            # None runs the database in-memory
+            'database': None,
             'silence_performance_warning': True
         }
 

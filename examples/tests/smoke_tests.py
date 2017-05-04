@@ -71,7 +71,7 @@ class ExamplesSmokeTestCase(TestCase):
             'terminate on its own.'
         )
 
-    def test_terminal_example(self):
+    def test_terminal_mongo_example(self):
         raise SkipTest(
             'This is being skipped so that we do not have '
             'to check if Mongo DB is running before running '
