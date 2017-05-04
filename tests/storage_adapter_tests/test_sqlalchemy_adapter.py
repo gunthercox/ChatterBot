@@ -7,7 +7,7 @@ class SQLAlchemyAdapterTestCase(TestCase):
 
     def setUp(self):
         """
-        Instantiate the adapter before any tests in the test case run.
+        Instantiate the adapter.
         """
         self.adapter = SQLAlchemyDatabaseAdapter(
             database='testdb',
@@ -18,7 +18,9 @@ class SQLAlchemyAdapterTestCase(TestCase):
         """
         Remove the test database.
         """
+        import os
         self.adapter.drop()
+        os.remove('testdb.db')
 
 
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
