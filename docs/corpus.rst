@@ -13,8 +13,13 @@ To explore what languages and collections of corpora are available,
 check out the `chatterbot_corpus/data`_ directory in the separate chatterbot-corpus repository.
 
 .. note::
-   If you are interested in contributing a new language corpus, or adding content to an existing language in the corpus,
-   please feel free to submit a pull request on ChatterBot's GitHub page. Contributions are welcomed!
+   If you are interested in contributing content to the corpus, please feel free to
+   submit a pull request on ChatterBot's corpus GitHub page. Contributions are welcomed!
+
+   https://github.com/gunthercox/chatterbot-corpus
+
+   The :code:`chatterbot-corpus` is distributed in its own Python package so that it can
+   be released and upgraded independently from the :code:`chatterbot` package.
 
 
 Exporting your chat bot's database as a training corpus
