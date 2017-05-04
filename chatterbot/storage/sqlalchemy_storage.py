@@ -43,7 +43,7 @@ try:
 
         def get_reponse_serialized(context):
             params = context.current_parameters
-            del (params['text_search'])
+            del params['text_search']
             return json.dumps(params)
 
         id = Column(Integer)
