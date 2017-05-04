@@ -147,4 +147,3 @@ class StorageAdapter(object):
         Typically this indicates that the method should be implement in a subclass.
         """
         pass
-
