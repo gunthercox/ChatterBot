@@ -11,7 +11,7 @@ class SQLAlchemyAdapterTestCase(TestCase):
         """
         self.adapter = SQLAlchemyDatabaseAdapter(
             database='testdb',
-            drop_create=True
+            create=True
         )
 
     def tearDown(self):
