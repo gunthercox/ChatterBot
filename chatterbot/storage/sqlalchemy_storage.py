@@ -74,7 +74,6 @@ def get_response_table(response):
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
     read_only = False
-    drop_create = False
 
     def __init__(self, **kwargs):
         super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
@@ -99,12 +98,9 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             "read_only", False
         )
 
-        self.drop_create = self.kwargs.get(
-            "drop_create", False
-        )
+        create = self.kwargs.get("create", False)
 
-        if not self.read_only and self.drop_create:
-            Base.metadata.drop_all(self.engine)
+        if not self.read_only and create:
             Base.metadata.create_all(self.engine)
 
     def count(self):
