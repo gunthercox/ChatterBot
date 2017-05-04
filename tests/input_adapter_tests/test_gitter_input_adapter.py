@@ -30,7 +30,6 @@ def mock_get_response(*args, **kwargs):
 
 def mock_post_response(*args, **kwargs):
     url = args[0]
-    data = kwargs.get('data', {})
 
     endpoints = {
         'https://api.gitter.im/v1/rooms': MockResponse(200, {'id': '40999743'}),
