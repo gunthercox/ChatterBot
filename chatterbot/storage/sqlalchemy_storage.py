@@ -103,14 +103,16 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         if not self.read_only and create:
             self.create()
 
-        Session = sessionmaker(bind=self.engine, expire_on_commit=True)
-        self.session = Session()
+        self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
 
     def count(self):
         """
         Return the number of entries in the database.
         """
-        return self.session.query(StatementTable).count()
+        session = self.Session()
+        statement_count = session.query(StatementTable).count()
+        session.close()
+        return statement_count
 
     def __statement_filter(self, session, **kwargs):
         """
@@ -125,10 +127,15 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         """
         Returns a statement if it exists otherwise None
         """
-        query = self.__statement_filter(self.session, **{"text": statement_text})
+        session = self.Session()
+        query = self.__statement_filter(session, **{"text": statement_text})
         record = query.first()
         if record:
-            return record.get_statement()
+            statement = record.get_statement()
+            session.close()
+            return statement
+
+        session.close()
         return None
 
     def remove(self, statement_text):
@@ -137,11 +144,13 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
-        query = self.__statement_filter(self.session, **{"text": statement_text})
+        session = self.Session()
+        query = self.__statement_filter(session, **{"text": statement_text})
         record = query.first()
-        self.session.delete(record)
 
-        self._session_finish(self.session, statement_text)
+        session.delete(record)
+
+        self._session_finish(session, statement_text)
 
     def filter(self, **kwargs):
         """
@@ -151,6 +160,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         all listed attributes and in which all values
         match for all listed attributes will be returned.
         """
+        session = self.Session()
 
         filter_parameters = kwargs.copy()
 
@@ -158,13 +168,13 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         # _response_query = None
         _query = None
         if len(filter_parameters) == 0:
-            _response_query = self.session.query(StatementTable)
+            _response_query = session.query(StatementTable)
             statements.extend(_response_query.all())
         else:
             for i, fp in enumerate(filter_parameters):
                 _filter = filter_parameters[fp]
                 if fp in ['in_response_to', 'in_response_to__contains']:
-                    _response_query = self.session.query(StatementTable)
+                    _response_query = session.query(StatementTable)
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
@@ -182,7 +192,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     if _query:
                         _query = _query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
                     else:
-                        _response_query = self.session.query(ResponseTable)
+                        _response_query = session.query(ResponseTable)
                         _query = _response_query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
 
                 if _query is None:
@@ -200,6 +210,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                 if statement:
                     results.append(statement.get_statement())
 
+        session.close()
+
         return results
 
     def update(self, statement):
@@ -208,7 +220,8 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Creates an entry if one does not exist.
         """
         if statement:
-            query = self.__statement_filter(self.session, **{"text": statement.text})
+            session = self.Session()
+            query = self.__statement_filter(session, **{"text": statement.text})
             record = query.first()
 
             if record:
@@ -219,24 +232,28 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     record.extra_data = dict[statement.extra_data]
                 if statement.in_response_to:
                     record.in_response_to = list(map(get_response_table, statement.in_response_to))
-                self.session.add(record)
+                session.add(record)
             else:
-                self.session.add(get_statement_table(statement))
+                session.add(get_statement_table(statement))
 
-            self._session_finish(self.session)
+            self._session_finish(session)
 
     def get_random(self):
         """
         Returns a random statement from the database
         """
+        session = self.Session()
         count = self.count()
         if count < 1:
             raise self.EmptyDatabaseException()
 
         rand = random.randrange(0, count)
-        stmt = self.session.query(StatementTable)[rand]
+        stmt = session.query(StatementTable)[rand]
 
-        return stmt.get_statement()
+        statement = stmt.get_statement()
+
+        session.close()
+        return statement
 
     def drop(self):
         """
@@ -245,6 +262,9 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         Base.metadata.drop_all(self.engine)
 
     def create(self):
+        """
+        Populate the database with the tables.
+        """
         Base.metadata.create_all(self.engine)
 
     def _session_finish(self, session, statement_text=None):
@@ -256,3 +276,5 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                 session.rollback()
         except DatabaseError as e:
             self.logger.error(statement_text, str(e.orig))
+        finally:
+            session.close()
