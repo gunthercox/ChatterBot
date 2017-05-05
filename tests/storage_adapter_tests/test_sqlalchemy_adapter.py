@@ -20,11 +20,14 @@ class SQLAlchemyAdapterTestCase(TestCase):
         os.remove('testdb.db')
 
     def setUp(self):
+        """
+        Create the tables in the database before each test is run.
+        """
         self.adapter.create()
 
     def tearDown(self):
         """
-        Remove the content of the test database after every test.
+        Drop the tables in the database after each test is run.
         """
         self.adapter.drop()
 
