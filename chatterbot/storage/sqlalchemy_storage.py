@@ -103,7 +103,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         if not self.read_only and create:
             self.create()
 
-        Session = sessionmaker(bind=self.engine)
+        Session = sessionmaker(bind=self.engine, expire_on_commit=True)
         self.session = Session()
 
     def count(self):
