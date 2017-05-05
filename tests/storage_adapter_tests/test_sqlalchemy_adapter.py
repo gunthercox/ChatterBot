@@ -17,7 +17,6 @@ class SQLAlchemyAdapterTestCase(TestCase):
     @classmethod
     def tearDownClass(cls):
         import os
-        cls.adapter.session.close()
         os.remove('testdb.db')
 
     def setUp(self):
