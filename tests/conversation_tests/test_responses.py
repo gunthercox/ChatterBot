@@ -6,4 +6,3 @@ class ResponseTests(TestCase):
 
     def setUp(self):
         self.response = Response("A test response.")
-

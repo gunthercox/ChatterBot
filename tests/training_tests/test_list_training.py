@@ -205,4 +205,3 @@ class ChatterBotResponseTests(ChatBotTestCase):
         response = self.chatbot.get_response("")
 
         self.assertTrue(len(response.text) >= 0)
-

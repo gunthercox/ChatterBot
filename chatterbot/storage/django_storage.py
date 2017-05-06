@@ -165,4 +165,3 @@ class DjangoStorageAdapter(StorageAdapter):
         responses = Response.objects.all()
 
         return Statement.objects.filter(in_response__in=responses)
-
