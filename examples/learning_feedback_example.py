@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from chatterbot import ChatBot
-import logging
 
 """
 This example shows how to create a chat bot that
@@ -9,6 +8,7 @@ element from the user.
 """
 
 # Uncomment the following line to enable verbose logging
+# import logging
 # logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
