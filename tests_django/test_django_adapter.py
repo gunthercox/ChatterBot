@@ -1,4 +1,3 @@
-import os
 from django.test import TestCase
 from chatterbot.storage import DjangoStorageAdapter
 from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
@@ -340,8 +339,6 @@ class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
         self.assertEqual(results[1], statement_b)
 
     def test_order_by_created_at(self):
-        from datetime import datetime, timedelta
-
         statement_a = StatementModel.objects.create(text='A is the first letter of the alphabet.')
         statement_b = StatementModel.objects.create(text='B is the second letter of the alphabet.')
 

@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import re
-from datetime import timedelta, date, datetime
+from datetime import timedelta, datetime
 import calendar
 
 # Variations of dates that the parser can capture
@@ -18,11 +18,13 @@ month_names_long = (
 )
 month_names = month_names_long + '|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec'
 day_nearest_names = 'today|yesterday|tomorrow|tonight|tonite'
-numbers = "(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten| \
-                    eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen| \
-                    eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|eighty| \
-                    ninety|hundred|thousand)"
-re_dmy = '(' + "|".join(day_variations + minute_variations + year_variations + week_variations + month_variations) + ')'
+numbers = (
+    '(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten|'
+    'eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|'
+    'eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|'
+    'eighty|ninety|hundred|thousand)'
+)
+re_dmy = '(' + '|'.join(day_variations + minute_variations + year_variations + week_variations + month_variations) + ')'
 re_duration = '(before|after|earlier|later|ago|from\snow)'
 re_year = '(19|20)\d{2}|^(19|20)\d{2}'
 re_timeframe = 'this|coming|next|following|previous|last|end\sof\sthe'

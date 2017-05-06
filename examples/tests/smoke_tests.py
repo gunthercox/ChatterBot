@@ -16,10 +16,10 @@ class ExamplesSmokeTestCase(TestCase):
     """
 
     def test_basic_example(self):
-        import basic_example
+        import basic_example # NOQA
 
     def test_default_response_example(self):
-        import default_response_example
+        import default_response_example # NOQA
 
     def test_export_example(self):
         raise SkipTest(
@@ -53,7 +53,7 @@ class ExamplesSmokeTestCase(TestCase):
         )
 
     def test_math_and_time(self):
-        import math_and_time
+        import math_and_time # NOQA
 
     def test_microsoft_bot(self):
         raise SkipTest(
@@ -62,7 +62,7 @@ class ExamplesSmokeTestCase(TestCase):
         )
 
     def test_specific_response_example(self):
-        import specific_response_example
+        import specific_response_example # NOQA
 
     def test_terminal_example(self):
         raise SkipTest(
