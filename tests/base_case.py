@@ -6,7 +6,6 @@ from chatterbot import ChatBot
 class ChatBotTestCase(TestCase):
 
     def setUp(self):
-        self.test_data_directory = None
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
 
     def assertIsLength(self, item, length):
