@@ -8,6 +8,12 @@ class ChatBotTestCase(TestCase):
     def setUp(self):
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
 
+    def tearDown(self):
+        """
+        Remove the test database.
+        """
+        self.chatbot.storage.drop()
+
     def assertIsLength(self, item, length):
         """
         Assert that an iterable has the given length.
@@ -21,7 +27,7 @@ class ChatBotTestCase(TestCase):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.output.OutputAdapter',
-            # None runs the database in-memory
+            # None runs the JSON database in-memory
             'database': None,
             'silence_performance_warning': True
         }
@@ -32,12 +38,6 @@ class ChatBotTestCase(TestCase):
         """
         from random import randint
         return str(randint(start, end))
-
-    def tearDown(self):
-        """
-        Remove the test database.
-        """
-        self.chatbot.storage.drop()
 
 
 class ChatBotMongoTestCase(ChatBotTestCase):
