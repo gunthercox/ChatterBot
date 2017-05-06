@@ -85,4 +85,3 @@ class JaccardSimilarityTestCase(TestCase):
         Test that text capitalization is ignored.
         """
         raise SkipTest('This test needs to be created.')
-

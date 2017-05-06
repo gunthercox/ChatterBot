@@ -21,4 +21,3 @@ class TimeAdapterTests(TestCase):
 
         self.assertEqual(response.confidence, 0)
         self.assertIn("The current time is ", response.text)
-
