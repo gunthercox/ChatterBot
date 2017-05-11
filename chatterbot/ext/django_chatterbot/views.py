@@ -1,4 +1,6 @@
 import json
+from urlparse import parse_qs
+
 from django.views.generic import View
 from django.http import JsonResponse
 from chatterbot import ChatBot
@@ -58,7 +60,11 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         Return a response to the statement in the posted data.
         """
-        input_data = json.loads(request.read().decode('utf-8'))
+        data = request.read().decode('utf-8')
+        try:
+            input_data = json.loads(data)
+        except ValueError:
+            input_data = {key: value[0] for (key, value) in parse_qs(data).items()}
 
         self.validate(input_data)
 
