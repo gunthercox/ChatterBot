@@ -92,8 +92,8 @@ Be sure to also see the documentation for the :ref:`Microsoft input adapter <mic
    chatbot = ChatBot(
        "My ChatterBot",
        output_adapter="chatterbot.output.Microsoft",
-       direct_line_host="https://directline.botframework.com",
-       direct_line_conservationId="IEyJvnDULgn",
+       directline_host="https://directline.botframework.com",
+       conversation_id="IEyJvnDULgn",
        direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
    )
 

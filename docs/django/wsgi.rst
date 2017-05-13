@@ -1,10 +1,10 @@
 Webservices
 ===========
 
-If you want host your example_app, you need use either `Heroku`_ or `PythonAnyWhere`_
-including this you need install `gunicorn`_ and `whitenoise`_.
+If you want to host your example_app, you need to use either `Heroku`_ or `PythonAnyWhere`_.
+You would also need to install `gunicorn`_ and `whitenoise`_.
 
-Please follow installation instruction as specified.
+Please follow the installation instructions as specified.
 
 .. _Heroku: https://dashboard.heroku.com/
 .. _PythonAnyWhere: https://www.pythonanywhere.com/details/django_hosting
