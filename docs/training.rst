@@ -12,12 +12,12 @@ inputs and responses are correctly represented.
 .. image:: _static/training-graph.svg
    :alt: ChatterBot training statement graph
 
-Several training classes come built-in with ChaterBot. These utilities range from allowing
+Several training classes come built-in with ChatterBot. These utilities range from allowing
 you to update the chat bot's database knowledge graph based on a list of statements
 representing a conversation, to tools that allow you to train your bot based on a corpus of
 pre-loaded training data.
 
-You can also create your own training class. This is recommend if you wish to train your bot
+You can also create your own training class. This is recommended if you wish to train your bot
 with data you have stored in a format that is not already supported by one of the pre-built
 classes listed below.
 
@@ -40,8 +40,8 @@ Training via list data
 
 .. autofunction:: chatterbot.trainers.ListTrainer
 
-For the training, process, you will need to pass in a list of statements where the order of each statement is based
-on it's placement in a given conversation.
+For the training process, you will need to pass in a list of statements where the order of each statement is based
+on its placement in a given conversation.
 
 For example, if you were to run bot of the following training calls, then the resulting chatterbot would respond to
 both statements of "Hi there!" and "Greetings!" by saying "Hello".
@@ -100,7 +100,7 @@ data modules you want to use.
 Specifying corpus scope
 +++++++++++++++++++++++
 
-It is also possible to import individual subsets of ChatterBot's at once.
+It is also possible to import individual subsets of ChatterBot's corpus at once.
 For example, if you only wish to train based on the english greetings and
 conversations corpora then you would simply specify them.
 

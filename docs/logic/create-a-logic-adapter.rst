@@ -89,7 +89,7 @@ Interacting with services
 =========================
 
 In some cases, it is useful to have a logic adapter that can interact with an external service or
-api in order to complete it's task. Here is an example that demonstrates how this could be done.
+api in order to complete its task. Here is an example that demonstrates how this could be done.
 For this example we will use a fictitious API endpoint that returns the current temperature.
 
 .. code-block:: python
@@ -145,7 +145,7 @@ information passed to it by the ChatBot class.
 
            self.api_key = kwargs.get('secret_key')
 
-The :code:`secret_key` variable would then be passed to the ChatBot class as shown bellow.
+The :code:`secret_key` variable would then be passed to the ChatBot class as shown below.
 
 .. code-block:: python
 

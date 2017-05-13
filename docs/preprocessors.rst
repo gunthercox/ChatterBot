@@ -6,7 +6,7 @@ ChatterBot's :term:`preprocessors` are simple functions that modify the input st
 that a chat bot receives before the statement gets processed by the logic adaper.
 
 Here is an example of how to set preprocessors. The :code:`preprocessors`
-parameter should be a list strings of the import paths to your preprocessors.
+parameter should be a list of strings of the import paths to your preprocessors.
 
 .. code-block:: python
 
@@ -20,7 +20,7 @@ parameter should be a list strings of the import paths to your preprocessors.
 Preprocessor functions
 ======================
 
-ChatterBot comes with several preprocessors build in.
+ChatterBot comes with several built-in preprocessors.
 
 .. autofunction:: chatterbot.preprocessors.clean_whitespace
 
