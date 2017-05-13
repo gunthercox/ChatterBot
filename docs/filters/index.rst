@@ -3,6 +3,7 @@ Filters
 =======
 
 Filters are an efficient way to create base queries that can be passed to ChatterBot's storage adapters.
+Filters will reduce the number of statements that a chat bot has to process when it is selecting a response.
 
 .. toctree::
    :maxdepth: 2

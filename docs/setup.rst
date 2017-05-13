@@ -16,6 +16,16 @@ To install ChatterBot from PyPi using pip run the following command in your term
    pip install chatterbot
 
 
+Installing from GitHub
+----------------------
+
+You can install the latest **development** version of ChatterBot directly from GitHub using :code:`pip`.
+
+.. code-block:: bash
+
+   pip install git+git://github.com/gunthercox/ChatterBot.git@master
+
+
 Installing from source
 ----------------------
 
