@@ -12,7 +12,7 @@ be a number of existing statements that are responses to the
 known match.
 
 To help with the selection of the response, several methods
-are build in to ChatterBot for selecting a response from the
+are built into ChatterBot for selecting a response from the
 available options.
 
 .. _response-selection:
@@ -43,7 +43,7 @@ Setting the response selection method
 To set the response selection method for your chat bot, you
 will need to pass the :code:`response_selection_method` parameter
 to your chat bot when you initialize it. An example of this
-is shown bellow.
+is shown below.
 
 .. code-block:: python
 
@@ -60,7 +60,7 @@ Response selection in logic adapters
 
 When a logic adapter is initialized, the response selection method
 parameter that was passed to it can be called using :code:`self.select_response`
-as shown bellow.
+as shown below.
 
 .. code-block:: python
 

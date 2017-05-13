@@ -24,7 +24,7 @@ class MultiLogicAdapter(LogicAdapter):
 
     def process(self, statement):
         """
-        Returns the outout of a selection of logic adapters
+        Returns the output of a selection of logic adapters
         for a given input statement.
 
         :param statement: The input statement to be processed.

@@ -78,7 +78,7 @@ Input and output adapters
 
 Next, we will add in parameters to specify the input and output terminal
 adapter. The input terminal adapter simply reads the user's input from
-the terminal. The output terminal adapter print's the chat bot's response.
+the terminal. The output terminal adapter prints the chat bot's response.
 
 .. code-block:: python
 
@@ -94,7 +94,7 @@ Specifying logic adapters
 -------------------------
 
 The `logic_adapters` parameter is a list of logic adapters.
-In ChatterBot, a logic adapter is a class that take's an input statement
+In ChatterBot, a logic adapter is a class that takes an input statement
 and returns a response to that statement.
 
 You can choose to use as many logic adapters as you would like.
