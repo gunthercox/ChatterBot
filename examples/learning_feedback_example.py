@@ -30,9 +30,9 @@ def get_feedback():
 
     text = input_function()
 
-    if 'Yes' in text:
+    if 'yes' in text.lower():
         return True
-    elif 'No' in text:
+    elif 'no' in text.lower():
         return False
     else:
         print('Please type either "Yes" or "No"')
