@@ -98,7 +98,7 @@ the `Mailgun API`_.
 .. _microsoft-input-adapter:
 
 Microsoft Bot Framework input adapter
-====================================
+=====================================
 
 .. autofunction:: chatterbot.input.Microsoft
 
