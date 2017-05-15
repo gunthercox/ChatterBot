@@ -6,7 +6,7 @@ from .output_adapter import OutputAdapter
 class Microsoft(OutputAdapter):
     """
     An output adapter that allows a ChatterBot instance to send
-    responses to a Micorsoft bot using *Direct Line client protocol*.
+    responses to a Microsoft bot using *Direct Line client protocol*.
     """
 
     def __init__(self, **kwargs):

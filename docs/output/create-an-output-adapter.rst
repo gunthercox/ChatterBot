@@ -1,7 +1,7 @@
 Creating a new output adapter
 ==============================
 
-You can write your own storage adapters by creating a new class that
+You can write your own output adapters by creating a new class that
 inherits from :code:`chatterbot.output.OutputAdapter` and overrides the
 necessary methods established in the :code:`OutputAdapter` class.
 

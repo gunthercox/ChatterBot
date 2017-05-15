@@ -27,7 +27,7 @@ Responses
 =========
 
 ChatterBot's response objects represent the relationship between two
-statements. A response indicates that one statements was issued in
+statements. A response indicates that one statement was issued in
 response to another statement.
 
 .. autoclass:: chatterbot.conversation.Response
@@ -37,7 +37,7 @@ Statement-response relationship
 ===============================
 
 ChatterBot stores knowledge of conversations as statements. Each statement can have any
-number possible responses.
+number of possible responses.
 
 .. image:: _static/statement-response-relationship.svg
    :alt: ChatterBot statement-response relationship
@@ -61,9 +61,9 @@ Statement comparison
 
 ChatterBot uses :code:`Statement` objects to hold information
 about things that can be said. An important part of how a chat bot
-selects a response is based on it's ability to compare two statements
-to each other. There is a number of ways to do this, and ChatterBot
-comes with a handful of method built in for you to use.
+selects a response is based on its ability to compare two statements
+to each other. There are a number of ways to do this, and ChatterBot
+comes with a handful of methods built in for you to use.
 
 .. automodule:: chatterbot.comparisons
    :members:
@@ -90,7 +90,7 @@ Setting the comparison method
 To set the statement comparison method for your chat bot, you
 will need to pass the :code:`statement_comparison_function` parameter
 to your chat bot when you initialize it. An example of this
-is shown bellow.
+is shown below.
 
 .. code-block:: python
 

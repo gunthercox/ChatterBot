@@ -10,7 +10,7 @@ versatile method of receiving or retrieving input from a given source.
 
    create-an-input-adapter
 
-The goal of a input adapter is to get input from some source, and then
+The goal of an input adapter is to get input from some source, and then
 to convert it into a format that ChatterBot can understand. This format
 is the :ref:`Statement <conversation_statements>` object found in ChatterBot's
 `conversation` module.
@@ -97,8 +97,8 @@ the `Mailgun API`_.
 
 .. _microsoft-input-adapter:
 
-Microsot Bot Framework input adapter
-====================================
+Microsoft Bot Framework input adapter
+=====================================
 
 .. autofunction:: chatterbot.input.Microsoft
 
@@ -113,7 +113,7 @@ Be sure to also see the documentation for the :ref:`Microsoft output adapter <mi
        "My ChatterBot",
        input_adapter="chatterbot.input.Microsoft",
        directline_host="https://directline.botframework.com",
-       dirctline_conversation_id="IEyJvnDULgn",
+       directline_conversation_id="IEyJvnDULgn",
        direct_line_token_or_secret="RCurR_XV9ZA.cwA.BKA.iaJrC8xpy8qbOF5xnR2vtCX7CZj0LdjAPGfiCpg4Fv0",
    )
 
