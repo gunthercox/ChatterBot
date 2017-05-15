@@ -286,8 +286,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         statement_objects = []
 
-        for statement in list(statement_query):
-            statement_objects.append(self.mongo_to_object(statement))
+        statement_objects = [self.mongo_to_object(statement) for statement in list(statement_query)]
 
         return statement_objects
 
