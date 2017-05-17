@@ -5,12 +5,13 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Response
 from chatterbot.conversation import Statement
 
-
 Base = None
 
 try:
     from sqlalchemy.ext.declarative import declarative_base
+
     Base = declarative_base()
+
 
     class StatementTable(Base):
         from sqlalchemy import Column, Integer, String, PickleType
@@ -35,6 +36,7 @@ try:
         # relationship:
         in_response_to = relationship("ResponseTable", back_populates="statement_table")
         text_search = Column(String, primary_key=True, default=get_statement_serialized)
+
 
     class ResponseTable(Base):
         from sqlalchemy import Column, Integer, String, ForeignKey
@@ -73,23 +75,25 @@ def get_response_table(response):
 
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
-
     def __init__(self, **kwargs):
         super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
 
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
-        self.database_name = self.kwargs.get(
-            "database", "chatterbot-database"
-        )
+        self.database_name = self.kwargs.get("database")
 
-        # if some annoying blank space wrong...
-        db_name = self.database_name.strip()
+        if self.database_name:
+            # if some annoying blank space wrong...
+            db_name = self.database_name.strip()
+            # if set dbname only will create sql file.
+            self.database_uri = self.kwargs.get(
+                "database_uri", "sqlite:///" + db_name + ".db"
+            )
 
-        # default uses sqlite
+        # default uses sqlite memory database.
         self.database_uri = self.kwargs.get(
-            "database_uri", "sqlite:///" + db_name + ".db"
+            "database_uri", "sqlite://"
         )
 
         self.engine = create_engine(self.database_uri)
@@ -178,7 +182,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
-                                StatementTable.in_response_to == None) # NOQA Here must use == instead of is
+                                StatementTable.in_response_to == None)  # NOQA Here must use == instead of is
                         else:
                             for f in _filter:
                                 _query = _response_query.filter(
@@ -187,7 +191,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                         if fp == 'in_response_to__contains':
                             _query = _response_query.join(ResponseTable).filter(ResponseTable.text == _filter)
                         else:
-                            _query = _response_query.filter(StatementTable.in_response_to == None) # NOQA
+                            _query = _response_query.filter(StatementTable.in_response_to == None)  # NOQA
                 else:
                     if _query:
                         _query = _query.filter(ResponseTable.text_search.like('%' + _filter + '%'))
