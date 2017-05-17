@@ -60,9 +60,8 @@ Using SQL Alchemy
 
 ChatterBot data can be saved and retrieved from SQL databases.
 
-.. literalinclude:: ../examples/sqlalchemy_example.py
+.. literalinclude:: ../examples/sqlalchemy/memory_sqlalchemy_example.py
    :language: python
-
 
 
 More Examples
