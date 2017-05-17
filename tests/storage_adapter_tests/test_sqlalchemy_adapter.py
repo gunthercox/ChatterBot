@@ -4,20 +4,12 @@ from chatterbot.storage.sqlalchemy_storage import SQLAlchemyDatabaseAdapter
 
 
 class SQLAlchemyAdapterTestCase(TestCase):
-
     @classmethod
     def setUpClass(cls):
         """
         Instantiate the adapter before any tests in the test case run.
         """
-        cls.adapter = SQLAlchemyDatabaseAdapter(
-            database='testdb'
-        )
-
-    @classmethod
-    def tearDownClass(cls):
-        import os
-        os.remove('testdb.db')
+        cls.adapter = SQLAlchemyDatabaseAdapter()
 
     def setUp(self):
         """
@@ -33,7 +25,6 @@ class SQLAlchemyAdapterTestCase(TestCase):
 
 
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
-
     def test_count_returns_zero(self):
         """
         The count method should return a value of 0
@@ -347,7 +338,6 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
 
 
 class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
-
     def setUp(self):
         """
         Make the adapter writable before every test.
@@ -381,3 +371,52 @@ class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(
             len(statement_found.in_response_to), 0
         )
+
+
+#
+# class CreateFileSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+#     @classmethod
+#     def tearDownClass(cls):
+#         import os
+#         os.remove('testdb.db')
+#
+#     def setUp(self):
+#         """
+#         Create the tables in the database before each test is run.
+#         """
+#         super(CreateFileSQLAlchemyDatabaseAdapterTestCase, self).setUp()
+#         self.adapter = SQLAlchemyDatabaseAdapter(
+#             database='testdb'
+#         )
+#
+#         self.adapter.create()
+#
+#     def tearDown(self):
+#         """
+#         Drop the tables in the database after each test is run.
+#         """
+#         self.adapter.drop()
+
+
+
+class CreateDBSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+    def setUp(self):
+        """
+        Make the adapter writable before every test.
+        """
+        super(CreateDBSQLAlchemyDatabaseAdapterTestCase, self).setUp()
+        self.adapter = SQLAlchemyDatabaseAdapter(
+            database='testdb'
+        )
+        self.adapter.create()
+
+        @classmethod
+        def tearDownClass(cls):
+            import os
+            os.remove('testdb.db')
+
+        def tearDown(self):
+            """
+            Drop the tables in the database after each test is run.
+            """
+            self.adapter.drop()
