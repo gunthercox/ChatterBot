@@ -397,8 +397,6 @@ class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
 #         """
 #         self.adapter.drop()
 
-
-
 class CreateDBSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
     def setUp(self):
         """

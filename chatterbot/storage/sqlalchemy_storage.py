@@ -75,11 +75,51 @@ def get_response_table(response):
 
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
+    """
+    SQLAlchemyDatabaseAdapter allows ChatterBot to store conversation
+    data semi-structutered T-SQL database, virtually, any database that SQL Alchemy supports.
+    
+    Notes:
+        Tables may change (and will), so, save your training data. There is no data migration (yet).
+        Performance test not done yet.
+        Tests using others databases not finished.
+ 
+    All parameters all optional, default is sqlite database in memory.
+    
+    It will check if tables is present, if not, it will attempt to create required tables.
+
+    :keyword database: Used for sqlite database. Ignored if database_uri especified.
+    :type database: str
+    
+    :keyword database_uri: eg: sqlite:///database_test.db", # use database_uri or database, database_uri 
+    can be especified to choose database driver (database parameter will be igored).
+    :type database_uri: str
+    
+    :keyword read_only: False by default, makes all operations read only,  has priority over all DB operations
+    so, create, update, delete will NOT be executed
+    :type read_only: bool
+    
+    :keyword create: Force Recreate ChatterBot only tables in database, default False, 
+    if read_only is True create is ignored.
+    :type create: bool
+
+
+    Simple use:
+    
+    chatbot = ChatBot(
+           "My ChatterBot",
+            storage_adapter="chatterbot.storage.SQLAlchemyDatabaseAdapter"
+    )    
+
+    """
+
     def __init__(self, **kwargs):
         super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
 
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
+        import sqlalchemy
+        from sqlalchemy import MetaData
 
         self.database_name = self.kwargs.get("database")
 
@@ -102,10 +142,25 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             "read_only", False
         )
 
+        # To force recreate tables
         create = self.kwargs.get("create", False)
 
         if not self.read_only and create:
+            self.drop()
             self.create()
+
+        if not self.read_only and not create:  # create tables already done
+            tables_needed = Base.metadata.sorted_tables  # current tables
+            metadata = MetaData()
+            metadata.reflect(self.engine)
+            tables = metadata.tables.values()
+            if not tables:
+                self.create()
+            else:
+                for table in tables_needed:
+                    if not self.engine.dialect.has_table(self.engine, table.name):
+                        # If table don't exist, Create.
+                        Base.metadata.create_all(self.engine, tables=[table])
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
 

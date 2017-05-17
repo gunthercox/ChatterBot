@@ -55,6 +55,16 @@ popular service *Gitter* demonstrates this.
 .. literalinclude:: ../examples/gitter_example.py
    :language: python
 
+Using SQL Alchemy
+=================
+
+ChatterBot data can be saved and retrieved from SQL databases.
+
+.. literalinclude:: ../examples/sqlalchemy_example.py
+   :language: python
+
+
+
 More Examples
 =============
 
