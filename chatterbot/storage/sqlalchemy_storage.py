@@ -12,7 +12,6 @@ try:
 
     Base = declarative_base()
 
-
     class StatementTable(Base):
         from sqlalchemy import Column, Integer, String, PickleType
         from sqlalchemy.orm import relationship
@@ -36,7 +35,6 @@ try:
         # relationship:
         in_response_to = relationship("ResponseTable", back_populates="statement_table")
         text_search = Column(String, primary_key=True, default=get_statement_serialized)
-
 
     class ResponseTable(Base):
         from sqlalchemy import Column, Integer, String, ForeignKey
