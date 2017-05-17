@@ -40,3 +40,4 @@ web browsers to have separate conversations with the chat bot.
    :language: python
    :pyobject: ChatterBotView.post
    :dedent: 4
+   :lines: 31-32

@@ -373,32 +373,6 @@ class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         )
 
 
-#
-# class CreateFileSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
-#     @classmethod
-#     def tearDownClass(cls):
-#         import os
-#         os.remove('testdb.db')
-#
-#     def setUp(self):
-#         """
-#         Create the tables in the database before each test is run.
-#         """
-#         super(CreateFileSQLAlchemyDatabaseAdapterTestCase, self).setUp()
-#         self.adapter = SQLAlchemyDatabaseAdapter(
-#             database='testdb'
-#         )
-#
-#         self.adapter.create()
-#
-#     def tearDown(self):
-#         """
-#         Drop the tables in the database after each test is run.
-#         """
-#         self.adapter.drop()
-
-
-
 class CreateDBSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
     def setUp(self):
         """
@@ -410,13 +384,13 @@ class CreateDBSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         )
         self.adapter.create()
 
-        @classmethod
-        def tearDownClass(cls):
-            import os
-            os.remove('testdb.db')
+    @classmethod
+    def tearDownClass(cls):
+        import os
+        os.remove('testdb.db')
 
-        def tearDown(self):
-            """
-            Drop the tables in the database after each test is run.
-            """
-            self.adapter.drop()
+    def tearDown(self):
+        """
+        Drop the tables in the database after each test is run.
+        """
+        self.adapter.drop()
