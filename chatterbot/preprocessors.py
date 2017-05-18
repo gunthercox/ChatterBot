@@ -31,7 +31,7 @@ def unescape_html(chatbot, statement):
 
     # Replace HTML escape characters
     if sys.version_info[0] < 3:
-        from HTMLParser import HTMLParser
+        from html.parser import HTMLParser
         html = HTMLParser()
     else:
         import html
@@ -51,7 +51,7 @@ def convert_to_ascii(chatbot, statement):
 
     # Normalize unicode characters
     if sys.version_info[0] < 3:
-        statement.text = unicode(statement.text) # NOQA
+        statement.text = str(statement.text) # NOQA
 
     text = unicodedata.normalize('NFKD', statement.text)
     text = text.encode('ascii', 'ignore').decode('utf-8')

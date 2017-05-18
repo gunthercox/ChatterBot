@@ -110,5 +110,5 @@ for config in CONFIGURATIONS:
 
     durration = time.time() - start_time
 
-    print(configuration['description'])
-    print('Durration was {} seconds'.format(durration))
+    print((configuration['description']))
+    print(('Durration was {} seconds'.format(durration)))

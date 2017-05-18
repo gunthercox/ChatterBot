@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
 
@@ -14,7 +14,7 @@ class VariableInputTypeAdapter(InputAdapter):
         import sys
 
         if sys.version_info[0] < 3:
-            string_types = basestring # NOQA
+            string_types = str # NOQA
         else:
             string_types = str
 

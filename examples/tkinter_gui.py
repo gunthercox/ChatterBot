@@ -2,8 +2,8 @@
 from chatterbot import ChatBot
 import tkinter as tk
 try:
-    import ttk as ttk
-    import ScrolledText
+    import tkinter.ttk as ttk
+    import tkinter.scrolledtext
 except ImportError:
     import tkinter.ttk as ttk
     import tkinter.scrolledtext as ScrolledText
@@ -48,7 +48,7 @@ class TkinterGUIExample(tk.Tk):
         self.conversation_lbl = ttk.Label(self, anchor=tk.E, text='Conversation:')
         self.conversation_lbl.grid(column=0, row=1, sticky='nesw', padx=3, pady=3)
 
-        self.conversation = ScrolledText.ScrolledText(self, state='disabled')
+        self.conversation = tkinter.scrolledtext.ScrolledText(self, state='disabled')
         self.conversation.grid(column=0, row=2, columnspan=2, sticky='nesw', padx=3, pady=3)
 
     def get_response(self):

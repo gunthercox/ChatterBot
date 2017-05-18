@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from datetime import datetime
 from .logic_adapter import LogicAdapter
 

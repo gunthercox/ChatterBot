@@ -470,7 +470,7 @@ def convert_string_to_number(value):
         return value
     if value.isdigit():
         return int(value)
-    num_list = map(lambda s: hashnum(s), re.findall(numbers + '+', value, re.IGNORECASE))
+    num_list = [hashnum(s) for s in re.findall(numbers + '+', value, re.IGNORECASE)]
     return sum(num_list)
 
 

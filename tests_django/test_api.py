@@ -43,7 +43,7 @@ class ApiTestCase(TestCase):
         Test that a response is returned.
         """
         data = {
-            'text': u'سلام'
+            'text': 'سلام'
         }
         response = self.client.post(
             self.api_url,

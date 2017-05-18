@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 import datetime
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement

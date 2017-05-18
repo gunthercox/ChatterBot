@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from .output_adapter import OutputAdapter
 
 

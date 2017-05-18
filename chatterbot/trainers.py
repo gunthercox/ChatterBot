@@ -189,7 +189,7 @@ class TwitterTrainer(Trainer):
         # Generate a random word
         random_word = self.random_word(self.random_seed_word)
 
-        self.logger.info(u'Requesting 50 random tweets containing the word {}'.format(random_word))
+        self.logger.info('Requesting 50 random tweets containing the word {}'.format(random_word))
         tweets = self.api.GetSearch(term=random_word, count=50)
         for tweet in tweets:
             statement = Statement(tweet.text)
@@ -256,7 +256,7 @@ class UbuntuCorpusTrainer(Trainer):
             return file_path
 
         with open(file_path, 'wb') as open_file:
-            print('Downloading %s' % file_name)
+            print(('Downloading %s' % file_name))
             response = requests.get(url, stream=True)
             total_length = response.headers.get('content-length')
 
@@ -300,7 +300,7 @@ class UbuntuCorpusTrainer(Trainer):
             for member in members:
                 # this will be the current file being extracted
                 yield member
-                print('Extracting {}'.format(member.path))
+                print(('Extracting {}'.format(member.path)))
 
         with tarfile.open(file_path) as tar:
             tar.extractall(path=self.data_directory, members=track_progress(tar))
@@ -337,7 +337,7 @@ class UbuntuCorpusTrainer(Trainer):
                     if len(row) > 0:
                         text = row[3]
                         statement = self.get_or_create(text)
-                        print(text, len(row))
+                        print((text, len(row)))
 
                         statement.add_extra_data('datetime', row[0])
                         statement.add_extra_data('speaker', row[1])

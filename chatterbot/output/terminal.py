@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 from .output_adapter import OutputAdapter
 
 
@@ -12,5 +12,5 @@ class TerminalAdapter(OutputAdapter):
         """
         Print the response to the user's input.
         """
-        print(statement.text)
+        print((statement.text))
         return statement.text
