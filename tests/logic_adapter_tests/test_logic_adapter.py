@@ -1,5 +1,6 @@
 from unittest import TestCase
 from chatterbot.logic import LogicAdapter
+import collections
 
 
 class LogicAdapterTestCase(TestCase):
@@ -34,24 +35,24 @@ class LogicAdapterTestCase(TestCase):
         adapter = LogicAdapter(
             statement_comparison_function='chatterbot.comparisons.levenshtein_distance'
         )
-        self.assertTrue(callable(adapter.compare_statements))
+        self.assertTrue(isinstance(adapter.compare_statements, collections.Callable))
 
     def test_set_statement_comparison_function_callable(self):
         from chatterbot.comparisons import levenshtein_distance
         adapter = LogicAdapter(
             statement_comparison_function=levenshtein_distance
         )
-        self.assertTrue(callable(adapter.compare_statements))
+        self.assertTrue(isinstance(adapter.compare_statements, collections.Callable))
 
     def test_set_response_selection_method_string(self):
         adapter = LogicAdapter(
             response_selection_method='chatterbot.response_selection.get_first_response'
         )
-        self.assertTrue(callable(adapter.select_response))
+        self.assertTrue(isinstance(adapter.select_response, collections.Callable))
 
     def test_set_response_selection_method_callable(self):
         from chatterbot.response_selection import get_first_response
         adapter = LogicAdapter(
             response_selection_method=get_first_response
         )
-        self.assertTrue(callable(adapter.select_response))
+        self.assertTrue(isinstance(adapter.select_response, collections.Callable))

@@ -30,4 +30,4 @@ bot = ChatBot(
 
 # Send an example email to the address provided
 response = bot.get_response("How are you?")
-print("Check your inbox at ", RECIPIENTS)
+print(("Check your inbox at ", RECIPIENTS))

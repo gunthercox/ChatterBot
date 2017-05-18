@@ -34,8 +34,8 @@ def levenshtein_distance(statement, other_statement):
 
     # Get the lowercase version of both strings
     if PYTHON < 3:
-        statement_text = unicode(statement.text.lower()) # NOQA
-        other_statement_text = unicode(other_statement.text.lower()) # NOQA
+        statement_text = str(statement.text.lower()) # NOQA
+        other_statement_text = str(other_statement.text.lower()) # NOQA
     else:
         statement_text = str(statement.text.lower())
         other_statement_text = str(other_statement.text.lower())
@@ -69,7 +69,7 @@ def synset_distance(statement, other_statement):
     """
     from nltk.corpus import wordnet
     from nltk import word_tokenize
-    from chatterbot import utils
+    from .chatterbot import utils
     import itertools
 
     tokens1 = word_tokenize(statement.text.lower())
@@ -200,8 +200,8 @@ def jaccard_similarity(statement, other_statement, threshold=0.5):
             return (pos_tag[0], wordnet.NOUN)
 
     ratio = 0
-    pos_a = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a)))
-    pos_b = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b)))
+    pos_a = list(map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a))))
+    pos_b = list(map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b))))
     lemma_a = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_a
                if pos == wordnet.NOUN and token.strip(string.punctuation) not in stopwords]
     lemma_b = [lemmatizer.lemmatize(token.strip(string.punctuation), pos) for token, pos in pos_b
@@ -211,5 +211,5 @@ def jaccard_similarity(statement, other_statement, threshold=0.5):
     try:
         ratio = len(set(lemma_a).intersection(lemma_b)) / float(len(set(lemma_a).union(lemma_b)))
     except Exception as e:
-        print('Error', e)
+        print(('Error', e))
     return ratio >= threshold

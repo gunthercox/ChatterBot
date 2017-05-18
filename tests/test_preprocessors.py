@@ -72,7 +72,7 @@ class ConvertToASCIIPreprocessorTestCase(ChatBotTestCase):
     """
 
     def test_convert_to_ascii(self):
-        statement = Statement(u'Klüft skräms inför på fédéral électoral große')
+        statement = Statement('Klüft skräms inför på fédéral électoral große')
         cleaned = preprocessors.convert_to_ascii(self.chatbot, statement)
         normal_text = 'Kluft skrams infor pa federal electoral groe'
 

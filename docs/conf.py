@@ -157,8 +157,8 @@ html_context = {
 # (source start file, target name, title,
 #  author, documentclass [howto, manual, or own class])
 latex_documents = [
-    (master_doc, 'ChatterBot.tex', u'ChatterBot Documentation',
-     u'Gunther Cox', 'manual'),
+    (master_doc, 'ChatterBot.tex', 'ChatterBot Documentation',
+     'Gunther Cox', 'manual'),
 ]
 
 # -- Options for manual page output ---------------------------------------
@@ -166,7 +166,7 @@ latex_documents = [
 # One entry per manual page. List of tuples
 # (source start file, name, description, authors, manual section)
 man_pages = [
-    (master_doc, 'chatterbot', u'ChatterBot Documentation',
+    (master_doc, 'chatterbot', 'ChatterBot Documentation',
      [author], 1)
 ]
 
@@ -176,7 +176,7 @@ man_pages = [
 # (source start file, target name, title, author,
 #  dir menu entry, description, category)
 texinfo_documents = [
-    (master_doc, 'ChatterBot', u'ChatterBot Documentation',
+    (master_doc, 'ChatterBot', 'ChatterBot Documentation',
      author, 'ChatterBot', 'One line description of project.',
      'Miscellaneous'),
 ]

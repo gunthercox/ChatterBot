@@ -85,7 +85,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         Test the case that a unicode string is passed in.
         """
-        response = self.chatbot.get_response(u'سلام')
+        response = self.chatbot.get_response('سلام')
         self.assertGreater(len(response.text), 0)
 
     def test_response_extra_data(self):

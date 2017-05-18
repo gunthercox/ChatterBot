@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 import logging
 from .storage import StorageAdapter
 from .input import InputAdapter

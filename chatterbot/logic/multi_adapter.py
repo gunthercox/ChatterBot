@@ -1,4 +1,4 @@
-from __future__ import unicode_literals
+
 import warnings
 from collections import Counter
 from chatterbot import utils
