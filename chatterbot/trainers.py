@@ -85,7 +85,8 @@ class ListTrainer(Trainer):
                 )
 
             statement_history.append(statement)
-            self.storage.update(statement)
+
+        map(self.storage.update, statement_history)
 
 
 class ChatterBotCorpusTrainer(Trainer):
