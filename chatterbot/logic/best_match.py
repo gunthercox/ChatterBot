@@ -31,9 +31,11 @@ class BestMatch(LogicAdapter):
         closest_match = input_statement
         closest_match.confidence = 0
 
-        closest_match, closest_match.confidence = max(
-            [[statement, self.compare_statements(input_statement, statement)] for statement in statement_list],
-            key=lambda confidence: confidence[1])
+        def compare_fun(statement):
+            return [statement, self.compare_statements(input_statement, statement)]
+
+        statment_and_confidence_list = map(compare_fun, statement_list)
+        closest_match, closest_match.confidence = max(statment_and_confidence_list, key=lambda confidence: confidence[1])
 
         return closest_match
 
