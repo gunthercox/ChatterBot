@@ -167,8 +167,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         # Convert Response objects to data
         if 'in_response_to' in kwargs:
-            serialized_responses = []
-            [serialized_responses.append({'text': response}) for response in kwargs['in_response_to']]
+            serialized_responses = [{'text': response} for response in kwargs['in_response_to']]
             query = query.statement_response_list_equals(serialized_responses)
             del kwargs['in_response_to']
 
@@ -192,11 +191,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
             matches = matches.sort(order_by, direction)
 
-        results = []
-
-        results = map(self.mongo_to_object, list(matches))
-
-        return results
+        return [self.mongo_to_object(match) for match in list(matches)]
 
     def update(self, statement):
         from pymongo import UpdateOne
@@ -214,7 +209,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         operations.append(update_operation)
 
         # Make sure that an entry for each response is saved
-        def operation(response_dict):
+        for response_dict in data.get('in_response_to', []):
             response_text = response_dict.get('text')
 
             # $setOnInsert does nothing if the document is not created
@@ -224,8 +219,6 @@ class MongoDatabaseAdapter(StorageAdapter):
                 upsert=True
             )
             operations.append(update_operation)
-
-        map(operation, data.get('in_response_to', []))
 
         try:
             self.statements.bulk_write(operations, ordered=False)
@@ -283,11 +276,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         statement_query = self.statements.find(_statement_query)
 
-        statement_objects = []
-
-        statement_objects = map(self.mongo_to_object, list(statement_query))
-
-        return statement_objects
+        return [self.mongo_to_object(statement) for statement in list(statement_query)]
 
     def drop(self):
         """

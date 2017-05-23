@@ -48,7 +48,8 @@ class Trainer(object):
     def _generate_export_data(self):
         result = []
 
-        result = [[response.text, statement.text] for statement in self.storage.filter() for response in statement.in_response_to]
+        result = [[response.text, statement.text] for statement in self.storage.filter() for response in
+                  statement.in_response_to]
 
         return result
 
@@ -76,7 +77,7 @@ class ListTrainer(Trainer):
         """
         statement_history = []
 
-        for text in conversation:
+        def append_statement_history(text):
             statement = self.get_or_create(text)
 
             if statement_history:
@@ -86,7 +87,8 @@ class ListTrainer(Trainer):
 
             statement_history.append(statement)
 
-        map(self.storage.update, statement_history)
+        [append_statement_history(text) for text in conversation]
+        [self.storage.update(statement) for statement in statement_history]
 
 
 class ChatterBotCorpusTrainer(Trainer):
