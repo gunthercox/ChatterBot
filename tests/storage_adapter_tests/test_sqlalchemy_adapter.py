@@ -340,7 +340,7 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
 class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
     def setUp(self):
         """
-        Make the adapter read only before every test.
+        Make the adapter read only before test.
         """
         super(ReadOnlySQLAlchemyDatabaseAdapterTestCase, self).setUp()
         self.adapter.read_only = False
