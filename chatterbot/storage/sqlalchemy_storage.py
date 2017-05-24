@@ -73,6 +73,7 @@ def get_response_table(response):
 
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
+
     def __init__(self, **kwargs):
         super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
 
