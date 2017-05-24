@@ -6,5 +6,5 @@ mock
 nose
 nose-exclude>=0.5.0,<0.6.0
 twython
-sphinx
+sphinx>=1.5,<1.6
 sphinx_rtd_theme
