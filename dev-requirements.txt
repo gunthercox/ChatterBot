@@ -1,3 +1,13 @@
+codeclimate-test-reporter
+coveralls
+factory-boy>=2.8,<2.9
+flake8
+mock
+nose
+nose-exclude>=0.5,<0.6
 pandoc
 pip
 twine
+twython
+sphinx>=1.5,<1.6
+sphinx_rtd_theme

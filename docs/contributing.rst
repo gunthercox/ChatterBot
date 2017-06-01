@@ -30,7 +30,6 @@ To contribute to ChatterBot's development, you simply need:
 
    pip install requirements.txt
    pip install dev-requirements.txt
-   pip install test-requirements.txt
 
 - A text editor
 
