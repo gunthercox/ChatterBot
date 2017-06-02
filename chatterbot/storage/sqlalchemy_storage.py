@@ -5,12 +5,13 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Response
 from chatterbot.conversation import Statement
 
-
 Base = None
 
 try:
     from sqlalchemy.ext.declarative import declarative_base
+
     Base = declarative_base()
+
 
     class StatementTable(Base):
         from sqlalchemy import Column, Integer, String, PickleType
@@ -35,6 +36,7 @@ try:
         # relationship:
         in_response_to = relationship("ResponseTable", back_populates="statement_table")
         text_search = Column(String, primary_key=True, default=get_statement_serialized)
+
 
     class ResponseTable(Base):
         from sqlalchemy import Column, Integer, String, ForeignKey
@@ -73,23 +75,65 @@ def get_response_table(response):
 
 
 class SQLAlchemyDatabaseAdapter(StorageAdapter):
+    """
+    SQLAlchemyDatabaseAdapter allows ChatterBot to store conversation
+    data semi-structutered T-SQL database, virtually, any database that SQL Alchemy supports.
+    
+    Notes:
+        Tables may change (and will), so, save your training data. There is no data migration (yet).
+        Performance test not done yet.
+        Tests using others databases not finished.
+ 
+    All parameters all optional, default is sqlite database in memory.
+    
+    It will check if tables is present, if not, it will attempt to create required tables.
+
+    :keyword database: Used for sqlite database. Ignored if database_uri especified.
+    :type database: str
+    
+    :keyword database_uri: eg: sqlite:///database_test.db", # use database_uri or database, database_uri 
+    can be especified to choose database driver (database parameter will be igored).
+    :type database_uri: str
+    
+    :keyword read_only: False by default, makes all operations read only,  has priority over all DB operations
+    so, create, update, delete will NOT be executed
+    :type read_only: bool
+    
+    :keyword create: Force Recreate ChatterBot only tables in database, default False, 
+    if read_only is True create is ignored.
+    :type create: bool
+
+
+    Simple use:
+    
+    chatbot = ChatBot(
+           "My ChatterBot",
+            storage_adapter="chatterbot.storage.SQLAlchemyDatabaseAdapter"
+    )    
+
+    """
 
     def __init__(self, **kwargs):
         super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
 
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
+        import sqlalchemy
+        from sqlalchemy import MetaData
 
-        self.database_name = self.kwargs.get(
-            "database", "chatterbot-database"
-        )
+        self.database_name = self.kwargs.get("database")
 
-        # if some annoying blank space wrong...
-        db_name = self.database_name.strip()
+        if self.database_name:
+            # if some annoying blank space wrong...
+            db_name = self.database_name.strip()
+            # if set dbname only will create sql file.
+            self.database_uri = self.kwargs.get(
+                "database_uri", "sqlite:///" + db_name + ".db"
+            )
 
-        # default uses sqlite
+        # default uses sqlite memory database.
         self.database_uri = self.kwargs.get(
-            "database_uri", "sqlite:///" + db_name + ".db"
+            "database_uri", "sqlite://"
         )
 
         self.engine = create_engine(self.database_uri)
@@ -98,10 +142,25 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
             "read_only", False
         )
 
+        # To force recreate tables
         create = self.kwargs.get("create", False)
 
         if not self.read_only and create:
+            self.drop()
             self.create()
+
+        if not self.read_only and not create:  # create tables already done
+            tables_needed = Base.metadata.sorted_tables  # current tables
+            metadata = MetaData()
+            metadata.reflect(self.engine)
+            tables = metadata.tables.values()
+            if not tables:
+                self.create()
+            else:
+                for table in tables_needed:
+                    if not self.engine.dialect.has_table(self.engine, table.name):
+                        # If table don't exist, Create.
+                        Base.metadata.create_all(self.engine, tables=[table])
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
 
@@ -178,7 +237,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
-                                StatementTable.in_response_to == None) # NOQA Here must use == instead of is
+                                StatementTable.in_response_to == None)  # NOQA Here must use == instead of is
                         else:
                             for f in _filter:
                                 _query = _response_query.filter(
@@ -187,7 +246,7 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
                         if fp == 'in_response_to__contains':
                             _query = _response_query.join(ResponseTable).filter(ResponseTable.text == _filter)
                         else:
-                            _query = _response_query.filter(StatementTable.in_response_to == None) # NOQA
+                            _query = _response_query.filter(StatementTable.in_response_to == None)  # NOQA
                 else:
                     if _query:
                         _query = _query.filter(ResponseTable.text_search.like('%' + _filter + '%'))

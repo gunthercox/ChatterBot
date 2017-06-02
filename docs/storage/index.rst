@@ -33,3 +33,9 @@ Mongo Database Adapter
 
 .. autoclass:: chatterbot.storage.MongoDatabaseAdapter
    :members:
+
+SQL Alchemy Database Adapter
+============================
+
+.. autoclass:: chatterbot.storage.SQLAlchemyDatabaseAdapter
+   :members:
