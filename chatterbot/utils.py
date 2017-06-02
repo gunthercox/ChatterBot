@@ -99,6 +99,7 @@ def nltk_download_corpus(resource_path):
     from nltk.data import find
     from nltk import download
     from os.path import split, sep
+    from zipfile import BadZipfile
 
     # Download the wordnet data only if it is not already downloaded
     _, corpus_name = split(resource_path)
@@ -119,6 +120,11 @@ def nltk_download_corpus(resource_path):
     except LookupError:
         download(corpus_name)
         downloaded = True
+    except BadZipfile:
+        raise BadZipfile(
+            'The NLTK corpus file being opened is not a zipfile, '
+            'or it has been corrupted and needs to be manually deleted.'
+        )
 
     return downloaded
 
