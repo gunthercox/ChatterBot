@@ -22,6 +22,19 @@ class MultiLogicAdapter(LogicAdapter):
         # Requied logic adapters that must always be present
         self.system_adapters = []
 
+    def get_initialization_functions(self):
+        """
+        Get the initialization functions for each logic adapter.
+        """
+        functions_dict = {}
+
+        # Interate over each adapter and get its initialization functions
+        for logic_adapter in self.get_adapters():
+            functions = logic_adapter.get_initialization_functions()
+            functions_dict.update(functions)
+
+        return functions_dict
+
     def process(self, statement):
         """
         Returns the output of a selection of logic adapters

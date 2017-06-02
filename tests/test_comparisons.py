@@ -73,6 +73,11 @@ class SentimentComparisonTestCase(TestCase):
         statement = Statement('Hi HoW ArE yOu?')
         other_statement = Statement('hI hOw are YoU?')
 
+        # Prepare to do the comparison
+        functions = comparisons.sentiment_comparison.get_initialization_functions()
+        for function in functions.values():
+            function()
+
         value = comparisons.sentiment_comparison(statement, other_statement)
 
         self.assertEqual(value, 1)

@@ -12,16 +12,13 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
 
     def setUp(self):
         super(BestMatchSynsetDistanceTestCase, self).setUp()
-        from chatterbot.utils import nltk_download_corpus
         from chatterbot.comparisons import synset_distance
-
-        nltk_download_corpus('stopwords')
-        nltk_download_corpus('wordnet')
-        nltk_download_corpus('punkt')
 
         self.adapter = BestMatch(
             statement_comparison_function=synset_distance
         )
+
+        self.adapter.initialize()
 
         # Add a mock storage adapter to the logic adapter
         self.adapter.set_chatbot(self.chatbot)
