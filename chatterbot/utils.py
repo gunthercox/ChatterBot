@@ -98,7 +98,7 @@ def nltk_download_corpus(resource_path):
     """
     from nltk.data import find
     from nltk import download
-    from os.path import split
+    from os.path import split, sep
 
     # Download the wordnet data only if it is not already downloaded
     _, corpus_name = split(resource_path)
@@ -109,8 +109,8 @@ def nltk_download_corpus(resource_path):
     # Otherwise, find() will not locate the directory.
     #
     # Helps when resource_path=='sentiment/vader_lexicon''
-    if not resource_path.endswith('/'):
-        resource_path = resource_path + '/'
+    if not resource_path.endswith(sep):
+        resource_path = resource_path + sep
 
     downloaded = False
 
