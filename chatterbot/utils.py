@@ -101,7 +101,7 @@ def nltk_download_corpus(resource_path):
     from os.path import split, sep
     from zipfile import BadZipfile
 
-    # Download the wordnet data only if it is not already downloaded
+    # Download the NLTK data only if it is not already downloaded
     _, corpus_name = split(resource_path)
 
     # From http://www.nltk.org/api/nltk.html

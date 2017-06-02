@@ -91,9 +91,8 @@ class ChatBot(object):
 
         # Download required NLTK corpora if they have not already been downloaded
         nltk_download_corpus('corpora/stopwords')
-        nltk_download_corpus('corpora/wordnet')
-        nltk_download_corpus('tokenizers/punkt')
-        nltk_download_corpus('sentiment/vader_lexicon')
+
+        self.logic.initialize()
 
     def get_response(self, input_item, session_id=None):
         """
