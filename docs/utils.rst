@@ -18,12 +18,6 @@ Class initialization
 .. autofunction:: chatterbot.utils.initialize_class
 
 
-Adapter validation
-------------------
-
-.. autofunction:: chatterbot.utils.validate_adapter_class
-
-
 Terminal input
 --------------
 
