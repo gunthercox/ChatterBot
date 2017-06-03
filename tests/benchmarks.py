@@ -3,9 +3,6 @@ Run this file to generate benchmark data for various
 chat bot configurations.
 """
 
-import time
-import string
-import random
 from chatterbot import ChatBot
 from chatterbot import utils
 from pymongo.errors import ServerSelectionTimeoutError

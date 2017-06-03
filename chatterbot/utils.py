@@ -157,6 +157,8 @@ def get_response_time(chatbot):
     :returns: The response time in seconds.
     :rtype: float
     """
+    import time
+
     start_time = time.time()
 
     chatbot.get_response('Hello')
@@ -177,6 +179,9 @@ def generate_strings(total_strings, string_length=20):
     :returns: The generated list of random strings.
     :rtype: list
     """
+    import random
+    import string
+
     statements = []
     for _ in range(0, total_strings):
         text = ''.join(
