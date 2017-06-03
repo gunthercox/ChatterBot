@@ -57,6 +57,14 @@ class LevenshteinDistanceTestCase(TestCase):
 
 class SynsetDistanceTestCase(TestCase):
 
+    def test_get_initialization_functions(self):
+        """
+        Test that the initialization functions are returned.
+        """
+        functions = comparisons.synset_distance.get_initialization_functions()
+
+        self.assertIn('initialize_nltk_wordnet', functions)
+
     def test_exact_match_different_capitalization(self):
         """
         Test that text capitalization is ignored.
