@@ -48,9 +48,8 @@ class Trainer(object):
     def _generate_export_data(self):
         result = []
 
-        for statement in self.storage.filter():
-            for response in statement.in_response_to:
-                result.append([response.text, statement.text])
+        result = [[response.text, statement.text] for statement in self.storage.filter() for response in
+                  statement.in_response_to]
 
         return result
 
@@ -78,7 +77,7 @@ class ListTrainer(Trainer):
         """
         statement_history = []
 
-        for text in conversation:
+        def append_statement_history(text):
             statement = self.get_or_create(text)
 
             if statement_history:
@@ -87,7 +86,9 @@ class ListTrainer(Trainer):
                 )
 
             statement_history.append(statement)
-            self.storage.update(statement)
+
+        [append_statement_history(text) for text in conversation]
+        [self.storage.update(statement) for statement in statement_history]
 
 
 class ChatterBotCorpusTrainer(Trainer):
@@ -110,11 +111,7 @@ class ChatterBotCorpusTrainer(Trainer):
             if isinstance(corpora[0], list):
                 corpora = corpora[0]
 
-        for corpus in corpora:
-            corpus_data = self.corpus.load_corpus(corpus)
-            for data in corpus_data:
-                for pair in data:
-                    trainer.train(pair)
+        [trainer.train(pair) for corpus in corpora for data in self.corpus.load_corpus(corpus) for pair in data]
 
 
 class TwitterTrainer(Trainer):

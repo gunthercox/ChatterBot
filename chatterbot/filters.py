@@ -33,8 +33,7 @@ class RepetitiveResponseFilter(Filter):
 
         text_of_recent_responses = []
 
-        for statement, response in session.conversation:
-            text_of_recent_responses.append(response.text)
+        [text_of_recent_responses.append(response.text) for statement, response in session.conversation]
 
         query = chatterbot.storage.base_query.statement_text_not_in(
             text_of_recent_responses

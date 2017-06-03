@@ -85,9 +85,7 @@ class MultiLogicAdapter(LogicAdapter):
         :param options: A tuple in the format of (confidence, statement).
         """
         values = []
-        for option in options:
-            if option[1] == statement:
-                values.append(option[0])
+        values = [option[0] for option in options if option[1] == statement]
 
         return max(values)
 
@@ -147,5 +145,4 @@ class MultiLogicAdapter(LogicAdapter):
         """
         super(MultiLogicAdapter, self).set_chatbot(chatbot)
 
-        for adapter in self.get_adapters():
-            adapter.set_chatbot(chatbot)
+        [adapter.set_chatbot(chatbot) for adapter in self.get_adapters()]
