@@ -83,14 +83,13 @@ class SQLAlchemyDatabaseAdapter(StorageAdapter):
         self.database_name = self.kwargs.get("database")
 
         if self.database_name:
-            # if some annoying blank space wrong...
-            db_name = self.database_name.strip()
-            # if set dbname only will create sql file.
+
+            # Create a sqlite file if a database name is provided
             self.database_uri = self.kwargs.get(
-                "database_uri", "sqlite:///" + db_name + ".db"
+                "database_uri", "sqlite:///" + self.database_name + ".db"
             )
 
-        # default uses sqlite memory database.
+        # The default uses sqlite in-memory database
         self.database_uri = self.kwargs.get(
             "database_uri", "sqlite://"
         )
