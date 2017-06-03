@@ -344,7 +344,7 @@ class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
 
     def setUp(self):
         """
-        Make the adapter read only before test.
+        Make the adapter writable before every test.
         """
         super(ReadOnlySQLAlchemyDatabaseAdapterTestCase, self).setUp()
         self.adapter.read_only = False
