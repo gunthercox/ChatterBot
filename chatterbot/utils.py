@@ -144,3 +144,43 @@ def remove_stopwords(tokens, language):
     tokens = set(tokens) - set(stop_words)
 
     return tokens
+
+
+def get_response_time(chatbot):
+    """
+    Returns the amount of time taken for a given
+    chat bot to return a response.
+
+    :param chatbot: A chat bot instance.
+    :type chatbot: ChatBot
+
+    :returns: The response time in seconds.
+    :rtype: float
+    """
+    start_time = time.time()
+
+    chatbot.get_response('Hello')
+
+    return time.time() - start_time
+
+
+def generate_strings(total_strings, string_length=20):
+    """
+    Generate a list of random strings.
+
+    :param total_strings: The number of strings to generate.
+    :type total_strings: int
+
+    :param string_length: The length of each string to generate.
+    :type string_length: int
+
+    :returns: The generated list of random strings.
+    :rtype: list
+    """
+    statements = []
+    for _ in range(0, total_strings):
+        text = ''.join(
+            random.choice(string.ascii_letters + string.digits + ' ') for _ in range(string_length)
+        )
+        statements.append(text)
+    return statements
