@@ -15,7 +15,21 @@ class Comparator:
         return 0
 
     def get_initialization_functions(self):
-        return {}
+        """
+        Return all initialization methods for the comparison algorithm.
+        Initialization methods must start with 'initialize_' and
+        take no parameters.
+        """
+        initialization_methods = [
+            (
+                method,
+                getattr(self, method),
+            ) for method in dir(self) if method.startswith('initialize_')
+        ]
+
+        return {
+            key: value for (key, value) in initialization_methods
+        }
 
 
 class LevenshteinDistance(Comparator):
@@ -68,7 +82,7 @@ class LevenshteinDistance(Comparator):
 
 class SynsetDistance(Comparator):
 
-    def download_nltk_wordnet(self):
+    def initialize_nltk_wordnet(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
@@ -76,19 +90,13 @@ class SynsetDistance(Comparator):
 
         nltk_download_corpus('corpora/wordnet')
 
-    def download_nltk_punkt(self):
+    def initialize_nltk_punkt(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
         from .utils import nltk_download_corpus
 
         nltk_download_corpus('tokenizers/punkt')
-
-    def get_initialization_functions(self):
-        return {
-            'download_nltk_wordnet': self.download_nltk_wordnet,
-            'download_nltk_punkt': self.download_nltk_punkt
-        }
 
     def compare(self, statement, other_statement):
         """
@@ -151,18 +159,13 @@ class SynsetDistance(Comparator):
 
 class SentimentComparison(Comparator):
 
-    def download_nltk_vader_lexicon(self):
+    def initialize_nltk_vader_lexicon(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
         from .utils import nltk_download_corpus
 
         nltk_download_corpus('sentiment/vader_lexicon')
-
-    def get_initialization_functions(self):
-        return {
-            'download_nltk_vader_lexicon': self.download_nltk_vader_lexicon
-        }
 
     def compare(self, statement, other_statement):
         """
@@ -206,18 +209,13 @@ class JaccardSimilarity(Comparator):
 
     SIMILARITY_THRESHOLD = 0.5
 
-    def download_nltk_wordnet(self):
+    def initialize_nltk_wordnet(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
         from .utils import nltk_download_corpus
 
         nltk_download_corpus('corpora/wordnet')
-
-    def get_initialization_functions(self):
-        return {
-            'download_nltk_wordnet': self.download_nltk_wordnet
-        }
 
     def compare(self, statement, other_statement):
         """
