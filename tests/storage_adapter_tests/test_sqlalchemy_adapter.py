@@ -4,6 +4,7 @@ from chatterbot.storage.sqlalchemy_storage import SQLAlchemyDatabaseAdapter
 
 
 class SQLAlchemyAdapterTestCase(TestCase):
+
     @classmethod
     def setUpClass(cls):
         """
@@ -25,6 +26,7 @@ class SQLAlchemyAdapterTestCase(TestCase):
 
 
 class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+
     def test_count_returns_zero(self):
         """
         The count method should return a value of 0
@@ -198,6 +200,7 @@ class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
 
 
 class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
+
     def setUp(self):
         super(SQLAlchemyStorageAdapterFilterTestCase, self).setUp()
 
@@ -338,6 +341,7 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
 
 
 class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+
     def setUp(self):
         """
         Make the adapter read only before test.
@@ -374,6 +378,7 @@ class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
 
 
 class CreateDBSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+
     def setUp(self):
         """
         Make the adapter writable before every test.
