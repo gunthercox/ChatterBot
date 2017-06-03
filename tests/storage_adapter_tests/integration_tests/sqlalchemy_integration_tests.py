@@ -1,7 +1,7 @@
-from tests.base_case import ChatBotTestCase
+from tests.base_case import ChatBotSQLTestCase
 
 
-class SqlAlchemyStorageIntegrationTests(ChatBotTestCase):
+class SqlAlchemyStorageIntegrationTests(ChatBotSQLTestCase):
 
     def test_database_is_updated(self):
         """
