@@ -28,7 +28,7 @@ If two :code:`ChatBot` instances are created, each will have sessions separate f
 
 An adapter can access any session as long as the unique identifier for the session is provided.
 
-Session example 
+Session example
 ---------------
 
 The following example is taken from the Django :code:`ChatterBotView` built into ChatterBot.
