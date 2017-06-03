@@ -62,3 +62,19 @@ class ChatBotMongoTestCase(ChatBotTestCase):
         kwargs['database'] = self.random_string()
         kwargs['storage_adapter'] = 'chatterbot.storage.MongoDatabaseAdapter'
         return kwargs
+
+
+class ChatBotSQLTestCase(ChatBotTestCase):
+
+    def setUp(self):
+        """
+        Create the tables in the database before each test is run.
+        """
+        super(ChatBotSQLTestCase, self).setUp()
+        self.chatbot.storage.create()
+
+    def get_kwargs(self):
+        kwargs = super(ChatBotSQLTestCase, self).get_kwargs()
+        del kwargs['database']
+        kwargs['storage_adapter'] = 'chatterbot.storage.SQLAlchemyDatabaseAdapter'
+        return kwargs
