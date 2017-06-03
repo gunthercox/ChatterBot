@@ -375,27 +375,3 @@ class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(
             len(statement_found.in_response_to), 0
         )
-
-
-class CreateDBSQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
-
-    def setUp(self):
-        """
-        Make the adapter writable before every test.
-        """
-        super(CreateDBSQLAlchemyDatabaseAdapterTestCase, self).setUp()
-        self.adapter = SQLAlchemyDatabaseAdapter(
-            database='testdb'
-        )
-        self.adapter.create()
-
-    @classmethod
-    def tearDownClass(cls):
-        import os
-        os.remove('testdb.db')
-
-    def tearDown(self):
-        """
-        Drop the tables in the database after each test is run.
-        """
-        self.adapter.drop()
