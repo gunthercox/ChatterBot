@@ -1,5 +1,6 @@
 import logging
 from .conversation import Statement, Response
+import couchdb
 
 
 class Trainer(object):
@@ -352,3 +353,54 @@ class UbuntuCorpusTrainer(Trainer):
 
                         statement_history.append(statement)
                         self.storage.update(statement)
+
+class CouchDBCorpusTrainer(Trainer):
+    """
+    Allows the chat bot to be trained using data stored in couchdb
+    designDocument will contaain all the map functions that will be usedto 
+    train the chatterbot instance.  the map functions will in turn be called
+    in the train function and get appended to data, which will then get trained
+    
+    The document stored in couchdb should be stored in the following way:
+        {
+        _id: "uniqueID",
+        _rev:"unique Revision",
+        "doc_type":"chatterbot",
+        "data":{Corpus Data}
+        }
+    
+    You should also write a design document that generates a map function
+    in the same format as that from the "load_corpus" function output:
+
+    for instance, a map function for the document shown in the above format would be:
+
+    function(doc){
+    if(doc.doc_type == "chatterbot"){
+    for (var i in doc.data){
+    emit(doc._id, doc.data[i])
+    }
+    }
+    }
+
+    """
+
+    def __init__(self, storage, **kwargs):
+        super(CouchDBCorpusTrainer, self).__init__(storage, **kwargs)
+
+    def train(self,**kwargs):
+        self.data = []
+        self.couch = couchdb.Server(kwargs.get('server_path'))
+        self.couch.resource.credentials = (kwargs.get('username'), kwargs.get('password'))
+        self.db = self.couch[kwargs.get('database')]
+        self.designDocument = self.db[kwargs.get('design_document')]['views']
+
+        for k,v in self.designDocument.items():
+            mapfn = v['map']
+            for row in self.db.query(mapfn):
+                self.data.append(row.value)          
+
+        trainer = ListTrainer(self.storage)
+
+        for item in self.data:
+            for pair in item:
+                trainer.train(pair)
