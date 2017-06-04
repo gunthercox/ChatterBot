@@ -130,8 +130,8 @@ class ArangoStorageAdapter(StorageAdapter):
         Returns a object from the database if it exists
         """
         # crsr = self.statements.find({'text': statement_text})
-        crsr = self.database.aql.execute('FOR s IN ' + self.database_collection + ' FILTER s.text == ' + statement_text
-                                         + ' COLLECT a = s RETURN a')
+        crsr = self.database.aql.execute('FOR s IN ' + self.database_collection + ' FILTER s.text == ' +
+                                         statement_text + ' COLLECT a = s RETURN a')
 
         if crsr.count() == 0:
             return None
