@@ -15,10 +15,10 @@ class ArangoStorageAdapter(StorageAdapter):
     :keyword password: The Password of user to be used for authentication.
     :type password: str
 
-    :keyword database_name: The name of database to be used to be used by ChatterBot
+    :keyword database: The name of database to be used to be used by ChatterBot
                        Note: it should be created before being used here.
                        Default: chatterbot-database
-    :type database_name: str
+    :type database: str
 
     :keyword collection: The name of collection to be used by Chatterbot.
                          Note: it should be created before being used here.
@@ -56,12 +56,12 @@ class ArangoStorageAdapter(StorageAdapter):
         # Initialize all variables
         self.database_username = username
         self.database_password = password
-        self.database_name = self.kwargs.get('database_name', 'chatterbot-database')
+        self.database_name = self.kwargs.get('database', 'chatterbot-database')
         self.database_collection = self.kwargs.get('collection', 'statements')
         self.database_host = self.kwargs.get('host', 'localhost')
         self.database_port = self.kwargs.get('port', '8529')
         self.database_logging = self.kwargs.get('logging', True)
-        self.database_protocol = self.kwargs.get('protocol', 'http://')
+        self.database_protocol = self.kwargs.get('protocol', 'http')
 
         # Use the default host and port
         self.client = ArangoClient(protocol=self.database_protocol,
@@ -72,14 +72,18 @@ class ArangoStorageAdapter(StorageAdapter):
                                    enable_logging=self.database_logging)
 
         # Specify the name of the database
-        self.database = self.client.db(name=self.database_name)
+        self.dbase = self.client.db(name=self.database_name)
 
         # The Arango collection of statement documents
-        self.statements = self.database.collection(self.database_collection)
+        self.statements = self.dbase.collection(self.database_collection)
 
         # Set a requirement for the text attribute to be unique
         if not any(x['fields'] == ['text'] for x in self.statements.indexes()):
             self.statements.add_hash_index(fields=['text'], unique=True)
+
+        # Arango does support query but Query class is not yet implemented
+        # TODO implement query class and then set this to true
+        self.adapter_supports_queries = False
 
     def count(self):
         return self.statements.count()
@@ -129,9 +133,8 @@ class ArangoStorageAdapter(StorageAdapter):
         """
         Returns a object from the database if it exists
         """
-        # crsr = self.statements.find({'text': statement_text})
-        crsr = self.database.aql.execute('FOR s IN ' + self.database_collection + ' FILTER s.text == ' +
-                                         statement_text + ' COLLECT a = s RETURN a')
+
+        crsr = self.statements.find({'text': statement_text})
 
         if crsr.count() == 0:
             return None
@@ -194,7 +197,7 @@ class ArangoStorageAdapter(StorageAdapter):
         rq += ' RETURN a'
 
         # List comprehension for results
-        results = [self.arango_to_object(z) for z in self.database.aql.execute(rq)]
+        results = [self.arango_to_object(z) for z in self.dbase.aql.execute(rq)]
 
         return results
 
@@ -220,7 +223,7 @@ class ArangoStorageAdapter(StorageAdapter):
                 json.dumps(data) + ' IN ' + self.database_collection
 
         # Execute query in ArangoDB
-        self.database.aql.execute(query)
+        self.dbase.aql.execute(query)
 
         # Make sure that an entry for each response exists
         for response_statement in statement.in_response_to:
@@ -235,7 +238,7 @@ class ArangoStorageAdapter(StorageAdapter):
         """
         Returns a random statement from the database
         """
-        lst = [x for x in self.database.aql.execute("FOR s IN statements SORT RAND() LIMIT 1 RETURN s")]
+        lst = [x for x in self.dbase.aql.execute("FOR s IN statements SORT RAND() LIMIT 1 RETURN s")]
 
         if len(lst) < 1:
             raise self.EmptyDatabaseException
@@ -260,21 +263,4 @@ class ArangoStorageAdapter(StorageAdapter):
         """
         q = 'FOR s IN statements FOR t in s.in_response_to FOR z IN statements ' \
             'FILTER z.text == t.text COLLECT a = z RETURN a'
-        return [self.arango_to_object(a) for a in self.database.aql.execute(q)]
-
-    class EmptyDatabaseException(Exception):
-
-        def __init__(self, value='The database currently contains no entries. '
-                                 'At least one entry is expected. '
-                                 'You may need to train your chat bot to populate your database.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)
-
-    class AdapterMethodNotImplementedError(NotImplementedError):
-        """
-        An exception to be raised when a storage adapter method has not been implemented.
-        Typically this indicates that the method should be implement in a subclass.
-        """
-        pass
+        return [self.arango_to_object(a) for a in self.dbase.aql.execute(q)]
