@@ -83,4 +83,4 @@ https://github.com/gunthercox/ChatterBot/tree/master/examples
 
 .. _install MongoDB: https://docs.mongodb.com/manual/installation/
 .. _install ArangoDB: https://docs.arangodb.com/3.1/Manual/GettingStarted/
-.. _ArangoDB Mannual:: https://docs.arangodb.com/3.1/Manual/
+.. _ArangoDB Mannual: https://docs.arangodb.com/3.1/Manual/
