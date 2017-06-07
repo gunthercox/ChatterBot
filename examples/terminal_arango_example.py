@@ -19,8 +19,8 @@ bot = ChatBot(
     ],
     input_adapter='chatterbot.input.TerminalAdapter',
     output_adapter='chatterbot.output.TerminalAdapter',
-    username='chatterbot',  # Enter user name here (required)
-    password='chatterbot',  # Enter password here (required)
+    username='root',  # Enter user name here (required)
+    password='password',  # Enter password here (required)
     database='chatterbot-database',  # Enter database name here (default: chatterbot-database)
     collection='statements',  # Enter collection name here (default: statements)
     host='localhost',  # Enter host name (default: localhost)

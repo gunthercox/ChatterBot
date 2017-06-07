@@ -36,6 +36,26 @@ the `storage_adapter` parameter.
 .. literalinclude:: ../examples/terminal_mongo_example.py
    :language: python
 
+Using ArangoDB
+==============
+
+Before you can use ChatterBot's built in adapter for ArangoDB,
+you will need to `install ArangoDB`_. Then you must create
+database and collection in ArangoDB. For help refere to
+`ArangoDB Mannual`_. Make sure ArangoDB is running in your
+environment before you execute your program. To tell ChatterBot
+to use this adapter, you will need to set the `storage_adapter`
+parameter. `username` and `password` parameter is compulsory.
+
+.. code-block:: python
+
+   storage_adapter="chatterbot.storage.ArangoStorageAdapter",
+   username="root",
+   password="password"
+
+.. literalinclude:: ../examples/terminal_arango_example.py
+   :language: python
+
 Time and Mathematics Example
 ============================
 
@@ -62,3 +82,5 @@ Even more examples can be found in the `examples` directory in on GitHub:
 https://github.com/gunthercox/ChatterBot/tree/master/examples 
 
 .. _install MongoDB: https://docs.mongodb.com/manual/installation/
+.. _install ArangoDB: https://docs.arangodb.com/3.1/Manual/GettingStarted/
+.. _ArangoDB Mannual:: https://docs.arangodb.com/3.1/Manual/
