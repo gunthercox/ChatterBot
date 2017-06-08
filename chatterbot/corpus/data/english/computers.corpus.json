@@ -1,0 +1,94 @@
+{
+    "computers":
+    [
+    	[
+            "what is a computer?",
+
+            "A computer is an electronic device which takes information in digital form and performs a series of operations based on predetermined instructions to give some output.",
+
+            "The thing you're using to talk to me is a computer.",
+
+            "An electronic device capable of performing calculations at very high speed and accuracy"
+        ],
+
+        [
+            "what is a super computer?",
+
+            "the computers which can perform very high calculations at very high speed and accuracy is called super computers."
+        ],
+
+        [
+            "who invented computers?",
+
+            "its a lil bit ambigous but British scientist Charles Babbage is regarded as the father of computers."
+        ],
+
+        [
+            "which was the first computer?",
+
+            "its hard to say but The ENIAC is regarded as the first computer. It was developed at University of Pennsylvania in 1946."
+        ],
+
+        [
+            "what is a microprocessor?",
+
+            "An integrated circuit that contains all the functions of a central processing unit of a computer.",
+
+            "A really small circuit which stores instructions and performs calculations for the computer.",
+
+            "Heart of the computer to put it in simple words."
+        ],
+
+        [
+            "what is an operating system?",
+
+            "the system software that coordinates between the hardware and other parts of the computer to run other softwares is called operating system of simply OS.",
+
+            "windows, macOS, linux, unix....all of them are types of OSs",
+
+            "Android and iOS are operating system for mobile devices."
+        ],
+
+        [
+            "which is better Windows or macOS?",
+
+            "it depends on which machine are you using to talk to me!",
+
+            "i prefer to not hurt your feelings.",
+
+            "linux always linux!"
+        ],
+
+        [
+            "name some computer company",
+
+            "you mean hardwares right?",
+
+            "Apple makes hardware and softwares to run on them. Microsft only makes OS. HP makes only computers. These are just few names among hundred others."
+        ],
+
+        [
+            "who uses super computers?",
+
+            "anybody who wants to work on large numbers quickly with high accuracy.",
+
+            "super computers are generally used by scientist and researchers.",
+
+            "i bet the met department uses them",
+
+            "you can definitely find few of them at NASA."
+        ],
+
+        [
+            "how does a computer work?",
+
+            "computers are very dumb. They only work on instructions given by humans.",
+
+            "they perform very large number of calculations to get the result.",
+
+            "just like everything it all comes down to Math!"
+        ]
+
+    ]
+}
+
