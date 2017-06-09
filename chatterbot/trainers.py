@@ -313,6 +313,7 @@ class UbuntuCorpusTrainer(Trainer):
         import glob
         import csv
         import os
+        import sys
 
         # Download and extract the Ubuntu dialog corpus
         corpus_download_path = self.download(self.data_download_url)
@@ -325,10 +326,16 @@ class UbuntuCorpusTrainer(Trainer):
             '**', '*.tsv'
         )
 
+        file_kwargs = {}
+
+        if sys.version_info[0] > 2:
+            # Specify the encoding in Python versions 3 and up
+            file_kwargs['encoding'] = 'utf-8'
+
         for file in glob.iglob(extracted_corpus_path):
             self.logger.info('Training from: {}'.format(file))
 
-            with open(file, 'r', encoding='utf-8') as tsv:
+            with open(file, 'r', **file_kwargs) as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
                 statement_history = []
