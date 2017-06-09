@@ -331,6 +331,7 @@ class UbuntuCorpusTrainer(Trainer):
         if sys.version_info[0] > 2:
             # Specify the encoding in Python versions 3 and up
             file_kwargs['encoding'] = 'utf-8'
+            # WARNING: This might fail to read a unicode corpus file in Python 2.x
 
         for file in glob.iglob(extracted_corpus_path):
             self.logger.info('Training from: {}'.format(file))
