@@ -328,7 +328,7 @@ class UbuntuCorpusTrainer(Trainer):
         for file in glob.iglob(extracted_corpus_path):
             self.logger.info('Training from: {}'.format(file))
 
-            with open(file, 'r') as tsv:
+            with open(file, 'r', encoding='utf-8') as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
                 statement_history = []
