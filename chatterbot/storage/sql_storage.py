@@ -72,10 +72,10 @@ def get_response_table(response):
     return ResponseTable(text=response.text, occurrence=response.occurrence)
 
 
-class SQLAlchemyDatabaseAdapter(StorageAdapter):
+class SQLStorageAdapter(StorageAdapter):
 
     def __init__(self, **kwargs):
-        super(SQLAlchemyDatabaseAdapter, self).__init__(**kwargs)
+        super(SQLStorageAdapter, self).__init__(**kwargs)
 
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker

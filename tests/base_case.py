@@ -76,5 +76,5 @@ class ChatBotSQLTestCase(ChatBotTestCase):
     def get_kwargs(self):
         kwargs = super(ChatBotSQLTestCase, self).get_kwargs()
         del kwargs['database']
-        kwargs['storage_adapter'] = 'chatterbot.storage.SQLAlchemyDatabaseAdapter'
+        kwargs['storage_adapter'] = 'chatterbot.storage.SQLStorageAdapter'
         return kwargs

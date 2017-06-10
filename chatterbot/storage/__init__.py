@@ -2,7 +2,7 @@ from .storage_adapter import StorageAdapter
 from .django_storage import DjangoStorageAdapter
 from .jsonfile import JsonFileStorageAdapter
 from .mongodb import MongoDatabaseAdapter
-from .sqlalchemy_storage import SQLAlchemyDatabaseAdapter
+from .sql_storage import SQLStorageAdapter
 
 
 __all__ = (
@@ -10,5 +10,5 @@ __all__ = (
     'DjangoStorageAdapter',
     'JsonFileStorageAdapter',
     'MongoDatabaseAdapter',
-    'SQLAlchemyDatabaseAdapter',
+    'SQLStorageAdapter',
 )
