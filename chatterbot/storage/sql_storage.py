@@ -100,9 +100,7 @@ class SQLStorageAdapter(StorageAdapter):
             "read_only", False
         )
 
-        create = self.kwargs.get("create", False)
-
-        if not self.read_only and create:
+        if not self.engine.dialect.has_table(self.engine, 'StatementTable'):
             self.create()
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
