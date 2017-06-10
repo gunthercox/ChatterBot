@@ -1,6 +1,6 @@
 from unittest import TestCase
 from chatterbot.conversation import Statement, Response
-from chatterbot.storage.sqlalchemy_storage import SQLAlchemyDatabaseAdapter
+from chatterbot.storage.sql_storage import SQLStorageAdapter
 
 
 class SQLAlchemyAdapterTestCase(TestCase):
@@ -10,7 +10,7 @@ class SQLAlchemyAdapterTestCase(TestCase):
         """
         Instantiate the adapter before any tests in the test case run.
         """
-        cls.adapter = SQLAlchemyDatabaseAdapter()
+        cls.adapter = SQLStorageAdapter()
 
     def setUp(self):
         """
@@ -25,7 +25,7 @@ class SQLAlchemyAdapterTestCase(TestCase):
         self.adapter.drop()
 
 
-class SQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -340,13 +340,13 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
         self.assertIsInstance(found[0].in_response_to[0], Response)
 
 
-class ReadOnlySQLAlchemyDatabaseAdapterTestCase(SQLAlchemyAdapterTestCase):
+class ReadOnlySQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
 
     def setUp(self):
         """
         Make the adapter writable before every test.
         """
-        super(ReadOnlySQLAlchemyDatabaseAdapterTestCase, self).setUp()
+        super(ReadOnlySQLStorageAdapterTestCase, self).setUp()
         self.adapter.read_only = False
 
     def test_update_does_not_add_new_statement(self):
