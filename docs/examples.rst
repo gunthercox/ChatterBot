@@ -63,7 +63,6 @@ ChatterBot data can be saved and retrieved from SQL databases.
 .. literalinclude:: ../examples/sql/memory_sql_example.py
    :language: python
 
-
 More Examples
 =============
 
