@@ -73,6 +73,39 @@ def get_response_table(response):
 
 
 class SQLStorageAdapter(StorageAdapter):
+    """
+       SQLStorageAdapter allows ChatterBot to store conversation
+       data semi-structutered T-SQL database, virtually, any database that SQL Alchemy supports.
+
+       Notes:
+           Tables may change (and will), so, save your training data. There is no data migration (yet).
+           Performance test not done yet.
+           Tests using others databases not finished.
+
+       All parameters all optional, default is sqlite database in memory.
+
+       It will check if tables is present, if not, it will attempt to create required tables.
+       :keyword database: Used for sqlite database. Ignored if database_uri especified.
+       :type database: str
+
+       :keyword database_uri: eg: sqlite:///database_test.db", # use database_uri or database, database_uri 
+       can be especified to choose database driver (database parameter will be igored).
+       :type database_uri: str
+
+       :keyword read_only: False by default, makes all operations read only,  has priority over all DB operations
+       so, create, update, delete will NOT be executed
+       :type read_only: bool
+
+       :keyword create: Force Recreate ChatterBot only tables in database, default False, 
+       if read_only is True create is ignored.
+       :type create: bool
+       Simple use:
+
+       chatbot = ChatBot(
+              "My ChatterBot",
+               storage_adapter="chatterbot.storage.SQLStorageAdapter"
+       )    
+       """
 
     def __init__(self, **kwargs):
         super(SQLStorageAdapter, self).__init__(**kwargs)
