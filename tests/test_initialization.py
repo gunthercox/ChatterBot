@@ -12,8 +12,8 @@ class StringInitalizationTestCase(ChatBotTestCase):
         }
 
     def test_storage_initialized(self):
-        from chatterbot.storage import JsonFileStorageAdapter
-        self.assertTrue(isinstance(self.chatbot.storage, JsonFileStorageAdapter))
+        from chatterbot.storage import SQLStorageAdapter
+        self.assertTrue(isinstance(self.chatbot.storage, SQLStorageAdapter))
 
     def test_logic_initialized(self):
         from chatterbot.logic import BestMatch
@@ -34,9 +34,8 @@ class DictionaryInitalizationTestCase(ChatBotTestCase):
     def get_kwargs(self):
         return {
             'storage_adapter': {
-                'import_path': 'chatterbot.storage.JsonFileStorageAdapter',
-                'database': None,
-                'silence_performance_warning': True
+                'import_path': 'chatterbot.storage.SQLStorageAdapter',
+                'database': None
             },
             'input_adapter': {
                 'import_path': 'chatterbot.input.VariableInputTypeAdapter'
@@ -55,8 +54,8 @@ class DictionaryInitalizationTestCase(ChatBotTestCase):
         }
 
     def test_storage_initialized(self):
-        from chatterbot.storage import JsonFileStorageAdapter
-        self.assertTrue(isinstance(self.chatbot.storage, JsonFileStorageAdapter))
+        from chatterbot.storage import SQLStorageAdapter
+        self.assertTrue(isinstance(self.chatbot.storage, SQLStorageAdapter))
 
     def test_logic_initialized(self):
         from chatterbot.logic import BestMatch
