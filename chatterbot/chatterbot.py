@@ -18,7 +18,7 @@ class ChatBot(object):
         self.name = name
         kwargs['name'] = name
 
-        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.JsonFileStorageAdapter')
+        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
