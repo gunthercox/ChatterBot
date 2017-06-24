@@ -274,7 +274,8 @@ class SQLStorageAdapter(StorageAdapter):
                 session.commit()
             else:
                 session.rollback()
-        except DatabaseError as e:
-            self.logger.error(statement_text, str(e.orig))
+        except DatabaseError:
+            # Log the statement text and the exception
+            self.logger.exception(statement_text)
         finally:
             session.close()
