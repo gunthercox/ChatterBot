@@ -19,10 +19,10 @@ try:
         __tablename__ = 'StatementTable'
 
         def get_statement(self):
-            stmt = Statement(self.text, **self.extra_data)
-            for resp in self.in_response_to:
-                stmt.add_response(resp.get_response())
-            return stmt
+            statement = Statement(self.text, **self.extra_data)
+            for response in self.in_response_to:
+                statement.add_response(response.get_response())
+            return statement
 
         def get_statement_serialized(context):
             params = context.current_parameters
@@ -32,9 +32,16 @@ try:
         id = Column(Integer)
         text = Column(String, primary_key=True)
         extra_data = Column(PickleType)
-        # relationship:
-        in_response_to = relationship("ResponseTable", back_populates="statement_table")
-        text_search = Column(String, primary_key=True, default=get_statement_serialized)
+
+        in_response_to = relationship(
+            'ResponseTable',
+            back_populates='statement_table'
+        )
+        text_search = Column(
+            String,
+            primary_key=True,
+            default=get_statement_serialized
+        )
 
     class ResponseTable(Base):
         from sqlalchemy import Column, Integer, String, ForeignKey
@@ -52,11 +59,20 @@ try:
         occurrence = Column(Integer)
         statement_text = Column(String, ForeignKey('StatementTable.text'))
 
-        statement_table = relationship("StatementTable", back_populates="in_response_to", cascade="all", uselist=False)
-        text_search = Column(String, primary_key=True, default=get_reponse_serialized)
+        statement_table = relationship(
+            'StatementTable',
+            back_populates='in_response_to',
+            cascade='all',
+            uselist=False
+        )
+        text_search = Column(
+            String,
+            primary_key=True,
+            default=get_reponse_serialized
+        )
 
         def get_response(self):
-            occ = {"occurrence": self.occurrence}
+            occ = {'occurrence': self.occurrence}
             return Response(text=self.text, **occ)
 
 except ImportError:
