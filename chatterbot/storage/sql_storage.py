@@ -229,9 +229,11 @@ class SQLStorageAdapter(StorageAdapter):
                 if statement.text:
                     record.text = statement.text
                 if statement.extra_data:
-                    record.extra_data = dict[statement.extra_data]
+                    record.extra_data = dict(statement.extra_data)
                 if statement.in_response_to:
-                    record.in_response_to = list(map(get_response_table, statement.in_response_to))
+                    record.in_response_to = list(
+                        map(get_response_table, statement.in_response_to)
+                    )
                 session.add(record)
             else:
                 session.add(get_statement_table(statement))
