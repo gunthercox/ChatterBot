@@ -19,7 +19,7 @@ try:
         __tablename__ = 'StatementTable'
 
         def get_statement(self):
-            statement = Statement(self.text, **self.extra_data)
+            statement = Statement(self.text, extra_data=self.extra_data)
             for response in self.in_response_to:
                 statement.add_response(response.get_response())
             return statement
