@@ -88,6 +88,34 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         response = self.chatbot.get_response(u'سلام')
         self.assertGreater(len(response.text), 0)
 
+    def test_get_response_emoji(self):
+        """
+        Test the case that the input string contains an emoji.
+        """
+        response = self.chatbot.get_response(u'💩 ')
+        self.assertGreater(len(response.text), 0)
+
+    def test_get_response_non_whitespace(self):
+        """
+        Test the case that a non-whitespace C1 control string is passed in.
+        """
+        response = self.chatbot.get_response(u'')
+        self.assertGreater(len(response.text), 0)
+
+    def test_get_response_two_byte_characters(self):
+        """
+        Test the case that a string containing two-byte characters is passed in.
+        """
+        response = self.chatbot.get_response(u'田中さんにあげて下さい')
+        self.assertGreater(len(response.text), 0)
+
+    def test_get_response_corrupted_text(self):
+        """
+        Test the case that a string contains "corrupted" text.
+        """
+        response = self.chatbot.get_response(u'Ṱ̺̺̕o͞ ̷i̲̬͇̪͙n̝̗͕v̟̜̘̦͟o̶̙̰̠kè͚̮̺̪̹̱̤ ̖t̝͕̳̣̻̪͞h̼͓̲̦̳̘̲e͇̣̰̦̬͎ ̢̼̻̱̘h͚͎͙̜̣̲ͅi̦̲̣̰̤v̻͍e̺̭̳̪̰-m̢iͅn̖̺̞̲̯̰d̵̼̟͙̩̼̘̳ ̞̥̱̳̭r̛̗̘e͙p͠r̼̞̻̭̗e̺̠̣͟s̘͇̳͍̝͉e͉̥̯̞̲͚̬͜ǹ̬͎͎̟̖͇̤t͍̬̤͓̼̭͘ͅi̪̱n͠g̴͉ ͏͉ͅc̬̟h͡a̫̻̯͘o̫̟̖͍̙̝͉s̗̦̲.̨̹͈̣')
+        self.assertGreater(len(response.text), 0)
+
     def test_response_extra_data(self):
         """
         If an input statement has data contained in the
