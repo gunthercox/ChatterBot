@@ -134,6 +134,10 @@ def remove_stopwords(tokens, language):
     Takes a language (i.e. 'english'), and a set of word tokens.
     Returns the tokenized text with any stopwords removed.
     Stop words are words like "is, the, a, ..."
+
+    Be sure to download the required NLTK corpus before calling this function:
+    - from chatterbot.utils import nltk_download_corpus
+    - nltk_download_corpus('corpora/stopwords')
     """
     from nltk.corpus import stopwords
 

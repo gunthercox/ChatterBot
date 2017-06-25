@@ -109,6 +109,14 @@ class SynsetDistance(Comparator):
 
         nltk_download_corpus('tokenizers/punkt')
 
+    def initialize_nltk_stopwords(self):
+        """
+        Download required NLTK corpora if they have not already been downloaded.
+        """
+        from .utils import nltk_download_corpus
+
+        nltk_download_corpus('corpora/stopwords')
+
     def compare(self, statement, other_statement):
         """
         Compare the two input statements.
