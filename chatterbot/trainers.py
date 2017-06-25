@@ -105,11 +105,12 @@ class ChatterBotCorpusTrainer(Trainer):
     def train(self, *corpora):
         trainer = ListTrainer(self.storage)
 
-        # Allow a list of coupora to be passed instead of arguments
+        # Allow a list of corpora to be passed instead of arguments
         if len(corpora) == 1:
             if isinstance(corpora[0], list):
                 corpora = corpora[0]
 
+        # Train the chat bot with each statement and response pair
         for corpus in corpora:
             corpus_data = self.corpus.load_corpus(corpus)
             for data in corpus_data:
@@ -166,11 +167,7 @@ class TwitterTrainer(Trainer):
         words = set()
 
         for tweet in tweets:
-            # TODO: Handle non-ascii characters properly
-            cleaned_text = ''.join(
-                [i if ord(i) < 128 else ' ' for i in tweet.text]
-            )
-            tweet_words = cleaned_text.split()
+            tweet_words = tweet.text.split()
 
             for word in tweet_words:
                 # If the word contains only letters with a length from 4 to 9
