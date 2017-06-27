@@ -8,6 +8,15 @@ if __name__ == '__main__':
         print(chatterbot.__version__)
 
     if 'list_nltk_data' in sys.argv:
+        import os
         import nltk.data
 
-        print('\n'.join(nltk.data.path))
+        data_directories = []
+
+        # Find each data directory in the NLTK path that has content
+        for path in nltk.data.path:
+            if os.path.exists(path):
+                if os.listdir(path):
+                    data_directories.append(path)
+
+        print(os.linesep.join(data_directories))
