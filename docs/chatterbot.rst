@@ -162,7 +162,7 @@ Then, :code:`self.chatbot.storage` refers to the storage adapter, :code:`self.ch
 Adapter defaults
 ----------------
 
-By default, ChatterBot uses the `JsonFileStorageAdapter` adapter for storage,
+By default, ChatterBot uses the `SQLStorageAdapter` adapter for storage,
 the `BestMatch` for logic, the `VariableInputTypeAdapter` for input
 and the `OutputAdapter` for output.
 
@@ -172,7 +172,7 @@ Each adapter can be set by passing in the dot-notated import path to the constru
 
    bot = ChatBot(
        "Elsie",
-       storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
+       storage_adapter="chatterbot.storage.SQLStorageAdapter",
        input_adapter="chatterbot.input.VariableInputTypeAdapter",
        output_adapter="chatterbot.output.OutputAdapter",
        logic_adapters=[
