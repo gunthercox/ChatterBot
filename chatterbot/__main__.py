@@ -2,9 +2,10 @@ import sys
 
 
 if __name__ == '__main__':
-    import chatterbot
+    import importlib
 
     if '--version' in sys.argv:
+        chatterbot = importlib.import_module('chatterbot')
         print(chatterbot.__version__)
 
     if 'list_nltk_data' in sys.argv:
