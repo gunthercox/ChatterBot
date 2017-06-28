@@ -24,8 +24,7 @@ CONFIGURATIONS = [
             }
         ],
         'storage_adapter': {
-            'import_path': 'chatterbot.storage.JsonFileStorageAdapter',
-            'silence_performance_warning': True
+            'import_path': 'chatterbot.storage.SQLStorageAdapter'
         },
     },
     {
@@ -38,8 +37,7 @@ CONFIGURATIONS = [
             }
         ],
         'storage_adapter': {
-            'import_path': 'chatterbot.storage.JsonFileStorageAdapter',
-            'silence_performance_warning': True
+            'import_path': 'chatterbot.storage.SQLStorageAdapter'
         },
     }
 ]
