@@ -14,7 +14,7 @@ element from the user.
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Feedback Learning Bot',
-    storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
+    storage_adapter='chatterbot.storage.SQLStorageAdapter',
     logic_adapters=[
         'chatterbot.logic.BestMatch'
     ],

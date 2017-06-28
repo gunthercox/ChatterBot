@@ -20,7 +20,7 @@ class TkinterGUIExample(tk.Tk):
 
         self.chatbot = ChatBot(
             "GUI Bot",
-            storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
+            storage_adapter="chatterbot.storage.SQLStorageAdapter",
             logic_adapters=[
                 "chatterbot.logic.BestMatch"
             ],

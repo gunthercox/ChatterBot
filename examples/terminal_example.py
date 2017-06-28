@@ -9,7 +9,7 @@ from chatterbot import ChatBot
 # Create a new instance of a ChatBot
 bot = ChatBot(
     "Terminal",
-    storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
+    storage_adapter="chatterbot.storage.SQLStorageAdapter",
     logic_adapters=[
         "chatterbot.logic.MathematicalEvaluation",
         "chatterbot.logic.TimeLogicAdapter",
