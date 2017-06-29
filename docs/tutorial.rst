@@ -41,37 +41,27 @@ Setting the storage adapter
 
 ChatterBot comes with built in adapter classes that allow it to connect
 to different types of databases. In this tutorial, we will be using the
-`JsonFileStorageAdapter` which is a simple storage adapter that stores data
-in a json formatted file on your hard disk. This functionality makes
-this storage adapter very good for testing and debugging.
+:code:`SQLStorageAdapter` which allows the chat bot to connect to SQL databases.
+By default, this adapter will create a `SQLite`_ database.
 
-.. warning::
-
-   The JsonFileStorageAdapter is not intended for use with large amounts of
-   data. You may experience serious performance problems if the size of
-   this database becomes too large.
-
-We will select the `JsonFileStorageAdapter` by specifying it in our chat
-bot's constructor.
-
-The `database` parameter is used to specify the path to the database
+The :code:`database` parameter is used to specify the path to the database
 that the chat bot will use. For this example we will call the database
-`database.json`. The `database.json` file will be created automatically
-if it does not already exist.
+`database.sqlite3`. this file will be created automatically if it doesn't
+already exist.
 
 .. code-block:: python
 
    bot = ChatBot(
        'Norman',
-       storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
-       database='./database.json'
+       storage_adapter='chatterbot.storage.SQLStorageAdapter',
+       database='./database.sqlite3'
    )
 
 .. note::
 
-   The JsonFileStorageAdapter is ChatterBot's default adapter.
+   The SQLStorageAdapter is ChatterBot's default adapter.
    If you do not specify an adapter in your constructor,
-   the JsonDatabase adapter will be used automatically.
+   the SQLStorageAdapter adapter will be used automatically.
 
 Input and output adapters
 -------------------------
@@ -84,10 +74,10 @@ the terminal. The output terminal adapter prints the chat bot's response.
 
    bot = ChatBot(
        'Norman',
-       storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
+       storage_adapter='chatterbot.storage.SQLStorageAdapter',
        input_adapter='chatterbot.input.TerminalAdapter',
        output_adapter='chatterbot.output.TerminalAdapter',
-       database='./database.json'
+       database='./database.sqlite3'
    )
 
 Specifying logic adapters
@@ -107,14 +97,14 @@ operations.
 
    bot = ChatBot(
        'Norman',
-       storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
+       storage_adapter='chatterbot.storage.SQLStorageAdapter',
        input_adapter='chatterbot.input.TerminalAdapter',
        output_adapter='chatterbot.output.TerminalAdapter',
        logic_adapters=[
            'chatterbot.logic.MathematicalEvaluation',
            'chatterbot.logic.TimeLogicAdapter'
        ],
-       database='./database.json'
+       database='./database.sqlite3'
    )
 
 Getting a response from your chat bot
@@ -162,3 +152,4 @@ documentation for more details and examples.
 Up next: :doc:`./examples`
 
 .. _Gitter: https://gitter.im/chatter_bot/Lobby
+.. _SQLite: https://www.sqlite.org/
