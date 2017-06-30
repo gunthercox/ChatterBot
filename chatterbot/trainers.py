@@ -102,20 +102,32 @@ class ChatterBotCorpusTrainer(Trainer):
 
         self.corpus = Corpus()
 
-    def train(self, *corpora):
-        trainer = ListTrainer(self.storage)
+    def train(self, *corpus_paths):
 
         # Allow a list of corpora to be passed instead of arguments
-        if len(corpora) == 1:
-            if isinstance(corpora[0], list):
-                corpora = corpora[0]
+        if len(corpus_paths) == 1:
+            if isinstance(corpus_paths[0], list):
+                corpus_paths = corpus_paths[0]
 
         # Train the chat bot with each statement and response pair
-        for corpus in corpora:
-            corpus_data = self.corpus.load_corpus(corpus)
-            for data in corpus_data:
-                for pair in data:
-                    trainer.train(pair)
+        for corpus_path in corpus_paths:
+
+            corpora = self.corpus.load_corpus(corpus_path)
+
+            for corpus in corpora:
+                for conversation in corpus:
+                    statement_history = []
+
+                    for text in conversation:
+                        statement = self.get_or_create(text)
+
+                        if statement_history:
+                            statement.add_response(
+                                Response(statement_history[-1].text)
+                            )
+
+                        statement_history.append(statement)
+                        self.storage.update(statement)
 
 
 class TwitterTrainer(Trainer):
