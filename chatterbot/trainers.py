@@ -78,7 +78,7 @@ class ListTrainer(Trainer):
         """
         previous_statement_text = None
 
-        for text in conversation:
+        for text in reversed(conversation):
             statement = self.get_or_create(text)
 
             if previous_statement_text:
