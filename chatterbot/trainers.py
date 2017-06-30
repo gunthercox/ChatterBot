@@ -76,17 +76,17 @@ class ListTrainer(Trainer):
         Train the chat bot based on the provided list of
         statements that represents a single conversation.
         """
-        statement_history = []
+        previous_statement_text = None
 
         for text in conversation:
             statement = self.get_or_create(text)
 
-            if statement_history:
+            if previous_statement_text:
                 statement.add_response(
-                    Response(statement_history[-1].text)
+                    Response(previous_statement_text)
                 )
 
-            statement_history.append(statement)
+            previous_statement_text = statement.text
             self.storage.update(statement)
 
 
@@ -116,17 +116,17 @@ class ChatterBotCorpusTrainer(Trainer):
 
             for corpus in corpora:
                 for conversation in corpus:
-                    statement_history = []
+                    previous_statement_text = None
 
                     for text in conversation:
                         statement = self.get_or_create(text)
 
-                        if statement_history:
+                        if previous_statement_text:
                             statement.add_response(
-                                Response(statement_history[-1].text)
+                                Response(previous_statement_text)
                             )
 
-                        statement_history.append(statement)
+                        previous_statement_text = statement.text
                         self.storage.update(statement)
 
 
