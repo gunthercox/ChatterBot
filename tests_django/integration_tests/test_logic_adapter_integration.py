@@ -29,7 +29,7 @@ class LogicIntegrationTestCase(TestCase):
         statement2 = Statement(text='Yes')
         statement2.save()
 
-        response = Response(statement=statement1, response=statement2)
+        response = Response(statement=statement2, response=statement1)
         response.save()
 
         response = adapter.process(statement1)
