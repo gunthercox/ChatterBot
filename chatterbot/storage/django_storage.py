@@ -82,6 +82,7 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         from django.apps import apps
         Statement = apps.get_model(self.django_app_name, 'Statement')
+        Response = apps.get_model(self.django_app_name, 'Response')
 
         response_statement_cache = statement.response_statement_cache
 
@@ -97,9 +98,9 @@ class DjangoStorageAdapter(StorageAdapter):
             response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
             response_statement.save()
 
-            response, created = statement.in_response.get_or_create(
-                statement=statement,
-                response=response_statement
+            response, created = Response.objects.get_or_create(
+                statement=response_statement,
+                response=statement
             )
 
             if not created:
