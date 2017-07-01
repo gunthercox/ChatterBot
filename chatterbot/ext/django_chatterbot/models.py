@@ -9,6 +9,14 @@ class AbstractBaseStatement(models.Model):
     default models.
     """
 
+    def __init__(self, *args, **kwargs):
+        super(AbstractBaseStatement, self).__init__(*args, **kwargs)
+
+        # This is the confidence with which the chat bot believes
+        # this is an accurate response. This value is set when the
+        # statement is returned by the chat bot.
+        self.confidence = 0
+
     text = models.CharField(
         unique=True,
         blank=False,
@@ -22,11 +30,6 @@ class AbstractBaseStatement(models.Model):
     )
 
     extra_data = models.CharField(max_length=500)
-
-    # This is the confidence with which the chat bot believes
-    # this is an accurate response. This value is set when the
-    # statement is returned by the chat bot.
-    confidence = 0
 
     class Meta:
         abstract = True
