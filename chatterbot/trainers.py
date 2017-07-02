@@ -1,3 +1,5 @@
+import os
+import sys
 import logging
 from .conversation import Statement, Response
 
@@ -230,7 +232,6 @@ class UbuntuCorpusTrainer(Trainer):
 
     def __init__(self, storage, **kwargs):
         super(UbuntuCorpusTrainer, self).__init__(storage, **kwargs)
-        import os
 
         self.data_download_url = kwargs.get(
             'ubuntu_corpus_data_download_url',
@@ -254,8 +255,6 @@ class UbuntuCorpusTrainer(Trainer):
         """
         Check if the data file is already downloaded.
         """
-        import os
-
         if os.path.exists(file_path):
             self.logger.info('File is already downloaded')
             return True
@@ -266,7 +265,6 @@ class UbuntuCorpusTrainer(Trainer):
         """
         Check if the data file is already extracted.
         """
-        import os
 
         if os.path.isdir(file_path):
             self.logger.info('File is already extracted')
@@ -279,8 +277,6 @@ class UbuntuCorpusTrainer(Trainer):
         Show a progress indicator for the download status.
         Based on: http://stackoverflow.com/a/15645088/1547223
         """
-        import os
-        import sys
         import requests
 
         file_name = url.split('/')[-1]
@@ -319,8 +315,6 @@ class UbuntuCorpusTrainer(Trainer):
         """
         Extract a tar file at the specified file path.
         """
-        import os
-        import sys
         import tarfile
 
         print('Extracting {}'.format(file_path))
@@ -344,8 +338,6 @@ class UbuntuCorpusTrainer(Trainer):
     def train(self):
         import glob
         import csv
-        import os
-        import sys
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
