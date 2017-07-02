@@ -242,47 +242,13 @@ class UbuntuCorpusTrainer(Trainer):
             './data/'
         )
 
+        self.extracted_data_directory = os.path.join(
+            self.data_directory, 'ubuntu_dialogs'
+        )
+
         # Create the data directory if it does not already exist
         if not os.path.exists(self.data_directory):
             os.makedirs(self.data_directory)
-
-    def download(self, url, show_status=True):
-        """
-        Download a file from the given url.
-        Show a progress indicator for the download status.
-        Based on: http://stackoverflow.com/a/15645088/1547223
-        """
-        import os
-        import sys
-        import requests
-
-        file_name = url.split('/')[-1]
-        file_path = os.path.join(self.data_directory, file_name)
-
-        # Do not download the data if it already exists
-        if self.is_downloaded(file_path):
-            return file_path
-
-        with open(file_path, 'wb') as open_file:
-            print('Downloading %s' % file_path)
-            response = requests.get(url, stream=True)
-            total_length = response.headers.get('content-length')
-
-            if total_length is None:
-                # No content length header
-                open_file.write(response.content)
-            else:
-                download = 0
-                total_length = int(total_length)
-                for data in response.iter_content(chunk_size=4096):
-                    download += len(data)
-                    open_file.write(data)
-                    if show_status:
-                        done = int(50 * download / total_length)
-                        sys.stdout.write('\r[%s%s]' % ('=' * done, ' ' * (50 - done)))
-                        sys.stdout.flush()
-
-        return file_path
 
     def is_downloaded(self, file_path):
         """
@@ -302,30 +268,76 @@ class UbuntuCorpusTrainer(Trainer):
         """
         import os
 
-        extracted_file_directory = os.path.splitext(file_path)[0]
-
-        if os.path.isdir(extracted_file_directory):
+        if os.path.isdir(file_path):
             self.logger.info('File is already extracted')
             return True
         return False
+
+    def download(self, url, show_status=True):
+        """
+        Download a file from the given url.
+        Show a progress indicator for the download status.
+        Based on: http://stackoverflow.com/a/15645088/1547223
+        """
+        import os
+        import sys
+        import requests
+
+        file_name = url.split('/')[-1]
+        file_path = os.path.join(self.data_directory, file_name)
+
+        # Do not download the data if it already exists
+        if self.is_downloaded(file_path):
+            return file_path
+
+        with open(file_path, 'wb') as open_file:
+            print('Downloading %s' % url)
+            response = requests.get(url, stream=True)
+            total_length = response.headers.get('content-length')
+
+            if total_length is None:
+                # No content length header
+                open_file.write(response.content)
+            else:
+                download = 0
+                total_length = int(total_length)
+                for data in response.iter_content(chunk_size=4096):
+                    download += len(data)
+                    open_file.write(data)
+                    if show_status:
+                        done = int(50 * download / total_length)
+                        sys.stdout.write('\r[%s%s]' % ('=' * done, ' ' * (50 - done)))
+                        sys.stdout.flush()
+
+            # Add a new line after the download bar
+            sys.stdout.write('\n')
+
+        print('Download location: %s' % file_path)
+        return file_path
 
     def extract(self, file_path):
         """
         Extract a tar file at the specified file path.
         """
+        import os
+        import sys
         import tarfile
 
         print('Extracting {}'.format(file_path))
 
+        if not os.path.exists(self.extracted_data_directory):
+            os.makedirs(self.extracted_data_directory)
+
         def track_progress(members):
+            sys.stdout.write('.')
             for member in members:
-                # this will be the current file being extracted
+                # This will be the current file being extracted
                 yield member
 
         with tarfile.open(file_path) as tar:
-            tar.extractall(path=self.data_directory, members=track_progress(tar))
+            tar.extractall(path=self.extracted_data_directory, members=track_progress(tar))
 
-        self.logger.info('File extraction complete')
+        self.logger.info('File extracted to {}'.format(self.extracted_data_directory))
 
         return True
 
@@ -339,13 +351,12 @@ class UbuntuCorpusTrainer(Trainer):
         corpus_download_path = self.download(self.data_download_url)
 
         # Extract if the directory doesn not already exists
-        if not self.is_extracted(corpus_download_path):
+        if not self.is_extracted(self.extracted_data_directory):
             self.extract(corpus_download_path)
 
         extracted_corpus_path = os.path.join(
-            self.data_directory,
-            os.path.split(corpus_download_path)[-1].split('.')[0],
-            '**', '*.tsv'
+            self.extracted_data_directory,
+            '**', '**', '*.tsv'
         )
 
         file_kwargs = {}

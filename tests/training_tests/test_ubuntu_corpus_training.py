@@ -19,11 +19,8 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
     def tearDown(self):
         super(UbuntuCorpusTrainerTestCase, self).tearDown()
-        import shutil
 
-        # Clean up by removing the corpus data directory
-        if os.path.exists(self.chatbot.trainer.data_directory):
-            shutil.rmtree(self.chatbot.trainer.data_directory)
+        self._remove_data()
 
     def _get_data(self):
 
@@ -43,6 +40,15 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
         return data1, data2
 
+    def _remove_data(self):
+        """
+        Clean up by removing the corpus data directory.
+        """
+        import shutil
+
+        if os.path.exists(self.chatbot.trainer.data_directory):
+            shutil.rmtree(self.chatbot.trainer.data_directory)
+
     def _create_test_corpus(self, data):
         """
         Create a small tar in a similar format to the
@@ -54,11 +60,11 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         tsv1 = BytesIO(data[0])
         tsv2 = BytesIO(data[1])
 
-        tarinfo = tarfile.TarInfo('ubuntu_dialogs/3/1.tsv')
+        tarinfo = tarfile.TarInfo('dialogs/3/1.tsv')
         tarinfo.size = len(data[0])
         tar.addfile(tarinfo, fileobj=tsv1)
 
-        tarinfo = tarfile.TarInfo('ubuntu_dialogs/3/2.tsv')
+        tarinfo = tarfile.TarInfo('dialogs/3/2.tsv')
         tarinfo.size = len(data[1])
         tar.addfile(tarinfo, fileobj=tsv2)
 
@@ -73,7 +79,9 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Remove the test corpus file.
         """
         file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
-        os.remove(file_path)
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
     def _mock_get_response(self, *args, **kwargs):
         """
@@ -136,8 +144,9 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         self.chatbot.trainer.extract(file_object_path)
 
         self._destroy_test_corpus()
-        corpus_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs', '3')
+        corpus_path = os.path.join(self.chatbot.trainer.extracted_data_directory, 'dialogs', '3')
 
+        self.assertTrue(os.path.exists(self.chatbot.trainer.extracted_data_directory))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '1.tsv')))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '2.tsv')))
 
@@ -160,7 +169,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         file_object_path = self._create_test_corpus(self._get_data())
         self.chatbot.trainer.extract(file_object_path)
 
-        extracted = self.chatbot.trainer.is_extracted(file_object_path)
+        extracted = self.chatbot.trainer.is_extracted(self.chatbot.trainer.extracted_data_directory)
         self._destroy_test_corpus()
 
         self.assertTrue(extracted)
@@ -169,8 +178,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         Test that a check can be done for if the corpus has aleady been extracted.
         """
-        file_object_path = self._create_test_corpus(self._get_data())
-        extracted = self.chatbot.trainer.is_extracted(file_object_path)
-        self._destroy_test_corpus()
+        self._remove_data()
+        extracted = self.chatbot.trainer.is_extracted(self.chatbot.trainer.extracted_data_directory)
 
         self.assertFalse(extracted)
