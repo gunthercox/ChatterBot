@@ -37,14 +37,15 @@ print("Type something to begin...")
 # The following loop will execute each time the user enters input
 while True:
     try:
-               input_statement = bot.input.process_input_statement()
-               statement, response = bot.generate_response(input_statement, DEFAULT_SESSION_ID)
-               bot.output.process_response(response)
-               print('\n Is "{}" a coherent response to "{}"? \n'.format(response, input_statement))                      
-               if get_feedback():
-                    print("please input the correct one")
-                    response1 = bot.input.process_input_statement()
-                    bot.learn_response(response1, input_statement)
+        input_statement = bot.input.process_input_statement()
+        statement, response = bot.generate_response(input_statement, DEFAULT_SESSION_ID)
+        bot.output.process_response(response)
+        print('\n Is "{}" a coherent response to "{}"? \n'.format(response, input_statement))                      
+        if get_feedback():
+            print("please input the correct one")
+            response1 = bot.input.process_input_statement()
+            bot.learn_response(response1, input_statement)
+            print("Response added to bot!")
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
