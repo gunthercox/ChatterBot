@@ -141,19 +141,6 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '1.tsv')))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '2.tsv')))
 
-    def test_already_extracted(self):
-        """
-        Test that extraction is only done if the compressed file
-        has not already been extracted.
-        """
-        file_object_path = self._create_test_corpus(self._get_data())
-        created = self.chatbot.trainer.extract(file_object_path)
-        not_created = self.chatbot.trainer.extract(file_object_path)
-        self._destroy_test_corpus()
-
-        self.assertTrue(created)
-        self.assertFalse(not_created)
-
     def test_train(self):
         """
         Test that the chat bot is trained using data from the Ubuntu Corpus.
@@ -165,3 +152,25 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
         response = self.chatbot.get_response('Is anyone there?')
         self.assertEqual(response, 'Yes')
+
+    def test_is_extracted(self):
+        """
+        Test that a check can be done for if the corpus has aleady been extracted.
+        """
+        file_object_path = self._create_test_corpus(self._get_data())
+        self.chatbot.trainer.extract(file_object_path)
+
+        extracted = self.chatbot.trainer.is_extracted(file_object_path)
+        self._destroy_test_corpus()
+
+        self.assertTrue(extracted)
+
+    def test_is_not_extracted(self):
+        """
+        Test that a check can be done for if the corpus has aleady been extracted.
+        """
+        file_object_path = self._create_test_corpus(self._get_data())
+        extracted = self.chatbot.trainer.is_extracted(file_object_path)
+        self._destroy_test_corpus()
+
+        self.assertFalse(extracted)

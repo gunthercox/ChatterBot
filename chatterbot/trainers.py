@@ -260,12 +260,11 @@ class UbuntuCorpusTrainer(Trainer):
         file_path = os.path.join(self.data_directory, file_name)
 
         # Do not download the data if it already exists
-        if os.path.exists(file_path):
-            self.logger.info('File is already downloaded')
+        if self.is_downloaded(file_path):
             return file_path
 
         with open(file_path, 'wb') as open_file:
-            print('Downloading %s' % file_name)
+            print('Downloading %s' % file_path)
             response = requests.get(url, stream=True)
             total_length = response.headers.get('content-length')
 
@@ -285,31 +284,43 @@ class UbuntuCorpusTrainer(Trainer):
 
         return file_path
 
+    def is_downloaded(self, file_path):
+        """
+        Check if the data file is already downloaded.
+        """
+        import os
+
+        if os.path.exists(file_path):
+            self.logger.info('File is already downloaded')
+            return True
+
+        return False
+
+    def is_extracted(self, file_path):
+        """
+        Check if the data file is already extracted.
+        """
+        import os
+
+        extracted_file_directory = os.path.splitext(file_path)[0]
+
+        if os.path.isdir(extracted_file_directory):
+            self.logger.info('File is already extracted')
+            return True
+        return False
+
     def extract(self, file_path):
         """
         Extract a tar file at the specified file path.
         """
-        import os
         import tarfile
 
-        dir_name = os.path.split(file_path)[-1].split('.')[0]
-
-        extracted_file_directory = os.path.join(
-            self.data_directory,
-            dir_name
-        )
-
-        # Do not extract if the extracted directory already exists
-        if os.path.isdir(extracted_file_directory):
-            return False
-
-        self.logger.info('Starting file extraction')
+        print('Extracting {}'.format(file_path))
 
         def track_progress(members):
             for member in members:
                 # this will be the current file being extracted
                 yield member
-                print('Extracting {}'.format(member.path))
 
         with tarfile.open(file_path) as tar:
             tar.extractall(path=self.data_directory, members=track_progress(tar))
@@ -324,10 +335,12 @@ class UbuntuCorpusTrainer(Trainer):
         import os
         import sys
 
-        # Download and extract the Ubuntu dialog corpus
+        # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
 
-        self.extract(corpus_download_path)
+        # Extract if the directory doesn not already exists
+        if not self.is_extracted(corpus_download_path):
+            self.extract(corpus_download_path)
 
         extracted_corpus_path = os.path.join(
             self.data_directory,
