@@ -49,7 +49,6 @@ class Trainer(object):
 
     def _generate_export_data(self):
         result = []
-
         for statement in self.storage.filter():
             for response in statement.in_response_to:
                 result.append([response.text, statement.text])
@@ -78,17 +77,25 @@ class ListTrainer(Trainer):
         Train the chat bot based on the provided list of
         statements that represents a single conversation.
         """
-        previous_statement_text = None
 
-        for text in conversation:
-            statement = self.get_or_create(text)
+        # Inline method yields statements for larger datasets
+        def get_statements(conversations):
+            previous_statement_text = None
 
-            if previous_statement_text:
-                statement.add_response(
-                    Response(previous_statement_text)
-                )
+            for text in conversation:
+                statement = self.get_or_create(text)
 
-            previous_statement_text = statement.text
+                if previous_statement_text:
+                    statement.add_response(
+                        Response(previous_statement_text)
+                    )
+
+                previous_statement_text = statement.text
+                yield statement
+
+        statements = get_statements(conversation)
+
+        for statement in statements:
             self.storage.update(statement)
 
 
@@ -111,25 +118,37 @@ class ChatterBotCorpusTrainer(Trainer):
             if isinstance(corpus_paths[0], list):
                 corpus_paths = corpus_paths[0]
 
-        # Train the chat bot with each statement and response pair
-        for corpus_path in corpus_paths:
+        # Inline method yields conversations for larger datasets
+        def get_conversations(corpus_paths):
+            for corpus_path in corpus_paths:
+                corpora = self.corpus.load_corpus(corpus_path)
 
-            corpora = self.corpus.load_corpus(corpus_path)
+                for corpus in corpora:
+                    for conversation in corpus:
+                        yield conversation
 
-            for corpus in corpora:
-                for conversation in corpus:
-                    previous_statement_text = None
+        # Inline method yields statements for larger datasets
+        def get_statements(conversation):
+            previous_statement_text = None
 
-                    for text in conversation:
-                        statement = self.get_or_create(text)
+            for text in conversation:
+                statement = self.get_or_create(text)
 
-                        if previous_statement_text:
-                            statement.add_response(
-                                Response(previous_statement_text)
-                            )
+                if previous_statement_text:
+                    statement.add_response(
+                        Response(previous_statement_text)
+                    )
 
-                        previous_statement_text = statement.text
-                        self.storage.update(statement)
+                previous_statement_text = statement.text
+                yield statement
+
+        # Get all conversations from copurs_paths
+        for conversation in get_conversations(corpus_paths):
+
+            # Get all statements from conversations
+            for statement in get_statements(conversation):
+
+                self.storage.update(statement)
 
 
 class TwitterTrainer(Trainer):
@@ -178,7 +197,6 @@ class TwitterTrainer(Trainer):
         Given a list of tweets, return the set of
         words from the tweets.
         """
-        words = set()
 
         for tweet in tweets:
             tweet_words = tweet.text.split()
@@ -186,16 +204,13 @@ class TwitterTrainer(Trainer):
             for word in tweet_words:
                 # If the word contains only letters with a length from 4 to 9
                 if word.isalpha() and len(word) > 3 and len(word) <= 9:
-                    words.add(word)
-
-        return words
+                    yield word
 
     def get_statements(self):
         """
         Returns list of random statements from the API.
         """
         from twitter import TwitterError
-        statements = []
 
         # Generate a random word
         random_word = self.random_word(self.random_seed_word)
@@ -209,13 +224,9 @@ class TwitterTrainer(Trainer):
                 try:
                     status = self.api.GetStatus(tweet.in_reply_to_status_id)
                     statement.add_response(Response(status.text))
-                    statements.append(statement)
+                    yield statement
                 except TwitterError as error:
                     self.logger.warning(str(error))
-
-        self.logger.info('Adding {} tweets with responses'.format(len(statements)))
-
-        return statements
 
     def train(self):
         for _ in range(0, 10):
