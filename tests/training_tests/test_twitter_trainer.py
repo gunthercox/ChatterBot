@@ -64,7 +64,7 @@ class TwitterTrainerTestCase(ChatBotTestCase):
 
     def test_get_words_from_tweets(self):
         tweets = get_search_side_effect()
-        words = self.trainer.get_words_from_tweets(tweets)
+        words = list(self.trainer.get_words_from_tweets(tweets))
 
         self.assertIn('about', words)
         self.assertIn('favorite', words)
@@ -73,10 +73,10 @@ class TwitterTrainerTestCase(ChatBotTestCase):
     def test_get_statements(self):
         statements = self.trainer.get_statements()
 
-        self.assertEqual(len(statements), 1)
+        self.assertEqual(len(list(statements)), 1)
 
     def test_train(self):
         self.trainer.train()
 
         statement_created = self.trainer.storage.filter()
-        self.assertTrue(len(statement_created))
+        self.assertTrue(len(list(statement_created)))
