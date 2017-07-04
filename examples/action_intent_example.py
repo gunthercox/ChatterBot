@@ -38,4 +38,4 @@ response = bot.get_response('current weather in London?')
 # Handle JSON data, get all required data and print them
 if 'http' in response.text:
     resp = requests.get(response.text)
-    print resp.json()
+    print(resp.json())
