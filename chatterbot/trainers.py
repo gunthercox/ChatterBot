@@ -135,8 +135,6 @@ class TwitterTrainer(Trainer):
     """
     Allows the chat bot to be trained using data
     gathered from Twitter.
-    :param random_seed_word: The seed word to be used to get random tweets from the Twitter API.
-                             This parameter is optional. By default it is the word 'random'.
     """
 
     def __init__(self, storage, **kwargs):
