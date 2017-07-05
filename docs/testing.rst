@@ -53,7 +53,7 @@ performance by running the following command.
    python tests/benchmarks.py
    
 Makefile Utility
----------------
+----------------
 
 Makefiles are a simple way to perform code compilation on ``Linux platforms``.
 
