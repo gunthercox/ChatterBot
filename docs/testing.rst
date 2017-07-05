@@ -51,5 +51,35 @@ performance by running the following command.
 .. sourcecode:: sh
 
    python tests/benchmarks.py
+   
+Makefile Utility
+---------------
+
+Makefiles are a simple way to perform code compilation on ``Linux platforms``.
+
+We often forget to compile or to run all tests whenever we make any change in existing files,
+and when we create a pull request for the same,it fails the build giving the explanation : 
+`Some checks were not successful`
+
+To avoid all your problems with the Travis CI, use the ``MAKEFILE``. It will help you with the code to avoid problems,
+failing the build by Travis CI.
+
+To see the list of avaliable commands with MAKEFILE:
+
+.. sourcecode:: sh
+
+   make help
+
+To run all tests:
+
+.. sourcecode:: sh
+
+   make all
+
+To clean your workspace with un-versioned files
+
+.. sourcecode:: sh
+
+   make clean
 
 ..  _`nose documentation`: https://nose.readthedocs.org/en/latest/
