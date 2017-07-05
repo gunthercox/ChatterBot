@@ -212,7 +212,6 @@ class SentimentComparison(Comparator):
             ], key=lambda score: score[1]
         )
 
-
         statement2_greatest_polarity = 'neu'
         statement2_greatest_score = -1
 

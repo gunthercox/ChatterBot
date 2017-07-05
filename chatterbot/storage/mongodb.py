@@ -263,7 +263,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         input text.
         """
         # Bottom-to-top approach list comprehension gives more readability
-        dum_var = [
+        [
             [
                 statement.remove_response(statement_text),
                 self.update(statement)
