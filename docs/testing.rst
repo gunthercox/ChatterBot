@@ -52,4 +52,32 @@ performance by running the following command.
 
    python tests/benchmarks.py
 
+MakeFile Utility
+----------------
+
+Makefiles are a simple way to organize code compilation on ``Linux platforms``.
+
+We offten forogt compile all tests when we have made any changes in exisisting files,
+and eventually we will create pull requrest and it will fail build in ``red`` color.
+
+To avoid all your problem ``makefile`` make your life very eaiser with some command line areguments.
+
+To see list avaliable commands to exeucte using make
+
+.. sourcecode:: sh
+
+   make help
+
+To execute all tests
+
+.. sourcecode:: sh
+
+   make all
+
+To clean your workspace with un-versioned files
+
+.. sourcecode:: sh
+
+   make clean
+
 ..  _`nose documentation`: https://nose.readthedocs.org/en/latest/
