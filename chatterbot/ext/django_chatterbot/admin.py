@@ -9,7 +9,8 @@ class StatementAdmin(admin.ModelAdmin):
 
 
 class ResponseAdmin(admin.ModelAdmin):
-    list_display = ('statement', 'occurrence', )
+    list_display = ('statement', 'response', 'occurrence', )
+    search_fields = ['statement__text', 'response__text']
 
 
 class ConversationAdmin(admin.ModelAdmin):

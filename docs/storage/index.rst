@@ -18,15 +18,14 @@ storage adapter you want to use.
 
    chatbot = ChatBot(
        "My ChatterBot",
-       storage_adapter="chatterbot.storage.JsonFileStorageAdapter"
+       storage_adapter="chatterbot.storage.SQLStorageAdapter"
    )
 
-Json File Storage Adapter
-=========================
+SQL Alchemy Storage Adapter
+===========================
 
-.. autoclass:: chatterbot.storage.JsonFileStorageAdapter
+.. autoclass:: chatterbot.storage.SQLStorageAdapter
    :members:
-   :special-members: AdapterUnsuitableForProductionWarning
 
 Mongo Database Adapter
 ======================

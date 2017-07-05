@@ -19,10 +19,10 @@ try:
         __tablename__ = 'StatementTable'
 
         def get_statement(self):
-            stmt = Statement(self.text, **self.extra_data)
-            for resp in self.in_response_to:
-                stmt.add_response(resp.get_response())
-            return stmt
+            statement = Statement(self.text, extra_data=self.extra_data)
+            for response in self.in_response_to:
+                statement.add_response(response.get_response())
+            return statement
 
         def get_statement_serialized(context):
             params = context.current_parameters
@@ -32,9 +32,16 @@ try:
         id = Column(Integer)
         text = Column(String, primary_key=True)
         extra_data = Column(PickleType)
-        # relationship:
-        in_response_to = relationship("ResponseTable", back_populates="statement_table")
-        text_search = Column(String, primary_key=True, default=get_statement_serialized)
+
+        in_response_to = relationship(
+            'ResponseTable',
+            back_populates='statement_table'
+        )
+        text_search = Column(
+            String,
+            primary_key=True,
+            default=get_statement_serialized
+        )
 
     class ResponseTable(Base):
         from sqlalchemy import Column, Integer, String, ForeignKey
@@ -52,11 +59,20 @@ try:
         occurrence = Column(Integer)
         statement_text = Column(String, ForeignKey('StatementTable.text'))
 
-        statement_table = relationship("StatementTable", back_populates="in_response_to", cascade="all", uselist=False)
-        text_search = Column(String, primary_key=True, default=get_reponse_serialized)
+        statement_table = relationship(
+            'StatementTable',
+            back_populates='in_response_to',
+            cascade='all',
+            uselist=False
+        )
+        text_search = Column(
+            String,
+            primary_key=True,
+            default=get_reponse_serialized
+        )
 
         def get_response(self):
-            occ = {"occurrence": self.occurrence}
+            occ = {'occurrence': self.occurrence}
             return Response(text=self.text, **occ)
 
 except ImportError:
@@ -133,9 +149,7 @@ class SQLStorageAdapter(StorageAdapter):
             "read_only", False
         )
 
-        create = self.kwargs.get("create", False)
-
-        if not self.read_only and create:
+        if not self.engine.dialect.has_table(self.engine, 'StatementTable'):
             self.create()
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
@@ -264,9 +278,11 @@ class SQLStorageAdapter(StorageAdapter):
                 if statement.text:
                     record.text = statement.text
                 if statement.extra_data:
-                    record.extra_data = dict[statement.extra_data]
+                    record.extra_data = dict(statement.extra_data)
                 if statement.in_response_to:
-                    record.in_response_to = list(map(get_response_table, statement.in_response_to))
+                    record.in_response_to = list(
+                        map(get_response_table, statement.in_response_to)
+                    )
                 session.add(record)
             else:
                 session.add(get_statement_table(statement))
@@ -309,7 +325,8 @@ class SQLStorageAdapter(StorageAdapter):
                 session.commit()
             else:
                 session.rollback()
-        except DatabaseError as e:
-            self.logger.error(statement_text, str(e.orig))
+        except DatabaseError:
+            # Log the statement text and the exception
+            self.logger.exception(statement_text)
         finally:
             session.close()

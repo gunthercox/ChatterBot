@@ -27,9 +27,8 @@ class ChatBotTestCase(TestCase):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.output.OutputAdapter',
-            # None runs the JSON database in-memory
-            'database': None,
-            'silence_performance_warning': True
+            # None runs the test database in-memory
+            'database': None
         }
 
     def random_string(self, start=0, end=9000):

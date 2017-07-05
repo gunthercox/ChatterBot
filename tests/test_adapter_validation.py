@@ -13,7 +13,7 @@ class AdapterValidationTests(ChatBotTestCase):
 
     def test_valid_storage_adapter(self):
         kwargs = self.get_kwargs()
-        kwargs['storage_adapter'] = 'chatterbot.storage.JsonFileStorageAdapter'
+        kwargs['storage_adapter'] = 'chatterbot.storage.SQLStorageAdapter'
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)
         except Adapter.InvalidAdapterTypeException:
@@ -21,7 +21,7 @@ class AdapterValidationTests(ChatBotTestCase):
 
     def test_invalid_input_adapter(self):
         kwargs = self.get_kwargs()
-        kwargs['input_adapter'] = 'chatterbot.storage.JsonFileStorageAdapter'
+        kwargs['input_adapter'] = 'chatterbot.storage.SQLStorageAdapter'
         with self.assertRaises(Adapter.InvalidAdapterTypeException):
             self.chatbot = ChatBot('Test Bot', **kwargs)
 
@@ -64,7 +64,7 @@ class AdapterValidationTests(ChatBotTestCase):
     def test_valid_adapter_dictionary(self):
         kwargs = self.get_kwargs()
         kwargs['storage_adapter'] = {
-            'import_path': 'chatterbot.storage.JsonFileStorageAdapter'
+            'import_path': 'chatterbot.storage.SQLStorageAdapter'
         }
         try:
             self.chatbot = ChatBot('Test Bot', **kwargs)

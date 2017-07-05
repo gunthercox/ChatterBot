@@ -5,7 +5,7 @@ from chatterbot import ChatBot
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Default Response Example Bot',
-    storage_adapter='chatterbot.storage.JsonFileStorageAdapter',
+    storage_adapter='chatterbot.storage.SQLStorageAdapter',
     logic_adapters=[
         {
             'import_path': 'chatterbot.logic.BestMatch'

@@ -18,7 +18,7 @@ class ChatBot(object):
         self.name = name
         kwargs['name'] = name
 
-        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.JsonFileStorageAdapter')
+        storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
@@ -87,11 +87,6 @@ class ChatBot(object):
         """
         Do any work that needs to be done before the responses can be returned.
         """
-        from .utils import nltk_download_corpus
-
-        # Download required NLTK corpora if they have not already been downloaded
-        nltk_download_corpus('corpora/stopwords')
-
         self.logic.initialize()
 
     def get_response(self, input_item, session_id=None):

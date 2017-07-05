@@ -38,7 +38,7 @@ class TimeLogicAdapter(LogicAdapter):
 
     def time_question_features(self, text):
         """
-        Provide an analysis of significan features in the string.
+        Provide an analysis of significant features in the string.
         """
         features = {}
 
