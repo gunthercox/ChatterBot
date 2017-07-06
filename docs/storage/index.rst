@@ -27,14 +27,8 @@ SQL Alchemy Storage Adapter
 .. autoclass:: chatterbot.storage.SQLStorageAdapter
    :members:
 
-Mongo Database Adapter
-======================
+MongoDB Storage Adapter
+=======================
 
 .. autoclass:: chatterbot.storage.MongoDatabaseAdapter
-   :members:
-
-SQL Alchemy Database Adapter
-============================
-
-.. autoclass:: chatterbot.storage.SQLStorageAdapter
    :members:
