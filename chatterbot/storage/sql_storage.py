@@ -8,7 +8,8 @@ try:
     from chatterbot.ext.sqlalchemy_app.models import Base
     from sqlalchemy.orm import relationship
     from sqlalchemy.sql import func
-    from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, PickleType
+    from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, PickleType
+
 
     class StatementTable(Base):
         """
@@ -60,6 +61,28 @@ try:
         def get_response(self):
             occ = {'occurrence': self.occurrence}
             return Response(text=self.text, **occ)
+
+    conversation_association_table = Table(
+        'conversation_association',
+        Base.metadata,
+        Column('conversation_id', Integer, ForeignKey('conversation.id')),
+        Column('statement_id', Integer, ForeignKey('StatementTable.id'))
+    )
+
+    class Conversation(Base):
+        """
+        A conversation.
+        """
+
+        __tablename__ = 'conversation'
+
+        id = Column(Integer, primary_key=True)
+
+        statements = relationship(
+            'StatementTable',
+            secondary=lambda: conversation_association_table,
+            backref='conversations'
+        )
 
 except ImportError:
     pass
@@ -278,6 +301,45 @@ class SQLStorageAdapter(StorageAdapter):
             session.add(record)
 
             self._session_finish(session)
+
+    def create_conversation(self):
+        """
+        Create a new conversation.
+        """
+        session = self.Session()
+
+        conversation = Conversation()
+        session.add(conversation)
+
+        conversation_id = conversation.id
+
+        self._session_finish(session)
+
+        return conversation_id
+
+    def get_latest_response(self, conversation_id):
+        """
+        Returns the latest response in a conversation if it exists.
+        Returns None if a matching conversation cannot be found.
+        """
+        from sqlalchemy import text
+
+        session = self.Session()
+        statement = None
+
+        statement_query = session.query(
+            StatementTable.conversations
+        ).filter_by(
+            id=conversation_id
+        ).first()
+        # TODO: Get the last response statement, not just the first in the result set
+
+        if statement_query:
+            statement = statement_query.get_statement()
+
+        session.close()
+
+        return statement
 
     def get_random(self):
         """
