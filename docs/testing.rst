@@ -57,7 +57,7 @@ Makefile Utility
 
 Makefiles are a simple way to perform code compilation on ``Linux platforms``.
 
-We often forget to compile or to run all tests whenever we make any change in existing files,
+We often forgot to build docs, run nosetes or Django tests whenever we make any change in existing files,
 and when we create a pull request for the same,it fails the build giving the explanation : 
 `Some checks were not successful`
 
