@@ -91,6 +91,23 @@ class StorageAdapter(object):
             'The `update` method is not implemented by this adapter.'
         )
 
+    def get_latest_response(self, conversation_id):
+        """
+        Returns the latest response in a conversation if it exists.
+        Returns None if a matching conversation cannot be found.
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `get_conversation` method is not implemented by this adapter.'
+        )
+
+    def create_conversation(self):
+        """
+        Creates a new conversation.
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `create_conversation` method is not implemented by this adapter.'
+        )
+
     def get_random(self):
         """
         Returns a random statement from the database.

@@ -99,7 +99,7 @@ class ChatBot(object):
         :rtype: Statement
         """
         if not session_id:
-            session_id = str(self.default_session.uuid)
+            session_id = self.default_session_id
 
         input_statement = self.input.process_input_statement(input_item)
 
@@ -110,9 +110,7 @@ class ChatBot(object):
         statement, response = self.generate_response(input_statement, session_id)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
-        previous_statement = self.conversation_sessions.get(
-            session_id
-        ).conversation.get_last_response_statement()
+        previous_statement = self.storage.get_latest_response(session_id)
         self.learn_response(statement, previous_statement)
 
         self.conversation_sessions.update(session_id, (statement, response, ))
