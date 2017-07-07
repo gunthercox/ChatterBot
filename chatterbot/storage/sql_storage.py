@@ -10,6 +10,23 @@ try:
     from sqlalchemy.sql import func
     from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, PickleType
 
+    tag_association_table = Table(
+        'tag_association',
+        Base.metadata,
+        Column('tag_id', Integer, ForeignKey('tag.id')),
+        Column('statement_id', Integer, ForeignKey('StatementTable.id'))
+    )
+
+    class Tag(Base):
+        """
+        A tag that describes a statement.
+        """
+
+        __tablename__ = 'tag'
+
+        id = Column(Integer, primary_key=True)
+        name = Column(String)
+
     class StatementTable(Base):
         """
         StatementTable, placeholder for a sentence or phrase.
@@ -24,6 +41,12 @@ try:
             return statement
 
         text = Column(String, unique=True)
+
+        tags = relationship(
+            'Tag',
+            secondary=lambda: tag_association_table,
+            backref='statements'
+        )
 
         extra_data = Column(PickleType)
 
