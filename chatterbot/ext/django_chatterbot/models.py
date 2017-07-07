@@ -202,6 +202,29 @@ class AbstractBaseConversation(models.Model):
         return str(self.id)
 
 
+class AbstractBaseTag(models.Model):
+    """
+    The abstract base tag allows other models to
+    be created using the attributes that exist on the
+    default models.
+    """
+
+    name = models.SlugField(
+        max_length=50
+    )
+
+    statements = models.ManyToManyField(
+        'Statement',
+        related_name='tags'
+    )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+
 class Statement(AbstractBaseStatement):
     """
     A statement represents a single spoken entity, sentence or
@@ -223,5 +246,12 @@ class Response(AbstractBaseResponse):
 class Conversation(AbstractBaseConversation):
     """
     A sequence of statements representing a conversation.
+    """
+    pass
+
+
+class Tag(AbstractBaseTag):
+    """
+    A label that categorizes a statement.
     """
     pass
