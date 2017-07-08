@@ -8,7 +8,12 @@ import os
 import sphinx_rtd_theme
 from datetime import datetime
 
-import chatterbot
+try:
+    import chatterbot
+except ImportError:
+    import pip
+    pip.main(['install', 'chatterbot'])
+    import chatterbot
 
 
 # Insert the project root dir as the first element in the PYTHONPATH.
