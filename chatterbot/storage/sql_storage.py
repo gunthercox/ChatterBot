@@ -76,7 +76,7 @@ try:
 
         __tablename__ = 'conversation'
 
-        id = Column(Integer, primary_key=True)
+        id = Column(Integer, primary_key=True, autoincrement=True, default=1)
 
         statements = relationship(
             'StatementTable',
@@ -198,7 +198,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         session.delete(record)
 
-        self._session_finish(session, statement_text)
+        self._session_finish(session)
 
     def filter(self, **kwargs):
         """
@@ -309,13 +309,38 @@ class SQLStorageAdapter(StorageAdapter):
         session = self.Session()
 
         conversation = Conversation()
-        session.add(conversation)
 
+        session.add(conversation)
+        session.flush()
+
+        session.refresh(conversation)
         conversation_id = conversation.id
 
-        self._session_finish(session)
+        session.commit()
+        session.close()
 
         return conversation_id
+
+    def add_to_converation(self, conversation_id, statement, response):
+        """
+        Add the statement and response to the conversation.
+        """
+        session = self.Session()
+
+        conversation = session.query(Conversation).get(conversation_id)
+
+        statement_query = session.query(StatementTable).filter_by(
+            text=statement.text
+        ).first()
+        response_query = session.query(StatementTable).filter_by(
+            text=response.text
+        ).first()
+
+        conversation.statements.append(statement_query)
+        conversation.statements.append(response_query)
+
+        session.add(conversation)
+        self._session_finish(session)
 
     def get_latest_response(self, conversation_id):
         """
@@ -328,11 +353,10 @@ class SQLStorageAdapter(StorageAdapter):
         statement = None
 
         statement_query = session.query(
-            StatementTable.conversations
-        ).filter_by(
-            id=conversation_id
-        ).first()
-        # TODO: Get the last response statement, not just the first in the result set
+            StatementTable
+        ).filter(
+            StatementTable.conversations.any(id=conversation_id)
+        ).order_by(StatementTable.id.desc()).limit(2).first()
 
         if statement_query:
             statement = statement_query.get_statement()
@@ -370,15 +394,26 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Base.metadata.create_all(self.engine)
 
+<<<<<<< HEAD
     def _session_finish(self, session, statement_text=None):
         from sqlalchemy.exc import InvalidRequestError
+=======
+    def _session_finish(self, session):
+        from sqlalchemy.exc import DatabaseError
+>>>>>>> Save conversations to the database
         try:
             if not self.read_only:
                 session.commit()
             else:
                 session.rollback()
+<<<<<<< HEAD
         except InvalidRequestError:
             # Log the statement text and the exception
             self.logger.exception(statement_text)
+=======
+        except DatabaseError:
+            # Log the exception
+            self.logger.exception('An error occurred.')
+>>>>>>> Save conversations to the database
         finally:
             session.close()
