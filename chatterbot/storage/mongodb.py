@@ -98,6 +98,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         # The mongo collection of statement documents
         self.statements = self.database['statements']
 
+        # The mongo collection of conversation documents
+        self.conversations = self.database['conversations']
+
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
 
@@ -235,6 +238,51 @@ class MongoDatabaseAdapter(StorageAdapter):
             self.logger.error(str(bwe.details))
 
         return statement
+
+    def create_conversation(self):
+        """
+        Create a new conversation.
+        """
+        conversation_id = self.conversations.insert_one({
+            'statements': []
+        }).inserted_id
+        return conversation_id
+
+    def get_latest_response(self, conversation_id):
+        """
+        Returns the latest response in a conversation if it exists.
+        Returns None if a matching conversation cannot be found.
+        """
+        conversation = self.conversations.find_one({
+            '_id': conversation_id
+        })
+
+        if not conversation['statements']:
+            return None
+
+        # TODO: Check if ordering is needed
+
+        return conversation['statements'][-2]
+
+    def add_to_converation(self, conversation_id, statement, response):
+        """
+        Add the statement and response to the conversation.
+        """
+        self.conversations.update_one(
+            {
+                'id': conversation_id
+            },
+            {
+                '$push': {
+                    'conversations': {
+                        '$each': [
+                            statement.text,
+                            response.text
+                        ]
+                    }
+                }
+            }
+        )
 
     def get_random(self):
         """

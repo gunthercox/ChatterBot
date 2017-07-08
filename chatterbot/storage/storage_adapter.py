@@ -97,7 +97,7 @@ class StorageAdapter(object):
         Returns None if a matching conversation cannot be found.
         """
         raise self.AdapterMethodNotImplementedError(
-            'The `get_conversation` method is not implemented by this adapter.'
+            'The `get_latest_response` method is not implemented by this adapter.'
         )
 
     def create_conversation(self):
