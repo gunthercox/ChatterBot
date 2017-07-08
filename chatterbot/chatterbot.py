@@ -12,7 +12,6 @@ class ChatBot(object):
     """
 
     def __init__(self, name, **kwargs):
-        from .conversation.session import ConversationSessionManager
         from .logic import MultiLogicAdapter
 
         self.name = name
