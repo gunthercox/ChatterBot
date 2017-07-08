@@ -113,7 +113,8 @@ class ChatBot(object):
         previous_statement = self.storage.get_latest_response(session_id)
         self.learn_response(statement, previous_statement)
 
-        self.conversation_sessions.update(session_id, (statement, response, ))
+        if not self.read_only:
+            self.storage.add_to_converation(session_id, statement, response)
 
         # Process the response output with the output adapter
         return self.output.process_response(response, session_id)
