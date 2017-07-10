@@ -158,7 +158,7 @@ class TwitterTrainer(Trainer):
         """
         Generate a random word using the Twitter API.
 
-        Search twitter for recent tweets containing the term 'random'.i
+        Search twitter for recent tweets containing the term 'random'.
         Then randomly select one word from those tweets and do another
         search with that word. Return a randomly selected word from the
         new set of results.
