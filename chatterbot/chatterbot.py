@@ -17,6 +17,10 @@ class ChatBot(object):
 
         self.name = name
         kwargs['name'] = name
+        kwargs['chatbot'] = self
+
+        self.conversation_sessions = ConversationSessionManager()
+        self.default_session = self.conversation_sessions.new()
 
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
@@ -71,9 +75,6 @@ class ChatBot(object):
         TrainerClass = utils.import_module(trainer)
         self.trainer = TrainerClass(self.storage, **kwargs)
         self.training_data = kwargs.get('training_data')
-
-        self.conversation_sessions = ConversationSessionManager()
-        self.default_session = self.conversation_sessions.new()
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
