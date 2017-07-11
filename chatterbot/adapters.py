@@ -8,7 +8,7 @@ class Adapter(object):
 
     def __init__(self, **kwargs):
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
-        self.chatbot = None
+        self.chatbot = kwargs.get('chatbot')
 
     def set_chatbot(self, chatbot):
         """
