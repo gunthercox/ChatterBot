@@ -18,6 +18,10 @@ class HipChat(InputAdapter):
         self.hipchat_room = kwargs.get('hipchat_room')
         self.session_id = str(self.chatbot.default_session.uuid)
 
+        import requests
+        self.session = requests.Session()
+        self.session.verify = kwargs.get('ssl_verify', True)
+
         authorization_header = 'Bearer {}'.format(self.hipchat_access_token)
 
         self.headers = {
@@ -48,7 +52,6 @@ class HipChat(InputAdapter):
         """
         https://www.hipchat.com/docs/apiv2/method/view_recent_room_history
         """
-        import requests
 
         recent_histroy_url = '{}/v2/room/{}/history?max-results={}'.format(
             self.hipchat_host,
@@ -56,7 +59,7 @@ class HipChat(InputAdapter):
             max_results
         )
 
-        response = requests.get(
+        response = self.session.get(
             recent_histroy_url,
             headers=self.headers
         )
