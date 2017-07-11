@@ -1,6 +1,6 @@
+import logging
 import os
 import sys
-import logging
 from .conversation import Statement, Response
 
 
@@ -49,7 +49,6 @@ class Trainer(object):
 
     def _generate_export_data(self):
         result = []
-
         for statement in self.storage.filter():
             for response in statement.in_response_to:
                 result.append([response.text, statement.text])
@@ -364,7 +363,7 @@ class UbuntuCorpusTrainer(Trainer):
             with open(file, 'r', **file_kwargs) as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
-                statement_history = []
+                previous_statement_text = None
 
                 for row in reader:
                     if len(row) > 0:
@@ -378,10 +377,10 @@ class UbuntuCorpusTrainer(Trainer):
                         if row[2].strip():
                             statement.add_extra_data('addressing_speaker', row[2])
 
-                        if statement_history:
+                        if previous_statement_text:
                             statement.add_response(
-                                Response(statement_history[-1].text)
+                                Response(previous_statement_text)
                             )
 
-                        statement_history.append(statement)
+                        previous_statement_text = statement.text
                         self.storage.update(statement)

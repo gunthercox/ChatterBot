@@ -26,3 +26,6 @@ examples/ubuntu_dialogs*
 .env
 .out
 venv*
+
+# ignore Ubuntu corpus files
+data
