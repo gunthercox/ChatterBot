@@ -29,9 +29,9 @@ class RepetitiveResponseFilter(Filter):
         text_of_recent_responses = []
 
         # TODO: Add a larger quantity of response history
-        text_of_recent_responses.append(
-            chatterbot.storage.get_latest_response(session_id)
-        )
+        latest_response = chatterbot.storage.get_latest_response(session_id)
+        if latest_response:
+            text_of_recent_responses.append(latest_response.text)
 
         # Return the query with no changes if there are no statements to exclude
         if not text_of_recent_responses:
