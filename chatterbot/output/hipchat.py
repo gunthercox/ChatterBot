@@ -23,19 +23,21 @@ class HipChat(OutputAdapter):
             'Content-Type': 'application/json'
         }
 
+        import requests
+        self.session = requests.Session()
+        self.session.verify = kwargs.get('ssl_verify', True)
+
     def send_message(self, room_id_or_name, message):
         """
         Send a message to a HipChat room.
         https://www.hipchat.com/docs/apiv2/method/send_message
         """
-        import requests
-
         message_url = "{}/v2/room/{}/message".format(
             self.hipchat_host,
             room_id_or_name
         )
 
-        response = requests.post(
+        response = self.session.post(
             message_url,
             headers=self.headers,
             data=json.dumps({
