@@ -367,7 +367,7 @@ class SQLStorageAdapter(StorageAdapter):
             StatementTable
         ).filter(
             StatementTable.conversations.any(id=conversation_id)
-        ).order_by(StatementTable.id.desc()).limit(2).first()
+        ).order_by(StatementTable.id).limit(2).first()
 
         if statement_query:
             statement = statement_query.get_statement()
