@@ -31,13 +31,6 @@ class ChatBotTestCase(TestCase):
             'database': None
         }
 
-    def random_string(self, start=0, end=9000):
-        """
-        Generate a string based on a random number.
-        """
-        from random import randint
-        return str(randint(start, end))
-
 
 class ChatBotMongoTestCase(ChatBotTestCase):
 
@@ -58,7 +51,7 @@ class ChatBotMongoTestCase(ChatBotTestCase):
 
     def get_kwargs(self):
         kwargs = super(ChatBotMongoTestCase, self).get_kwargs()
-        kwargs['database'] = self.random_string()
+        kwargs['database'] = 'chatterbot_test_database'
         kwargs['storage_adapter'] = 'chatterbot.storage.MongoDatabaseAdapter'
         return kwargs
 
