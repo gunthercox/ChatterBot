@@ -138,6 +138,15 @@ class DjangoStorageAdapter(StorageAdapter):
         responses.delete()
         statements.delete()
 
+    def create_conversation(self):
+        """
+        Create a new conversation.
+        """
+        from django.apps import apps
+        Conversation = apps.get_model(self.django_app_name, 'Conversation')
+        conversation = Conversation.objects.create()
+        return conversation.id
+
     def drop(self):
         """
         Remove all data from the database.
