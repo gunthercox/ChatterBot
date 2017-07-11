@@ -28,31 +28,34 @@ class ChatterBotViewMixin(object):
         Return the current session for the chat if one exists.
         Create a new session if one does not exist.
         """
+        class Conversation(object):
+            def __init__(self):
+                self.id = None
+                self.statements = []
+
+        conversation = Conversation()
+
         chat_session_id = request.session.get('chat_session_id', None)
-        chat_session = self.chatterbot.conversation_sessions.get(chat_session_id, None)
+        statements = self.chatterbot.storage.filter(
+            conversation__id=chat_session_id
+        )
 
-        if not chat_session:
-            chat_session = self.chatterbot.conversation_sessions.new()
-            request.session['chat_session_id'] = chat_session.id_string
+        if not statements:
+            chat_session_id = self.chatterbot.storage.create_conversation()
+            request.session['chat_session_id'] = chat_session_id
 
-        return chat_session
+        conversation.id = chat_session_id
+        conversation.statements = [
+            statement.serialize() for statement in statements
+        ]
+
+        return conversation
 
 
 class ChatterBotView(ChatterBotViewMixin, View):
     """
     Provide an API endpoint to interact with ChatterBot.
     """
-
-    def _serialize_conversation(self, session):
-        if session.conversation.empty():
-            return []
-
-        conversation = []
-
-        for statement, response in session.conversation:
-            conversation.append([statement.serialize(), response.serialize()])
-
-        return conversation
 
     def post(self, request, *args, **kwargs):
         """
@@ -62,9 +65,9 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         self.validate(input_data)
 
-        chat_session = self.get_chat_session(request)
+        conversation = self.get_chat_session(request)
 
-        response = self.chatterbot.get_response(input_data, chat_session.id_string)
+        response = self.chatterbot.get_response(input_data, conversation.id)
         response_data = response.serialize()
 
         return JsonResponse(response_data, status=200)
@@ -73,12 +76,12 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         Return data corresponding to the current conversation.
         """
-        chat_session = self.get_chat_session(request)
+        conversation = self.get_chat_session(request)
 
         data = {
             'detail': 'You should make a POST request to this endpoint.',
             'name': self.chatterbot.name,
-            'conversation': self._serialize_conversation(chat_session)
+            'conversation': conversation.statements
         }
 
         # Return a method not allowed response
