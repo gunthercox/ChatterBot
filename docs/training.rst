@@ -155,8 +155,8 @@ Training with the Ubuntu dialog corpus
 .. warning::
 
    The Ubuntu dialog corpus is a massive data set. Developers will currently
-   experience significant performance in the form of delayed training and
-   response times from the chat bot when using this corpus.
+   experience significantly decreased performance in the form of delayed
+   training and response times from the chat bot when using this corpus.
 
 .. autofunction:: chatterbot.trainers.UbuntuCorpusTrainer
 
