@@ -243,9 +243,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Create a new conversation.
         """
-        conversation_id = self.conversations.insert_one({
-            'statements': []
-        }).inserted_id
+        conversation_id = self.conversations.insert_one({}).inserted_id
         return conversation_id
 
     def get_latest_response(self, conversation_id):
@@ -253,32 +251,45 @@ class MongoDatabaseAdapter(StorageAdapter):
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
-        conversation = self.conversations.find_one({
-            '_id': conversation_id
-        })
+        from pymongo import DESCENDING
 
-        if not conversation['statements']:
+        statements = list(self.statements.find({
+            'conversations.id': conversation_id
+        }).sort('conversations.created_at', DESCENDING))
+
+        if not statements:
             return None
 
-        # TODO: Check if ordering is needed
-
-        return conversation['statements'][-2]
+        return self.mongo_to_object(statements[-2])
 
     def add_to_converation(self, conversation_id, statement, response):
         """
         Add the statement and response to the conversation.
         """
-        self.conversations.update_one(
+        from datetime import datetime, timedelta
+        self.statements.update_one(
             {
-                'id': conversation_id
+                'text': statement.text
             },
             {
                 '$push': {
                     'conversations': {
-                        '$each': [
-                            statement.text,
-                            response.text
-                        ]
+                        'id': conversation_id,
+                        'created_at': datetime.utcnow()
+                    }
+                }
+            }
+        )
+        self.statements.update_one(
+            {
+                'text': response.text
+            },
+            {
+                '$push': {
+                    'conversations': {
+                        'id': conversation_id,
+                        # Force the response to be at least one millisecond after the input statement
+                        'created_at': datetime.utcnow() + timedelta(milliseconds=1)
                     }
                 }
             }
