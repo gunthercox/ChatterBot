@@ -138,6 +138,21 @@ class DjangoStorageAdapter(StorageAdapter):
         responses.delete()
         statements.delete()
 
+    def get_latest_response(self, conversation_id):
+        """
+        Returns the latest response in a conversation if it exists.
+        Returns None if a matching conversation cannot be found.
+        """
+        from django.apps import apps
+
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+
+        return Statement.objects.filter(
+            conversation__id=conversation_id
+        ).order_by(
+            'created_at'
+        )[:2].first()
+
     def create_conversation(self):
         """
         Create a new conversation.
@@ -146,6 +161,20 @@ class DjangoStorageAdapter(StorageAdapter):
         Conversation = apps.get_model(self.django_app_name, 'Conversation')
         conversation = Conversation.objects.create()
         return conversation.id
+
+    def add_to_converation(self, conversation_id, statement, response):
+        """
+        Add the statement and response to the conversation.
+        """
+        from django.apps import apps
+
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+
+        first_statement = Statement.objects.filter(text=statement.text).first()
+        first_response = Statement.objects.filter(text=response.text).first()
+
+        first_statement.conversation.add(conversation_id)
+        first_response.conversation.add(conversation_id)
 
     def drop(self):
         """
