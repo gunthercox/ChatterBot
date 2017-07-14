@@ -114,9 +114,9 @@ class ChatBot(object):
 
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.storage.get_latest_response(session_id)
-        self.learn_response(statement, previous_statement)
 
         if not self.read_only:
+            self.learn_response(statement, previous_statement)
             self.storage.add_to_converation(session_id, statement, response)
 
         # Process the response output with the output adapter
@@ -149,8 +149,7 @@ class ChatBot(object):
             ))
 
         # Save the statement after selecting a response
-        if not self.read_only:
-            self.storage.update(statement)
+        self.storage.update(statement)
 
     def set_trainer(self, training_class, **kwargs):
         """
