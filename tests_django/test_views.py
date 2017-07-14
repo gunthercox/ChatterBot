@@ -30,11 +30,12 @@ class ViewTestCase(TestCase):
             })
 
     def test_get_chat_session(self):
-        from chatterbot.ext.django_chatterbot.factories import StatementFactory
+        from chatterbot.ext.django_chatterbot.models import Statement
 
         conversation_id = self.view.chatterbot.storage.create_conversation()
 
-        statement = StatementFactory()
+        statement = Statement.objects.create(text='Test statement')
+        statement.conversation.add(conversation_id)
 
         mock_response = MockResponse(conversation_id)
         get_session = self.view.get_chat_session(mock_response)
