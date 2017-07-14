@@ -77,9 +77,7 @@ class MathematicalEvaluation(LogicAdapter):
 
         # Use the result cached by the process method if it exists
         if input_text in self.cache:
-            cached_result = self.cache[input_text]
-            self.cache = {}
-            return cached_result
+            return self.cache[input_text]
 
         # Getting the mathematical terms within the input statement
         expression = str(self.simplify_chunks(self.normalize(input_text)))
