@@ -30,21 +30,26 @@ class ViewTestCase(TestCase):
             })
 
     def test_get_chat_session(self):
-        session = self.view.chatterbot.conversation_sessions.new()
-        mock_response = MockResponse(session.id_string)
+        from chatterbot.ext.django_chatterbot.factories import StatementFactory
+
+        conversation_id = self.view.chatterbot.storage.create_conversation()
+
+        statement = StatementFactory()
+
+        mock_response = MockResponse(conversation_id)
         get_session = self.view.get_chat_session(mock_response)
 
-        self.assertEqual(session.id_string, get_session.id_string)
+        self.assertEqual(conversation_id, get_session.id)
 
     def test_get_chat_session_invalid(self):
-        mock_response = MockResponse('--invalid--')
+        mock_response = MockResponse(0)
         session = self.view.get_chat_session(mock_response)
 
-        self.assertNotEqual(session.id_string, 'test-session-id')
+        self.assertNotEqual(session.id, 'test-session-id')
 
     def test_get_chat_session_no_session(self):
         mock_response = MockResponse(None)
         mock_response.session = {}
         session = self.view.get_chat_session(mock_response)
 
-        self.assertNotEqual(session.id_string, 'test-session-id')
+        self.assertNotEqual(session.id, 'test-session-id')

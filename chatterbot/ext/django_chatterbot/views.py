@@ -28,14 +28,15 @@ class ChatterBotViewMixin(object):
         Return the current session for the chat if one exists.
         Create a new session if one does not exist.
         """
-        class Conversation(object):
+        class Obj(object):
             def __init__(self):
                 self.id = None
                 self.statements = []
 
-        conversation = Conversation()
+        conversation = Obj()
 
         chat_session_id = request.session.get('chat_session_id', None)
+
         statements = self.chatterbot.storage.filter(
             conversation__id=chat_session_id
         )
