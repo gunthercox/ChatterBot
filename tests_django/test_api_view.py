@@ -10,19 +10,6 @@ class ApiIntegrationTestCase(TestCase):
         super(ApiIntegrationTestCase, self).setUp()
         self.api_url = reverse('chatterbot')
 
-        # Clear the response queue before tests
-        ChatterBotView.chatterbot.conversation_sessions.get(
-            ChatterBotView.chatterbot.default_session.id_string
-        ).conversation.flush()
-
-    def tearDown(self):
-        super(ApiIntegrationTestCase, self).tearDown()
-
-        # Clear the response queue after tests
-        ChatterBotView.chatterbot.conversation_sessions.get(
-            ChatterBotView.chatterbot.default_session.id_string
-        ).conversation.flush()
-
     def _get_json(self, response):
         from django.utils.encoding import force_text
         return json.loads(force_text(response.content))
