@@ -2,6 +2,32 @@
 Conversations
 =============
 
+ChatterBot supports the ability to have multiple concurrent conversations.
+A conversations is where the chat bot interacts with a person, and supporting
+multiple concurrent conversations means that the chat bot can have multiple
+different conversations with different people at the same time.
+
+Conversation scope
+------------------
+
+If two :code:`ChatBot` instances are created, each will have conversations separate from each other.
+
+An adapter can access any conversation as long as the unique identifier for the conversation is provided.
+
+Conversation example
+--------------------
+
+The following example is taken from the Django :code:`ChatterBotView` built into ChatterBot.
+In this method, the unique identifiers for each chat session are being stored in Django's
+session objects. This allows different users who interact with the bot through different
+web browsers to have separate conversations with the chat bot.
+
+.. literalinclude:: ../chatterbot/ext/django_chatterbot/views.py
+   :language: python
+   :pyobject: ChatterBotView.post
+   :dedent: 4
+
+
 ..  _conversation_statements:
 
 Statements
@@ -53,51 +79,3 @@ of the current statement.
 The :code:`Response` object's :code:`occurrence` attribute indicates the number of times
 that the statement has been given as a response. This makes it possible for the chat bot
 to determine if a particular response is more commonly used than another.
-
-.. _statement-comparison:
-
-Statement comparison
-====================
-
-ChatterBot uses :code:`Statement` objects to hold information
-about things that can be said. An important part of how a chat bot
-selects a response is based on its ability to compare two statements
-to each other. There are a number of ways to do this, and ChatterBot
-comes with a handful of methods built in for you to use.
-
-.. automodule:: chatterbot.comparisons
-   :members:
-
-Use your own comparison function
-++++++++++++++++++++++++++++++++
-
-You can create your own comparison function and use it as long as the function takes two statements
-as parameters and returns a numeric value between 0 and 1. A 0 should represent the lowest possible
-similarity and a 1 should represent the highest possible similarity.
-
-.. code-block:: python
-
-   def comparison_function(statement, other_statement):
-
-       # Your comparison logic
-
-       # Return your calculated value here
-       return 0.0
-
-Setting the comparison method
------------------------------
-
-To set the statement comparison method for your chat bot, you
-will need to pass the :code:`statement_comparison_function` parameter
-to your chat bot when you initialize it. An example of this
-is shown below.
-
-.. code-block:: python
-
-   from chatterbot import ChatBot
-   from chatterbot.comparisons import levenshtein_distance
-
-   chatbot = ChatBot(
-       # ...
-       statement_comparison_function=levenshtein_distance
-   )
