@@ -20,6 +20,7 @@ class AbstractBasePhrase(models.Model):
     def __str__(self):
         return self.text
 
+
 class AbstractBaseStatement(models.Model):
     """
     The abstract base statement allows other models to
