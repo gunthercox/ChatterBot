@@ -98,14 +98,10 @@ class DjangoStorageAdapter(StorageAdapter):
             response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
             response_statement.save()
 
-            response, created = Response.objects.get_or_create(
+            response = Response.objects.create(
                 statement=response_statement,
                 response=statement
             )
-
-            if not created:
-                response.occurrence += 1
-                response.save()
 
         return statement
 
@@ -145,13 +141,18 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         from django.apps import apps
 
-        Statement = apps.get_model(self.django_app_name, 'Statement')
+        Response = apps.get_model(self.django_app_name, 'Response')
 
-        return Statement.objects.filter(
-            phrase__conversations__id=conversation_id
+        response = Response.objects.filter(
+            conversations__id=conversation_id
         ).order_by(
             'created_at'
-        )[:2].first()
+        ).first()
+
+        if not response:
+            return None
+
+        return response.response
 
     def create_conversation(self):
         """
@@ -169,24 +170,17 @@ class DjangoStorageAdapter(StorageAdapter):
         from django.apps import apps
 
         Statement = apps.get_model(self.django_app_name, 'Statement')
-        Phrase = apps.get_model(self.django_app_name, 'Phrase')
+        Response = apps.get_model(self.django_app_name, 'Response')
 
-        first_statement = Statement.objects.filter(text=statement.text).first()
-        first_response = Statement.objects.filter(text=response.text).first()
+        first_statement = Statement.objects.get(text=statement.text)
+        first_response = Statement.objects.get(text=response.text)
 
-        statement_phrase = Phrase.objects.create(
-            text=statement.text
-
-        )
-        response_phrase = Phrase.objects.create(
-            text=response.text
+        response = Response.objects.create(
+            statement=first_statement,
+            response=first_response
         )
 
-        statement_phrase.conversations.add(conversation_id)
-        statement_phrase.statements.add(first_statement)
-
-        response_phrase.conversations.add(conversation_id)
-        response_phrase.statements.add(first_response)
+        response.conversations.add(conversation_id)
 
     def drop(self):
         """

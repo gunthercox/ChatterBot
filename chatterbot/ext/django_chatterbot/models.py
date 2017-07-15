@@ -2,25 +2,6 @@ from django.db import models
 from django.utils import timezone
 
 
-class AbstractBasePhrase(models.Model):
-    """
-    A small group of words representing a conceptual unit.
-    """
-
-    text = models.CharField(
-        # unique=True,
-        blank=True,
-        null=False,
-        max_length=255
-    )
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return self.text
-
-
 class AbstractBaseStatement(models.Model):
     """
     The abstract base statement allows other models to
@@ -29,21 +10,10 @@ class AbstractBaseStatement(models.Model):
     """
 
     text = models.CharField(
+        unique=True,
         blank=False,
         null=False,
         max_length=255
-    )
-
-    phrase = models.ForeignKey(
-        'Phrase',
-        related_name='statements',
-        blank=True,
-        null=True
-    )
-
-    created_at = models.DateTimeField(
-        default=timezone.now,
-        help_text='The date and time that this statement was created at.'
     )
 
     extra_data = models.CharField(max_length=500)
@@ -142,7 +112,6 @@ class AbstractBaseStatement(models.Model):
 
         data['text'] = self.text
         data['in_response_to'] = []
-        data['created_at'] = self.created_at
         data['extra_data'] = json.loads(self.extra_data)
 
         for response in self.in_response.all():
@@ -168,9 +137,10 @@ class AbstractBaseResponse(models.Model):
         related_name='responses'
     )
 
-    unique_together = (('statement', 'response'),)
-
-    occurrence = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(
+        default=timezone.now,
+        help_text='The date and time that this statement was created at.'
+    )
 
     created_at = models.DateTimeField(
         default=timezone.now,
@@ -179,6 +149,20 @@ class AbstractBaseResponse(models.Model):
 
     class Meta:
         abstract = True
+
+    @property
+    def occurrence(self):
+        """
+        Return a count of the number of times this response has occurred.
+        """
+        from django.apps import apps
+
+        response = apps.get_model('django_chatterbot', self.__class__.__name__)
+
+        return response.objects.filter(
+            statement__text=self.statement.text,
+            response__text=self.response.text
+        ).count()
 
     def __str__(self):
         statement = self.statement.text
@@ -209,10 +193,10 @@ class AbstractBaseConversation(models.Model):
     default models.
     """
 
-    statements = models.ManyToManyField(
-        'Phrase',
+    responses = models.ManyToManyField(
+        'Response',
         related_name='conversations',
-        help_text='The phrases in this conversation.'
+        help_text='The responses in this conversation.'
     )
 
     class Meta:
@@ -243,12 +227,5 @@ class Response(AbstractBaseResponse):
 class Conversation(AbstractBaseConversation):
     """
     A sequence of statements representing a conversation.
-    """
-    pass
-
-
-class Phrase(AbstractBasePhrase):
-    """
-    A small group of words representing a conceptual unit.
     """
     pass

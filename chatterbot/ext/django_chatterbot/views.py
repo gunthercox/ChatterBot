@@ -28,7 +28,7 @@ class ChatterBotViewMixin(object):
         Return the conversation for the session if one exists.
         Create a new conversation if one does not exist.
         """
-        from chatterbot.ext.django_chatterbot.models import Phrase
+        from chatterbot.ext.django_chatterbot.models import Response
 
         class Obj(object):
             def __init__(self):
@@ -37,20 +37,20 @@ class ChatterBotViewMixin(object):
 
         conversation = Obj()
 
-        conversation_id = request.session.get('conversation_id', None)
+        conversation.id = request.session.get('conversation_id', None)
 
-        phrases = Phrase.objects.filter(
-            conversations__id=conversation_id
+        responses = Response.objects.filter(
+            conversations__id=conversation.id
         )
 
-        if not phrases:
+        if not conversation.id:
             conversation_id = self.chatterbot.storage.create_conversation()
             request.session['conversation_id'] = conversation_id
+            conversation.id = conversation_id
 
-        conversation.id = conversation_id
-        conversation.statements = [
-            {'text': phrase.text} for phrase in phrases
-        ]
+        for response in responses:
+            conversation.statements.append(response.statement.serialize())
+            conversation.statements.append(response.response.serialize())
 
         return conversation
 
