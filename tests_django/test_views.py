@@ -30,22 +30,20 @@ class ViewTestCase(TestCase):
             })
 
     def test_get_conversation(self):
-        from chatterbot.ext.django_chatterbot.models import Statement, Phrase
+        from chatterbot.ext.django_chatterbot.models import Statement, Response
 
         conversation_id = self.view.chatterbot.storage.create_conversation()
 
-        statement = Statement.objects.create(
-            text='Test statement',
-            phrase=Phrase.objects.create(
-                text='Test statement'
-            )
+        statement = Statement.objects.create(text='Hello')
+        Response.objects.create(
+            statement=statement,
+            response=statement
         )
-        statement.phrase.conversations.add(conversation_id)
 
         mock_response = MockResponse(conversation_id)
-        get_session = self.view.get_conversation(mock_response)
+        conversation = self.view.get_conversation(mock_response)
 
-        self.assertEqual(conversation_id, get_session.id)
+        self.assertEqual(conversation_id, conversation.id)
 
     def test_get_conversation_invalid(self):
         mock_response = MockResponse(0)
@@ -53,7 +51,7 @@ class ViewTestCase(TestCase):
 
         self.assertNotEqual(session.id, 'test-session-id')
 
-    def test_get_conversation_no_session(self):
+    def test_get_conversation_nonexistent(self):
         mock_response = MockResponse(None)
         mock_response.session = {}
         session = self.view.get_conversation(mock_response)
