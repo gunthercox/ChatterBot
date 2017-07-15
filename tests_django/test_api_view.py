@@ -1,7 +1,6 @@
 import json
 from django.test import TestCase
 from django.core.urlresolvers import reverse
-from chatterbot.ext.django_chatterbot.views import ChatterBotView
 
 
 class ApiIntegrationTestCase(TestCase):

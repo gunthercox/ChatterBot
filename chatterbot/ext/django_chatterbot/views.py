@@ -39,10 +39,6 @@ class ChatterBotViewMixin(object):
 
         chat_session_id = request.session.get('chat_session_id', None)
 
-        statements = self.chatterbot.storage.filter(
-            phrase__conversations__id=chat_session_id
-        )
-
         phrases = Phrase.objects.filter(
             conversations__id=chat_session_id
         )
