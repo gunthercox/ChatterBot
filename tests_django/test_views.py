@@ -29,7 +29,7 @@ class ViewTestCase(TestCase):
                 'type': 'classmethod'
             })
 
-    def test_get_chat_session(self):
+    def test_get_conversation(self):
         from chatterbot.ext.django_chatterbot.models import Statement, Phrase
 
         conversation_id = self.view.chatterbot.storage.create_conversation()
@@ -43,19 +43,19 @@ class ViewTestCase(TestCase):
         statement.phrase.conversations.add(conversation_id)
 
         mock_response = MockResponse(conversation_id)
-        get_session = self.view.get_chat_session(mock_response)
+        get_session = self.view.get_conversation(mock_response)
 
         self.assertEqual(conversation_id, get_session.id)
 
-    def test_get_chat_session_invalid(self):
+    def test_get_conversation_invalid(self):
         mock_response = MockResponse(0)
-        session = self.view.get_chat_session(mock_response)
+        session = self.view.get_conversation(mock_response)
 
         self.assertNotEqual(session.id, 'test-session-id')
 
-    def test_get_chat_session_no_session(self):
+    def test_get_conversation_no_session(self):
         mock_response = MockResponse(None)
         mock_response.session = {}
-        session = self.view.get_chat_session(mock_response)
+        session = self.view.get_conversation(mock_response)
 
         self.assertNotEqual(session.id, 'test-session-id')
