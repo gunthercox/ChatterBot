@@ -2,6 +2,24 @@ from django.db import models
 from django.utils import timezone
 
 
+class AbstractBasePhrase(models.Model):
+    """
+    A small group of words representing a conceptual unit.
+    """
+
+    text = models.CharField(
+        # unique=True,
+        blank=True,
+        null=False,
+        max_length=255
+    )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.text
+
 class AbstractBaseStatement(models.Model):
     """
     The abstract base statement allows other models to
@@ -10,10 +28,16 @@ class AbstractBaseStatement(models.Model):
     """
 
     text = models.CharField(
-        unique=True,
         blank=False,
         null=False,
         max_length=255
+    )
+
+    phrase = models.ForeignKey(
+        'Phrase',
+        related_name='statements',
+        blank=True,
+        null=True
     )
 
     created_at = models.DateTimeField(
@@ -185,9 +209,9 @@ class AbstractBaseConversation(models.Model):
     """
 
     statements = models.ManyToManyField(
-        'Statement',
-        related_name='conversation',
-        help_text='The statements in this conversation.'
+        'Phrase',
+        related_name='conversations',
+        help_text='The phrases in this conversation.'
     )
 
     class Meta:
@@ -218,5 +242,12 @@ class Response(AbstractBaseResponse):
 class Conversation(AbstractBaseConversation):
     """
     A sequence of statements representing a conversation.
+    """
+    pass
+
+
+class Phrase(AbstractBasePhrase):
+    """
+    A small group of words representing a conceptual unit.
     """
     pass

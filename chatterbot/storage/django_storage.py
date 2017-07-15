@@ -148,7 +148,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Statement = apps.get_model(self.django_app_name, 'Statement')
 
         return Statement.objects.filter(
-            conversation__id=conversation_id
+            phrase__conversations__id=conversation_id
         ).order_by(
             'created_at'
         )[:2].first()
@@ -169,12 +169,24 @@ class DjangoStorageAdapter(StorageAdapter):
         from django.apps import apps
 
         Statement = apps.get_model(self.django_app_name, 'Statement')
+        Phrase = apps.get_model(self.django_app_name, 'Phrase')
 
         first_statement = Statement.objects.filter(text=statement.text).first()
         first_response = Statement.objects.filter(text=response.text).first()
 
-        first_statement.conversation.add(conversation_id)
-        first_response.conversation.add(conversation_id)
+        statement_phrase = Phrase.objects.create(
+            text=statement.text
+
+        )
+        response_phrase = Phrase.objects.create(
+            text=response.text
+        )
+
+        statement_phrase.conversations.add(conversation_id)
+        statement_phrase.statements.add(first_statement)
+
+        response_phrase.conversations.add(conversation_id)
+        response_phrase.statements.add(first_response)
 
     def drop(self):
         """
