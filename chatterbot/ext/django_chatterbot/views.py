@@ -23,10 +23,10 @@ class ChatterBotViewMixin(object):
         if 'text' not in data:
             raise ValidationError('The attribute "text" is required.')
 
-    def get_chat_session(self, request):
+    def get_conversation(self, request):
         """
-        Return the current session for the chat if one exists.
-        Create a new session if one does not exist.
+        Return the conversation for the session if one exists.
+        Create a new conversation if one does not exist.
         """
         from chatterbot.ext.django_chatterbot.models import Phrase
 
@@ -37,17 +37,17 @@ class ChatterBotViewMixin(object):
 
         conversation = Obj()
 
-        chat_session_id = request.session.get('chat_session_id', None)
+        conversation_id = request.session.get('conversation_id', None)
 
         phrases = Phrase.objects.filter(
-            conversations__id=chat_session_id
+            conversations__id=conversation_id
         )
 
         if not phrases:
-            chat_session_id = self.chatterbot.storage.create_conversation()
-            request.session['chat_session_id'] = chat_session_id
+            conversation_id = self.chatterbot.storage.create_conversation()
+            request.session['conversation_id'] = conversation_id
 
-        conversation.id = chat_session_id
+        conversation.id = conversation_id
         conversation.statements = [
             {'text': phrase.text} for phrase in phrases
         ]
@@ -68,7 +68,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         self.validate(input_data)
 
-        conversation = self.get_chat_session(request)
+        conversation = self.get_conversation(request)
 
         response = self.chatterbot.get_response(input_data, conversation.id)
         response_data = response.serialize()
@@ -79,7 +79,7 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         Return data corresponding to the current conversation.
         """
-        conversation = self.get_chat_session(request)
+        conversation = self.get_conversation(request)
 
         data = {
             'detail': 'You should make a POST request to this endpoint.',
