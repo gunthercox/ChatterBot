@@ -43,7 +43,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement_text = 'Wow!'
         response = self.chatbot.get_response(statement_text)
         response_statement = self.chatbot.storage.get_latest_response(
-            self.chatbot.default_session_id
+            self.chatbot.default_conversation_id
         )
 
         self.assertEqual(statement_text, response_statement.text)
@@ -138,7 +138,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
         input_statement, response = self.chatbot.generate_response(
             statement,
-            self.chatbot.default_session_id
+            self.chatbot.default_conversation_id
         )
 
         self.assertEqual(input_statement, statement)
