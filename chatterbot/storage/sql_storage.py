@@ -352,13 +352,13 @@ class SQLStorageAdapter(StorageAdapter):
         Base.metadata.create_all(self.engine)
 
     def _session_finish(self, session, statement_text=None):
-        from sqlalchemy.exc import DatabaseError
+        from sqlalchemy.exc import InvalidRequestError
         try:
             if not self.read_only:
                 session.commit()
             else:
                 session.rollback()
-        except DatabaseError:
+        except InvalidRequestError:
             # Log the statement text and the exception
             self.logger.exception(statement_text)
         finally:
