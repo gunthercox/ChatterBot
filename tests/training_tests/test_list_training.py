@@ -150,6 +150,7 @@ class ListTrainingTests(ChatBotTestCase):
         self.assertEqual(response1.text, "C")
         self.assertEqual(response2.text, "D")
 
+
 class ChatterBotResponseTests(ChatBotTestCase):
 
     def setUp(self):

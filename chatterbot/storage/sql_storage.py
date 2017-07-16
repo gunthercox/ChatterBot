@@ -9,11 +9,10 @@ Base = None
 
 try:
     from sqlalchemy.ext.declarative import declarative_base
-    from sqlalchemy_mixins import ActiveRecordMixin, SmartQueryMixin
 
     Base = declarative_base()
 
-    class StatementTable(Base, ActiveRecordMixin, SmartQueryMixin):
+    class StatementTable(Base):
         """
         StatementTable, placeholder for a sentence or phrase.
         """
@@ -47,7 +46,7 @@ try:
             default=get_statement_serialized
         )
 
-    class ResponseTable(Base, ActiveRecordMixin, SmartQueryMixin):
+    class ResponseTable(Base):
         """
         ResponseTable, contains responses related to a givem statment.
         """
@@ -85,24 +84,6 @@ try:
 
 except ImportError:
     pass
-
-
-def get_or_create(session, model, defaults=None, **kwargs):
-    from sqlalchemy.sql.expression import ClauseElement
-    instance = session.query(model).filter_by(**kwargs).first()
-    if instance:
-        return instance, False
-    else:
-        params = dict((k, v) for k, v in kwargs.iteritems() if not isinstance(v, ClauseElement))
-        params.update(defaults or {})
-        instance = model(**params)
-        session.add(instance)
-        return instance, True
-
-
-def get_statement_table(statement):
-    responses = list(map(get_response_table, statement.in_response_to))
-    return StatementTable(text=statement.text, in_response_to=responses, extra_data=statement.extra_data)
 
 
 def get_response_table(response):
@@ -285,40 +266,35 @@ class SQLStorageAdapter(StorageAdapter):
         """
         if statement:
             session = self.Session()
-            ResponseTable.set_session(session)
             query = self.__statement_filter(session, **{"text": statement.text})
-            # TODO: This should be a get
             record = query.first()
 
-            if record:
-                # update
-                if statement.text:
-                    record.text = statement.text
-                if statement.extra_data:
-                    record.extra_data = dict(statement.extra_data)
-                if statement.in_response_to:
+            # Create a new statement entry if one does not already exist
+            if not record:
+                record = StatementTable(text=statement.text)
 
-                    responses = []
+            record.extra_data = dict(statement.extra_data)
 
-                    # Get or create the response records as needed
-                    for response in statement.in_response_to:
-                        _response = ResponseTable.where(
-                            text=statement.text,
-                            statement_text=response.text
-                        ).first()
+            if statement.in_response_to:
+                # Get or create the response records as needed
+                for response in statement.in_response_to:
+                    _response = session.query(ResponseTable).filter_by(
+                        text=response.text,
+                        statement_text=statement.text
+                    ).first()
 
-                        if _response:
-                            _response.occurrence += 1
-                        else:
-                            # Create the record
-                            _response = get_response_table(response)
+                    if _response:
+                        _response.occurrence += 1
+                    else:
+                        # Create the record
+                        _response = ResponseTable(
+                            text=response.text,
+                            occurrence=response.occurrence
+                        )
 
-                        responses.append(_response)
+                    record.in_response_to.append(_response)
 
-                    record.in_response_to = responses
-                session.add(record)
-            else:
-                session.add(get_statement_table(statement))
+            session.add(record)
 
             self._session_finish(session)
 

@@ -4,4 +4,3 @@ nltk>=3.2.0,<4.0.0
 pymongo>=3.3.0,<4.0.0
 python-twitter>=3.0.0,<4.0.0
 sqlalchemy>=1.1,<1.2
-sqlalchemy_mixins>=0.2.2,<0.3
