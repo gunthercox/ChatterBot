@@ -63,7 +63,7 @@ try:
 
         id = Column(Integer)
         text = Column(String, primary_key=True)
-        occurrence = Column(Integer)
+        occurrence = Column(Integer, default=1)
         statement_text = Column(String, ForeignKey('StatementTable.text'))
 
         statement_table = relationship(
@@ -84,11 +84,6 @@ try:
 
 except ImportError:
     pass
-
-
-def get_statement_table(statement):
-    responses = list(map(get_response_table, statement.in_response_to))
-    return StatementTable(text=statement.text, in_response_to=responses, extra_data=statement.extra_data)
 
 
 def get_response_table(response):
@@ -274,19 +269,32 @@ class SQLStorageAdapter(StorageAdapter):
             query = self.__statement_filter(session, **{"text": statement.text})
             record = query.first()
 
-            if record:
-                # update
-                if statement.text:
-                    record.text = statement.text
-                if statement.extra_data:
-                    record.extra_data = dict(statement.extra_data)
-                if statement.in_response_to:
-                    record.in_response_to = list(
-                        map(get_response_table, statement.in_response_to)
-                    )
-                session.add(record)
-            else:
-                session.add(get_statement_table(statement))
+            # Create a new statement entry if one does not already exist
+            if not record:
+                record = StatementTable(text=statement.text)
+
+            record.extra_data = dict(statement.extra_data)
+
+            if statement.in_response_to:
+                # Get or create the response records as needed
+                for response in statement.in_response_to:
+                    _response = session.query(ResponseTable).filter_by(
+                        text=response.text,
+                        statement_text=statement.text
+                    ).first()
+
+                    if _response:
+                        _response.occurrence += 1
+                    else:
+                        # Create the record
+                        _response = ResponseTable(
+                            text=response.text,
+                            occurrence=response.occurrence
+                        )
+
+                    record.in_response_to.append(_response)
+
+            session.add(record)
 
             self._session_finish(session)
 
@@ -320,13 +328,13 @@ class SQLStorageAdapter(StorageAdapter):
         Base.metadata.create_all(self.engine)
 
     def _session_finish(self, session, statement_text=None):
-        from sqlalchemy.exc import DatabaseError
+        from sqlalchemy.exc import InvalidRequestError
         try:
             if not self.read_only:
                 session.commit()
             else:
                 session.rollback()
-        except DatabaseError:
+        except InvalidRequestError:
             # Log the statement text and the exception
             self.logger.exception(statement_text)
         finally:

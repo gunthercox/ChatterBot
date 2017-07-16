@@ -137,6 +137,19 @@ class ListTrainingTests(ChatBotTestCase):
         self.assertEqual(response_to_trained_set, response1)
         self.assertEqual(response1, response2)
 
+    def test_consecutive_trainings_same_responses_different_inputs(self):
+        """
+        Test consecutive trainings with the same responses to different inputs.
+        """
+        self.chatbot.train(["A", "B" "C"])
+        self.chatbot.train(["B", "C", "D"])
+
+        response1 = self.chatbot.get_response("B")
+        response2 = self.chatbot.get_response("C")
+
+        self.assertEqual(response1.text, "C")
+        self.assertEqual(response2.text, "D")
+
 
 class ChatterBotResponseTests(ChatBotTestCase):
 
