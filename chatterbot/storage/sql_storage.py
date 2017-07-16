@@ -32,8 +32,8 @@ try:
             del params['text_search']
             return json.dumps(params)
 
-        id = Column(Integer)
-        text = Column(String, primary_key=True)
+        id = Column(Integer, primary_key=True, autoincrement=True)
+        text = Column(String, unique=True)
         extra_data = Column(PickleType)
 
         in_response_to = relationship(
@@ -42,7 +42,6 @@ try:
         )
         text_search = Column(
             String,
-            primary_key=True,
             default=get_statement_serialized
         )
 
@@ -61,8 +60,8 @@ try:
             del params['text_search']
             return json.dumps(params)
 
-        id = Column(Integer)
-        text = Column(String, primary_key=True)
+        id = Column(Integer, primary_key=True, autoincrement=True)
+        text = Column(String)
         occurrence = Column(Integer, default=1)
         statement_text = Column(String, ForeignKey('StatementTable.text'))
 
@@ -74,7 +73,6 @@ try:
         )
         text_search = Column(
             String,
-            primary_key=True,
             default=get_reponse_serialized
         )
 
@@ -289,6 +287,7 @@ class SQLStorageAdapter(StorageAdapter):
                         # Create the record
                         _response = ResponseTable(
                             text=response.text,
+                            statement_text=statement.text,
                             occurrence=response.occurrence
                         )
 
