@@ -35,6 +35,7 @@ setup(
         'chatterbot.corpus',
         'chatterbot.conversation',
         'chatterbot.ext',
+        'chatterbot.ext.sqlalchemy_app',
         'chatterbot.ext.django_chatterbot',
         'chatterbot.ext.django_chatterbot.migrations',
         'chatterbot.ext.django_chatterbot.management',

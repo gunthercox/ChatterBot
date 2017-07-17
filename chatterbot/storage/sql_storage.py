@@ -8,9 +8,7 @@ from chatterbot.conversation import Statement
 Base = None
 
 try:
-    from sqlalchemy.ext.declarative import declarative_base
-
-    Base = declarative_base()
+    from chatterbot.ext.sqlalchemy_app.models import Base
 
     class StatementTable(Base):
         """
@@ -32,7 +30,6 @@ try:
             del params['text_search']
             return json.dumps(params)
 
-        id = Column(Integer, primary_key=True, autoincrement=True)
         text = Column(String, unique=True)
         extra_data = Column(PickleType)
 
@@ -60,7 +57,6 @@ try:
             del params['text_search']
             return json.dumps(params)
 
-        id = Column(Integer, primary_key=True, autoincrement=True)
         text = Column(String)
         occurrence = Column(Integer, default=1)
         statement_text = Column(String, ForeignKey('StatementTable.text'))
