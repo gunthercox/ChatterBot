@@ -28,6 +28,6 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='conversation',
             name='statements',
-            field=models.ManyToManyField(help_text=b'The statements in this conversation.', related_name='conversation', to='django_chatterbot.Statement'),
+            field=models.ManyToManyField(help_text='The statements in this conversation.', related_name='conversation', to='django_chatterbot.Statement'),
         ),
     ]
