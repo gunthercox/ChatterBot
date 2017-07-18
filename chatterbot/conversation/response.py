@@ -11,8 +11,7 @@ class Response(object):
         self.created_at = kwargs.get('created_at', datetime.now())
         self.occurrence = kwargs.get('occurrence', 1)
 
-        iso_string_type = type(datetime.now().isoformat())
-        if isinstance(self.created_at, iso_string_type):
+        if not isinstance(self.created_at, datetime):
             self.created_at = date_parser.parse(self.created_at)
 
     def __str__(self):
