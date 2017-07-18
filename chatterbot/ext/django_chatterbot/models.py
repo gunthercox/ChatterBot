@@ -171,7 +171,7 @@ class AbstractBaseResponse(models.Model):
         data = {}
 
         data['text'] = self.response.text
-        data['created_at'] = self.created_at
+        data['created_at'] = self.created_at.isoformat()
         data['occurrence'] = self.occurrence
 
         return data
