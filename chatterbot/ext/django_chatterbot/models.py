@@ -147,6 +147,11 @@ class AbstractBaseResponse(models.Model):
 
     occurrence = models.PositiveIntegerField(default=1)
 
+    created_at = models.DateTimeField(
+        default=timezone.now,
+        help_text='The date and time that this response was created at.'
+    )
+
     class Meta:
         abstract = True
 
@@ -166,6 +171,7 @@ class AbstractBaseResponse(models.Model):
         data = {}
 
         data['text'] = self.response.text
+        data['created_at'] = self.created_at
         data['occurrence'] = self.occurrence
 
         return data
