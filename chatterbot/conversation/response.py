@@ -31,7 +31,7 @@ class Response(object):
         data = {}
 
         data['text'] = self.text
-        data['created_at'] = self.created_at
+        data['created_at'] = str(self.created_at)
         data['occurrence'] = self.occurrence
 
         return data
