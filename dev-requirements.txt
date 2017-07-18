@@ -5,7 +5,6 @@ flake8
 mock
 nose
 nose-exclude>=0.5,<0.6
-pandoc
 pip
 twine
 twython
