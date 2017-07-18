@@ -8,7 +8,8 @@ from chatterbot.conversation import Statement
 try:
     from chatterbot.ext.sqlalchemy_app.models import Base
     from sqlalchemy.orm import relationship
-    from sqlalchemy import Column, Integer, String, ForeignKey, PickleType
+    from sqlalchemy.sql import func
+    from sqlalchemy import Column, Integer, String, DateTime, ForeignKey, PickleType
 
     class StatementTable(Base):
         """
@@ -54,6 +55,11 @@ try:
             return json.dumps(params)
 
         text = Column(String)
+
+        created_at = Column(
+            DateTime(timezone=True),
+            server_default=func.now()
+        )
 
         occurrence = Column(Integer, default=1)
 
