@@ -4,7 +4,9 @@ class Response(object):
     """
 
     def __init__(self, text, **kwargs):
+        from datetime import datetime
         self.text = text
+        self.created_at = kwargs.get('created_at', datetime.now())
         self.occurrence = kwargs.get('occurrence', 1)
 
     def __str__(self):
@@ -29,6 +31,7 @@ class Response(object):
         data = {}
 
         data['text'] = self.text
+        data['created_at'] = self.created_at
         data['occurrence'] = self.occurrence
 
         return data
