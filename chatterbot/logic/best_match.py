@@ -32,12 +32,14 @@ class BestMatch(LogicAdapter):
         closest_match.confidence = 0
 
         # Find the closest matching known statement
-        for statement in statement_list:
-            confidence = self.compare_statements(input_statement, statement)
-
-            if confidence > closest_match.confidence:
-                statement.confidence = confidence
-                closest_match = statement
+        closest_match, closest_match.confidence = max(
+            [
+                [
+                    statement,
+                    self.compare_statements(input_statement, statement)
+                ] for statement in statement_list
+            ], key=lambda confidence: confidence[1]
+        )
 
         return closest_match
 

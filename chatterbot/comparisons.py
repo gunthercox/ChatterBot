@@ -202,17 +202,27 @@ class SentimentComparison(Comparator):
 
         statement_greatest_polarity = 'neu'
         statement_greatest_score = -1
-        for polarity in sorted(statement_polarity):
-            if statement_polarity[polarity] > statement_greatest_score:
-                statement_greatest_polarity = polarity
-                statement_greatest_score = statement_polarity[polarity]
+
+        # Bottom-to-top approach list comprehension gives more readability
+        statement_greatest_polarity, statement_greatest_score = max(
+            [
+                [polarity, statement_polarity[polarity]]
+                for polarity in sorted(statement_polarity)
+                if statement_polarity[polarity] > statement_greatest_score
+            ], key=lambda score: score[1]
+        )
 
         statement2_greatest_polarity = 'neu'
         statement2_greatest_score = -1
-        for polarity in sorted(statement2_polarity):
-            if statement2_polarity[polarity] > statement2_greatest_score:
-                statement2_greatest_polarity = polarity
-                statement2_greatest_score = statement2_polarity[polarity]
+
+        # Bottom-to-top approach list comprehension gives more readability
+        statement2_greatest_polarity, statement2_greatest_score = max(
+            [
+                [polarity, statement2_polarity[polarity]]
+                for polarity in sorted(statement2_polarity)
+                if statement2_polarity[polarity] > statement2_greatest_score
+            ], key=lambda score: score[1]
+        )
 
         # Check if the polarity if of a different type
         if statement_greatest_polarity != statement2_greatest_polarity:

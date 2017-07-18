@@ -167,9 +167,11 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         # Convert Response objects to data
         if 'in_response_to' in kwargs:
-            serialized_responses = []
-            for response in kwargs['in_response_to']:
-                serialized_responses.append({'text': response})
+            # Bottom-to-top approach list comprehension gives more readability
+            serialized_responses = [
+                {'text': response}
+                for response in kwargs['in_response_to']
+            ]
 
             query = query.statement_response_list_equals(serialized_responses)
             del kwargs['in_response_to']
@@ -194,10 +196,11 @@ class MongoDatabaseAdapter(StorageAdapter):
 
             matches = matches.sort(order_by, direction)
 
-        results = []
-
-        for match in list(matches):
-            results.append(self.mongo_to_object(match))
+        # Bottom-to-top approach list comprehension gives more readability
+        results = [
+            self.mongo_to_object(match)
+            for match in list(matches)
+        ]
 
         return results
 
@@ -259,9 +262,13 @@ class MongoDatabaseAdapter(StorageAdapter):
         Removes any responses from statements if the response text matches the
         input text.
         """
-        for statement in self.filter(in_response_to__contains=statement_text):
-            statement.remove_response(statement_text)
-            self.update(statement)
+        # Bottom-to-top approach list comprehension gives more readability
+        [
+            [
+                statement.remove_response(statement_text),
+                self.update(statement)
+            ] for statement in self.filter(in_response_to__contains=statement_text)
+        ]
 
         self.statements.delete_one({'text': statement_text})
 
@@ -284,10 +291,11 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         statement_query = self.statements.find(_statement_query)
 
-        statement_objects = []
-
-        for statement in list(statement_query):
-            statement_objects.append(self.mongo_to_object(statement))
+        # Bottom-to-top approach list comprehension gives more readability
+        statement_objects = [
+            self.mongo_to_object(statement)
+            for statement in list(statement_query)
+        ]
 
         return statement_objects
 

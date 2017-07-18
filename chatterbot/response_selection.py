@@ -22,13 +22,15 @@ def get_most_frequent_response(input_statement, response_list):
     logger = logging.getLogger(__name__)
     logger.info(u'Selecting response with greatest number of occurrences.')
 
-    for statement in response_list:
-        count = statement.get_response_count(input_statement)
-
-        # Keep the more common statement
-        if count >= occurrence_count:
-            matching_response = statement
-            occurrence_count = count
+    # Bottom-to-top approach list comprehension gives more readability
+    matching_response, occurrence_count = max(
+        [
+            [
+                statement,
+                statement.get_response_count(input_statement)
+            ] for statement in response_list
+        ], key=lambda count: count[1]
+    )
 
     # Choose the most commonly occuring matching response
     return matching_response
