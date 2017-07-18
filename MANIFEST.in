@@ -1,9 +1,6 @@
-include license.md
-include readme.md
+include LICENSE
+include README.rst
 include requirements.txt
-
-recursive-include chatterbot/corpus/* *.json
-recursive-include chatterbot/corpus/* *.csv
 
 recursive-exclude * __pycache__
 recursive-exclude * *.py[co~]
