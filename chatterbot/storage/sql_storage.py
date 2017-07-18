@@ -5,17 +5,15 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Response
 from chatterbot.conversation import Statement
 
-Base = None
-
 try:
     from chatterbot.ext.sqlalchemy_app.models import Base
+    from sqlalchemy.orm import relationship
+    from sqlalchemy import Column, Integer, String, ForeignKey, PickleType
 
     class StatementTable(Base):
         """
         StatementTable, placeholder for a sentence or phrase.
         """
-        from sqlalchemy import Column, Integer, String, PickleType
-        from sqlalchemy.orm import relationship
 
         __tablename__ = 'StatementTable'
 
@@ -31,6 +29,7 @@ try:
             return json.dumps(params)
 
         text = Column(String, unique=True)
+
         extra_data = Column(PickleType)
 
         in_response_to = relationship(
@@ -47,9 +46,6 @@ try:
         ResponseTable, contains responses related to a givem statment.
         """
 
-        from sqlalchemy import Column, Integer, String, ForeignKey
-        from sqlalchemy.orm import relationship
-
         __tablename__ = 'ResponseTable'
 
         def get_reponse_serialized(context):
@@ -58,7 +54,9 @@ try:
             return json.dumps(params)
 
         text = Column(String)
+
         occurrence = Column(Integer, default=1)
+
         statement_text = Column(String, ForeignKey('StatementTable.text'))
 
         statement_table = relationship(

@@ -93,7 +93,7 @@ class StorageAdapter(object):
 
     def get_random(self):
         """
-        Returns a random statement from the database
+        Returns a random statement from the database.
         """
         raise self.AdapterMethodNotImplementedError(
             'The `get_random` method is not implemented by this adapter.'
