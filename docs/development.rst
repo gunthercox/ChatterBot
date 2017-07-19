@@ -19,3 +19,4 @@ Please pull gently.
     contributing
     releases
     testing
+    packaging
