@@ -173,6 +173,14 @@ class ChatBot(object):
         Create a new ChatBot instance from a JSON config file.
         """
         import json
+        import warnings
+
+        warnings.warn(
+            'The from_config method is deprecated and '
+            'will be removed in ChatterBot version 0.8.',
+            DeprecationWarning
+        )
+
         with open(config_file_path, 'r') as config_file:
             data = json.load(config_file)
 
