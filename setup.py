@@ -16,12 +16,16 @@ DESCRIPTION = CHATTERBOT.__doc__
 with open('requirements.txt') as requirements:
     REQUIREMENTS = requirements.readlines()
 
+with open('README.rst') as readme:
+    README = readme.read()
+
 setup(
     name='ChatterBot',
     version=VERSION,
     url=URL,
     download_url='{}/tarball/{}'.format(URL, VERSION),
     description=DESCRIPTION,
+    long_description=README,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     packages=[
