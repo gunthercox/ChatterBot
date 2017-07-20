@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from .response import Response
-from datetime import datetime
 
 
 class Statement(object):

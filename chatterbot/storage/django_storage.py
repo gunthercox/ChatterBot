@@ -98,7 +98,7 @@ class DjangoStorageAdapter(StorageAdapter):
             response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
             response_statement.save()
 
-            response = Response.objects.create(
+            Response.objects.create(
                 statement=response_statement,
                 response=statement
             )
