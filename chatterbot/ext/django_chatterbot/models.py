@@ -93,11 +93,7 @@ class AbstractBaseStatement(models.Model):
         :returns: Return the number of times the statement has been used as a response.
         :rtype: int
         """
-        try:
-            response = self.in_response.get(response__text=statement.text)
-            return response.occurrence
-        except Response.DoesNotExist:
-            return 0
+        return self.in_response.filter(response__text=statement.text).count()
 
     def serialize(self):
         """

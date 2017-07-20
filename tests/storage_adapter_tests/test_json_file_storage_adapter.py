@@ -380,27 +380,3 @@ class JsonFileStorageOrderingTestCase(JsonAdapterTestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
         self.assertEqual(results[1], statement_b)
-
-    def test_order_by_created_at(self):
-        from datetime import datetime, timedelta
-
-        today = datetime.now()
-        yesterday = datetime.now() - timedelta(days=1)
-
-        statement_a = Statement(
-            text='A is the first letter of the alphabet.',
-            created_at=today
-        )
-        statement_b = Statement(
-            text='B is the second letter of the alphabet.',
-            created_at=yesterday
-        )
-
-        self.adapter.update(statement_a)
-        self.adapter.update(statement_b)
-
-        results = self.adapter.filter(order_by='created_at')
-
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[0], statement_a)
-        self.assertEqual(results[1], statement_b)
