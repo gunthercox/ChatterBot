@@ -33,10 +33,6 @@ class ApiTestCase(TestCase):
         self.assertIn('text', content)
         self.assertGreater(len(content['text']), 1)
         self.assertIn('in_response_to', content)
-        self.assertIn('created_at', content)
-        self.assertTrue(
-            isinstance(parse(content['created_at']), datetime)
-        )
 
     def test_post_unicode(self):
         """
