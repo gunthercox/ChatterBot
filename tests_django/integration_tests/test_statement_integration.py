@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.utils import timezone
 from chatterbot.conversation import Statement as StatementObject
 from chatterbot.conversation import Response as ResponseObject
 from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
@@ -96,6 +95,7 @@ class ResponseIntegrationTestCase(TestCase):
         statement_model = StatementModel.objects.create(text='_')
         self.object = ResponseObject(statement_object.text)
         self.model = ResponseModel(statement=statement_model, response=statement_model)
+        self.model.save()
 
     def test_serialize(self):
         object_data = self.object.serialize()

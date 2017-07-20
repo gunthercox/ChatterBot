@@ -18,8 +18,7 @@ class ChatBot(object):
         kwargs['name'] = name
         kwargs['chatbot'] = self
 
-        self.conversation_sessions = ConversationSessionManager()
-        self.default_session = self.conversation_sessions.new()
+        self.default_session = None
 
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 

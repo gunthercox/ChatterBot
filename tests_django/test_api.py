@@ -14,9 +14,6 @@ class ApiTestCase(TestCase):
         """
         Test that a response is returned.
         """
-        from datetime import datetime
-        from dateutil.parser import parse
-
         data = {
             'text': 'How are you?'
         }

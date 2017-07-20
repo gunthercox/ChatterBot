@@ -133,7 +133,7 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
         response = self.adapter.find(statement.text)
 
-        self.assertEqual(response.responses.count(), 1)
+        self.assertEqual(response.responses.count(), 2)
         self.assertEqual(response.responses.first().occurrence, 2)
 
     def test_remove(self):

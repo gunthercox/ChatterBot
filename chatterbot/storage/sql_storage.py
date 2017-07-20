@@ -10,7 +10,6 @@ try:
     from sqlalchemy.sql import func
     from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, PickleType
 
-
     class StatementTable(Base):
         """
         StatementTable, placeholder for a sentence or phrase.
