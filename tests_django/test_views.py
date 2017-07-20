@@ -6,7 +6,7 @@ from chatterbot.ext.django_chatterbot.views import ChatterBotView
 class MockResponse(object):
 
     def __init__(self, pk):
-        self.session = {'chat_session_id': pk}
+        self.session = {'conversation_id': pk}
 
 
 class ViewTestCase(TestCase):
@@ -30,15 +30,7 @@ class ViewTestCase(TestCase):
             })
 
     def test_get_conversation(self):
-        from chatterbot.ext.django_chatterbot.models import Statement, Response
-
         conversation_id = self.view.chatterbot.storage.create_conversation()
-
-        statement = Statement.objects.create(text='Hello')
-        Response.objects.create(
-            statement=statement,
-            response=statement
-        )
 
         mock_response = MockResponse(conversation_id)
         conversation = self.view.get_conversation(mock_response)
