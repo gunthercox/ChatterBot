@@ -59,10 +59,10 @@ class StatementIntegrationTestCase(TestCase):
         self.object.add_response(ResponseObject('Hello', occurrence=2))
         model_response_statement = StatementModel.objects.create(text='Hello')
         self.model.save()
-        self.model.in_response.create(
+        ResponseModel.objects.create(
             statement=self.model, response=model_response_statement
         )
-        self.model.in_response.create(
+        ResponseModel.objects.create(
             statement=self.model, response=model_response_statement
         )
 
