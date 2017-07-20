@@ -89,7 +89,7 @@ class SQLStorageAdapter(StorageAdapter):
         can be especified to choose database driver (database parameter will be igored).
     :type database_uri: str
 
-    :keyword read_only: False by default, makes all operations read only,  has priority over all DB operations
+    :keyword read_only: False by default, makes all operations read only, has priority over all DB operations
         so, create, update, delete will NOT be executed
     :type read_only: bool
 
@@ -104,19 +104,16 @@ class SQLStorageAdapter(StorageAdapter):
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
-        self.database_name = self.kwargs.get("database")
-
-        if self.database_name:
-
-            # Create a sqlite file if a database name is provided
-            self.database_uri = self.kwargs.get(
-                "database_uri", "sqlite:///" + self.database_name + ".db"
-            )
-
-        # The default uses sqlite in-memory database
+        # The default uses a sqlite in-memory database
         self.database_uri = self.kwargs.get(
             "database_uri", "sqlite://"
         )
+
+        database_name = self.kwargs.get("database")
+
+        # Create a sqlite file if a database name is provided
+        if database_name:
+            self.database_uri = "sqlite:///" + database_name + ".db"
 
         self.engine = create_engine(self.database_uri)
 
