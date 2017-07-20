@@ -27,6 +27,18 @@ class SQLAlchemyAdapterTestCase(TestCase):
 
 class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
 
+    def test_set_database_name_none(self):
+        adapter = SQLStorageAdapter(database=None)
+        self.assertEqual(adapter.database_uri, 'sqlite://')
+
+    def test_set_database_name(self):
+        adapter = SQLStorageAdapter(database='test')
+        self.assertEqual(adapter.database_uri, 'sqlite:///test.db')
+
+    def test_set_database_uri(self):
+        adapter = SQLStorageAdapter(database_uri='sqlite:///db.sqlite3')
+        self.assertEqual(adapter.database_uri, 'sqlite:///db.sqlite3')
+
     def test_count_returns_zero(self):
         """
         The count method should return a value of 0
