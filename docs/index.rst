@@ -73,7 +73,6 @@ Contents:
    django/index
    faq
    commands
-   encoding
    development
    glossary
 
