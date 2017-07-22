@@ -12,12 +12,25 @@ AUTHOR = CHATTERBOT.__author__
 AUTHOR_EMAIL = CHATTERBOT.__email__
 URL = CHATTERBOT.__url__
 DESCRIPTION = CHATTERBOT.__doc__
+LONG_DESCRIPTION = '''
+ChatterBot
+==========
+
+ChatterBot is a machine-learning based conversational dialog engine build in
+Python which makes it possible to generate responses based on collections of
+known conversations. The language independent design of ChatterBot allows it
+to be trained to speak any language.
+
+An example of typical input would be something like this:
+
+    | **user:** Good morning! How are you doing?
+    | **bot:** I am doing very well, thank you for asking.
+    | **user:** You’re welcome.
+    | **bot:** Do you like hats?
+'''
 
 with open('requirements.txt') as requirements:
     REQUIREMENTS = requirements.readlines()
-
-with open('README.md') as readme:
-    README = readme.read()
 
 setup(
     name='ChatterBot',
@@ -25,7 +38,7 @@ setup(
     url=URL,
     download_url='{}/tarball/{}'.format(URL, VERSION),
     description=DESCRIPTION,
-    long_description=README,
+    long_description=LONG_DESCRIPTION,
     author=AUTHOR,
     author_email=AUTHOR_EMAIL,
     packages=[
