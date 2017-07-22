@@ -60,10 +60,10 @@ class Trainer(object):
         Create a file from the database that can be used to
         train other chat bots.
         """
-        from jsondb.db import Database
-        database = Database(file_path)
-        export = {'export': self._generate_export_data()}
-        database.data(dictionary=export)
+        import json
+        export = {'conversations': self._generate_export_data()}
+        with open(file_path, 'w+') as jsonfile:
+            json.dumps(export, jsonfile, ensure_ascii=False)
 
 
 class ListTrainer(Trainer):
