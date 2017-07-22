@@ -16,7 +16,7 @@ DESCRIPTION = CHATTERBOT.__doc__
 with open('requirements.txt') as requirements:
     REQUIREMENTS = requirements.readlines()
 
-with open('README.rst') as readme:
+with open('README.md') as readme:
     README = readme.read()
 
 setup(
