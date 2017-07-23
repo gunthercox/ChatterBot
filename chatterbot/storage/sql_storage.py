@@ -79,7 +79,7 @@ class SQLStorageAdapter(StorageAdapter):
         Performance test not done yet.
         Tests using others databases not finished.
 
-    All parameters all optional, default is sqlite database in memory.
+    All parameters are optional, by default a sqlite database is used.
 
     It will check if tables is present, if not, it will attempt to create required tables.
     :keyword database: Used for sqlite database. Ignored if database_uri especified.
@@ -92,10 +92,6 @@ class SQLStorageAdapter(StorageAdapter):
     :keyword read_only: False by default, makes all operations read only, has priority over all DB operations
         so, create, update, delete will NOT be executed
     :type read_only: bool
-
-    :keyword create: Force Recreate ChatterBot only tables in database, default False,
-        if read_only is True create is ignored.
-    :type create: bool
     """
 
     def __init__(self, **kwargs):
@@ -104,12 +100,17 @@ class SQLStorageAdapter(StorageAdapter):
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
-        # The default uses a sqlite in-memory database
-        self.database_uri = self.kwargs.get(
-            "database_uri", "sqlite://"
-        )
+        default_uri = "sqlite:///db.sqlite3"
 
-        database_name = self.kwargs.get("database")
+        database_name = self.kwargs.get("database", False)
+
+        # None results in a sqlite in-memory database as the default
+        if database_name is None:
+            default_uri = "sqlite://"
+
+        self.database_uri = self.kwargs.get(
+            "database_uri", default_uri
+        )
 
         # Create a sqlite file if a database name is provided
         if database_name:
