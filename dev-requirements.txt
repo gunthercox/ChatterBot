@@ -1,4 +1,3 @@
-codeclimate-test-reporter
 coveralls
 factory-boy>=2.8,<2.9
 flake8
