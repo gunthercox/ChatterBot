@@ -127,6 +127,9 @@ class SQLStorageAdapter(StorageAdapter):
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
 
+        # ChatterBot's internal query builder is not yet supported for this adapter
+        self.adapter_supports_queries = False
+
     def count(self):
         """
         Return the number of entries in the database.
