@@ -116,7 +116,7 @@ class SQLStorageAdapter(StorageAdapter):
         if database_name:
             self.database_uri = "sqlite:///" + database_name + ".db"
 
-        self.engine = create_engine(self.database_uri)
+        self.engine = create_engine(self.database_uri, convert_unicode=True)
 
         self.read_only = self.kwargs.get(
             "read_only", False
