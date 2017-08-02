@@ -4,6 +4,7 @@ import sys
 from .conversation import Statement, Response
 from .utils import print_progress_bar
 
+
 class Trainer(object):
     """
     Base class for all other trainer classes.
