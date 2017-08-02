@@ -2,7 +2,7 @@ import logging
 import os
 import sys
 from .conversation import Statement, Response
-
+from .utils import print_progress_bar
 
 class Trainer(object):
     """
@@ -79,7 +79,9 @@ class ListTrainer(Trainer):
         """
         previous_statement_text = None
 
-        for text in conversation:
+        for conversation_count, text in enumerate(conversation):
+            print_progress_bar("List Trainer", conversation_count + 1, len(conversation))
+
             statement = self.get_or_create(text)
 
             if previous_statement_text:
@@ -115,8 +117,15 @@ class ChatterBotCorpusTrainer(Trainer):
 
             corpora = self.corpus.load_corpus(corpus_path)
 
-            for corpus in corpora:
-                for conversation in corpus:
+            corpus_files = self.corpus.list_corpus_files(corpus_path)
+            for corpus_count, corpus in enumerate(corpora):
+                for conversation_count, conversation in enumerate(corpus):
+                    print_progress_bar(
+                        str(os.path.basename(corpus_files[corpus_count])) + " Training",
+                        conversation_count + 1,
+                        len(corpus)
+                    )
+
                     previous_statement_text = None
 
                     for text in conversation:
