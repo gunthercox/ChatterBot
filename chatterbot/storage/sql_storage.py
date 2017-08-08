@@ -3,14 +3,14 @@ from chatterbot.storage import StorageAdapter
 
 try:
     from chatterbot.ext.sqlalchemy_app.models import (
-        Base, Conversation, StatementTable, ResponseTable, Tag
+        Base, Conversation, Statement, Response
     )
 except ImportError:
     pass
 
 
 def get_response_table(response):
-    return ResponseTable(text=response.text, occurrence=response.occurrence)
+    return Response(text=response.text, occurrence=response.occurrence)
 
 
 class SQLStorageAdapter(StorageAdapter):
@@ -66,7 +66,7 @@ class SQLStorageAdapter(StorageAdapter):
             "read_only", False
         )
 
-        if not self.engine.dialect.has_table(self.engine, 'StatementTable'):
+        if not self.engine.dialect.has_table(self.engine, 'Statement'):
             self.create()
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
@@ -79,17 +79,17 @@ class SQLStorageAdapter(StorageAdapter):
         Return the number of entries in the database.
         """
         session = self.Session()
-        statement_count = session.query(StatementTable).count()
+        statement_count = session.query(Statement).count()
         session.close()
         return statement_count
 
     def __statement_filter(self, session, **kwargs):
         """
-        Apply filter operation on StatementTable
+        Apply filter operation on Statement
 
         rtype: query
         """
-        _query = session.query(StatementTable)
+        _query = session.query(Statement)
         return _query.filter_by(**kwargs)
 
     def find(self, statement_text):
@@ -137,32 +137,32 @@ class SQLStorageAdapter(StorageAdapter):
         # _response_query = None
         _query = None
         if len(filter_parameters) == 0:
-            _response_query = session.query(StatementTable)
+            _response_query = session.query(Statement)
             statements.extend(_response_query.all())
         else:
             for i, fp in enumerate(filter_parameters):
                 _filter = filter_parameters[fp]
                 if fp in ['in_response_to', 'in_response_to__contains']:
-                    _response_query = session.query(StatementTable)
+                    _response_query = session.query(Statement)
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
-                                StatementTable.in_response_to == None)  # NOQA Here must use == instead of is
+                                Statement.in_response_to == None)  # NOQA Here must use == instead of is
                         else:
                             for f in _filter:
                                 _query = _response_query.filter(
-                                    StatementTable.in_response_to.contains(get_response_table(f)))
+                                    Statement.in_response_to.contains(get_response_table(f)))
                     else:
                         if fp == 'in_response_to__contains':
-                            _query = _response_query.join(ResponseTable).filter(ResponseTable.text == _filter)
+                            _query = _response_query.join(Response).filter(Response.text == _filter)
                         else:
-                            _query = _response_query.filter(StatementTable.in_response_to == None)  # NOQA
+                            _query = _response_query.filter(Statement.in_response_to == None)  # NOQA
                 else:
                     if _query:
-                        _query = _query.filter(ResponseTable.statement_text.like('%' + _filter + '%'))
+                        _query = _query.filter(Response.statement_text.like('%' + _filter + '%'))
                     else:
-                        _response_query = session.query(ResponseTable)
-                        _query = _response_query.filter(ResponseTable.statement_text.like('%' + _filter + '%'))
+                        _response_query = session.query(Response)
+                        _query = _response_query.filter(Response.statement_text.like('%' + _filter + '%'))
 
                 if _query is None:
                     return []
@@ -172,7 +172,7 @@ class SQLStorageAdapter(StorageAdapter):
         results = []
 
         for statement in statements:
-            if isinstance(statement, ResponseTable):
+            if isinstance(statement, Response):
                 if statement and statement.statement_table:
                     results.append(statement.statement_table.get_statement())
             else:
@@ -195,14 +195,14 @@ class SQLStorageAdapter(StorageAdapter):
 
             # Create a new statement entry if one does not already exist
             if not record:
-                record = StatementTable(text=statement.text)
+                record = Statement(text=statement.text)
 
             record.extra_data = dict(statement.extra_data)
 
             if statement.in_response_to:
                 # Get or create the response records as needed
                 for response in statement.in_response_to:
-                    _response = session.query(ResponseTable).filter_by(
+                    _response = session.query(Response).filter_by(
                         text=response.text,
                         statement_text=statement.text
                     ).first()
@@ -211,7 +211,7 @@ class SQLStorageAdapter(StorageAdapter):
                         _response.occurrence += 1
                     else:
                         # Create the record
-                        _response = ResponseTable(
+                        _response = Response(
                             text=response.text,
                             statement_text=statement.text,
                             occurrence=response.occurrence
@@ -250,23 +250,23 @@ class SQLStorageAdapter(StorageAdapter):
 
         conversation = session.query(Conversation).get(conversation_id)
 
-        statement_query = session.query(StatementTable).filter_by(
+        statement_query = session.query(Statement).filter_by(
             text=statement.text
         ).first()
-        response_query = session.query(StatementTable).filter_by(
+        response_query = session.query(Statement).filter_by(
             text=response.text
         ).first()
 
         # Make sure the statements exist
         if not statement_query:
             self.update(statement)
-            statement_query = session.query(StatementTable).filter_by(
+            statement_query = session.query(Statement).filter_by(
                 text=statement.text
             ).first()
 
         if not response_query:
             self.update(response)
-            response_query = session.query(StatementTable).filter_by(
+            response_query = session.query(Statement).filter_by(
                 text=response.text
             ).first()
 
@@ -285,10 +285,10 @@ class SQLStorageAdapter(StorageAdapter):
         statement = None
 
         statement_query = session.query(
-            StatementTable
+            Statement
         ).filter(
-            StatementTable.conversations.any(id=conversation_id)
-        ).order_by(StatementTable.id).limit(2).first()
+            Statement.conversations.any(id=conversation_id)
+        ).order_by(Statement.id).limit(2).first()
 
         if statement_query:
             statement = statement_query.get_statement()
@@ -307,7 +307,7 @@ class SQLStorageAdapter(StorageAdapter):
             raise self.EmptyDatabaseException()
 
         rand = random.randrange(0, count)
-        stmt = session.query(StatementTable)[rand]
+        stmt = session.query(Statement)[rand]
 
         statement = stmt.get_statement()
 
