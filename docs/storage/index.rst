@@ -21,8 +21,8 @@ storage adapter you want to use.
        storage_adapter="chatterbot.storage.SQLStorageAdapter"
    )
 
-SQL Alchemy Storage Adapter
-===========================
+SQL Storage Adapter
+===================
 
 .. autoclass:: chatterbot.storage.SQLStorageAdapter
    :members:
