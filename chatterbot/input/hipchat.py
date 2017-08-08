@@ -84,17 +84,9 @@ class HipChat(InputAdapter):
         """
         new_message = False
 
-        input_statement = self.chatbot.conversation_sessions.get(
-            self.session_id).conversation.get_last_input_statement()
-        response_statement = self.chatbot.conversation_sessions.get(
-            self.session_id).conversation.get_last_response_statement()
-
-        if input_statement:
-            last_message_id = input_statement.extra_data.get(
-                'hipchat_message_id', None
-            )
-            if last_message_id:
-                self.recent_message_ids.add(last_message_id)
+        response_statement = self.chatbot.storage.get_latest_response(
+            self.session_id
+        )
 
         if response_statement:
             last_message_id = response_statement.extra_data.get(
