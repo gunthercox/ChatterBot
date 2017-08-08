@@ -51,30 +51,3 @@ class FixedSizeQueue(object):
         Remove all elements from the queue.
         """
         self.queue = []
-
-
-class ResponseQueue(FixedSizeQueue):
-    """
-    An extension of the FixedSizeQueue class with
-    utility methods to help manage the conversation.
-    """
-
-    def get_last_response_statement(self):
-        """
-        Return the last statement that was received.
-        """
-        previous_interaction = self.peek()
-        if previous_interaction:
-            # Return the output statement
-            return previous_interaction[1]
-        return None
-
-    def get_last_input_statement(self):
-        """
-        Return the last response that was given.
-        """
-        previous_interaction = self.peek()
-        if previous_interaction:
-            # Return the input statement
-            return previous_interaction[0]
-        return None
