@@ -30,8 +30,9 @@ tag_association_table = Table(
     'tag_association',
     Base.metadata,
     Column('tag_id', Integer, ForeignKey('tag.id')),
-    Column('statement_id', Integer, ForeignKey('StatementTable.id'))
+    Column('statement_id', Integer, ForeignKey('statement.id'))
 )
+
 
 class Tag(Base):
     """
@@ -40,20 +41,11 @@ class Tag(Base):
 
     name = Column(String)
 
-class StatementTable(Base):
+
+class Statement(Base):
     """
-    StatementTable, placeholder for a sentence or phrase.
+    A Statement represents a sentence or phrase.
     """
-
-    __tablename__ = 'StatementTable'
-
-    def get_statement(self):
-        from chatterbot.conversation import Statement as StatementObject
-
-        statement = StatementObject(self.text, extra_data=self.extra_data)
-        for response in self.in_response_to:
-            statement.add_response(response.get_response())
-        return statement
 
     text = Column(String, unique=True)
 
@@ -66,16 +58,23 @@ class StatementTable(Base):
     extra_data = Column(PickleType)
 
     in_response_to = relationship(
-        'ResponseTable',
+        'Response',
         back_populates='statement_table'
     )
 
-class ResponseTable(Base):
-    """
-    ResponseTable, contains responses related to a givem statment.
-    """
+    def get_statement(self):
+        from chatterbot.conversation import Statement as StatementObject
 
-    __tablename__ = 'ResponseTable'
+        statement = StatementObject(self.text, extra_data=self.extra_data)
+        for response in self.in_response_to:
+            statement.add_response(response.get_response())
+        return statement
+
+
+class Response(Base):
+    """
+    Response, contains responses related to a givem statment.
+    """
 
     text = Column(String)
 
@@ -86,10 +85,10 @@ class ResponseTable(Base):
 
     occurrence = Column(Integer, default=1)
 
-    statement_text = Column(String, ForeignKey('StatementTable.text'))
+    statement_text = Column(String, ForeignKey('statement.text'))
 
     statement_table = relationship(
-        'StatementTable',
+        'Statement',
         back_populates='in_response_to',
         cascade='all',
         uselist=False
@@ -100,12 +99,14 @@ class ResponseTable(Base):
         occ = {'occurrence': self.occurrence}
         return ResponseObject(text=self.text, **occ)
 
+
 conversation_association_table = Table(
     'conversation_association',
     Base.metadata,
     Column('conversation_id', Integer, ForeignKey('conversation.id')),
-    Column('statement_id', Integer, ForeignKey('StatementTable.id'))
+    Column('statement_id', Integer, ForeignKey('statement.id'))
 )
+
 
 class Conversation(Base):
     """
@@ -113,7 +114,7 @@ class Conversation(Base):
     """
 
     statements = relationship(
-        'StatementTable',
+        'Statement',
         secondary=lambda: conversation_association_table,
         backref='conversations'
     )
