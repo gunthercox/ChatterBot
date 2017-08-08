@@ -22,9 +22,6 @@ try:
         A tag that describes a statement.
         """
 
-        __tablename__ = 'tag'
-
-        id = Column(Integer, primary_key=True)
         name = Column(String)
 
     class StatementTable(Base):
