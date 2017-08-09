@@ -331,23 +331,23 @@ class MongoDatabaseAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        response_query = self.statements.distinct('in_response_to.text')
+        response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}])
+
+        responses = []
+        for r in response_query:
+            responses.extend(r['_id'])
 
         _statement_query = {
             'text': {
-                '$in': response_query
+                '$in': responses
             }
         }
 
         _statement_query.update(self.base_query.value())
-
         statement_query = self.statements.find(_statement_query)
-
         statement_objects = []
-
         for statement in list(statement_query):
             statement_objects.append(self.mongo_to_object(statement))
-
         return statement_objects
 
     def drop(self):
