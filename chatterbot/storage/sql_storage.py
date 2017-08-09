@@ -56,6 +56,17 @@ class SQLStorageAdapter(StorageAdapter):
 
         self.engine = create_engine(self.database_uri, convert_unicode=True)
 
+        from re import search
+
+        if search('^sqlite://', self.database_uri):
+            from sqlalchemy.engine import Engine
+            from sqlalchemy import event
+
+            @event.listens_for(Engine, "connect")
+            def set_sqlite_pragma(dbapi_connection, connection_record):
+                dbapi_connection.execute('PRAGMA journal_mode=WAL')
+                dbapi_connection.execute('PRAGMA synchronous=NORMAL')
+
         self.read_only = self.kwargs.get(
             "read_only", False
         )
