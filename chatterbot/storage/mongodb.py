@@ -335,7 +335,10 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         responses = []
         for r in response_query:
-            responses.extend(r['_id'])
+            try:
+                responses.extend(r['_id'])
+            except TypeError:
+                pass
 
         _statement_query = {
             'text': {
