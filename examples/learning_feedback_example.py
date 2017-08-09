@@ -22,7 +22,7 @@ bot = ChatBot(
     output_adapter='chatterbot.output.TerminalAdapter'
 )
 
-DEFAULT_SESSION_ID = bot.default_session.id
+DEFAULT_SESSION_ID = bot.default_conversation_id
 
 
 def get_feedback():

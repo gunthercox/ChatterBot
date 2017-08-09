@@ -16,7 +16,7 @@ bot.set_trainer(ChatterBotCorpusTrainer)
 
 bot.train("chatterbot.corpus.english")
 
-DEFAULT_SESSION_ID = bot.default_session.id
+DEFAULT_SESSION_ID = bot.default_conversation_id
 
 
 def get_feedback():
