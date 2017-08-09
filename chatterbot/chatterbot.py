@@ -115,7 +115,7 @@ class ChatBot(object):
         previous_statement = self.storage.get_latest_response(conversation_id)
 
         if not self.read_only:
-            self.learn_response(statement, previous_statement)
+            self.learn_response(response, previous_statement)
             self.storage.add_to_converation(conversation_id, statement, response)
 
         # Process the response output with the output adapter
