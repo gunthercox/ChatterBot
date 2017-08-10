@@ -265,7 +265,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return self.mongo_to_object(statements[-2])
 
-    def add_to_converation(self, conversation_id, statement, response):
+    def add_to_conversation(self, conversation_id, statement, response):
         """
         Add the statement and response to the conversation.
         """
