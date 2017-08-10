@@ -92,6 +92,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Use the default host and port
         self.client = MongoClient(self.database_uri)
 
+        # Increase the sort buffer to 42M
+        self.client.admin.command({'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
+
         # Specify the name of the database
         self.database = self.client[self.database_name]
 
