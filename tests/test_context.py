@@ -17,7 +17,7 @@ class AdapterTests(ChatBotTestCase):
     def test_get_latest_response(self):
         from chatterbot.conversation import Statement
         conversation_id = self.chatbot.storage.create_conversation()
-        self.chatbot.storage.add_to_converation(
+        self.chatbot.storage.add_to_conversation(
             conversation_id, Statement(text='A'), Statement(text='B')
         )
 

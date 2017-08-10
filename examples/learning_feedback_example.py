@@ -56,7 +56,7 @@ while True:
 
         # Update the conversation history for the bot
         # It is important that this happens last, after the learning step
-        bot.storage.add_to_converation(bot.default_session, statement, response)
+        bot.storage.add_to_conversation(bot.default_session, statement, response)
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
