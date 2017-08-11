@@ -9,11 +9,10 @@ class AbstractBaseStatement(models.Model):
     default models.
     """
 
-    text = models.CharField(
+    text = models.TextField(
         unique=True,
         blank=False,
-        null=False,
-        max_length=255
+        null=False
     )
 
     extra_data = models.CharField(max_length=500)
