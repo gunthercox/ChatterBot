@@ -1,5 +1,6 @@
 chatterbot-corpus>=1.0,<1.1
 jsondatabase>=0.1.7,<1.0.0
+mock>=2.0,<3.0
 nltk>=3.2,<4.0
 pymongo>=3.3,<4.0
 python-dateutil>=2.6,<2.7
