@@ -93,7 +93,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         self.client = MongoClient(self.database_uri)
 
         # Increase the sort buffer to 42M
-        self.client.admin.command({'setFeatureCompatibilityVersion': '3.2'})
         self.client.admin.command({'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
 
         # Specify the name of the database
