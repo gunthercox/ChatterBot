@@ -15,7 +15,7 @@ class AbstractBaseStatement(models.Model):
         null=False
     )
 
-    extra_data = models.CharField(max_length=500)
+    extra_data = models.CharField(max_length=1000)
 
     # This is the confidence with which the chat bot believes
     # this is an accurate response. This value is set when the
