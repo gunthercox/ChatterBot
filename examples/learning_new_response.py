@@ -16,7 +16,7 @@ bot.set_trainer(ChatterBotCorpusTrainer)
 
 bot.train("chatterbot.corpus.english")
 
-DEFAULT_SESSION_ID = bot.default_conversation_id
+DEFAULT_CONVERSATION_ID = bot.default_conversation_id
 
 
 def get_feedback():
@@ -39,7 +39,7 @@ print("Type something to begin...")
 while True:
     try:
         input_statement = bot.input.process_input_statement()
-        statement, response = bot.generate_response(input_statement, DEFAULT_SESSION_ID)
+        statement, response = bot.generate_response(input_statement, DEFAULT_CONVERSATION_ID)
         bot.output.process_response(response)
         print('\n Is "{}" a coherent response to "{}"? \n'.format(response, input_statement))
         if get_feedback():
