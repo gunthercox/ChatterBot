@@ -81,6 +81,7 @@ class MongoDatabaseAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)
         from pymongo import MongoClient
+        from pymongo.errors import OperationFailure
 
         self.database_name = self.kwargs.get(
             'database', 'chatterbot-database'
@@ -92,8 +93,11 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Use the default host and port
         self.client = MongoClient(self.database_uri)
 
-        # Increase the sort buffer to 42M
-        self.client.admin.command({'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
+        # Increase the sort buffer to 42M if possible
+        try:
+            self.client.admin.command({'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
+        except OperationFailure:
+            pass
 
         # Specify the name of the database
         self.database = self.client[self.database_name]
