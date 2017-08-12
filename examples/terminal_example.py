@@ -17,9 +17,8 @@ bot = ChatBot(
     ],
     input_adapter="chatterbot.input.TerminalAdapter",
     output_adapter="chatterbot.output.TerminalAdapter",
-    # No need for suffix
     # Use sys.path[0]+"/../database" to make the path relative to file instead of interpreter
-    database="../database"
+    database="../database.db"
 )
 
 print("Type something to begin...")

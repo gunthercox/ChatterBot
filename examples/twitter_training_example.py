@@ -29,8 +29,7 @@ chatbot = ChatBot(
     ],
     input_adapter="chatterbot.input.TerminalAdapter",
     output_adapter="chatterbot.output.TerminalAdapter",
-    # No need for suffix
-    database="./twitter-database",
+    database="./twitter-database.db",
     twitter_consumer_key=TWITTER["CONSUMER_KEY"],
     twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],
     twitter_access_token_key=TWITTER["ACCESS_TOKEN"],

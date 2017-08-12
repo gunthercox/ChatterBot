@@ -26,8 +26,7 @@ class TkinterGUIExample(tk.Tk):
             ],
             input_adapter="chatterbot.input.VariableInputTypeAdapter",
             output_adapter="chatterbot.output.OutputAdapter",
-            # No need for suffix
-            database="../database"
+            database="../database.db"
         )
 
         self.title("Chatterbot")

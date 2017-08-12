@@ -32,7 +32,7 @@ class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(adapter.database_uri, 'sqlite://')
 
     def test_set_database_name(self):
-        adapter = SQLStorageAdapter(database='test')
+        adapter = SQLStorageAdapter(database='test.db')
         self.assertEqual(adapter.database_uri, 'sqlite:///test.db')
 
     def test_set_database_uri(self):
