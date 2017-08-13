@@ -47,7 +47,6 @@ while True:
     try:
         input_statement = bot.input.process_input_statement()
         statement, response = bot.generate_response(input_statement, CONVERSATION_ID)
-        
         print('\n Is "{}" this a coherent response to "{}"? \n'.format(response, input_statement))
 
         if get_feedback():
