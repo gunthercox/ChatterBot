@@ -16,6 +16,7 @@ bot.set_trainer(ChatterBotCorpusTrainer)
 
 bot.train("chatterbot.corpus.english")
 
+
 CONVERSATION_ID = bot.storage.create_conversation()
 
 
@@ -40,6 +41,7 @@ while True:
     try:
         input_statement = bot.input.process_input_statement()
         statement, response = bot.generate_response(input_statement, CONVERSATION_ID)
+
         bot.output.process_response(response)
         print('\n Is "{}" a coherent response to "{}"? \n'.format(response, input_statement))
         if get_feedback():
