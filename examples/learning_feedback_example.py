@@ -57,8 +57,6 @@ while True:
 
         bot.output.process_response(response)
 
-
-
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
         break
