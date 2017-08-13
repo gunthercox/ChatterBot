@@ -51,12 +51,13 @@ while True:
 
         if get_feedback():
             bot.learn_response(response, input_statement)
+            # Update the conversation history for the bot
+            # It is important that this happens last, after the learning step
+            bot.storage.add_to_conversation(CONVERSATION_ID, statement, response)
 
         bot.output.process_response(response)
 
-        # Update the conversation history for the bot
-        # It is important that this happens last, after the learning step
-        bot.storage.add_to_conversation(CONVERSATION_ID, statement, response)
+
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
