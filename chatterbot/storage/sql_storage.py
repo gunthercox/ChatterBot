@@ -212,7 +212,7 @@ class SQLStorageAdapter(StorageAdapter):
         Modifies an entry in the database.
         Creates an entry if one does not exist.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement, Response
+        from chatterbot.ext.sqlalchemy_app.models import Statement, Response, Tag
 
         if statement:
             session = self.Session()
@@ -224,6 +224,7 @@ class SQLStorageAdapter(StorageAdapter):
                 record = Statement(text=statement.text)
 
             record.extra_data = dict(statement.extra_data)
+            record.tags = [Tag(name=statement.tags)]
 
             if statement.in_response_to:
                 # Get or create the response records as needed
