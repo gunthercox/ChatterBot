@@ -19,6 +19,9 @@ class Statement(object):
         self.text = text
         self.in_response_to = kwargs.pop('in_response_to', [])
 
+        # Store tags information into statements
+        self.tags = kwargs.pop('tags', [])
+
         self.extra_data = kwargs.pop('extra_data', {})
 
         # This is the confidence with which the chat bot believes
@@ -134,6 +137,7 @@ class Statement(object):
         data = dict
 
         data['text'] = self.text
+        data['tags'] = self.tags
         data['in_response_to'] = []
         data['extra_data'] = self.extra_data
 
