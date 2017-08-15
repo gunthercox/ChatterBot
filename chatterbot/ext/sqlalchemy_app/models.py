@@ -73,7 +73,7 @@ class Statement(Base):
 
 class Response(Base):
     """
-    Response, contains responses related to a givem statment.
+    Response, contains responses related to a given statement.
     """
 
     text = Column(String)
