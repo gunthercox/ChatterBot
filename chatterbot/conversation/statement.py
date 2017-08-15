@@ -20,7 +20,7 @@ class Statement(object):
         self.in_response_to = kwargs.pop('in_response_to', [])
 
         # Store tags information into statements
-        self.tags = kwargs.pop('tags', [])
+        self.tags = kwargs.pop('tags', '')
 
         self.extra_data = kwargs.pop('extra_data', {})
 
@@ -134,7 +134,7 @@ class Statement(object):
         :returns: A dictionary representation of the statement object.
         :rtype: dict
         """
-        data = dict
+        data = {}
 
         data['text'] = self.text
         data['tags'] = self.tags
