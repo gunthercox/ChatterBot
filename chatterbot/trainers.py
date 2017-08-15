@@ -20,15 +20,16 @@ class Trainer(object):
         """
         raise self.TrainerInitializationException()
 
-    def get_or_create(self, statement_text):
+    def get_or_create(self, statement_text, **kwargs):
         """
         Return a statement if it exists.
         Create and return the statement if it does not exist.
         """
-        statement = self.storage.find(statement_text)
+        tags = kwargs.pop('tags', '')
 
+        statement = self.storage.find(statement_text)
         if not statement:
-            statement = Statement(statement_text)
+            statement = Statement(statement_text, tags=tags)
 
         return statement
 
@@ -119,26 +120,26 @@ class ChatterBotCorpusTrainer(Trainer):
             corpora = self.corpus.load_corpus(corpus_path)
 
             corpus_files = self.corpus.list_corpus_files(corpus_path)
-            for corpus_count, corpus in enumerate(corpora):
-                for conversation_count, conversation in enumerate(corpus):
-                    print_progress_bar(
-                        str(os.path.basename(corpus_files[corpus_count])) + " Training",
-                        conversation_count + 1,
-                        len(corpus)
-                    )
+            for category in corpora.categories:
+                for corpus_count, corpus in enumerate(corpora):
+                    for conversation_count, conversation in enumerate(corpus):
+                        print_progress_bar(
+                            str(os.path.basename(corpus_files[corpus_count])) + " Training",
+                            conversation_count + 1,
+                            len(corpus)
+                        )
 
-                    previous_statement_text = None
+                        previous_statement_text = None
 
-                    for text in conversation:
-                        statement = self.get_or_create(text)
+                        for text in conversation:
+                            statement = self.get_or_create(text, tags=category)
+                            if previous_statement_text:
+                                statement.add_response(
+                                    Response(previous_statement_text)
+                                )
 
-                        if previous_statement_text:
-                            statement.add_response(
-                                Response(previous_statement_text)
-                            )
-
-                        previous_statement_text = statement.text
-                        self.storage.update(statement)
+                            previous_statement_text = statement.text
+                            self.storage.update(statement)
 
 
 class TwitterTrainer(Trainer):
