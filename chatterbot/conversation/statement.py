@@ -32,7 +32,7 @@ class Statement(object):
         return self.text
 
     def __repr__(self):
-        return '<Statement text:%s>' % (self.text)
+        return '<Statement text:%s>' % self.text
 
     def __hash__(self):
         return hash(self.text)
@@ -80,7 +80,7 @@ class Statement(object):
         """
         if not isinstance(response, Response):
             raise Statement.InvalidTypeException(
-                'A {} was recieved when a {} instance was expected'.format(
+                'A {} was received when a {} instance was expected'.format(
                     type(response),
                     type(Response(''))
                 )
@@ -131,7 +131,7 @@ class Statement(object):
         :returns: A dictionary representation of the statement object.
         :rtype: dict
         """
-        data = {}
+        data = dict
 
         data['text'] = self.text
         data['in_response_to'] = []
@@ -152,7 +152,7 @@ class Statement(object):
 
     class InvalidTypeException(Exception):
 
-        def __init__(self, value='Recieved an unexpected value type.'):
+        def __init__(self, value='Received an unexpected value type.'):
             self.value = value
 
         def __str__(self):
