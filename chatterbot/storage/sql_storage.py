@@ -10,7 +10,7 @@ def get_response_table(response):
 class SQLStorageAdapter(StorageAdapter):
     """
     SQLStorageAdapter allows ChatterBot to store conversation
-    data semi-structutered T-SQL database, virtually, any database that SQL Alchemy supports.
+    data semi-structured T-SQL database, virtually, any database that SQL Alchemy supports.
 
     Notes:
         Tables may change (and will), so, save your training data. There is no data migration (yet).
@@ -24,7 +24,7 @@ class SQLStorageAdapter(StorageAdapter):
     :type database: str
 
     :keyword database_uri: eg: sqlite:///database_test.db", # use database_uri or database, database_uri
-        can be especified to choose database driver (database parameter will be igored).
+        can be specified to choose database driver (database parameter will be ignored).
     :type database_uri: str
 
     :keyword read_only: False by default, makes all operations read only, has priority over all DB operations
@@ -89,6 +89,19 @@ class SQLStorageAdapter(StorageAdapter):
         statement_count = session.query(Statement).count()
         session.close()
         return statement_count
+
+    def __tag_filter(self, session, **kwargs):
+        """
+        Apply tag filter operation on Statement
+
+        rtype: query
+        """
+        from chatterbot.ext.sqlalchemy_app.models import Statement, Tag
+
+        tags = kwargs.get('tags', [])
+        statement_text = kwargs.get('statement_text', [])
+        _query = session.query(Statement)
+        return _query.join(Statement.tags).filter(Statement.text == statement_text).filter(Tag.name.in_(tags))
 
     def __statement_filter(self, session, **kwargs):
         """
