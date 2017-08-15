@@ -151,9 +151,11 @@ class SQLStorageAdapter(StorageAdapter):
         all listed attributes and in which all values
         match for all listed attributes will be returned.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement, Response
+        from chatterbot.ext.sqlalchemy_app.models import Statement, Response, Tag
 
         session = self.Session()
+
+        tags = kwargs.pop('tags', '')
 
         filter_parameters = kwargs.copy()
 
@@ -161,13 +163,13 @@ class SQLStorageAdapter(StorageAdapter):
         # _response_query = None
         _query = None
         if len(filter_parameters) == 0:
-            _response_query = session.query(Statement)
+            _response_query = session.query(Statement).join(Statement.tags).filter(Tag.name.in_(([tags])))
             statements.extend(_response_query.all())
         else:
             for i, fp in enumerate(filter_parameters):
                 _filter = filter_parameters[fp]
                 if fp in ['in_response_to', 'in_response_to__contains']:
-                    _response_query = session.query(Statement)
+                    _response_query = session.query(Statement).join(Statement.tags).filter(Tag.name.in_(([tags])))
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
