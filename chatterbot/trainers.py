@@ -377,7 +377,7 @@ class UbuntuCorpusTrainer(Trainer):
 
                 for row in reader:
                     if len(row) > 0:
-                        text = row[3]
+                        text = unicode(row[3], errors='ignore')
                         statement = self.get_or_create(text)
                         print(text, len(row))
 
