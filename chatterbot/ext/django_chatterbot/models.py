@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from chatterbot import constants
 
 
 class AbstractBaseStatement(models.Model):
@@ -13,7 +14,7 @@ class AbstractBaseStatement(models.Model):
         unique=True,
         blank=False,
         null=False,
-        max_length=255
+        max_length=constants.MAXIMUM_DIALOG_CHARACTERS
     )
 
     extra_data = models.CharField(max_length=500)
