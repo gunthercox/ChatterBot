@@ -14,7 +14,7 @@ class AbstractBaseStatement(models.Model):
         unique=True,
         blank=False,
         null=False,
-        max_length=constants.MAXIMUM_DIALOG_CHARACTERS
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH
     )
 
     extra_data = models.CharField(max_length=500)
