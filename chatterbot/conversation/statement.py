@@ -19,8 +19,8 @@ class Statement(object):
         self.text = text
         self.in_response_to = kwargs.pop('in_response_to', [])
 
-        # Store tags information into statements
-        self.tags = kwargs.pop('tags', '')
+        # tags information into statements
+        self.tags = kwargs.pop('tags', [])
 
         self.extra_data = kwargs.pop('extra_data', {})
 
@@ -72,6 +72,14 @@ class Statement(object):
         :param value: The value to set for the specified key.
         """
         self.extra_data[key] = value
+
+    def add_tags(self, tags):
+        """
+        This method will preserve tags information specific statements
+
+        :param tags: specific tags
+        """
+        self.tags = tags
 
     def add_response(self, response):
         """
@@ -137,7 +145,6 @@ class Statement(object):
         data = {}
 
         data['text'] = self.text
-        data['tags'] = self.tags
         data['in_response_to'] = []
         data['extra_data'] = self.extra_data
 
