@@ -90,19 +90,6 @@ class SQLStorageAdapter(StorageAdapter):
         session.close()
         return statement_count
 
-    def __tag_filter(self, session, **kwargs):
-        """
-        Apply tag filter operation on Statement
-
-        rtype: query
-        """
-        from chatterbot.ext.sqlalchemy_app.models import Statement, Tag
-
-        tags = kwargs.get('tags', [])
-        statement_text = kwargs.get('statement_text', [])
-        _query = session.query(Statement)
-        return _query.join(Statement.tags).filter(Statement.text == statement_text).filter(Tag.name.in_(tags))
-
     def __statement_filter(self, session, **kwargs):
         """
         Apply filter operation on Statement
@@ -155,21 +142,22 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
-        tags = kwargs.pop('tags', '')
-
         filter_parameters = kwargs.copy()
 
         statements = []
-        # _response_query = None
+
         _query = None
         if len(filter_parameters) == 0:
-            _response_query = session.query(Statement).join(Statement.tags).filter(Tag.name.in_(([tags])))
+            if session.query(Tag).count() >= 1:
+                _response_query = session.query(Statement).join(Statement.tags)
+            else:
+                _response_query = session.query(Statement)
             statements.extend(_response_query.all())
         else:
             for i, fp in enumerate(filter_parameters):
                 _filter = filter_parameters[fp]
                 if fp in ['in_response_to', 'in_response_to__contains']:
-                    _response_query = session.query(Statement).join(Statement.tags).filter(Tag.name.in_(([tags])))
+                    _response_query = session.query(Statement)
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
@@ -226,7 +214,9 @@ class SQLStorageAdapter(StorageAdapter):
                 record = Statement(text=statement.text)
 
             record.extra_data = dict(statement.extra_data)
-            record.tags = [Tag(name=statement.tags)]
+
+            # Store each tag information into statement
+            record.tags = [Tag(name=tag) for tag in statement.tags]
 
             if statement.in_response_to:
                 # Get or create the response records as needed
