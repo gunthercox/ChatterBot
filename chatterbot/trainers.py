@@ -20,16 +20,14 @@ class Trainer(object):
         """
         raise self.TrainerInitializationException()
 
-    def get_or_create(self, statement_text, **kwargs):
+    def get_or_create(self, statement_text):
         """
         Return a statement if it exists.
         Create and return the statement if it does not exist.
         """
-        tags = kwargs.pop('tags', '')
-
         statement = self.storage.find(statement_text)
         if not statement:
-            statement = Statement(statement_text, tags=tags)
+            statement = Statement(statement_text)
 
         return statement
 
@@ -120,26 +118,32 @@ class ChatterBotCorpusTrainer(Trainer):
             corpora = self.corpus.load_corpus(corpus_path)
 
             corpus_files = self.corpus.list_corpus_files(corpus_path)
-            for category in corpora.categories:
-                for corpus_count, corpus in enumerate(corpora):
-                    for conversation_count, conversation in enumerate(corpus):
-                        print_progress_bar(
-                            str(os.path.basename(corpus_files[corpus_count])) + " Training",
-                            conversation_count + 1,
-                            len(corpus)
-                        )
 
-                        previous_statement_text = None
+            for corpus_count, corpus in enumerate(corpora):
 
-                        for text in conversation:
-                            statement = self.get_or_create(text, tags=category)
-                            if previous_statement_text:
-                                statement.add_response(
-                                    Response(previous_statement_text)
-                                )
+                categories = corpora.categories[corpus_count]
 
-                            previous_statement_text = statement.text
-                            self.storage.update(statement)
+                for conversation_count, conversation in enumerate(corpus):
+                    print_progress_bar(
+                        str(os.path.basename(corpus_files[corpus_count])) + " Training",
+                        conversation_count + 1,
+                        len(corpus)
+                    )
+
+                    previous_statement_text = None
+
+                    for text in conversation:
+                        statement = self.get_or_create(text)
+
+                        statement.add_tags(categories)
+
+                        if previous_statement_text:
+                            statement.add_response(
+                                Response(previous_statement_text)
+                            )
+
+                        previous_statement_text = statement.text
+                        self.storage.update(statement)
 
 
 class TwitterTrainer(Trainer):
