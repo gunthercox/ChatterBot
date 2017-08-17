@@ -16,6 +16,8 @@ class AbstractBaseStatement(models.Model):
         max_length=255
     )
 
+    tags = []
+
     extra_data = models.CharField(max_length=500)
 
     # This is the confidence with which the chat bot believes
@@ -59,6 +61,14 @@ class AbstractBaseStatement(models.Model):
         extra_data[key] = value
 
         self.extra_data = json.dumps(extra_data)
+
+    def add_tags(self, tags):
+        """
+        This method will preserve tags information specific statements
+
+        :param tags: specific tags        """
+
+        pass
 
     def add_response(self, statement):
         """

@@ -65,10 +65,9 @@ class Statement(Base):
     def get_statement(self):
         from chatterbot.conversation import Statement as StatementObject
 
-        for tag in self.tags:
-            statement = StatementObject(self.text, extra_data=self.extra_data, tags=tag.name)
-            for response in self.in_response_to:
-                statement.add_response(response.get_response())
+        statement = StatementObject(self.text, extra_data=self.extra_data)
+        for response in self.in_response_to:
+            statement.add_response(response.get_response())
         return statement
 
 
