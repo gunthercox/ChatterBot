@@ -239,7 +239,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
     def update_or_create_index(self, statement=None):
         """
-        Create or update the 
+        Create or update the.
         """
         if not statement:
             return None
