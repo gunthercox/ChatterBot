@@ -95,7 +95,8 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         # Increase the sort buffer to 42M if possible
         try:
-            self.client.admin.command({'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
+            self.client.admin.command(
+                {'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
         except OperationFailure:
             pass
 
@@ -135,7 +136,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         tokens = word_tokenize(statement)
         tokens = list(remove_stopwords(tokens, language='english'))
-        tokens = list(filter(lambda x:x.isalpha() or x.isdigit(), tokens))
+        tokens = list(filter(lambda x: x.isalpha() or x.isdigit(), tokens))
         return tokens
 
     def count(self):
@@ -250,12 +251,13 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         tokens = self.statement_segmentation(statement.text)
         for word in tokens:
-            inverted_item = self.inverted.find_one({'word':word})
+            inverted_item = self.inverted.find_one({'word': word})
             if inverted_item:
                 if _id not in inverted_item['statements']:
-                    self.inverted.find_one_and_update({'word':word}, {'$push': {'statements': _id}})
+                    self.inverted.find_one_and_update(
+                        {'word': word}, {'$push': {'statements': _id}})
             else:
-                self.inverted.insert({'word':word, 'statements': [_id]})
+                self.inverted.insert({'word': word, 'statements': [_id]})
 
     def update(self, statement):
         from pymongo import UpdateOne
@@ -342,7 +344,8 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$push': {
                     'conversations': {
                         'id': conversation_id,
-                        # Force the response to be at least one millisecond after the input statement
+                        # Force the response to be at least one millisecond
+                        # after the input statement
                         'created_at': datetime.utcnow() + timedelta(milliseconds=1)
                     }
                 }
@@ -386,7 +389,8 @@ class MongoDatabaseAdapter(StorageAdapter):
         matching statement that does not have a known response.
         """
         if not statement:
-            response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}])
+            response_query = self.statements.aggregate(
+                [{'$group': {'_id': '$in_response_to.text'}}])
 
             responses = []
             for r in response_query:
@@ -404,7 +408,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             # Just filter the statement in need.
             statement_ids = []
             tokens = self.statement_segmentation(statement.text)
-            word_dicts = self.inverted.find({'word':{'$in': tokens}})
+            word_dicts = self.inverted.find({'word': {'$in': tokens}})
 
             for word_dict in word_dicts:
                 statement_ids += word_dict.get('statements', [])
