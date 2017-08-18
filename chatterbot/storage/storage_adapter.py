@@ -132,7 +132,7 @@ class StorageAdapter(object):
             'The `drop` method is not implemented by this adapter.'
         )
 
-    def get_response_statements(self):
+    def get_response_statements(self, input_statement=None):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the

@@ -420,7 +420,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         for statement in list(statement_query):
             statement_objects.append(self.mongo_to_object(statement))
         return statement_objects
-        # """
 
     def drop(self):
         """
