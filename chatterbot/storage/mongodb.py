@@ -134,7 +134,8 @@ class MongoDatabaseAdapter(StorageAdapter):
         nltk_download_corpus('tokenizers/punkt')
 
         tokens = word_tokenize(statement)
-        tokens = remove_stopwords(tokens, language='english')
+        tokens = list(remove_stopwords(tokens, language='english'))
+        tokens = list(filter(lambda x:x.isalpha() or x.isdigit(), tokens))
         return tokens
 
     def count(self):
