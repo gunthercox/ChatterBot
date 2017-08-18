@@ -105,13 +105,37 @@ class MongoDatabaseAdapter(StorageAdapter):
         # The mongo collection of statement documents
         self.statements = self.database['statements']
 
+        # The mongo collection of inverted index
+        self.inverted = self.database['inverted']
+
         # The mongo collection of conversation documents
         self.conversations = self.database['conversations']
 
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
 
+        # Set a requirement for the word attribute to be unique
+        self.inverted.create_index('word', unique=True)
+
         self.base_query = Query()
+
+        statement_segmentation = kwargs.get("word_tokenize", {})
+        if statement_segmentation:
+            self.statement_segmentation = statement_segmentation
+
+    def statement_segmentation(self, statement):
+        """
+        Conver statement to words.
+        It return a list of words of input statement.
+        """
+        from chatterbot.utils import nltk_download_corpus, remove_stopwords
+        from nltk import word_tokenize
+
+        nltk_download_corpus('tokenizers/punkt')
+
+        tokens = word_tokenize(statement)
+        tokens = remove_stopwords(tokens, language='english')
+        return tokens
 
     def count(self):
         return self.statements.count()
@@ -211,6 +235,27 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
+    def update_or_create_index(self, statement=None):
+        """
+        Create or update the 
+        """
+        if not statement:
+            return None
+
+        mongo_statement = self.statements.find_one({"text": statement.text})
+        if not mongo_statement:
+            return None
+        _id = mongo_statement['_id']
+
+        tokens = self.statement_segmentation(statement.text)
+        for word in tokens:
+            inverted_item = self.inverted.find_one({'word':word})
+            if inverted_item:
+                if _id not in inverted_item['statements']:
+                    self.inverted.find_one_and_update({'word':word}, {'$push': {'statements': _id}})
+            else:
+                self.inverted.insert({'word':word, 'statements': [_id]})
+
     def update(self, statement):
         from pymongo import UpdateOne
         from pymongo.errors import BulkWriteError
@@ -240,6 +285,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         try:
             self.statements.bulk_write(operations, ordered=False)
+            self.update_or_create_index(statement)
         except BulkWriteError as bwe:
             # Log the details of a bulk write error
             self.logger.error(str(bwe.details))
@@ -331,27 +377,42 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.statements.delete_one({'text': statement_text})
 
-    def get_response_statements(self):
+    def get_response_statements(self, statement=None):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}])
+        if not statement:
+            response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}])
 
-        responses = []
-        for r in response_query:
-            try:
-                responses.extend(r['_id'])
-            except TypeError:
-                pass
+            responses = []
+            for r in response_query:
+                try:
+                    responses.extend(r['_id'])
+                except TypeError:
+                    pass
 
-        _statement_query = {
-            'text': {
-                '$in': responses
+            _statement_query = {
+                'text': {
+                    '$in': responses
+                }
             }
-        }
+        else:
+            # Just filter the statement in need.
+            statement_ids = []
+            tokens = self.statement_segmentation(statement.text)
+            word_dicts = self.inverted.find({'word':{'$in': tokens}})
+
+            for word_dict in word_dicts:
+                statement_ids += word_dict.get('statements', [])
+            statement_ids = list(set(statement_ids))
+            _statement_query = {
+                '_id': {
+                    '$in': statement_ids
+                }
+            }
 
         _statement_query.update(self.base_query.value())
         statement_query = self.statements.find(_statement_query)
@@ -359,6 +420,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         for statement in list(statement_query):
             statement_objects.append(self.mongo_to_object(statement))
         return statement_objects
+        # """
 
     def drop(self):
         """
