@@ -7,6 +7,12 @@ class LogicAdapter(Adapter):
     """
     This is an abstract class that represents the interface
     that all logic adapters should implement.
+
+    :param statement_comparison_function: The dot-notated import path to a statement comparison function.
+                                          Defaults to ``levenshtein_distance``.
+
+    :param response_selection_method: The a response selection method.
+                                      Defaults to ``get_first_response``.
     """
 
     def __init__(self, **kwargs):
