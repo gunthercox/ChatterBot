@@ -66,7 +66,8 @@ class AbstractBaseStatement(models.Model):
         """
         This method will preserve tags information specific statements
 
-        :param tags: specific tags        """
+        :param tags: specific tags
+        """
 
         pass
 

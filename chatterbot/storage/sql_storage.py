@@ -79,16 +79,33 @@ class SQLStorageAdapter(StorageAdapter):
         # ChatterBot's internal query builder is not yet supported for this adapter
         self.adapter_supports_queries = False
 
-    def count(self):
+    def count(self, tags=[]):
         """
         Return the number of entries in the database.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement
+        from chatterbot.ext.sqlalchemy_app.models import Statement, Tag
 
         session = self.Session()
-        statement_count = session.query(Statement).count()
+        if tags:
+            statement_count = session.query(Statement).join(Statement.tags).filter(Tag.name.in_(tags)).count()
+        else:
+            statement_count = session.query(Statement).count()
+
         session.close()
         return statement_count
+
+    def __tag_filter(self, session, **kwargs):
+        """
+        Apply filter operation on Tag and reruns a list of tags
+
+        :return: list of tags
+        """
+        from chatterbot.ext.sqlalchemy_app.models import Tag
+
+        _query = session.query(Tag).join(Tag.statements)
+        all_tags = _query.filter_by(**kwargs).all()
+
+        return [tag.name for tag in all_tags]
 
     def __statement_filter(self, session, **kwargs):
         """
@@ -142,16 +159,19 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
+        tags = kwargs.pop('tags', [])
+
         filter_parameters = kwargs.copy()
 
         statements = []
 
         _query = None
         if len(filter_parameters) == 0:
-            if session.query(Tag).count() >= 1:
-                _response_query = session.query(Statement).join(Statement.tags)
+            if tags:
+                _response_query = session.query(Statement).join(Statement.tags).filter(Tag.name.in_(tags))
             else:
                 _response_query = session.query(Statement)
+
             statements.extend(_response_query.all())
         else:
             for i, fp in enumerate(filter_parameters):

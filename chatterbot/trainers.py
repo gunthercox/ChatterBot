@@ -121,7 +121,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
             for corpus_count, corpus in enumerate(corpora):
 
-                categories = corpora.categories[corpus_count]
+                categories = corpus.categories
 
                 for conversation_count, conversation in enumerate(corpus):
                     print_progress_bar(

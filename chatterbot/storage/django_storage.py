@@ -13,7 +13,7 @@ class DjangoStorageAdapter(StorageAdapter):
         self.adapter_supports_queries = False
         self.django_app_name = kwargs.get('django_app_name', 'django_chatterbot')
 
-    def count(self):
+    def count(self, input_statement=None):
         from django.apps import apps
         Statement = apps.get_model(self.django_app_name, 'Statement')
         return Statement.objects.count()
@@ -33,9 +33,11 @@ class DjangoStorageAdapter(StorageAdapter):
         that match the parameters specified.
         """
         from django.apps import apps
-        Statement = apps.get_model(self.django_app_name, 'Statement')
         from django.db.models import Q
 
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+
+        tags = kwargs.pop('tags', [])
         order = kwargs.pop('order_by', None)
 
         RESPONSE_CONTAINS = 'in_response_to__contains'
@@ -196,7 +198,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Response.objects.all().delete()
         Conversation.objects.all().delete()
 
-    def get_response_statements(self):
+    def get_response_statements(self, tags=[]):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the
