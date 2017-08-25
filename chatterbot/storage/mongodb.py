@@ -129,10 +129,10 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         nltk_download_corpus('tokenizers/punkt')
 
-        tokens = word_tokenize(statement)
-        tokens = list(remove_stopwords(tokens, language='english'))
+        full_tokens = word_tokenize(statement)
+        tokens = list(remove_stopwords(full_tokens, language='english'))
         tokens = list(filter(lambda x: x.isalpha() or x.isdigit(), tokens))
-        return tokens
+        return tokens if len(tokens) > 0 else full_tokens
 
     def count(self):
         return self.statements.count()
@@ -287,7 +287,6 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         if not statements:
             return None
-
         return self.mongo_to_object(statements[-2])
 
     def add_to_conversation(self, conversation_id, statement, response):
@@ -379,7 +378,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         else:
             # Just filter the statement in need.
             tokens = self.statement_segmentation(statement.text)
-            search_key = list(map(lambda x:'"%s" ' % x, tokens))
+            search_key = list(map(lambda x: '"%s" ' % x, tokens))
 
             _statement_query = {
                 'text': {
