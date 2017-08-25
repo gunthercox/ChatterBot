@@ -106,9 +106,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         # The mongo collection of statement documents
         self.statements = self.database['statements']
 
-        # The mongo collection of inverted index
-        self.inverted = self.database['inverted']
-
         # The mongo collection of conversation documents
         self.conversations = self.database['conversations']
 
@@ -116,8 +113,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         self.statements.create_index('text', unique=True)
 
         # Set a requirement for the word attribute to be unique
-        self.inverted.create_index('word', unique=True)
-
         self.base_query = Query()
 
         statement_segmentation = kwargs.get("word_tokenize", {})
@@ -237,28 +232,6 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
-    def update_or_create_index(self, statement=None):
-        """
-        Create or update the.
-        """
-        if not statement:
-            return None
-
-        mongo_statement = self.statements.find_one({"text": statement.text})
-        if not mongo_statement:
-            return None
-        _id = mongo_statement['_id']
-
-        tokens = self.statement_segmentation(statement.text)
-        for word in tokens:
-            inverted_item = self.inverted.find_one({'word': word})
-            if inverted_item:
-                if _id not in inverted_item['statements']:
-                    self.inverted.find_one_and_update(
-                        {'word': word}, {'$push': {'statements': _id}})
-            else:
-                self.inverted.insert({'word': word, 'statements': [_id]})
-
     def update(self, statement):
         from pymongo import UpdateOne
         from pymongo.errors import BulkWriteError
@@ -288,7 +261,6 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         try:
             self.statements.bulk_write(operations, ordered=False)
-            self.update_or_create_index(statement)
         except BulkWriteError as bwe:
             # Log the details of a bulk write error
             self.logger.error(str(bwe.details))
@@ -406,16 +378,12 @@ class MongoDatabaseAdapter(StorageAdapter):
             }
         else:
             # Just filter the statement in need.
-            statement_ids = []
             tokens = self.statement_segmentation(statement.text)
-            word_dicts = self.inverted.find({'word': {'$in': tokens}})
+            search_key = list(map(lambda x:'"%s" ' % x, tokens))
 
-            for word_dict in word_dicts:
-                statement_ids += word_dict.get('statements', [])
-            statement_ids = list(set(statement_ids))
             _statement_query = {
-                '_id': {
-                    '$in': statement_ids
+                'text': {
+                    'search': search_key
                 }
             }
 
