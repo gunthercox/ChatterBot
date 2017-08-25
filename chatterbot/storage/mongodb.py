@@ -112,6 +112,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
 
+        # Set a full text index for the text
+        self.statements.create_index([('text', 'text')])
+
         # Set a requirement for the word attribute to be unique
         self.base_query = Query()
 
@@ -378,11 +381,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         else:
             # Just filter the statement in need.
             tokens = self.statement_segmentation(statement.text)
-            search_key = list(map(lambda x: '"%s" ' % x, tokens))
-
+            search_key = " ".join(tokens)
             _statement_query = {
-                'text': {
-                    'search': search_key
+                '$text': {
+                    '$search': search_key
                 }
             }
 
