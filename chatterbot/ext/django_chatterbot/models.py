@@ -1,5 +1,6 @@
 from django.db import models
 from django.utils import timezone
+from chatterbot import constants
 
 
 class AbstractBaseStatement(models.Model):
@@ -13,12 +14,15 @@ class AbstractBaseStatement(models.Model):
         unique=True,
         blank=False,
         null=False,
-        max_length=255
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH
     )
 
     tags = []
 
-    extra_data = models.CharField(max_length=500)
+    extra_data = models.CharField(
+        max_length=500,
+        blank=True
+    )
 
     # This is the confidence with which the chat bot believes
     # this is an accurate response. This value is set when the
@@ -69,7 +73,7 @@ class AbstractBaseStatement(models.Model):
         :param tags: specific tags
         """
 
-        pass
+        self.tags = tags
 
     def add_response(self, statement):
         """
@@ -248,7 +252,7 @@ class Response(AbstractBaseResponse):
     """
     Connection between a response and the statement that triggered it.
 
-    Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
+    Comparable to a ManyToMany "through" table, but without the M2M indexing/relations.
     The text and number of times the response has occurred are stored.
     """
     pass
