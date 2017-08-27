@@ -95,6 +95,7 @@ class ChatBot(object):
         Return the bot's response based on the input.
 
         :param input_item: An input value.
+        :param conversation_id: conversation id
         :returns: A response to the input.
         :rtype: Statement
         """
@@ -105,7 +106,7 @@ class ChatBot(object):
 
         input_statement = self.input.process_input_statement(input_item)
 
-        # Preprocess the input statement
+        # Preprocessor the input statement
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(self, input_statement)
 

@@ -13,10 +13,11 @@ class BestMatch(LogicAdapter):
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
-        statement_list = self.chatbot.storage.get_response_statements()
+        tags = input_statement.tags
+        statement_list = self.chatbot.storage.get_response_statements(tags=tags)
 
         if not statement_list:
-            if self.chatbot.storage.count():
+            if self.chatbot.storage.count(tags=tags):
                 # Use a randomly picked statement
                 self.logger.info(
                     'No statements have known responses. ' +
@@ -46,7 +47,8 @@ class BestMatch(LogicAdapter):
         Check that the chatbot's storage adapter is available to the logic
         adapter and there is at least one statement in the database.
         """
-        return self.chatbot.storage.count()
+        tags = statement.tags
+        return self.chatbot.storage.count(tags=tags)
 
     def process(self, input_statement):
 

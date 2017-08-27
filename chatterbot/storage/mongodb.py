@@ -113,7 +113,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.base_query = Query()
 
-    def count(self):
+    def count(self, tags=[]):
         return self.statements.count()
 
     def find(self, statement_text):
@@ -173,6 +173,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         query = self.base_query
 
+        tags = kwargs.pop('tags', [])
         order_by = kwargs.pop('order_by', None)
 
         # Convert Response objects to data
@@ -198,7 +199,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
             direction = pymongo.ASCENDING
 
-            # Sort so that newer datetimes appear first
+            # Sort so that newer datetime appear first
             if order_by == 'created_at':
                 direction = pymongo.DESCENDING
 
@@ -331,7 +332,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.statements.delete_one({'text': statement_text})
 
-    def get_response_statements(self):
+    def get_response_statements(self, tags=[]):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the

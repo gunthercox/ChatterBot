@@ -26,7 +26,6 @@ class Trainer(object):
         Create and return the statement if it does not exist.
         """
         statement = self.storage.find(statement_text)
-
         if not statement:
             statement = Statement(statement_text)
 
@@ -119,7 +118,11 @@ class ChatterBotCorpusTrainer(Trainer):
             corpora = self.corpus.load_corpus(corpus_path)
 
             corpus_files = self.corpus.list_corpus_files(corpus_path)
+
             for corpus_count, corpus in enumerate(corpora):
+
+                categories = corpus.categories
+
                 for conversation_count, conversation in enumerate(corpus):
                     print_progress_bar(
                         str(os.path.basename(corpus_files[corpus_count])) + " Training",
@@ -131,6 +134,8 @@ class ChatterBotCorpusTrainer(Trainer):
 
                     for text in conversation:
                         statement = self.get_or_create(text)
+
+                        statement.add_tags(categories)
 
                         if previous_statement_text:
                             statement.add_response(

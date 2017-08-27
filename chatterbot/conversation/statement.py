@@ -19,6 +19,9 @@ class Statement(object):
         self.text = text
         self.in_response_to = kwargs.pop('in_response_to', [])
 
+        # tags information into statements
+        self.tags = kwargs.pop('tags', [])
+
         self.extra_data = kwargs.pop('extra_data', {})
 
         # This is the confidence with which the chat bot believes
@@ -32,7 +35,7 @@ class Statement(object):
         return self.text
 
     def __repr__(self):
-        return '<Statement text:%s>' % (self.text)
+        return '<Statement text:%s>' % self.text
 
     def __hash__(self):
         return hash(self.text)
@@ -70,6 +73,14 @@ class Statement(object):
         """
         self.extra_data[key] = value
 
+    def add_tags(self, tags):
+        """
+        This method will preserve tags information specific statements
+
+        :param tags: specific tags
+        """
+        self.tags = tags
+
     def add_response(self, response):
         """
         Add the response to the list of statements that this statement is in response to.
@@ -80,7 +91,7 @@ class Statement(object):
         """
         if not isinstance(response, Response):
             raise Statement.InvalidTypeException(
-                'A {} was recieved when a {} instance was expected'.format(
+                'A {} was received when a {} instance was expected'.format(
                     type(response),
                     type(Response(''))
                 )
@@ -152,7 +163,7 @@ class Statement(object):
 
     class InvalidTypeException(Exception):
 
-        def __init__(self, value='Recieved an unexpected value type.'):
+        def __init__(self, value='Received an unexpected value type.'):
             self.value = value
 
         def __str__(self):

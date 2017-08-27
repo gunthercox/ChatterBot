@@ -44,7 +44,7 @@ class StorageAdapter(object):
             for filter_instance in chatterbot.filters:
                 self.base_query = filter_instance.filter_selection(chatterbot, session_id)
 
-    def count(self):
+    def count(self, tags=[]):
         """
         Return the number of entries in the database.
         """
@@ -132,7 +132,7 @@ class StorageAdapter(object):
             'The `drop` method is not implemented by this adapter.'
         )
 
-    def get_response_statements(self):
+    def get_response_statements(self, tags=[]):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the
@@ -142,7 +142,7 @@ class StorageAdapter(object):
         This method may be overridden by a child class to provide more a
         efficient method to get these results.
         """
-        statement_list = self.filter()
+        statement_list = self.filter(tags=tags)
 
         responses = set()
         to_remove = list()

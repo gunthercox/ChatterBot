@@ -17,6 +17,8 @@ class AbstractBaseStatement(models.Model):
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH
     )
 
+    tags = []
+
     extra_data = models.CharField(
         max_length=500,
         blank=True
@@ -63,6 +65,16 @@ class AbstractBaseStatement(models.Model):
         extra_data[key] = value
 
         self.extra_data = json.dumps(extra_data)
+
+    def add_tags(self, tags):
+        """
+        This method will preserve tags information specific statements
+
+        :param tags: specific tags
+        """
+        for tag in tags:
+            tag = Tag.objects.create(name=tag)
+            tag.save()
 
     def add_response(self, statement):
         """
@@ -241,7 +253,7 @@ class Response(AbstractBaseResponse):
     """
     Connection between a response and the statement that triggered it.
 
-    Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
+    Comparable to a ManyToMany "through" table, but without the M2M indexing/relations.
     The text and number of times the response has occurred are stored.
     """
     pass
