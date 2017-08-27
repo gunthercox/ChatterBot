@@ -52,7 +52,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         # Create a sqlite file if a database name is provided
         if database_name:
-            self.database_uri = "sqlite:///" + database_name + ".db"
+            self.database_uri = "sqlite:///" + database_name
 
         self.engine = create_engine(self.database_uri, convert_unicode=True)
 
