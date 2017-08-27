@@ -4,7 +4,7 @@ from chatterbot.storage import StorageAdapter
 class DjangoStorageAdapter(StorageAdapter):
     """
     Storage adapter that allows ChatterBot to interact with
-    Django storage backends.
+    Django storage backend.
     """
 
     def __init__(self, **kwargs):
@@ -85,19 +85,13 @@ class DjangoStorageAdapter(StorageAdapter):
         from django.apps import apps
         Statement = apps.get_model(self.django_app_name, 'Statement')
         Response = apps.get_model(self.django_app_name, 'Response')
-        Tag = apps.get_model(self.django_app_name, 'Tag')
 
         response_statement_cache = statement.response_statement_cache
-        tags = statement.tags
 
         statement, created = Statement.objects.get_or_create(text=statement.text)
         statement.extra_data = getattr(statement, 'extra_data', '')
+        statement.tags = statement.tags.all()
         statement.save()
-
-        for tag in tags:
-            tag, created = Tag.objects.get_or_create(name=tag)
-            tag.save()
-            tag.statements.add(statement)
 
         for _response_statement in response_statement_cache:
 

@@ -72,8 +72,9 @@ class AbstractBaseStatement(models.Model):
 
         :param tags: specific tags
         """
-
-        self.tags = tags
+        for tag in tags:
+            tag = Tag.objects.create(name=tag)
+            tag.save()
 
     def add_response(self, statement):
         """
