@@ -126,8 +126,8 @@ Training with the Twitter API
 
 .. autofunction:: chatterbot.trainers.TwitterTrainer
 
-Create an new app using your twitter account. Once created,
-it will provide you with the following credentials that are
+
+Create an new app using your twitter account. Once created, it will provide you with the following credentials that are
 required to work with the Twitter API.
 
 +-------------------------------------+-------------------------------------+

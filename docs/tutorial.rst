@@ -44,8 +44,16 @@ to different types of databases. In this tutorial, we will be using the
 :code:`SQLStorageAdapter` which allows the chat bot to connect to SQL databases.
 By default, this adapter will create a `SQLite`_ database.
 
-The :code:`database` parameter is used to specify the path to the database
-that the chat bot will use. For this example we will call the database
+.. warning::
+
+   The JsonFileStorageAdapter is not intended for use with large amounts of
+   data. You may experience serious performance problems if the size of
+   this database becomes too large.
+
+We will select the `JsonFileStorageAdapter` by specifying it in our chat
+bot's constructor.
+
+The `database` parameter is used to specify the path to the database that the chat bot will use. For this example we will call the database
 `database.sqlite3`. this file will be created automatically if it doesn't
 already exist.
 
