@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.utils import timezone
 from chatterbot.conversation import Statement as StatementObject
 from chatterbot.conversation import Response as ResponseObject
 from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
@@ -14,9 +13,8 @@ class StatementIntegrationTestCase(TestCase):
 
     def setUp(self):
         super(StatementIntegrationTestCase, self).setUp()
-        date_created = timezone.now()
-        self.object = StatementObject(text='_', created_at=date_created)
-        self.model = StatementModel(text='_', created_at=date_created)
+        self.object = StatementObject(text='_')
+        self.model = StatementModel(text='_')
 
     def test_text(self):
         self.assertTrue(hasattr(self.object, 'text'))
@@ -60,8 +58,11 @@ class StatementIntegrationTestCase(TestCase):
         self.object.add_response(ResponseObject('Hello', occurrence=2))
         model_response_statement = StatementModel.objects.create(text='Hello')
         self.model.save()
-        self.model.in_response.create(
-            statement=self.model, response=model_response_statement, occurrence=2
+        ResponseModel.objects.create(
+            statement=self.model, response=model_response_statement
+        )
+        ResponseModel.objects.create(
+            statement=self.model, response=model_response_statement
         )
 
         object_count = self.object.get_response_count(StatementObject(text='Hello'))
@@ -74,11 +75,7 @@ class StatementIntegrationTestCase(TestCase):
         object_data = self.object.serialize()
         model_data = self.model.serialize()
 
-        object_data_created_at = object_data.pop('created_at')
-        model_data_created_at = model_data.pop('created_at')
-
         self.assertEqual(object_data, model_data)
-        self.assertEqual(object_data_created_at.date(), model_data_created_at.date())
 
     def test_response_statement_cache(self):
         self.assertTrue(hasattr(self.object, 'response_statement_cache'))
@@ -94,14 +91,20 @@ class ResponseIntegrationTestCase(TestCase):
 
     def setUp(self):
         super(ResponseIntegrationTestCase, self).setUp()
-        date_created = timezone.now()
-        statement_object = StatementObject(text='_', created_at=date_created)
-        statement_model = StatementModel.objects.create(text='_', created_at=date_created)
+        statement_object = StatementObject(text='_')
+        statement_model = StatementModel.objects.create(text='_')
         self.object = ResponseObject(statement_object.text)
         self.model = ResponseModel(statement=statement_model, response=statement_model)
+        self.model.save()
 
     def test_serialize(self):
         object_data = self.object.serialize()
         model_data = self.model.serialize()
 
-        self.assertEqual(object_data, model_data)
+        self.assertEqual(len(object_data), len(model_data))
+        self.assertIn('text', object_data)
+        self.assertIn('text', model_data)
+        self.assertEqual(object_data['text'], model_data['text'])
+        self.assertIn('occurrence', object_data)
+        self.assertIn('occurrence', model_data)
+        self.assertEqual(object_data['occurrence'], model_data['occurrence'])

@@ -1,4 +1,3 @@
-from unittest import TestCase
 from mock import MagicMock
 from chatterbot.logic import BestMatch
 from chatterbot.conversation import Statement, Response

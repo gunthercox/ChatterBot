@@ -1,4 +1,3 @@
-import json
 from chatterbot.storage import StorageAdapter
 
 
@@ -12,13 +11,16 @@ class DjangoStorageAdapter(StorageAdapter):
         super(DjangoStorageAdapter, self).__init__(**kwargs)
 
         self.adapter_supports_queries = False
+        self.django_app_name = kwargs.get('django_app_name', 'django_chatterbot')
 
     def count(self):
-        from chatterbot.ext.django_chatterbot.models import Statement
+        from django.apps import apps
+        Statement = apps.get_model(self.django_app_name, 'Statement')
         return Statement.objects.count()
 
     def find(self, statement_text):
-        from chatterbot.ext.django_chatterbot.models import Statement
+        from django.apps import apps
+        Statement = apps.get_model(self.django_app_name, 'Statement')
         try:
             return Statement.objects.get(text=statement_text)
         except Statement.DoesNotExist as e:
@@ -30,7 +32,8 @@ class DjangoStorageAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement
+        from django.apps import apps
+        Statement = apps.get_model(self.django_app_name, 'Statement')
         from django.db.models import Q
 
         order = kwargs.pop('order_by', None)
@@ -77,7 +80,9 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Update the provided statement.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement
+        from django.apps import apps
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+        Response = apps.get_model(self.django_app_name, 'Response')
 
         response_statement_cache = statement.response_statement_cache
 
@@ -93,14 +98,10 @@ class DjangoStorageAdapter(StorageAdapter):
             response_statement.extra_data = getattr(_response_statement, 'extra_data', '')
             response_statement.save()
 
-            response, created = statement.in_response.get_or_create(
-                statement=statement,
-                response=response_statement
+            Response.objects.create(
+                statement=response_statement,
+                response=statement
             )
-
-            if not created:
-                response.occurrence += 1
-                response.save()
 
         return statement
 
@@ -108,7 +109,8 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Returns a random statement from the database
         """
-        from chatterbot.ext.django_chatterbot.models import Statement
+        from django.apps import apps
+        Statement = apps.get_model(self.django_app_name, 'Statement')
         return Statement.objects.order_by('?').first()
 
     def remove(self, statement_text):
@@ -117,9 +119,12 @@ class DjangoStorageAdapter(StorageAdapter):
         Removes any responses from statements if the response text matches the
         input text.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement
-        from chatterbot.ext.django_chatterbot.models import Response
+        from django.apps import apps
         from django.db.models import Q
+
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+        Response = apps.get_model(self.django_app_name, 'Response')
+
         statements = Statement.objects.filter(text=statement_text)
 
         responses = Response.objects.filter(
@@ -129,11 +134,63 @@ class DjangoStorageAdapter(StorageAdapter):
         responses.delete()
         statements.delete()
 
+    def get_latest_response(self, conversation_id):
+        """
+        Returns the latest response in a conversation if it exists.
+        Returns None if a matching conversation cannot be found.
+        """
+        from django.apps import apps
+
+        Response = apps.get_model(self.django_app_name, 'Response')
+
+        response = Response.objects.filter(
+            conversations__id=conversation_id
+        ).order_by(
+            'created_at'
+        ).first()
+
+        if not response:
+            return None
+
+        return response.response
+
+    def create_conversation(self):
+        """
+        Create a new conversation.
+        """
+        from django.apps import apps
+        Conversation = apps.get_model(self.django_app_name, 'Conversation')
+        conversation = Conversation.objects.create()
+        return conversation.id
+
+    def add_to_conversation(self, conversation_id, statement, response):
+        """
+        Add the statement and response to the conversation.
+        """
+        from django.apps import apps
+
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+        Response = apps.get_model(self.django_app_name, 'Response')
+
+        first_statement = Statement.objects.get(text=statement.text)
+        first_response = Statement.objects.get(text=response.text)
+
+        response = Response.objects.create(
+            statement=first_statement,
+            response=first_response
+        )
+
+        response.conversations.add(conversation_id)
+
     def drop(self):
         """
         Remove all data from the database.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement, Response, Conversation
+        from django.apps import apps
+
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+        Response = apps.get_model(self.django_app_name, 'Response')
+        Conversation = apps.get_model(self.django_app_name, 'Conversation')
 
         Statement.objects.all().delete()
         Response.objects.all().delete()
@@ -146,7 +203,9 @@ class DjangoStorageAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        from chatterbot.ext.django_chatterbot.models import Statement, Response
+        from django.apps import apps
+        Statement = apps.get_model(self.django_app_name, 'Statement')
+        Response = apps.get_model(self.django_app_name, 'Response')
 
         responses = Response.objects.all()
 

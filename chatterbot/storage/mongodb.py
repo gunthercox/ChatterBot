@@ -81,6 +81,7 @@ class MongoDatabaseAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(MongoDatabaseAdapter, self).__init__(**kwargs)
         from pymongo import MongoClient
+        from pymongo.errors import OperationFailure
 
         self.database_name = self.kwargs.get(
             'database', 'chatterbot-database'
@@ -92,11 +93,20 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Use the default host and port
         self.client = MongoClient(self.database_uri)
 
+        # Increase the sort buffer to 42M if possible
+        try:
+            self.client.admin.command({'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
+        except OperationFailure:
+            pass
+
         # Specify the name of the database
         self.database = self.client[self.database_name]
 
         # The mongo collection of statement documents
         self.statements = self.database['statements']
+
+        # The mongo collection of conversation documents
+        self.conversations = self.database['conversations']
 
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
@@ -236,6 +246,62 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return statement
 
+    def create_conversation(self):
+        """
+        Create a new conversation.
+        """
+        conversation_id = self.conversations.insert_one({}).inserted_id
+        return conversation_id
+
+    def get_latest_response(self, conversation_id):
+        """
+        Returns the latest response in a conversation if it exists.
+        Returns None if a matching conversation cannot be found.
+        """
+        from pymongo import DESCENDING
+
+        statements = list(self.statements.find({
+            'conversations.id': conversation_id
+        }).sort('conversations.created_at', DESCENDING))
+
+        if not statements:
+            return None
+
+        return self.mongo_to_object(statements[-2])
+
+    def add_to_conversation(self, conversation_id, statement, response):
+        """
+        Add the statement and response to the conversation.
+        """
+        from datetime import datetime, timedelta
+        self.statements.update_one(
+            {
+                'text': statement.text
+            },
+            {
+                '$push': {
+                    'conversations': {
+                        'id': conversation_id,
+                        'created_at': datetime.utcnow()
+                    }
+                }
+            }
+        )
+        self.statements.update_one(
+            {
+                'text': response.text
+            },
+            {
+                '$push': {
+                    'conversations': {
+                        'id': conversation_id,
+                        # Force the response to be at least one millisecond after the input statement
+                        'created_at': datetime.utcnow() + timedelta(milliseconds=1)
+                    }
+                }
+            }
+        )
+
     def get_random(self):
         """
         Returns a random statement from the database
@@ -272,23 +338,26 @@ class MongoDatabaseAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        response_query = self.statements.distinct('in_response_to.text')
+        response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}])
+
+        responses = []
+        for r in response_query:
+            try:
+                responses.extend(r['_id'])
+            except TypeError:
+                pass
 
         _statement_query = {
             'text': {
-                '$in': response_query
+                '$in': responses
             }
         }
 
         _statement_query.update(self.base_query.value())
-
         statement_query = self.statements.find(_statement_query)
-
         statement_objects = []
-
         for statement in list(statement_query):
             statement_objects.append(self.mongo_to_object(statement))
-
         return statement_objects
 
     def drop(self):

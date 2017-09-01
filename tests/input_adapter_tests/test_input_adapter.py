@@ -2,6 +2,7 @@ from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
 from chatterbot.input import InputAdapter
 
+
 class InputAdapterTestCase(ChatBotTestCase):
     """
     This test case is for the InputAdapter base class.

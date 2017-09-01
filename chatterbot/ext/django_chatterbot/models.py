@@ -1,31 +1,34 @@
 from django.db import models
 from django.utils import timezone
+from chatterbot import constants
 
 
-class Statement(models.Model):
+class AbstractBaseStatement(models.Model):
     """
-    A statement represents a single spoken entity, sentence or
-    phrase that someone can say.
+    The abstract base statement allows other models to
+    be created using the attributes that exist on the
+    default models.
     """
 
     text = models.CharField(
         unique=True,
         blank=False,
         null=False,
-        max_length=255
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH
     )
 
-    created_at = models.DateTimeField(
-        default=timezone.now,
-        help_text='The date and time that this statement was created at.'
+    extra_data = models.CharField(
+        max_length=500,
+        blank=True
     )
-
-    extra_data = models.CharField(max_length=500)
 
     # This is the confidence with which the chat bot believes
     # this is an accurate response. This value is set when the
     # statement is returned by the chat bot.
     confidence = 0
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         if len(self.text.strip()) > 60:
@@ -35,7 +38,7 @@ class Statement(models.Model):
         return '<empty>'
 
     def __init__(self, *args, **kwargs):
-        super(Statement, self).__init__(*args, **kwargs)
+        super(AbstractBaseStatement, self).__init__(*args, **kwargs)
 
         # Responses to be saved if the statement is updated with the storage adapter
         self.response_statement_cache = []
@@ -94,11 +97,7 @@ class Statement(models.Model):
         :returns: Return the number of times the statement has been used as a response.
         :rtype: int
         """
-        try:
-            response = self.in_response.get(response__text=statement.text)
-            return response.occurrence
-        except Response.DoesNotExist:
-            return 0
+        return self.in_response.filter(response__text=statement.text).count()
 
     def serialize(self):
         """
@@ -113,7 +112,6 @@ class Statement(models.Model):
 
         data['text'] = self.text
         data['in_response_to'] = []
-        data['created_at'] = self.created_at
         data['extra_data'] = json.loads(self.extra_data)
 
         for response in self.in_response.all():
@@ -122,12 +120,11 @@ class Statement(models.Model):
         return data
 
 
-class Response(models.Model):
+class AbstractBaseResponse(models.Model):
     """
-    Connection between a response and the statement that triggered it.
-
-    Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
-    The text and number of times the response has occurred are stored.
+    The abstract base response allows other models to
+    be created using the attributes that exist on the
+    default models.
     """
 
     statement = models.ForeignKey(
@@ -140,9 +137,32 @@ class Response(models.Model):
         related_name='responses'
     )
 
-    unique_together = (('statement', 'response'),)
+    created_at = models.DateTimeField(
+        default=timezone.now,
+        help_text='The date and time that this statement was created at.'
+    )
 
-    occurrence = models.PositiveIntegerField(default=1)
+    created_at = models.DateTimeField(
+        default=timezone.now,
+        help_text='The date and time that this response was created at.'
+    )
+
+    class Meta:
+        abstract = True
+
+    @property
+    def occurrence(self):
+        """
+        Return a count of the number of times this response has occurred.
+        """
+        from django.apps import apps
+
+        response = apps.get_model('django_chatterbot', self.__class__.__name__)
+
+        return response.objects.filter(
+            statement__text=self.statement.text,
+            response__text=self.response.text
+        ).count()
 
     def __str__(self):
         statement = self.statement.text
@@ -160,21 +180,82 @@ class Response(models.Model):
         data = {}
 
         data['text'] = self.response.text
+        data['created_at'] = self.created_at.isoformat()
         data['occurrence'] = self.occurrence
 
         return data
 
 
-class Conversation(models.Model):
+class AbstractBaseConversation(models.Model):
     """
-    A sequence of statements representing a conversation.
+    The abstract base conversation allows other models to
+    be created using the attributes that exist on the
+    default models.
     """
 
-    statements = models.ManyToManyField(
-        'Statement',
-        related_name='conversation',
-        help_text='The statements in this conversation.'
+    responses = models.ManyToManyField(
+        'Response',
+        related_name='conversations',
+        help_text='The responses in this conversation.'
     )
+
+    class Meta:
+        abstract = True
 
     def __str__(self):
         return str(self.id)
+
+
+class AbstractBaseTag(models.Model):
+    """
+    The abstract base tag allows other models to
+    be created using the attributes that exist on the
+    default models.
+    """
+
+    name = models.SlugField(
+        max_length=50
+    )
+
+    statements = models.ManyToManyField(
+        'Statement',
+        related_name='tags'
+    )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+
+class Statement(AbstractBaseStatement):
+    """
+    A statement represents a single spoken entity, sentence or
+    phrase that someone can say.
+    """
+    pass
+
+
+class Response(AbstractBaseResponse):
+    """
+    Connection between a response and the statement that triggered it.
+
+    Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
+    The text and number of times the response has occurred are stored.
+    """
+    pass
+
+
+class Conversation(AbstractBaseConversation):
+    """
+    A sequence of statements representing a conversation.
+    """
+    pass
+
+
+class Tag(AbstractBaseTag):
+    """
+    A label that categorizes a statement.
+    """
+    pass

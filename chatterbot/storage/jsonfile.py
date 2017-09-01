@@ -26,6 +26,12 @@ class JsonFileStorageAdapter(StorageAdapter):
                 self.UnsuitableForProductionWarning
             )
 
+        warnings.warn(
+            'The JsonFileStorageAdapter is deprecated and '
+            'will be removed in ChatterBot version 0.8.',
+            DeprecationWarning
+        )
+
         database_path = self.kwargs.get('database', 'database.db')
         self.database = Database(database_path)
 

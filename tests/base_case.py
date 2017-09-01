@@ -6,8 +6,13 @@ from chatterbot import ChatBot
 class ChatBotTestCase(TestCase):
 
     def setUp(self):
-        self.test_data_directory = None
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
+
+    def tearDown(self):
+        """
+        Remove the test database.
+        """
+        self.chatbot.storage.drop()
 
     def assertIsLength(self, item, length):
         """
@@ -22,27 +27,15 @@ class ChatBotTestCase(TestCase):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.output.OutputAdapter',
-            'database': None, # None runs the database in-memory
-            'silence_performance_warning': True
+            # Run the test database in-memory
+            'database': None
         }
-
-    def random_string(self, start=0, end=9000):
-        """
-        Generate a string based on a random number.
-        """
-        from random import randint
-        return str(randint(start, end))
-
-    def tearDown(self):
-        """
-        Remove the test database.
-        """
-        self.chatbot.storage.drop()
 
 
 class ChatBotMongoTestCase(ChatBotTestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         from pymongo.errors import ServerSelectionTimeoutError
         from pymongo import MongoClient
 
@@ -56,10 +49,24 @@ class ChatBotMongoTestCase(ChatBotTestCase):
         except ServerSelectionTimeoutError:
             raise SkipTest('Unable to connect to Mongo DB.')
 
-        super(ChatBotMongoTestCase, self).setUp()
-
     def get_kwargs(self):
         kwargs = super(ChatBotMongoTestCase, self).get_kwargs()
-        kwargs['database'] = self.random_string()
+        kwargs['database'] = 'chatterbot_test_database'
         kwargs['storage_adapter'] = 'chatterbot.storage.MongoDatabaseAdapter'
+        return kwargs
+
+
+class ChatBotSQLTestCase(ChatBotTestCase):
+
+    def setUp(self):
+        """
+        Create the tables in the database before each test is run.
+        """
+        super(ChatBotSQLTestCase, self).setUp()
+        self.chatbot.storage.create()
+
+    def get_kwargs(self):
+        kwargs = super(ChatBotSQLTestCase, self).get_kwargs()
+        del kwargs['database']
+        kwargs['storage_adapter'] = 'chatterbot.storage.SQLStorageAdapter'
         return kwargs

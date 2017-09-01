@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 from settings import GITTER
-import logging
 
 
-# Uncomment the following line to enable verbose logging
+# Uncomment the following lines to enable verbose logging
+# import logging
 # logging.basicConfig(level=logging.INFO)
 
 

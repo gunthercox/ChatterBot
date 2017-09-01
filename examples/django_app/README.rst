@@ -15,4 +15,4 @@ found in the `ChatterBot documentation`_.
 
 .. _Django: https://www.djangoproject.com
 .. _ChatterBot: https://github.com/gunthercox/ChatterBot
-.. _ChatterBot documentation: http://chatterbot.readthedocs.io/en/latest/django.html
+.. _ChatterBot documentation: http://chatterbot.readthedocs.io/en/stable/django/index.html

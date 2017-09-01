@@ -5,9 +5,10 @@ About ChatterBot
 
 ChatterBot is a Python library that makes it easy to generate automated
 responses to a user's input. ChatterBot uses a selection of machine learning
-algorithms to produce different types of responces. This makes it easy for
+algorithms to produce different types of responses. This makes it easy for
 developers to create chat bots and automate conversations with users.
-For more details about the ideas and concepts behind ChatterBot see the :ref:`process flow diagram <process_flow_diagram>`.
+For more details about the ideas and concepts behind ChatterBot see the
+:ref:`process flow diagram <process_flow_diagram>`.
 
 An example of typical input would be something like this:
 
@@ -58,7 +59,6 @@ Contents:
    tutorial
    examples
    training
-   corpus
    preprocessors
    logic/index
    input/index
@@ -67,32 +67,20 @@ Contents:
    filters/index
    chatterbot
    conversations
-   sessions
+   comparisons
    utils
+   corpus
    django/index
-   testing
-   encoding
+   faq
+   commands
+   development
+   glossary
 
 Report an Issue
 ===============
 
 Please direct all bug reports and feature requests to the project's issue
 tracker on `GitHub`_.
-
-Definitions
-===========
-
-.. glossary::
-
-   untrained instance
-      An untrained instance of the chat bot has an empty database.
-
-   statement
-      A single string of text representing something that can be said.
-
-   response
-      A single string of text that is uttered as an answer, a reply or
-      an acknowledgement to a statement.
 
 Indices and tables
 ==================

@@ -1,7 +1,9 @@
 """
-Test Django settings
+Django settings for when tests are run.
 """
 import os
+
+DEBUG = True
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -42,5 +44,10 @@ DATABASES = {
         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
     }
 }
+
+# Using the MD5 password hasher improves test performance
+PASSWORD_HASHERS = (
+    'django.contrib.auth.hashers.MD5PasswordHasher',
+)
 
 USE_TZ = True

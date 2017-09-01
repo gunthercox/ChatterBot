@@ -1,5 +1,8 @@
 import logging
+import os
+import sys
 from .conversation import Statement, Response
+from .utils import print_progress_bar
 
 
 class Trainer(object):
@@ -47,7 +50,6 @@ class Trainer(object):
 
     def _generate_export_data(self):
         result = []
-
         for statement in self.storage.filter():
             for response in statement.in_response_to:
                 result.append([response.text, statement.text])
@@ -59,10 +61,10 @@ class Trainer(object):
         Create a file from the database that can be used to
         train other chat bots.
         """
-        from jsondb.db import Database
-        database = Database(file_path)
-        export = {'export': self._generate_export_data()}
-        database.data(dictionary=export)
+        import json
+        export = {'conversations': self._generate_export_data()}
+        with open(file_path, 'w+') as jsonfile:
+            json.dump(export, jsonfile, ensure_ascii=False)
 
 
 class ListTrainer(Trainer):
@@ -76,17 +78,19 @@ class ListTrainer(Trainer):
         Train the chat bot based on the provided list of
         statements that represents a single conversation.
         """
-        statement_history = []
+        previous_statement_text = None
 
-        for text in conversation:
+        for conversation_count, text in enumerate(conversation):
+            print_progress_bar("List Trainer", conversation_count + 1, len(conversation))
+
             statement = self.get_or_create(text)
 
-            if statement_history:
+            if previous_statement_text:
                 statement.add_response(
-                    Response(statement_history[-1].text)
+                    Response(previous_statement_text)
                 )
 
-            statement_history.append(statement)
+            previous_statement_text = statement.text
             self.storage.update(statement)
 
 
@@ -102,19 +106,39 @@ class ChatterBotCorpusTrainer(Trainer):
 
         self.corpus = Corpus()
 
-    def train(self, *corpora):
-        trainer = ListTrainer(self.storage)
+    def train(self, *corpus_paths):
 
-        # Allow a list of coupora to be passed instead of arguments
-        if len(corpora) == 1:
-            if isinstance(corpora[0], list):
-                corpora = corpora[0]
+        # Allow a list of corpora to be passed instead of arguments
+        if len(corpus_paths) == 1:
+            if isinstance(corpus_paths[0], list):
+                corpus_paths = corpus_paths[0]
 
-        for corpus in corpora:
-            corpus_data = self.corpus.load_corpus(corpus)
-            for data in corpus_data:
-                for pair in data:
-                    trainer.train(pair)
+        # Train the chat bot with each statement and response pair
+        for corpus_path in corpus_paths:
+
+            corpora = self.corpus.load_corpus(corpus_path)
+
+            corpus_files = self.corpus.list_corpus_files(corpus_path)
+            for corpus_count, corpus in enumerate(corpora):
+                for conversation_count, conversation in enumerate(corpus):
+                    print_progress_bar(
+                        str(os.path.basename(corpus_files[corpus_count])) + " Training",
+                        conversation_count + 1,
+                        len(corpus)
+                    )
+
+                    previous_statement_text = None
+
+                    for text in conversation:
+                        statement = self.get_or_create(text)
+
+                        if previous_statement_text:
+                            statement.add_response(
+                                Response(previous_statement_text)
+                            )
+
+                        previous_statement_text = statement.text
+                        self.storage.update(statement)
 
 
 class TwitterTrainer(Trainer):
@@ -166,11 +190,7 @@ class TwitterTrainer(Trainer):
         words = set()
 
         for tweet in tweets:
-            # TODO: Handle non-ascii characters properly
-            cleaned_text = ''.join(
-                [i if ord(i) < 128 else ' ' for i in tweet.text]
-            )
-            tweet_words = cleaned_text.split()
+            tweet_words = tweet.text.split()
 
             for word in tweet_words:
                 # If the word contains only letters with a length from 4 to 9
@@ -221,7 +241,6 @@ class UbuntuCorpusTrainer(Trainer):
 
     def __init__(self, storage, **kwargs):
         super(UbuntuCorpusTrainer, self).__init__(storage, **kwargs)
-        import os
 
         self.data_download_url = kwargs.get(
             'ubuntu_corpus_data_download_url',
@@ -233,9 +252,33 @@ class UbuntuCorpusTrainer(Trainer):
             './data/'
         )
 
+        self.extracted_data_directory = os.path.join(
+            self.data_directory, 'ubuntu_dialogs'
+        )
+
         # Create the data directory if it does not already exist
         if not os.path.exists(self.data_directory):
             os.makedirs(self.data_directory)
+
+    def is_downloaded(self, file_path):
+        """
+        Check if the data file is already downloaded.
+        """
+        if os.path.exists(file_path):
+            self.logger.info('File is already downloaded')
+            return True
+
+        return False
+
+    def is_extracted(self, file_path):
+        """
+        Check if the data file is already extracted.
+        """
+
+        if os.path.isdir(file_path):
+            self.logger.info('File is already extracted')
+            return True
+        return False
 
     def download(self, url, show_status=True):
         """
@@ -243,20 +286,17 @@ class UbuntuCorpusTrainer(Trainer):
         Show a progress indicator for the download status.
         Based on: http://stackoverflow.com/a/15645088/1547223
         """
-        import os
-        import sys
         import requests
 
         file_name = url.split('/')[-1]
         file_path = os.path.join(self.data_directory, file_name)
 
         # Do not download the data if it already exists
-        if os.path.exists(file_path):
-            self.logger.info('File is already downloaded')
+        if self.is_downloaded(file_path):
             return file_path
 
         with open(file_path, 'wb') as open_file:
-            print('Downloading %s' % file_name)
+            print('Downloading %s' % url)
             response = requests.get(url, stream=True)
             total_length = response.headers.get('content-length')
 
@@ -274,64 +314,66 @@ class UbuntuCorpusTrainer(Trainer):
                         sys.stdout.write('\r[%s%s]' % ('=' * done, ' ' * (50 - done)))
                         sys.stdout.flush()
 
+            # Add a new line after the download bar
+            sys.stdout.write('\n')
+
+        print('Download location: %s' % file_path)
         return file_path
 
     def extract(self, file_path):
         """
         Extract a tar file at the specified file path.
         """
-        import os
         import tarfile
 
-        dir_name = os.path.split(file_path)[-1].split('.')[0]
+        print('Extracting {}'.format(file_path))
 
-        extracted_file_directory = os.path.join(
-            self.data_directory,
-            dir_name
-        )
-
-        # Do not extract if the extracted directory already exists
-        if os.path.isdir(extracted_file_directory):
-            return False
-
-        self.logger.info('Starting file extraction')
+        if not os.path.exists(self.extracted_data_directory):
+            os.makedirs(self.extracted_data_directory)
 
         def track_progress(members):
+            sys.stdout.write('.')
             for member in members:
-                # this will be the current file being extracted
+                # This will be the current file being extracted
                 yield member
-                print('Extracting {}'.format(member.path))
 
         with tarfile.open(file_path) as tar:
-            tar.extractall(path=self.data_directory, members=track_progress(tar))
+            tar.extractall(path=self.extracted_data_directory, members=track_progress(tar))
 
-        self.logger.info('File extraction complete')
+        self.logger.info('File extracted to {}'.format(self.extracted_data_directory))
 
         return True
 
     def train(self):
         import glob
         import csv
-        import os
 
-        # Download and extract the Ubuntu dialog corpus
+        # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
 
-        self.extract(corpus_download_path)
+        # Extract if the directory doesn not already exists
+        if not self.is_extracted(self.extracted_data_directory):
+            self.extract(corpus_download_path)
 
         extracted_corpus_path = os.path.join(
-            self.data_directory,
-            os.path.split(corpus_download_path)[-1].split('.')[0],
-            '**', '*.tsv'
+            self.extracted_data_directory,
+            '**', '**', '*.tsv'
         )
+
+        file_kwargs = {}
+
+        if sys.version_info[0] > 2:
+            # Specify the encoding in Python versions 3 and up
+            file_kwargs['encoding'] = 'utf-8'
+            # WARNING: This might fail to read a unicode corpus file in Python 2.x
 
         for file in glob.iglob(extracted_corpus_path):
             self.logger.info('Training from: {}'.format(file))
 
-            with open(file, 'r') as tsv:
+            with open(file, 'r', **file_kwargs) as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
-                statement_history = []
+                previous_statement_text = None
 
                 for row in reader:
                     if len(row) > 0:
@@ -345,10 +387,10 @@ class UbuntuCorpusTrainer(Trainer):
                         if row[2].strip():
                             statement.add_extra_data('addressing_speaker', row[2])
 
-                        if statement_history:
+                        if previous_statement_text:
                             statement.add_response(
-                                Response(statement_history[-1].text)
+                                Response(previous_statement_text)
                             )
 
-                        statement_history.append(statement)
+                        previous_statement_text = statement.text
                         self.storage.update(statement)

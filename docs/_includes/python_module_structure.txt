@@ -1,0 +1,9 @@
+IronyAdapter/
+|-- README
+|-- setup.py
+|-- irony_adapter
+|   |-- __init__.py
+|   |-- logic.py
+|-- tests
+|-- |-- __init__.py
+|-- |-- test_logic.py

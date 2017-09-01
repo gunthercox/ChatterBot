@@ -18,7 +18,7 @@ class Migration(migrations.Migration):
             name='created_at',
             field=models.DateTimeField(
                 default=django.utils.timezone.now,
-                help_text=b'The date and time that this statement was created at.'
+                help_text='The date and time that this statement was created at.'
             ),
         ),
     ]

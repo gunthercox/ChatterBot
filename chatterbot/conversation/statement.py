@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 from .response import Response
-from datetime import datetime
 
 
 class Statement(object):
@@ -10,11 +9,15 @@ class Statement(object):
     """
 
     def __init__(self, text, **kwargs):
+
+        # Try not to allow non-string types to be passed to statements
+        try:
+            text = str(text)
+        except UnicodeEncodeError:
+            pass
+
         self.text = text
         self.in_response_to = kwargs.pop('in_response_to', [])
-
-        # The date and time that this statement was created at
-        self.created_at = kwargs.pop('created_at', datetime.now())
 
         self.extra_data = kwargs.pop('extra_data', {})
 
@@ -132,7 +135,6 @@ class Statement(object):
 
         data['text'] = self.text
         data['in_response_to'] = []
-        data['created_at'] = self.created_at
         data['extra_data'] = self.extra_data
 
         for response in self.in_response_to:

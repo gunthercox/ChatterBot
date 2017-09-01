@@ -170,4 +170,3 @@ class MathematicalEvaluationOperationTests(TestCase):
         response = self.adapter.process(statement)
         self.assertEqual(response.text, 'sqrt ( 144 ) = 12.0')
         self.assertEqual(response.confidence, 1)
-

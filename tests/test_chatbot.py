@@ -42,11 +42,11 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         statement_text = 'Wow!'
         response = self.chatbot.get_response(statement_text)
-        session = self.chatbot.conversation_sessions.get(
-            self.chatbot.default_session.id_string
+        response_statement = self.chatbot.storage.get_latest_response(
+            self.chatbot.default_conversation_id
         )
 
-        self.assertIn(statement_text, session.conversation[0])
+        self.assertEqual(statement_text, response_statement.text)
         self.assertEqual(response, statement_text)
 
     def test_response_known(self):
@@ -69,8 +69,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_second_response_format(self):
         self.chatbot.storage.update(self.test_statement)
 
-        response = self.chatbot.get_response('Hi')
-        # response = 'Hello'
+        self.chatbot.get_response('Hi')
+        # >>> 'Hello'
         second_response = self.chatbot.get_response('How are you?')
         statement = self.chatbot.storage.find(second_response.text)
 
@@ -86,6 +86,34 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         Test the case that a unicode string is passed in.
         """
         response = self.chatbot.get_response(u'سلام')
+        self.assertGreater(len(response.text), 0)
+
+    def test_get_response_emoji(self):
+        """
+        Test the case that the input string contains an emoji.
+        """
+        response = self.chatbot.get_response(u'💩 ')
+        self.assertGreater(len(response.text), 0)
+
+    def test_get_response_non_whitespace(self):
+        """
+        Test the case that a non-whitespace C1 control string is passed in.
+        """
+        response = self.chatbot.get_response(u'')
+        self.assertGreater(len(response.text), 0)
+
+    def test_get_response_two_byte_characters(self):
+        """
+        Test the case that a string containing two-byte characters is passed in.
+        """
+        response = self.chatbot.get_response(u'田中さんにあげて下さい')
+        self.assertGreater(len(response.text), 0)
+
+    def test_get_response_corrupted_text(self):
+        """
+        Test the case that a string contains "corrupted" text.
+        """
+        response = self.chatbot.get_response(u'Ṱ̺̺̕h̼͓̲̦̳̘̲e͇̣̰̦̬͎ ̢̼̻̱̘h͚͎͙̜̣̲ͅi̦̲̣̰̤v̻͍e̺̭̳̪̰-m̢iͅn̖̺̞̲̯̰d̵̼̟͙̩̼̘̳.̨̹͈̣')
         self.assertGreater(len(response.text), 0)
 
     def test_response_extra_data(self):
@@ -110,7 +138,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
         input_statement, response = self.chatbot.generate_response(
             statement,
-            self.chatbot.default_session.id
+            self.chatbot.default_conversation_id
         )
 
         self.assertEqual(input_statement, statement)

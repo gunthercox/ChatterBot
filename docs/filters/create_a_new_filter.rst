@@ -3,7 +3,7 @@ How to create a new filter for ChatterBot
 =========================================
 
 This is the basic outline of the code that your filter will need to follow.
-Each filter shold inherit from ChatterBot's `Filter` class and implement a
+Each filter should inherit from ChatterBot's `Filter` class and implement a
 method called `filter_selection`. Everything else that your filter does is
 up to you.
 
@@ -26,8 +26,8 @@ can evaluate. The available query methods currently are:
 statement_text_equals(statement_text)
 -------------------------------------
 
-This query method returns the current query with the added constraint text
-attribute of any statement returned must be equal to the test specified in
+This query method returns the current query with the added constraint that the text
+attribute of any statement returned must be equal to the text specified in
 the parameter.
 
 statement_text_not_in(statements)
@@ -60,4 +60,4 @@ storage adapter.
 
 A storage adapter only supports filters if it supports querying.
 You can tell if a storage adapter supports querying by checking
-if it's `adapter_supports_queries` property is set to true.
+if its `adapter_supports_queries` property is set to true.

@@ -16,7 +16,7 @@ class TerminalAdapterTests(TestCase):
     def test_response_is_returned(self):
         """
         For consistency across io adapters, the
-        terminal adaper should return the output value. 
+        terminal adaper should return the output value.
         """
         statement = Statement("Come with me if you want to live.")
 
@@ -24,4 +24,3 @@ class TerminalAdapterTests(TestCase):
             self.adapter.process_response(statement),
             statement.text
         )
-

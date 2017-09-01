@@ -3,6 +3,7 @@
 Statement pre-processors.
 """
 
+
 def clean_whitespace(chatbot, statement):
     """
     Remove any consecutive whitespace characters from the statement text.
@@ -50,7 +51,7 @@ def convert_to_ascii(chatbot, statement):
 
     # Normalize unicode characters
     if sys.version_info[0] < 3:
-        statement.text = unicode(statement.text)
+        statement.text = unicode(statement.text) # NOQA
 
     text = unicodedata.normalize('NFKD', statement.text)
     text = text.encode('ascii', 'ignore').decode('utf-8')

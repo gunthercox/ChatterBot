@@ -8,6 +8,13 @@ import os
 import sphinx_rtd_theme
 from datetime import datetime
 
+try:
+    import chatterbot
+except ImportError:
+    import pip
+    pip.main(['install', 'chatterbot'])
+    import chatterbot
+
 
 # Insert the project root dir as the first element in the PYTHONPATH.
 # This lets us ensure that the source package is imported, and that its version is used.
@@ -15,12 +22,9 @@ current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
 
-import chatterbot
-
-
 # -- General configuration ------------------------------------------------
 
-# Add any Sphinx extension module names here, as strings.
+# Sphinx extension modules
 extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.autosectionlabel',
@@ -40,7 +44,7 @@ templates_path = ['_templates']
 source_suffix = ['.rst', '.md']
 
 # The encoding of source files
-#source_encoding = 'utf-8-sig'
+# source_encoding = 'utf-8-sig'
 
 # The master toctree document
 master_doc = 'index'
@@ -64,15 +68,15 @@ language = 'en'
 exclude_patterns = []
 
 # If true, '()' will be appended to :func: etc. cross-reference text
-#add_function_parentheses = True
+# add_function_parentheses = True
 
 # If true, the current module name will be prepended to all description
 # unit titles (such as .. function::)
-#add_module_names = True
+# add_module_names = True
 
 # If true, sectionauthor and moduleauthor directives will be shown in the
 # output. They are ignored by default.
-#show_authors = False
+# show_authors = False
 
 # The name of the Pygments (syntax highlighting) style to use
 pygments_style = 'sphinx'
@@ -91,8 +95,8 @@ html_theme_options = {
 
 html_show_sourcelink = False
 
-# A shorter title for the navigation bar.  Default is the same as html_title.
-#html_short_title = None
+# A shorter title for the navigation bar. Default is the same as html_title.
+# html_short_title = None
 
 # The name of an image file (relative to this directory) to place at the top
 # of the sidebar.
@@ -111,28 +115,28 @@ html_static_path = ['_static']
 # Add any extra paths that contain custom files (such as robots.txt or
 # .htaccess) here, relative to this directory. These files are copied
 # directly to the root of the documentation.
-#html_extra_path = []
+# html_extra_path = []
 
 # If not None, a 'Last updated on:' timestamp is inserted at every page
 # bottom, using the given strftime format.
 # The empty string is equivalent to '%b %d, %Y'.
-#html_last_updated_fmt = None
+# html_last_updated_fmt = None
 
 # Custom sidebar templates, maps document names to template names.
-#html_sidebars = {}
+# html_sidebars = {}
 
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
-#html_additional_pages = {}
+# html_additional_pages = {}
 
 # If false, no module index is generated.
-#html_domain_indices = True
+# html_domain_indices = True
 
 # If false, no index is generated.
-#html_use_index = True
+# html_use_index = True
 
-# If true, the index is split into individual pages for each letter.
-#html_split_index = False
+# Split the index into individual pages for each letter.
+html_split_index = True
 
 # If true, "Created using Sphinx" is shown in the HTML footer. Default is True.
 html_show_sphinx = False
@@ -193,5 +197,7 @@ epub_copyright = copyright
 # A list of files that should not be packed into the epub file
 epub_exclude_files = ['search.html']
 
-# Example configuration for intersphinx: refer to the Python standard library
-intersphinx_mapping = {'https://docs.python.org/': None}
+# Configuration for intersphinx
+intersphinx_mapping = {
+    'python': ('https://docs.python.org/3.4', None)
+}

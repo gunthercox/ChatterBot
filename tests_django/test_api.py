@@ -14,9 +14,6 @@ class ApiTestCase(TestCase):
         """
         Test that a response is returned.
         """
-        from datetime import datetime
-        from dateutil.parser import parse
-
         data = {
             'text': 'How are you?'
         }
@@ -33,10 +30,6 @@ class ApiTestCase(TestCase):
         self.assertIn('text', content)
         self.assertGreater(len(content['text']), 1)
         self.assertIn('in_response_to', content)
-        self.assertIn('created_at', content)
-        self.assertTrue(
-            isinstance(parse(content['created_at']), datetime)
-        )
 
     def test_post_unicode(self):
         """
@@ -64,7 +57,7 @@ class ApiTestCase(TestCase):
         Test that unicode reponse
         """
         data = {
-            'text' : '\u2013'
+            'text': '\u2013'
         }
         response = self.client.post(
             self.api_url,

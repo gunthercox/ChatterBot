@@ -1,4 +1,3 @@
-import os
 from django.test import TestCase
 from chatterbot.storage import DjangoStorageAdapter
 from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
@@ -97,8 +96,8 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
         result = self.adapter.find(statement.text)
 
-        self.assertTrue(result.in_response_to.filter(response__text="Yes").exists())
-        self.assertTrue(result.in_response_to.filter(response__text="No").exists())
+        self.assertTrue(result.responses.filter(statement__text="Yes").exists())
+        self.assertTrue(result.responses.filter(statement__text="No").exists())
 
     def test_multiple_responses_added_on_update(self):
         statement = StatementModel.objects.create(text="You are welcome.")
@@ -109,9 +108,9 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
         result = self.adapter.find(statement.text)
 
-        self.assertEqual(result.in_response_to.count(), 2)
-        self.assertTrue(result.in_response_to.filter(response__text="Thank you.").exists())
-        self.assertTrue(result.in_response_to.filter(response__text="Thanks.").exists())
+        self.assertEqual(result.responses.count(), 2)
+        self.assertTrue(result.responses.filter(statement__text="Thank you.").exists())
+        self.assertTrue(result.responses.filter(statement__text="Thanks.").exists())
 
     def test_update_saves_statement_with_multiple_responses(self):
         statement = StatementModel.objects.create(text="You are welcome.")
@@ -122,7 +121,8 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
         response = self.adapter.find(statement.text)
 
-        self.assertEqual(response.in_response_to.count(), 2)
+        self.assertEqual(ResponseModel.objects.count(), 2)
+        self.assertEqual(response.responses.count(), 2)
 
     def test_getting_and_updating_statement(self):
         statement = StatementModel.objects.create(text="Hi")
@@ -133,8 +133,8 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
         response = self.adapter.find(statement.text)
 
-        self.assertEqual(len(response.in_response_to), 1)
-        self.assertEqual(response.in_response_to[0].occurrence, 2)
+        self.assertEqual(response.responses.count(), 2)
+        self.assertEqual(response.responses.first().occurrence, 2)
 
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."
@@ -177,8 +177,8 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         responses = self.adapter.get_response_statements()
 
         self.assertEqual(len(responses), 2)
-        self.assertTrue(responses.filter(in_response__response__text="This is a phone.").exists())
-        self.assertTrue(responses.filter(in_response__response__text="A what?").exists())
+        self.assertTrue(responses.filter(in_response__statement__text="This is a phone.").exists())
+        self.assertTrue(responses.filter(in_response__statement__text="A what?").exists())
 
 
 class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
@@ -286,9 +286,9 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
         )
 
         # Get the first response
-        response = response[0]
+        response = response.first()
 
-        self.assertEqual(len(response.in_response_to), 2)
+        self.assertEqual(response.responses.count(), 2)
 
     def test_response_list_in_results(self):
         """
@@ -304,8 +304,9 @@ class DjangoAdapterFilterTestCase(DjangoAdapterTestCase):
 
         found = self.adapter.filter(text=statement.text)
 
-        self.assertEqual(len(found[0].in_response_to), 1)
-        self.assertEqual(type(found[0].in_response_to[0]), ResponseModel)
+        self.assertEqual(found.count(), 1)
+        self.assertEqual(found.first().responses.count(), 1)
+        self.assertEqual(type(found.first().responses.first()), ResponseModel)
 
     def test_confidence(self):
         """
@@ -339,14 +340,12 @@ class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
         self.assertEqual(results[0], statement_a)
         self.assertEqual(results[1], statement_b)
 
-    def test_order_by_created_at(self):
-        from datetime import datetime, timedelta
-
+    def test_reverse_order_by_text(self):
         statement_a = StatementModel.objects.create(text='A is the first letter of the alphabet.')
         statement_b = StatementModel.objects.create(text='B is the second letter of the alphabet.')
 
-        results = self.adapter.filter(order_by='created_at')
+        results = self.adapter.filter(order_by='-text')
 
         self.assertEqual(len(results), 2)
-        self.assertEqual(results[0], statement_a)
-        self.assertEqual(results[1], statement_b)
+        self.assertEqual(results[1], statement_a)
+        self.assertEqual(results[0], statement_b)

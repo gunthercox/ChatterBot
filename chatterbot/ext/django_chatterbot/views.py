@@ -23,36 +23,47 @@ class ChatterBotViewMixin(object):
         if 'text' not in data:
             raise ValidationError('The attribute "text" is required.')
 
-    def get_chat_session(self, request):
+    def get_conversation(self, request):
         """
-        Return the current session for the chat if one exists.
-        Create a new session if one does not exist.
+        Return the conversation for the session if one exists.
+        Create a new conversation if one does not exist.
         """
-        chat_session_id = request.session.get('chat_session_id', None)
-        chat_session = self.chatterbot.conversation_sessions.get(chat_session_id, None)
+        from chatterbot.ext.django_chatterbot.models import Conversation, Response
 
-        if not chat_session:
-            chat_session = self.chatterbot.conversation_sessions.new()
-            request.session['chat_session_id'] = chat_session.id_string
+        class Obj(object):
+            def __init__(self):
+                self.id = None
+                self.statements = []
 
-        return chat_session
+        conversation = Obj()
+
+        conversation.id = request.session.get('conversation_id', 0)
+        existing_conversation = False
+        try:
+            Conversation.objects.get(id=conversation.id)
+            existing_conversation = True
+
+        except Conversation.DoesNotExist:
+            conversation_id = self.chatterbot.storage.create_conversation()
+            request.session['conversation_id'] = conversation_id
+            conversation.id = conversation_id
+
+        if existing_conversation:
+            responses = Response.objects.filter(
+                conversations__id=conversation.id
+            )
+
+            for response in responses:
+                conversation.statements.append(response.statement.serialize())
+                conversation.statements.append(response.response.serialize())
+
+        return conversation
 
 
 class ChatterBotView(ChatterBotViewMixin, View):
     """
     Provide an API endpoint to interact with ChatterBot.
     """
-
-    def _serialize_conversation(self, session):
-        if session.conversation.empty():
-            return []
-
-        conversation = []
-
-        for statement, response in session.conversation:
-            conversation.append([statement.serialize(), response.serialize()])
-
-        return conversation
 
     def post(self, request, *args, **kwargs):
         """
@@ -62,9 +73,9 @@ class ChatterBotView(ChatterBotViewMixin, View):
 
         self.validate(input_data)
 
-        chat_session = self.get_chat_session(request)
+        conversation = self.get_conversation(request)
 
-        response = self.chatterbot.get_response(input_data, chat_session.id_string)
+        response = self.chatterbot.get_response(input_data, conversation.id)
         response_data = response.serialize()
 
         return JsonResponse(response_data, status=200)
@@ -73,12 +84,12 @@ class ChatterBotView(ChatterBotViewMixin, View):
         """
         Return data corresponding to the current conversation.
         """
-        chat_session = self.get_chat_session(request)
+        conversation = self.get_conversation(request)
 
         data = {
             'detail': 'You should make a POST request to this endpoint.',
             'name': self.chatterbot.name,
-            'conversation': self._serialize_conversation(chat_session)
+            'conversation': conversation.statements
         }
 
         # Return a method not allowed response

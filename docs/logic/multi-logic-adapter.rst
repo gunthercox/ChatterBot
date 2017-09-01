@@ -34,7 +34,7 @@ Assume the following results were returned by a chat bot's logic adapters.
 +------------+--------------+
 
 In this case, two of the logic adapters have generated the same result.
-When multiple logic adapters come to to the same conclusion, that statement
+When multiple logic adapters come to the same conclusion, that statement
 is given priority over another response with a possibly higher confidence score.
 The fact that the multiple adapters agreed on a response is a significant
 indicator that a particular statement has a greater probability of being

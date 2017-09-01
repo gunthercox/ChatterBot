@@ -9,7 +9,7 @@ class Filter(object):
     filters should be subclassed.
     """
 
-    def filter_selection(self, chatterbot, session_id):
+    def filter_selection(self, chatterbot, conversation_id):
         """
         Because this is the base filter class, this method just
         returns the storage adapter's base query. Other filters
@@ -24,17 +24,21 @@ class RepetitiveResponseFilter(Filter):
     a chat bot from repeating statements that it has recently said.
     """
 
-    def filter_selection(self, chatterbot, session_id):
-
-        session = chatterbot.conversation_sessions.get(session_id)
-
-        if session.conversation.empty():
-            return chatterbot.storage.base_query
+    def filter_selection(self, chatterbot, conversation_id):
 
         text_of_recent_responses = []
 
-        for statement, response in session.conversation:
-            text_of_recent_responses.append(response.text)
+        # TODO: Add a larger quantity of response history
+        latest_response = chatterbot.storage.get_latest_response(conversation_id)
+        if latest_response:
+            text_of_recent_responses.append(latest_response.text)
+
+        # Return the query with no changes if there are no statements to exclude
+        if not text_of_recent_responses:
+            return super(RepetitiveResponseFilter, self).filter_selection(
+                chatterbot,
+                conversation_id
+            )
 
         query = chatterbot.storage.base_query.statement_text_not_in(
             text_of_recent_responses

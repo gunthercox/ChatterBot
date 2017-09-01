@@ -5,8 +5,8 @@ from chatterbot.ext.django_chatterbot.views import ChatterBotView
 
 class MockResponse(object):
 
-    def __init__(self, id_string):
-        self.session = {'chat_session_id': id_string}
+    def __init__(self, pk):
+        self.session = {'conversation_id': pk}
 
 
 class ViewTestCase(TestCase):
@@ -29,22 +29,23 @@ class ViewTestCase(TestCase):
                 'type': 'classmethod'
             })
 
-    def test_get_chat_session(self):
-        session = self.view.chatterbot.conversation_sessions.new()
-        mock_response = MockResponse(session.id_string)
-        get_session = self.view.get_chat_session(mock_response)
+    def test_get_conversation(self):
+        conversation_id = self.view.chatterbot.storage.create_conversation()
 
-        self.assertEqual(session.id_string, get_session.id_string)
+        mock_response = MockResponse(conversation_id)
+        conversation = self.view.get_conversation(mock_response)
 
-    def test_get_chat_session_invalid(self):
-        mock_response = MockResponse('--invalid--')
-        session = self.view.get_chat_session(mock_response)
+        self.assertEqual(conversation_id, conversation.id)
 
-        self.assertNotEqual(session.id_string, 'test-session-id')
+    def test_get_conversation_invalid(self):
+        mock_response = MockResponse(0)
+        session = self.view.get_conversation(mock_response)
 
-    def test_get_chat_session_no_session(self):
+        self.assertNotEqual(session.id, 'test-session-id')
+
+    def test_get_conversation_nonexistent(self):
         mock_response = MockResponse(None)
         mock_response.session = {}
-        session = self.view.get_chat_session(mock_response)
+        session = self.view.get_conversation(mock_response)
 
-        self.assertNotEqual(session.id_string, 'test-session-id')
+        self.assertNotEqual(session.id, 'test-session-id')

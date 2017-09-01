@@ -77,14 +77,14 @@ def input_function():
     import sys
 
     if sys.version_info[0] < 3:
-        user_input = str(raw_input())
+        user_input = str(raw_input()) # NOQA
 
         # Avoid problems using format strings with unicode characters
         if user_input:
             user_input = user_input.decode('utf-8')
 
     else:
-        user_input = input()
+        user_input = input() # NOQA
 
     return user_input
 
@@ -98,19 +98,20 @@ def nltk_download_corpus(resource_path):
     """
     from nltk.data import find
     from nltk import download
-    from os.path import split
+    from os.path import split, sep
+    from zipfile import BadZipfile
 
-    # Download the wordnet data only if it is not already downloaded
+    # Download the NLTK data only if it is not already downloaded
     _, corpus_name = split(resource_path)
 
-    ## From http://www.nltk.org/api/nltk.html ##
+    # From http://www.nltk.org/api/nltk.html
     # When using find() to locate a directory contained in a zipfile,
     # the resource name must end with the forward slash character.
     # Otherwise, find() will not locate the directory.
-    ####
+    #
     # Helps when resource_path=='sentiment/vader_lexicon''
-    if not resource_path.endswith('/'):
-        resource_path = resource_path + '/'
+    if not resource_path.endswith(sep):
+        resource_path = resource_path + sep
 
     downloaded = False
 
@@ -119,6 +120,11 @@ def nltk_download_corpus(resource_path):
     except LookupError:
         download(corpus_name)
         downloaded = True
+    except BadZipfile:
+        raise BadZipfile(
+            'The NLTK corpus file being opened is not a zipfile, '
+            'or it has been corrupted and needs to be manually deleted.'
+        )
 
     return downloaded
 
@@ -128,6 +134,10 @@ def remove_stopwords(tokens, language):
     Takes a language (i.e. 'english'), and a set of word tokens.
     Returns the tokenized text with any stopwords removed.
     Stop words are words like "is, the, a, ..."
+
+    Be sure to download the required NLTK corpus before calling this function:
+    - from chatterbot.utils import nltk_download_corpus
+    - nltk_download_corpus('corpora/stopwords')
     """
     from nltk.corpus import stopwords
 
@@ -138,3 +148,77 @@ def remove_stopwords(tokens, language):
     tokens = set(tokens) - set(stop_words)
 
     return tokens
+
+
+def get_response_time(chatbot):
+    """
+    Returns the amount of time taken for a given
+    chat bot to return a response.
+
+    :param chatbot: A chat bot instance.
+    :type chatbot: ChatBot
+
+    :returns: The response time in seconds.
+    :rtype: float
+    """
+    import time
+
+    start_time = time.time()
+
+    chatbot.get_response('Hello')
+
+    return time.time() - start_time
+
+
+def generate_strings(total_strings, string_length=20):
+    """
+    Generate a list of random strings.
+
+    :param total_strings: The number of strings to generate.
+    :type total_strings: int
+
+    :param string_length: The length of each string to generate.
+    :type string_length: int
+
+    :returns: The generated list of random strings.
+    :rtype: list
+    """
+    import random
+    import string
+
+    statements = []
+    for _ in range(0, total_strings):
+        text = ''.join(
+            random.choice(string.ascii_letters + string.digits + ' ') for _ in range(string_length)
+        )
+        statements.append(text)
+    return statements
+
+
+def print_progress_bar(description, iteration_counter, total_items, progress_bar_length=20):
+    """
+    Print progress bar
+    :param description: Training description
+    :type description: str
+
+    :param iteration_counter: Incremental counter
+    :type iteration_counter: int
+
+    :param total_items: total number items
+    :type total_items: int
+
+    :param progress_bar_length: Progress bar length
+    :type progress_bar_length: int
+
+    :returns: void
+    :rtype: void
+    """
+    import sys
+
+    percent = float(iteration_counter) / total_items
+    hashes = '#' * int(round(percent * progress_bar_length))
+    spaces = ' ' * (progress_bar_length - len(hashes))
+    sys.stdout.write("\r{0}: [{1}] {2}%".format(description, hashes + spaces, int(round(percent * 100))))
+    sys.stdout.flush()
+    if total_items == iteration_counter:
+        print("\r")

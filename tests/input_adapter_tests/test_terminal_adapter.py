@@ -1,5 +1,4 @@
 from unittest import TestCase
-from chatterbot.conversation import Statement
 from chatterbot.input import TerminalAdapter
 
 

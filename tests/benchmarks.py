@@ -3,10 +3,8 @@ Run this file to generate benchmark data for various
 chat bot configurations.
 """
 
-import time
-import string
-import random
 from chatterbot import ChatBot
+from chatterbot import utils
 from pymongo.errors import ServerSelectionTimeoutError
 from pymongo import MongoClient
 
@@ -26,8 +24,7 @@ CONFIGURATIONS = [
             }
         ],
         'storage_adapter': {
-            'import_path': 'chatterbot.storage.JsonFileStorageAdapter',
-            'silence_performance_warning': True
+            'import_path': 'chatterbot.storage.SQLStorageAdapter'
         },
     },
     {
@@ -40,8 +37,7 @@ CONFIGURATIONS = [
             }
         ],
         'storage_adapter': {
-            'import_path': 'chatterbot.storage.JsonFileStorageAdapter',
-            'silence_performance_warning': True
+            'import_path': 'chatterbot.storage.SQLStorageAdapter'
         },
     }
 ]
@@ -82,20 +78,7 @@ except ServerSelectionTimeoutError:
     print('Not running Mongo DB benchmarking')
 
 
-def generate_strings(total_strings, string_length=20):
-    """
-    Generate a list of random strings.
-    """
-    statements = []
-    for _ in range(0, total_strings):
-        text = ''.join(
-            random.choice(string.ascii_letters + string.digits + ' ') for _ in range(string_length)
-        )
-        statements.append(text)
-    return statements
-
-
-STATEMENT_LIST = generate_strings(10)
+STATEMENT_LIST = utils.generate_strings(10)
 
 for config in CONFIGURATIONS:
     configuration = BASE_CONFIGURATION.copy()
@@ -104,11 +87,7 @@ for config in CONFIGURATIONS:
     chatbot = ChatBot('Benchmark', **configuration)
     chatbot.train(STATEMENT_LIST)
 
-    start_time = time.time()
-
-    chatbot.get_response('Hello')
-
-    durration = time.time() - start_time
+    durration = utils.get_response_time(chatbot)
 
     print(configuration['description'])
     print('Durration was {} seconds'.format(durration))

@@ -4,6 +4,8 @@ dist
 include
 lib
 venv
+.tox
+.coverage
 *.pyc
 *.swp
 *.egg-info
@@ -14,12 +16,14 @@ venv
 *.sqlite3
 *.db
 
-# Sphinx docs
-docs/_build/
-
 # IntelliJ
 .idea
 *.iml
 
 examples/settings.py
 examples/ubuntu_dialogs*
+.env
+.out
+
+# ignore Ubuntu corpus files
+data

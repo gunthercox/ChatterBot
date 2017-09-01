@@ -15,11 +15,11 @@ character encodings in Python.
 Does ChatterBot handle non-ascii characters?
 ============================================
 
-ChatterBot is able to handle unicode values correctly. You can pass it
+ChatterBot is able to handle unicode values correctly. You can pass to it
 non-encoded data and it should be able to process it properly
 (you will need to make sure that you decode the output that is returned).
 
-Bellow is one of ChatterBot's tests from `tests/test_chatbot.py`_,
+Below is one of ChatterBot's tests from `tests/test_chatbot.py`_,
 this is just a simple check that a unicode response can be processed.
 
 .. code-block:: python
@@ -34,8 +34,8 @@ this is just a simple check that a unicode response can be processed.
 This test passes in both Python 2.7 and 3.x. It also verifies that
 ChatterBot *can* take unicode input without issue.
 
-Fixing encoding errors
-======================
+How do I fix Python encoding errors?
+====================================
 
 When working with string type data in Python, it is possible to encounter errors
 such as the following.
@@ -57,8 +57,8 @@ Unicode header
 When to use the unicode header
 ++++++++++++++++++++++++++++++
 
-If your strings use escaped unicode characters (they looks like :code:`u'\u00b0C'`) then
-you do not need add the header. If your strings like :code:`'ØÆÅ'` then you are required
+If your strings use escaped unicode characters (they look like :code:`u'\u00b0C'`) then
+you do not need to add the header. If you use strings like :code:`'ØÆÅ'` then you are required
 to use the header.
 
 If you are using this header it must be the first line in your Python file.
@@ -75,7 +75,7 @@ When to use escape characters
 +++++++++++++++++++++++++++++
 
 Prefix your strings with the unicode escape character :code:`u'...'` when you are
-using excaped unicode characters.
+using escaped unicode characters.
 
 Import unicode literals from future
 -----------------------------------

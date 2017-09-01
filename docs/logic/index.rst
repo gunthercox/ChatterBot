@@ -2,7 +2,7 @@
 Logic Adapters
 ==============
 
-Logic adapters determine the logic for how ChatterBot selects a responses to a given input statement.
+Logic adapters determine the logic for how ChatterBot selects a response to a given input statement.
 
 .. toctree::
    :maxdepth: 1
@@ -35,12 +35,12 @@ Best Match Adapter
 
 .. autofunction:: chatterbot.logic.BestMatch
 
-The :code:`BestMatch` logic adapter selects a response based on the best know match to a given statement.
+The :code:`BestMatch` logic adapter selects a response based on the best known match to a given statement.
 
 How it works
 ------------
 
-The best match adapter determines uses an function to compare the input statement to known statements.
+The best match adapter uses a function to compare the input statement to known statements.
 Once it finds the closest match to the input statement, it uses another function to select one of the
 known responses to that statement.
 
@@ -118,7 +118,7 @@ Low confidence response example
 Specific Response Adapter
 =========================
 
-If the input that the chat bot recieves, matches the input text specified
+If the input that the chat bot receives, matches the input text specified
 for this adapter, the specified response will be returned.
 
 .. autofunction:: chatterbot.logic.SpecificResponseAdapter

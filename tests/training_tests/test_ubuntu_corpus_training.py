@@ -19,19 +19,10 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
     def tearDown(self):
         super(UbuntuCorpusTrainerTestCase, self).tearDown()
-        import shutil
 
-        # Clean up by removing the corpus data directory
-        if os.path.exists(self.chatbot.trainer.data_directory):
-            shutil.rmtree(self.chatbot.trainer.data_directory)
+        self._remove_data()
 
-    def _create_test_corpus(self):
-        """
-        Create a small tar in a similar format to the
-        Ubuntu corpus file in memory for testing.
-        """
-        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
-        tar = tarfile.TarFile(file_path, 'w')
+    def _get_data(self):
 
         data1 = (
             b'2004-11-04T16:49:00.000Z	tom	jane	Hello\n' +
@@ -47,15 +38,34 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
             b'\n'
         )
 
-        tsv1 = BytesIO(data1)
-        tsv2 = BytesIO(data2)
+        return data1, data2
 
-        tarinfo = tarfile.TarInfo('ubuntu_dialogs/3/1.tsv')
-        tarinfo.size = len(data1)
+    def _remove_data(self):
+        """
+        Clean up by removing the corpus data directory.
+        """
+        import shutil
+
+        if os.path.exists(self.chatbot.trainer.data_directory):
+            shutil.rmtree(self.chatbot.trainer.data_directory)
+
+    def _create_test_corpus(self, data):
+        """
+        Create a small tar in a similar format to the
+        Ubuntu corpus file in memory for testing.
+        """
+        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
+        tar = tarfile.TarFile(file_path, 'w')
+
+        tsv1 = BytesIO(data[0])
+        tsv2 = BytesIO(data[1])
+
+        tarinfo = tarfile.TarInfo('dialogs/3/1.tsv')
+        tarinfo.size = len(data[0])
         tar.addfile(tarinfo, fileobj=tsv1)
 
-        tarinfo = tarfile.TarInfo('ubuntu_dialogs/3/2.tsv')
-        tarinfo.size = len(data2)
+        tarinfo = tarfile.TarInfo('dialogs/3/2.tsv')
+        tarinfo.size = len(data[1])
         tar.addfile(tarinfo, fileobj=tsv2)
 
         tsv1.close()
@@ -69,7 +79,9 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Remove the test corpus file.
         """
         file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
-        os.remove(file_path)
+
+        if os.path.exists(file_path):
+            os.remove(file_path)
 
     def _mock_get_response(self, *args, **kwargs):
         """
@@ -128,36 +140,45 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         Test the extraction of text from a decompressed Ubuntu Corpus file.
         """
-        file_object_path = self._create_test_corpus()
+        file_object_path = self._create_test_corpus(self._get_data())
         self.chatbot.trainer.extract(file_object_path)
 
         self._destroy_test_corpus()
-        corpus_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs', '3')
+        corpus_path = os.path.join(self.chatbot.trainer.extracted_data_directory, 'dialogs', '3')
 
+        self.assertTrue(os.path.exists(self.chatbot.trainer.extracted_data_directory))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '1.tsv')))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '2.tsv')))
-
-    def test_already_extracted(self):
-        """
-        Test that extraction is only done if the compressed file
-        has not already been extracted.
-        """
-        file_object_path = self._create_test_corpus()
-        created = self.chatbot.trainer.extract(file_object_path)
-        not_created = self.chatbot.trainer.extract(file_object_path)
-        self._destroy_test_corpus()
-
-        self.assertTrue(created)
-        self.assertFalse(not_created)
 
     def test_train(self):
         """
         Test that the chat bot is trained using data from the Ubuntu Corpus.
         """
-        path = self._create_test_corpus()
+        self._create_test_corpus(self._get_data())
 
         self.chatbot.train()
         self._destroy_test_corpus()
 
         response = self.chatbot.get_response('Is anyone there?')
         self.assertEqual(response, 'Yes')
+
+    def test_is_extracted(self):
+        """
+        Test that a check can be done for if the corpus has aleady been extracted.
+        """
+        file_object_path = self._create_test_corpus(self._get_data())
+        self.chatbot.trainer.extract(file_object_path)
+
+        extracted = self.chatbot.trainer.is_extracted(self.chatbot.trainer.extracted_data_directory)
+        self._destroy_test_corpus()
+
+        self.assertTrue(extracted)
+
+    def test_is_not_extracted(self):
+        """
+        Test that a check can be done for if the corpus has aleady been extracted.
+        """
+        self._remove_data()
+        extracted = self.chatbot.trainer.is_extracted(self.chatbot.trainer.extracted_data_directory)
+
+        self.assertFalse(extracted)

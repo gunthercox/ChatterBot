@@ -9,31 +9,18 @@ os:
   - linux
   - windows
 
-env:
-  - DJANGO_VERSION=1.8
-  - DJANGO_VERSION=1.9
-  - DJANGO_VERSION=1.10
+services:
+  - mongodb
 
 install:
-  - pip install .
-  - pip install -r test-requirements.txt
-  - pip install -r requirements.txt
-  - pip install -q Django==$DJANGO_VERSION
+  - pip install tox coveralls codeclimate-test-reporter
 
 addons:
     code_climate:
         repo_token: 3ec30a156224df0f59620967241d9659086e918fd824f4f69b8ce7b55b5a590f
 
-services:
-  - mongodb
-
 script:
-  - python runtests.py
-  - python examples/django_app/manage.py test examples/django_app/
-  - nosetests --with-coverage --cover-package=chatterbot
-  - nosetests examples
-  - sphinx-build -nW -b html ./docs/ ./build/
-  - python tests/benchmarks.py
+  - tox
 
 after_success:
   - coveralls
