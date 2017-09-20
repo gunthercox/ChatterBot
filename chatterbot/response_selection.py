@@ -51,6 +51,23 @@ def get_first_response(input_statement, response_list):
     ))
     return response_list[0]
 
+def get_recent_response(input_statement,response_list):
+    """
+    :param input_statement: A statement, that closely matches an input to the chat bot.
+    :type input_statement: Statement
+
+    :param response_list: A list of statement options to choose a response from.
+    :type response_list: list
+
+    :return: Return the latest statement in the response list.
+    :rtype: Statement
+    """
+    logger = logging.getLogger(__name__)
+    logger.info(u'Selecting the more recent response from the list of {} options.'.format(
+        len(response_list)
+    ))
+    return response_list[len(response_list) - 1]
+
 
 def get_random_response(input_statement, response_list):
     """
