@@ -31,6 +31,17 @@ class ResponseSelectionTests(TestCase):
 
         self.assertEqual('What... is your quest?', output)
 
+    def test_get_recent_response(self):
+        statement_list = [
+               Statement('What... is your quest?'),
+               Statement('A what?'),
+               Statement('A quest.')
+           ]
+
+        output = response_selection.get_recent_response(Statement('Hello'), statement_list)
+
+        self.assertEqual('A quest.',output)
+
     def test_get_random_response(self):
         statement_list = [
             Statement('This is a phone.'),
