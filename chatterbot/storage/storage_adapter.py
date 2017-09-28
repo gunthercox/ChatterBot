@@ -1,5 +1,4 @@
 import logging
-import os
 
 
 class StorageAdapter(object):
@@ -17,23 +16,28 @@ class StorageAdapter(object):
         self.adapter_supports_queries = True
         self.base_query = None
 
-    @property
-    def Statement(self):
+    def get_model(self, model_name):
         """
-        Create a storage-aware statement.
+        Return the model class for a given model name.
         """
 
-        if 'DJANGO_SETTINGS_MODULE' in os.environ:
-            django_project = __import__(os.environ['DJANGO_SETTINGS_MODULE'])
-            if 'use_django_models' in django_project.settings.CHATTERBOT:
-                if django_project.settings.CHATTERBOT['use_django_models'] is True:
-                    from django.apps import apps
-                    Statement = apps.get_model(django_project.settings.CHATTERBOT['django_app_name'], 'Statement')
-                    return Statement
+        # The string must be lowercase
+        model_name = model_name.lower()
 
+        get_model_method = getattr(self, 'get_%s_model' % (model_name, ))
+
+        return get_model_method()
+
+    def get_statement_model(self):
+        """
+        Return the class for the statement model.
+        """
         from chatterbot.conversation.statement import Statement
+
+        # Create a storage-aware statement
         statement = Statement
         statement.storage = self
+
         return statement
 
     def generate_base_query(self, chatterbot, session_id):
