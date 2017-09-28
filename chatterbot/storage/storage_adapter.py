@@ -24,6 +24,11 @@ class StorageAdapter(object):
         # The string must be lowercase
         model_name = model_name.lower()
 
+        kwarg_model_key = '%s_model' % (model_name, )
+
+        if kwarg_model_key in self.kwargs:
+            return self.kwargs.get(kwarg_model_key)
+
         get_model_method = getattr(self, 'get_%s_model' % (model_name, ))
 
         return get_model_method()
