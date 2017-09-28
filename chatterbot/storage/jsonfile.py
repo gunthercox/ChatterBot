@@ -71,7 +71,8 @@ class JsonFileStorageAdapter(StorageAdapter):
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = self.Statement('')
+        Statement = self.get_model('statement')
+        proxy_statement = Statement('')
 
         for response in response_list:
             data = response.copy()
@@ -88,6 +89,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         """
         Converts a dictionary-like object to a Statement object.
         """
+        Statement = self.get_model('statement')
 
         # Don't modify the referenced object
         statement_data = statement_data.copy()
@@ -100,7 +102,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         # Remove the text attribute from the values
         text = statement_data.pop('text')
 
-        return self.Statement(text, **statement_data)
+        return Statement(text, **statement_data)
 
     def _all_kwargs_match_values(self, kwarguments, values):
         for kwarg in kwarguments:
@@ -160,6 +162,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         """
         Update a statement in the database.
         """
+        Statement = self.get_model('statement')
         data = statement.serialize()
 
         # Remove the text key from the data
@@ -170,7 +173,7 @@ class JsonFileStorageAdapter(StorageAdapter):
         for response_statement in statement.in_response_to:
             response = self.find(response_statement.text)
             if not response:
-                response = self.Statement(response_statement.text)
+                response = Statement(response_statement.text)
                 self.update(response)
 
         return statement
