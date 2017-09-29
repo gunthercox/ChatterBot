@@ -1,4 +1,3 @@
-import random
 from chatterbot.storage import StorageAdapter
 
 
@@ -79,11 +78,32 @@ class SQLStorageAdapter(StorageAdapter):
         # ChatterBot's internal query builder is not yet supported for this adapter
         self.adapter_supports_queries = False
 
+    def get_statement_model(self):
+        """
+        Return the statement model.
+        """
+        from chatterbot.ext.sqlalchemy_app.models import Statement
+        return Statement
+
+    def get_response_model(self):
+        """
+        Return the response model.
+        """
+        from chatterbot.ext.sqlalchemy_app.models import Response
+        return Response
+
+    def get_conversation_model(self):
+        """
+        Return the conversation model.
+        """
+        from chatterbot.ext.sqlalchemy_app.models import Conversation
+        return Conversation
+
     def count(self):
         """
         Return the number of entries in the database.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement
+        Statement = self.get_model('statement')
 
         session = self.Session()
         statement_count = session.query(Statement).count()
@@ -96,7 +116,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         rtype: query
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement
+        Statement = self.get_model('statement')
 
         _query = session.query(Statement)
         return _query.filter_by(**kwargs)
@@ -138,7 +158,8 @@ class SQLStorageAdapter(StorageAdapter):
         all listed attributes and in which all values
         match for all listed attributes will be returned.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement, Response
+        Statement = self.get_model('statement')
+        Response = self.get_model('response')
 
         session = self.Session()
 
@@ -199,7 +220,8 @@ class SQLStorageAdapter(StorageAdapter):
         Modifies an entry in the database.
         Creates an entry if one does not exist.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement, Response
+        Statement = self.get_model('statement')
+        Response = self.get_model('response')
 
         if statement:
             session = self.Session()
@@ -240,7 +262,7 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Create a new conversation.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Conversation
+        Conversation = self.get_model('conversation')
 
         session = self.Session()
         conversation = Conversation()
@@ -260,7 +282,8 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Add the statement and response to the conversation.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Conversation, Statement
+        Statement = self.get_model('statement')
+        Conversation = self.get_model('conversation')
 
         session = self.Session()
         conversation = session.query(Conversation).get(conversation_id)
@@ -296,7 +319,7 @@ class SQLStorageAdapter(StorageAdapter):
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement
+        Statement = self.get_model('statement')
 
         session = self.Session()
         statement = None
@@ -318,7 +341,9 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Returns a random statement from the database
         """
-        from chatterbot.ext.sqlalchemy_app.models import Statement
+        import random
+
+        Statement = self.get_model('statement')
 
         session = self.Session()
         count = self.count()

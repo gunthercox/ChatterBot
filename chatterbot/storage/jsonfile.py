@@ -37,6 +37,18 @@ class JsonFileStorageAdapter(StorageAdapter):
 
         self.adapter_supports_queries = False
 
+    def get_statement_model(self):
+        """
+        Return the class for the statement model.
+        """
+        from chatterbot.conversation.statement import Statement
+
+        # Create a storage-aware statement
+        statement = Statement
+        statement.storage = self
+
+        return statement
+
     def _keys(self):
         # The value has to be cast as a list for Python 3 compatibility
         return list(self.database[0].keys())
