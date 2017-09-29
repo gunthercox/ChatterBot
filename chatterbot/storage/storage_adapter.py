@@ -33,18 +33,6 @@ class StorageAdapter(object):
 
         return get_model_method()
 
-    def get_statement_model(self):
-        """
-        Return the class for the statement model.
-        """
-        from chatterbot.conversation.statement import Statement
-
-        # Create a storage-aware statement
-        statement = Statement
-        statement.storage = self
-
-        return statement
-
     def generate_base_query(self, chatterbot, session_id):
         """
         Create a base query for the storage adapter.

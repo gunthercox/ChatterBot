@@ -1,5 +1,4 @@
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Response
 
 
 class Query(object):
@@ -113,6 +112,30 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.base_query = Query()
 
+    def get_statement_model(self):
+        """
+        Return the class for the statement model.
+        """
+        from chatterbot.conversation.statement import Statement
+
+        # Create a storage-aware statement
+        statement = Statement
+        statement.storage = self
+
+        return statement
+
+    def get_response_model(self):
+        """
+        Return the class for the response model.
+        """
+        from chatterbot.conversation.response import Response
+
+        # Create a storage-aware response
+        response = Response
+        response.storage = self
+
+        return response
+
     def count(self):
         return self.statements.count()
 
@@ -140,6 +163,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         the list converted to Response objects.
         """
         Statement = self.get_model('statement')
+        Response = self.get_model('response')
         proxy_statement = Statement('')
 
         for response in response_list:
