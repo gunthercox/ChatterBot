@@ -127,21 +127,6 @@ class AbstractBaseResponse(models.Model):
     default models.
     """
 
-    statement = models.ForeignKey(
-        'Statement',
-        related_name='in_response'
-    )
-
-    response = models.ForeignKey(
-        'Statement',
-        related_name='responses'
-    )
-
-    created_at = models.DateTimeField(
-        default=timezone.now,
-        help_text='The date and time that this statement was created at.'
-    )
-
     created_at = models.DateTimeField(
         default=timezone.now,
         help_text='The date and time that this response was created at.'
@@ -193,12 +178,6 @@ class AbstractBaseConversation(models.Model):
     default models.
     """
 
-    responses = models.ManyToManyField(
-        'Response',
-        related_name='conversations',
-        help_text='The responses in this conversation.'
-    )
-
     class Meta:
         abstract = True
 
@@ -215,11 +194,6 @@ class AbstractBaseTag(models.Model):
 
     name = models.SlugField(
         max_length=50
-    )
-
-    statements = models.ManyToManyField(
-        'Statement',
-        related_name='tags'
     )
 
     class Meta:
@@ -239,23 +213,38 @@ class Statement(AbstractBaseStatement):
 
 class Response(AbstractBaseResponse):
     """
-    Connection between a response and the statement that triggered it.
-
-    Comparble to a ManyToMany "through" table, but without the M2M indexing/relations.
-    The text and number of times the response has occurred are stored.
+    Connection between a response and a statement that caused it.
     """
-    pass
+
+    statement = models.ForeignKey(
+        'Statement',
+        related_name='in_response'
+    )
+
+    response = models.ForeignKey(
+        'Statement',
+        related_name='responses'
+    )
 
 
 class Conversation(AbstractBaseConversation):
     """
-    A sequence of statements representing a conversation.
+    A sequence of responses representing a conversation.
     """
-    pass
+
+    responses = models.ManyToManyField(
+        'Response',
+        related_name='conversations',
+        help_text='The responses in this conversation.'
+    )
 
 
 class Tag(AbstractBaseTag):
     """
     A label that categorizes a statement.
     """
-    pass
+
+    statements = models.ManyToManyField(
+        'Statement',
+        related_name='tags'
+    )
