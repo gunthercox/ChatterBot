@@ -1,4 +1,5 @@
 from chatterbot.storage import StorageAdapter
+from chatterbot import constants
 
 
 class DjangoStorageAdapter(StorageAdapter):
@@ -11,7 +12,10 @@ class DjangoStorageAdapter(StorageAdapter):
         super(DjangoStorageAdapter, self).__init__(**kwargs)
 
         self.adapter_supports_queries = False
-        self.django_app_name = kwargs.get('django_app_name', 'django_chatterbot')
+        self.django_app_name = kwargs.get(
+            'django_app_name',
+            constants.DEFAULT_DJANGO_APP_NAME
+        )
 
     def get_statement_model(self):
         from django.apps import apps
