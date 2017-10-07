@@ -9,21 +9,25 @@ def get_response_table(response):
 class SQLStorageAdapter(StorageAdapter):
     """
     SQLStorageAdapter allows ChatterBot to store conversation
-    data semi-structutered T-SQL database, virtually, any database that SQL Alchemy supports.
+    data semi-structured T-SQL database, virtually, any database
+    that SQL Alchemy supports.
 
     Notes:
-        Tables may change (and will), so, save your training data. There is no data migration (yet).
+        Tables may change (and will), so, save your training data.
+        There is no data migration (yet).
         Performance test not done yet.
         Tests using other databases not finished.
 
     All parameters are optional, by default a sqlite database is used.
 
-    It will check if tables is present, if not, it will attempt to create required tables.
-    :keyword database: Used for sqlite database. Ignored if database_uri especified.
+    It will check if tables are present, if they are not, it will attempt
+    to create the required tables.
+
+    :keyword database: Used for sqlite database. Ignored if database_uri is specified.
     :type database: str
 
-    :keyword database_uri: eg: sqlite:///database_test.db", # use database_uri or database, database_uri
-        can be especified to choose database driver (database parameter will be igored).
+    :keyword database_uri: eg: sqlite:///database_test.db", use database_uri or database,
+        database_uri can be specified to choose database driver (database parameter will be ignored).
     :type database_uri: str
 
     :keyword read_only: False by default, makes all operations read only, has priority over all DB operations
@@ -166,8 +170,8 @@ class SQLStorageAdapter(StorageAdapter):
         filter_parameters = kwargs.copy()
 
         statements = []
-        # _response_query = None
         _query = None
+
         if len(filter_parameters) == 0:
             _response_query = session.query(Statement)
             statements.extend(_response_query.all())
