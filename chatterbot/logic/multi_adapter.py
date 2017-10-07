@@ -19,7 +19,7 @@ class MultiLogicAdapter(LogicAdapter):
         # Logic adapters added by the chat bot
         self.adapters = []
 
-        # Requied logic adapters that must always be present
+        # Required logic adapters that must always be present
         self.system_adapters = []
 
     def get_initialization_functions(self):
@@ -28,7 +28,7 @@ class MultiLogicAdapter(LogicAdapter):
         """
         functions_dict = {}
 
-        # Interate over each adapter and get its initialization functions
+        # Iterate over each adapter and get its initialization functions
         for logic_adapter in self.get_adapters():
             functions = logic_adapter.get_initialization_functions()
             functions_dict.update(functions)

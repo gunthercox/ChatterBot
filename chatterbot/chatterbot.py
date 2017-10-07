@@ -95,6 +95,7 @@ class ChatBot(object):
         Return the bot's response based on the input.
 
         :param input_item: An input value.
+        :param conversation_id: The id of a conversation.
         :returns: A response to the input.
         :rtype: Statement
         """

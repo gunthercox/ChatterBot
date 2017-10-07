@@ -152,7 +152,7 @@ class Statement(object):
 
     class InvalidTypeException(Exception):
 
-        def __init__(self, value='Recieved an unexpected value type.'):
+        def __init__(self, value='Received an unexpected value type.'):
             self.value = value
 
         def __str__(self):
