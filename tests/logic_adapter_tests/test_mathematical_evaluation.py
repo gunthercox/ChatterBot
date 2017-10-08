@@ -6,12 +6,7 @@ from chatterbot.conversation import Statement
 class MathematicalEvaluationTests(TestCase):
 
     def setUp(self):
-        import sys
-
         self.adapter = MathematicalEvaluation()
-
-        # Some tests may return decimals under python 3
-        self.python_version = sys.version_info[0]
 
     def test_can_process(self):
         statement = Statement('What is 10 + 10 + 10?')
@@ -81,10 +76,7 @@ class MathematicalEvaluationTests(TestCase):
         statement = Statement('What is one thousand two hundred four divided by one hundred?')
         response = self.adapter.process(statement)
 
-        if self.python_version <= 2:
-            self.assertEqual(response.text, 'one thousand two hundred four divided by one hundred = 12')
-        else:
-            self.assertEqual(response.text, 'one thousand two hundred four divided by one hundred = 12.04')
+        self.assertEqual(response.text, 'one thousand two hundred four divided by one hundred = 12.04')
 
         self.assertEqual(response.confidence, 1)
 
