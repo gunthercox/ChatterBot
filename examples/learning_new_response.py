@@ -1,5 +1,4 @@
 from chatterbot import ChatBot
-
 from chatterbot.trainers import ChatterBotCorpusTrainer
 
 
@@ -8,10 +7,12 @@ from chatterbot.trainers import ChatterBotCorpusTrainer
 # logging.basicConfig(level=logging.INFO)
 
 # Create a new instance of a ChatBot
-bot = ChatBot("Terminal",
-              storage_adapter="chatterbot.storage.JsonFileStorageAdapter",
-              input_adapter="chatterbot.input.TerminalAdapter",
-              output_adapter="chatterbot.output.TerminalAdapter")
+bot = ChatBot(
+    "Terminal",
+    storage_adapter="chatterbot.storage.SQLStorageAdapter",
+    input_adapter="chatterbot.input.TerminalAdapter",
+    output_adapter="chatterbot.output.TerminalAdapter"
+)
 bot.set_trainer(ChatterBotCorpusTrainer)
 
 bot.train("chatterbot.corpus.english")

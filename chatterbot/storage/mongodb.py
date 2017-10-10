@@ -1,5 +1,4 @@
 from chatterbot.storage import StorageAdapter
-from chatterbot.conversation import Response
 
 
 class Query(object):
@@ -137,10 +136,35 @@ class MongoDatabaseAdapter(StorageAdapter):
         tokens = list(filter(lambda x: x.isalpha() or x.isdigit(), tokens))
         return tokens if len(tokens) > 0 else full_tokens
 
+    def get_statement_model(self):
+        """
+        Return the class for the statement model.
+        """
+        from chatterbot.conversation.statement import Statement
+
+        # Create a storage-aware statement
+        statement = Statement
+        statement.storage = self
+
+        return statement
+
+    def get_response_model(self):
+        """
+        Return the class for the response model.
+        """
+        from chatterbot.conversation.response import Response
+
+        # Create a storage-aware response
+        response = Response
+        response.storage = self
+
+        return response
+
     def count(self):
         return self.statements.count()
 
     def find(self, statement_text):
+        Statement = self.get_model('statement')
         query = self.base_query.statement_text_equals(statement_text)
 
         values = self.statements.find_one(query.value())
@@ -155,14 +179,16 @@ class MongoDatabaseAdapter(StorageAdapter):
             values.get('in_response_to', [])
         )
 
-        return self.Statement(statement_text, **values)
+        return Statement(statement_text, **values)
 
     def deserialize_responses(self, response_list):
         """
         Takes the list of response items and returns
         the list converted to Response objects.
         """
-        proxy_statement = self.Statement('')
+        Statement = self.get_model('statement')
+        Response = self.get_model('response')
+        proxy_statement = Statement('')
 
         for response in response_list:
             text = response['text']
@@ -179,6 +205,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         Return Statement object when given data
         returned from Mongo DB.
         """
+        Statement = self.get_model('statement')
         statement_text = statement_data['text']
         del statement_data['text']
 
@@ -186,7 +213,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             statement_data.get('in_response_to', [])
         )
 
-        return self.Statement(statement_text, **statement_data)
+        return Statement(statement_text, **statement_data)
 
     def filter(self, **kwargs):
         """

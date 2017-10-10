@@ -2,7 +2,7 @@
 ChatterBot
 ==========
 
-The main class :code:`ChatBot` is a connecting point between each of
+The main class ``ChatBot`` is a connecting point between each of
 ChatterBot's :term:`adapters`. In this class, an input statement is returned
 from the :term:`input adapter`, processed and stored by the :term:`logic adapter`
 and :term:`storage adapter`, and then passed to the output adapter to be returned
@@ -14,25 +14,29 @@ to the user.
    :param name: A name is the only required parameter for the ChatBot class.
    :type name: str
 
-   :param storage_adapter: The import path to a storage adapter class.
+   :keyword storage_adapter: The dot-notated import path to a storage adapter class.
+                             Defaults to ``"chatterbot.storage.SQLStorageAdapter"``.
    :type storage_adapter: str
 
-   :param logic_adapters: A list of string paths to each logic adapter the bot uses.
+   :param logic_adapters: A list of dot-notated import paths to each logic adapter the bot uses.
+                          Defaults to ``["chatterbot.logic.BestMatch"]``.
    :type logic_adapters: list
 
-   :param input_adapter: The import path to an input adapter class.
+   :param input_adapter: The dot-notated import path to an input adapter class.
+                         Defaults to ``"chatterbot.input.VariableInputTypeAdapter"``.
    :type input_adapter: str
 
-   :param output_adapter: The import path to an output adapter class.
+   :param output_adapter: The dot-notated import path to an output adapter class.
+                          Defaults to ``"chatterbot.output.OutputAdapter"``.
    :type output_adapter: str
 
-   :param trainer: The import path to the training class to be used with the chat bot.
+   :param trainer: The dot-notated import path to the training class to be used with the chat bot.
    :type trainer: str
 
-   :param filters: A list of import paths to filter classes to be used by the chat bot.
+   :param filters: A list of dot-notated import paths to filter classes to be used by the chat bot.
    :type filters: list
 
-   :param logger: A :code:`Logger` object.
+   :param logger: A ``Logger`` object.
    :type logger: logging.Logger
 
 Example chat bot parameters
@@ -62,7 +66,7 @@ Example expanded chat bot parameters
 ====================================
 
 It is also possible to pass parameters directly to individual adapters.
-To do this, you must use a dictionary that contains a key called :code:`import_path`
+To do this, you must use a dictionary that contains a key called ``import_path``
 which specifies the import path to the adapter class.
 
 .. code-block:: python
@@ -112,7 +116,8 @@ logging by setting the logging level in your code.
        # ...
    )
 
-The logging levels available are :code:`CRITICAL`, :code:`ERROR`, :code:`WARNING`, :code:`INFO`, :code:`DEBUG`, and :code:`NOTSET`.
+The logging levels available are
+``CRITICAL``, ``ERROR``, ``WARNING``, ``INFO``, ``DEBUG``, and ``NOTSET``.
 See the `Python logging documentation`_ for more information.
 
 Using a custom logger
@@ -150,35 +155,14 @@ Adapters types
 Accessing the chatbot instance
 -------------------------------
 
-When ChatterBot initializes each adapter, it sets an attribute named :code:`chatbot`.
+When ChatterBot initializes each adapter, it sets an attribute named ``chatbot``.
 The chatbot variable makes it possible for each adapter to have access to all of the other adapters being used.
 Suppose two input and output adapters need to share some information or perhaps you want to give your logic adapter
 direct access to the storage adapter. These are just a few cases where this functionality is useful.
 
 Each adapter can be accessed on the chatbot object from within an adapter by referencing `self.chatbot`.
-Then, :code:`self.chatbot.storage` refers to the storage adapter, :code:`self.chatbot.input` refers to the input adapter,
-:code:`self.chatbot.output` refers to the current output adapter, and :code:`self.chatbot.logic` refers to the logic adapters.
-
-Adapter defaults
-----------------
-
-By default, ChatterBot uses the `SQLStorageAdapter` adapter for storage,
-the `BestMatch` for logic, the `VariableInputTypeAdapter` for input
-and the `OutputAdapter` for output.
-
-Each adapter can be set by passing in the dot-notated import path to the constructor as shown.
-
-.. code-block:: python
-
-   bot = ChatBot(
-       "Elsie",
-       storage_adapter="chatterbot.storage.SQLStorageAdapter",
-       input_adapter="chatterbot.input.VariableInputTypeAdapter",
-       output_adapter="chatterbot.output.OutputAdapter",
-       logic_adapters=[
-           "chatterbot.logic.BestMatch"
-       ],
-   )
+Then, ``self.chatbot.storage`` refers to the storage adapter, ``self.chatbot.input`` refers to the input adapter,
+``self.chatbot.output`` refers to the current output adapter, and ``self.chatbot.logic`` refers to the logic adapters.
 
 .. _MongoDB: https://docs.mongodb.com/
 .. _`Python logging documentation`: https://docs.python.org/3/library/logging.html#logging-levels

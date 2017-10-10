@@ -24,6 +24,4 @@ Any setting that gets set in the CHATTERBOT dictionary will be passed to the cha
 Additional Django settings
 ==========================
 
-- :code:`use_django_models` [default: True] Use the Django models for storing learned conversation data.
-  If set to False, ChatterBot's non-Django objects will be used.
-- :code:`django_app_name` [default: 'django_chatterbot'] The Django app name to look up the models from.
+- ``django_app_name`` [default: 'django_chatterbot'] The Django app name to look up the models from.

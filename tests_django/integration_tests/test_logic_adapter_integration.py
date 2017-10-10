@@ -59,7 +59,7 @@ class LogicIntegrationTestCase(TestCase):
 
         response = adapter.process(statement)
 
-        self.assertEqual(response.text, '( 6 + 6 ) = 12')
+        self.assertEqual(response.text, '6 + 6 = 12')
         self.assertEqual(response.confidence, 1)
 
     def test_time(self):
