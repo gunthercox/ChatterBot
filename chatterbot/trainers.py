@@ -131,6 +131,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
                     for text in conversation:
                         statement = self.get_or_create(text)
+                        statement.add_tags(corpus.categories)
 
                         if previous_statement_text:
                             statement.add_response(
