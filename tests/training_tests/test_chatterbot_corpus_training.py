@@ -3,6 +3,9 @@ from chatterbot.trainers import ChatterBotCorpusTrainer
 
 
 class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
+    """
+    Test case for training with data from the ChatterBot Corpus.
+    """
 
     def setUp(self):
         super(ChatterBotCorpusTrainingTestCase, self).setUp()
@@ -12,7 +15,15 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
         self.chatbot.train('chatterbot.corpus.english.greetings')
 
         statement = self.chatbot.storage.find('Hello')
+
         self.assertIsNotNone(statement)
+
+    def test_train_with_english_greeting_corpus_tags(self):
+        self.chatbot.train('chatterbot.corpus.english.greetings')
+
+        statement = self.chatbot.storage.find('Hello')
+
+        self.assertIn('greetings', statement.get_tags())
 
     def test_train_with_multiple_corpora(self):
         self.chatbot.train(
