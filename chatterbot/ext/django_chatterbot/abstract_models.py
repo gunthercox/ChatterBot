@@ -155,12 +155,14 @@ class AbstractBaseResponse(models.Model):
 
     statement = models.ForeignKey(
         STATEMENT_MODEL,
-        related_name='in_response'
+        related_name='in_response',
+        on_delete=models.CASCADE
     )
 
     response = models.ForeignKey(
         STATEMENT_MODEL,
-        related_name='responses'
+        related_name='responses',
+        on_delete=models.CASCADE
     )
 
     created_at = models.DateTimeField(
