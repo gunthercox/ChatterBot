@@ -379,6 +379,29 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$in': responses
             }
         }
+        
+        import jieba.analyse as al
+        word_topk = al.extract_tags(input_statement.text,topK=4)
+        reg_str=u"|".join(word_topk)
+        
+        if reg_str != "":
+            _statement_query = {
+                '$and':
+                [
+                    {
+                        'text': {
+                        '$in': responses
+                        }
+                    }
+                    ,
+                    {
+                        'text':{
+                        '$regex':reg_str,
+                        '$options': 'i'
+                        }
+                    }                    
+                ]
+            }
 
         _statement_query.update(self.base_query.value())
         statement_query = self.statements.find(_statement_query)
