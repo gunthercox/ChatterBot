@@ -13,7 +13,7 @@ class BestMatch(LogicAdapter):
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
-        statement_list = self.chatbot.storage.get_response_statements()
+        statement_list = self.chatbot.storage.get_response_statements(input_statement)
 
         if not statement_list:
             if self.chatbot.storage.count():
