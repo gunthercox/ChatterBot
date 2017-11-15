@@ -358,7 +358,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.statements.delete_one({'text': statement_text})
 
-    def get_response_statements(self,input_statement=""):
+    def get_response_statements(self, input_statement=""):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the
@@ -379,25 +379,24 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$in': responses
             }
         }
-        
+
         import jieba.analyse as al
-        word_topk = al.extract_tags(input_statement.text,topK=4)
-        reg_str=u"|".join(word_topk)
-        
+        word_topk = al.extract_tags(input_statement.text, topK=4)
+        reg_str = u"|".join(word_topk)
+
         if reg_str != "":
             _statement_query = {
                 '$and':
                 [
                     {
                         'text': {
-                        '$in': responses
+                            '$in': responses
                         }
-                    }
-                    ,
+                    },
                     {
-                        'text':{
-                        '$regex':reg_str,
-                        '$options': 'i'
+                        'text': {
+                            '$regex': reg_str,
+                            '$options': 'i'
                         }
                     }                    
                 ]
