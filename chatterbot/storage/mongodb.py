@@ -398,7 +398,7 @@ class MongoDatabaseAdapter(StorageAdapter):
                             '$regex': reg_str,
                             '$options': 'i'
                         }
-                    }                    
+                    }
                 ]
             }
 
