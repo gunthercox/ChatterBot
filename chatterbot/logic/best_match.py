@@ -1,6 +1,6 @@
 from __future__ import unicode_literals
 from .logic_adapter import LogicAdapter
-
+import time
 
 class BestMatch(LogicAdapter):
     """
@@ -13,7 +13,10 @@ class BestMatch(LogicAdapter):
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
-        statement_list = self.chatbot.storage.get_response_statements()
+
+        statement_list = self.chatbot.storage.get_response_statements(input_statement)   
+        #calmzeal print time here
+        print ("statement_list count after jieba:",len(statement_list))
 
         if not statement_list:
             if self.chatbot.storage.count():
@@ -31,6 +34,8 @@ class BestMatch(LogicAdapter):
         closest_match = input_statement
         closest_match.confidence = 0
 
+        #calmzeal   https://github.com/gunthercox/ChatterBot/pull/738
+        # slow solution: commet below,and add line 50,51 before return
         # Find the closest matching known statement
         for statement in statement_list:
             confidence = self.compare_statements(input_statement, statement)
@@ -54,6 +59,10 @@ class BestMatch(LogicAdapter):
         closest_match = self.get(input_statement)
         self.logger.info('Using "{}" as a close match to "{}"'.format(
             input_statement.text, closest_match.text
+        ))
+         #calmzeal print matching
+        print ('Using "{}" as a close match to "{}"'.format(
+            closest_match.text, input_statement.text
         ))
 
         # Get all statements that are in response to the closest match
