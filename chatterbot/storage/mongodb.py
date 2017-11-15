@@ -381,8 +381,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         }
 
         import jieba.analyse as al
-        word_topk = al.extract_tags(input_statement.text, topK=4)
-        reg_str = u"|".join(word_topk)
+        reg_str = ""
+        if input_statement != "":
+            word_topk = al.extract_tags(input_statement.text, topK=4)
+            reg_str = u"|".join(word_topk)
 
         if reg_str != "":
             _statement_query = {
