@@ -23,7 +23,7 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
 
         statement = self.chatbot.storage.find('Hello')
 
-        self.assertIn('greetings', statement.get_tags())
+        self.assertEqual(['greetings'], statement.get_tags())
 
     def test_train_with_multiple_corpora(self):
         self.chatbot.train(
