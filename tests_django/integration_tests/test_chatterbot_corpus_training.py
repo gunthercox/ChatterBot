@@ -1,17 +1,24 @@
-from tests.base_case import ChatBotTestCase
+from django.test import TestCase
+from django.conf import settings
+from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 
 
-class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
+class ChatterBotCorpusTrainingTestCase(TestCase):
     """
     Test case for training with data from the ChatterBot Corpus.
 
-    Note: This class has a mirror tests_django/integration_tests/
+    Note: This class has a mirror tests/training_tests/
     """
 
     def setUp(self):
         super(ChatterBotCorpusTrainingTestCase, self).setUp()
+        self.chatbot = ChatBot(**settings.CHATTERBOT)
         self.chatbot.set_trainer(ChatterBotCorpusTrainer)
+
+    def tearDown(self):
+        super(ChatterBotCorpusTrainingTestCase, self).setUp()
+        self.chatbot.storage.drop()
 
     def test_train_with_english_greeting_corpus(self):
         self.chatbot.train('chatterbot.corpus.english.greetings')

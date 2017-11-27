@@ -29,6 +29,10 @@ class DjangoStorageAdapter(StorageAdapter):
         from django.apps import apps
         return apps.get_model(self.django_app_name, 'Conversation')
 
+    def get_tag_model(self):
+        from django.apps import apps
+        return apps.get_model(self.django_app_name, 'Tag')
+
     def count(self):
         Statement = self.get_model('statement')
         return Statement.objects.count()
@@ -194,10 +198,12 @@ class DjangoStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
         Response = self.get_model('response')
         Conversation = self.get_model('conversation')
+        Tag = self.get_model('tag')
 
         Statement.objects.all().delete()
         Response.objects.all().delete()
         Conversation.objects.all().delete()
+        Tag.objects.all().delete()
 
     def get_response_statements(self):
         """
