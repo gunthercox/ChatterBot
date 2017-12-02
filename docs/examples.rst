@@ -63,6 +63,17 @@ ChatterBot data can be saved and retrieved from SQL databases.
 .. literalinclude:: ../examples/sql/memory_sql_example.py
    :language: python
 
+Read only mode
+==============
+
+Your chat bot will learn based on each new input statement it receives.
+If you want to disable this learning feature after your bot has been trained,
+you can set `read_only=True` as a parameter when initializing the bot.
+
+.. code-block:: python
+
+   chatbot = ChatBot("Johnny Five", read_only=True)
+
 More Examples
 =============
 

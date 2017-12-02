@@ -65,14 +65,3 @@ Get a response
 
    response = chatbot.get_response("Good morning!")
    print(response)
-
-Read only mode
-==============
-
-Your ChatterBot will learn based on each new input statement it receives.
-If you want to disable this learning feature after your bot has been trained,
-you can set `read_only=True` as a parameter when initializing the bot.
-
-.. code-block:: python
-
-   chatbot = ChatBot("Johnny Five", read_only=True)
