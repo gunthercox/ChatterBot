@@ -2,13 +2,21 @@
 Quick Start Guide
 =================
 
+The first thing you'll need to do to get started is install ChatterBot.
+
+.. code-block:: bash
+
+   pip install chatterbot
+
+See :ref:`Installation` for options for alternative installation methods.
+
 Create a new chat bot
 =====================
 
 .. note::
 
    If you are using Python 2.7, be sure that the unicode header is the first line of
-   your Python file: :code:`# -*- coding: utf-8 -*-`
+   your Python file: ``# -*- coding: utf-8 -*-``
 
 .. code-block:: python
 
