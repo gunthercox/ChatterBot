@@ -1,5 +1,5 @@
 coveralls
-factory-boy>=2.8,<2.9
+factory-boy>=2.9,<2.10
 flake8
 mock
 nose
