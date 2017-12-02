@@ -13,6 +13,17 @@ to chat with other ChatterBot users who might be able to help.
 If you believe that you have encountered an error in ChatterBot, please open a
 ticket on GitHub: https://github.com/gunthercox/ChatterBot/issues/new
 
+Installing ChatterBot
+=====================
+
+You can install ChatterBot on your system using Python's pip command.
+
+.. code-block:: bash
+
+   pip install chatterbot
+
+See :ref:`Installation` for alternative installation options.
+
 Creating your first chat bot
 ============================
 
