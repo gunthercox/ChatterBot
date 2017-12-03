@@ -131,6 +131,22 @@ class ListTrainingTests(ChatBotTestCase):
 
         self.assertEqual(response, conversation[2])
 
+    def test_training_with_unicode_bytestring(self):
+        """
+        Test training with an 8-bit bytestring.
+        """
+        conversation = [
+            'Hi, how are you?',
+            '\xe4\xbd\xa0\xe5\xa5\xbd\xe5\x90\x97',
+            'Superb!'
+        ]
+
+        self.chatbot.train(conversation)
+
+        response = self.chatbot.get_response(conversation[1])
+
+        self.assertEqual(response, conversation[2])
+
     def test_similar_sentence_gets_same_response_multiple_times(self):
         """
         Tests if the bot returns the same response for the same
