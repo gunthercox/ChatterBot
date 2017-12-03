@@ -115,6 +115,22 @@ class ListTrainingTests(ChatBotTestCase):
 
         self.assertEqual(response, conversation[2])
 
+    def test_training_with_emoji_characters(self):
+        """
+        Ensure that the training method adds statements containing emojis.
+        """
+        conversation = [
+            u'Hi, how are you? 😃',
+            u'I am just dandy 👍',
+            u'Superb! 🎆'
+        ]
+
+        self.chatbot.train(conversation)
+
+        response = self.chatbot.get_response(conversation[1])
+
+        self.assertEqual(response, conversation[2])
+
     def test_similar_sentence_gets_same_response_multiple_times(self):
         """
         Tests if the bot returns the same response for the same
