@@ -1,7 +1,8 @@
-from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, PickleType
+from sqlalchemy import Table, Column, Integer, DateTime, ForeignKey, PickleType
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
+from chatterbot.ext.sqlalchemy_app.types import UnicodeString
 from chatterbot.conversation.statement import StatementMixin
 
 
@@ -40,7 +41,7 @@ class Tag(Base):
     A tag that describes a statement.
     """
 
-    name = Column(String)
+    name = Column(UnicodeString)
 
 
 class Statement(Base, StatementMixin):
@@ -48,7 +49,7 @@ class Statement(Base, StatementMixin):
     A Statement represents a sentence or phrase.
     """
 
-    text = Column(String, unique=True)
+    text = Column(UnicodeString, unique=True)
 
     tags = relationship(
         'Tag',
@@ -90,7 +91,7 @@ class Response(Base):
     Response, contains responses related to a given statement.
     """
 
-    text = Column(String)
+    text = Column(UnicodeString)
 
     created_at = Column(
         DateTime(timezone=True),
@@ -99,7 +100,7 @@ class Response(Base):
 
     occurrence = Column(Integer, default=1)
 
-    statement_text = Column(String, ForeignKey('statement.text'))
+    statement_text = Column(UnicodeString, ForeignKey('statement.text'))
 
     statement_table = relationship(
         'Statement',
