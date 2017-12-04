@@ -29,12 +29,20 @@ class Statement(StatementMixin):
     """
 
     def __init__(self, text, **kwargs):
+        import sys
 
         # Try not to allow non-string types to be passed to statements
         try:
             text = str(text)
         except UnicodeEncodeError:
             pass
+
+        # Prefer decoded utf8-strings in Python 2.7
+        if sys.version_info[0] < 3:
+            try:
+                text = text.decode('utf-8')
+            except UnicodeEncodeError:
+                pass
 
         self.text = text
         self.tags = kwargs.pop('tags', [])
