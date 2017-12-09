@@ -41,8 +41,7 @@ class LevenshteinDistance(Comparator):
     "where is the post office?" and "looking for the post office"
     based on the Levenshtein distance algorithm.
     """
-
-    def compare(self, statement, other_statement):
+    def compare(self, statement, statement_list):
         """
         Compare the two input statements.
 
@@ -58,29 +57,26 @@ class LevenshteinDistance(Comparator):
             from difflib import SequenceMatcher
 
         PYTHON = sys.version_info[0]
-
-        # Return 0 if either statement has a falsy text value
-        if not statement.text or not other_statement.text:
-            return 0
-
-        # Get the lowercase version of both strings
         if PYTHON < 3:
-            statement_text = unicode(statement.text.lower()) # NOQA
-            other_statement_text = unicode(other_statement.text.lower()) # NOQA
+            turner = unicode
         else:
-            statement_text = str(statement.text.lower())
-            other_statement_text = str(other_statement.text.lower())
+            turner = str
 
-        similarity = SequenceMatcher(
-            None,
-            statement_text,
-            other_statement_text
-        )
+        for other_statement in statement_list:
+            # Return (0, other_statement) if either statement has a falsy text value
+            if not statement.text or not other_statement.text:
+                yield (0, other_statement)
+            else:
+                # Get similarity from the lowercase text
+                similarity = SequenceMatcher(
+                    None,
+                    turner(statement.text.lower()),
+                    turner(other_statement.text.lower())
+                )
+                # Calculate a decimal percent of the similarity
+                percent = round(similarity.ratio(), 2)
 
-        # Calculate a decimal percent of the similarity
-        percent = round(similarity.ratio(), 2)
-
-        return percent
+                yield (percent, other_statement)
 
 
 class SynsetDistance(Comparator):
