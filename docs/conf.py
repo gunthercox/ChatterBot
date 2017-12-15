@@ -5,15 +5,8 @@
 
 import sys
 import os
-import sphinx_rtd_theme
 from datetime import datetime
-
-try:
-    import chatterbot
-except ImportError:
-    import pip
-    pip.main(['install', 'chatterbot'])
-    import chatterbot
+import sphinx_rtd_theme
 
 
 # Insert the project root dir as the first element in the PYTHONPATH.
@@ -21,6 +14,8 @@ except ImportError:
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
 sys.path.insert(0, parent_directory)
+
+import chatterbot # NOQA
 
 # -- General configuration ------------------------------------------------
 
