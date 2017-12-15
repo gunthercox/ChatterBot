@@ -51,35 +51,64 @@ performance by running the following command.
 .. sourcecode:: sh
 
    python tests/benchmarks.py
-   
-Makefile Utility
-----------------
 
-Makefiles are a simple way to perform code compilation on ``Linux platforms``.
+Running all the tests
+---------------------
 
-We often forgot to build docs, run nosetes or Django tests whenever we make any change in existing files,
-and when we create a pull request for the same,it fails the build giving the explanation : 
-`Some checks were not successful`
+You can run all of ChatterBot's tests with a single command: ``tox``.
 
-To avoid all your problems with the Travis CI, use the ``MAKEFILE``. It will help you with the code to avoid problems,
-failing the build by Travis CI.
+Tox is a tool for managing virtual environments and running tests.
 
-To see the list of avaliable commands with MAKEFILE:
+Installing tox
+++++++++++++++
 
-.. sourcecode:: sh
+You can install ``tox`` with ``pip``.
 
-   make help
+.. code-block:: bash
 
-To run all tests:
+   pip install tox
 
-.. sourcecode:: sh
+Using tox
++++++++++
 
-   make all
+When you run the ``tox`` command from within the root directory of
+the ``ChatterBot`` repository it will run the following tests:
 
-To clean your workspace with un-versioned files
+1. Tests for ChatterBot's core files.
+2. Tests for ChatterBot's integration with multiple versions of Django.
+3. Tests for each of ChatterBot's example files.
+4. Tests to make sure ChatterBot's documentation builds.
+5. Code style and validation checks (linting).
+6. Benchmarking tests for performance.
 
-.. sourcecode:: sh
+You can run specific tox environments using the ``-e`` flag.
+A few examples include:
 
-   make clean
+.. code-block:: bash
+
+   # Run the documentation tests
+   tox -e docs
+
+.. code-block:: bash
+
+   # Run the tests with Django 1.10
+   tox -e django110
+
+.. code-block:: bash
+
+   # Run the code linting scripts
+   tox -e lint
+
+To see the list of all available environments that you can run tests for:
+
+.. code-block:: bash
+
+   tox -l
+
+To run tests for all environments:
+
+.. code-block:: bash
+
+   tox
 
 ..  _`nose documentation`: https://nose.readthedocs.org/en/latest/
