@@ -14,8 +14,9 @@ class MathematicalEvaluation(LogicAdapter):
         User: 'What is three plus five?'
         Bot: 'Three plus five equals eight'
 
-    Arguments:
-        - language: The language is set to 'ENG' for English by default.
+    :kwargs:
+        * *language* (``str``) --
+          The language is set to 'ENG' for English by default.
     """
 
     def __init__(self, **kwargs):
