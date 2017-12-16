@@ -5,7 +5,7 @@ from .logic_adapter import LogicAdapter
 class NoKnowledgeAdapter(LogicAdapter):
     """
     This is a system adapter that is automatically added
-    to the list of logic adapters durring initialization.
+    to the list of logic adapters during initialization.
     This adapter is placed at the beginning of the list
     to be given the highest priority.
     """
