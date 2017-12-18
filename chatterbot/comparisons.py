@@ -64,7 +64,7 @@ class LevenshteinDistance(Comparator):
 
         for other_statement in statement_list:
             # Return (0, other_statement) if either statement has a falsy text value
-            if not statement.text or not other_statement.text:
+            if not statement.text or not other_statement:
                 yield (0, other_statement)
             else:
                 # Get similarity from the lowercase text

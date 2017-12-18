@@ -18,7 +18,7 @@ class LevenshteinDistanceTestCase(TestCase):
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
-        self.assertEqual(value, 0)
+        self.assertEqual(value[0], 0)
 
     def test_levenshtein_distance_other_statement_false(self):
         """

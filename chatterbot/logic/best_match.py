@@ -28,12 +28,11 @@ class BestMatch(LogicAdapter):
             else:
                 raise self.EmptyDatasetException()
 
-        closest_match = input_statement
-        closest_match.confidence = 0
-
         # Find the closest matching known statement
         confidence = [_ for _ in self.compare_statements(input_statement, statement_list)]
         best_match = max(confidence, key=lambda x: x[0])
+        # best_match is (score, best_match_statement)
+        best_match[1].confidence = best_match[0]
         return best_match[1]
 
     def can_process(self, statement):
