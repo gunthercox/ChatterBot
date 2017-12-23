@@ -45,7 +45,7 @@ class TimeLogicAdapter(LogicAdapter):
         )
 
         train_set = [
-            (self.time_question_features(n), text) for (n, text) in labeled_data
+            (self.time_question_features(text), n) for (text, n) in labeled_data
         ]
 
         self.classifier = NaiveBayesClassifier.train(train_set)
