@@ -366,7 +366,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         matching statement that does not have a known response.
         """
         response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}],
-                                                   {'allowDiskUse': true})
+                                                   {'allowDiskUse': True})
 
         responses = []
         for r in response_query:
