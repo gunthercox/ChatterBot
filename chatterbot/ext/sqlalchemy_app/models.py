@@ -1,7 +1,9 @@
-from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, PickleType
+from sqlalchemy import Table, Column, Integer, DateTime, ForeignKey, PickleType
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
+from chatterbot.ext.sqlalchemy_app.types import UnicodeString
+from chatterbot.conversation.statement import StatementMixin
 
 
 class ModelBase(object):
@@ -39,15 +41,15 @@ class Tag(Base):
     A tag that describes a statement.
     """
 
-    name = Column(String)
+    name = Column(UnicodeString)
 
 
-class Statement(Base):
+class Statement(Base, StatementMixin):
     """
     A Statement represents a sentence or phrase.
     """
 
-    text = Column(String, unique=True)
+    text = Column(UnicodeString, unique=True)
 
     tags = relationship(
         'Tag',
@@ -62,12 +64,25 @@ class Statement(Base):
         back_populates='statement_table'
     )
 
+    def get_tags(self):
+        """
+        Return a list of tags for this statement.
+        """
+        return [tag.name for tag in self.tags]
+
     def get_statement(self):
         from chatterbot.conversation import Statement as StatementObject
+        from chatterbot.conversation import Response as ResponseObject
 
-        statement = StatementObject(self.text, extra_data=self.extra_data)
+        statement = StatementObject(
+            self.text,
+            tags=[tag.name for tag in self.tags],
+            extra_data=self.extra_data
+        )
         for response in self.in_response_to:
-            statement.add_response(response.get_response())
+            statement.add_response(
+                ResponseObject(text=response.text, occurrence=response.occurrence)
+            )
         return statement
 
 
@@ -76,7 +91,7 @@ class Response(Base):
     Response, contains responses related to a given statement.
     """
 
-    text = Column(String)
+    text = Column(UnicodeString)
 
     created_at = Column(
         DateTime(timezone=True),
@@ -85,7 +100,7 @@ class Response(Base):
 
     occurrence = Column(Integer, default=1)
 
-    statement_text = Column(String, ForeignKey('statement.text'))
+    statement_text = Column(UnicodeString, ForeignKey('statement.text'))
 
     statement_table = relationship(
         'Statement',
@@ -93,11 +108,6 @@ class Response(Base):
         cascade='all',
         uselist=False
     )
-
-    def get_response(self):
-        from chatterbot.conversation import Response as ResponseObject
-        occ = {'occurrence': self.occurrence}
-        return ResponseObject(text=self.text, **occ)
 
 
 conversation_association_table = Table(

@@ -9,7 +9,7 @@ chatbot = ChatBot(
 
 chatbot.train([
     "Hi, can I help you?",
-    "Sure, I'd to book a flight to Iceland.",
+    "Sure, I'd like to book a flight to Iceland.",
     "Your flight has been booked."
 ])
 

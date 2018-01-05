@@ -2,13 +2,34 @@
 from .response import Response
 
 
-class Statement(object):
+class StatementMixin(object):
+    """
+    This class has shared methods used to
+    normalize different statement models.
+    """
+
+    def get_tags(self):
+        """
+        Return the list of tags for this statement.
+        """
+        return self.tags
+
+    def add_tags(self, tags):
+        """
+        Add a list of strings to the statement as tags.
+        """
+        for tag in tags:
+            self.tags.append(tag)
+
+
+class Statement(StatementMixin):
     """
     A statement represents a single spoken entity, sentence or
     phrase that someone can say.
     """
 
     def __init__(self, text, **kwargs):
+        import sys
 
         # Try not to allow non-string types to be passed to statements
         try:
@@ -16,7 +37,15 @@ class Statement(object):
         except UnicodeEncodeError:
             pass
 
+        # Prefer decoded utf8-strings in Python 2.7
+        if sys.version_info[0] < 3:
+            try:
+                text = text.decode('utf-8')
+            except UnicodeEncodeError:
+                pass
+
         self.text = text
+        self.tags = kwargs.pop('tags', [])
         self.in_response_to = kwargs.pop('in_response_to', [])
 
         self.extra_data = kwargs.pop('extra_data', {})
@@ -80,7 +109,7 @@ class Statement(object):
         """
         if not isinstance(response, Response):
             raise Statement.InvalidTypeException(
-                'A {} was recieved when a {} instance was expected'.format(
+                'A {} was received when a {} instance was expected'.format(
                     type(response),
                     type(Response(''))
                 )

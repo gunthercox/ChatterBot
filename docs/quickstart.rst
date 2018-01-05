@@ -2,13 +2,21 @@
 Quick Start Guide
 =================
 
+The first thing you'll need to do to get started is install ChatterBot.
+
+.. code-block:: bash
+
+   pip install chatterbot
+
+See :ref:`Installation` for options for alternative installation methods.
+
 Create a new chat bot
 =====================
 
 .. note::
 
    If you are using Python 2.7, be sure that the unicode header is the first line of
-   your Python file: :code:`# -*- coding: utf-8 -*-`
+   your Python file: ``# -*- coding: utf-8 -*-``
 
 .. code-block:: python
 
@@ -57,14 +65,3 @@ Get a response
 
    response = chatbot.get_response("Good morning!")
    print(response)
-
-Read only mode
-==============
-
-Your ChatterBot will learn based on each new input statement it receives.
-If you want to disable this learning feature after your bot has been trained,
-you can set `read_only=True` as a parameter when initializing the bot.
-
-.. code-block:: python
-
-   chatbot = ChatBot("Johnny Five", read_only=True)

@@ -6,33 +6,47 @@ from .logic_adapter import LogicAdapter
 class TimeLogicAdapter(LogicAdapter):
     """
     The TimeLogicAdapter returns the current time.
+
+    :kwargs:
+        * *positive* (``list``) --
+          The time-related questions used to identify time questions.
+          Defaults to a list of English sentences.
+        * *negative* (``list``) --
+          The non-time-related questions used to identify time questions.
+          Defaults to a list of English sentences.
     """
 
     def __init__(self, **kwargs):
         super(TimeLogicAdapter, self).__init__(**kwargs)
         from nltk import NaiveBayesClassifier
 
-        self.positive = [
+        self.positive = kwargs.get('positive', [
             'what time is it',
+            'hey what time is it',
+            'do you have the time',
             'do you know the time',
             'do you know what time it is',
             'what is the time'
-        ]
+        ])
 
-        self.negative = [
+        self.negative = kwargs.get('negative', [
             'it is time to go to sleep',
             'what is your favorite color',
             'i had a great time',
-            'what is'
-        ]
+            'thyme is my favorite herb',
+            'do you have time to look at my essay',
+            'how do you have the time to do all this'
+            'what is it'
+        ])
 
         labeled_data = (
             [(name, 0) for name in self.negative] +
             [(name, 1) for name in self.positive]
         )
 
-        # train_set = apply_features(self.time_question_features, training_data)
-        train_set = [(self.time_question_features(n), text) for (n, text) in labeled_data]
+        train_set = [
+            (self.time_question_features(text), n) for (text, n) in labeled_data
+        ]
 
         self.classifier = NaiveBayesClassifier.train(train_set)
 
@@ -42,7 +56,18 @@ class TimeLogicAdapter(LogicAdapter):
         """
         features = {}
 
+        # A list of all words from the known sentences
         all_words = " ".join(self.positive + self.negative).split()
+
+        # A list of the first word in each of the known sentence
+        all_first_words = []
+        for sentence in self.positive + self.negative:
+            all_first_words.append(
+                sentence.split(' ', 1)[0]
+            )
+
+        for word in text.split():
+            features['first_word({})'.format(word)] = (word in all_first_words)
 
         for word in text.split():
             features['contains({})'.format(word)] = (word in all_words)

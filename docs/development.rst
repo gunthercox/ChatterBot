@@ -18,5 +18,6 @@ Please pull gently.
 
     contributing
     releases
+    Release Notes <https://github.com/gunthercox/ChatterBot/releases>
     testing
     packaging

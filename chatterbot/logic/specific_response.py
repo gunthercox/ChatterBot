@@ -5,6 +5,12 @@ from .logic_adapter import LogicAdapter
 class SpecificResponseAdapter(LogicAdapter):
     """
     Return a specific response to a specific input.
+
+    :kwargs:
+        * *input_text* (``str``) --
+          The input text that triggers this logic adapter.
+        * *output_text* (``str``) --
+          The output text returned by this logic adapter.
     """
 
     def __init__(self, **kwargs):

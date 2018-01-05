@@ -2,18 +2,22 @@
 Releasing ChatterBot
 ====================
 
+ChatterBot follows the following rules when it comes to new versions and updates.
+
+Versioning
+==========
+
 ChatterBot follows semantic versioning as a set of guidelines for release versions.
 
-- **Major** releases (2.0.0, 3.0.0, etc.) are used for large, potentially
-  backwards incompatible changes.
+- **Major** releases (2.0.0, 3.0.0, etc.) are used for large, almost
+  entirely backwards incompatible changes.
 
 - **Minor** releases (2.1.0, 2.2.0, 3.1.0, 3.2.0, etc.) are used for
-  releases that contain features and dependency changes.
+  releases that contain small, backwards incompatible changes. Known
+  backwards incompatibilities will be described in the release notes.
 
-- **Patch** releases (e.g., 2.1.1, 2.1.2, 3.0.1, 3.0.10, etc.) are used for
-  releases that contain *only* bug fixes.
-
-These rules are adhered to as much as possible but sometimes mistakes are made.
+- **Patch** releases (e.g., 2.1.1, 2.1.2, 3.0.1, 3.0.10, etc.) are used
+  for releases that contain bug fixes, features and dependency changes.
 
 
 Release Process

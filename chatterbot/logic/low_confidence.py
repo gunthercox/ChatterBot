@@ -7,6 +7,13 @@ class LowConfidenceAdapter(BestMatch):
     """
     Returns a default response with a high confidence
     when a high confidence response is not known.
+
+    :kwargs:
+        * *threshold* (``float``) --
+          The low confidence value that triggers this adapter.
+          Defaults to 0.65.
+        * *default_response* (``str``) --
+          The response returned by this logic adaper.
     """
 
     def __init__(self, **kwargs):

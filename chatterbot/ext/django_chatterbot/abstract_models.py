@@ -1,7 +1,8 @@
+from chatterbot.conversation.statement import StatementMixin
+from chatterbot import constants
 from django.db import models
 from django.apps import apps
 from django.utils import timezone
-from chatterbot import constants
 from django.conf import settings
 
 
@@ -28,7 +29,7 @@ if hasattr(settings, 'CHATTERBOT'):
     )
 
 
-class AbstractBaseStatement(models.Model):
+class AbstractBaseStatement(models.Model, StatementMixin):
     """
     The abstract base statement allows other models to
     be created using the attributes that exist on the
@@ -89,6 +90,16 @@ class AbstractBaseStatement(models.Model):
         extra_data[key] = value
 
         self.extra_data = json.dumps(extra_data)
+
+    def add_tags(self, tags):
+        """
+        Add a list of strings to the statement as tags.
+        (Overrides the method from StatementMixin)
+        """
+        for tag in tags:
+            self.tags.create(
+                name=tag
+            )
 
     def add_response(self, statement):
         """
@@ -155,12 +166,14 @@ class AbstractBaseResponse(models.Model):
 
     statement = models.ForeignKey(
         STATEMENT_MODEL,
-        related_name='in_response'
+        related_name='in_response',
+        on_delete=models.CASCADE
     )
 
     response = models.ForeignKey(
         STATEMENT_MODEL,
-        related_name='responses'
+        related_name='responses',
+        on_delete=models.CASCADE
     )
 
     created_at = models.DateTimeField(
