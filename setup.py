@@ -47,7 +47,6 @@ setup(
         'chatterbot.output',
         'chatterbot.storage',
         'chatterbot.logic',
-        'chatterbot.conversation',
         'chatterbot.ext',
         'chatterbot.ext.sqlalchemy_app',
         'chatterbot.ext.django_chatterbot',
