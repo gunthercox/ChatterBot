@@ -3,7 +3,7 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
 from chatterbot.ext.sqlalchemy_app.types import UnicodeString
-from chatterbot.conversation.statement import StatementMixin
+from chatterbot.conversation import StatementMixin
 
 
 class ModelBase(object):

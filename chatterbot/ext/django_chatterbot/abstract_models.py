@@ -1,4 +1,4 @@
-from chatterbot.conversation.statement import StatementMixin
+from chatterbot.conversation import StatementMixin
 from chatterbot import constants
 from django.db import models
 from django.apps import apps
@@ -129,7 +129,7 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         as a response to the current statement.
 
         :param statement: The statement object to get the count for.
-        :type statement: chatterbot.conversation.statement.Statement
+        :type statement: chatterbot.conversation.Statement
 
         :returns: Return the number of times the statement has been used as a response.
         :rtype: int

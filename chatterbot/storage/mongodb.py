@@ -116,7 +116,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Return the class for the statement model.
         """
-        from chatterbot.conversation.statement import Statement
+        from chatterbot.conversation import Statement
 
         # Create a storage-aware statement
         statement = Statement
@@ -128,7 +128,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Return the class for the response model.
         """
-        from chatterbot.conversation.response import Response
+        from chatterbot.conversation import Response
 
         # Create a storage-aware response
         response = Response
