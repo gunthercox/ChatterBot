@@ -190,7 +190,8 @@ class SQLStorageAdapter(StorageAdapter):
                     if isinstance(_filter, list):
                         if len(_filter) == 0:
                             _query = _response_query.filter(
-                                Statement.in_response_to == None)  # NOQA Here must use == instead of is
+                                Statement.in_response_to == None  # NOQA Here must use == instead of is
+                            )
                         else:
                             for f in _filter:
                                 _query = _response_query.filter(
