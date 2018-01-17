@@ -1,10 +1,17 @@
 # -*- coding: utf-8 -*-
+import sys
+
 
 """
 This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
 
+# Use python-Levenshtein if available
+try:
+    from Levenshtein.StringMatcher import StringMatcher as SequenceMatcher
+except ImportError:
+    from difflib import SequenceMatcher
 
 class Comparator:
 
@@ -49,13 +56,6 @@ class LevenshteinDistance(Comparator):
         :return: The percent of similarity between the text of the statements.
         :rtype: float
         """
-        import sys
-
-        # Use python-Levenshtein if available
-        try:
-            from Levenshtein.StringMatcher import StringMatcher as SequenceMatcher
-        except ImportError:
-            from difflib import SequenceMatcher
 
         PYTHON = sys.version_info[0]
 
