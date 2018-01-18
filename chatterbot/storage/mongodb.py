@@ -86,8 +86,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             'database_uri', 'mongodb://localhost:27017/'
         )
 
-        re.compile('[a-zA-z]]')
-        self._database_name = re.sub("", self.database_uri)
+        self._database_name = re.sub(r'\W+', '', self.database_uri)
 
         # Use the default host and port
         self.client = MongoClient(self.database_uri)
