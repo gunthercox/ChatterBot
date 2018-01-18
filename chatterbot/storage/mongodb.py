@@ -1,5 +1,4 @@
 from chatterbot.storage import StorageAdapter
-import re
 
 
 class Query(object):
@@ -87,7 +86,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             'database_uri', 'mongodb://localhost:27017/'
         )
 
-        self._database_name = re.sub(r'\W+', '', self.database_uri)
+        self._database_name = "chatterbot-database"
 
         # Use the default host and port
         self.client = MongoClient(self.database_uri)
