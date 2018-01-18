@@ -13,6 +13,7 @@ try:
 except ImportError:
     from difflib import SequenceMatcher
 
+
 class Comparator:
 
     def __call__(self, statement_a, statement_b):
