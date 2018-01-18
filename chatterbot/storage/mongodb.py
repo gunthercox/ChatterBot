@@ -87,10 +87,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         )
 
         re.compile('[a-zA-z]]')
-        self._database_name = re.sub("",self.database_uri)
+        self._database_name = re.sub("", self.database_uri)
 
         # Use the default host and port
-        self.client = MongoClient(self._database_name)
+        self.client = MongoClient(self.database_uri)
 
         # Increase the sort buffer to 42M if possible
         try:
@@ -100,7 +100,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         # Specify the name of the database
         # By convention self.database_uri is the name of the database. Refer to ticket #939
-        self.database = self.client[self.database_uri]
+        self.database = self.client[self._database_name]
 
         # The mongo collection of statement documents
         self.statements = self.database['statements']
