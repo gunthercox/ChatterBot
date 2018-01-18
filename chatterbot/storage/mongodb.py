@@ -1,6 +1,7 @@
 from chatterbot.storage import StorageAdapter
 import re
 
+
 class Query(object):
 
     def __init__(self, query={}):
