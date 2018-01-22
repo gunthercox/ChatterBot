@@ -3,7 +3,7 @@ Webservices
 
 If you want to host your Django app, you need to choose a method through
 which it will be hosted. There are a few free services that you can use
-to do this shuch as `Heroku`_ and `PythonAnyWhere`_.
+to do this such as `Heroku`_ and `PythonAnyWhere`_.
 
 WSGI
 ----
