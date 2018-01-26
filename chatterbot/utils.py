@@ -22,7 +22,7 @@ def initialize_class(data, **kwargs):
     :param data: A string or dictionary containing a import_path attribute.
     """
     if isinstance(data, dict):
-        import_path = data.pop('import_path')
+        import_path = data.get('import_path')
         data.update(kwargs)
         Class = import_module(import_path)
 
