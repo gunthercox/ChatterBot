@@ -47,7 +47,7 @@ class LogicIntegrationTestCase(TestCase):
 
         response = adapter.process(statement)
 
-        self.assertEqual(response.text, adapter.default_response)
+        self.assertEqual(response.text, adapter.default_responses[0])
 
     def test_mathematical_evaluation(self):
         from chatterbot.logic import MathematicalEvaluation
