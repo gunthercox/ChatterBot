@@ -50,15 +50,16 @@ def validate_adapter_class(validate_class, adapter_class):
 
     # If a dictionary was passed in, check if it has an import_path attribute
     if isinstance(validate_class, dict):
-        origional_data = validate_class.copy()
-        validate_class = validate_class.get('import_path')
 
-        if not validate_class:
+        if 'import_path' not in validate_class:
             raise Adapter.InvalidAdapterTypeException(
                 'The dictionary {} must contain a value for "import_path"'.format(
-                    str(origional_data)
+                    str(validate_class)
                 )
             )
+
+        # Set the class to the import path for the next check
+        validate_class = validate_class.get('import_path')
 
     if not issubclass(import_module(validate_class), adapter_class):
         raise Adapter.InvalidAdapterTypeException(
