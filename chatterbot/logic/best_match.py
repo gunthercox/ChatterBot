@@ -4,7 +4,7 @@ from .logic_adapter import LogicAdapter
 
 class BestMatch(LogicAdapter):
     """
-    A logic adater that returns a response based on known responses to
+    A logic adapter that returns a response based on known responses to
     the closest matches to the input statement.
     """
 
