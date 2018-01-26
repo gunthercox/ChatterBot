@@ -1,5 +1,4 @@
 from __future__ import unicode_literals
-import warnings
 from collections import Counter
 from chatterbot import utils
 from .logic_adapter import LogicAdapter
@@ -50,16 +49,6 @@ class MultiLogicAdapter(LogicAdapter):
             if adapter.can_process(statement):
 
                 output = adapter.process(statement)
-
-                if type(output) == tuple:
-                    warnings.warn(
-                        '{} returned two values when just a Statement object was expected. '
-                        'You should update your logic adapter to return just the Statement object. '
-                        'Make sure that statement.confidence is being set.'.format(adapter.class_name),
-                        DeprecationWarning
-                    )
-                    output = output[1]
-
                 results.append((output.confidence, output, ))
 
                 self.logger.info(

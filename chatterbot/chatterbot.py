@@ -168,24 +168,3 @@ class ChatBot(object):
         Proxy method to the chat bot's trainer class.
         """
         return self.trainer.train
-
-    @classmethod
-    def from_config(cls, config_file_path):
-        """
-        Create a new ChatBot instance from a JSON config file.
-        """
-        import json
-        import warnings
-
-        warnings.warn(
-            'The from_config method is deprecated and '
-            'will be removed in ChatterBot version 0.8.',
-            DeprecationWarning
-        )
-
-        with open(config_file_path, 'r') as config_file:
-            data = json.load(config_file)
-
-        name = data.pop('name')
-
-        return ChatBot(name, **data)
