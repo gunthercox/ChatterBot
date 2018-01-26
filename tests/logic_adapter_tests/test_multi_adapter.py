@@ -68,6 +68,34 @@ class MultiLogicAdapterTestCase(ChatBotTestCase):
 
         self.assertEqual(adapter_count_after, adapter_count_before + 1)
 
+    def test_get_adapters(self):
+        """
+        TODO
+        """
+        import unittest
+        raise unittest.SkipTest('This test needs to be written.')
+
+    def test_get_initialization_functions(self):
+        """
+        TODO
+        """
+        import unittest
+        raise unittest.SkipTest('This test needs to be written.')
+
+    def test_insert_logic_adapter(self):
+        """
+        TODO
+        """
+        import unittest
+        raise unittest.SkipTest('This test needs to be written.')
+
+    def test_remove_logic_adapter(self):
+        """
+        TODO
+        """
+        import unittest
+        raise unittest.SkipTest('This test needs to be written.')
+
     def test_set_chatbot(self):
         adapter = MultiLogicAdapter()
         adapter.set_chatbot(self.chatbot)
