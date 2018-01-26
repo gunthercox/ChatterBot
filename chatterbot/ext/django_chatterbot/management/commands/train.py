@@ -24,5 +24,6 @@ class Command(BaseCommand):
         else:
             style = self.style.NOTICE
 
+        self.stdout.write(style('Starting training...'))
         training_class = chatterbot.trainer.__class__.__name__
         self.stdout.write(style('ChatterBot trained using "%s"' % training_class))
