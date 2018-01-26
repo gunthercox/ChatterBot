@@ -1,14 +1,13 @@
 from .base_case import ChatBotTestCase
 
 
-class StringInitalizationTestCase(ChatBotTestCase):
+class StringInitializationTestCase(ChatBotTestCase):
 
     def get_kwargs(self):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.output.OutputAdapter',
-            'database': None,
-            'silence_performance_warning': True
+            'database': None
         }
 
     def test_storage_initialized(self):
@@ -29,7 +28,7 @@ class StringInitalizationTestCase(ChatBotTestCase):
         self.assertTrue(isinstance(self.chatbot.output, OutputAdapter))
 
 
-class DictionaryInitalizationTestCase(ChatBotTestCase):
+class DictionaryInitializationTestCase(ChatBotTestCase):
 
     def get_kwargs(self):
         return {
