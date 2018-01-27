@@ -164,7 +164,7 @@ documentation for more details and examples.
 
 Up next: :doc:`./examples`
 
-.. _Gitter: https://gitter.im/chatter_bot/Lobby
+.. _Gitter: https://gitter.im/chatterbot/Lobby
 .. _SQLite: https://www.sqlite.org/
 .. _`Stack Overflow`: https://stackoverflow.com/questions/tagged/chatterbot
 .. _`ask questions`: https://stackoverflow.com/questions/ask
