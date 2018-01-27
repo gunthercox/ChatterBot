@@ -3,7 +3,6 @@ factory-boy>=2.9,<2.10
 flake8
 mock
 nose
-nose-exclude>=0.5,<0.6
 pip
 twine
 twython
