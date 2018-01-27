@@ -14,7 +14,10 @@ class ChatterBotCorpusTrainingTestCase(TestCase):
     def setUp(self):
         super(ChatterBotCorpusTrainingTestCase, self).setUp()
         self.chatbot = ChatBot(**settings.CHATTERBOT)
-        self.chatbot.set_trainer(ChatterBotCorpusTrainer)
+        self.chatbot.set_trainer(
+            ChatterBotCorpusTrainer,
+            **settings.CHATTERBOT
+        )
 
     def tearDown(self):
         super(ChatterBotCorpusTrainingTestCase, self).setUp()
