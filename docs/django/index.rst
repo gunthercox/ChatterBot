@@ -17,7 +17,7 @@ Django applications.
 Install packages
 ================
 
-Install with pip
+Begin by making sure that you have installed both ``django`` and ``chatterbot``.
 
 .. sourcecode:: sh
 
@@ -41,18 +41,27 @@ Add `chatterbot.ext.django_chatterbot` to your `INSTALLED_APPS`
 API view
 --------
 
-If you need a ChatterBot API endpoint you will want to add the following to your urls.py
+If you need an API endpoint for your chat bot you can add the following
+to your Django urls.py file. You can also choose to create your own views
+and end endpoints as needed.
 
 .. code-block:: python
 
    urlpatterns = patterns(
        ...
-       url(r'^chatterbot/', include('chatterbot.ext.django_chatterbot.urls', namespace='chatterbot')),
+       url(
+           r'^chatterbot/',
+           include('chatterbot.ext.django_chatterbot.urls',
+           namespace='chatterbot')
+       ),
    )
 
 
 Migrations
 ----------
+
+You can run the Django database migrations for your chat bot with the
+following command.
 
 .. sourcecode:: sh
 
@@ -61,7 +70,8 @@ Migrations
 .. note::
 
    Looking for a working example? Check our the example Django app using
-   ChatterBot on GitHub: https://github.com/gunthercox/ChatterBot/tree/master/examples/django_app
+   ChatterBot on GitHub:
+   https://github.com/gunthercox/ChatterBot/tree/master/examples/django_app
 
 MongoDB and Django
 ------------------
