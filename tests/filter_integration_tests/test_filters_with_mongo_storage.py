@@ -14,7 +14,7 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
         from chatterbot.trainers import ListTrainer
 
         self.chatbot.filters = (RepetitiveResponseFilter(), )
-        self.chatbot.set_trainer(ListTrainer)
+        self.chatbot.set_trainer(ListTrainer, **self.get_kwargs())
 
         self.chatbot.train([
             'Hello',

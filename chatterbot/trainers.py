@@ -13,6 +13,7 @@ class Trainer(object):
     def __init__(self, storage, **kwargs):
         self.storage = storage
         self.logger = logging.getLogger(__name__)
+        self.show_training_progress = kwargs.get('show_training_progress', True)
 
     def train(self, *args, **kwargs):
         """
@@ -81,7 +82,11 @@ class ListTrainer(Trainer):
         previous_statement_text = None
 
         for conversation_count, text in enumerate(conversation):
-            print_progress_bar("List Trainer", conversation_count + 1, len(conversation))
+            if self.show_training_progress:
+                print_progress_bar(
+                    'List Trainer',
+                    conversation_count + 1, len(conversation)
+                )
 
             statement = self.get_or_create(text)
 
@@ -121,11 +126,13 @@ class ChatterBotCorpusTrainer(Trainer):
             corpus_files = self.corpus.list_corpus_files(corpus_path)
             for corpus_count, corpus in enumerate(corpora):
                 for conversation_count, conversation in enumerate(corpus):
-                    print_progress_bar(
-                        str(os.path.basename(corpus_files[corpus_count])) + " Training",
-                        conversation_count + 1,
-                        len(corpus)
-                    )
+
+                    if self.show_training_progress:
+                        print_progress_bar(
+                            str(os.path.basename(corpus_files[corpus_count])) + ' Training',
+                            conversation_count + 1,
+                            len(corpus)
+                        )
 
                     previous_statement_text = None
 

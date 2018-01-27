@@ -25,7 +25,7 @@ class DataCachingTests(ChatBotTestCase):
         self.chatbot.logic = DummyMutatorLogicAdapter()
         self.chatbot.logic.set_chatbot(self.chatbot)
 
-        self.chatbot.set_trainer(ListTrainer)
+        self.chatbot.set_trainer(ListTrainer, **self.get_kwargs())
 
         self.chatbot.train([
             'Hello',

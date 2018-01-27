@@ -14,7 +14,7 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
         from chatterbot.trainers import ListTrainer
         from chatterbot.comparisons import sentiment_comparison
 
-        self.chatbot.set_trainer(ListTrainer)
+        self.chatbot.set_trainer(ListTrainer, **self.get_kwargs())
         self.adapter = BestMatch(
             statement_comparison_function=sentiment_comparison
         )
