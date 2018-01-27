@@ -2,7 +2,7 @@ import logging
 import os
 import sys
 from .conversation import Statement, Response
-from .utils import print_progress_bar
+from . import utils
 
 
 class Trainer(object):
@@ -11,13 +11,28 @@ class Trainer(object):
     """
 
     def __init__(self, storage, **kwargs):
+        self.chatbot = kwargs.get('chatbot')
         self.storage = storage
         self.logger = logging.getLogger(__name__)
         self.show_training_progress = kwargs.get('show_training_progress', True)
 
+    def get_preprocessed_statement(self, input_statement):
+        """
+        Preprocess the input statement.
+        """
+
+        # The chatbot is optional to prevent backwards-incompatible changes
+        if not self.chatbot:
+            return input_statement
+
+        for preprocessor in self.chatbot.preprocessors:
+            input_statement = preprocessor(self, input_statement)
+
+        return input_statement
+
     def train(self, *args, **kwargs):
         """
-        This class must be overridden by a class the inherits from 'Trainer'.
+        This method must be overridden by a child class.
         """
         raise self.TrainerInitializationException()
 
@@ -26,10 +41,14 @@ class Trainer(object):
         Return a statement if it exists.
         Create and return the statement if it does not exist.
         """
-        statement = self.storage.find(statement_text)
+        temp_statement = self.get_preprocessed_statement(
+            Statement(text=statement_text)
+        )
+
+        statement = self.storage.find(temp_statement.text)
 
         if not statement:
-            statement = Statement(statement_text)
+            statement = Statement(temp_statement.text)
 
         return statement
 
@@ -83,7 +102,7 @@ class ListTrainer(Trainer):
 
         for conversation_count, text in enumerate(conversation):
             if self.show_training_progress:
-                print_progress_bar(
+                utils.print_progress_bar(
                     'List Trainer',
                     conversation_count + 1, len(conversation)
                 )
@@ -128,7 +147,7 @@ class ChatterBotCorpusTrainer(Trainer):
                 for conversation_count, conversation in enumerate(corpus):
 
                     if self.show_training_progress:
-                        print_progress_bar(
+                        utils.print_progress_bar(
                             str(os.path.basename(corpus_files[corpus_count])) + ' Training',
                             conversation_count + 1,
                             len(corpus)
