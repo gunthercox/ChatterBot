@@ -3,7 +3,7 @@ from chatterbot.conversation import Statement
 from chatterbot.storage.sql_storage import SQLStorageAdapter
 
 
-class SQLAlchemyAdapterTestCase(TestCase):
+class SQLStorageAdapterTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
@@ -25,7 +25,7 @@ class SQLAlchemyAdapterTestCase(TestCase):
         self.adapter.drop()
 
 
-class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
+class SQLStorageAdapterTestCase(SQLStorageAdapterTestCase):
 
     def test_set_database_uri_none(self):
         adapter = SQLStorageAdapter(database_uri=None)
@@ -133,10 +133,10 @@ class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.assertIn("A what?", responses)
 
 
-class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
+class SQLStorageAdapterFilterTestCase(SQLStorageAdapterTestCase):
 
     def setUp(self):
-        super(SQLAlchemyStorageAdapterFilterTestCase, self).setUp()
+        super().setUp()
 
         self.statement1 = Statement(
             "Testing...",
@@ -188,29 +188,42 @@ class SQLAlchemyStorageAdapterFilterTestCase(SQLAlchemyAdapterTestCase):
 
         self.assertEqual(len(results), 2)
 
-    def test_response_list_in_results(self):
-        """
-        If a statement with response values is found using
-        the filter method, they should be returned as
-        response objects.
-        """
-        statement = Statement(
-            "The first is to help yourself, the second is to help others.",
-            in_response_to="Why do people have two hands?"
+    def test_filter_by_tag(self):
+        self.adapter.create(text="Hello!", tags=["greeting", "salutation"])
+        self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
+        self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
+
+        results = self.adapter.filter(tags="greeting")
+
+        results_text_list = [statement.text for statement in results]
+
+        self.assertEqual(len(results_text_list), 2)
+        self.assertIn("Hello!", results_text_list)
+        self.assertIn("Hi everyone!", results_text_list)
+
+    def test_filter_by_tags(self):
+        self.adapter.create(text="Hello!", tags=["greeting", "salutation"])
+        self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
+        self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
+
+        results = self.adapter.filter(
+            tags=["exclamation", "fact"]
         )
-        self.adapter.update(statement)
-        found = self.adapter.filter(text=statement.text)
 
-        self.assertEqual(found[0].in_response_to, statement.in_response_to)
+        results_text_list = [statement.text for statement in results]
+
+        self.assertEqual(len(results_text_list), 2)
+        self.assertIn("Hi everyone!", results_text_list)
+        self.assertIn("The air contains Oxygen.", results_text_list)
 
 
-class ReadOnlySQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
+class ReadOnlySQLStorageAdapterTestCase(SQLStorageAdapterTestCase):
 
     def setUp(self):
         """
         Make the adapter writable before every test.
         """
-        super(ReadOnlySQLStorageAdapterTestCase, self).setUp()
+        super().setUp()
         self.adapter.read_only = False
 
     def test_update_does_not_add_new_statement(self):
@@ -238,7 +251,7 @@ class ReadOnlySQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(results[0].in_response_to, None)
 
 
-class SQLOrderingTestCase(SQLAlchemyAdapterTestCase):
+class SQLOrderingTestCase(SQLStorageAdapterTestCase):
     """
     Test cases for the ordering of sets of statements.
     """
@@ -281,7 +294,7 @@ class SQLOrderingTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(results[1], statement_b)
 
 
-class StorageAdapterCreateTestCase(SQLAlchemyAdapterTestCase):
+class StorageAdapterCreateTestCase(SQLStorageAdapterTestCase):
     """
     Tests for the create function of the storage adapter.
     """
@@ -317,7 +330,7 @@ class StorageAdapterCreateTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(results[0].get_tags(), ['ab'])
 
 
-class StorageAdapterUpdateTestCase(SQLAlchemyAdapterTestCase):
+class StorageAdapterUpdateTestCase(SQLStorageAdapterTestCase):
     """
     Tests for the update function of the storage adapter.
     """
