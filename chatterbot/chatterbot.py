@@ -160,6 +160,9 @@ class ChatBot(object):
 
         :param \**kwargs: Any parameters that should be passed to the training class.
         """
+        if 'chatbot' not in kwargs:
+            kwargs['chatbot'] = self
+
         self.trainer = training_class(self.storage, **kwargs)
 
     @property
