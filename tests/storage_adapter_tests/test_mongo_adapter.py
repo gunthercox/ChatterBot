@@ -223,6 +223,34 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(response.in_response_to, "Yes")
 
+    def test_filter_by_tag(self):
+        self.adapter.create(text="Hello!", tags=["greeting", "salutation"])
+        self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
+        self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
+
+        results = self.adapter.filter(tags="greeting")
+
+        results_text_list = [statement.text for statement in results]
+
+        self.assertEqual(len(results_text_list), 2)
+        self.assertIn("Hello!", results_text_list)
+        self.assertIn("Hi everyone!", results_text_list)
+
+    def test_filter_by_tags(self):
+        self.adapter.create(text="Hello!", tags=["greeting", "salutation"])
+        self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
+        self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
+
+        results = self.adapter.filter(
+            tags=["exclamation", "fact"]
+        )
+
+        results_text_list = [statement.text for statement in results]
+
+        self.assertEqual(len(results_text_list), 2)
+        self.assertIn("Hi everyone!", results_text_list)
+        self.assertIn("The air contains Oxygen.", results_text_list)
+
 
 class MongoOrderingTestCase(MongoAdapterTestCase):
     """
