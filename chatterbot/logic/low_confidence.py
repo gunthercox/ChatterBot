@@ -21,7 +21,6 @@ class LowConfidenceAdapter(BestMatch):
 
     def __init__(self, **kwargs):
         super(LowConfidenceAdapter, self).__init__(**kwargs)
-        import types
 
         self.confidence_threshold = kwargs.get('threshold', 0.65)
 
@@ -30,7 +29,7 @@ class LowConfidenceAdapter(BestMatch):
         )
 
         # Convert a single string into a list
-        if isinstance(default_responses, types.StringTypes):
+        if isinstance(default_responses, str):
             default_responses = [
                 default_responses
             ]
