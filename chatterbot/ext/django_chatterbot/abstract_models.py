@@ -178,11 +178,6 @@ class AbstractBaseResponse(models.Model):
 
     created_at = models.DateTimeField(
         default=timezone.now,
-        help_text='The date and time that this statement was created at.'
-    )
-
-    created_at = models.DateTimeField(
-        default=timezone.now,
         help_text='The date and time that this response was created at.'
     )
 
@@ -251,7 +246,7 @@ class AbstractBaseTag(models.Model):
     """
 
     name = models.SlugField(
-        max_length=50
+        max_length=constants.TAG_NAME_MAX_LENGTH
     )
 
     statements = models.ManyToManyField(
