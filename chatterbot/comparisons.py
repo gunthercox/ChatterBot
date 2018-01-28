@@ -314,7 +314,9 @@ class JaccardSimilarity(Comparator):
 
         # Calculate Jaccard similarity
         try:
-            ratio = len(set(lemma_a).intersection(lemma_b)) / float(len(set(lemma_a).union(lemma_b)))
+            numerator = len(set(lemma_a).intersection(lemma_b))
+            denominator = float(len(set(lemma_a).union(lemma_b)))
+            ratio = numerator / denominator
         except Exception as e:
             print('Error', e)
         return ratio >= self.SIMILARITY_THRESHOLD
