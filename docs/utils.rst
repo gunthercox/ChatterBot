@@ -41,12 +41,6 @@ ChatBot response time
 .. autofunction:: chatterbot.utils.get_response_time
 
 
-Random string generation
-------------------------
-
-.. autofunction:: chatterbot.utils.generate_strings
-
-
 Parsing datetime information
 ----------------------------
 

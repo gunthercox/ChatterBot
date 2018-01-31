@@ -7,6 +7,7 @@ performance based regressions when changes are made.
 from .base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot import ChatBot
 from chatterbot import utils
+from factory import Faker
 import sys
 import logging
 
@@ -16,7 +17,8 @@ logging.basicConfig(
     level=logging.INFO
 )
 
-STATEMENT_LIST = utils.generate_strings(10)
+# Generate a list of random sentences
+STATEMENT_LIST = Faker('sentences', nb=10).generate({})
 
 
 class BenchmarkingMixin(object):
@@ -96,14 +98,13 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
             ]
         })
 
-        self.assert_response_duration(1.9, kwargs)
+        self.assert_response_duration(3.5, kwargs)
 
     def test_english_corpus_training(self):
         """
         Test the amount of time it takes to train with the English corpus.
         """
-        import unittest
-        raise unittest.SkipTest('TODO: This test needs to be written.')
+        self.skipTest('TODO: This test needs to be written.')
 
 
 class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
@@ -154,5 +155,4 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
         """
         Test the amount of time it takes to train with the English corpus.
         """
-        import unittest
-        raise unittest.SkipTest('TODO: This test needs to be written.')
+        self.skipTest('TODO: This test needs to be written.')

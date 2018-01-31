@@ -171,31 +171,6 @@ def get_response_time(chatbot):
     return time.time() - start_time
 
 
-def generate_strings(total_strings, string_length=20):
-    """
-    Generate a list of random strings.
-
-    :param total_strings: The number of strings to generate.
-    :type total_strings: int
-
-    :param string_length: The length of each string to generate.
-    :type string_length: int
-
-    :returns: The generated list of random strings.
-    :rtype: list
-    """
-    import random
-    import string
-
-    statements = []
-    for _ in range(0, total_strings):
-        text = ''.join(
-            random.choice(string.ascii_letters + string.digits + ' ') for _ in range(string_length)
-        )
-        statements.append(text)
-    return statements
-
-
 def print_progress_bar(description, iteration_counter, total_items, progress_bar_length=20):
     """
     Print progress bar
