@@ -28,15 +28,6 @@ class UtilityTests(TestCase):
         self.assertIn('test', list(words))
         self.assertIn('string', list(words))
 
-    def test_generate_strings(self):
-        """
-        Test that we can generate 2 strings of length 10.
-        """
-        strings = utils.generate_strings(2, 10)
-        self.assertEqual(len(strings), 2)
-        self.assertEqual(len(strings[0]), 10)
-        self.assertEqual(len(strings[1]), 10)
-
 
 class UtilityChatBotTestCase(ChatBotTestCase):
 
