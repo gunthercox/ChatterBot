@@ -138,7 +138,7 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
             ]
         })
 
-        self.assert_response_duration(1.9, kwargs)
+        self.assert_response_duration(3.5, kwargs)
 
     def test_english_corpus_training(self):
         """
