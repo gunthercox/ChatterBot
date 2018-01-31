@@ -1,6 +1,6 @@
 include LICENSE
 include requirements.txt
 
-recursive-exclude * __pycache__
-recursive-exclude * *.py[co~]
-recursive-exclude * .*
+global-exclude __pycache__
+global-exclude *.py[co]
+global-exclude .*
