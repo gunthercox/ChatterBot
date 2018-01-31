@@ -121,23 +121,14 @@ class SQLStorageAdapter(StorageAdapter):
         session.close()
         return statement_count
 
-    def __statement_filter(self, session, **kwargs):
-        """
-        Apply filter operation on Statement
-
-        rtype: query
-        """
-        Statement = self.get_model('statement')
-
-        _query = session.query(Statement)
-        return _query.filter_by(**kwargs)
-
     def find(self, statement_text):
         """
         Returns a statement if it exists otherwise None
         """
+        Statement = self.get_model('statement')
         session = self.Session()
-        query = self.__statement_filter(session, **{"text": statement_text})
+
+        query = session.query(Statement).filter_by(text=statement_text)
         record = query.first()
         if record:
             statement = record.get_statement()
@@ -153,8 +144,10 @@ class SQLStorageAdapter(StorageAdapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
+        Statement = self.get_model('statement')
         session = self.Session()
-        query = self.__statement_filter(session, **{"text": statement_text})
+
+        query = session.query(Statement).filter_by(text=statement_text)
         record = query.first()
 
         session.delete(record)
@@ -238,7 +231,8 @@ class SQLStorageAdapter(StorageAdapter):
 
         if statement:
             session = self.Session()
-            query = self.__statement_filter(session, **{"text": statement.text})
+
+            query = session.query(Statement).filter_by(text=statement.text)
             record = query.first()
 
             # Create a new statement entry if one does not already exist
