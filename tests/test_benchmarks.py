@@ -8,25 +8,13 @@ from .base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot import ChatBot
 from chatterbot import utils
 from factory import Faker
-import sys
-import logging
 
-
-logging.basicConfig(
-    stream=sys.stdout,
-    level=logging.INFO
-)
 
 # Generate a list of random sentences
 STATEMENT_LIST = Faker('sentences', nb=10).generate({})
 
 
 class BenchmarkingMixin(object):
-
-    def setUp(self):
-        super(BenchmarkingMixin, self).setUp()
-
-        self.logger = logging.getLogger(__name__)
 
     def get_kwargs(self):
         kwargs = super(BenchmarkingMixin, self).get_kwargs()
@@ -38,13 +26,14 @@ class BenchmarkingMixin(object):
         """
         Assert that the response time did not exceed the maximum allowed amount.
         """
+        from sys import stdout
 
         chatbot = ChatBot('Benchmark', **test_kwargs)
         chatbot.train(STATEMENT_LIST)
 
         duration = utils.get_response_time(chatbot)
 
-        self.logger.info('Duration was %f seconds' % duration)
+        stdout.write('\nBENCHMARK: Duration was %f seconds\n' % duration)
 
         if duration > maximum_duration:
             raise AssertionError(
