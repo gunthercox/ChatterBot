@@ -15,7 +15,10 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
     def setUp(self):
         super(UbuntuCorpusTrainerTestCase, self).setUp()
-        self.chatbot.set_trainer(UbuntuCorpusTrainer)
+        self.chatbot.set_trainer(
+            UbuntuCorpusTrainer,
+            show_training_progress=False
+        )
 
     def tearDown(self):
         super(UbuntuCorpusTrainerTestCase, self).tearDown()

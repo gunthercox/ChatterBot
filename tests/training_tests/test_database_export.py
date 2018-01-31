@@ -6,7 +6,10 @@ class DatabaseExportTests(ChatBotTestCase):
 
     def setUp(self):
         super(DatabaseExportTests, self).setUp()
-        self.chatbot.set_trainer(ListTrainer)
+        self.chatbot.set_trainer(
+            ListTrainer,
+            show_training_progress=False
+        )
 
     def test_generate_export_data(self):
         self.chatbot.trainer.train([
