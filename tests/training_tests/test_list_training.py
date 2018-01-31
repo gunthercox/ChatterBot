@@ -7,7 +7,10 @@ class ListTrainingTests(ChatBotTestCase):
 
     def setUp(self):
         super(ListTrainingTests, self).setUp()
-        self.chatbot.set_trainer(ListTrainer)
+        self.chatbot.set_trainer(
+            ListTrainer,
+            show_training_progress=False
+        )
 
     def test_training_adds_statements(self):
         """

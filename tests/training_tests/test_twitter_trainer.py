@@ -50,7 +50,8 @@ class TwitterTrainerTestCase(ChatBotTestCase):
             twitter_consumer_key='twitter_consumer_key',
             twitter_consumer_secret='twitter_consumer_secret',
             twitter_access_token_key='twitter_access_token_key',
-            twitter_access_token_secret='twitter_access_token_secret'
+            twitter_access_token_secret='twitter_access_token_secret',
+            show_training_progress=False
         )
         self.trainer.api = Mock()
 

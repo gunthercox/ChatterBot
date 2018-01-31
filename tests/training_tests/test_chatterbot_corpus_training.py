@@ -11,7 +11,10 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
 
     def setUp(self):
         super(ChatterBotCorpusTrainingTestCase, self).setUp()
-        self.chatbot.set_trainer(ChatterBotCorpusTrainer)
+        self.chatbot.set_trainer(
+            ChatterBotCorpusTrainer,
+            show_training_progress=False
+        )
 
     def test_train_with_english_greeting_corpus(self):
         self.chatbot.train('chatterbot.corpus.english.greetings')

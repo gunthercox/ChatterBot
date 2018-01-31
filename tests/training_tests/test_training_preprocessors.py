@@ -16,7 +16,10 @@ class PreprocessorTrainingTests(ChatBotTestCase):
         the training process.
         """
         self.chatbot.preprocessors = [preprocessors.clean_whitespace]
-        self.chatbot.set_trainer(trainers.ListTrainer)
+        self.chatbot.set_trainer(
+            trainers.ListTrainer,
+            show_training_progress=False
+        )
 
         self.chatbot.train([
             'Can I help you with anything?',
