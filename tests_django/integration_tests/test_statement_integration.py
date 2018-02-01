@@ -1,8 +1,12 @@
 from django.test import TestCase
-from chatterbot.conversation import Statement as StatementObject
-from chatterbot.conversation import Response as ResponseObject
-from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
+from chatterbot.conversation import (
+    Statement as StatementObject,
+    Response as ResponseObject,
+)
+from chatterbot.ext.django_chatterbot.models import (
+    Statement as StatementModel,
+    Response as ResponseModel,
+)
 
 
 class StatementIntegrationTestCase(TestCase):

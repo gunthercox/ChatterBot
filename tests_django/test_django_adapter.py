@@ -1,7 +1,9 @@
 from django.test import TestCase
 from chatterbot.storage import DjangoStorageAdapter
-from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
-from chatterbot.ext.django_chatterbot.models import Response as ResponseModel
+from chatterbot.ext.django_chatterbot.models import (
+    Statement as StatementModel,
+    Response as ResponseModel,
+)
 
 
 class DjangoAdapterTestCase(TestCase):

@@ -40,14 +40,15 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         An input statement should be added to the recent response list.
         """
-        statement_text = 'Wow!'
-        response = self.chatbot.get_response(statement_text)
+        statement = Statement(text='Wow!', in_response_to=[Response(text='Ok')])
+        response = self.chatbot.get_response(statement)
         response_statement = self.chatbot.storage.get_latest_response(
             self.chatbot.default_conversation_id
         )
 
-        self.assertEqual(statement_text, response_statement.text)
-        self.assertEqual(response, statement_text)
+        self.assertIsNotNone(response_statement)
+        self.assertEqual(statement.text, response_statement.text)
+        self.assertEqual(statement.text, response)
 
     def test_response_known(self):
         self.chatbot.storage.update(self.test_statement)
