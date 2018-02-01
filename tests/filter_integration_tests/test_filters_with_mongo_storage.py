@@ -29,5 +29,5 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
         first_response = self.chatbot.get_response('Hello')
         second_response = self.chatbot.get_response('Hello')
 
-        self.assertEqual(first_response.text, 'Hi')
-        self.assertEqual(second_response.text, 'Hi, how are you?')
+        self.assertEqual('Hi', first_response.text)
+        self.assertEqual('Hi, how are you?', second_response.text)
