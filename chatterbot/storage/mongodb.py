@@ -294,7 +294,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         if not statements:
             return None
 
-        return self.mongo_to_object(statements[-2])
+        return self.mongo_to_object(statements[-1])
 
     def add_to_conversation(self, conversation_id, statement, response):
         """
