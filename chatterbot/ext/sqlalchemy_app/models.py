@@ -41,7 +41,7 @@ class Tag(Base):
     A tag that describes a statement.
     """
 
-    name = Column(UnicodeString)
+    name = Column(UnicodeString(512))
 
 
 class Statement(Base, StatementMixin):
@@ -49,7 +49,7 @@ class Statement(Base, StatementMixin):
     A Statement represents a sentence or phrase.
     """
 
-    text = Column(UnicodeString, unique=True)
+    text = Column(UnicodeString(512), unique=True)
 
     tags = relationship(
         'Tag',
@@ -91,7 +91,7 @@ class Response(Base):
     Response, contains responses related to a given statement.
     """
 
-    text = Column(UnicodeString)
+    text = Column(UnicodeString(512))
 
     created_at = Column(
         DateTime(timezone=True),
@@ -100,7 +100,7 @@ class Response(Base):
 
     occurrence = Column(Integer, default=1)
 
-    statement_text = Column(UnicodeString, ForeignKey('statement.text'))
+    statement_text = Column(UnicodeString(512), ForeignKey('statement.text'))
 
     statement_table = relationship(
         'Statement',
