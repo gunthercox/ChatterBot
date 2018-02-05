@@ -2,6 +2,8 @@ from sqlalchemy import Table, Column, Integer, DateTime, ForeignKey, PickleType
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
+
+from chatterbot.constants import TAG_NAME_MAX_LENGTH, STATEMENT_TEXT_MAX_LENGTH
 from chatterbot.ext.sqlalchemy_app.types import UnicodeString
 from chatterbot.conversation import StatementMixin
 
@@ -41,7 +43,7 @@ class Tag(Base):
     A tag that describes a statement.
     """
 
-    name = Column(UnicodeString(512))
+    name = Column(UnicodeString(TAG_NAME_MAX_LENGTH))
 
 
 class Statement(Base, StatementMixin):
@@ -49,7 +51,7 @@ class Statement(Base, StatementMixin):
     A Statement represents a sentence or phrase.
     """
 
-    text = Column(UnicodeString(512), unique=True)
+    text = Column(UnicodeString(STATEMENT_TEXT_MAX_LENGTH), unique=True)
 
     tags = relationship(
         'Tag',
@@ -91,7 +93,7 @@ class Response(Base):
     Response, contains responses related to a given statement.
     """
 
-    text = Column(UnicodeString(512))
+    text = Column(UnicodeString(STATEMENT_TEXT_MAX_LENGTH))
 
     created_at = Column(
         DateTime(timezone=True),
@@ -100,7 +102,7 @@ class Response(Base):
 
     occurrence = Column(Integer, default=1)
 
-    statement_text = Column(UnicodeString(512), ForeignKey('statement.text'))
+    statement_text = Column(UnicodeString(STATEMENT_TEXT_MAX_LENGTH), ForeignKey('statement.text'))
 
     statement_table = relationship(
         'Statement',
