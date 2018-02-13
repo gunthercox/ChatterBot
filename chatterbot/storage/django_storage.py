@@ -181,8 +181,8 @@ class DjangoStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
         Response = self.get_model('response')
 
-        first_statement = Statement.objects.get(text=statement.text)
-        first_response = Statement.objects.get(text=response.text)
+        first_statement, created = Statement.objects.get_or_create(text=statement.text)
+        first_response, created = Statement.objects.get_or_create(text=response.text)
 
         response = Response.objects.create(
             statement=first_statement,
