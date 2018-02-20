@@ -1,4 +1,4 @@
-![Chatterbot: Machine learning in Python](http://i.imgur.com/b3SCmGT.png)
+![Chatterbot: Machine learning in Python](https://i.imgur.com/b3SCmGT.png)
 
 # ChatterBot
 
@@ -73,9 +73,9 @@ chatbot.train("chatterbot.corpus.english.conversations")
 
 **Corpus contributions are welcome! Please make a pull request.**
 
-# [Documentation](http://chatterbot.readthedocs.io/)
+# [Documentation](https://chatterbot.readthedocs.io/)
 
-View the [documentation](http://chatterbot.readthedocs.io/)
+View the [documentation](https://chatterbot.readthedocs.io/)
 for ChatterBot on Read the Docs.
 
 To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
@@ -103,7 +103,7 @@ See release notes for changes https://github.com/gunthercox/ChatterBot/releases
    a new branch `my-pull-request`.
 3. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/).
 4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
-5. Use the projects [built-in automated testing](http://chatterbot.readthedocs.io/en/latest/testing.html)
+5. Use the projects [built-in automated testing](https://chatterbot.readthedocs.io/en/latest/testing.html)
    to help make sure that your contribution is free from errors.
 
 # License
