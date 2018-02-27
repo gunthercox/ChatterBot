@@ -51,7 +51,7 @@ Your directory setup should look something like the following:
    ├── cool_chatbot.py
    └── cool_adapter.py
 
-Then assuming that you have a class named :code:`MyLogicAdapter` in your *cool_chatbot.py* file,
+Then assuming that you have a class named :code:`MyLogicAdapter` in your *cool_adapter.py* file,
 you should be able to specify the following when you initialize your chat bot.
 
 .. code-block:: python
@@ -60,7 +60,7 @@ you should be able to specify the following when you initialize your chat bot.
        # ...
        logic_adapters=[
            {
-               'import_path': 'cool_chatbot.MyLogicAdapter'
+               'import_path': 'cool_adapter.MyLogicAdapter'
            }
        ]
    )
