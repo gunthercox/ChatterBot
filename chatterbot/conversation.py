@@ -191,7 +191,7 @@ class Response(object):
 
     def __init__(self, text, **kwargs):
         from datetime import datetime
-        import dateutil.parser as date_parser
+        from dateutil import parser as date_parser
 
         self.text = text
         self.created_at = kwargs.get('created_at', datetime.now())
