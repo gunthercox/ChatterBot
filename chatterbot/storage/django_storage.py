@@ -159,7 +159,7 @@ class DjangoStorageAdapter(StorageAdapter):
             conversations__id=conversation_id
         ).order_by(
             'created_at'
-        ).first()
+        ).last()
 
         if not response:
             return None

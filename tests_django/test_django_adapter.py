@@ -1,4 +1,3 @@
-from unittest import expectedFailure
 from django.test import TestCase
 from chatterbot.storage import DjangoStorageAdapter
 from chatterbot.ext.django_chatterbot.factories import (
@@ -52,7 +51,6 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
         self.assertEqual(response_1.response, response)
 
-    @expectedFailure
     def test_get_latest_response_from_two_responses(self):
         conversation = ConversationFactory()
         response_1 = ResponseFactory(
@@ -69,7 +67,6 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
         self.assertEqual(response_2.response, response)
 
-    @expectedFailure
     def test_get_latest_response_from_three_responses(self):
         conversation = ConversationFactory()
         response_1 = ResponseFactory(
