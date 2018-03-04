@@ -339,14 +339,16 @@ class SQLStorageAdapter(StorageAdapter):
         session = self.Session()
         statement = None
 
-        statement_query = session.query(
-            Statement
-        ).filter(
+        statement_query = session.query(Statement).filter(
             Statement.conversations.any(id=conversation_id)
-        ).order_by(Statement.id).limit(2).first()
+        ).order_by(Statement.id)
 
-        if statement_query:
-            statement = statement_query.get_statement()
+        if statement_query.count() >= 2:
+            statement = statement_query[-2].get_statement()
+
+        # Handle the case of the first statement in the list
+        elif statement_query.count() == 1:
+            statement = statement_query[0].get_statement()
 
         session.close()
 
