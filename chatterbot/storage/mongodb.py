@@ -280,6 +280,20 @@ class MongoDatabaseAdapter(StorageAdapter):
         conversation_id = self.conversations.insert_one({}).inserted_id
         return conversation_id
 
+    def get_statements_for_conversation(self, conversation_id):
+        """
+        Return all statements in the specified conversation.
+        """
+        from pymongo import DESCENDING
+
+        statements = list(self.statements.find({
+            'conversations.id': conversation_id
+        }).sort('conversations.created_at', DESCENDING))
+
+        return [
+            self.mongo_to_object(statement) for statement in statements
+        ]
+
     def get_latest_response(self, conversation_id):
         """
         Returns the latest response in a conversation if it exists.
