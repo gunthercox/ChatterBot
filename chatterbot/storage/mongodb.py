@@ -291,10 +291,16 @@ class MongoDatabaseAdapter(StorageAdapter):
             'conversations.id': conversation_id
         }).sort('conversations.created_at', DESCENDING))
 
-        if not statements:
-            return None
+        statement = None
 
-        return self.mongo_to_object(statements[-2])
+        if len(statements) >= 2:
+            statement = self.mongo_to_object(statements[1])
+
+        # Handle the case of the first statement in the list
+        elif len(statements) == 1:
+            statement = self.mongo_to_object(statements[0])
+
+        return statement
 
     def add_to_conversation(self, conversation_id, statement, response):
         """
@@ -312,7 +318,8 @@ class MongoDatabaseAdapter(StorageAdapter):
                         'created_at': datetime.utcnow()
                     }
                 }
-            }
+            },
+            upsert=True
         )
         self.statements.update_one(
             {
@@ -326,7 +333,8 @@ class MongoDatabaseAdapter(StorageAdapter):
                         'created_at': datetime.utcnow() + timedelta(milliseconds=1)
                     }
                 }
-            }
+            },
+            upsert=True
         )
 
     def get_random(self):
