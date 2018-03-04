@@ -1,4 +1,4 @@
-from unittest import TestCase, expectedFailure
+from unittest import TestCase
 from chatterbot.conversation import Statement, Response
 from chatterbot.storage.sql_storage import SQLStorageAdapter
 
@@ -49,7 +49,6 @@ class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
 
         self.assertEqual(statement_1, response)
 
-    @expectedFailure
     def test_get_latest_response_from_two_responses(self):
         conversation_id = self.adapter.create_conversation()
         statement_1 = Statement(text='A')
@@ -63,7 +62,6 @@ class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
 
         self.assertEqual(statement_2, response)
 
-    @expectedFailure
     def test_get_latest_response_from_three_responses(self):
         conversation_id = self.adapter.create_conversation()
         statement_1 = Statement(text='A')
