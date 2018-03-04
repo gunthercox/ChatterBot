@@ -49,10 +49,12 @@ class ListTrainingTests(ChatBotTestCase):
         statements = self.chatbot.storage.filter(
             in_response_to__contains="Do you like my hat?"
         )
-        response = statements[0].in_response_to[0]
 
         self.assertIsLength(statements, 1)
         self.assertIsLength(statements[0].in_response_to, 1)
+
+        response = statements[0].in_response_to[0]
+
         self.assertEqual(response.occurrence, 2)
 
     def test_database_has_correct_format(self):
