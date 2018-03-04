@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, expectedFailure
 from chatterbot.conversation import Statement, Response
 from chatterbot.storage.sql_storage import SQLStorageAdapter
 
@@ -26,6 +26,58 @@ class SQLAlchemyAdapterTestCase(TestCase):
 
 
 class SQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
+
+    def test_get_latest_response_from_invalid_conversation_id(self):
+        response = self.adapter.get_latest_response(0)
+
+        self.assertIsNone(response)
+
+    def test_get_latest_response_from_zero_responses(self):
+        conversation_id = self.adapter.create_conversation()
+        response = self.adapter.get_latest_response(conversation_id)
+
+        self.assertIsNone(response)
+
+    def test_get_latest_response_from_one_responses(self):
+        conversation_id = self.adapter.create_conversation()
+        statement_1 = Statement(text='A')
+        statement_2 = Statement(text='B', in_response_to=[Response(text=statement_1.text)])
+
+        self.adapter.add_to_conversation(conversation_id, statement_1, statement_2)
+
+        response = self.adapter.get_latest_response(conversation_id)
+
+        self.assertEqual(statement_1, response)
+
+    @expectedFailure
+    def test_get_latest_response_from_two_responses(self):
+        conversation_id = self.adapter.create_conversation()
+        statement_1 = Statement(text='A')
+        statement_2 = Statement(text='B', in_response_to=[Response(text=statement_1.text)])
+        statement_3 = Statement(text='C', in_response_to=[Response(text=statement_2.text)])
+
+        self.adapter.add_to_conversation(conversation_id, statement_1, statement_2)
+        self.adapter.add_to_conversation(conversation_id, statement_2, statement_3)
+
+        response = self.adapter.get_latest_response(conversation_id)
+
+        self.assertEqual(statement_2, response)
+
+    @expectedFailure
+    def test_get_latest_response_from_three_responses(self):
+        conversation_id = self.adapter.create_conversation()
+        statement_1 = Statement(text='A')
+        statement_2 = Statement(text='B', in_response_to=[Response(text=statement_1.text)])
+        statement_3 = Statement(text='C', in_response_to=[Response(text=statement_2.text)])
+        statement_4 = Statement(text='D', in_response_to=[Response(text=statement_3.text)])
+
+        self.adapter.add_to_conversation(conversation_id, statement_1, statement_2)
+        self.adapter.add_to_conversation(conversation_id, statement_2, statement_3)
+        self.adapter.add_to_conversation(conversation_id, statement_3, statement_4)
+
+        response = self.adapter.get_latest_response(conversation_id)
+
+        self.assertEqual(statement_3, response)
 
     def test_set_database_name_none(self):
         adapter = SQLStorageAdapter(database=None)
