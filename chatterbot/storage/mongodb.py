@@ -288,7 +288,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         statements = list(self.statements.find({
             'conversations.id': conversation_id
-        }).sort('conversations.created_at', DESCENDING))
+        }).sort('conversations.index', DESCENDING))
 
         return [
             self.mongo_to_object(statement) for statement in statements
@@ -316,7 +316,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Add the statement and response to the conversation.
         """
-        from datetime import datetime
+        import time
 
         self.statements.update_one(
             {
@@ -326,7 +326,7 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$push': {
                     'conversations': {
                         'id': conversation_id,
-                        'created_at': datetime.utcnow()
+                        'created_at': time.time()
                     }
                 }
             },
@@ -340,7 +340,7 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$push': {
                     'conversations': {
                         'id': conversation_id,
-                        'created_at': datetime.utcnow()
+                        'created_at': time.time()
                     }
                 }
             },
