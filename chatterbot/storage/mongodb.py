@@ -307,12 +307,8 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         statement = None
 
-        if len(statements) >= 2:
+        if len(statements) >= 1:
             statement = self.mongo_to_object(statements[1])
-
-        # Handle the case of the first statement in the list
-        elif len(statements) == 1:
-            statement = self.mongo_to_object(statements[0])
 
         return statement
 
@@ -320,7 +316,8 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Add the statement and response to the conversation.
         """
-        from datetime import datetime, timedelta
+        from datetime import datetime
+
         self.statements.update_one(
             {
                 'text': statement.text
@@ -343,8 +340,7 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$push': {
                     'conversations': {
                         'id': conversation_id,
-                        # Force the response to be at least one millisecond after the input statement
-                        'created_at': datetime.utcnow() + timedelta(milliseconds=1)
+                        'created_at': datetime.utcnow()
                     }
                 }
             },
