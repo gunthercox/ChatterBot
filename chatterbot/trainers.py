@@ -100,6 +100,8 @@ class ListTrainer(Trainer):
         """
         previous_statement_text = None
 
+        conversation_id = self.storage.create_conversation()
+
         for conversation_count, text in enumerate(conversation):
             if self.show_training_progress:
                 utils.print_progress_bar(
@@ -116,6 +118,11 @@ class ListTrainer(Trainer):
 
             previous_statement_text = statement.text
             self.storage.update(statement)
+
+            if previous_statement_text:
+                self.storage.add_to_conversation(
+                    conversation_id, statement, Statement(previous_statement_text)
+                )
 
 
 class ChatterBotCorpusTrainer(Trainer):
@@ -146,6 +153,8 @@ class ChatterBotCorpusTrainer(Trainer):
             for corpus_count, corpus in enumerate(corpora):
                 for conversation_count, conversation in enumerate(corpus):
 
+                    conversation_id = self.storage.create_conversation()
+
                     if self.show_training_progress:
                         utils.print_progress_bar(
                             str(os.path.basename(corpus_files[corpus_count])) + ' Training',
@@ -166,6 +175,11 @@ class ChatterBotCorpusTrainer(Trainer):
 
                         previous_statement_text = statement.text
                         self.storage.update(statement)
+
+                        if previous_statement_text:
+                            self.storage.add_to_conversation(
+                                conversation_id, statement, Statement(previous_statement_text)
+                            )
 
 
 class TwitterTrainer(Trainer):
@@ -400,6 +414,8 @@ class UbuntuCorpusTrainer(Trainer):
         for file in glob.iglob(extracted_corpus_path):
             self.logger.info('Training from: {}'.format(file))
 
+            conversation_id = self.storage.create_conversation()
+
             with open(file, 'r', **file_kwargs) as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
@@ -424,3 +440,8 @@ class UbuntuCorpusTrainer(Trainer):
 
                         previous_statement_text = statement.text
                         self.storage.update(statement)
+
+                        if previous_statement_text:
+                            self.storage.add_to_conversation(
+                                conversation_id, statement, Statement(previous_statement_text)
+                            )
