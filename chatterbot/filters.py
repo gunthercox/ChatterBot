@@ -51,6 +51,8 @@ class RepetitiveResponseFilter(Filter):
                 conversation_id
             )
 
+        print('text_of_recent_responses =>', text_of_recent_responses)
+
         query = chatterbot.storage.base_query.statement_text_not_in(
             text_of_recent_responses
         )
