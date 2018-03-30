@@ -205,7 +205,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Conversation.objects.all().delete()
         Tag.objects.all().delete()
 
-    def get_response_statements(self):
+    def get_response_statements(self, statement=None):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the

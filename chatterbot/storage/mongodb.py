@@ -94,7 +94,8 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         # Increase the sort buffer to 42M if possible
         try:
-            self.client.admin.command({'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
+            self.client.admin.command(
+                {'setParameter': 1, 'internalQueryExecMaxBlockingSortBytes': 44040192})
         except OperationFailure:
             pass
 
@@ -110,7 +111,30 @@ class MongoDatabaseAdapter(StorageAdapter):
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
 
+        # Set a full text index for the text
+        self.statements.create_index([('text', 'text')])
+
+        # Set a requirement for the word attribute to be unique
         self.base_query = Query()
+
+        statement_segmentation = kwargs.get("word_tokenize", {})
+        if statement_segmentation:
+            self.statement_segmentation = statement_segmentation
+
+    def statement_segmentation(self, statement):
+        """
+        Conver statement to words.
+        It return a list of words of input statement.
+        """
+        from chatterbot.utils import nltk_download_corpus, remove_stopwords
+        from nltk import word_tokenize
+
+        nltk_download_corpus('tokenizers/punkt')
+
+        full_tokens = word_tokenize(statement)
+        tokens = list(remove_stopwords(full_tokens, language='english'))
+        tokens = list(filter(lambda x: x.isalpha() or x.isdigit(), tokens))
+        return tokens if len(tokens) > 0 else full_tokens
 
     def get_statement_model(self):
         """
@@ -293,7 +317,6 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         if not statements:
             return None
-
         return self.mongo_to_object(statements[-2])
 
     def add_to_conversation(self, conversation_id, statement, response):
@@ -322,7 +345,8 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$push': {
                     'conversations': {
                         'id': conversation_id,
-                        # Force the response to be at least one millisecond after the input statement
+                        # Force the response to be at least one millisecond
+                        # after the input statement
                         'created_at': datetime.utcnow() + timedelta(milliseconds=1)
                     }
                 }
@@ -358,27 +382,38 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         self.statements.delete_one({'text': statement_text})
 
-    def get_response_statements(self):
+    def get_response_statements(self, statement=None):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}])
+        if not statement:
+            response_query = self.statements.aggregate(
+                [{'$group': {'_id': '$in_response_to.text'}}])
 
-        responses = []
-        for r in response_query:
-            try:
-                responses.extend(r['_id'])
-            except TypeError:
-                pass
+            responses = []
+            for r in response_query:
+                try:
+                    responses.extend(r['_id'])
+                except TypeError:
+                    pass
 
-        _statement_query = {
-            'text': {
-                '$in': responses
+            _statement_query = {
+                'text': {
+                    '$in': responses
+                }
             }
-        }
+        else:
+            # Just filter the statement in need.
+            tokens = self.statement_segmentation(statement.text)
+            search_key = " ".join(tokens)
+            _statement_query = {
+                '$text': {
+                    '$search': search_key
+                }
+            }
 
         _statement_query.update(self.base_query.value())
         statement_query = self.statements.find(_statement_query)
