@@ -16,7 +16,7 @@ class Adapter(object):
         """
         Gives the adapter access to an instance of the ChatBot class.
 
-        :param chatbot: A chat bot instanse.
+        :param chatbot: A chat bot instance.
         :type chatbot: ChatBot
         """
         self.chatbot = chatbot
