@@ -398,7 +398,7 @@ class UbuntuCorpusTrainer(Trainer):
             # WARNING: This might fail to read a unicode corpus file in Python 2.x
 
         for file in glob.iglob(extracted_corpus_path):
-            def Runshit(file):
+            def Largeimport(file):
                 self.logger.info('Training from: {}'.format(file))
                 with open(file, 'r', **file_kwargs) as tsv:
                     reader = csv.reader(tsv, delimiter='\t')
@@ -424,6 +424,6 @@ class UbuntuCorpusTrainer(Trainer):
                             self.storage.update(statement)
             self.logger.info('Training from: {}'.format(file))
             p = Pool(cpu_count())
-            p.apply_async(Runshit, (file,))
+            p.apply_async(Largeimport, (file,))
             p.close()
         p.join()
