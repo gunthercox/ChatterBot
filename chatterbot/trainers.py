@@ -3,7 +3,7 @@ import os
 import sys
 from .conversation import Statement, Response
 from . import utils
-
+from multiprocessing import Pool, cpu_count
 
 class Trainer(object):
     """
@@ -398,29 +398,32 @@ class UbuntuCorpusTrainer(Trainer):
             # WARNING: This might fail to read a unicode corpus file in Python 2.x
 
         for file in glob.iglob(extracted_corpus_path):
+            def Largeimport(file):
+                self.logger.info('Training from: {}'.format(file))
+                with open(file, 'r', **file_kwargs) as tsv:
+                    reader = csv.reader(tsv, delimiter='\t')
+                    previous_statement_text = None
+                    for row in reader:
+                        if len(row) > 0:
+                            text = row[3]
+                            statement = self.get_or_create(text)
+                            print(text, len(row))
+
+                            statement.add_extra_data('datetime', row[0])
+                            statement.add_extra_data('speaker', row[1])
+
+                            if row[2].strip():
+                                statement.add_extra_data('addressing_speaker', row[2])
+
+                            if previous_statement_text:
+                                statement.add_response(
+                                    Response(previous_statement_text)
+                                )
+
+                            previous_statement_text = statement.text
+                            self.storage.update(statement)
             self.logger.info('Training from: {}'.format(file))
-
-            with open(file, 'r', **file_kwargs) as tsv:
-                reader = csv.reader(tsv, delimiter='\t')
-
-                previous_statement_text = None
-
-                for row in reader:
-                    if len(row) > 0:
-                        text = row[3]
-                        statement = self.get_or_create(text)
-                        print(text, len(row))
-
-                        statement.add_extra_data('datetime', row[0])
-                        statement.add_extra_data('speaker', row[1])
-
-                        if row[2].strip():
-                            statement.add_extra_data('addressing_speaker', row[2])
-
-                        if previous_statement_text:
-                            statement.add_response(
-                                Response(previous_statement_text)
-                            )
-
-                        previous_statement_text = statement.text
-                        self.storage.update(statement)
+            p = Pool(cpu_count())
+            p.apply_async(Largeimport, (file,))
+            p.close()
+        p.join()
