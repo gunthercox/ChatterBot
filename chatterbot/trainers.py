@@ -3,7 +3,7 @@ import os
 import sys
 from .conversation import Statement, Response
 from . import utils
-from multiprocessing import Pool
+from multiprocessing import Pool, cpu_count
 
 class Trainer(object):
     """
@@ -423,7 +423,7 @@ class UbuntuCorpusTrainer(Trainer):
                             previous_statement_text = statement.text
                             self.storage.update(statement)
             self.logger.info('Training from: {}'.format(file))
-            p = Pool(32)
+            p = Pool(cpu_count())
             p.apply_async(Runshit, (file,))
             p.close()
         p.join()
