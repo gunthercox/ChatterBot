@@ -43,19 +43,9 @@ class SQLStorageAdapter(StorageAdapter):
 
         default_uri = "sqlite:///db.sqlite3"
 
-        database_name = self.kwargs.get("database", False)
-
-        # None results in a sqlite in-memory database as the default
-        if database_name is None:
-            default_uri = "sqlite://"
-
         self.database_uri = self.kwargs.get(
             "database_uri", default_uri
         )
-
-        # Create a sqlite file if a database name is provided
-        if database_name:
-            self.database_uri = "sqlite:///" + database_name
 
         self.engine = create_engine(self.database_uri, convert_unicode=True)
 

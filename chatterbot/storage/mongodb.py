@@ -82,12 +82,11 @@ class MongoDatabaseAdapter(StorageAdapter):
         from pymongo import MongoClient
         from pymongo.errors import OperationFailure
 
-        self.database_name = self.kwargs.get(
-            'database', 'chatterbot-database'
-        )
         self.database_uri = self.kwargs.get(
             'database_uri', 'mongodb://localhost:27017/'
         )
+
+        self._database_name = "chatterbot-database"
 
         # Use the default host and port
         self.client = MongoClient(self.database_uri)
@@ -99,7 +98,8 @@ class MongoDatabaseAdapter(StorageAdapter):
             pass
 
         # Specify the name of the database
-        self.database = self.client[self.database_name]
+        # By convention self.database_uri is the name of the database. Refer to ticket #939
+        self.database = self.client[self._database_name]
 
         # The mongo collection of statement documents
         self.statements = self.database['statements']
@@ -391,4 +391,4 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Remove the database.
         """
-        self.client.drop_database(self.database_name)
+        self.client.drop_database(self._database_name)
