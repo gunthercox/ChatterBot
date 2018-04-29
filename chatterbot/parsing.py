@@ -29,7 +29,7 @@ re_duration = '(before|after|earlier|later|ago|from\snow)'
 re_year = '(19|20)\d{2}|^(19|20)\d{2}'
 re_timeframe = 'this|coming|next|following|previous|last|end\sof\sthe'
 re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
-re_time = r'(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})|(?P<convention>am|pm))'
+re_time = r'(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})(\sam|pm)?|\s?(?P<convention>am|pm))'
 re_separator = 'of|at|on'
 
 # A list tuple of regular expressions / parser fn to match
@@ -360,7 +360,7 @@ regex = [
     (
         re.compile(
             r'''
-            (%s) # Matches time 12:00
+            (%s) # Matches time 12:00 am or 12:00 pm
             ''' % (re_time),
             (re.VERBOSE | re.IGNORECASE),
         ),
