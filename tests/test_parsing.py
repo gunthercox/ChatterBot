@@ -201,6 +201,22 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
         self.assertEqual(parser[0][1].strftime('%d-%m-%Y'), '02-01-2014')
         self.assertEqual(len(parser), 1)
 
+    def test_captured_pattern_has_am(self):
+        input_text = 'You have to woke up at 5 am in the morning'
+        parser = parsing.datetime_parsing(input_text)
+        self.assertIn('5 am', parser[0])
+        self.assertEqual(parser[0][1].strftime('%d'), datetime.today().strftime('%d'))
+        self.assertEqual(parser[0][1].strftime('%H'), '05')
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_has_pm(self):
+        input_text = 'Your dental appointment at 4 pm in the evening.'
+        parser = parsing.datetime_parsing(input_text)
+        self.assertIn('4 pm', parser[0])
+        self.assertEqual(parser[0][1].strftime('%d'), datetime.today().strftime('%d'))
+        self.assertEqual(parser[0][1].strftime('%H'), '16')
+        self.assertEqual(len(parser), 1)
+
 
 class DateTimeParsingTestCases(TestCase):
     """
