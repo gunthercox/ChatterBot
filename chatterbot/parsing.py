@@ -207,7 +207,7 @@ regex = [
         lambda m, base_date: date_from_relative_week_year(
             base_date,
             m.group('time').lower(),
-            m.group('dmy'),
+            m.group('dmy').lower(),
             m.group('number')
         ) + timedelta(**convert_time_to_hour_minute(
             m.group('hour'),
@@ -488,7 +488,7 @@ def convert_time_to_hour_minute(hour, minute, convention):
     hour = int(hour)
     minute = int(minute)
 
-    if convention == 'pm':
+    if convention.lower() == 'pm':
         hour += 12
 
     return {'hours': hour, 'minutes': minute}
