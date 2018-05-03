@@ -549,7 +549,7 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
         elif time == 'last' or time == 'previous':
             return datetime(relative_date.year - 1, relative_date.month, 1)
         elif time == 'next' or time == 'following':
-            return relative_date + timedelta(ord*365)
+            return relative_date + timedelta(ord * 365)
         elif time == 'end of the':
             return datetime(relative_date.year, 12, 31)
     elif dow in month_variations:
