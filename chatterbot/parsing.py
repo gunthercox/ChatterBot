@@ -206,7 +206,7 @@ regex = [
         ),
         lambda m, base_date: date_from_relative_week_year(
             base_date,
-            m.group('time'),
+            m.group('time').lower(),
             m.group('dmy'),
             m.group('number')
         ) + timedelta(**convert_time_to_hour_minute(
@@ -227,7 +227,7 @@ regex = [
         ),
         lambda m, base_date: date_from_relative_day(
             base_date,
-            m.group('time'),
+            m.group('time').lower(),
             m.group('dow')
         ) + timedelta(**convert_time_to_hour_minute(
             m.group('hour'),
@@ -549,7 +549,7 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
         elif time == 'last' or time == 'previous':
             return datetime(relative_date.year - 1, relative_date.month, 1)
         elif time == 'next' or time == 'following':
-            return relative_date + timedelta(relative_date.year + ord)
+            return relative_date + timedelta(ord*365)
         elif time == 'end of the':
             return datetime(relative_date.year, 12, 31)
     elif dow in month_variations:
