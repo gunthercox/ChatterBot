@@ -558,7 +558,14 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
         elif time == 'last' or time == 'previous':
             return datetime(relative_date.year, relative_date.month - 1, relative_date.day)
         elif time == 'next' or time == 'following':
-            return datetime(relative_date.year, relative_date.month + ord, relative_date.day)
+            if relative_date.month + ord >= 12:
+                month = relative_date.month - 1 + ord
+                year = relative_date.year + month // 12
+                month = month % 12 + 1
+                day = min(relative_date.day, calendar.monthrange(year, month)[1])
+                return datetime(year, month, day)
+            else:
+                return datetime(relative_date.year, relative_date.month + ord, relative_date.day)
         elif time == 'end of the':
             return datetime(
                 relative_date.year,
