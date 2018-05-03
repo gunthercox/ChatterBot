@@ -6,7 +6,7 @@ from chatterbot import parsing
 
 class DateTimeParsingFunctionIntegrationTestCases(TestCase):
     """
-    Test the datetime parseing module.
+    Test the datetime parsing module.
 
     Output of the parser is an array of tuples
     [match, value, (start, end)]
@@ -182,47 +182,41 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
     def test_captured_pattern_is_next_three_weeks(self):
         input_text = 'Next 3 weeks'
         parser = parsing.datetime_parsing(input_text)
-        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day) + timedelta(weeks=3)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
-                         '{day}-{month}-{year}'.format(month=relative_date.day,
-                                                       day=relative_date.month,
-                                                       year=relative_date.year))
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'),
+            (datetime.today() + timedelta(weeks=3)).strftime('%d-%m-%Y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_is_next_eight_days(self):
         input_text = 'Next 8 days'
         parser = parsing.datetime_parsing(input_text)
-        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
-                         '{day}-{month}-{year}'.format(month=relative_date.day + 8,
-                                                       day=relative_date.month,
-                                                       year=relative_date.year))
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'),
+            (datetime.today() + timedelta(days=8)).strftime('%d-%m-%Y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_is_next_ten_years(self):
         input_text = 'Next 10 years'
         parser = parsing.datetime_parsing(input_text)
-        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day) + timedelta(
-            self.base_date.year + 10)
-        self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
-                         '{day}-{month}-{year}'.format(day=relative_date.day,
-                                                       month=relative_date.month,
-                                                       year=relative_date.year))
+        self.assertIn('Next 10 year', parser[0])
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'),
+            (datetime.today() + timedelta(10*365)).strftime('%d-%m-%Y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_is_next_eleven_months(self):
         input_text = 'Next 11 months'
         parser = parsing.datetime_parsing(input_text)
-        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day) + timedelta(
-            self.base_date.month + 11)
-        self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
-                         '{day}-{month}-{year}'.format(day=relative_date.day,
-                                                       month=relative_date.month,
-                                                       year=relative_date.year))
+        self.assertIn('Next 11 month', parser[0])
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'),
+            (datetime.today() + timedelta(11*365/12)).strftime('%d-%m-%Y')
+        )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_is_on_day(self):
