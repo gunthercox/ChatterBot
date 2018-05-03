@@ -205,17 +205,22 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
         self.assertIn('Next 10 year', parser[0])
         self.assertEqual(
             parser[0][1].strftime('%d-%m-%Y'),
-            (datetime.today() + timedelta(10*365)).strftime('%d-%m-%Y')
+            (datetime.today() + timedelta(10 * 365)).strftime('%d-%m-%Y')
         )
         self.assertEqual(len(parser), 1)
 
     def test_captured_pattern_is_next_eleven_months(self):
+        import calendar
         input_text = 'Next 11 months'
         parser = parsing.datetime_parsing(input_text)
+        relative_date = datetime.today()
+        month = relative_date.month - 1 + 11
+        year = relative_date.year + month // 12
+        month = month % 12 + 1
+        day = min(relative_date.day, calendar.monthrange(year, month)[1])
         self.assertIn('Next 11 month', parser[0])
         self.assertEqual(
-            parser[0][1].strftime('%d-%m-%Y'),
-            (datetime.today() + timedelta(11*365/12)).strftime('%d-%m-%Y')
+            parser[0][1].strftime('%d-%m-%Y'), datetime(year, month, day).strftime('%d-%m-%Y')
         )
         self.assertEqual(len(parser), 1)
 
