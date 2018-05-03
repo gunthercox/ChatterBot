@@ -179,6 +179,52 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
         self.assertEqual(parser[0][1][1].strftime('%d-%m-%Y'), '31-12-2015')
         self.assertEqual(len(parser), 1)
 
+    def test_captured_pattern_is_next_three_weeks(self):
+        input_text = 'Next 3 weeks'
+        parser = parsing.datetime_parsing(input_text)
+        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day) + timedelta(weeks=3)
+        self.assertIn(input_text, parser[0])
+        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
+                         '{day}-{month}-{year}'.format(month=relative_date.day,
+                                                       day=relative_date.month,
+                                                       year=relative_date.year))
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_is_next_eight_days(self):
+        input_text = 'Next 8 days'
+        parser = parsing.datetime_parsing(input_text)
+        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day)
+        self.assertIn(input_text, parser[0])
+        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
+                         '{day}-{month}-{year}'.format(month=relative_date.day + 8,
+                                                       day=relative_date.month,
+                                                       year=relative_date.year))
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_is_next_ten_years(self):
+        input_text = 'Next 10 years'
+        parser = parsing.datetime_parsing(input_text)
+        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day) + timedelta(
+            self.base_date.year + 10)
+        self.assertIn(input_text, parser[0])
+        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
+                         '{day}-{month}-{year}'.format(day=relative_date.day,
+                                                       month=relative_date.month,
+                                                       year=relative_date.year))
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_is_next_eleven_months(self):
+        input_text = 'Next 11 months'
+        parser = parsing.datetime_parsing(input_text)
+        relative_date = datetime(self.base_date.year, self.base_date.month, self.base_date.day) + timedelta(
+            self.base_date.month + 11)
+        self.assertIn(input_text, parser[0])
+        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'),
+                         '{day}-{month}-{year}'.format(day=relative_date.day,
+                                                       month=relative_date.month,
+                                                       year=relative_date.year))
+        self.assertEqual(len(parser), 1)
+
     def test_captured_pattern_is_on_day(self):
         input_text = 'My birthday is on January 2nd.'
         parser = parsing.datetime_parsing(input_text)
