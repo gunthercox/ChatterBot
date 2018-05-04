@@ -6,7 +6,7 @@ from .multi_adapter import MultiLogicAdapter
 from .no_knowledge_adapter import NoKnowledgeAdapter
 from .specific_response import SpecificResponseAdapter
 from .time_adapter import TimeLogicAdapter
-
+from .unit_conversion_adapter import UnitConversion
 
 __all__ = (
     'LogicAdapter',
@@ -17,4 +17,5 @@ __all__ = (
     'NoKnowledgeAdapter',
     'SpecificResponseAdapter',
     'TimeLogicAdapter',
+    'UnitConversionAdapter'
 )
