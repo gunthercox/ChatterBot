@@ -22,6 +22,11 @@ class ChatBot(object):
 
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
+        # These are logic adapters that are required for normal operation
+        system_logic_adapters = kwargs.get('system_logic_adapters', (
+            'chatterbot.logic.NoKnowledgeAdapter',
+        ))
+
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
         ])
@@ -44,9 +49,10 @@ class ChatBot(object):
         self.filters = tuple([utils.import_module(F)() for F in filters])
 
         # Add required system logic adapter
-        self.logic.system_adapters.append(
-            utils.initialize_class('chatterbot.logic.NoKnowledgeAdapter', **kwargs)
-        )
+        for system_logic_adapter in system_logic_adapters:
+            self.logic.system_adapters.append(
+                utils.initialize_class(system_logic_adapter, **kwargs)
+            )
 
         for adapter in logic_adapters:
             self.logic.add_adapter(adapter, **kwargs)
