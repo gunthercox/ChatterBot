@@ -29,7 +29,7 @@ re_duration = '(before|after|earlier|later|ago|from\snow)'
 re_year = '(19|20)\d{2}|^(19|20)\d{2}'
 re_timeframe = 'this|coming|next|following|previous|last|end\sof\sthe'
 re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
-re_time = r'(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})|(?P<convention>am|pm))'
+re_time = r'(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})(\sam|pm)?|\s?(?P<convention>am|pm))'
 re_separator = 'of|at|on'
 
 # A list tuple of regular expressions / parser fn to match
@@ -227,7 +227,7 @@ regex = [
         ),
         lambda m, base_date: date_from_relative_day(
             base_date,
-            m.group('time'),
+            m.group('time').lower(),
             m.group('dow')
         ) + timedelta(**convert_time_to_hour_minute(
             m.group('hour'),
@@ -360,7 +360,7 @@ regex = [
     (
         re.compile(
             r'''
-            (%s) # Matches time 12:00
+            (%s) # Matches time 12:00 am or 12:00 pm
             ''' % (re_time),
             (re.VERBOSE | re.IGNORECASE),
         ),
@@ -542,13 +542,14 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
     # If there is an ordinal (next 3 weeks) => return a start and end range
     # Reset date to start of the day
     relative_date = datetime(base_date.year, base_date.month, base_date.day)
+    ord = convert_string_to_number(ordinal)
     if dow in year_variations:
         if time == 'this' or time == 'coming':
             return datetime(relative_date.year, 1, 1)
         elif time == 'last' or time == 'previous':
             return datetime(relative_date.year - 1, relative_date.month, 1)
         elif time == 'next' or time == 'following':
-            return relative_date + timedelta(relative_date.year + 1)
+            return relative_date + timedelta(ord * 365)
         elif time == 'end of the':
             return datetime(relative_date.year, 12, 31)
     elif dow in month_variations:
@@ -557,7 +558,14 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
         elif time == 'last' or time == 'previous':
             return datetime(relative_date.year, relative_date.month - 1, relative_date.day)
         elif time == 'next' or time == 'following':
-            return datetime(relative_date.year, relative_date.month + 1, relative_date.day)
+            if relative_date.month + ord >= 12:
+                month = relative_date.month - 1 + ord
+                year = relative_date.year + month // 12
+                month = month % 12 + 1
+                day = min(relative_date.day, calendar.monthrange(year, month)[1])
+                return datetime(year, month, day)
+            else:
+                return datetime(relative_date.year, relative_date.month + ord, relative_date.day)
         elif time == 'end of the':
             return datetime(
                 relative_date.year,
@@ -570,7 +578,7 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
         elif time == 'last' or time == 'previous':
             return relative_date - timedelta(weeks=1)
         elif time == 'next' or time == 'following':
-            return relative_date + timedelta(weeks=1)
+            return relative_date + timedelta(weeks=ord)
         elif time == 'end of the':
             day_of_week = base_date.weekday()
             return day_of_week + timedelta(days=6 - relative_date.weekday())
@@ -580,7 +588,7 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
         elif time == 'last' or time == 'previous':
             return relative_date - timedelta(days=1)
         elif time == 'next' or time == 'following':
-            return relative_date + timedelta(days=1)
+            return relative_date + timedelta(days=ord)
         elif time == 'end of the':
             return datetime(relative_date.year, relative_date.month, relative_date.day, 23, 59, 59)
 

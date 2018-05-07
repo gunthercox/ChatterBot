@@ -6,7 +6,7 @@ from chatterbot import parsing
 
 class DateTimeParsingFunctionIntegrationTestCases(TestCase):
     """
-    Test the datetime parseing module.
+    Test the datetime parsing module.
 
     Output of the parser is an array of tuples
     [match, value, (start, end)]
@@ -179,6 +179,51 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
         self.assertEqual(parser[0][1][1].strftime('%d-%m-%Y'), '31-12-2015')
         self.assertEqual(len(parser), 1)
 
+    def test_captured_pattern_is_next_three_weeks(self):
+        input_text = 'Next 3 weeks'
+        parser = parsing.datetime_parsing(input_text)
+        self.assertIn(input_text, parser[0])
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'),
+            (datetime.today() + timedelta(weeks=3)).strftime('%d-%m-%Y')
+        )
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_is_next_eight_days(self):
+        input_text = 'Next 8 days'
+        parser = parsing.datetime_parsing(input_text)
+        self.assertIn(input_text, parser[0])
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'),
+            (datetime.today() + timedelta(days=8)).strftime('%d-%m-%Y')
+        )
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_is_next_ten_years(self):
+        input_text = 'Next 10 years'
+        parser = parsing.datetime_parsing(input_text)
+        self.assertIn('Next 10 year', parser[0])
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'),
+            (datetime.today() + timedelta(10 * 365)).strftime('%d-%m-%Y')
+        )
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_is_next_eleven_months(self):
+        import calendar
+        input_text = 'Next 11 months'
+        parser = parsing.datetime_parsing(input_text)
+        relative_date = datetime.today()
+        month = relative_date.month - 1 + 11
+        year = relative_date.year + month // 12
+        month = month % 12 + 1
+        day = min(relative_date.day, calendar.monthrange(year, month)[1])
+        self.assertIn('Next 11 month', parser[0])
+        self.assertEqual(
+            parser[0][1].strftime('%d-%m-%Y'), datetime(year, month, day).strftime('%d-%m-%Y')
+        )
+        self.assertEqual(len(parser), 1)
+
     def test_captured_pattern_is_on_day(self):
         input_text = 'My birthday is on January 2nd.'
         parser = parsing.datetime_parsing(input_text)
@@ -199,6 +244,22 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
         parser = parsing.datetime_parsing(input_text)
         self.assertIn('2nd January 2014', parser[0])
         self.assertEqual(parser[0][1].strftime('%d-%m-%Y'), '02-01-2014')
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_has_am(self):
+        input_text = 'You have to woke up at 5 am in the morning'
+        parser = parsing.datetime_parsing(input_text)
+        self.assertIn('5 am', parser[0])
+        self.assertEqual(parser[0][1].strftime('%d'), datetime.today().strftime('%d'))
+        self.assertEqual(parser[0][1].strftime('%H'), '05')
+        self.assertEqual(len(parser), 1)
+
+    def test_captured_pattern_has_pm(self):
+        input_text = 'Your dental appointment at 4 pm in the evening.'
+        parser = parsing.datetime_parsing(input_text)
+        self.assertIn('4 pm', parser[0])
+        self.assertEqual(parser[0][1].strftime('%d'), datetime.today().strftime('%d'))
+        self.assertEqual(parser[0][1].strftime('%H'), '16')
         self.assertEqual(len(parser), 1)
 
 
