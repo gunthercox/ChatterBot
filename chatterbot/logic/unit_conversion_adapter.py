@@ -1,5 +1,4 @@
 from chatterbot.logic import LogicAdapter
-from chatterbot.conversation import Statement
 import re
 
 
@@ -18,17 +17,4 @@ class UnitConversion(LogicAdapter):
         return re.match(self.pattern, statment.text)
 
     def process(self, statment):
-        from mathparse import mathparse
-
-        response = Statement(text='')
-        response.confidence = 1
-        p = re.match(self.pattern, statment.text)
-        if p is None:
-            response.confidence = 0
-            return response
-        unit_from = p.group("from")
-        unit_target = p.group("target")
-        number = mathparse.parse(p.group("number"), "ENG")
-
-        return response
-
+        pass
