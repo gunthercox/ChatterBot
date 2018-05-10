@@ -19,5 +19,7 @@ class UnitConversionTests(TestCase):
     def test_inches_to_kilometers(self):
         statement = Statement('How many inches are in two kilometers?')
         expected_value = 78740.2
-        returned_value = float(self.adapter.process(statement).text)
-        self.assertLessEqual(returned_value - expected_value, 1e-10)
+        response_statement = self.adapter.process(statement)
+        self.assertEqual(response_statement.confidence, 1)
+        self.assertIsNotNone(response_statement)
+        self.assertLessEqual(float(response_statement.text) - expected_value, 1e-10)
