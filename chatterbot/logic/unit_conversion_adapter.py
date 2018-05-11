@@ -19,7 +19,7 @@ class UnitConversion(LogicAdapter):
                        \s+
                        ((are)*\s*in)
                        \s+
-                       (?P<number>\d+|(%s[-\s]?)+)(\s+)
+                       (?P<number>\d+|(a|an)|(%s[-\s]?)+)(\s+)
                        (?P<from>\S+)\s*\? # meter, kilometer, hectometer
                        ''' % (parsing.numbers)
 
@@ -39,16 +39,23 @@ class UnitConversion(LogicAdapter):
         response = Statement(text='')
         response.confidence = 1
 
-        pattern = re.compile(self.pattern, re.VERBOSE)
-        p = pattern.match(statment.text)
-        if p is None:
-            response.confidence = 0
-            return response
-
         try:
-            n = mathparse.parse(p.group("number"), "ENG")
-            target_parsed = p.group("target")
-            from_parsed = p.group("from")
+            pattern = re.compile(self.pattern, re.VERBOSE)
+            p = pattern.match(statment.text)
+            if p is None:
+                response.confidence = 0
+                return response
+
+            try:
+                target_parsed = p.group("target")
+                from_parsed = p.group("from")
+                n_statement = p.group("number")
+                n = mathparse.parse(n_statement, "ENG")
+            except Exception:
+                if n_statement == 'a' or n_statement == 'an':
+                    n = 1.0
+                else:
+                    raise
 
             target_unit = [None, 0.0]
             from_unit = [None, 0.0]
