@@ -1,5 +1,6 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
+from chatterbot import parsing
 import re
 
 
@@ -11,16 +12,20 @@ supported_units = ['meter', 'kilometer', 'hectometer', 'decameter', 'decimeter',
 class UnitConversion(LogicAdapter):
     def __init__(self, **kwargs):
         super(UnitConversion, self).__init__(**kwargs)
-        self.number = (
-            '(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten|'
-            'eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|'
-            'eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|'
-            'eighty|ninety|hundred|thousand)'
-        )
-        self.pattern = r'''([Hh]ow many)(\s+)(?P<target>\S+)(\s+)((are)*\s+in)(\s+)(?P<number>\d+|(%s[-\s]?)+)(\s+)(?P<from>\S+)\?''' % self.number
+        self.pattern = r'''
+                       ([Hh]ow[ ]many)
+                       \s+
+                       (?P<target>\S+) # meter, kilometer, hectometer
+                       \s+
+                       ((are)*\s+in)
+                       \s+
+                       (?P<number>\d+|(%s[-\s]?)+)(\s+)
+                       (?P<from>\S+)\? # meter, kilometer, hectometer
+                       ''' % (parsing.numbers)
 
     def can_process(self, statment):
-        return re.match(self.pattern, statment.text)
+        pattern = re.compile(self.pattern, re.VERBOSE)
+        return not pattern.match(statment.text) is None
 
     def process(self, statment):
         from pint import UnitRegistry
@@ -34,7 +39,8 @@ class UnitConversion(LogicAdapter):
         response = Statement(text='')
         response.confidence = 1
 
-        p = re.match(self.pattern, statment.text)
+        pattern = re.compile(self.pattern, re.VERBOSE)
+        p = pattern.match(statment.text)
         if p is None:
             response.confidence = 0
             return response
