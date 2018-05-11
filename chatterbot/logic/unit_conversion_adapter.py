@@ -17,10 +17,10 @@ class UnitConversion(LogicAdapter):
                        \s+
                        (?P<target>\S+) # meter, kilometer, hectometer
                        \s+
-                       ((are)*\s+in)
+                       ((are)*\s*in)
                        \s+
                        (?P<number>\d+|(%s[-\s]?)+)(\s+)
-                       (?P<from>\S+)\? # meter, kilometer, hectometer
+                       (?P<from>\S+)\s*\? # meter, kilometer, hectometer
                        ''' % (parsing.numbers)
 
     def can_process(self, statment):
@@ -69,7 +69,7 @@ class UnitConversion(LogicAdapter):
             target_value = from_value.to(getattr(ureg, target_unit[0]))
             response.text = target_value.magnitude
 
-        except Exception, e:
+        except Exception:
             response.confidence = 0
 
         finally:
