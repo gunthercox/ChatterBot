@@ -19,9 +19,6 @@ class UnitConversion(LogicAdapter):
         )
         self.pattern = r'''([Hh]ow many)(\s+)(?P<target>\S+)(\s+)((are)*\s+in)(\s+)(?P<number>\d+|(%s[-\s]?)+)(\s+)(?P<from>\S+)\?''' % self.number
 
-    def get_unit(self, text):
-        pass
-
     def can_process(self, statment):
         return re.match(self.pattern, statment.text)
 
