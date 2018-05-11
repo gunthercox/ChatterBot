@@ -3,9 +3,9 @@ from chatterbot.conversation import Statement
 import re
 
 
-supported_units = ['kilometer', 'hectometer', 'decameter', 'decimeter',
-        'centimeter', 'millimeter', 'micrometer', 'nanometer',
-        'picometer', 'femtometer', 'attometer', 'inches']
+supported_units = ['meter', 'kilometer', 'hectometer', 'decameter', 'decimeter',
+                   'centimeter', 'millimeter', 'micrometer', 'nanometer',
+                   'picometer', 'femtometer', 'attometer', 'inches']
 
 
 class UnitConversion(LogicAdapter):
@@ -59,6 +59,8 @@ class UnitConversion(LogicAdapter):
                     from_unit[0] = unit
                     from_unit[1] = from_ratio
 
+            response.confidence = (target_unit[1] + target_unit[1]) / 2.0
+
             ureg = UnitRegistry()
             from_value = float(n) * getattr(ureg, from_unit[0])
             target_value = from_value.to(getattr(ureg, target_unit[0]))
@@ -69,4 +71,3 @@ class UnitConversion(LogicAdapter):
 
         finally:
             return response
-
