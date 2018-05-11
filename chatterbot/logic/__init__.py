@@ -17,5 +17,5 @@ __all__ = (
     'NoKnowledgeAdapter',
     'SpecificResponseAdapter',
     'TimeLogicAdapter',
-    'UnitConversionAdapter'
+    'UnitConversion'
 )
