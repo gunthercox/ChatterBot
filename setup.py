@@ -13,7 +13,7 @@ AUTHOR_EMAIL = CHATTERBOT.__email__
 URL = CHATTERBOT.__url__
 DESCRIPTION = CHATTERBOT.__doc__
 
-with open('README.md', encoding='utf-8') as f:
+with open('README.md') as f:
     LONG_DESCRIPTION = f.read()
 
 with open('requirements.txt') as requirements:
