@@ -162,7 +162,8 @@ Training with the Ubuntu dialog corpus
 
 This training class makes it possible to train your chat bot using the Ubuntu
 dialog corpus. Because of the file size of the Ubuntu dialog corpus, the download
-and training process may take a considerable amount of time.
+and training process may take a considerable amount of time - More than 24hrs on a
+fast desktop machine.
 
 This training class will handle the process of downloading the compressed corpus
 file and extracting it. If the file has already been downloaded, it will not be
