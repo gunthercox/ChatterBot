@@ -131,7 +131,7 @@ we can exit the loop and stop the program when a user enters `ctrl+c`.
 
    while True:
        try:
-        bot_input = bot.get_response(None)
+           bot_input = bot.get_response(None)
 
        except(KeyboardInterrupt, EOFError, SystemExit):
            break
