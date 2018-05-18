@@ -13,7 +13,7 @@ chatbot.train([
     "Your flight has been booked."
 ])
 
-# Get a response to the input text 'How are you?'
+# Get a response to the input text 'I would like to book a flight.'
 response = chatbot.get_response('I would like to book a flight.')
 
 print(response)
