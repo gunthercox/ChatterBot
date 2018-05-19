@@ -73,3 +73,22 @@ class UnitConversionTests(TestCase):
         self.assertIsNotNone(response_statement)
         self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
+
+    def test_temperature_celsius_to_fahrenheit(self):
+        statement = Statement('How many fahrenheit are in 0 celsius ?')
+        self.assertTrue(self.adapter.can_process(statement))
+        expected_value = 32
+        response_statement = self.adapter.process(statement)
+        self.assertIsNotNone(response_statement)
+        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
+
+    def test_time_two_hours_to_seconds(self):
+        statement = Statement('How many seconds are in two hours?')
+        self.assertTrue(self.adapter.can_process(statement))
+        expected_value = 7200
+        response_statement = self.adapter.process(statement)
+        self.assertIsNotNone(response_statement)
+        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
+
