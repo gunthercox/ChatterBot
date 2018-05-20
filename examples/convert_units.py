@@ -11,7 +11,10 @@ bot = ChatBot(
     output_adapter="chatterbot.output.OutputAdapter"
 )
 
-questions = ['How many meters are in a kilometer?', 'How many meters are in one inch?', '0 celsius to fahrenheit', 'one hour is how many minutes ?']
+questions = ['How many meters are in a kilometer?',
+             'How many meters are in one inch?',
+             '0 celsius to fahrenheit',
+             'one hour is how many minutes ?']
 
 # Prints the convertion given the specific question
 for q in questions:
