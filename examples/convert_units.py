@@ -11,10 +11,9 @@ bot = ChatBot(
     output_adapter="chatterbot.output.OutputAdapter"
 )
 
-# Prints the convertion from one kilometer to meters
-response = bot.get_response('How many meters are in a kilometer?')
-print(response.text)
+questions = ['How many meters are in a kilometer?', 'How many meters are in one inch?', '0 celsius to fahrenheit', 'one hour is how many minutes ?']
 
-# Prints the convertion from one inch to meters
-response = bot.get_response('How many meters are in one inch?')
-print(response.text)
+# Prints the convertion given the specific question
+for q in questions:
+    response = bot.get_response(q)
+    print(q + " -  Response: " + response.text)
