@@ -35,8 +35,6 @@ CHATTERBOT = {
     'initialize': False
 }
 
-ROOT_URLCONF = 'chatterbot.ext.django_chatterbot.urls'
-
 MIDDLEWARE_CLASSES = (
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
