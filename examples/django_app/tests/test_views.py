@@ -1,5 +1,4 @@
 from django.test import TestCase
-from django.core.exceptions import ValidationError
 from example_app.views import ChatterBotApiView
 
 
@@ -14,20 +13,6 @@ class ViewTestCase(TestCase):
     def setUp(self):
         super(ViewTestCase, self).setUp()
         self.view = ChatterBotApiView()
-
-    def test_validate_text(self):
-        try:
-            self.view.validate({
-                'text': 'How are you?'
-            })
-        except ValidationError:
-            self.fail('Test raised ValidationError unexpectedly!')
-
-    def test_validate_invalid_text(self):
-        with self.assertRaises(ValidationError):
-            self.view.validate({
-                'type': 'classmethod'
-            })
 
     def test_get_conversation(self):
         conversation_id = self.view.chatterbot.storage.create_conversation()

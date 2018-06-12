@@ -15,7 +15,7 @@ class ChatterBotApiView(View):
     Provide an API endpoint to interact with ChatterBot.
     """
 
-    chatterbot = ChatBot(**settings.CHATTERBOT)    
+    chatterbot = ChatBot(**settings.CHATTERBOT)
 
     def get_conversation(self, request):
         """
@@ -59,12 +59,14 @@ class ChatterBotApiView(View):
 
         * The JSON data should contain a 'text' attribute.
         """
-        from django.core.exceptions import ValidationError
-
         input_data = json.loads(request.read().decode('utf-8'))
 
         if 'text' not in input_data:
-            raise ValidationError('The attribute "text" is required.')
+            return JsonResponse({
+                'text': [
+                    'The attribute "text" is required.'
+                ]
+            }, status=400)
 
         conversation = self.get_conversation(request)
 
