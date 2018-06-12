@@ -26,7 +26,7 @@ class ApiTestCase(TestCase):
 
     def setUp(self):
         super(ApiTestCase, self).setUp()
-        self.api_url = reverse('chatterbot:chatterbot')
+        self.api_url = reverse('chatterbot')
 
     def test_post(self):
         """
@@ -74,7 +74,7 @@ class ApiIntegrationTestCase(TestCase):
 
     def setUp(self):
         super(ApiIntegrationTestCase, self).setUp()
-        self.api_url = reverse('chatterbot:chatterbot')
+        self.api_url = reverse('chatterbot')
 
     def _get_json(self, response):
         return json.loads(force_text(response.content))

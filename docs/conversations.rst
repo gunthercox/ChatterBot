@@ -17,14 +17,14 @@ An adapter can access any conversation as long as the unique identifier for the 
 Conversation example
 --------------------
 
-The following example is taken from the Django :code:`ChatterBotView` built into ChatterBot.
+The following example is taken from the Django ``ChatterBotApiView`` built into ChatterBot.
 In this method, the unique identifiers for each chat session are being stored in Django's
 session objects. This allows different users who interact with the bot through different
 web browsers to have separate conversations with the chat bot.
 
-.. literalinclude:: ../chatterbot/ext/django_chatterbot/views.py
+.. literalinclude:: ../examples/django_app/example_app/views.py
    :language: python
-   :pyobject: ChatterBotView.post
+   :pyobject: ChatterBotApiView.post
    :dedent: 4
 
 
