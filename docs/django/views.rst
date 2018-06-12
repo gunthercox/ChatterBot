@@ -2,20 +2,26 @@
 ChatterBot Django Views
 =======================
 
-API Views
-=========
+Exmple API Views
+================
 
-ChatterBot's django module comes with a pre-built API view that you can make
-requests against to communicate with your bot from your web application.
+ChatterBot's Django example comes with an API view that demonstrates
+one way to use ChatterBot to create an conversational API endpoint
+for your application.
 
-The endpoint expects a JSON request with the following data:
+The endpoint expects a JSON request in the following format:
 
 .. code-block:: json
 
    {"text": "My input statement"}
 
+
+.. literalinclude:: ../../examples/django_app/example_app/views.py
+   :language: python
+   :pyobject: ChatterBotApiView
+
+
 .. note::
 
-   You will need to include ChatterBot's urls in your django url configuration
-   before you can make requests to these views. See the setup instructions for
-   more details.
+   Looking for the full example? Check it out on GitHub:
+   https://github.com/gunthercox/ChatterBot/tree/master/examples/django_app

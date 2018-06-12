@@ -1,6 +1,6 @@
 from django.test import TestCase
 from django.core.exceptions import ValidationError
-from chatterbot.ext.django_chatterbot.views import ChatterBotView
+from example_app.views import ChatterBotApiView
 
 
 class MockResponse(object):
@@ -13,7 +13,7 @@ class ViewTestCase(TestCase):
 
     def setUp(self):
         super(ViewTestCase, self).setUp()
-        self.view = ChatterBotView()
+        self.view = ChatterBotApiView()
 
     def test_validate_text(self):
         try:

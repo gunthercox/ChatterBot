@@ -43,7 +43,7 @@
     <script src="{% static 'js/js.cookie.js' %}"></script>
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script>
-      var chatterbotUrl = '{% url "chatterbot:chatterbot" %}';
+      var chatterbotUrl = '{% url "chatterbot" %}';
       var csrftoken = Cookies.get('csrftoken');
 
       function csrfSafeMethod(method) {

@@ -92,7 +92,7 @@ class ApiTestCase(TestCase):
     def test_get(self):
         response = self.client.get(self.api_url)
 
-        self.assertEqual(response.status_code, 405)
+        self.assertEqual(response.status_code, 200)
 
     def test_patch(self):
         response = self.client.patch(self.api_url)
