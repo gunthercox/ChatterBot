@@ -75,7 +75,7 @@ which specifies the import path to the adapter class.
        'Leander Jenkins',
        storage_adapter={
            'import_path': 'my.storage.AdapterClass',
-           'database_name': 'my-database'
+           'database_uri': 'protocol://my-database'
        },
        logic_adapters=[
            {

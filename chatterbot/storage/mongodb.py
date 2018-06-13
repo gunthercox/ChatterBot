@@ -62,13 +62,6 @@ class MongoDatabaseAdapter(StorageAdapter):
     The MongoDatabaseAdapter is an interface that allows
     ChatterBot to store statements in a MongoDB database.
 
-    :keyword database: The name of the database you wish to connect to.
-    :type database: str
-
-    .. code-block:: python
-
-       database='chatterbot-database'
-
     :keyword database_uri: The URI of a remote instance of MongoDB.
     :type database_uri: str
 
@@ -82,11 +75,8 @@ class MongoDatabaseAdapter(StorageAdapter):
         from pymongo import MongoClient
         from pymongo.errors import OperationFailure
 
-        self.database_name = self.kwargs.get(
-            'database', 'chatterbot-database'
-        )
         self.database_uri = self.kwargs.get(
-            'database_uri', 'mongodb://localhost:27017/'
+            'database_uri', 'mongodb://localhost:27017/chatterbot-database'
         )
 
         # Use the default host and port
@@ -99,7 +89,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             pass
 
         # Specify the name of the database
-        self.database = self.client[self.database_name]
+        self.database = self.client.get_database()
 
         # The mongo collection of statement documents
         self.statements = self.database['statements']
@@ -391,4 +381,4 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Remove the database.
         """
-        self.client.drop_database(self.database_name)
+        self.client.drop_database(self.database.name)
