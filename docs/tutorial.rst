@@ -67,7 +67,7 @@ already exist.
    bot = ChatBot(
        'Norman',
        storage_adapter='chatterbot.storage.SQLStorageAdapter',
-       database='./database.sqlite3'
+       database_uri='./database.sqlite3'
    )
 
 .. note::
@@ -90,7 +90,7 @@ the terminal. The output terminal adapter prints the chat bot's response.
        storage_adapter='chatterbot.storage.SQLStorageAdapter',
        input_adapter='chatterbot.input.TerminalAdapter',
        output_adapter='chatterbot.output.TerminalAdapter',
-       database='./database.sqlite3'
+       database_uri='./database.sqlite3'
    )
 
 Specifying logic adapters
@@ -117,7 +117,7 @@ operations.
            'chatterbot.logic.MathematicalEvaluation',
            'chatterbot.logic.TimeLogicAdapter'
        ],
-       database='./database.sqlite3'
+       database_uri='./database.sqlite3'
    )
 
 Getting a response from your chat bot

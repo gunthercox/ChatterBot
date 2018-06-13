@@ -25,7 +25,7 @@ bot = ChatBot(
     input_adapter="chatterbot.input.Mailgun",
     output_adapter="chatterbot.output.Mailgun",
     storage_adapter="chatterbot.storage.SQLStorageAdapter",
-    database="../database.db"
+    database_uri="../database.db"
 )
 
 # Send an example email to the address provided

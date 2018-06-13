@@ -29,7 +29,7 @@ chatbot = ChatBot(
     ],
     input_adapter="chatterbot.input.TerminalAdapter",
     output_adapter="chatterbot.output.TerminalAdapter",
-    database="./twitter-database.db",
+    database_uri="./twitter-database.db",
     twitter_consumer_key=TWITTER["CONSUMER_KEY"],
     twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],
     twitter_access_token_key=TWITTER["ACCESS_TOKEN"],

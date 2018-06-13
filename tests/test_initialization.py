@@ -7,7 +7,7 @@ class StringInitializationTestCase(ChatBotTestCase):
         return {
             'input_adapter': 'chatterbot.input.VariableInputTypeAdapter',
             'output_adapter': 'chatterbot.output.OutputAdapter',
-            'database': None
+            'database_uri': None
         }
 
     def test_storage_initialized(self):
@@ -34,7 +34,7 @@ class DictionaryInitializationTestCase(ChatBotTestCase):
         return {
             'storage_adapter': {
                 'import_path': 'chatterbot.storage.SQLStorageAdapter',
-                'database': None
+                'database_uri': None
             },
             'input_adapter': {
                 'import_path': 'chatterbot.input.VariableInputTypeAdapter'

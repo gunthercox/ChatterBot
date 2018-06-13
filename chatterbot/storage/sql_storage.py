@@ -23,9 +23,6 @@ class SQLStorageAdapter(StorageAdapter):
     It will check if tables are present, if they are not, it will attempt
     to create the required tables.
 
-    :keyword database: Used for sqlite database. Ignored if database_uri is specified.
-    :type database: str
-
     :keyword database_uri: eg: sqlite:///database_test.db", use database_uri or database,
         database_uri can be specified to choose database driver (database parameter will be ignored).
     :type database_uri: str
@@ -41,21 +38,15 @@ class SQLStorageAdapter(StorageAdapter):
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
-        default_uri = "sqlite:///db.sqlite3"
-
-        database_name = self.kwargs.get("database", False)
+        self.database_uri = self.kwargs.get("database_uri", False)
 
         # None results in a sqlite in-memory database as the default
-        if database_name is None:
-            default_uri = "sqlite://"
+        if self.database_uri is None:
+            self.database_uri = "sqlite://"
 
-        self.database_uri = self.kwargs.get(
-            "database_uri", default_uri
-        )
-
-        # Create a sqlite file if a database name is provided
-        if database_name:
-            self.database_uri = "sqlite:///" + database_name
+        # Create a file database if the database is not a connection string
+        if not self.database_uri:
+            self.database_uri = "sqlite:///db.sqlite3"
 
         self.engine = create_engine(self.database_uri, convert_unicode=True)
 
