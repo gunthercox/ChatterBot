@@ -63,6 +63,8 @@ class MongoDatabaseAdapter(StorageAdapter):
     ChatterBot to store statements in a MongoDB database.
 
     :keyword database_uri: The URI of a remote instance of MongoDB.
+                           This can be any valid
+                           `MongoDB connection string <https://docs.mongodb.com/manual/reference/connection-string/>`_
     :type database_uri: str
 
     .. code-block:: python
