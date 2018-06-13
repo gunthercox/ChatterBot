@@ -12,8 +12,6 @@ class MongoAdapterTestCase(TestCase):
         from pymongo.errors import ServerSelectionTimeoutError
         from pymongo import MongoClient
 
-        database_name = "test_db"
-
         # Skip these tests if a mongo client is not running
         try:
             client = MongoClient(
@@ -21,7 +19,9 @@ class MongoAdapterTestCase(TestCase):
             )
             client.server_info()
 
-            self.adapter = MongoDatabaseAdapter(database=database_name)
+            self.adapter = MongoDatabaseAdapter(
+                database_uri="mongodb://localhost:27017/chatterbot_test_database"
+            )
 
         except ServerSelectionTimeoutError:
             raise SkipTest("Unable to connect to mongo database.")

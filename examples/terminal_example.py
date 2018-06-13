@@ -17,7 +17,7 @@ bot = ChatBot(
     ],
     input_adapter="chatterbot.input.TerminalAdapter",
     output_adapter="chatterbot.output.TerminalAdapter",
-    database="../database.db"
+    database_uri="../database.db"
 )
 
 print("Type something to begin...")
