@@ -27,9 +27,8 @@ CONVERSATION_ID = bot.storage.create_conversation()
 
 
 def get_feedback():
-    from chatterbot.utils import input_function
 
-    text = input_function()
+    text = input()
 
     if 'yes' in text.lower():
         return True

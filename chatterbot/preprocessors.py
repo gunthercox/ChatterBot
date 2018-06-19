@@ -27,14 +27,7 @@ def unescape_html(chatbot, statement):
     Convert escaped html characters into unescaped html characters.
     For example: "&lt;b&gt;" becomes "<b>".
     """
-    import sys
-
-    # Replace HTML escape characters
-    if sys.version_info[0] < 3:
-        from HTMLParser import HTMLParser
-        html = HTMLParser()
-    else:
-        import html
+    import html
 
     statement.text = html.unescape(statement.text)
 
@@ -47,11 +40,6 @@ def convert_to_ascii(chatbot, statement):
     For example: "på fédéral" becomes "pa federal".
     """
     import unicodedata
-    import sys
-
-    # Normalize unicode characters
-    if sys.version_info[0] < 3:
-        statement.text = unicode(statement.text) # NOQA
 
     text = unicodedata.normalize('NFKD', statement.text)
     text = text.encode('ascii', 'ignore').decode('utf-8')
