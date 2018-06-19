@@ -1,7 +1,3 @@
-# -*- coding: utf-8 -*-
-import sys
-
-
 """
 This module contains various text-comparison algorithms
 designed to compare one statement to another.
@@ -58,19 +54,13 @@ class LevenshteinDistance(Comparator):
         :rtype: float
         """
 
-        PYTHON = sys.version_info[0]
-
         # Return 0 if either statement has a falsy text value
         if not statement.text or not other_statement.text:
             return 0
 
         # Get the lowercase version of both strings
-        if PYTHON < 3:
-            statement_text = unicode(statement.text.lower()) # NOQA
-            other_statement_text = unicode(other_statement.text.lower()) # NOQA
-        else:
-            statement_text = str(statement.text.lower())
-            other_statement_text = str(other_statement.text.lower())
+        statement_text = str(statement.text.lower())
+        other_statement_text = str(other_statement.text.lower())
 
         similarity = SequenceMatcher(
             None,

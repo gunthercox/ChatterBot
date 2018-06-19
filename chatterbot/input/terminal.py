@@ -1,6 +1,5 @@
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
-from chatterbot.utils import input_function
 
 
 class TerminalAdapter(InputAdapter):
@@ -13,5 +12,5 @@ class TerminalAdapter(InputAdapter):
         """
         Read the user's input from the terminal.
         """
-        user_input = input_function()
+        user_input = input()
         return Statement(user_input)
