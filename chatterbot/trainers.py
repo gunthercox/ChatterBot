@@ -10,9 +10,8 @@ class Trainer(object):
     Base class for all other trainer classes.
     """
 
-    def __init__(self, storage, **kwargs):
-        self.chatbot = kwargs.get('chatbot')
-        self.storage = storage
+    def __init__(self, chatbot, **kwargs):
+        self.chatbot = chatbot
         self.logger = logging.getLogger(__name__)
         self.show_training_progress = kwargs.get('show_training_progress', True)
 
@@ -20,11 +19,6 @@ class Trainer(object):
         """
         Preprocess the input statement.
         """
-
-        # The chatbot is optional to prevent backwards-incompatible changes
-        if not self.chatbot:
-            return input_statement
-
         for preprocessor in self.chatbot.preprocessors:
             input_statement = preprocessor(self, input_statement)
 
@@ -45,7 +39,7 @@ class Trainer(object):
             Statement(text=statement_text)
         )
 
-        statement = self.storage.find(temp_statement.text)
+        statement = self.chatbot.storage.find(temp_statement.text)
 
         if not statement:
             statement = Statement(temp_statement.text)
@@ -70,7 +64,7 @@ class Trainer(object):
 
     def _generate_export_data(self):
         result = []
-        for statement in self.storage.filter():
+        for statement in self.chatbot.storage.filter():
             for response in statement.in_response_to:
                 result.append([response.text, statement.text])
 
@@ -115,7 +109,7 @@ class ListTrainer(Trainer):
                 )
 
             previous_statement_text = statement.text
-            self.storage.update(statement)
+            self.chatbot.storage.update(statement)
 
 
 class ChatterBotCorpusTrainer(Trainer):
@@ -165,7 +159,7 @@ class ChatterBotCorpusTrainer(Trainer):
                             )
 
                         previous_statement_text = statement.text
-                        self.storage.update(statement)
+                        self.chatbot.storage.update(statement)
 
 
 class TwitterTrainer(Trainer):
@@ -260,7 +254,7 @@ class TwitterTrainer(Trainer):
         for _ in range(0, 10):
             statements = self.get_statements()
             for statement in statements:
-                self.storage.update(statement)
+                self.chatbot.storage.update(statement)
 
 
 class UbuntuCorpusTrainer(Trainer):
@@ -423,4 +417,4 @@ class UbuntuCorpusTrainer(Trainer):
                             )
 
                         previous_statement_text = statement.text
-                        self.storage.update(statement)
+                        self.chatbot.storage.update(statement)

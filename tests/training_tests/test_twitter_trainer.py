@@ -46,7 +46,7 @@ class TwitterTrainerTestCase(ChatBotTestCase):
         super(TwitterTrainerTestCase, self).setUp()
 
         self.trainer = TwitterTrainer(
-            self.chatbot.storage,
+            self.chatbot,
             twitter_consumer_key='twitter_consumer_key',
             twitter_consumer_secret='twitter_consumer_secret',
             twitter_access_token_key='twitter_access_token_key',
@@ -79,5 +79,5 @@ class TwitterTrainerTestCase(ChatBotTestCase):
     def test_train(self):
         self.trainer.train()
 
-        statement_created = self.trainer.storage.filter()
+        statement_created = self.trainer.chatbot.storage.filter()
         self.assertTrue(len(statement_created))
