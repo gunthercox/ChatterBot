@@ -10,16 +10,9 @@ class VariableInputTypeAdapter(InputAdapter):
     VALID_FORMATS = (JSON, TEXT, OBJECT, )
 
     def detect_type(self, statement):
-        import sys
-
-        if sys.version_info[0] < 3:
-            string_types = basestring # NOQA
-        else:
-            string_types = str
-
         if hasattr(statement, 'text'):
             return self.OBJECT
-        if isinstance(statement, string_types):
+        if isinstance(statement, str):
             return self.TEXT
         if isinstance(statement, dict):
             return self.JSON
