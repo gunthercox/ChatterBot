@@ -1,4 +1,3 @@
-from __future__ import unicode_literals
 from time import sleep
 from chatterbot.input import InputAdapter
 from chatterbot.conversation import Statement
