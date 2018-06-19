@@ -16,7 +16,6 @@ class ChatBot(object):
 
         self.name = name
         kwargs['name'] = name
-        kwargs['chatbot'] = self
 
         self.default_session = None
 
@@ -77,7 +76,7 @@ class ChatBot(object):
         # Use specified trainer or fall back to the default
         trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')
         TrainerClass = utils.import_module(trainer)
-        self.trainer = TrainerClass(self.storage, **kwargs)
+        self.trainer = TrainerClass(self, **kwargs)
         self.training_data = kwargs.get('training_data')
 
         self.default_conversation_id = None
@@ -166,10 +165,7 @@ class ChatBot(object):
 
         :param \**kwargs: Any parameters that should be passed to the training class.
         """
-        if 'chatbot' not in kwargs:
-            kwargs['chatbot'] = self
-
-        self.trainer = training_class(self.storage, **kwargs)
+        self.trainer = training_class(self, **kwargs)
 
     @property
     def train(self):
