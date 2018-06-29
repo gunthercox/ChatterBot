@@ -18,11 +18,7 @@ class Command(BaseCommand):
 
         chatterbot.train(chatterbot.training_data)
 
-        # Django 1.8 does not define SUCCESS
-        if hasattr(self.style, 'SUCCESS'):
-            style = self.style.SUCCESS
-        else:
-            style = self.style.NOTICE
+        style = self.style.SUCCESS
 
         self.stdout.write(style('Starting training...'))
         training_class = chatterbot.trainer.__class__.__name__
