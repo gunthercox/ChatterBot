@@ -91,8 +91,8 @@ A few examples include:
 
 .. code-block:: bash
 
-   # Run the tests with Django 1.10
-   tox -e django110
+   # Run the tests with Django 2.0
+   tox -e django20
 
 .. code-block:: bash
 
