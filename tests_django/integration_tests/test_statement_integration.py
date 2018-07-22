@@ -105,10 +105,14 @@ class ResponseIntegrationTestCase(TestCase):
         object_data = self.object.serialize()
         model_data = self.model.serialize()
 
-        self.assertEqual(len(object_data), len(model_data))
         self.assertIn('text', object_data)
         self.assertIn('text', model_data)
         self.assertEqual(object_data['text'], model_data['text'])
         self.assertIn('occurrence', object_data)
         self.assertIn('occurrence', model_data)
         self.assertEqual(object_data['occurrence'], model_data['occurrence'])
+        self.assertIn('conversation', object_data)
+        self.assertIn('conversation', model_data)
+        self.assertEqual(object_data['conversation'], model_data['conversation'])
+        self.assertEqual(len(object_data), len(model_data))
+

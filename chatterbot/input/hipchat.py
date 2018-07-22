@@ -15,7 +15,6 @@ class HipChat(InputAdapter):
         self.hipchat_host = kwargs.get('hipchat_host')
         self.hipchat_access_token = kwargs.get('hipchat_access_token')
         self.hipchat_room = kwargs.get('hipchat_room')
-        self.session_id = str(self.chatbot.default_session.uuid)
 
         import requests
         self.session = requests.Session()
@@ -77,14 +76,14 @@ class HipChat(InputAdapter):
             return None
         return items[-1]
 
-    def process_input(self, statement):
+    def process_input(self, statement, conversation):
         """
         Process input from the HipChat room.
         """
         new_message = False
 
         response_statement = self.chatbot.storage.get_latest_response(
-            self.session_id
+            conversation
         )
 
         if response_statement:

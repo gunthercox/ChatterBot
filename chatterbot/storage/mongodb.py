@@ -96,9 +96,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         # The mongo collection of statement documents
         self.statements = self.database['statements']
 
-        # The mongo collection of conversation documents
-        self.conversations = self.database['conversations']
-
         # Set a requirement for the text attribute to be unique
         self.statements.create_index('text', unique=True)
 
@@ -282,14 +279,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return statement
 
-    def create_conversation(self):
-        """
-        Create a new conversation.
-        """
-        conversation_id = self.conversations.insert_one({}).inserted_id
-        return conversation_id
-
-    def get_latest_response(self, conversation_id):
+    def get_latest_response(self, conversation):
         """
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
@@ -297,46 +287,13 @@ class MongoDatabaseAdapter(StorageAdapter):
         from pymongo import DESCENDING
 
         statements = list(self.statements.find({
-            'conversations.id': conversation_id
+            'conversation': conversation
         }).sort('conversations.created_at', DESCENDING))
 
         if not statements:
             return None
 
         return self.mongo_to_object(statements[-2])
-
-    def add_to_conversation(self, conversation_id, statement, response):
-        """
-        Add the statement and response to the conversation.
-        """
-        from datetime import datetime, timedelta
-        self.statements.update_one(
-            {
-                'text': statement.text
-            },
-            {
-                '$push': {
-                    'conversations': {
-                        'id': conversation_id,
-                        'created_at': datetime.utcnow()
-                    }
-                }
-            }
-        )
-        self.statements.update_one(
-            {
-                'text': response.text
-            },
-            {
-                '$push': {
-                    'conversations': {
-                        'id': conversation_id,
-                        # Force the response to be at least one millisecond after the input statement
-                        'created_at': datetime.utcnow() + timedelta(milliseconds=1)
-                    }
-                }
-            }
-        )
 
     def get_random(self):
         """

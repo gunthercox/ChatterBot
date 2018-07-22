@@ -6,6 +6,8 @@ from chatterbot.trainers import ChatterBotCorpusTrainer
 # import logging
 # logging.basicConfig(level=logging.INFO)
 
+CONVERSATION = 'example_learning_conversation'
+
 # Create a new instance of a ChatBot
 bot = ChatBot(
     "Terminal",
@@ -16,9 +18,6 @@ bot = ChatBot(
 bot.set_trainer(ChatterBotCorpusTrainer)
 
 bot.train("chatterbot.corpus.english")
-
-
-CONVERSATION_ID = bot.storage.create_conversation()
 
 
 def get_feedback():
@@ -40,15 +39,17 @@ print("Type something to begin...")
 while True:
     try:
         input_statement = bot.input.process_input_statement()
-        statement, response = bot.generate_response(input_statement, CONVERSATION_ID)
+        statement, response = bot.generate_response(
+            input_statement,
+            CONVERSATION
+        )
 
         bot.output.process_response(response)
         print('\n Is "{}" a coherent response to "{}"? \n'.format(response, input_statement))
         if get_feedback():
             print("please input the correct one")
             response1 = bot.input.process_input_statement()
-            bot.learn_response(response1, input_statement)
-            bot.storage.add_to_conversation(CONVERSATION_ID, statement, response1)
+            bot.learn_response(CONVERSATION, response1, input_statement)
             print("Responses added to bot!")
 
     # Press ctrl-c or ctrl-d on the keyboard to exit

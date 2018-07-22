@@ -106,12 +106,19 @@ class Response(Base):
         String(constants.STATEMENT_TEXT_MAX_LENGTH)
     )
 
+    conversation = Column(
+        String(constants.CONVERSATION_LABEL_MAX_LENGTH)
+    )
+
     created_at = Column(
         DateTime(timezone=True),
         server_default=func.now()
     )
 
-    occurrence = Column(Integer, default=1)
+    occurrence = Column(
+        Integer,
+        default=1
+    )
 
     statement_text = Column(
         String(constants.STATEMENT_TEXT_MAX_LENGTH),
@@ -123,24 +130,4 @@ class Response(Base):
         back_populates='in_response_to',
         cascade='all',
         uselist=False
-    )
-
-
-conversation_association_table = Table(
-    'conversation_association',
-    Base.metadata,
-    Column('conversation_id', Integer, ForeignKey('conversation.id')),
-    Column('statement_id', Integer, ForeignKey('statement.id'))
-)
-
-
-class Conversation(Base):
-    """
-    A conversation.
-    """
-
-    statements = relationship(
-        'Statement',
-        secondary=lambda: conversation_association_table,
-        backref='conversations'
     )
