@@ -115,4 +115,3 @@ class ResponseIntegrationTestCase(TestCase):
         self.assertIn('conversation', model_data)
         self.assertEqual(object_data['conversation'], model_data['conversation'])
         self.assertEqual(len(object_data), len(model_data))
-
