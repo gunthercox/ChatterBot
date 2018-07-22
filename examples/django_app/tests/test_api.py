@@ -111,29 +111,6 @@ class ApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
 
-    def test_get_conversation_empty(self):
-        response = self.client.get(self.api_url)
-        data = self._get_json(response)
-
-        self.assertIn('conversation', data)
-        self.assertEqual(len(data['conversation']), 0)
-
-    def test_get_conversation(self):
-        self.client.post(
-            self.api_url,
-            data=json.dumps({'text': 'How are you?'}),
-            content_type='application/json',
-            format='json'
-        )
-
-        response = self.client.get(self.api_url)
-        data = self._get_json(response)
-
-        self.assertIn('conversation', data)
-        self.assertEqual(len(data['conversation']), 2)
-        self.assertIn('text', data['conversation'][0])
-        self.assertIn('text', data['conversation'][1])
-
     def test_patch(self):
         response = self.client.patch(self.api_url)
 
