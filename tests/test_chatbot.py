@@ -40,15 +40,19 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         An input statement should be added to the recent response list.
         """
-        statement = Statement(text='Wow!', in_response_to=[Response(text='Ok')])
-        response = self.chatbot.get_response(statement)
+        conversation = 'test'
+        statement = Statement(text='Wow!', in_response_to=[
+            Response(text='Ok', conversation=conversation)
+        ])
+        response = self.chatbot.get_response(statement, conversation=conversation)
+
         response_statement = self.chatbot.storage.get_latest_response(
-            self.chatbot.default_conversation_id
+            conversation
         )
 
         self.assertIsNotNone(response_statement)
-        self.assertEqual(statement.text, response_statement.text)
         self.assertEqual(statement.text, response)
+        self.assertEqual(statement.in_response_to[0].text, response_statement.text)
 
     def test_response_known(self):
         self.chatbot.storage.update(self.test_statement)
@@ -70,8 +74,9 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_second_response_format(self):
         self.chatbot.storage.update(self.test_statement)
 
-        self.chatbot.get_response('Hi')
-        # >>> 'Hello'
+        response = self.chatbot.get_response('Hi')
+        self.assertEqual(response.text, 'Hello')
+
         second_response = self.chatbot.get_response('How are you?')
         statement = self.chatbot.storage.find(second_response.text)
 
@@ -139,7 +144,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
         input_statement, response = self.chatbot.generate_response(
             statement,
-            self.chatbot.default_conversation_id
+            'default'
         )
 
         self.assertEqual(input_statement, statement)
@@ -149,7 +154,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_learn_response(self):
         previous_response = Statement('Define Hemoglobin.')
         statement = Statement('Hemoglobin is an oxygen-transport metalloprotein.')
-        self.chatbot.learn_response(statement, previous_response)
+        self.chatbot.learn_response('test_conversation', statement, previous_response)
         exists = self.chatbot.storage.find(statement.text)
 
         self.assertIsNotNone(exists)

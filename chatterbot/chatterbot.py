@@ -16,8 +16,6 @@ class ChatBot(object):
         self.name = name
         kwargs['name'] = name
 
-        self.default_session = None
-
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
         # These are logic adapters that are required for normal operation
@@ -78,8 +76,6 @@ class ChatBot(object):
         self.trainer = TrainerClass(self, **kwargs)
         self.training_data = kwargs.get('training_data')
 
-        self.default_conversation_id = None
-
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
         # Allow the bot to save input it receives so that it can learn
@@ -94,50 +90,47 @@ class ChatBot(object):
         """
         self.logic.initialize()
 
-    def get_response(self, input_item, conversation_id=None):
+    def get_response(self, input_item, conversation='default'):
         """
         Return the bot's response based on the input.
 
         :param input_item: An input value.
-        :param conversation_id: The id of a conversation.
+        :param conversation: A string of characters unique to the conversation.
         :returns: A response to the input.
         :rtype: Statement
         """
-        if not conversation_id:
-            if not self.default_conversation_id:
-                self.default_conversation_id = self.storage.create_conversation()
-            conversation_id = self.default_conversation_id
-
-        input_statement = self.input.process_input_statement(input_item)
+        input_statement = self.input.process_input_statement(
+            input_item,
+            conversation
+        )
 
         # Preprocess the input statement
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(self, input_statement)
 
-        statement, response = self.generate_response(input_statement, conversation_id)
+        statement, response = self.generate_response(input_statement, conversation)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
-        previous_statement = self.storage.get_latest_response(conversation_id)
+        previous_statement = self.storage.get_latest_response(conversation)
 
         if not self.read_only:
-            self.learn_response(statement, previous_statement)
-            self.storage.add_to_conversation(conversation_id, statement, response)
+            self.learn_response(conversation, statement, previous_statement)
 
         # Process the response output with the output adapter
-        return self.output.process_response(response, conversation_id)
+        return self.output.process_response(response, conversation)
 
-    def generate_response(self, input_statement, conversation_id):
+    def generate_response(self, input_statement, conversation):
         """
         Return a response based on a given input statement.
         """
-        self.storage.generate_base_query(self, conversation_id)
+        self.storage.generate_base_query(self, conversation)
 
         # Select a response to the input statement
         response = self.logic.process(input_statement)
 
         return input_statement, response
 
-    def learn_response(self, statement, previous_statement):
+    def learn_response(self, conversation, statement, previous_statement):
         """
         Learn that the statement provided is a valid response.
         """
@@ -145,7 +138,7 @@ class ChatBot(object):
 
         if previous_statement:
             statement.add_response(
-                Response(previous_statement.text)
+                Response(previous_statement.text, conversation=conversation)
             )
             self.logger.info('Adding "{}" as a response to "{}"'.format(
                 statement.text,

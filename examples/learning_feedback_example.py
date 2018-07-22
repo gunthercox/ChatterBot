@@ -11,6 +11,8 @@ element from the user.
 # import logging
 # logging.basicConfig(level=logging.INFO)
 
+CONVERSATION = 'example_feedback_conversation'
+
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Feedback Learning Bot',
@@ -21,9 +23,6 @@ bot = ChatBot(
     input_adapter='chatterbot.input.TerminalAdapter',
     output_adapter='chatterbot.output.TerminalAdapter'
 )
-
-
-CONVERSATION_ID = bot.storage.create_conversation()
 
 
 def get_feedback():
@@ -45,14 +44,14 @@ print('Type something to begin...')
 while True:
     try:
         input_statement = bot.input.process_input_statement()
-        statement, response = bot.generate_response(input_statement, CONVERSATION_ID)
+        statement, response = bot.generate_response(
+            input_statement,
+            CONVERSATION
+        )
         print('\n Is "{}" this a coherent response to "{}"? \n'.format(response, input_statement))
 
         if get_feedback():
-            bot.learn_response(response, input_statement)
-            # Update the conversation history for the bot
-            # It is important that this happens last, after the learning step
-            bot.storage.add_to_conversation(CONVERSATION_ID, statement, response)
+            bot.learn_response(CONVERSATION, response, input_statement)
 
         bot.output.process_response(response)
 

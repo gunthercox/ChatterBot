@@ -154,11 +154,11 @@ class Statement(StatementMixin):
         :returns: A dictionary representation of the statement object.
         :rtype: dict
         """
-        data = {}
-
-        data['text'] = self.text
-        data['in_response_to'] = []
-        data['extra_data'] = self.extra_data
+        data = {
+            'text': self.text,
+            'in_response_to': [],
+            'extra_data': self.extra_data
+        }
 
         for response in self.in_response_to:
             data['in_response_to'].append(response.serialize())
@@ -192,6 +192,7 @@ class Response(object):
         from dateutil import parser as date_parser
 
         self.text = text
+        self.conversation = kwargs.get('conversation', '')
         self.created_at = kwargs.get('created_at', datetime.now())
         self.occurrence = kwargs.get('occurrence', 1)
 
@@ -217,11 +218,9 @@ class Response(object):
         return self.text == other
 
     def serialize(self):
-        data = {}
-
-        data['text'] = self.text
-        data['created_at'] = self.created_at.isoformat()
-
-        data['occurrence'] = self.occurrence
-
-        return data
+        return {
+            'text': self.text,
+            'created_at': self.created_at.isoformat(),
+            'conversation': self.conversation,
+            'occurrence': self.occurrence
+        }

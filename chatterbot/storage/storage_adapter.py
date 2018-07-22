@@ -106,22 +106,6 @@ class StorageAdapter(object):
             'The `get_latest_response` method is not implemented by this adapter.'
         )
 
-    def create_conversation(self):
-        """
-        Creates a new conversation.
-        """
-        raise self.AdapterMethodNotImplementedError(
-            'The `create_conversation` method is not implemented by this adapter.'
-        )
-
-    def add_to_conversation(self, conversation_id, statement, response):
-        """
-        Add the statement and response to the conversation.
-        """
-        raise self.AdapterMethodNotImplementedError(
-            'The `add_to_conversation` method is not implemented by this adapter.'
-        )
-
     def get_random(self):
         """
         Returns a random statement from the database.

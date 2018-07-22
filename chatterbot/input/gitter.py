@@ -147,7 +147,7 @@ class Gitter(InputAdapter):
 
         return text_without_mentions
 
-    def process_input(self, statement):
+    def process_input(self, statement, conversation):
         new_message = False
 
         while not new_message:

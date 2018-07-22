@@ -25,7 +25,7 @@ class VariableInputTypeAdapter(InputAdapter):
             )
         )
 
-    def process_input(self, statement):
+    def process_input(self, statement, conversation):
         input_type = self.detect_type(statement)
 
         # Return the statement object without modification

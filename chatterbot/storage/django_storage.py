@@ -25,10 +25,6 @@ class DjangoStorageAdapter(StorageAdapter):
         from django.apps import apps
         return apps.get_model(self.django_app_name, 'Response')
 
-    def get_conversation_model(self):
-        from django.apps import apps
-        return apps.get_model(self.django_app_name, 'Conversation')
-
     def get_tag_model(self):
         from django.apps import apps
         return apps.get_model(self.django_app_name, 'Tag')
@@ -166,7 +162,7 @@ class DjangoStorageAdapter(StorageAdapter):
         responses.delete()
         statements.delete()
 
-    def get_latest_response(self, conversation_id):
+    def get_latest_response(self, conversation):
         """
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
@@ -174,7 +170,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Response = self.get_model('response')
 
         response = Response.objects.filter(
-            conversations__id=conversation_id
+            conversation=conversation
         ).order_by(
             'created_at'
         ).last()
@@ -184,43 +180,16 @@ class DjangoStorageAdapter(StorageAdapter):
 
         return response.response
 
-    def create_conversation(self):
-        """
-        Create a new conversation.
-        """
-        Conversation = self.get_model('conversation')
-        conversation = Conversation.objects.create()
-        return conversation.id
-
-    def add_to_conversation(self, conversation_id, statement, response):
-        """
-        Add the statement and response to the conversation.
-        """
-        Statement = self.get_model('statement')
-        Response = self.get_model('response')
-
-        first_statement, created = Statement.objects.get_or_create(text=statement.text)
-        first_response, created = Statement.objects.get_or_create(text=response.text)
-
-        response = Response.objects.create(
-            statement=first_statement,
-            response=first_response
-        )
-
-        response.conversations.add(conversation_id)
-
     def drop(self):
         """
         Remove all data from the database.
         """
         Statement = self.get_model('statement')
         Response = self.get_model('response')
-        Conversation = self.get_model('conversation')
         Tag = self.get_model('tag')
 
         Statement.objects.all().delete()
         Response.objects.all().delete()
-        Conversation.objects.all().delete()
         Tag.objects.all().delete()
 
     def get_response_statements(self):
