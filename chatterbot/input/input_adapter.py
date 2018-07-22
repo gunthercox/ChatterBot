@@ -7,17 +7,17 @@ class InputAdapter(Adapter):
     interface that all input adapters should implement.
     """
 
-    def process_input(self, *args, **kwargs):
+    def process_input(self, statement, conversation):
         """
         Returns a statement object based on the input source.
         """
         raise self.AdapterMethodNotImplementedError()
 
-    def process_input_statement(self, *args, **kwargs):
+    def process_input_statement(self, statement, conversation):
         """
         Return an existing statement object (if one exists).
         """
-        input_statement = self.process_input(*args, **kwargs)
+        input_statement = self.process_input(statement, conversation)
 
         self.logger.info('Received input statement: {}'.format(input_statement.text))
 

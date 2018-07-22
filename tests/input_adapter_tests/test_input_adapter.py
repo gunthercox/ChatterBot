@@ -17,14 +17,23 @@ class InputAdapterTestCase(ChatBotTestCase):
 
     def test_process_response(self):
         with self.assertRaises(InputAdapter.AdapterMethodNotImplementedError):
-            self.adapter.process_input()
+            self.adapter.process_input(
+                'test statement',
+                'test conversation'
+            )
 
     def test_process_response_statement(self):
         with self.assertRaises(InputAdapter.AdapterMethodNotImplementedError):
-            self.adapter.process_input_statement()
+            self.adapter.process_input_statement(
+                'test statement',
+                'test conversation'
+            )
 
     def test_process_response_statement_initialized(self):
         self.adapter.chatbot = self.chatbot
         self.adapter.process_input = lambda *args, **kwargs: Statement('Hi')
-        response = self.adapter.process_input_statement()
+        response = self.adapter.process_input_statement(
+            'test statement',
+            'test conversation'
+        )
         self.assertEqual(response, 'Hi')

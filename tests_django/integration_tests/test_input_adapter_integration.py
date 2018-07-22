@@ -15,6 +15,6 @@ class InputIntegrationTestCase(TestCase):
 
         statement = Statement(text='_')
 
-        result = adapter.process_input(statement)
+        result = adapter.process_input(statement, 'test')
 
         self.assertEqual(result.text, '_')

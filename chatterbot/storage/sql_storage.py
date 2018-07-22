@@ -87,13 +87,6 @@ class SQLStorageAdapter(StorageAdapter):
         from chatterbot.ext.sqlalchemy_app.models import Response
         return Response
 
-    def get_conversation_model(self):
-        """
-        Return the conversation model.
-        """
-        from chatterbot.ext.sqlalchemy_app.models import Conversation
-        return Conversation
-
     def get_tag_model(self):
         """
         Return the conversation model.
@@ -255,6 +248,9 @@ class SQLStorageAdapter(StorageAdapter):
             if not record:
                 record = Statement(text=statement.text)
 
+            if statement.extra_data is None:
+                statement.extra_data = {}
+
             record.extra_data = dict(statement.extra_data)
 
             for _tag in statement.tags:
@@ -280,8 +276,21 @@ class SQLStorageAdapter(StorageAdapter):
                     _response = Response(
                         text=response.text,
                         statement_text=statement.text,
+                        conversation=response.conversation,
                         occurrence=response.occurrence
                     )
+
+                # Make sure a statement exists for the response text
+                if response.text != statement.text:
+                    response_statement_query = session.query(Statement).filter_by(
+                        text=response.text
+                    )
+
+                    if not response_statement_query.count():
+                        _response_statement = Statement(
+                            text=response.text
+                        )
+                        session.add(_response_statement)
 
                 record.in_response_to.append(_response)
 
@@ -289,82 +298,32 @@ class SQLStorageAdapter(StorageAdapter):
 
             self._session_finish(session)
 
-    def create_conversation(self):
-        """
-        Create a new conversation.
-        """
-        Conversation = self.get_model('conversation')
-
-        session = self.Session()
-        conversation = Conversation()
-
-        session.add(conversation)
-        session.flush()
-
-        session.refresh(conversation)
-        conversation_id = conversation.id
-
-        session.commit()
-        session.close()
-
-        return conversation_id
-
-    def add_to_conversation(self, conversation_id, statement, response):
-        """
-        Add the statement and response to the conversation.
-        """
-        Statement = self.get_model('statement')
-        Conversation = self.get_model('conversation')
-
-        session = self.Session()
-        conversation = session.query(Conversation).get(conversation_id)
-
-        statement_query = session.query(Statement).filter_by(
-            text=statement.text
-        ).first()
-        response_query = session.query(Statement).filter_by(
-            text=response.text
-        ).first()
-
-        # Make sure the statements exist
-        if not statement_query:
-            self.update(statement)
-            statement_query = session.query(Statement).filter_by(
-                text=statement.text
-            ).first()
-
-        if not response_query:
-            self.update(response)
-            response_query = session.query(Statement).filter_by(
-                text=response.text
-            ).first()
-
-        conversation.statements.append(statement_query)
-        conversation.statements.append(response_query)
-
-        session.add(conversation)
-        self._session_finish(session)
-
-    def get_latest_response(self, conversation_id):
+    def get_latest_response(self, conversation):
         """
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
         Statement = self.get_model('statement')
+        Response = self.get_model('response')
 
         session = self.Session()
         statement = None
+        response = None
 
-        statement_query = session.query(Statement).filter(
-            Statement.conversations.any(id=conversation_id)
-        ).order_by(Statement.id)
+        response_query = session.query(Response).filter(
+            Response.conversation == conversation
+        ).order_by(Response.id)
 
-        if statement_query.count() >= 2:
-            statement = statement_query[-2].get_statement()
+        if response_query.count():
+            response = response_query[-1].text
 
-        # Handle the case of the first statement in the list
-        elif statement_query.count() == 1:
-            statement = statement_query[0].get_statement()
+        # Get the statement for the response
+        if response:
+            statement = session.query(Statement).filter(
+                Statement.text == response
+            ).first()
+            if statement:
+                statement = statement.get_statement()
 
         session.close()
 

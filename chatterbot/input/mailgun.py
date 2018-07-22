@@ -48,7 +48,7 @@ class Mailgun(InputAdapter):
             auth=('api', self.api_key)
         )
 
-    def process_input(self, statement):
+    def process_input(self, statement, conversation):
         urls = self.get_stored_email_urls()
         url = list(urls)[0]
 

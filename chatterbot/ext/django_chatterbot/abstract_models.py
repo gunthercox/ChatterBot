@@ -181,6 +181,10 @@ class AbstractBaseResponse(models.Model):
         on_delete=models.CASCADE
     )
 
+    conversation = models.CharField(
+        max_length=constants.CONVERSATION_LABEL_MAX_LENGTH
+    )
+
     created_at = models.DateTimeField(
         default=timezone.now,
         help_text='The date and time that this response was created at.'
@@ -214,33 +218,12 @@ class AbstractBaseResponse(models.Model):
         :returns: A dictionary representation of the statement object.
         :rtype: dict
         """
-        data = {}
-
-        data['text'] = self.response.text
-        data['created_at'] = self.created_at.isoformat()
-        data['occurrence'] = self.occurrence
-
-        return data
-
-
-class AbstractBaseConversation(models.Model):
-    """
-    The abstract base conversation allows other models to
-    be created using the attributes that exist on the
-    default models.
-    """
-
-    responses = models.ManyToManyField(
-        RESPONSE_MODEL,
-        related_name='conversations',
-        help_text='The responses in this conversation.'
-    )
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return str(self.id)
+        return {
+            'text': self.response.text,
+            'conversation': self.conversation,
+            'created_at': self.created_at.isoformat(),
+            'occurrence': self.occurrence
+        }
 
 
 class AbstractBaseTag(models.Model):

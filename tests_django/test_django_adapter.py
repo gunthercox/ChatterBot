@@ -24,62 +24,56 @@ class DjangoAdapterTestCase(TestCase):
 
 class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
 
-    def test_get_latest_response_from_invalid_conversation_id(self):
-        response = self.adapter.get_latest_response(0)
-
-        self.assertIsNone(response)
-
     def test_get_latest_response_from_zero_responses(self):
-        conversation = ConversationModel.objects.create()
-        response = self.adapter.get_latest_response(conversation.id)
+        response = self.adapter.get_latest_response('default')
 
         self.assertIsNone(response)
 
     def test_get_latest_response_from_one_responses(self):
-        conversation = ConversationModel.objects.create()
         response_1 = ResponseModel.objects.create(
             statement=StatementModel.objects.create(text='A'),
-            response=StatementModel.objects.create(text='B')
+            response=StatementModel.objects.create(text='B'),
+            conversation='test'
         )
 
-        conversation.responses.add(response_1)
-        response = self.adapter.get_latest_response(conversation.id)
+        response = self.adapter.get_latest_response('test')
 
         self.assertEqual(response_1.response, response)
 
     def test_get_latest_response_from_two_responses(self):
-        conversation = ConversationModel.objects.create()
-        response_1 = ResponseModel.objects.create(
+        ResponseModel.objects.create(
             statement=StatementModel.objects.create(text='A'),
-            response=StatementModel.objects.create(text='B')
+            response=StatementModel.objects.create(text='B'),
+            conversation='test'
         )
         response_2 = ResponseModel.objects.create(
             statement=StatementModel.objects.create(text='C'),
-            response=StatementModel.objects.create(text='D')
+            response=StatementModel.objects.create(text='D'),
+            conversation='test'
         )
 
-        conversation.responses.add(response_1, response_2)
-        response = self.adapter.get_latest_response(conversation.id)
+        response = self.adapter.get_latest_response('test')
 
         self.assertEqual(response_2.response, response)
 
     def test_get_latest_response_from_three_responses(self):
-        conversation = ConversationModel.objects.create()
-        response_1 = ResponseModel.objects.create(
+        ResponseModel.objects.create(
             statement=StatementModel.objects.create(text='A'),
-            response=StatementModel.objects.create(text='B')
+            response=StatementModel.objects.create(text='B'),
+            conversation='test'
         )
-        response_2 = ResponseModel.objects.create(
+        ResponseModel.objects.create(
             statement=StatementModel.objects.create(text='C'),
-            response=StatementModel.objects.create(text='D')
+            response=StatementModel.objects.create(text='D'),
+            conversation='test'
         )
         response_3 = ResponseModel.objects.create(
             statement=StatementModel.objects.create(text='E'),
-            response=StatementModel.objects.create(text='F')
+            response=StatementModel.objects.create(text='F'),
+            conversation='test'
         )
 
-        conversation.responses.add(response_1, response_2, response_3)
-        response = self.adapter.get_latest_response(conversation.id)
+        response = self.adapter.get_latest_response('test')
 
         self.assertEqual(response_3.response, response)
 

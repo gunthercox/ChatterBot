@@ -17,42 +17,6 @@ class ChatterBotApiView(View):
 
     chatterbot = ChatBot(**settings.CHATTERBOT)
 
-    def get_conversation(self, request):
-        """
-        Return the conversation for the session if one exists.
-        Create a new conversation if one does not exist.
-        """
-        from chatterbot.ext.django_chatterbot.models import Conversation, Response
-
-        class Obj(object):
-            def __init__(self):
-                self.id = None
-                self.statements = []
-
-        conversation = Obj()
-
-        conversation.id = request.session.get('conversation_id', 0)
-        existing_conversation = False
-        try:
-            Conversation.objects.get(id=conversation.id)
-            existing_conversation = True
-
-        except Conversation.DoesNotExist:
-            conversation_id = self.chatterbot.storage.create_conversation()
-            request.session['conversation_id'] = conversation_id
-            conversation.id = conversation_id
-
-        if existing_conversation:
-            responses = Response.objects.filter(
-                conversations__id=conversation.id
-            )
-
-            for response in responses:
-                conversation.statements.append(response.statement.serialize())
-                conversation.statements.append(response.response.serialize())
-
-        return conversation
-
     def post(self, request, *args, **kwargs):
         """
         Return a response to the statement in the posted data.
@@ -66,11 +30,12 @@ class ChatterBotApiView(View):
                 'text': [
                     'The attribute "text" is required.'
                 ]
-            }, status=400)
+            }, status=400)            
 
-        conversation = self.get_conversation(request)
-
-        response = self.chatterbot.get_response(input_data, conversation.id)
+        response = self.chatterbot.get_response(
+            input_data,
+            input_data.get('conversation', 'default')
+        )
         response_data = response.serialize()
 
         return JsonResponse(response_data, status=200)
