@@ -48,6 +48,9 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
             Response(text=statement_1.text, conversation=conversation)
         ])
 
+        self.adapter.update(statement_1)
+        self.adapter.update(statement_2)
+
         response = self.adapter.get_latest_response(conversation)
 
         self.assertEqual(statement_1, response)
@@ -62,6 +65,10 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         statement_3 = Statement(text='C', in_response_to=[
             Response(text=statement_2.text, conversation=conversation)
         ])
+
+        self.adapter.update(statement_1)
+        self.adapter.update(statement_2)
+        self.adapter.update(statement_3)
 
         response = self.adapter.get_latest_response(conversation)
 
@@ -80,6 +87,11 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         statement_4 = Statement(text='D', in_response_to=[
             Response(text=statement_3.text, conversation=conversation)
         ])
+
+        self.adapter.update(statement_1)
+        self.adapter.update(statement_2)
+        self.adapter.update(statement_3)
+        self.adapter.update(statement_4)
 
         response = self.adapter.get_latest_response(conversation)
 
