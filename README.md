@@ -34,6 +34,12 @@ This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBo
 pip install chatterbot
 ```
 
+Alternatively, you can use the following command to install this package.
+```
+python setup.py install
+```
+Make sure to cd into ChatterBot directory before performing the above command.
+
 ## Basic Usage
 
 ```
