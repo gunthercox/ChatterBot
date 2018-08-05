@@ -21,20 +21,6 @@ class MongoAdapterTestCase(TestCase):
         self.assertIn('One', query.value()['text']['$nin'])
         self.assertIn('Two', query.value()['text']['$nin'])
 
-    def test_statement_response_list_contains(self):
-        query = self.query.statement_response_list_contains('Hey')
-
-        self.assertIn('in_response_to', query.value())
-        self.assertIn('$elemMatch', query.value()['in_response_to'])
-        self.assertIn('text', query.value()['in_response_to']['$elemMatch'])
-        self.assertEqual('Hey', query.value()['in_response_to']['$elemMatch']['text'])
-
-    def test_statement_response_list_equals(self):
-        query = self.query.statement_response_list_equals([])
-
-        self.assertIn('in_response_to', query.value())
-        self.assertEqual(query.value()['in_response_to'], [])
-
     def test_raw(self):
         query = self.query.raw({'text': 'testing'})
 
