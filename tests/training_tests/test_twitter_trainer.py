@@ -1,5 +1,5 @@
 from tests.base_case import ChatBotTestCase
-from mock import Mock, MagicMock
+from unittest.mock import Mock, MagicMock
 from chatterbot.trainers import TwitterTrainer
 import os
 import json

@@ -1,5 +1,5 @@
 from unittest import TestCase
-from mock import Mock
+from unittest.mock import Mock
 from chatterbot.conversation import Statement
 from chatterbot.output import Microsoft
 from chatterbot.output import microsoft

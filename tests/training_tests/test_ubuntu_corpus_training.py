@@ -1,8 +1,8 @@
+from unittest.mock import Mock
 from io import BytesIO
 import unittest
 import tarfile
 import os
-from mock import Mock
 
 from tests.base_case import ChatBotTestCase
 from chatterbot.trainers import UbuntuCorpusTrainer
