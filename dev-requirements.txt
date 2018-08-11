@@ -1,11 +1,8 @@
 coveralls
 factory-boy>=2.9,<2.10
 flake8
-mock
 nose
-pip
 twine
 twython
 sphinx>=1.6,<1.7
 sphinx_rtd_theme
-wheel
