@@ -85,6 +85,7 @@ class DjangoStorageAdapter(StorageAdapter):
         if 'in_response__response__text' in kwargs:
             value = kwargs['in_response__response__text']
             parameters['responses__statement__text'] = value
+            del kwargs['in_response__response__text']
 
         statements = Statement.objects.filter(Q(**kwargs) | Q(**parameters))
 
