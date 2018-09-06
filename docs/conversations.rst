@@ -45,19 +45,14 @@ has returned based on some input.
       ChatterBot's logic adapters assign a confidence score to the statement
       before it is returned. The confidence score indicates the degree of
       certainty with which the chat bot believes this is the correct response
-      to the given input. 
+      to the given input.
 
-..  _conversation_responses:
+   .. autoinstanceattribute:: chatterbot.conversation.Statement.in_response_to
 
-Responses
-=========
+      The response attribute represents the relationship between two statements.
+      This value of this field indicates that one statement was issued in response
+      to another statement.
 
-ChatterBot's response objects represent the relationship between two
-statements. A response indicates that one statement was issued in
-response to another statement.
-
-.. autoclass:: chatterbot.conversation.Response
-   :members:
 
 Statement-response relationship
 ===============================
@@ -76,6 +71,6 @@ of the current statement.
 .. image:: _static/statement-relationship.svg
    :alt: ChatterBot statement relationship
 
-The :code:`Response` object's :code:`occurrence` attribute indicates the number of times
-that the statement has been given as a response. This makes it possible for the chat bot
-to determine if a particular response is more commonly used than another.
+The count of recorded statements with matching, or similar text indicates the number of
+times that the statement has been given as a response. This makes it possible for the
+chat bot to determine if a particular response is more commonly used than another.

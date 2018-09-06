@@ -31,7 +31,7 @@ two parameters (a statements and a list of statements). The method must return a
 
 .. code-block:: python
 
-   def select_response(statement, statement_list):
+   def select_response(statement, statement_list, storage=None):
 
        # Your selection logic
 
@@ -65,5 +65,7 @@ as shown below.
 .. code-block:: python
 
    response = self.select_response(
-       input_statement, list_of_response_options
+       input_statement,
+       list_of_response_options,
+       self.chatbot.storage
    )
