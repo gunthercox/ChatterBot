@@ -4,14 +4,27 @@ various chat bot configurations to help prevent
 performance based regressions when changes are made.
 """
 
+from random import choice
 from .base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot import ChatBot
 from chatterbot import utils
-from factory import Faker
+
+
+WORDBANK = (
+    'the', 'mellifluous', 'sound', 'of', 'a', 'spring', 'evening',
+    'breaks', 'the', 'heart', 'string', 'by', 'calling', 'out', 'to',
+    'David', 'who', 'looks', 'on', 'at', 'the', 'world', 'blankly',
+    'who', 'could', 'tell', 'that', 'there', 'is', 'no', 'instrament',
+    'softly', 'strumming', 'toward', 'the', 'melody', 'called', 'silence',
+)
 
 
 # Generate a list of random sentences
-STATEMENT_LIST = Faker('sentences', nb=10).generate({})
+STATEMENT_LIST = [
+    '{:s} {:s} {:s} {:s} {:s} {:s} {:s} {:s} {:s} {:s}'.format(
+        *[choice(WORDBANK) for __ in range(0, 10)]
+    ) for _ in range(0, 10)
+]
 
 
 class BenchmarkingMixin(object):
