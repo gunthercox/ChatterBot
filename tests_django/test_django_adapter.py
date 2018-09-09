@@ -1,11 +1,7 @@
 from django.test import TestCase
 from chatterbot.storage import DjangoStorageAdapter
-from chatterbot.ext.django_chatterbot.factories import (
-    ConversationFactory,
-    StatementFactory,
-    ResponseFactory,
-)
 from chatterbot.ext.django_chatterbot.models import (
+    Conversation as ConversationModel,
     Statement as StatementModel,
     Response as ResponseModel,
 )
@@ -34,16 +30,16 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         self.assertIsNone(response)
 
     def test_get_latest_response_from_zero_responses(self):
-        conversation = ConversationFactory()
+        conversation = ConversationModel.objects.create()
         response = self.adapter.get_latest_response(conversation.id)
 
         self.assertIsNone(response)
 
     def test_get_latest_response_from_one_responses(self):
-        conversation = ConversationFactory()
-        response_1 = ResponseFactory(
-            statement=StatementFactory(text='A'),
-            response=StatementFactory(text='B')
+        conversation = ConversationModel.objects.create()
+        response_1 = ResponseModel.objects.create(
+            statement=StatementModel.objects.create(text='A'),
+            response=StatementModel.objects.create(text='B')
         )
 
         conversation.responses.add(response_1)
@@ -52,14 +48,14 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         self.assertEqual(response_1.response, response)
 
     def test_get_latest_response_from_two_responses(self):
-        conversation = ConversationFactory()
-        response_1 = ResponseFactory(
-            statement=StatementFactory(text='A'),
-            response=StatementFactory(text='B')
+        conversation = ConversationModel.objects.create()
+        response_1 = ResponseModel.objects.create(
+            statement=StatementModel.objects.create(text='A'),
+            response=StatementModel.objects.create(text='B')
         )
-        response_2 = ResponseFactory(
-            statement=StatementFactory(text='C'),
-            response=StatementFactory(text='D')
+        response_2 = ResponseModel.objects.create(
+            statement=StatementModel.objects.create(text='C'),
+            response=StatementModel.objects.create(text='D')
         )
 
         conversation.responses.add(response_1, response_2)
@@ -68,18 +64,18 @@ class DjangoStorageAdapterTestCase(DjangoAdapterTestCase):
         self.assertEqual(response_2.response, response)
 
     def test_get_latest_response_from_three_responses(self):
-        conversation = ConversationFactory()
-        response_1 = ResponseFactory(
-            statement=StatementFactory(text='A'),
-            response=StatementFactory(text='B')
+        conversation = ConversationModel.objects.create()
+        response_1 = ResponseModel.objects.create(
+            statement=StatementModel.objects.create(text='A'),
+            response=StatementModel.objects.create(text='B')
         )
-        response_2 = ResponseFactory(
-            statement=StatementFactory(text='C'),
-            response=StatementFactory(text='D')
+        response_2 = ResponseModel.objects.create(
+            statement=StatementModel.objects.create(text='C'),
+            response=StatementModel.objects.create(text='D')
         )
-        response_3 = ResponseFactory(
-            statement=StatementFactory(text='E'),
-            response=StatementFactory(text='F')
+        response_3 = ResponseModel.objects.create(
+            statement=StatementModel.objects.create(text='E'),
+            response=StatementModel.objects.create(text='F')
         )
 
         conversation.responses.add(response_1, response_2, response_3)
