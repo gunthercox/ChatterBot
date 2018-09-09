@@ -7,19 +7,13 @@ class MongoAdapterTestCase(TestCase):
         from chatterbot.storage.mongodb import Query
         self.query = Query()
 
-    def test_statement_text_equals(self):
-        query = self.query.statement_text_equals('Testing in progress')
+    def test_statement_in_response_to_not_in(self):
+        query = self.query.statement_in_response_to_not_in(['One', 'Two'])
 
-        self.assertIn('text', query.value())
-        self.assertEqual(query.value()['text'], 'Testing in progress')
-
-    def test_statement_text_not_in(self):
-        query = self.query.statement_text_not_in(['One', 'Two'])
-
-        self.assertIn('text', query.value())
-        self.assertIn('$nin', query.value()['text'])
-        self.assertIn('One', query.value()['text']['$nin'])
-        self.assertIn('Two', query.value()['text']['$nin'])
+        self.assertIn('in_response_to', query.value())
+        self.assertIn('$nin', query.value()['in_response_to'])
+        self.assertIn('One', query.value()['in_response_to']['$nin'])
+        self.assertIn('Two', query.value()['in_response_to']['$nin'])
 
     def test_raw(self):
         query = self.query.raw({'text': 'testing'})

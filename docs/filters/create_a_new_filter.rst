@@ -23,13 +23,6 @@ Filter Queries
 Filters use a storage adapter's query object to build a query that the adapter
 can evaluate. The available query methods currently are:
 
-statement_text_equals(statement_text)
--------------------------------------
-
-This query method returns the current query with the added constraint that the text
-attribute of any statement returned must be equal to the text specified in
-the parameter.
-
 statement_text_not_in(statements)
 ---------------------------------
 

@@ -43,7 +43,7 @@ print('Type something to begin...')
 # The following loop will execute each time the user enters input
 while True:
     try:
-        input_statement = bot.input.process_input_statement()
+        input_statement = bot.input.process_input()
         statement, response = bot.generate_response(
             input_statement,
             CONVERSATION

@@ -38,10 +38,16 @@ class DataCachingTests(ChatBotTestCase):
         and that this attribute is saved.
         """
         self.chatbot.get_response('Hello')
-        found_statement = self.chatbot.storage.find('Hello')
-        data = found_statement.serialize()
+        results = self.chatbot.storage.filter(
+            text='Hello',
+            in_response_to=None,
+            conversation='default'
+        )
 
-        self.assertIsNotNone(found_statement)
+        self.assertEqual(len(results), 1)
+
+        data = results[0].serialize()
+
         self.assertIn('extra_data', data)
         self.assertIn('pos_tags', data['extra_data'])
         self.assertEqual('NN', data['extra_data']['pos_tags'])

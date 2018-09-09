@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 from chatterbot.logic import LowConfidenceAdapter
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 from tests.base_case import ChatBotTestCase
 
 
@@ -17,24 +17,30 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         self.adapter.set_chatbot(self.chatbot)
 
         possible_choices = [
-            Statement('Who do you love?', in_response_to=[
-                Response('I hear you are going on a quest?')
-            ]),
-            Statement('What is the meaning of life?', in_response_to=[
-                Response('Yuck, black licorice jelly beans.')
-            ]),
-            Statement('I am Iron Man.', in_response_to=[
-                Response('What... is your quest?')
-            ]),
-            Statement('What... is your quest?', in_response_to=[
-                Response('I am Iron Man.')
-            ]),
-            Statement('Yuck, black licorice jelly beans.', in_response_to=[
-                Response('What is the meaning of life?')
-            ]),
-            Statement('I hear you are going on a quest?', in_response_to=[
-                Response('Who do you love?')
-            ]),
+            Statement(
+                'Who do you love?',
+                in_response_to='I hear you are going on a quest?'
+            ),
+            Statement(
+                'What is the meaning of life?',
+                in_response_to='Yuck, black licorice jelly beans.'
+            ),
+            Statement(
+                'I am Iron Man.',
+                in_response_to='What... is your quest?'
+            ),
+            Statement(
+                'What... is your quest?',
+                in_response_to='I am Iron Man.'
+            ),
+            Statement(
+                'Yuck, black licorice jelly beans.',
+                in_response_to='What is the meaning of life?'
+            ),
+            Statement(
+                'I hear you are going on a quest?',
+                in_response_to='Who do you love?'
+            ),
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 

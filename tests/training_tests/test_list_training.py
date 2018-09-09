@@ -47,15 +47,11 @@ class ListTrainingTests(ChatBotTestCase):
         self.chatbot.train(conversation)
 
         statements = self.chatbot.storage.filter(
-            in_response_to__contains="Do you like my hat?"
+            in_response_to="Do you like my hat?"
         )
 
-        self.assertIsLength(statements, 1)
-        self.assertIsLength(statements[0].in_response_to, 1)
-
-        response = statements[0].in_response_to[0]
-
-        self.assertEqual(response.occurrence, 2)
+        self.assertIsLength(statements, 2)
+        self.assertEqual(statements[0].in_response_to, "Do you like my hat?")
 
     def test_database_has_correct_format(self):
         """
@@ -84,21 +80,14 @@ class ListTrainingTests(ChatBotTestCase):
         self.assertEqual(self.chatbot.storage.count(), 9)
 
         # The first statement should be in response to another statement
-        self.assertEqual(
-            len(self.chatbot.storage.find(conversation[0]).in_response_to),
-            0
-        )
-
-        # The second statement should have one response
-        self.assertEqual(
-            len(self.chatbot.storage.find(conversation[1]).in_response_to),
-            1
+        self.assertIsNone(
+            self.chatbot.storage.filter(text=conversation[0])[0].in_response_to
         )
 
         # The second statement should be in response to the first statement
-        self.assertIn(
-            conversation[0],
-            self.chatbot.storage.find(conversation[1]).in_response_to,
+        self.assertEqual(
+            self.chatbot.storage.filter(text=conversation[1])[0].in_response_to,
+            conversation[0]
         )
 
     def test_training_with_unicode_characters(self):

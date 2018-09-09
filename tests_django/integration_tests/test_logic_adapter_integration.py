@@ -1,5 +1,5 @@
 from django.test import TestCase
-from chatterbot.ext.django_chatterbot.models import Statement, Response
+from chatterbot.ext.django_chatterbot.models import Statement
 
 
 class LogicIntegrationTestCase(TestCase):
@@ -23,14 +23,16 @@ class LogicIntegrationTestCase(TestCase):
         adapter = BestMatch()
         adapter.set_chatbot(self.chatbot)
 
-        statement1 = Statement(text='Do you like programming?')
-        statement1.save()
+        statement1 = Statement.objects.create(
+            text='Do you like programming?',
+            conversation='test'
+        )
 
-        statement2 = Statement(text='Yes')
-        statement2.save()
-
-        response = Response(statement=statement1, response=statement2)
-        response.save()
+        Statement.objects.create(
+            text='Yes',
+            in_response_to=statement1.text,
+            conversation='test'
+        )
 
         response = adapter.process(statement1)
 

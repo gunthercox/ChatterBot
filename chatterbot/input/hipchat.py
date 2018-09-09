@@ -82,9 +82,12 @@ class HipChat(InputAdapter):
         """
         new_message = False
 
-        response_statement = self.chatbot.storage.get_latest_response(
-            conversation
+        conversation = self.chatbot.storage.filter(
+            text=conversation,
+            order_by=['id']
         )
+
+        response_statement = conversation[-1] if conversation else None
 
         if response_statement:
             last_message_id = response_statement.extra_data.get(

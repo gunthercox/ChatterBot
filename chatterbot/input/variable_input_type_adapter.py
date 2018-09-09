@@ -30,17 +30,27 @@ class VariableInputTypeAdapter(InputAdapter):
 
         # Return the statement object without modification
         if input_type == self.OBJECT:
+
+            if not statement.conversation:
+                statement.conversation = conversation
+
             return statement
 
         # Convert the input string into a statement object
         if input_type == self.TEXT:
-            return Statement(statement)
+            return Statement(
+                text=statement,
+                conversation=conversation
+            )
 
         # Convert input dictionary into a statement object
         if input_type == self.JSON:
             input_json = dict(statement)
             text = input_json['text']
             del input_json['text']
+
+            if 'conversation' not in input_json:
+                input_json['conversation'] = conversation
 
             return Statement(text, **input_json)
 
