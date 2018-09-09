@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from .base_case import ChatBotTestCase
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 
 
 class ChatterBotResponseTestCase(ChatBotTestCase):
@@ -8,11 +8,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def setUp(self):
         super(ChatterBotResponseTestCase, self).setUp()
 
-        response_list = [
-            Response('Hi')
-        ]
-
-        self.test_statement = Statement('Hello', in_response_to=response_list)
+        self.test_statement = Statement('Hello', in_response_to='Hi')
 
     def test_empty_database(self):
         """
@@ -31,28 +27,20 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement_text = 'Wow!'
         response = self.chatbot.get_response(statement_text)
 
-        saved_statement = self.chatbot.storage.find(statement_text)
+        results = self.chatbot.storage.filter(text=statement_text)
 
-        self.assertIsNotNone(saved_statement)
+        self.assertIsLength(results, 1)
         self.assertEqual(response, statement_text)
 
-    def test_statement_added_to_recent_response_list(self):
+    def test_statement_added_to_conversation(self):
         """
         An input statement should be added to the recent response list.
         """
-        conversation = 'test'
-        statement = Statement(text='Wow!', in_response_to=[
-            Response(text='Ok', conversation=conversation)
-        ])
-        response = self.chatbot.get_response(statement, conversation=conversation)
+        statement = Statement(text='Wow!', conversation='test')
+        response = self.chatbot.get_response(statement)
 
-        response_statement = self.chatbot.storage.get_latest_response(
-            conversation
-        )
-
-        self.assertIsNotNone(response_statement)
         self.assertEqual(statement.text, response)
-        self.assertEqual(statement.in_response_to[0].text, response_statement.text)
+        self.assertEqual(response.conversation, 'test')
 
     def test_response_known(self):
         self.chatbot.storage.update(self.test_statement)
@@ -65,11 +53,11 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.chatbot.storage.update(self.test_statement)
 
         response = self.chatbot.get_response('Hi')
-        statement_object = self.chatbot.storage.find(response.text)
+        results = self.chatbot.storage.filter(text=response.text)
 
         self.assertEqual(response, self.test_statement.text)
-        self.assertIsLength(statement_object.in_response_to, 1)
-        self.assertIn('Hi', statement_object.in_response_to)
+        self.assertIsLength(results, 1)
+        self.assertEqual(results[0].in_response_to, 'Hi')
 
     def test_second_response_format(self):
         self.chatbot.storage.update(self.test_statement)
@@ -78,14 +66,14 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.text, 'Hello')
 
         second_response = self.chatbot.get_response('How are you?')
-        statement = self.chatbot.storage.find(second_response.text)
+        results = self.chatbot.storage.filter(text=second_response.text)
 
         # Make sure that the second response was saved to the database
-        self.assertIsNotNone(self.chatbot.storage.find('How are you?'))
+        self.assertIsLength(self.chatbot.storage.filter(text='How are you?'), 1)
 
         self.assertEqual(second_response, self.test_statement.text)
-        self.assertIsLength(statement.in_response_to, 1)
-        self.assertIn('Hi', statement.in_response_to)
+        self.assertIsLength(results, 1)
+        self.assertEqual(results[0].in_response_to, 'Hi')
 
     def test_get_response_unicode(self):
         """
@@ -133,41 +121,33 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
             self.test_statement
         )
 
-        saved_statement = self.chatbot.storage.find(
-            self.test_statement.text
-        )
+        results = self.chatbot.storage.filter(text=self.test_statement.text)
 
-        self.assertIn('test', saved_statement.extra_data)
-        self.assertEqual(1, saved_statement.extra_data['test'])
+        self.assertIsLength(results, 1)
+        self.assertIn('test', results[0].extra_data)
+        self.assertEqual(1, results[0].extra_data['test'])
 
     def test_generate_response(self):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
-        input_statement, response = self.chatbot.generate_response(
-            statement,
-            'default'
-        )
+        response = self.chatbot.generate_response(statement)
 
-        self.assertEqual(input_statement, statement)
         self.assertEqual(response, statement)
         self.assertEqual(response.confidence, 1)
 
     def test_learn_response(self):
         previous_response = Statement('Define Hemoglobin.')
         statement = Statement('Hemoglobin is an oxygen-transport metalloprotein.')
-        self.chatbot.learn_response('test_conversation', statement, previous_response)
-        exists = self.chatbot.storage.find(statement.text)
+        self.chatbot.learn_response(statement, previous_response)
+        results = self.chatbot.storage.filter(text=statement.text)
 
-        self.assertIsNotNone(exists)
+        self.assertIsLength(results, 1)
 
-    def test_update_does_not_add_new_statement(self):
+    def test_get_response_does_not_add_new_statement(self):
         """
         Test that a new statement is not learned if `read_only` is set to True.
         """
         self.chatbot.read_only = True
-        self.chatbot.storage.update(self.test_statement)
+        self.chatbot.get_response('Hi!')
+        results = self.chatbot.storage.filter(text='Hi!')
 
-        response = self.chatbot.get_response('Hi!')
-        statement_found = self.chatbot.storage.find('Hi!')
-
-        self.assertEqual(response, self.test_statement.text)
-        self.assertIsNone(statement_found)
+        self.assertIsLength(results, 0)

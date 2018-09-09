@@ -1,24 +1,36 @@
-from unittest import TestCase
+from .base_case import ChatBotSQLTestCase
 from chatterbot import response_selection
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 
 
-class ResponseSelectionTests(TestCase):
+class ResponseSelectionTests(ChatBotSQLTestCase):
 
     def test_get_most_frequent_response(self):
         statement_list = [
-            Statement('What... is your quest?', in_response_to=[Response('Hello', occurrence=2)]),
-            Statement('This is a phone.', in_response_to=[Response('Hello', occurrence=4)]),
-            Statement('A what?', in_response_to=[Response('Hello', occurrence=2)]),
-            Statement('A phone.', in_response_to=[Response('Hello', occurrence=1)])
+            Statement('What... is your quest?', in_response_to='Hello'),
+            Statement('What... is your quest?', in_response_to='Hello'),
+            Statement('This is a phone.', in_response_to='Hello'),
+            Statement('This is a phone.', in_response_to='Hello'),
+            Statement('This is a phone.', in_response_to='Hello'),
+            Statement('This is a phone.', in_response_to='Hello'),
+            Statement('A what?', in_response_to='Hello'),
+            Statement('A what?', in_response_to='Hello'),
+            Statement('A phone.', in_response_to='Hello')
         ]
+
+        for statement in statement_list:
+            self.chatbot.storage.create(
+                text=statement.text,
+                in_response_to=statement.in_response_to
+            )
 
         output = response_selection.get_most_frequent_response(
             Statement('Hello'),
-            statement_list
+            statement_list,
+            self.chatbot.storage
         )
 
-        self.assertEqual('This is a phone.', output)
+        self.assertEqual('This is a phone.', output.text)
 
     def test_get_first_response(self):
         statement_list = [

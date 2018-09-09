@@ -57,7 +57,7 @@ class BestMatch(LogicAdapter):
 
         # Get all statements that are in response to the closest match
         response_list = self.chatbot.storage.filter(
-            in_response_to__contains=closest_match.text
+            in_response_to=closest_match.text
         )
 
         if response_list:
@@ -66,7 +66,11 @@ class BestMatch(LogicAdapter):
                     len(response_list)
                 )
             )
-            response = self.select_response(input_statement, response_list)
+            response = self.select_response(
+                input_statement,
+                response_list,
+                self.chatbot.storage
+            )
             response.confidence = closest_match.confidence
             self.logger.info('Response selected. Using "{}"'.format(response.text))
         else:

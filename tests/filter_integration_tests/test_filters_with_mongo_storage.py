@@ -17,17 +17,20 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
         self.chatbot.set_trainer(ListTrainer, **self.get_kwargs())
 
         self.chatbot.train([
-            'Hello',
             'Hi',
             'Hello',
             'Hi',
             'Hello',
-            'Hi, how are you?',
-            'I am good.'
+            'Hi',
+            'Hello',
+            'How are you?',
+            'I am good.',
+            'Glad to hear',
+            'How are you?'
         ])
 
-        first_response = self.chatbot.get_response('Hello')
-        second_response = self.chatbot.get_response('Hello')
+        first_response = self.chatbot.get_response('Hello', conversation='training')
+        second_response = self.chatbot.get_response('Hello', conversation='training')
 
-        self.assertEqual('Hi', first_response.text)
-        self.assertEqual('Hi, how are you?', second_response.text)
+        self.assertEqual('I am good.', first_response.text)
+        self.assertEqual('Hi', second_response.text)

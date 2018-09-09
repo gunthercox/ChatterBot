@@ -1,5 +1,4 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot.conversation import Statement
 from chatterbot.input import InputAdapter
 
 

@@ -38,7 +38,7 @@ print("Type something to begin...")
 # The following loop will execute each time the user enters input
 while True:
     try:
-        input_statement = bot.input.process_input_statement()
+        input_statement = bot.input.process_input()
         statement, response = bot.generate_response(
             input_statement,
             CONVERSATION
@@ -48,7 +48,7 @@ while True:
         print('\n Is "{}" a coherent response to "{}"? \n'.format(response, input_statement))
         if get_feedback():
             print("please input the correct one")
-            response1 = bot.input.process_input_statement()
+            response1 = bot.input.process_input()
             bot.learn_response(CONVERSATION, response1, input_statement)
             print("Responses added to bot!")
 

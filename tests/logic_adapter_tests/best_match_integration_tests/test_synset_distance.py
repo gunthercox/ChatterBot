@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 from chatterbot.logic import BestMatch
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 from tests.base_case import ChatBotTestCase
 
 
@@ -30,9 +30,9 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
         filter out any statements that are not in response to a known statement.
         """
         possible_choices = [
-            Statement('This is a lovely bog.', in_response_to=[Response('This is a lovely bog.')]),
-            Statement('This is a beautiful swamp.', in_response_to=[Response('This is a beautiful swamp.')]),
-            Statement('It smells like a swamp.', in_response_to=[Response('It smells like a swamp.')])
+            Statement('This is a lovely bog.', in_response_to='This is a lovely bog.'),
+            Statement('This is a beautiful swamp.', in_response_to='This is a beautiful swamp.'),
+            Statement('It smells like a swamp.', in_response_to='It smells like a swamp.')
         ]
         self.adapter.chatbot.storage.filter = MagicMock(
             return_value=possible_choices

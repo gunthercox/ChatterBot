@@ -46,7 +46,11 @@ class LowConfidenceAdapter(BestMatch):
         closest_match = self.get(input_statement)
 
         # Choose a response from the list of options
-        response = self.select_response(input_statement, self.default_responses)
+        response = self.select_response(
+            input_statement,
+            self.default_responses,
+            self.chatbot.storage
+        )
 
         # Confidence should be high only if it is less than the threshold
         if closest_match.confidence < self.confidence_threshold:

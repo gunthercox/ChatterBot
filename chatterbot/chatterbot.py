@@ -99,7 +99,7 @@ class ChatBot(object):
         :returns: A response to the input.
         :rtype: Statement
         """
-        input_statement = self.input.process_input_statement(
+        input_statement = self.input.process_input(
             input_item,
             conversation
         )
@@ -108,45 +108,89 @@ class ChatBot(object):
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(self, input_statement)
 
-        statement, response = self.generate_response(input_statement, conversation)
+        response = self.generate_response(input_statement)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
-        previous_statement = self.storage.get_latest_response(conversation)
+        previous_statement = self.get_latest_response(input_statement.conversation)
 
         if not self.read_only:
-            self.learn_response(conversation, statement, previous_statement)
+            self.learn_response(input_statement, previous_statement)
 
         # Process the response output with the output adapter
         return self.output.process_response(response, conversation)
 
-    def generate_response(self, input_statement, conversation):
+    def generate_response(self, input_statement):
         """
         Return a response based on a given input statement.
         """
-        self.storage.generate_base_query(self, conversation)
+        self.storage.generate_base_query(self, input_statement.conversation)
 
         # Select a response to the input statement
         response = self.logic.process(input_statement)
 
-        return input_statement, response
+        return response
 
-    def learn_response(self, conversation, statement, previous_statement):
+    def learn_response(self, statement, previous_statement):
         """
         Learn that the statement provided is a valid response.
         """
-        from .conversation import Response
+        previous_statement_text = previous_statement
 
-        if previous_statement:
-            statement.add_response(
-                Response(previous_statement.text, conversation=conversation)
-            )
-            self.logger.info('Adding "{}" as a response to "{}"'.format(
-                statement.text,
-                previous_statement.text
-            ))
+        if previous_statement is not None:
+            previous_statement_text = previous_statement.text
+
+        self.logger.info('Adding "{}" as a response to "{}"'.format(
+            statement.text,
+            previous_statement_text
+        ))
 
         # Save the statement after selecting a response
-        self.storage.update(statement)
+        self.storage.create(
+            text=statement.text,
+            in_response_to=previous_statement_text,
+            conversation=statement.conversation,
+            extra_data=statement.extra_data,
+            tags=statement.tags
+        )
+
+    def get_latest_response(self, conversation):
+        """
+        Returns the latest response in a conversation if it exists.
+        Returns None if a matching conversation cannot be found.
+
+        # TODO: Write tests for this method.
+        """
+        from .conversation import Statement as StatementObject
+
+        conversation_statements = self.storage.filter(
+            conversation=conversation,
+            order_by=['id']
+        )
+
+        # Get the most recent statement in the conversation if one exists
+        latest_statement = conversation_statements[-1] if conversation_statements else None
+
+        if latest_statement:
+            if latest_statement.in_response_to:
+
+                response_statements = self.storage.filter(
+                    conversation=conversation,
+                    text=latest_statement.in_response_to,
+                    order_by=['id']
+                )
+
+                if response_statements:
+                    return response_statements[-1]
+                else:
+                    return StatementObject(
+                        text=latest_statement.in_response_to,
+                        conversation=conversation
+                    )
+            else:
+                # The case that the latest statement is not in response to another statement
+                return latest_statement
+
+        return None
 
     def set_trainer(self, training_class, **kwargs):
         """

@@ -1,7 +1,7 @@
 import logging
 import os
 import sys
-from .conversation import Statement, Response
+from .conversation import Statement
 from . import utils
 
 
@@ -30,22 +30,6 @@ class Trainer(object):
         """
         raise self.TrainerInitializationException()
 
-    def get_or_create(self, statement_text):
-        """
-        Return a statement if it exists.
-        Create and return the statement if it does not exist.
-        """
-        temp_statement = self.get_preprocessed_statement(
-            Statement(text=statement_text)
-        )
-
-        statement = self.chatbot.storage.find(temp_statement.text)
-
-        if not statement:
-            statement = Statement(temp_statement.text)
-
-        return statement
-
     class TrainerInitializationException(Exception):
         """
         Exception raised when a base class has not overridden
@@ -65,8 +49,8 @@ class Trainer(object):
     def _generate_export_data(self):
         result = []
         for statement in self.chatbot.storage.filter():
-            for response in statement.in_response_to:
-                result.append([response.text, statement.text])
+            if statement.in_response_to:
+                result.append([statement.in_response_to, statement.text])
 
         return result
 
@@ -101,15 +85,22 @@ class ListTrainer(Trainer):
                     conversation_count + 1, len(conversation)
                 )
 
-            statement = self.get_or_create(text)
-
-            if previous_statement_text:
-                statement.add_response(
-                    Response(previous_statement_text)
+            statement = self.get_preprocessed_statement(
+                Statement(
+                    text=text,
+                    in_response_to=previous_statement_text,
+                    conversation='training'
                 )
+            )
 
             previous_statement_text = statement.text
-            self.chatbot.storage.update(statement)
+
+            self.chatbot.storage.create(
+                text=statement.text,
+                in_response_to=statement.in_response_to,
+                conversation=statement.conversation,
+                tags=statement.tags
+            )
 
 
 class ChatterBotCorpusTrainer(Trainer):
@@ -150,16 +141,25 @@ class ChatterBotCorpusTrainer(Trainer):
                     previous_statement_text = None
 
                     for text in conversation:
-                        statement = self.get_or_create(text)
-                        statement.add_tags(corpus.categories)
 
-                        if previous_statement_text:
-                            statement.add_response(
-                                Response(previous_statement_text)
-                            )
+                        _statement = Statement(
+                            text=text,
+                            in_response_to=previous_statement_text,
+                            conversation='training'
+                        )
+
+                        _statement.add_tags(corpus.categories)
+
+                        statement = self.get_preprocessed_statement(_statement)
 
                         previous_statement_text = statement.text
-                        self.chatbot.storage.update(statement)
+
+                        self.chatbot.storage.create(
+                            text=statement.text,
+                            in_response_to=statement.in_response_to,
+                            conversation=statement.conversation,
+                            tags=statement.tags
+                        )
 
 
 class TwitterTrainer(Trainer):
@@ -233,7 +233,7 @@ class TwitterTrainer(Trainer):
         # Generate a random word
         random_word = self.random_word(self.random_seed_word, self.lang)
 
-        self.logger.info(u'Requesting 50 random tweets containing the word {}'.format(random_word))
+        self.logger.info('Requesting 50 random tweets containing the word {}'.format(random_word))
         tweets = self.api.GetSearch(term=random_word, count=50, lang=self.lang)
         for tweet in tweets:
             statement = Statement(tweet.text)
@@ -241,7 +241,7 @@ class TwitterTrainer(Trainer):
             if tweet.in_reply_to_status_id:
                 try:
                     status = self.api.GetStatus(tweet.in_reply_to_status_id)
-                    statement.add_response(Response(status.text))
+                    statement.in_response_to = status.text
                     statements.append(statement)
                 except TwitterError as error:
                     self.logger.warning(str(error))
@@ -254,7 +254,12 @@ class TwitterTrainer(Trainer):
         for _ in range(0, 10):
             statements = self.get_statements()
             for statement in statements:
-                self.chatbot.storage.update(statement)
+                self.chatbot.storage.create(
+                    text=statement.text,
+                    in_response_to=statement.in_response_to,
+                    conversation=statement.conversation,
+                    tags=statement.tags
+                )
 
 
 class UbuntuCorpusTrainer(Trainer):
@@ -395,7 +400,13 @@ class UbuntuCorpusTrainer(Trainer):
                 for row in reader:
                     if len(row) > 0:
                         text = row[3]
-                        statement = self.get_or_create(text)
+                        statement = self.get_preprocessed_statement(
+                            Statement(
+                                text=text,
+                                in_response_to=previous_statement_text,
+                                conversation='training'
+                            )
+                        )
                         print(text, len(row))
 
                         statement.add_extra_data('datetime', row[0])
@@ -404,10 +415,11 @@ class UbuntuCorpusTrainer(Trainer):
                         if row[2].strip():
                             statement.add_extra_data('addressing_speaker', row[2])
 
-                        if previous_statement_text:
-                            statement.add_response(
-                                Response(previous_statement_text)
-                            )
-
                         previous_statement_text = statement.text
-                        self.chatbot.storage.update(statement)
+
+                        self.chatbot.storage.create(
+                            text=statement.text,
+                            in_response_to=statement.in_response_to,
+                            conversation=statement.conversation,
+                            tags=statement.tags
+                        )

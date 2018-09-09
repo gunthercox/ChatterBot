@@ -53,8 +53,11 @@ class Statement(Base, StatementMixin):
     """
 
     text = Column(
-        String(constants.STATEMENT_TEXT_MAX_LENGTH),
-        unique=True
+        String(constants.STATEMENT_TEXT_MAX_LENGTH)
+    )
+
+    conversation = Column(
+        String(constants.CONVERSATION_LABEL_MAX_LENGTH)
     )
 
     created_at = Column(
@@ -70,9 +73,9 @@ class Statement(Base, StatementMixin):
 
     extra_data = Column(PickleType)
 
-    in_response_to = relationship(
-        'Response',
-        back_populates='statement_table'
+    in_response_to = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=True
     )
 
     def get_tags(self):
@@ -83,51 +86,13 @@ class Statement(Base, StatementMixin):
 
     def get_statement(self):
         from chatterbot.conversation import Statement as StatementObject
-        from chatterbot.conversation import Response as ResponseObject
 
-        statement = StatementObject(
-            self.text,
-            tags=[tag.name for tag in self.tags],
-            extra_data=self.extra_data
+        return StatementObject(
+            id=self.id,
+            text=self.text,
+            conversation=self.conversation,
+            created_at=self.created_at,
+            tags=self.get_tags(),
+            extra_data=self.extra_data,
+            in_response_to=self.in_response_to
         )
-        for response in self.in_response_to:
-            statement.add_response(
-                ResponseObject(text=response.text, occurrence=response.occurrence)
-            )
-        return statement
-
-
-class Response(Base):
-    """
-    Response, contains responses related to a given statement.
-    """
-
-    text = Column(
-        String(constants.STATEMENT_TEXT_MAX_LENGTH)
-    )
-
-    conversation = Column(
-        String(constants.CONVERSATION_LABEL_MAX_LENGTH)
-    )
-
-    created_at = Column(
-        DateTime(timezone=True),
-        server_default=func.now()
-    )
-
-    occurrence = Column(
-        Integer,
-        default=1
-    )
-
-    statement_text = Column(
-        String(constants.STATEMENT_TEXT_MAX_LENGTH),
-        ForeignKey('statement.text')
-    )
-
-    statement_table = relationship(
-        'Statement',
-        back_populates='in_response_to',
-        cascade='all',
-        uselist=False
-    )

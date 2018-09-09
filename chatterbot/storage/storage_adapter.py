@@ -49,14 +49,6 @@ class StorageAdapter(object):
             'The `count` method is not implemented by this adapter.'
         )
 
-    def find(self, statement_text):
-        """
-        Returns a object from the database if it exists
-        """
-        raise self.AdapterMethodNotImplementedError(
-            'The `find` method is not implemented by this adapter.'
-        )
-
     def remove(self, statement_text):
         """
         Removes the statement that matches the input text.
@@ -97,15 +89,6 @@ class StorageAdapter(object):
             'The `update` method is not implemented by this adapter.'
         )
 
-    def get_latest_response(self, conversation_id):
-        """
-        Returns the latest response in a conversation if it exists.
-        Returns None if a matching conversation cannot be found.
-        """
-        raise self.AdapterMethodNotImplementedError(
-            'The `get_latest_response` method is not implemented by this adapter.'
-        )
-
     def get_random(self):
         """
         Returns a random statement from the database.
@@ -133,20 +116,18 @@ class StorageAdapter(object):
         efficient method to get these results.
         """
         statement_list = self.filter()
+        response_statements = set()
+        statements_for_response_statements = []
 
-        responses = set()
-        to_remove = list()
         for statement in statement_list:
-            for response in statement.in_response_to:
-                responses.add(response.text)
+            if statement.in_response_to is not None:
+                response_statements.add(statement.in_response_to)
+
         for statement in statement_list:
-            if statement.text not in responses:
-                to_remove.append(statement)
+            if statement.text in response_statements:
+                statements_for_response_statements.append(statement)
 
-        for statement in to_remove:
-            statement_list.remove(statement)
-
-        return statement_list
+        return statements_for_response_statements
 
     class EmptyDatabaseException(Exception):
 

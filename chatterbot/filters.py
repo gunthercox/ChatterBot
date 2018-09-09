@@ -9,7 +9,7 @@ class Filter(object):
     filters should be subclassed.
     """
 
-    def filter_selection(self, chatterbot, conversation_id):
+    def filter_selection(self, chatterbot, conversation):
         """
         Because this is the base filter class, this method just
         returns the storage adapter's base query. Other filters
@@ -24,24 +24,34 @@ class RepetitiveResponseFilter(Filter):
     a chat bot from repeating statements that it has recently said.
     """
 
-    def filter_selection(self, chatterbot, conversation_id):
+    def filter_selection(self, chatterbot, conversation):
+        from collections import Counter
 
-        text_of_recent_responses = []
+        # Get the 10 most recent statements from the conversation
+        conversation_statements = chatterbot.storage.filter(
+            conversation=conversation,
+            order_by=['id']
+        )[-10:]
 
-        # TODO: Add a larger quantity of response history
-        latest_response = chatterbot.storage.get_latest_response(conversation_id)
-        if latest_response:
-            text_of_recent_responses.append(latest_response.text)
+        text_of_recent_responses = [
+            statement.in_response_to for statement in conversation_statements
+            if statement is not None and statement.in_response_to is not None
+        ]
+
+        counter = Counter(text_of_recent_responses)
+
+        # Find the three most common responses from the conversation
+        most_common = counter.most_common(3)
 
         # Return the query with no changes if there are no statements to exclude
-        if not text_of_recent_responses:
+        if not most_common:
             return super(RepetitiveResponseFilter, self).filter_selection(
                 chatterbot,
-                conversation_id
+                conversation
             )
 
-        query = chatterbot.storage.base_query.statement_text_not_in(
-            text_of_recent_responses
+        query = chatterbot.storage.base_query.statement_in_response_to_not_in(
+            [text[0] for text in most_common]
         )
 
         return query
