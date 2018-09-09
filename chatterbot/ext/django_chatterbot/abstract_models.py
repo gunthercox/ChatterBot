@@ -37,10 +37,10 @@ class AbstractBaseStatement(models.Model, StatementMixin):
     """
 
     text = models.CharField(
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
         unique=True,
         blank=False,
-        null=False,
-        max_length=constants.STATEMENT_TEXT_MAX_LENGTH
+        null=False
     )
 
     extra_data = models.CharField(

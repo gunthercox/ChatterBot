@@ -1,7 +1,4 @@
-from chatterbot.ext.django_chatterbot.abstract_models import (
-    AbstractBaseConversation, AbstractBaseResponse,
-    AbstractBaseStatement, AbstractBaseTag
-)
+from chatterbot.ext.django_chatterbot.abstract_models import AbstractBaseConversation, AbstractBaseResponse, AbstractBaseStatement, AbstractBaseTag
 
 
 class Statement(AbstractBaseStatement):
