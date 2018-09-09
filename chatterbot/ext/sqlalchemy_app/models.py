@@ -3,8 +3,8 @@ from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
 
-from chatterbot.constants import TAG_NAME_MAX_LENGTH, STATEMENT_TEXT_MAX_LENGTH
 from chatterbot.conversation import StatementMixin
+from chatterbot import constants
 
 
 class ModelBase(object):
@@ -42,7 +42,9 @@ class Tag(Base):
     A tag that describes a statement.
     """
 
-    name = Column(String(TAG_NAME_MAX_LENGTH))
+    name = Column(
+        String(constants.TAG_NAME_MAX_LENGTH)
+    )
 
 
 class Statement(Base, StatementMixin):
@@ -50,7 +52,10 @@ class Statement(Base, StatementMixin):
     A Statement represents a sentence or phrase.
     """
 
-    text = Column(String(STATEMENT_TEXT_MAX_LENGTH), unique=True)
+    text = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        unique=True
+    )
 
     tags = relationship(
         'Tag',
@@ -92,7 +97,9 @@ class Response(Base):
     Response, contains responses related to a given statement.
     """
 
-    text = Column(String(STATEMENT_TEXT_MAX_LENGTH))
+    text = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH)
+    )
 
     created_at = Column(
         DateTime(timezone=True),
@@ -101,7 +108,10 @@ class Response(Base):
 
     occurrence = Column(Integer, default=1)
 
-    statement_text = Column(String(STATEMENT_TEXT_MAX_LENGTH), ForeignKey('statement.text'))
+    statement_text = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        ForeignKey('statement.text')
+    )
 
     statement_table = relationship(
         'Statement',
