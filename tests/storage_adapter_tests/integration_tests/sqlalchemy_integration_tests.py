@@ -8,10 +8,10 @@ class SqlStorageIntegrationTests(ChatBotSQLTestCase):
         Test that the database is updated when read_only is set to false.
         """
         input_text = 'What is the airspeed velocity of an unladen swallow?'
-        exists_before = self.chatbot.storage.find(input_text)
+        exists_before = self.chatbot.storage.filter(text=input_text)
 
         self.chatbot.get_response(input_text)
-        exists_after = self.chatbot.storage.find(input_text)
+        exists_after = self.chatbot.storage.filter(text=input_text)
 
-        self.assertFalse(exists_before)
-        self.assertTrue(exists_after)
+        self.assertEqual(len(exists_before), 0)
+        self.assertTrue(len(exists_after), 1)

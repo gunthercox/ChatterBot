@@ -26,15 +26,17 @@ class ChatterBotCorpusTrainingTestCase(TestCase):
     def test_train_with_english_greeting_corpus(self):
         self.chatbot.train('chatterbot.corpus.english.greetings')
 
-        statement = self.chatbot.storage.find('Hello')
+        results = self.chatbot.storage.filter(text='Hello')
 
-        self.assertIsNotNone(statement)
+        self.assertGreater(len(results), 1)
 
     def test_train_with_english_greeting_corpus_tags(self):
         self.chatbot.train('chatterbot.corpus.english.greetings')
 
-        statement = self.chatbot.storage.find('Hello')
+        results = self.chatbot.storage.filter(text='Hello')
 
+        self.assertGreater(len(results), 1)
+        statement = results[0]
         self.assertEqual(['greetings'], statement.get_tags())
 
     def test_train_with_multiple_corpora(self):
@@ -42,12 +44,12 @@ class ChatterBotCorpusTrainingTestCase(TestCase):
             'chatterbot.corpus.english.greetings',
             'chatterbot.corpus.english.conversations',
         )
+        results = self.chatbot.storage.filter(text='Hello')
 
-        statement = self.chatbot.storage.find('Hello')
-        self.assertIsNotNone(statement)
+        self.assertGreater(len(results), 1)
 
     def test_train_with_english_corpus(self):
         self.chatbot.train('chatterbot.corpus.english')
-        statement = self.chatbot.storage.find('Hello')
+        results = self.chatbot.storage.filter(text='Hello')
 
-        self.assertIsNotNone(statement)
+        self.assertGreater(len(results), 1)

@@ -1,12 +1,6 @@
 from django.test import TestCase
-from chatterbot.conversation import (
-    Statement as StatementObject,
-    Response as ResponseObject,
-)
-from chatterbot.ext.django_chatterbot.models import (
-    Statement as StatementModel,
-    Response as ResponseModel,
-)
+from chatterbot.conversation import Statement as StatementObject
+from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
 
 
 class StatementIntegrationTestCase(TestCase):
@@ -17,8 +11,14 @@ class StatementIntegrationTestCase(TestCase):
 
     def setUp(self):
         super(StatementIntegrationTestCase, self).setUp()
-        self.object = StatementObject(text='_')
-        self.model = StatementModel(text='_')
+
+        from datetime import datetime
+        from pytz import UTC
+
+        now = datetime(2020, 2, 15, 3, 14, 10, 0, UTC)
+
+        self.object = StatementObject(text='_', created_at=now)
+        self.model = StatementModel(text='_', created_at=now)
 
     def test_text(self):
         self.assertTrue(hasattr(self.object, 'text'))
@@ -42,76 +42,8 @@ class StatementIntegrationTestCase(TestCase):
         self.object.add_extra_data('key', 'value')
         self.model.add_extra_data('key', 'value')
 
-    def test_add_response(self):
-        self.assertTrue(hasattr(self.object, 'add_response'))
-        self.assertTrue(hasattr(self.model, 'add_response'))
-
-    def test_remove_response(self):
-        self.object.add_response(ResponseObject('Hello'))
-        model_response_statement = StatementModel.objects.create(text='Hello')
-        self.model.save()
-        self.model.in_response.create(statement=self.model, response=model_response_statement)
-
-        object_removed = self.object.remove_response('Hello')
-        model_removed = self.model.remove_response('Hello')
-
-        self.assertTrue(object_removed)
-        self.assertTrue(model_removed)
-
-    def test_get_response_count(self):
-        self.object.add_response(ResponseObject('Hello', occurrence=2))
-        model_response_statement = StatementModel.objects.create(text='Hello')
-        self.model.save()
-        ResponseModel.objects.create(
-            statement=self.model, response=model_response_statement
-        )
-        ResponseModel.objects.create(
-            statement=self.model, response=model_response_statement
-        )
-
-        object_count = self.object.get_response_count(StatementObject(text='Hello'))
-        model_count = self.model.get_response_count(StatementModel(text='Hello'))
-
-        self.assertEqual(object_count, 2)
-        self.assertEqual(model_count, 2)
-
     def test_serialize(self):
         object_data = self.object.serialize()
         model_data = self.model.serialize()
 
         self.assertEqual(object_data, model_data)
-
-    def test_response_statement_cache(self):
-        self.assertTrue(hasattr(self.object, 'response_statement_cache'))
-        self.assertTrue(hasattr(self.model, 'response_statement_cache'))
-
-
-class ResponseIntegrationTestCase(TestCase):
-
-    """
-    Test case to make sure that the Django Response model
-    and ChatterBot Response object have a common interface.
-    """
-
-    def setUp(self):
-        super(ResponseIntegrationTestCase, self).setUp()
-        statement_object = StatementObject(text='_')
-        statement_model = StatementModel.objects.create(text='_')
-        self.object = ResponseObject(statement_object.text)
-        self.model = ResponseModel(statement=statement_model, response=statement_model)
-        self.model.save()
-
-    def test_serialize(self):
-        object_data = self.object.serialize()
-        model_data = self.model.serialize()
-
-        self.assertIn('text', object_data)
-        self.assertIn('text', model_data)
-        self.assertEqual(object_data['text'], model_data['text'])
-        self.assertIn('occurrence', object_data)
-        self.assertIn('occurrence', model_data)
-        self.assertEqual(object_data['occurrence'], model_data['occurrence'])
-        self.assertIn('conversation', object_data)
-        self.assertIn('conversation', model_data)
-        self.assertEqual(object_data['conversation'], model_data['conversation'])
-        self.assertEqual(len(object_data), len(model_data))

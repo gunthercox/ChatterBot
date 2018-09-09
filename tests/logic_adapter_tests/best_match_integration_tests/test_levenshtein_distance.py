@@ -1,6 +1,6 @@
 from unittest.mock import MagicMock
 from chatterbot.logic import BestMatch
-from chatterbot.conversation import Statement, Response
+from chatterbot.conversation import Statement
 from tests.base_case import ChatBotTestCase
 
 
@@ -26,12 +26,12 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         filter out any statements that are not in response to a known statement.
         """
         possible_choices = [
-            Statement('Who do you love?', in_response_to=[Response('I hear you are going on a quest?')]),
-            Statement('What is the meaning of life?', in_response_to=[Response('Yuck, black licorice jelly beans.')]),
-            Statement('I am Iron Man.', in_response_to=[Response('What... is your quest?')]),
-            Statement('What... is your quest?', in_response_to=[Response('I am Iron Man.')]),
-            Statement('Yuck, black licorice jelly beans.', in_response_to=[Response('What is the meaning of life?')]),
-            Statement('I hear you are going on a quest?', in_response_to=[Response('Who do you love?')]),
+            Statement('Who do you love?', in_response_to='I hear you are going on a quest?'),
+            Statement('What is the meaning of life?', in_response_to='Yuck, black licorice jelly beans.'),
+            Statement('I am Iron Man.', in_response_to='What... is your quest?'),
+            Statement('What... is your quest?', in_response_to='I am Iron Man.'),
+            Statement('Yuck, black licorice jelly beans.', in_response_to='What is the meaning of life?'),
+            Statement('I hear you are going on a quest?', in_response_to='Who do you love?'),
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
@@ -43,7 +43,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
 
     def test_confidence_exact_match(self):
         possible_choices = [
-            Statement('What is your quest?', in_response_to=[Response('What is your quest?')])
+            Statement('What is your quest?', in_response_to='What is your quest?')
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
@@ -54,7 +54,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
 
     def test_confidence_half_match(self):
         possible_choices = [
-            Statement('xxyy', in_response_to=[Response('xxyy')])
+            Statement('xxyy', in_response_to='xxyy')
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 
@@ -65,7 +65,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
 
     def test_confidence_no_match(self):
         possible_choices = [
-            Statement('xxx', in_response_to=[Response('xxx')])
+            Statement('xxx', in_response_to='xxx')
         ]
         self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
 

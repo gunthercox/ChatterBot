@@ -1,14 +1,12 @@
 from chatterbot.conversation import StatementMixin
 from chatterbot import constants
 from django.db import models
-from django.apps import apps
 from django.utils import timezone
 from django.conf import settings
 
 
 DJANGO_APP_NAME = constants.DEFAULT_DJANGO_APP_NAME
 STATEMENT_MODEL = 'Statement'
-RESPONSE_MODEL = 'Response'
 
 if hasattr(settings, 'CHATTERBOT'):
     """
@@ -23,10 +21,6 @@ if hasattr(settings, 'CHATTERBOT'):
         'statement_model',
         STATEMENT_MODEL
     )
-    RESPONSE_MODEL = settings.CHATTERBOT.get(
-        'response_model',
-        RESPONSE_MODEL
-    )
 
 
 class AbstractBaseStatement(models.Model, StatementMixin):
@@ -38,14 +32,22 @@ class AbstractBaseStatement(models.Model, StatementMixin):
 
     text = models.CharField(
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
-        unique=True,
         blank=False,
         null=False
+    )
+
+    conversation = models.CharField(
+        max_length=constants.CONVERSATION_LABEL_MAX_LENGTH
     )
 
     created_at = models.DateTimeField(
         default=timezone.now,
         help_text='The date and time that the statement was created at.'
+    )
+
+    in_response_to = models.CharField(
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
+        null=True
     )
 
     extra_data = models.CharField(
@@ -67,20 +69,6 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         elif len(self.text.strip()) > 0:
             return self.text
         return '<empty>'
-
-    def __init__(self, *args, **kwargs):
-        super(AbstractBaseStatement, self).__init__(*args, **kwargs)
-
-        # Responses to be saved if the statement is updated with the storage adapter
-        self.response_statement_cache = []
-
-    @property
-    def in_response_to(self):
-        """
-        Return the response objects that are for this statement.
-        """
-        ResponseModel = apps.get_model(DJANGO_APP_NAME, RESPONSE_MODEL)
-        return ResponseModel.objects.filter(statement=self)
 
     def add_extra_data(self, key, value):
         """
@@ -106,123 +94,23 @@ class AbstractBaseStatement(models.Model, StatementMixin):
                 name=tag
             )
 
-    def add_response(self, statement):
-        """
-        Add a response to this statement.
-        """
-        self.response_statement_cache.append(statement)
-
-    def remove_response(self, response_text):
-        """
-        Removes a response from the statement's response list based
-        on the value of the response text.
-
-        :param response_text: The text of the response to be removed.
-        :type response_text: str
-        """
-        is_deleted = False
-        response = self.in_response.filter(response__text=response_text)
-
-        if response.exists():
-            is_deleted = True
-
-        return is_deleted
-
-    def get_response_count(self, statement):
-        """
-        Find the number of times that the statement has been used
-        as a response to the current statement.
-
-        :param statement: The statement object to get the count for.
-        :type statement: chatterbot.conversation.Statement
-
-        :returns: Return the number of times the statement has been used as a response.
-        :rtype: int
-        """
-        return self.in_response.filter(response__text=statement.text).count()
-
     def serialize(self):
         """
         :returns: A dictionary representation of the statement object.
         :rtype: dict
         """
         import json
-        data = {}
 
         if not self.extra_data:
             self.extra_data = '{}'
 
-        data['text'] = self.text
-        data['in_response_to'] = []
-        data['extra_data'] = json.loads(self.extra_data)
-
-        for response in self.in_response.all():
-            data['in_response_to'].append(response.serialize())
-
-        return data
-
-
-class AbstractBaseResponse(models.Model):
-    """
-    The abstract base response allows other models to
-    be created using the attributes that exist on the
-    default models.
-    """
-
-    statement = models.ForeignKey(
-        STATEMENT_MODEL,
-        related_name='in_response',
-        on_delete=models.CASCADE
-    )
-
-    response = models.ForeignKey(
-        STATEMENT_MODEL,
-        related_name='responses',
-        on_delete=models.CASCADE
-    )
-
-    conversation = models.CharField(
-        max_length=constants.CONVERSATION_LABEL_MAX_LENGTH
-    )
-
-    created_at = models.DateTimeField(
-        default=timezone.now,
-        help_text='The date and time that this response was created at.'
-    )
-
-    class Meta:
-        abstract = True
-
-    @property
-    def occurrence(self):
-        """
-        Return a count of the number of times this response has occurred.
-        """
-        ResponseModel = apps.get_model(DJANGO_APP_NAME, RESPONSE_MODEL)
-
-        return ResponseModel.objects.filter(
-            statement__text=self.statement.text,
-            response__text=self.response.text
-        ).count()
-
-    def __str__(self):
-        statement = self.statement.text
-        response = self.response.text
-        return '{} => {}'.format(
-            statement if len(statement) <= 20 else statement[:17] + '...',
-            response if len(response) <= 40 else response[:37] + '...'
-        )
-
-    def serialize(self):
-        """
-        :returns: A dictionary representation of the statement object.
-        :rtype: dict
-        """
         return {
-            'text': self.response.text,
+            'id': self.id,
+            'text': self.text,
+            'in_response_to': self.in_response_to,
             'conversation': self.conversation,
-            'created_at': self.created_at.isoformat(),
-            'occurrence': self.occurrence
+            'created_at': self.created_at.isoformat().split('+', 1)[0],
+            'extra_data': json.loads(self.extra_data),
         }
 
 

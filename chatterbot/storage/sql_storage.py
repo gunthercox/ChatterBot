@@ -1,11 +1,6 @@
 from chatterbot.storage import StorageAdapter
 
 
-def get_response_table(response):
-    from chatterbot.ext.sqlalchemy_app.models import Response
-    return Response(text=response.text, occurrence=response.occurrence)
-
-
 class SQLStorageAdapter(StorageAdapter):
     """
     SQLStorageAdapter allows ChatterBot to store conversation
@@ -80,13 +75,6 @@ class SQLStorageAdapter(StorageAdapter):
         from chatterbot.ext.sqlalchemy_app.models import Statement
         return Statement
 
-    def get_response_model(self):
-        """
-        Return the response model.
-        """
-        from chatterbot.ext.sqlalchemy_app.models import Response
-        return Response
-
     def get_tag_model(self):
         """
         Return the conversation model.
@@ -104,23 +92,6 @@ class SQLStorageAdapter(StorageAdapter):
         statement_count = session.query(Statement).count()
         session.close()
         return statement_count
-
-    def find(self, statement_text):
-        """
-        Returns a statement if it exists otherwise None
-        """
-        Statement = self.get_model('statement')
-        session = self.Session()
-
-        query = session.query(Statement).filter_by(text=statement_text)
-        record = query.first()
-        if record:
-            statement = record.get_statement()
-            session.close()
-            return statement
-
-        session.close()
-        return None
 
     def remove(self, statement_text):
         """
@@ -147,59 +118,28 @@ class SQLStorageAdapter(StorageAdapter):
         for all listed attributes will be returned.
         """
         Statement = self.get_model('statement')
-        Response = self.get_model('response')
 
         session = self.Session()
 
-        kwargs.pop('order_by', None)
-        filter_parameters = kwargs.copy()
+        order_by = kwargs.pop('order_by', None)
 
-        statements = []
-        _query = None
-
-        if len(filter_parameters) == 0:
-            _response_query = session.query(Statement)
-            statements.extend(_response_query.all())
+        if len(kwargs) == 0:
+            statements = session.query(Statement).filter()
         else:
-            for i, fp in enumerate(filter_parameters):
-                _filter = filter_parameters[fp]
-                if fp in ['in_response_to', 'in_response_to__contains']:
-                    _response_query = session.query(Statement)
-                    if isinstance(_filter, list):
-                        if len(_filter) == 0:
-                            _query = _response_query.filter(
-                                Statement.in_response_to == None  # NOQA Here must use == instead of is
-                            )
-                        else:
-                            for f in _filter:
-                                _query = _response_query.filter(
-                                    Statement.in_response_to.contains(get_response_table(f)))
-                    else:
-                        if fp == 'in_response_to__contains':
-                            _query = _response_query.join(Response).filter(Response.text == _filter)
-                        else:
-                            _query = _response_query.filter(Statement.in_response_to == None)  # NOQA
-                else:
-                    if _query:
-                        _query = _query.filter(Response.statement_text.like('%' + _filter + '%'))
-                    else:
-                        _response_query = session.query(Response)
-                        _query = _response_query.filter(Response.statement_text.like('%' + _filter + '%'))
+            statements = session.query(Statement).filter_by(**kwargs)
 
-                if _query is None:
-                    return []
-                if len(filter_parameters) == i + 1:
-                    statements.extend(_query.all())
+        if order_by:
+
+            if 'created_at' in order_by:
+                index = order_by.index('created_at')
+                order_by[index] = Statement.created_at.asc()
+
+            statements = statements.order_by(*order_by)
 
         results = []
 
         for statement in statements:
-            if isinstance(statement, Response):
-                if statement and statement.statement_table:
-                    results.append(statement.statement_table.get_statement())
-            else:
-                if statement:
-                    results.append(statement.get_statement())
+            results.append(statement.get_statement())
 
         session.close()
 
@@ -235,23 +175,35 @@ class SQLStorageAdapter(StorageAdapter):
         Creates an entry if one does not exist.
         """
         Statement = self.get_model('statement')
-        Response = self.get_model('response')
         Tag = self.get_model('tag')
 
-        if statement:
+        if statement is not None:
             session = self.Session()
+            record = None
 
-            query = session.query(Statement).filter_by(text=statement.text)
-            record = query.first()
+            if hasattr(statement, 'id') and statement.id is not None:
+                record = session.query(Statement).get(statement.id)
+            else:
+                record = session.query(Statement).filter(
+                    Statement.text == statement.text,
+                    Statement.conversation == statement.conversation,
+                ).first()
 
-            # Create a new statement entry if one does not already exist
-            if not record:
-                record = Statement(text=statement.text)
+                # Create a new statement entry if one does not already exist
+                if not record:
+                    record = Statement(
+                        text=statement.text,
+                        conversation=statement.conversation
+                    )
+
+            # Update the response value
+            record.in_response_to = statement.in_response_to
+
+            record.created_at = statement.created_at
+            record.extra_data = dict(statement.extra_data)
 
             if statement.extra_data is None:
                 statement.extra_data = {}
-
-            record.extra_data = dict(statement.extra_data)
 
             for _tag in statement.tags:
                 tag = session.query(Tag).filter_by(name=_tag).first()
@@ -262,76 +214,13 @@ class SQLStorageAdapter(StorageAdapter):
 
                 record.tags.append(tag)
 
-            # Get or create the response records as needed
-            for response in statement.in_response_to:
-                _response = session.query(Response).filter_by(
-                    text=response.text,
-                    statement_text=statement.text
-                ).first()
-
-                if _response:
-                    _response.occurrence += 1
-                else:
-                    # Create the record
-                    _response = Response(
-                        text=response.text,
-                        statement_text=statement.text,
-                        conversation=response.conversation,
-                        occurrence=response.occurrence
-                    )
-
-                # Make sure a statement exists for the response text
-                if response.text != statement.text:
-                    response_statement_query = session.query(Statement).filter_by(
-                        text=response.text
-                    )
-
-                    if not response_statement_query.count():
-                        _response_statement = Statement(
-                            text=response.text
-                        )
-                        session.add(_response_statement)
-
-                record.in_response_to.append(_response)
-
             session.add(record)
 
             self._session_finish(session)
 
-    def get_latest_response(self, conversation):
-        """
-        Returns the latest response in a conversation if it exists.
-        Returns None if a matching conversation cannot be found.
-        """
-        Statement = self.get_model('statement')
-        Response = self.get_model('response')
-
-        session = self.Session()
-        statement = None
-        response = None
-
-        response_query = session.query(Response).filter(
-            Response.conversation == conversation
-        ).order_by(Response.id)
-
-        if response_query.count():
-            response = response_query[-1].text
-
-        # Get the statement for the response
-        if response:
-            statement = session.query(Statement).filter(
-                Statement.text == response
-            ).first()
-            if statement:
-                statement = statement.get_statement()
-
-        session.close()
-
-        return statement
-
     def get_random(self):
         """
-        Returns a random statement from the database
+        Returns a random statement from the database.
         """
         import random
 
