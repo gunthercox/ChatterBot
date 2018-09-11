@@ -1,4 +1,4 @@
-from unittest import TestCase, SkipTest, expectedFailure
+from unittest import TestCase, SkipTest
 from chatterbot.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement, Response
 
@@ -46,7 +46,6 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
         self.assertIsNone(response)
 
-    @expectedFailure
     def test_get_latest_response_from_one_responses(self):
         conversation_id = self.adapter.create_conversation()
         statement_1 = Statement(text='A')
@@ -58,7 +57,6 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
         self.assertEqual(statement_1, response)
 
-    @expectedFailure
     def test_get_latest_response_from_two_responses(self):
         conversation_id = self.adapter.create_conversation()
         statement_1 = Statement(text='A')
@@ -72,7 +70,6 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
         self.assertEqual(statement_2, response)
 
-    @expectedFailure
     def test_get_latest_response_from_three_responses(self):
         conversation_id = self.adapter.create_conversation()
         statement_1 = Statement(text='A')

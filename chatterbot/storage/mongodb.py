@@ -272,6 +272,20 @@ class MongoDatabaseAdapter(StorageAdapter):
         conversation_id = self.conversations.insert_one({}).inserted_id
         return conversation_id
 
+    def get_statements_for_conversation(self, conversation_id):
+        """
+        Return all statements in the specified conversation.
+        """
+        from pymongo import DESCENDING
+
+        statements = list(self.statements.find({
+            'conversations.id': conversation_id
+        }).sort('conversations.index', DESCENDING))
+
+        return [
+            self.mongo_to_object(statement) for statement in statements
+        ]
+
     def get_latest_response(self, conversation_id):
         """
         Returns the latest response in a conversation if it exists.
@@ -283,16 +297,19 @@ class MongoDatabaseAdapter(StorageAdapter):
             'conversations.id': conversation_id
         }).sort('conversations.created_at', DESCENDING))
 
-        if not statements:
-            return None
+        statement = None
 
-        return self.mongo_to_object(statements[-2])
+        if len(statements) >= 1:
+            statement = self.mongo_to_object(statements[1])
+
+        return statement
 
     def add_to_conversation(self, conversation_id, statement, response):
         """
         Add the statement and response to the conversation.
         """
-        from datetime import datetime, timedelta
+        import time
+
         self.statements.update_one(
             {
                 'text': statement.text
@@ -301,10 +318,11 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$push': {
                     'conversations': {
                         'id': conversation_id,
-                        'created_at': datetime.utcnow()
+                        'created_at': time.time()
                     }
                 }
-            }
+            },
+            upsert=True
         )
         self.statements.update_one(
             {
@@ -314,11 +332,11 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '$push': {
                     'conversations': {
                         'id': conversation_id,
-                        # Force the response to be at least one millisecond after the input statement
-                        'created_at': datetime.utcnow() + timedelta(milliseconds=1)
+                        'created_at': time.time()
                     }
                 }
-            }
+            },
+            upsert=True
         )
 
     def get_random(self):

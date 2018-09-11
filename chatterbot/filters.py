@@ -26,12 +26,23 @@ class RepetitiveResponseFilter(Filter):
 
     def filter_selection(self, chatterbot, conversation_id):
 
-        text_of_recent_responses = []
+        responses = chatterbot.storage.get_statements_for_conversation(
+            conversation_id
+        )
 
-        # TODO: Add a larger quantity of response history
-        latest_response = chatterbot.storage.get_latest_response(conversation_id)
-        if latest_response:
-            text_of_recent_responses.append(latest_response.text)
+        text_of_recent_responses = set()
+        text_of_all_responses = []
+
+        for response in responses:
+
+            # Use the latest 1 repetitive responses
+            if len(text_of_recent_responses) >= 1:
+                break
+
+            if response.text in text_of_all_responses:
+                text_of_recent_responses.add(response.text)
+
+            text_of_all_responses.append(response.text)
 
         # Return the query with no changes if there are no statements to exclude
         if not text_of_recent_responses:
@@ -39,6 +50,8 @@ class RepetitiveResponseFilter(Filter):
                 chatterbot,
                 conversation_id
             )
+
+        print('text_of_recent_responses =>', text_of_recent_responses)
 
         query = chatterbot.storage.base_query.statement_text_not_in(
             text_of_recent_responses
