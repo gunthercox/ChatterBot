@@ -43,6 +43,11 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         null=False
     )
 
+    created_at = models.DateTimeField(
+        default=timezone.now,
+        help_text='The date and time that the statement was created at.'
+    )
+
     extra_data = models.CharField(
         max_length=500,
         blank=True

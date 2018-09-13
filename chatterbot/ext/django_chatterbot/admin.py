@@ -1,12 +1,10 @@
 from django.contrib import admin
-from chatterbot.ext.django_chatterbot.models import (
-    Statement, Response, Conversation, Tag
-)
+from chatterbot.ext.django_chatterbot.models import Statement, Response, Conversation, Tag
 
 
 class StatementAdmin(admin.ModelAdmin):
-    list_display = ('text', )
-    list_filter = ('text', )
+    list_display = ('text', 'created_at', )
+    list_filter = ('text', 'created_at', )
     search_fields = ('text', )
 
 
