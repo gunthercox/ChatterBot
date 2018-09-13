@@ -79,6 +79,15 @@ class StorageAdapter(object):
             'The `filter` method is not implemented by this adapter.'
         )
 
+    def create(self, **kwargs):
+        """
+        Creates a new statement matching the keyword arguments specified.
+        Returns the created statement.
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `create` method is not implemented by this adapter.'
+        )
+
     def update(self, statement):
         """
         Modifies an entry in the database.
