@@ -29,7 +29,7 @@ class Gitter(OutputAdapter):
     def _validate_status_code(self, response):
         code = response.status_code
         if code not in [200, 201]:
-            raise self.HTTPStatusException('{} status code recieved'.format(code))
+            raise self.HTTPStatusException('{} status code received'.format(code))
 
     def join_room(self, room_name):
         """
