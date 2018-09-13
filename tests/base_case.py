@@ -64,7 +64,7 @@ class ChatBotSQLTestCase(ChatBotTestCase):
         Create the tables in the database before each test is run.
         """
         super(ChatBotSQLTestCase, self).setUp()
-        self.chatbot.storage.create()
+        self.chatbot.storage.create_database()
 
     def get_kwargs(self):
         kwargs = super(ChatBotSQLTestCase, self).get_kwargs()
