@@ -66,7 +66,7 @@ class SQLStorageAdapter(StorageAdapter):
         )
 
         if not self.engine.dialect.has_table(self.engine, 'Statement'):
-            self.create()
+            self.create_database()
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
 
@@ -374,7 +374,7 @@ class SQLStorageAdapter(StorageAdapter):
         from chatterbot.ext.sqlalchemy_app.models import Base
         Base.metadata.drop_all(self.engine)
 
-    def create(self):
+    def create_database(self):
         """
         Populate the database with the tables.
         """

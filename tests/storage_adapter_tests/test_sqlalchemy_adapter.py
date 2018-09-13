@@ -16,7 +16,7 @@ class SQLAlchemyAdapterTestCase(TestCase):
         """
         Create the tables in the database before each test is run.
         """
-        self.adapter.create()
+        self.adapter.create_database()
 
     def tearDown(self):
         """
