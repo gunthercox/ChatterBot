@@ -396,7 +396,7 @@ class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
         statement_a = StatementModel.objects.create(text='A is the first letter of the alphabet.')
         statement_b = StatementModel.objects.create(text='B is the second letter of the alphabet.')
 
-        results = self.adapter.filter(order_by='text')
+        results = self.adapter.filter(order_by=['text'])
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -406,7 +406,7 @@ class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
         statement_a = StatementModel.objects.create(text='A is the first letter of the alphabet.')
         statement_b = StatementModel.objects.create(text='B is the second letter of the alphabet.')
 
-        results = self.adapter.filter(order_by='-text')
+        results = self.adapter.filter(order_by=['-text'])
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[1], statement_a)

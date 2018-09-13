@@ -53,7 +53,7 @@ class DjangoStorageAdapter(StorageAdapter):
         from django.db.models import Q
         Statement = self.get_model('statement')
 
-        order = kwargs.pop('order_by', None)
+        order_by = kwargs.pop('order_by', None)
 
         RESPONSE_CONTAINS = 'in_response_to__contains'
 
@@ -88,8 +88,8 @@ class DjangoStorageAdapter(StorageAdapter):
 
         statements = Statement.objects.filter(Q(**kwargs) | Q(**parameters))
 
-        if order:
-            statements = statements.order_by(order)
+        if order_by:
+            statements = statements.order_by(*order_by)
 
         return statements
 
