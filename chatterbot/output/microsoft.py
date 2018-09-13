@@ -32,7 +32,7 @@ class Microsoft(OutputAdapter):
     def _validate_status_code(self, response):
         status_code = response.status_code
         if status_code not in [200, 204]:
-            raise self.HTTPStatusException('{} status code recieved'.format(status_code))
+            raise self.HTTPStatusException('{} status code received'.format(status_code))
 
     def get_most_recent_message(self):
         """

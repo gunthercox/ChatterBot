@@ -16,15 +16,19 @@ class Microsoft(InputAdapter):
         from requests.packages.urllib3.exceptions import InsecureRequestWarning
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)
 
-        self.directline_host = kwargs.get('directline_host', 'https://directline.botframework.com')
+        self.directline_host = kwargs.get(
+            'directline_host',
+            'https://directline.botframework.com'
+        )
 
-        # NOTE: Direct Line client credentials are different from your bot's
-        # credentials
-        self.direct_line_token_or_secret = kwargs.\
-            get('direct_line_token_or_secret')
+        # NOTE: Direct Line client credentials are different from your bot's credentials
+        self.direct_line_token_or_secret = kwargs.get(
+            'direct_line_token_or_secret'
+        )
 
-        authorization_header = 'BotConnector  {}'.\
-            format(self.direct_line_token_or_secret)
+        authorization_header = 'BotConnector  {}'.format(
+            self.direct_line_token_or_secret
+        )
 
         self.headers = {
             'Authorization': authorization_header,
@@ -40,8 +44,7 @@ class Microsoft(InputAdapter):
     def _validate_status_code(self, response):
         code = response.status_code
         if not code == 200:
-            raise self.HTTPStatusException('{} status code recieved'.
-                                           format(code))
+            raise self.HTTPStatusException('{} status code received'.format(code))
 
     def start_conversation(self):
         import requests
@@ -61,9 +64,10 @@ class Microsoft(InputAdapter):
     def get_most_recent_message(self):
         import requests
 
-        endpoint = '{host}/api/conversations/{id}/messages'\
-            .format(host=self.directline_host,
-                    id=self.conversation_id)
+        endpoint = '{host}/api/conversations/{id}/messages'.format(
+            host=self.directline_host,
+            id=self.conversation_id
+        )
 
         response = requests.get(
             endpoint,
