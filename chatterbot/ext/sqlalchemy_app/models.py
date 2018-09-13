@@ -57,6 +57,11 @@ class Statement(Base, StatementMixin):
         unique=True
     )
 
+    created_at = Column(
+        DateTime(timezone=True),
+        server_default=func.now()
+    )
+
     tags = relationship(
         'Tag',
         secondary=lambda: tag_association_table,
