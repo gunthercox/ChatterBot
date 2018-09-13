@@ -149,15 +149,16 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Returns a list of objects from the database.
         The kwargs parameter can contain any number
-        of attributes. Only objects which contain
-        all listed attributes and in which all values
-        match for all listed attributes will be returned.
+        of attributes. Only objects which contain all
+        listed attributes and in which all values match
+        for all listed attributes will be returned.
         """
         Statement = self.get_model('statement')
         Response = self.get_model('response')
 
         session = self.Session()
 
+        kwargs.pop('order_by', None)
         filter_parameters = kwargs.copy()
 
         statements = []

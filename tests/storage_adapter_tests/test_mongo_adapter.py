@@ -454,7 +454,7 @@ class MongoOrderingTestCase(MongoAdapterTestCase):
         self.adapter.update(statement_a)
         self.adapter.update(statement_b)
 
-        results = self.adapter.filter(order_by='text')
+        results = self.adapter.filter(order_by=['text'])
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -478,7 +478,7 @@ class MongoOrderingTestCase(MongoAdapterTestCase):
         self.adapter.update(statement_a)
         self.adapter.update(statement_b)
 
-        results = self.adapter.filter(order_by='created_at')
+        results = self.adapter.filter(order_by=['created_at'])
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)

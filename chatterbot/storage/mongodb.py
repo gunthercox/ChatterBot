@@ -215,13 +215,17 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         if order_by:
 
-            direction = pymongo.ASCENDING
+            mongo_ordering = []
 
             # Sort so that newer datetimes appear first
-            if order_by == 'created_at':
-                direction = pymongo.DESCENDING
+            if 'created_at' in order_by:
+                order_by.remove('created_at')
+                mongo_ordering.append(('created_at', pymongo.DESCENDING, ))
 
-            matches = matches.sort(order_by, direction)
+            for order in order_by:
+                mongo_ordering.append((order, pymongo.ASCENDING))
+
+            matches = matches.sort(mongo_ordering)
 
         results = []
 
