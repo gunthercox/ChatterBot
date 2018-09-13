@@ -361,7 +361,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}])
+        response_query = self.statements.aggregate([{'$group': {'_id': '$in_response_to.text'}}], allowDiskUse=True)
 
         responses = []
         for r in response_query:
