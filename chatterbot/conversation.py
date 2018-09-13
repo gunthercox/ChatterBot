@@ -25,6 +25,8 @@ class Statement(StatementMixin):
     """
 
     def __init__(self, text, **kwargs):
+        from datetime import datetime
+        from dateutil import parser as date_parser
 
         # Try not to allow non-string types to be passed to statements
         try:
@@ -35,6 +37,10 @@ class Statement(StatementMixin):
         self.text = text
         self.tags = kwargs.pop('tags', [])
         self.in_response_to = kwargs.pop('in_response_to', [])
+        self.created_at = kwargs.get('created_at', datetime.now())
+
+        if not isinstance(self.created_at, datetime):
+            self.created_at = date_parser.parse(self.created_at)
 
         self.extra_data = kwargs.pop('extra_data', {})
 
