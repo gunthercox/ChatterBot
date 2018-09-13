@@ -1,4 +1,4 @@
-from unittest import TestCase
+from unittest import TestCase, expectedFailure
 from chatterbot.conversation import Statement, Response
 from chatterbot.storage.sql_storage import SQLStorageAdapter
 
@@ -433,3 +433,48 @@ class ReadOnlySQLStorageAdapterTestCase(SQLAlchemyAdapterTestCase):
         self.assertEqual(
             len(statement_found.in_response_to), 0
         )
+
+
+class SQLOrderingTestCase(SQLAlchemyAdapterTestCase):
+    """
+    Test cases for the ordering of sets of statements.
+    """
+
+    @expectedFailure
+    def test_order_by_text(self):
+        statement_a = Statement(text='A is the first letter of the alphabet.')
+        statement_b = Statement(text='B is the second letter of the alphabet.')
+
+        self.adapter.update(statement_b)
+        self.adapter.update(statement_a)
+
+        results = self.adapter.filter(order_by=['text'])
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0], statement_a)
+        self.assertEqual(results[1], statement_b)
+
+    @expectedFailure
+    def test_order_by_created_at(self):
+        from datetime import datetime, timedelta
+
+        today = datetime.now()
+        yesterday = datetime.now() - timedelta(days=1)
+
+        statement_a = Statement(
+            text='A is the first letter of the alphabet.',
+            created_at=today
+        )
+        statement_b = Statement(
+            text='B is the second letter of the alphabet.',
+            created_at=yesterday
+        )
+
+        self.adapter.update(statement_b)
+        self.adapter.update(statement_a)
+
+        results = self.adapter.filter(order_by=['created_at'])
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0], statement_a)
+        self.assertEqual(results[1], statement_b)
