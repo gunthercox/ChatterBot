@@ -21,23 +21,13 @@ class StatementMixin(object):
         :returns: A dictionary representation of the statement object.
         :rtype: dict
         """
-        extra_data = self.extra_data
-
-        if not extra_data:
-            extra_data = '{}'
-
-        if type(extra_data) == str:
-            import json
-            extra_data = json.loads(extra_data)
-
         return {
             'id': self.id,
             'text': self.text,
             'created_at': self.created_at.isoformat().split('+', 1)[0],
             'conversation': self.conversation,
             'in_response_to': self.in_response_to,
-            'tags': self.get_tags(),
-            'extra_data': extra_data
+            'tags': self.get_tags()
         }
 
 
@@ -70,8 +60,6 @@ class Statement(StatementMixin):
         if not isinstance(self.created_at, datetime):
             self.created_at = date_parser.parse(self.created_at)
 
-        self.extra_data = kwargs.pop('extra_data', {})
-
         # This is the confidence with which the chat bot believes
         # this is an accurate response. This value is set when the
         # statement is returned by the chat bot.
@@ -102,24 +90,6 @@ class Statement(StatementMixin):
         Save the statement in the database.
         """
         self.storage.update(self)
-
-    def add_extra_data(self, key, value):
-        """
-        This method allows additional data to be stored on the statement object.
-
-        Typically this data is something that pertains just to this statement.
-        For example, a value stored here might be the tagged parts of speech for
-        each word in the statement text.
-
-            - key = 'pos_tags'
-            - value = [('Now', 'RB'), ('for', 'IN'), ('something', 'NN'), ('different', 'JJ')]
-
-        :param key: The key to use in the dictionary of extra data.
-        :type key: str
-
-        :param value: The value to set for the specified key.
-        """
-        self.extra_data[key] = value
 
     class InvalidTypeException(Exception):
 

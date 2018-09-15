@@ -110,13 +110,12 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         response = self.chatbot.get_response(u'Ṱ̺̺̕h̼͓̲̦̳̘̲e͇̣̰̦̬͎ ̢̼̻̱̘h͚͎͙̜̣̲ͅi̦̲̣̰̤v̻͍e̺̭̳̪̰-m̢iͅn̖̺̞̲̯̰d̵̼̟͙̩̼̘̳.̨̹͈̣')
         self.assertGreater(len(response.text), 0)
 
-    def test_response_extra_data(self):
+    def test_response_with_tags_added(self):
         """
-        If an input statement has data contained in the
-        `extra_data` attribute of a statement object,
+        If an input statement has tags added to it,
         that data should saved with the input statement.
         """
-        self.test_statement.add_extra_data('test', 1)
+        self.test_statement.add_tags('test')
         self.chatbot.get_response(
             self.test_statement
         )
@@ -124,8 +123,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         results = self.chatbot.storage.filter(text=self.test_statement.text)
 
         self.assertIsLength(results, 1)
-        self.assertIn('test', results[0].extra_data)
-        self.assertEqual(1, results[0].extra_data['test'])
+        self.assertIn('test', results[0].get_tags())
 
     def test_generate_response(self):
         statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')

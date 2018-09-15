@@ -10,7 +10,7 @@ class DummyMutatorLogicAdapter(LogicAdapter):
     """
 
     def process(self, statement):
-        statement.add_extra_data('pos_tags', 'NN')
+        statement.add_tags('pos_tags:NN')
 
         self.chatbot.storage.update(statement)
         statement.confidence = 1
@@ -45,9 +45,4 @@ class DataCachingTests(ChatBotTestCase):
         )
 
         self.assertEqual(len(results), 1)
-
-        data = results[0].serialize()
-
-        self.assertIn('extra_data', data)
-        self.assertIn('pos_tags', data['extra_data'])
-        self.assertEqual('NN', data['extra_data']['pos_tags'])
+        self.assertIn('pos_tags:NN', results[0].get_tags())

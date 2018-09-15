@@ -207,11 +207,6 @@ class SQLStorageAdapter(StorageAdapter):
 
             record.created_at = statement.created_at
 
-            if statement.extra_data is None:
-                statement.extra_data = {}
-
-            record.extra_data = dict(statement.extra_data)
-
             for _tag in statement.tags:
                 tag = session.query(Tag).filter_by(name=_tag).first()
 

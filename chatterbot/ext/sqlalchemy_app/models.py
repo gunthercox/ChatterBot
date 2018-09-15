@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey, PickleType
+from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey
 from sqlalchemy.orm import relationship
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr, declarative_base
@@ -71,8 +71,6 @@ class Statement(Base, StatementMixin):
         backref='statements'
     )
 
-    extra_data = Column(PickleType)
-
     in_response_to = Column(
         String(constants.STATEMENT_TEXT_MAX_LENGTH),
         nullable=True
@@ -93,6 +91,5 @@ class Statement(Base, StatementMixin):
             conversation=self.conversation,
             created_at=self.created_at,
             tags=self.get_tags(),
-            extra_data=self.extra_data,
             in_response_to=self.in_response_to
         )

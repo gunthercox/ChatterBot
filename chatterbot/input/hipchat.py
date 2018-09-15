@@ -90,9 +90,14 @@ class HipChat(InputAdapter):
         response_statement = conversation[-1] if conversation else None
 
         if response_statement:
-            last_message_id = response_statement.extra_data.get(
-                'hipchat_message_id', None
-            )
+            tags = response_statement.get_tags()
+            last_message_id = None
+
+            for tag in tags:
+                if tag.startswith('hipchat_message_id:'):
+                    last_message_id = tag.split('hipchat_message_id:')[-1]
+                    break
+
             if last_message_id:
                 self.recent_message_ids.add(last_message_id)
 
@@ -109,6 +114,6 @@ class HipChat(InputAdapter):
         text = data['message']
 
         statement = Statement(text)
-        statement.add_extra_data('hipchat_message_id', data['id'])
+        statement.add_tags('hipchat_message_id' + data['id'])
 
         return statement

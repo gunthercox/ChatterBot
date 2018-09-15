@@ -76,8 +76,7 @@ class DjangoStorageAdapter(StorageAdapter):
                 text=statement.text,
                 conversation=statement.conversation,
                 in_response_to=statement.in_response_to,
-                created_at=statement.created_at,
-                extra_data=getattr(statement, 'extra_data', '')
+                created_at=statement.created_at
             )
 
         for tag in statement.tags.all():
