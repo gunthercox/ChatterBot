@@ -212,6 +212,30 @@ class SQLStorageAdapter(StorageAdapter):
 
         return results
 
+    def create(self, **kwargs):
+        """
+        Creates a new statement matching the keyword arguments specified.
+        Returns the created statement.
+        """
+        Statement = self.get_model('statement')
+        Tag = self.get_model('tag')
+
+        session = self.Session()
+
+        tags = kwargs.pop('tags', [])
+
+        statement = Statement(**kwargs)
+
+        statement.tags.extend([
+            Tag(name=tag) for tag in tags
+        ])
+
+        session.add(statement)
+
+        self._session_finish(session)
+
+        return statement
+
     def update(self, statement):
         """
         Modifies an entry in the database.
