@@ -10,10 +10,6 @@ class ApiTestCase(TestCase):
         super(ApiTestCase, self).setUp()
         self.api_url = reverse('chatterbot')
 
-    def _get_json(self, response):
-        from django.utils.encoding import force_text
-        return json.loads(force_text(response.content))
-
     def test_invalid_text(self):
         response = self.client.post(
             self.api_url,
@@ -24,11 +20,9 @@ class ApiTestCase(TestCase):
             format='json'
         )
 
-        content = json.loads(response.content.decode('utf-8'))
-
         self.assertEqual(response.status_code, 400)
-        self.assertIn('text', content)
-        self.assertEqual(['The attribute "text" is required.'], content['text'])
+        self.assertIn('text', response.json())
+        self.assertEqual(['The attribute "text" is required.'], response.json()['text'])
 
     def test_post(self):
         """
@@ -43,12 +37,10 @@ class ApiTestCase(TestCase):
             format='json'
         )
 
-        content = json.loads(response.content.decode('utf-8'))
-
         self.assertEqual(response.status_code, 200)
-        self.assertIn('text', content)
-        self.assertGreater(len(content['text']), 1)
-        self.assertIn('in_response_to', content)
+        self.assertIn('text', response.json())
+        self.assertGreater(len(response.json()['text']), 1)
+        self.assertIn('in_response_to', response.json())
 
     def test_post_unicode(self):
         """
@@ -63,16 +55,14 @@ class ApiTestCase(TestCase):
             format='json'
         )
 
-        content = json.loads(response.content.decode('utf-8'))
-
         self.assertEqual(response.status_code, 200)
-        self.assertIn('text', content)
-        self.assertGreater(len(content['text']), 1)
-        self.assertIn('in_response_to', content)
+        self.assertIn('text', response.json())
+        self.assertGreater(len(response.json()['text']), 1)
+        self.assertIn('in_response_to', response.json())
 
     def test_escaped_unicode_post(self):
         """
-        Test that unicode reponse
+        Test that unicode reponce
         """
         response = self.client.post(
             self.api_url,
@@ -84,8 +74,8 @@ class ApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('text', str(response.content))
-        self.assertIn('in_response_to', str(response.content))
+        self.assertIn('text', response.json())
+        self.assertIn('in_response_to', response.json())
 
     def test_post_tags(self):
         post_data = {
@@ -102,10 +92,10 @@ class ApiTestCase(TestCase):
         )
 
         self.assertEqual(response.status_code, 200)
-        self.assertIn('text', str(response.content))
-        self.assertIn('in_response_to', str(response.content))
-        self.assertIn('tags', str(response.content))
-        self.assertIn('user:jen@example.com', str(response.content))
+        self.assertIn('text', response.json())
+        self.assertIn('in_response_to', response.json())
+        self.assertIn('tags', response.json())
+        self.assertIn('user:jen@example.com', response.json()['tags'])
 
     def test_get(self):
         response = self.client.get(self.api_url)
