@@ -20,6 +20,10 @@ class StatementIntegrationTestCase(TestCase):
         self.object = StatementObject(text='_', created_at=now)
         self.model = StatementModel(text='_', created_at=now)
 
+        # Simulate both statements being saved
+        self.model.save()
+        self.object.id = self.model.id
+
     def test_text(self):
         self.assertTrue(hasattr(self.object, 'text'))
         self.assertTrue(hasattr(self.model, 'text'))

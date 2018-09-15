@@ -300,5 +300,22 @@ class StorageAdapterCreateTestCase(SQLAlchemyAdapterTestCase):
         results = self.adapter.filter()
 
         self.assertEqual(len(results), 1)
-        self.assertIn('a', results[0].tags)
-        self.assertIn('b', results[0].tags)
+        self.assertIn('a', results[0].get_tags())
+        self.assertIn('b', results[0].get_tags())
+
+
+class StorageAdapterUpdateTestCase(SQLAlchemyAdapterTestCase):
+    """
+    Tests for the update function of the storage adapter.
+    """
+
+    def test_update_adds_tags(self):
+        statement = self.adapter.create(text='Testing')
+        statement.add_tags('a', 'b')
+        self.adapter.update(statement)
+
+        statements = self.adapter.filter()
+
+        self.assertEqual(len(statements), 1)
+        self.assertIn('a', statements[0].get_tags())
+        self.assertIn('b', statements[0].get_tags())
