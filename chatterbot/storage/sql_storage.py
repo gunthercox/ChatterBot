@@ -165,9 +165,15 @@ class SQLStorageAdapter(StorageAdapter):
 
         session.add(statement)
 
+        session.flush()
+
+        session.refresh(statement)
+
+        statement_object = statement.get_statement()
+
         self._session_finish(session)
 
-        return statement
+        return statement_object
 
     def update(self, statement):
         """
@@ -200,10 +206,11 @@ class SQLStorageAdapter(StorageAdapter):
             record.in_response_to = statement.in_response_to
 
             record.created_at = statement.created_at
-            record.extra_data = dict(statement.extra_data)
 
             if statement.extra_data is None:
                 statement.extra_data = {}
+
+            record.extra_data = dict(statement.extra_data)
 
             for _tag in statement.tags:
                 tag = session.query(Tag).filter_by(name=_tag).first()

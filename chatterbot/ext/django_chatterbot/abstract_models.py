@@ -84,34 +84,20 @@ class AbstractBaseStatement(models.Model, StatementMixin):
 
         self.extra_data = json.dumps(extra_data)
 
-    def add_tags(self, tags):
+    def get_tags(self):
+        """
+        Return the list of tags for this statement.
+        (Overrides the method from StatementMixin)
+        """
+        return list(self.tags.values_list('name', flat=True))
+
+    def add_tags(self, *tags):
         """
         Add a list of strings to the statement as tags.
         (Overrides the method from StatementMixin)
         """
         for tag in tags:
-            self.tags.create(
-                name=tag
-            )
-
-    def serialize(self):
-        """
-        :returns: A dictionary representation of the statement object.
-        :rtype: dict
-        """
-        import json
-
-        if not self.extra_data:
-            self.extra_data = '{}'
-
-        return {
-            'id': self.id,
-            'text': self.text,
-            'in_response_to': self.in_response_to,
-            'conversation': self.conversation,
-            'created_at': self.created_at.isoformat().split('+', 1)[0],
-            'extra_data': json.loads(self.extra_data),
-        }
+            self.tags.create(name=tag)
 
 
 class AbstractBaseTag(models.Model):

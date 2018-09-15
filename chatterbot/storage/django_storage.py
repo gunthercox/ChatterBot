@@ -80,6 +80,9 @@ class DjangoStorageAdapter(StorageAdapter):
                 extra_data=getattr(statement, 'extra_data', '')
             )
 
+        for tag in statement.tags.all():
+            statement.tags.create(name=tag)
+
         return statement
 
     def get_random(self):
