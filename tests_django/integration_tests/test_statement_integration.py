@@ -32,9 +32,13 @@ class StatementIntegrationTestCase(TestCase):
         self.assertTrue(hasattr(self.object, 'in_response_to'))
         self.assertTrue(hasattr(self.model, 'in_response_to'))
 
-    def test_extra_data(self):
-        self.assertTrue(hasattr(self.object, 'extra_data'))
-        self.assertTrue(hasattr(self.model, 'extra_data'))
+    def test_conversation(self):
+        self.assertTrue(hasattr(self.object, 'conversation'))
+        self.assertTrue(hasattr(self.model, 'conversation'))
+
+    def test_tags(self):
+        self.assertTrue(hasattr(self.object, 'tags'))
+        self.assertTrue(hasattr(self.model, 'tags'))
 
     def test__str__(self):
         self.assertTrue(hasattr(self.object, '__str__'))
@@ -42,9 +46,12 @@ class StatementIntegrationTestCase(TestCase):
 
         self.assertEqual(str(self.object), str(self.model))
 
-    def test_add_extra_data(self):
-        self.object.add_extra_data('key', 'value')
-        self.model.add_extra_data('key', 'value')
+    def test_add_tags(self):
+        self.object.add_tags('a', 'b')
+        self.model.add_tags('a', 'b')
+
+        self.assertIn('a', self.object.get_tags())
+        self.assertIn('a', self.model.get_tags())
 
     def test_serialize(self):
         object_data = self.object.serialize()

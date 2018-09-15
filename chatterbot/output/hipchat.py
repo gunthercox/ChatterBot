@@ -60,7 +60,7 @@ class HipChat(OutputAdapter):
 
         # Update the output statement with the message id
         self.chatbot.storage.update(
-            statement.add_extra_data('hipchat_message_id', data['id'])
+            statement.add_tags('hipchat_message_id:' + data['id'])
         )
 
         return statement

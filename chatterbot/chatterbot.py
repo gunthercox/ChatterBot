@@ -149,7 +149,6 @@ class ChatBot(object):
             text=statement.text,
             in_response_to=previous_statement_text,
             conversation=statement.conversation,
-            extra_data=statement.extra_data,
             tags=statement.tags
         )
 
