@@ -157,8 +157,6 @@ class ChatBot(object):
         """
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
-
-        # TODO: Write tests for this method.
         """
         from .conversation import Statement as StatementObject
 
