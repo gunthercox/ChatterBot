@@ -409,11 +409,11 @@ class UbuntuCorpusTrainer(Trainer):
                         )
                         print(text, len(row))
 
-                        statement.add_extra_data('datetime', row[0])
-                        statement.add_extra_data('speaker', row[1])
+                        statement.add_tags('datetime:' + row[0])
+                        statement.add_tags('speaker:' + row[1])
 
                         if row[2].strip():
-                            statement.add_extra_data('addressing_speaker', row[2])
+                            statement.add_tags('addressing_speaker:', row[2])
 
                         previous_statement_text = statement.text
 

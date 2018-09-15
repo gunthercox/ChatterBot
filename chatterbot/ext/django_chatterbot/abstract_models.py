@@ -50,11 +50,6 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         null=True
     )
 
-    extra_data = models.CharField(
-        max_length=500,
-        blank=True
-    )
-
     # This is the confidence with which the chat bot believes
     # this is an accurate response. This value is set when the
     # statement is returned by the chat bot.
@@ -69,20 +64,6 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         elif len(self.text.strip()) > 0:
             return self.text
         return '<empty>'
-
-    def add_extra_data(self, key, value):
-        """
-        Add extra data to the extra_data field.
-        """
-        import json
-
-        if not self.extra_data:
-            self.extra_data = '{}'
-
-        extra_data = json.loads(self.extra_data)
-        extra_data[key] = value
-
-        self.extra_data = json.dumps(extra_data)
 
     def get_tags(self):
         """

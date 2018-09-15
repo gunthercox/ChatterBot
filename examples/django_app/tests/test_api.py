@@ -87,12 +87,12 @@ class ApiTestCase(TestCase):
         self.assertIn('text', str(response.content))
         self.assertIn('in_response_to', str(response.content))
 
-    def test_post_extra_data(self):
+    def test_post_tags(self):
         post_data = {
             'text': 'Good morning.',
-            'extra_data': {
-                'user': 'jen@example.com'
-            }
+            'tags': [
+                'user:jen@example.com'
+            ]
         }
         response = self.client.post(
             self.api_url,
@@ -103,8 +103,9 @@ class ApiTestCase(TestCase):
 
         self.assertEqual(response.status_code, 200)
         self.assertIn('text', str(response.content))
-        self.assertIn('extra_data', str(response.content))
         self.assertIn('in_response_to', str(response.content))
+        self.assertIn('tags', str(response.content))
+        self.assertIn('user:jen@example.com', str(response.content))
 
     def test_get(self):
         response = self.client.get(self.api_url)
