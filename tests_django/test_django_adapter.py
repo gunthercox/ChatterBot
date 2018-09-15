@@ -411,3 +411,27 @@ class DjangoOrderingTestCase(DjangoStorageAdapterTestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[1], statement_a)
         self.assertEqual(results[0], statement_b)
+
+
+class StorageAdapterCreateTestCase(DjangoStorageAdapterTestCase):
+    """
+    Tests for the create function of the storage adapter.
+    """
+
+    def test_create_text(self):
+        self.adapter.create(text='testing')
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, 'testing')
+
+    def test_create_tags(self):
+        self.adapter.create(text='testing', tags=['a', 'b'])
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 1)
+        tags = results[0].tags.values_list('name', flat=True)
+        self.assertIn('a', tags)
+        self.assertIn('b', tags)

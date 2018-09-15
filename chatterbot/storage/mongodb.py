@@ -234,6 +234,19 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return results
 
+    def create(self, **kwargs):
+        """
+        Creates a new statement matching the keyword arguments specified.
+        Returns the created statement.
+        """
+        Statement = self.get_model('statement')
+
+        inserted = self.statements.insert_one(kwargs)
+
+        kwargs['id'] = inserted.inserted_id
+
+        return Statement(**kwargs)
+
     def update(self, statement):
         from pymongo import UpdateOne
         from pymongo.errors import BulkWriteError
