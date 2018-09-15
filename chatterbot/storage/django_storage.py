@@ -93,6 +93,24 @@ class DjangoStorageAdapter(StorageAdapter):
 
         return statements
 
+    def create(self, **kwargs):
+        """
+        Creates a new statement matching the keyword arguments specified.
+        Returns the created statement.
+        """
+        Statement = self.get_model('statement')
+
+        tags = kwargs.pop('tags', [])
+
+        statement = Statement(**kwargs)
+
+        statement.save()
+
+        for tag in tags:
+            statement.tags.create(name=tag)
+
+        return statement
+
     def update(self, statement):
         """
         Update the provided statement.
