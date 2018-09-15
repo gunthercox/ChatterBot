@@ -148,7 +148,7 @@ class ChatterBotCorpusTrainer(Trainer):
                             conversation='training'
                         )
 
-                        _statement.add_tags(corpus.categories)
+                        _statement.add_tags(*corpus.categories)
 
                         statement = self.get_preprocessed_statement(_statement)
 

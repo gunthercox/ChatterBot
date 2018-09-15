@@ -10,12 +10,35 @@ class StatementMixin(object):
         """
         return self.tags
 
-    def add_tags(self, tags):
+    def add_tags(self, *tags):
         """
         Add a list of strings to the statement as tags.
         """
-        for tag in tags:
-            self.tags.append(tag)
+        self.tags.extend(tags)
+
+    def serialize(self):
+        """
+        :returns: A dictionary representation of the statement object.
+        :rtype: dict
+        """
+        extra_data = self.extra_data
+
+        if not extra_data:
+            extra_data = '{}'
+
+        if type(extra_data) == str:
+            import json
+            extra_data = json.loads(extra_data)
+
+        return {
+            'id': self.id,
+            'text': self.text,
+            'created_at': self.created_at.isoformat().split('+', 1)[0],
+            'conversation': self.conversation,
+            'in_response_to': self.in_response_to,
+            'tags': self.get_tags(),
+            'extra_data': extra_data
+        }
 
 
 class Statement(StatementMixin):
@@ -97,20 +120,6 @@ class Statement(StatementMixin):
         :param value: The value to set for the specified key.
         """
         self.extra_data[key] = value
-
-    def serialize(self):
-        """
-        :returns: A dictionary representation of the statement object.
-        :rtype: dict
-        """
-        return {
-            'id': self.id,
-            'text': self.text,
-            'created_at': self.created_at.isoformat().split('+', 1)[0],
-            'conversation': self.conversation,
-            'in_response_to': self.in_response_to,
-            'extra_data': self.extra_data
-        }
 
     class InvalidTypeException(Exception):
 
