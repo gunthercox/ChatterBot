@@ -151,3 +151,35 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         results = self.chatbot.storage.filter(text='Hi!')
 
         self.assertIsLength(results, 0)
+
+    def test_get_latest_response_from_zero_responses(self):
+        response = self.chatbot.get_latest_response('invalid')
+
+        self.assertIsNone(response)
+
+    def test_get_latest_response_from_one_responses(self):
+        self.chatbot.storage.create(text='A', conversation='test')
+        self.chatbot.storage.create(text='B', conversation='test', in_response_to='A')
+
+        response = self.chatbot.get_latest_response('test')
+
+        self.assertEqual(response.text, 'A')
+
+    def test_get_latest_response_from_two_responses(self):
+        self.chatbot.storage.create(text='A', conversation='test')
+        self.chatbot.storage.create(text='B', conversation='test', in_response_to='A')
+        self.chatbot.storage.create(text='C', conversation='test', in_response_to='B')
+
+        response = self.chatbot.get_latest_response('test')
+
+        self.assertEqual(response.text, 'B')
+
+    def test_get_latest_response_from_three_responses(self):
+        self.chatbot.storage.create(text='A', conversation='test')
+        self.chatbot.storage.create(text='B', conversation='test', in_response_to='A')
+        self.chatbot.storage.create(text='C', conversation='test', in_response_to='B')
+        self.chatbot.storage.create(text='D', conversation='test', in_response_to='C')
+
+        response = self.chatbot.get_latest_response('test')
+
+        self.assertEqual(response.text, 'C')
