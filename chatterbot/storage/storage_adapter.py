@@ -33,13 +33,13 @@ class StorageAdapter(object):
 
         return get_model_method()
 
-    def generate_base_query(self, chatterbot, session_id):
+    def generate_base_query(self, chatterbot, conversation):
         """
         Create a base query for the storage adapter.
         """
         if self.adapter_supports_queries:
             for filter_instance in chatterbot.filters:
-                self.base_query = filter_instance.filter_selection(chatterbot, session_id)
+                self.base_query = filter_instance.filter_selection(chatterbot, conversation)
 
     def count(self):
         """
