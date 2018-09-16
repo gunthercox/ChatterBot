@@ -18,5 +18,5 @@ class OutputAdapterTestCase(TestCase):
         """
         The value passed in for the statement parameter should be returned.
         """
-        statement = self.adapter.process_response('_', 0)
+        statement = self.adapter.process_response('_')
         self.assertEqual(statement, '_')

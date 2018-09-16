@@ -7,13 +7,11 @@ class OutputAdapter(Adapter):
     functionality, such as delivering a response to an API endpoint.
     """
 
-    def process_response(self, statement, session_id=None):
+    def process_response(self, statement):
         """
         Override this method in a subclass to implement customized functionality.
 
         :param statement: The statement that the chat bot has produced in response to some input.
-
-        :param session_id: The unique id of the current chat session.
 
         :returns: The response statement.
         """
