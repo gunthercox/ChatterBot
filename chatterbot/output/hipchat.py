@@ -55,7 +55,7 @@ class HipChat(OutputAdapter):
         """
         raise self.AdapterMethodNotImplementedError()
 
-    def process_response(self, statement, session_id=None):
+    def process_response(self, statement):
         data = self.send_message(self.hipchat_room, statement.text)
 
         # Update the output statement with the message id

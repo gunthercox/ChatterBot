@@ -117,7 +117,7 @@ class ChatBot(object):
             self.learn_response(input_statement, previous_statement)
 
         # Process the response output with the output adapter
-        return self.output.process_response(response, conversation)
+        return self.output.process_response(response)
 
     def generate_response(self, input_statement):
         """
@@ -127,6 +127,8 @@ class ChatBot(object):
 
         # Select a response to the input statement
         response = self.logic.process(input_statement)
+
+        response.conversation = input_statement.conversation
 
         return response
 
