@@ -81,15 +81,3 @@ class Statement(Base, StatementMixin):
         Return a list of tags for this statement.
         """
         return [tag.name for tag in self.tags]
-
-    def get_statement(self):
-        from chatterbot.conversation import Statement as StatementObject
-
-        return StatementObject(
-            id=self.id,
-            text=self.text,
-            conversation=self.conversation,
-            created_at=self.created_at,
-            tags=self.get_tags(),
-            in_response_to=self.in_response_to
-        )

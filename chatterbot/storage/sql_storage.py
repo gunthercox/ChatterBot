@@ -82,6 +82,11 @@ class SQLStorageAdapter(StorageAdapter):
         from chatterbot.ext.sqlalchemy_app.models import Tag
         return Tag
 
+    def model_to_object(self, statement):
+        from chatterbot.conversation import Statement as StatementObject
+
+        return StatementObject(**statement.serialize())
+
     def count(self):
         """
         Return the number of entries in the database.
@@ -139,7 +144,7 @@ class SQLStorageAdapter(StorageAdapter):
         results = []
 
         for statement in statements:
-            results.append(statement.get_statement())
+            results.append(self.model_to_object(statement))
 
         session.close()
 
@@ -169,7 +174,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         session.refresh(statement)
 
-        statement_object = statement.get_statement()
+        statement_object = self.model_to_object(statement)
 
         self._session_finish(session)
 
@@ -233,10 +238,10 @@ class SQLStorageAdapter(StorageAdapter):
         if count < 1:
             raise self.EmptyDatabaseException()
 
-        rand = random.randrange(0, count)
-        stmt = session.query(Statement)[rand]
+        random_index = random.randrange(0, count)
+        random_statement = session.query(Statement)[random_index]
 
-        statement = stmt.get_statement()
+        statement = self.model_to_object(random_statement)
 
         session.close()
         return statement
