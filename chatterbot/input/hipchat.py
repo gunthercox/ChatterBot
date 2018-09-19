@@ -76,14 +76,14 @@ class HipChat(InputAdapter):
             return None
         return items[-1]
 
-    def process_input(self, statement, conversation):
+    def process_input(self, statement):
         """
         Process input from the HipChat room.
         """
         new_message = False
 
         conversation = self.chatbot.storage.filter(
-            text=conversation,
+            conversation=statement.conversation,
             order_by=['id']
         )
 

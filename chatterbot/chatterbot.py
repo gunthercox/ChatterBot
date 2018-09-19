@@ -90,19 +90,15 @@ class ChatBot(object):
         """
         self.logic.initialize()
 
-    def get_response(self, input_item, conversation='default'):
+    def get_response(self, input_item):
         """
         Return the bot's response based on the input.
 
         :param input_item: An input value.
-        :param conversation: A string of characters unique to the conversation.
         :returns: A response to the input.
         :rtype: Statement
         """
-        input_statement = self.input.process_input(
-            input_item,
-            conversation
-        )
+        input_statement = self.input.process_input(input_item)
 
         # Preprocess the input statement
         for preprocessor in self.preprocessors:

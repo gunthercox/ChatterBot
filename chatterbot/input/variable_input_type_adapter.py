@@ -25,14 +25,16 @@ class VariableInputTypeAdapter(InputAdapter):
             )
         )
 
-    def process_input(self, statement, conversation):
+    def process_input(self, statement):
+        DEFAULT_CONVERSATION = 'default'
+
         input_type = self.detect_type(statement)
 
         # Return the statement object without modification
         if input_type == self.OBJECT:
 
             if not statement.conversation:
-                statement.conversation = conversation
+                statement.conversation = DEFAULT_CONVERSATION
 
             return statement
 
@@ -40,7 +42,7 @@ class VariableInputTypeAdapter(InputAdapter):
         if input_type == self.TEXT:
             return Statement(
                 text=statement,
-                conversation=conversation
+                conversation=DEFAULT_CONVERSATION
             )
 
         # Convert input dictionary into a statement object
@@ -50,7 +52,7 @@ class VariableInputTypeAdapter(InputAdapter):
             del input_json['text']
 
             if 'conversation' not in input_json:
-                input_json['conversation'] = conversation
+                input_json['conversation'] = DEFAULT_CONVERSATION
 
             return Statement(text, **input_json)
 

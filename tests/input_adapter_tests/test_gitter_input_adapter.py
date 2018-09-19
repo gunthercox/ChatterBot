@@ -120,5 +120,5 @@ class GitterAdapterTests(TestCase):
 
     def test_process_input(self):
         statement = Statement('Hello')
-        data = self.adapter.process_input(statement, 'test')
+        data = self.adapter.process_input(statement)
         self.assertEqual('Hello', data)

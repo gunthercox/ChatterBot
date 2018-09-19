@@ -8,7 +8,7 @@ class TerminalAdapter(InputAdapter):
     communicate through the terminal.
     """
 
-    def process_input(self, *args, **kwargs):
+    def process_input(self, *args):
         """
         Read the user's input from the terminal.
         """
