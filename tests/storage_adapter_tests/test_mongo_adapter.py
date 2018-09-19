@@ -289,6 +289,19 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
         self.assertIn('a', results[0].get_tags())
         self.assertIn('b', results[0].get_tags())
 
+    def test_create_duplicate_tags(self):
+        """
+        The storage adapter should not create a statement with tags
+        that are duplicates.
+        """
+        self.adapter.create(text='testing', tags=['ab', 'ab'])
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(len(results[0].get_tags()), 1)
+        self.assertEqual(results[0].get_tags(), ['ab'])
+
 
 class StorageAdapterUpdateTestCase(MongoAdapterFilterTestCase):
     """
@@ -305,3 +318,18 @@ class StorageAdapterUpdateTestCase(MongoAdapterFilterTestCase):
         self.assertEqual(len(statements), 1)
         self.assertIn('a', statements[0].get_tags())
         self.assertIn('b', statements[0].get_tags())
+
+    def test_update_duplicate_tags(self):
+        """
+        The storage adapter should not update a statement with tags
+        that are duplicates.
+        """
+        statement = self.adapter.create(text='Testing', tags=['ab'])
+        statement.add_tags('ab')
+        self.adapter.update(statement)
+
+        statements = self.adapter.filter()
+
+        self.assertEqual(len(statements), 1)
+        self.assertEqual(len(statements[0].get_tags()), 1)
+        self.assertEqual(statements[0].get_tags(), ['ab'])

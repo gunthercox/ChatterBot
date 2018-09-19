@@ -138,6 +138,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Statement = self.get_model('statement')
 
+        if 'tags' in kwargs:
+            kwargs['tags'] = list(set(kwargs['tags']))
+
         inserted = self.statements.insert_one(kwargs)
 
         kwargs['id'] = inserted.inserted_id
@@ -147,6 +150,18 @@ class MongoDatabaseAdapter(StorageAdapter):
     def update(self, statement):
         data = statement.serialize()
         data.pop('id', None)
+        data.pop('tags', None)
+
+        update_data = {
+            '$set': data
+        }
+
+        if statement.tags:
+            update_data['$addToSet'] = {
+                'tags': {
+                    '$each': statement.tags
+                }
+            }
 
         search_parameters = {}
 
@@ -158,7 +173,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         update_operation = self.statements.update_one(
             search_parameters,
-            {'$set': data},
+            update_data,
             upsert=True
         )
 
