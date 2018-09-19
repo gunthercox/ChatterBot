@@ -160,13 +160,18 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
-        tags = kwargs.pop('tags', [])
+        tags = set(kwargs.pop('tags', []))
 
         statement = Statement(**kwargs)
 
-        statement.tags.extend([
-            Tag(name=tag) for tag in tags
-        ])
+        for _tag in tags:
+            tag = session.query(Tag).filter_by(name=_tag).first()
+
+            if not tag:
+                # Create the tag
+                tag = Tag(name=_tag)
+
+            statement.tags.append(tag)
 
         session.add(statement)
 

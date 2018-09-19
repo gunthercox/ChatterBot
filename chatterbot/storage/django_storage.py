@@ -51,6 +51,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Returns the created statement.
         """
         Statement = self.get_model('statement')
+        Tag = self.get_model('tag')
 
         tags = kwargs.pop('tags', [])
 
@@ -58,8 +59,10 @@ class DjangoStorageAdapter(StorageAdapter):
 
         statement.save()
 
-        for tag in tags:
-            statement.tags.create(name=tag)
+        for _tag in tags:
+            tag, _ = Tag.objects.get_or_create(name=_tag)
+
+            statement.tags.add(tag)
 
         return statement
 
@@ -68,6 +71,7 @@ class DjangoStorageAdapter(StorageAdapter):
         Update the provided statement.
         """
         Statement = self.get_model('statement')
+        Tag = self.get_model('tag')
 
         if hasattr(statement, 'id'):
             statement.save()
@@ -79,8 +83,10 @@ class DjangoStorageAdapter(StorageAdapter):
                 created_at=statement.created_at
             )
 
-        for tag in statement.tags.all():
-            statement.tags.create(name=tag)
+        for _tag in statement.tags.all():
+            tag, _ = Tag.objects.get_or_create(name=_tag)
+
+            statement.tags.add(tag)
 
         return statement
 
