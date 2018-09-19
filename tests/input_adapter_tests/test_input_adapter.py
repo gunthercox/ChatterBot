@@ -16,7 +16,4 @@ class InputAdapterTestCase(ChatBotTestCase):
 
     def test_process_response(self):
         with self.assertRaises(InputAdapter.AdapterMethodNotImplementedError):
-            self.adapter.process_input(
-                'test statement',
-                'test conversation'
-            )
+            self.adapter.process_input('test statement')
