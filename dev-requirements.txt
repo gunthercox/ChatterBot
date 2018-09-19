@@ -3,5 +3,5 @@ flake8
 nose
 twine
 twython
-sphinx>=1.6,<1.7
+sphinx>=1.7,<1.8
 sphinx_rtd_theme
