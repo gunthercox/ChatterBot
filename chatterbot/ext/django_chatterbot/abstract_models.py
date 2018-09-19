@@ -77,8 +77,9 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         Add a list of strings to the statement as tags.
         (Overrides the method from StatementMixin)
         """
-        for tag in tags:
-            self.tags.create(name=tag)
+        for _tag in tags:
+            if not self.tags.filter(name=_tag).exists():
+                self.tags.create(name=_tag)
 
 
 class AbstractBaseTag(models.Model):
