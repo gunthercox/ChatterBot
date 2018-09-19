@@ -7,7 +7,7 @@ class InputAdapter(Adapter):
     interface that all input adapters should implement.
     """
 
-    def process_input(self, statement, conversation):
+    def process_input(self, statement):
         """
         Returns a statement object based on the input source.
         """

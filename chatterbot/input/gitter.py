@@ -147,7 +147,7 @@ class Gitter(InputAdapter):
 
         return text_without_mentions
 
-    def process_input(self, statement, conversation):
+    def process_input(self, statement):
         new_message = False
 
         while not new_message:
@@ -158,9 +158,8 @@ class Gitter(InputAdapter):
             sleep(self.sleep_time)
 
         text = self.remove_mentions(data['text'])
-        statement = Statement(text)
 
-        return statement
+        return Statement(text)
 
     class HTTPStatusException(Exception):
         """

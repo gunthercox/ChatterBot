@@ -7,26 +7,25 @@ class VariableInputTypeAdapterTests(TestCase):
 
     def setUp(self):
         self.adapter = VariableInputTypeAdapter()
-        self.conversation = 'test'
 
     def test_statement_returned_dict(self):
         data = {
             'text': 'Robot ipsum datus scan amet.',
             'in_response_to': []
         }
-        response = self.adapter.process_input(data, self.conversation)
+        response = self.adapter.process_input(data)
 
         self.assertEqual(response.text, data['text'])
 
     def test_statement_returned_text(self):
         text = 'The test statement to process is here.'
-        response = self.adapter.process_input(text, self.conversation)
+        response = self.adapter.process_input(text)
 
         self.assertEqual(response.text, text)
 
     def test_statement_returned_object(self):
         statement = Statement('The test statement to process is here.')
-        response = self.adapter.process_input(statement, self.conversation)
+        response = self.adapter.process_input(statement)
 
         self.assertEqual(response.text, statement.text)
 
@@ -34,4 +33,4 @@ class VariableInputTypeAdapterTests(TestCase):
         data = ['A list', 'of text', 'is an', 'invalid input type.']
 
         with self.assertRaises(VariableInputTypeAdapter.UnrecognizedInputFormatException):
-            self.adapter.process_input(data, self.conversation)
+            self.adapter.process_input(data)
