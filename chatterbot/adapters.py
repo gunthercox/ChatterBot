@@ -28,16 +28,11 @@ class Adapter(object):
         method in a subclass.
         """
 
-        def __init__(self, message=None):
+        def __init__(self, message='This method must be overridden in a subclass method.'):
             """
-            Set the message for the esception.
+            Set the message for the exception.
             """
-            if not message:
-                message = 'This method must be overridden in a subclass method.'
-            self.message = message
-
-        def __str__(self):
-            return self.message
+            super().__init__(message)
 
     class InvalidAdapterTypeException(Exception):
         """
