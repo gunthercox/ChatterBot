@@ -2,13 +2,13 @@ Creating a new output adapter
 ==============================
 
 You can write your own output adapters by creating a new class that
-inherits from :code:`chatterbot.output.OutputAdapter` and overrides the
-necessary methods established in the :code:`OutputAdapter` class.
+inherits from ``chatterbot.output.OutputAdapter`` and overrides the
+necessary methods established in the ``OutputAdapter`` class.
 
-To create your own output adapter you must override the :code:`process_response`
+To create your own output adapter you must override the ``process_response``
 method to return a :ref:`Statement <conversation_statements>` object.
 
-Note that you may need to extend the :code:`__init__` method of your custom output
+Note that you may need to extend the ``__init__`` method of your custom output
 adapter if you intend to save a kwarg parameter that was passed into
 the chat bot's constructor.
 (An API key might be an example of a parameter you would want to access here.)

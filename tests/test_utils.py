@@ -28,6 +28,17 @@ class UtilityTests(TestCase):
         self.assertIn('test', list(words))
         self.assertIn('string', list(words))
 
+    def test_get_greatest_confidence(self):
+        statement = 'Hello'
+        options = [
+            (0.50, 'Hello'),
+            (0.85, 'Hello'),
+            (0.42, 'Hello')
+        ]
+        value = utils.get_greatest_confidence(statement, options)
+
+        self.assertEqual(value, 0.85)
+
 
 class UtilityChatBotTestCase(ChatBotTestCase):
 

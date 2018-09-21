@@ -39,7 +39,7 @@ The import for ChatterBot should look like the following line.
 
    from chatterbot import ChatBot
 
-Create a new instance of the :code:`ChatBot` class.
+Create a new instance of the ``ChatBot`` class.
 
 .. code-block:: python
 
@@ -54,10 +54,10 @@ Setting the storage adapter
 
 ChatterBot comes with built in adapter classes that allow it to connect
 to different types of databases. In this tutorial, we will be using the
-:code:`SQLStorageAdapter` which allows the chat bot to connect to SQL databases.
+``SQLStorageAdapter`` which allows the chat bot to connect to SQL databases.
 By default, this adapter will create a `SQLite`_ database.
 
-The :code:`database` parameter is used to specify the path to the database
+The ``database`` parameter is used to specify the path to the database
 that the chat bot will use. For this example we will call the database
 `database.sqlite3`. this file will be created automatically if it doesn't
 already exist.

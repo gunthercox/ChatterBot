@@ -16,7 +16,7 @@ Training settings
 =================
 
 You can specify any data that you want to be passed to the chat bot
-trainer in the :code:`training_data` parameter in your :code:`CHATTERBOT`
+trainer in the ``training_data`` parameter in your ``CHATTERBOT``
 Django settings.
 
 .. code-block:: python
@@ -31,6 +31,6 @@ Django settings.
 
 .. note::
 
-   You can also specify paths to corpus files or directories of corpus files in the :code:`training_data` list.
+   You can also specify paths to corpus files or directories of corpus files in the ``training_data`` list.
 
 See the documentation for the :ref:`training-classes` for other training class options that can be used here.

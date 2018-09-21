@@ -111,7 +111,7 @@ conversations corpora then you would simply specify them.
        "chatterbot.corpus.english.conversations"
    )
 
-You can also specify file paths to corpus files or directories of corpus files when calling the :code:`train` method.
+You can also specify file paths to corpus files or directories of corpus files when calling the ``train`` method.
 
 .. code-block:: python
 
@@ -133,13 +133,13 @@ required to work with the Twitter API.
 +-------------------------------------+-------------------------------------+
 | Parameter                           | Description                         | 
 +=====================================+=====================================+
-| :code:`twitter_consumer_key`        | Consumer key of twitter app.        |
+| ``twitter_consumer_key``            | Consumer key of twitter app.        |
 +-------------------------------------+-------------------------------------+
-| :code:`twitter_consumer_secret`     | Consumer secret of twitter app.     | 
+| ``twitter_consumer_secret``         | Consumer secret of twitter app.     | 
 +-------------------------------------+-------------------------------------+
-| :code:`twitter_access_token_key`    | Access token key of twitter app.    | 
+| ``twitter_access_token_key``        | Access token key of twitter app.    | 
 +-------------------------------------+-------------------------------------+
-| :code:`twitter_access_token_secret` | Access token secret of twitter app. | 
+| ``twitter_access_token_secret``     | Access token secret of twitter app. | 
 +-------------------------------------+-------------------------------------+
 
 Twitter training example

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from .base_case import ChatBotTestCase
+from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 
 
@@ -181,3 +182,65 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         response = self.chatbot.get_latest_response('test')
 
         self.assertEqual(response.text, 'C')
+
+
+class TestAdapterA(LogicAdapter):
+
+    def process(self, statement):
+        response = Statement('Good morning.')
+        response.confidence = 0.2
+        return response
+
+
+class TestAdapterB(LogicAdapter):
+
+    def process(self, statement):
+        response = Statement('Good morning.')
+        response.confidence = 0.5
+        return response
+
+
+class TestAdapterC(LogicAdapter):
+
+    def process(self, statement):
+        response = Statement('Good night.')
+        response.confidence = 0.7
+        return response
+
+
+class ChatBotLogicAdapterTestCase(ChatBotTestCase):
+
+    def test_sub_adapter_agreement(self):
+        """
+        In the case that multiple adapters agree on a given
+        statement, this statement should be returned with the
+        highest confidence available from these matching options.
+        """
+        self.chatbot.logic_adapters = [
+            TestAdapterA(),
+            TestAdapterB(),
+            TestAdapterC()
+        ]
+
+        statement = self.chatbot.generate_response(Statement('Howdy!'))
+
+        self.assertEqual(statement.confidence, 0.5)
+        self.assertEqual(statement, 'Good morning.')
+
+    def test_get_logic_adapters(self):
+        """
+        Test that all system logic adapters and regular logic adapters
+        can be retrieved as a list by a single method.
+        """
+        adapter_a = TestAdapterA()
+        adapter_b = TestAdapterB()
+        self.chatbot.system_logic_adapters = [adapter_a]
+        self.chatbot.logic_adapters = [adapter_b]
+
+        self.assertIsLength(self.chatbot.get_logic_adapters(), 2)
+        self.assertIn(adapter_a, self.chatbot.get_logic_adapters())
+        self.assertIn(adapter_b, self.chatbot.get_logic_adapters())
+
+    def test_chatbot_set_for_all_logic_adapters(self):
+        for sub_adapter in self.chatbot.get_logic_adapters():
+            self.assertEqual(sub_adapter.chatbot, self.chatbot)

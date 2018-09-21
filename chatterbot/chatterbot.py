@@ -1,5 +1,6 @@
 import logging
 from .storage import StorageAdapter
+from .logic import LogicAdapter
 from .input import InputAdapter
 from .output import OutputAdapter
 from . import utils
@@ -11,8 +12,6 @@ class ChatBot(object):
     """
 
     def __init__(self, name, **kwargs):
-        from .logic import MultiLogicAdapter
-
         self.name = name
         kwargs['name'] = name
 
@@ -36,7 +35,12 @@ class ChatBot(object):
         utils.validate_adapter_class(input_adapter, InputAdapter)
         utils.validate_adapter_class(output_adapter, OutputAdapter)
 
-        self.logic = MultiLogicAdapter(**kwargs)
+        # Logic adapters used by the chat bot
+        self.logic_adapters = []
+
+        # Required logic adapters that must always be present
+        self.system_logic_adapters = []
+
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
         self.input = utils.initialize_class(input_adapter, **kwargs)
         self.output = utils.initialize_class(output_adapter, **kwargs)
@@ -46,16 +50,19 @@ class ChatBot(object):
 
         # Add required system logic adapter
         for system_logic_adapter in system_logic_adapters:
-            self.logic.system_adapters.append(
-                utils.initialize_class(system_logic_adapter, **kwargs)
-            )
+            utils.validate_adapter_class(system_logic_adapter, LogicAdapter)
+            logic_adapter = utils.initialize_class(system_logic_adapter, **kwargs)
+            logic_adapter.set_chatbot(self)
+            self.system_logic_adapters.append(logic_adapter)
 
         for adapter in logic_adapters:
-            self.logic.add_adapter(adapter, **kwargs)
+            utils.validate_adapter_class(adapter, LogicAdapter)
+            logic_adapter = utils.initialize_class(adapter, **kwargs)
+            logic_adapter.set_chatbot(self)
+            self.logic_adapters.append(logic_adapter)
 
         # Add the chatbot instance to each adapter to share information such as
         # the name, the current conversation, or other adapters
-        self.logic.set_chatbot(self)
         self.input.set_chatbot(self)
         self.output.set_chatbot(self)
 
@@ -88,7 +95,8 @@ class ChatBot(object):
         """
         Do any work that needs to be done before the responses can be returned.
         """
-        self.logic.initialize()
+        for logic_adapter in self.get_logic_adapters():
+            logic_adapter.initialize()
 
     def get_response(self, input_item):
         """
@@ -118,15 +126,51 @@ class ChatBot(object):
     def generate_response(self, input_statement):
         """
         Return a response based on a given input statement.
+
+        :param input_statement: The input statement to be processed.
         """
+        from collections import Counter
+
         self.storage.generate_base_query(self, input_statement.conversation)
 
-        # Select a response to the input statement
-        response = self.logic.process(input_statement)
+        results = []
+        result = None
+        max_confidence = -1
 
-        response.conversation = input_statement.conversation
+        for adapter in self.get_logic_adapters():
+            if adapter.can_process(input_statement):
 
-        return response
+                output = adapter.process(input_statement)
+                results.append((output.confidence, output, ))
+
+                self.logger.info(
+                    '{} selected "{}" as a response with a confidence of {}'.format(
+                        adapter.class_name, output.text, output.confidence
+                    )
+                )
+
+                if output.confidence > max_confidence:
+                    result = output
+                    max_confidence = output.confidence
+            else:
+                self.logger.info(
+                    'Not processing the statement using {}'.format(adapter.class_name)
+                )
+
+        # If multiple adapters agree on the same statement,
+        # then that statement is more likely to be the correct response
+        if len(results) >= 3:
+            statements = [s[1] for s in results]
+            count = Counter(statements)
+            most_common = count.most_common()
+            if most_common[0][1] > 1:
+                result = most_common[0][0]
+                max_confidence = utils.get_greatest_confidence(result, results)
+
+        result.confidence = max_confidence
+        result.conversation = input_statement.conversation
+
+        return result
 
     def learn_response(self, statement, previous_statement):
         """
@@ -186,6 +230,15 @@ class ChatBot(object):
                 return latest_statement
 
         return None
+
+    def get_logic_adapters(self):
+        """
+        Return a list of all logic adapters being used, including system logic adapters.
+        """
+        adapters = []
+        adapters.extend(self.logic_adapters)
+        adapters.extend(self.system_logic_adapters)
+        return adapters
 
     def set_trainer(self, training_class, **kwargs):
         """
