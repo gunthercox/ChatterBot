@@ -10,7 +10,7 @@ different conversations with different people at the same time.
 Conversation scope
 ------------------
 
-If two :code:`ChatBot` instances are created, each will have conversations separate from each other.
+If two ``ChatBot`` instances are created, each will have conversations separate from each other.
 
 An adapter can access any conversation as long as the unique identifier for the conversation is provided.
 
@@ -63,9 +63,9 @@ number of possible responses.
 .. image:: _static/statement-response-relationship.svg
    :alt: ChatterBot statement-response relationship
 
-Each :code:`Statement` object has an :code:`in_response_to` reference which links the
+Each ``Statement`` object has an ``in_response_to`` reference which links the
 statement to a number of other statements that it has been learned to be in response to.
-The :code:`in_response_to` attribute is essentially a reference to all parent statements
+The ``in_response_to`` attribute is essentially a reference to all parent statements
 of the current statement.
 
 .. image:: _static/statement-relationship.svg

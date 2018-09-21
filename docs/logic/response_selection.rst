@@ -41,7 +41,7 @@ Setting the response selection method
 =====================================
 
 To set the response selection method for your chat bot, you
-will need to pass the :code:`response_selection_method` parameter
+will need to pass the ``response_selection_method`` parameter
 to your chat bot when you initialize it. An example of this
 is shown below.
 
@@ -59,7 +59,7 @@ Response selection in logic adapters
 ====================================
 
 When a logic adapter is initialized, the response selection method
-parameter that was passed to it can be called using :code:`self.select_response`
+parameter that was passed to it can be called using ``self.select_response``
 as shown below.
 
 .. code-block:: python
@@ -69,3 +69,42 @@ as shown below.
        list_of_response_options,
        self.chatbot.storage
    )
+
+
+Selecting a response from multiple logic adapters
+=================================================
+
+The ``generate_response`` method is used to select a single response from the responses
+returned by all of the logic adapters that the chat bot has been configured to use.
+Each response returned by the logic adapters includes a confidence score that indicates
+the likeliness that the returned statement is a valid response to the input.
+
+Response selection
+++++++++++++++++++
+
+The ``generate_response`` will return the response statement that has the greatest
+confidence score. The only exception to this is a case where multiple logic adapters
+return the same statement and therefore *agree* on that response.
+
+For this example, consider a scenario where multiple logic adapters are being used.
+Assume the following results were returned by a chat bot's logic adapters.
+
++------------+--------------+
+| Confidence | Statement    |
++============+==============+
+| 0.2        | Good morning |
++------------+--------------+
+| 0.5        | Good morning |
++------------+--------------+
+| 0.7        | Good night   |
++------------+--------------+
+
+In this case, two of the logic adapters have generated the same result.
+When multiple logic adapters come to the same conclusion, that statement
+is given priority over another response with a possibly higher confidence score.
+The fact that the multiple adapters agreed on a response is a significant
+indicator that a particular statement has a greater probability of being
+a more accurate response to the input.
+
+When multiple adapters agree on a response, the greatest confidence score that
+was generated for that response will be returned with it.

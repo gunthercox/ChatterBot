@@ -16,8 +16,8 @@ class StringInitializationTestCase(ChatBotTestCase):
 
     def test_logic_initialized(self):
         from chatterbot.logic import BestMatch
-        self.assertEqual(len(self.chatbot.logic.adapters), 1)
-        self.assertTrue(isinstance(self.chatbot.logic.adapters[0], BestMatch))
+        self.assertEqual(len(self.chatbot.logic_adapters), 1)
+        self.assertTrue(isinstance(self.chatbot.logic_adapters[0], BestMatch))
 
     def test_input_initialized(self):
         from chatterbot.input import VariableInputTypeAdapter
@@ -59,9 +59,9 @@ class DictionaryInitializationTestCase(ChatBotTestCase):
     def test_logic_initialized(self):
         from chatterbot.logic import BestMatch
         from chatterbot.logic import MathematicalEvaluation
-        self.assertEqual(len(self.chatbot.logic.adapters), 2)
-        self.assertTrue(isinstance(self.chatbot.logic.adapters[0], BestMatch))
-        self.assertTrue(isinstance(self.chatbot.logic.adapters[1], MathematicalEvaluation))
+        self.assertEqual(len(self.chatbot.logic_adapters), 2)
+        self.assertTrue(isinstance(self.chatbot.logic_adapters[0], BestMatch))
+        self.assertTrue(isinstance(self.chatbot.logic_adapters[1], MathematicalEvaluation))
 
     def test_input_initialized(self):
         from chatterbot.input import VariableInputTypeAdapter

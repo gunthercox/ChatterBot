@@ -31,7 +31,7 @@ Register on PyPI
 
 Create an account: https://pypi.python.org/pypi?%3Aaction=register_form
 
-Create a :code:`.pypirc` configuration file.
+Create a ``.pypirc`` configuration file.
 
 .. code-block:: bash
    :caption: .pypirc file contents

@@ -7,11 +7,10 @@ Logic adapters determine the logic for how ChatterBot selects a response to a gi
 .. toctree::
    :maxdepth: 1
 
-   multi-logic-adapter
    response_selection
    create-a-logic-adapter
 
-The logic adapter that your bot uses can be specified by setting the :code:`logic_adapters` parameter
+The logic adapter that your bot uses can be specified by setting the ``logic_adapters`` parameter
 to the import path of the logic adapter you want to use.
 
 It is possible to enter any number of logic adapters for your bot to use.
@@ -35,7 +34,7 @@ Best Match Adapter
 
 .. autofunction:: chatterbot.logic.BestMatch
 
-The :code:`BestMatch` logic adapter selects a response based on the best known match to a given statement.
+The ``BestMatch`` logic adapter selects a response based on the best known match to a given statement.
 
 How it works
 ------------
@@ -62,7 +61,7 @@ Setting parameters
 
 .. note::
 
-   The values for :code:`response_selection_method` and :code:`statement_comparison_function` can be a string
+   The values for ``response_selection_method`` and ``statement_comparison_function`` can be a string
    of the path to the function, or a callable.
 
     See the :ref:`statement-comparison` documentation for the list of functions included with ChatterBot.
@@ -75,7 +74,7 @@ Time Logic Adapter
 
 .. autofunction:: chatterbot.logic.TimeLogicAdapter
 
-The :code:`TimeLogicAdapter` identifies statements in which a question about the current time is asked.
+The ``TimeLogicAdapter`` identifies statements in which a question about the current time is asked.
 If a matching question is detected, then a response containing the current time is returned.
 
 .. code-block:: text
@@ -89,7 +88,7 @@ Mathematical Evaluation Adapter
 
 .. autofunction:: chatterbot.logic.MathematicalEvaluation
 
-The :code:`MathematicalEvaluation` logic adapter checks a given statement to see if
+The ``MathematicalEvaluation`` logic adapter checks a given statement to see if
 it contains a mathematical expression that can be evaluated.
 If one exists, then it returns a response containing the result.
 This adapter is able to handle any combination of word and numeric operators.

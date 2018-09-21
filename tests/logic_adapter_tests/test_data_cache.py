@@ -22,8 +22,9 @@ class DataCachingTests(ChatBotTestCase):
     def setUp(self):
         super(DataCachingTests, self).setUp()
 
-        self.chatbot.logic = DummyMutatorLogicAdapter()
-        self.chatbot.logic.set_chatbot(self.chatbot)
+        logic_adapter = DummyMutatorLogicAdapter()
+        logic_adapter.set_chatbot(self.chatbot)
+        self.chatbot.logic_adapters = [logic_adapter]
 
         self.chatbot.set_trainer(ListTrainer, **self.get_kwargs())
 
