@@ -15,8 +15,7 @@ bot = ChatBot(
             'input_text': 'Help me!',
             'output_text': 'Ok, here is a link: http://chatterbot.rtfd.org'
         }
-    ],
-    trainer='chatterbot.trainers.ListTrainer'
+    ]
 )
 
 # Get a response given the specific input

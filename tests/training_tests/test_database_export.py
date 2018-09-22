@@ -6,17 +6,17 @@ class DatabaseExportTests(ChatBotTestCase):
 
     def setUp(self):
         super(DatabaseExportTests, self).setUp()
-        self.chatbot.set_trainer(
-            ListTrainer,
+        self.trainer = ListTrainer(
+            self.chatbot,
             show_training_progress=False
         )
 
     def test_generate_export_data(self):
-        self.chatbot.trainer.train([
+        self.trainer.train([
             'Hello, how are you?',
             'I am good.'
         ])
-        data = self.chatbot.trainer._generate_export_data()
+        data = self.trainer._generate_export_data()
 
         self.assertEqual(
             [['Hello, how are you?', 'I am good.']], data

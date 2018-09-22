@@ -10,7 +10,6 @@ to create conversational pages and endpoints.
    :maxdepth: 2
 
    settings
-   training
    views
    wsgi
 

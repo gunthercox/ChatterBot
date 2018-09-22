@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from chatterbot import ChatBot
+from chatterbot.trainers import ListTrainer
 
 
 # Create a new instance of a ChatBot
@@ -15,12 +16,13 @@ bot = ChatBot(
             'threshold': 0.65,
             'default_response': 'I am sorry, but I do not understand.'
         }
-    ],
-    trainer='chatterbot.trainers.ListTrainer'
+    ]
 )
 
+trainer = ListTrainer(bot)
+
 # Train the chat bot with a few responses
-bot.train([
+trainer.train([
     'How can I help you?',
     'I want to create a chat bot',
     'Have you read the documentation?',

@@ -35,7 +35,7 @@ After creating a new ChatterBot instance it is also possible to train the bot.
 Training is a good way to ensure that the bot starts off with knowledge about
 specific responses. The current training method takes a list of statements that
 represent a conversation.
-Additional notes on training can be found in the :ref:`Training <set_trainer>` documentation.
+Additional notes on training can be found in the :ref:`Training` documentation.
 
 .. note::
 
@@ -55,8 +55,9 @@ Additional notes on training can be found in the :ref:`Training <set_trainer>` d
        "You're welcome."
    ]
 
-   chatbot.set_trainer(ListTrainer)
-   chatbot.train(conversation)
+   trainer = ListTrainer(chatbot)
+
+   trainer.train(conversation)
 
 Get a response
 ==============

@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer
 from settings import HIPCHAT
 
 '''
@@ -13,11 +14,12 @@ chatbot = ChatBot(
     hipchat_room=HIPCHAT['ROOM'],
     hipchat_access_token=HIPCHAT['ACCESS_TOKEN'],
     input_adapter='chatterbot.input.HipChat',
-    output_adapter='chatterbot.output.HipChat',
-    trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
+    output_adapter='chatterbot.output.HipChat'
 )
 
-chatbot.train('chatterbot.corpus.english')
+trainer = ChatterBotCorpusTrainer(chatbot)
+
+trainer.train('chatterbot.corpus.english')
 
 # The following loop will execute each time the user enters input
 while True:

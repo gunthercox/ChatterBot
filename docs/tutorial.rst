@@ -144,7 +144,11 @@ You can speed up this process by training him with examples of existing conversa
 
 .. code-block:: python
 
-   bot.train([
+   from chatterbot.training import ListTrainer
+
+   trainer = ListTrainer(bot)
+
+   trainer.train([
        'How are you?',
        'I am good.',
        'That is good to hear.',
