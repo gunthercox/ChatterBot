@@ -5,7 +5,8 @@ You can write your own storage adapters by creating a new class that
 inherits from ``StorageAdapter`` and overrides necessary
 methods established in the base ``StorageAdapter`` class.
 
-.. autofunction:: chatterbot.storage.StorageAdapter
+.. autoclass:: chatterbot.storage.StorageAdapter
+   :members:
 
 You will then need to implement the interface established by the ``StorageAdapter`` class.
 
