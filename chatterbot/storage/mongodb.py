@@ -105,8 +105,20 @@ class MongoDatabaseAdapter(StorageAdapter):
         query = self.base_query
 
         order_by = kwargs.pop('order_by', None)
+        tags = kwargs.pop('tags', [])
+
+        # Convert a single sting into a list if only one tag is provided
+        if type(tags) == str:
+            tags = [tags]
 
         query = query.raw(kwargs)
+
+        if tags:
+            query = query.raw({
+                'tags': {
+                    '$in': tags
+                }
+            })
 
         matches = self.statements.find(query.value())
 
