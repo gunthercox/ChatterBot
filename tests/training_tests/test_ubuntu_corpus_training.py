@@ -15,8 +15,8 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
     def setUp(self):
         super(UbuntuCorpusTrainerTestCase, self).setUp()
-        self.chatbot.set_trainer(
-            UbuntuCorpusTrainer,
+        self.trainer = UbuntuCorpusTrainer(
+            self.chatbot,
             show_training_progress=False
         )
 
@@ -49,15 +49,15 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         import shutil
 
-        if os.path.exists(self.chatbot.trainer.data_directory):
-            shutil.rmtree(self.chatbot.trainer.data_directory)
+        if os.path.exists(self.trainer.data_directory):
+            shutil.rmtree(self.trainer.data_directory)
 
     def _create_test_corpus(self, data):
         """
         Create a small tar in a similar format to the
         Ubuntu corpus file in memory for testing.
         """
-        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
+        file_path = os.path.join(self.trainer.data_directory, 'ubuntu_dialogs.tgz')
         tar = tarfile.TarFile(file_path, 'w')
 
         tsv1 = BytesIO(data[0])
@@ -81,7 +81,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         Remove the test corpus file.
         """
-        file_path = os.path.join(self.chatbot.trainer.data_directory, 'ubuntu_dialogs.tgz')
+        file_path = os.path.join(self.trainer.data_directory, 'ubuntu_dialogs.tgz')
 
         if os.path.exists(file_path):
             os.remove(file_path)
@@ -104,10 +104,10 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
 
         requests.get = Mock(side_effect=self._mock_get_response)
         download_url = 'https://example.com/download.tgz'
-        self.chatbot.trainer.download(download_url, show_status=False)
+        self.trainer.download(download_url, show_status=False)
 
         file_name = download_url.split('/')[-1]
-        downloaded_file_path = os.path.join(self.chatbot.trainer.data_directory, file_name)
+        downloaded_file_path = os.path.join(self.trainer.data_directory, file_name)
 
         requests.get.assert_called_with(download_url, stream=True)
         self.assertTrue(os.path.exists(downloaded_file_path))
@@ -121,12 +121,12 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         import requests
 
-        file_path = os.path.join(self.chatbot.trainer.data_directory, 'download.tgz')
+        file_path = os.path.join(self.trainer.data_directory, 'download.tgz')
         open(file_path, 'a').close()
 
         requests.get = Mock(side_effect=self._mock_get_response)
         download_url = 'https://example.com/download.tgz'
-        self.chatbot.trainer.download(download_url, show_status=False)
+        self.trainer.download(download_url, show_status=False)
 
         # Remove the dummy download_url
         os.remove(file_path)
@@ -144,12 +144,12 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Test the extraction of text from a decompressed Ubuntu Corpus file.
         """
         file_object_path = self._create_test_corpus(self._get_data())
-        self.chatbot.trainer.extract(file_object_path)
+        self.trainer.extract(file_object_path)
 
         self._destroy_test_corpus()
-        corpus_path = os.path.join(self.chatbot.trainer.extracted_data_directory, 'dialogs', '3')
+        corpus_path = os.path.join(self.trainer.extracted_data_directory, 'dialogs', '3')
 
-        self.assertTrue(os.path.exists(self.chatbot.trainer.extracted_data_directory))
+        self.assertTrue(os.path.exists(self.trainer.extracted_data_directory))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '1.tsv')))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '2.tsv')))
 
@@ -159,7 +159,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         self._create_test_corpus(self._get_data())
 
-        self.chatbot.train()
+        self.trainer.train()
         self._destroy_test_corpus()
 
         response = self.chatbot.get_response('Is anyone there?')
@@ -170,9 +170,9 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Test that a check can be done for if the corpus has aleady been extracted.
         """
         file_object_path = self._create_test_corpus(self._get_data())
-        self.chatbot.trainer.extract(file_object_path)
+        self.trainer.extract(file_object_path)
 
-        extracted = self.chatbot.trainer.is_extracted(self.chatbot.trainer.extracted_data_directory)
+        extracted = self.trainer.is_extracted(self.trainer.extracted_data_directory)
         self._destroy_test_corpus()
 
         self.assertTrue(extracted)
@@ -182,6 +182,6 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Test that a check can be done for if the corpus has aleady been extracted.
         """
         self._remove_data()
-        extracted = self.chatbot.trainer.is_extracted(self.chatbot.trainer.extracted_data_directory)
+        extracted = self.trainer.is_extracted(self.trainer.extracted_data_directory)
 
         self.assertFalse(extracted)

@@ -15,9 +15,10 @@ bot = ChatBot(
     input_adapter="chatterbot.input.TerminalAdapter",
     output_adapter="chatterbot.output.TerminalAdapter"
 )
-bot.set_trainer(ChatterBotCorpusTrainer)
 
-bot.train("chatterbot.corpus.english")
+trainer = ChatterBotCorpusTrainer(bot)
+
+trainer.train("chatterbot.corpus.english")
 
 
 def get_feedback():

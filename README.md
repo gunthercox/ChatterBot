@@ -40,14 +40,15 @@ pip install chatterbot
 
 ```
 from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer
 
-chatbot = ChatBot(
-    'Ron Obvious',
-    trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
-)
+chatbot = ChatBot('Ron Obvious')
 
-# Train based on the english corpus
-chatbot.train("chatterbot.corpus.english")
+# Create a new trainer for the chatbot
+trainer = ChatterBotCorpusTrainer(chatbot)
+
+# Train the chatbot based on the english corpus
+trainer.train("chatterbot.corpus.english")
 
 # Get a response to an input statement
 chatbot.get_response("Hello, how are you today?")
@@ -56,21 +57,26 @@ chatbot.get_response("Hello, how are you today?")
 # Training data
 
 ChatterBot comes with a data utility module that can be used to train chat bots.
-At the moment there is three languages, English, Spanish and Portuguese training data in this module. Contributions
-of additional training data or training data in other languages would be greatly
-appreciated. Take a look at the data files in the
-[chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus)
+At the moment there is three languages, English, Spanish and Portuguese training
+data in this module. Contributions of additional training data or training data
+in other languages would be greatly appreciated. Take a look at the data files
+in the [chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus)
 package if you are interested in contributing.
 
 ```
+from chatterbot.trainers import ChatterBotCorpusTrainer
+
+# Create a new trainer for the chatbot
+trainer = ChatterBotCorpusTrainer(chatbot)
+
 # Train based on the english corpus
-chatbot.train("chatterbot.corpus.english")
+trainer.train("chatterbot.corpus.english")
 
 # Train based on english greetings corpus
-chatbot.train("chatterbot.corpus.english.greetings")
+trainer.train("chatterbot.corpus.english.greetings")
 
 # Train based on the english conversations corpus
-chatbot.train("chatterbot.corpus.english.conversations")
+trainer.train("chatterbot.corpus.english.conversations")
 ```
 
 **Corpus contributions are welcome! Please make a pull request.**

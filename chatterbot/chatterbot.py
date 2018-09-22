@@ -77,12 +77,6 @@ class ChatBot(object):
         for preprocessor in preprocessors:
             self.preprocessors.append(utils.import_module(preprocessor))
 
-        # Use specified trainer or fall back to the default
-        trainer = kwargs.get('trainer', 'chatterbot.trainers.Trainer')
-        TrainerClass = utils.import_module(trainer)
-        self.trainer = TrainerClass(self, **kwargs)
-        self.training_data = kwargs.get('training_data')
-
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
         # Allow the bot to save input it receives so that it can learn
@@ -239,21 +233,3 @@ class ChatBot(object):
         adapters.extend(self.logic_adapters)
         adapters.extend(self.system_logic_adapters)
         return adapters
-
-    def set_trainer(self, training_class, **kwargs):
-        """
-        Set the module used to train the chatbot.
-
-        :param training_class: The training class to use for the chat bot.
-        :type training_class: `Trainer`
-
-        :param \**kwargs: Any parameters that should be passed to the training class.
-        """
-        self.trainer = training_class(self, **kwargs)
-
-    @property
-    def train(self):
-        """
-        Proxy method to the chat bot's trainer class.
-        """
-        return self.trainer.train

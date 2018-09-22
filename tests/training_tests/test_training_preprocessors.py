@@ -1,5 +1,5 @@
 from tests.base_case import ChatBotTestCase
-from chatterbot import trainers
+from chatterbot.trainers import ListTrainer
 from chatterbot import preprocessors
 
 
@@ -16,12 +16,13 @@ class PreprocessorTrainingTests(ChatBotTestCase):
         the training process.
         """
         self.chatbot.preprocessors = [preprocessors.clean_whitespace]
-        self.chatbot.set_trainer(
-            trainers.ListTrainer,
+
+        self.trainer = ListTrainer(
+            self.chatbot,
             show_training_progress=False
         )
 
-        self.chatbot.train([
+        self.trainer.train([
             'Can I help you with anything?',
             'No, I     think I am all set.',
             'Okay, have a nice day.',
