@@ -37,6 +37,14 @@ class DjangoStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
 
         order_by = kwargs.pop('order_by', None)
+        tags = kwargs.pop('tags', [])
+
+        # Convert a single sting into a list if only one tag is provided
+        if type(tags) == str:
+            tags = [tags]
+
+        if tags:
+            kwargs['tags__name__in'] = tags
 
         statements = Statement.objects.filter(**kwargs)
 
