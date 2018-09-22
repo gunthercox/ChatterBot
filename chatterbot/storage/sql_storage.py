@@ -123,15 +123,26 @@ class SQLStorageAdapter(StorageAdapter):
         for all listed attributes will be returned.
         """
         Statement = self.get_model('statement')
+        Tag = self.get_model('tag')
 
         session = self.Session()
 
         order_by = kwargs.pop('order_by', None)
+        tags = kwargs.pop('tags', [])
+
+        # Convert a single sting into a list if only one tag is provided
+        if type(tags) == str:
+            tags = [tags]
 
         if len(kwargs) == 0:
             statements = session.query(Statement).filter()
         else:
             statements = session.query(Statement).filter_by(**kwargs)
+
+        if tags:
+            statements = statements.join(Statement.tags).filter(
+                Tag.name.in_(tags)
+            )
 
         if order_by:
 
