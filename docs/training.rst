@@ -21,14 +21,12 @@ You can also create your own training class. This is recommended if you wish to 
 with data you have stored in a format that is not already supported by one of the pre-built
 classes listed below.
 
-..  _set_trainer:
-
 Setting the training class
 ==========================
 
 ChatterBot comes with training classes built in, or you can create your own
-if needed. To use a training class you must import it and pass it to
-the `set_trainer()` method before calling `train()`.
+if needed. To use a training class you call `train()` on an instance that
+has been initialized with your chat bot.
 
 .. _training-classes:
 
@@ -50,15 +48,16 @@ both statements of "Hi there!" and "Greetings!" by saying "Hello".
 
    from chatterbot.trainers import ListTrainer
 
-   chatterbot = ChatBot("Training Example")
-   chatterbot.set_trainer(ListTrainer)
+   chatbot = ChatBot("Training Example")
+   
+   trainer = ListTrainer(chatbot)
 
-   chatterbot.train([
+   trainer.train([
        "Hi there!",
        "Hello",
    ])
 
-   chatterbot.train([
+   trainer.train([
        "Greetings!",
        "Hello",
    ])
@@ -68,7 +67,7 @@ This will establish each item in the list as a possible response to it's predece
 
 .. code-block:: python
 
-   chatterbot.train([
+   trainer.train([
        "How are you?",
        "I am good.",
        "That is good to hear.",
@@ -90,10 +89,11 @@ data modules you want to use.
 
    from chatterbot.trainers import ChatterBotCorpusTrainer
 
-   chatterbot = ChatBot("Training Example")
-   chatterbot.set_trainer(ChatterBotCorpusTrainer)
+   chatbot = ChatBot("Training Example")
 
-   chatterbot.train(
+   trainer = ChatterBotCorpusTrainer(chatbot)
+
+   trainer.train(
        "chatterbot.corpus.english"
    )
 
@@ -106,7 +106,7 @@ conversations corpora then you would simply specify them.
 
 .. code-block:: python
 
-   chatterbot.train(
+   trainer.train(
        "chatterbot.corpus.english.greetings",
        "chatterbot.corpus.english.conversations"
    )
@@ -115,7 +115,7 @@ You can also specify file paths to corpus files or directories of corpus files w
 
 .. code-block:: python
 
-   chatterbot.train(
+   trainer.train(
        "./data/greetings_corpus/custom.corpus.json",
        "./data/my_corpus/"
    )

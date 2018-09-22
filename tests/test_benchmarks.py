@@ -7,6 +7,7 @@ performance based regressions when changes are made.
 from random import choice
 from .base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot import ChatBot
+from chatterbot.trainers import ListTrainer
 from chatterbot import utils
 
 
@@ -29,12 +30,6 @@ STATEMENT_LIST = [
 
 class BenchmarkingMixin(object):
 
-    def get_kwargs(self):
-        kwargs = super(BenchmarkingMixin, self).get_kwargs()
-        kwargs['trainer'] = 'chatterbot.trainers.ListTrainer'
-        kwargs['show_training_progress'] = False
-        return kwargs
-
     def assert_response_duration(self, maximum_duration, test_kwargs):
         """
         Assert that the response time did not exceed the maximum allowed amount.
@@ -42,7 +37,13 @@ class BenchmarkingMixin(object):
         from sys import stdout
 
         chatbot = ChatBot('Benchmark', **test_kwargs)
-        chatbot.train(STATEMENT_LIST)
+
+        trainer = ListTrainer(
+            chatbot,
+            show_training_progress=False
+        )
+
+        trainer.train(STATEMENT_LIST)
 
         duration = utils.get_response_time(chatbot)
 
@@ -64,7 +65,7 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
     """
 
     def get_kwargs(self):
-        kwargs = super(SqlBenchmarkingTests, self).get_kwargs()
+        kwargs = super().get_kwargs()
         kwargs['storage_adapter'] = 'chatterbot.storage.SQLStorageAdapter'
         return kwargs
 
@@ -115,7 +116,7 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
     """
 
     def get_kwargs(self):
-        kwargs = super(MongoBenchmarkingTests, self).get_kwargs()
+        kwargs = super().get_kwargs()
         kwargs['storage_adapter'] = 'chatterbot.storage.MongoDatabaseAdapter'
         return kwargs
 

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from chatterbot import ChatBot
+from chatterbot.trainers import ListTrainer
 
 # Create a new chat bot named Charlie
-chatbot = ChatBot(
-    'Charlie',
-    trainer='chatterbot.trainers.ListTrainer'
-)
+chatbot = ChatBot('Charlie')
 
-chatbot.train([
+trainer = ListTrainer(chatbot)
+
+trainer.train([
     "Hi, can I help you?",
     "Sure, I'd like to book a flight to Iceland.",
     "Your flight has been booked."

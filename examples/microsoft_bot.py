@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from chatterbot import ChatBot
+from chatterbot.trainers import ChatterBotCorpusTrainer
 from settings import Microsoft
 
 '''
@@ -13,11 +14,12 @@ chatbot = ChatBot(
     direct_line_token_or_secret=Microsoft['direct_line_token_or_secret'],
     conversation_id=Microsoft['conversation_id'],
     input_adapter='chatterbot.input.Microsoft',
-    output_adapter='chatterbot.output.Microsoft',
-    trainer='chatterbot.trainers.ChatterBotCorpusTrainer'
+    output_adapter='chatterbot.output.Microsoft'
 )
 
-chatbot.train('chatterbot.corpus.english')
+trainer = ChatterBotCorpusTrainer(chatbot)
+
+trainer.train('chatterbot.corpus.english')
 
 # The following loop will execute each time the user enters input
 while True:

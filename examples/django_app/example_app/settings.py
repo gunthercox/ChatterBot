@@ -34,10 +34,6 @@ INSTALLED_APPS = (
 
 CHATTERBOT = {
     'name': 'Django ChatterBot Example',
-    'trainer': 'chatterbot.trainers.ChatterBotCorpusTrainer',
-    'training_data': [
-        'chatterbot.corpus.english.greetings'
-    ],
     'django_app_name': 'django_chatterbot'
 }
 

@@ -30,9 +30,6 @@ to the user.
                           Defaults to ``"chatterbot.output.OutputAdapter"``.
    :type output_adapter: str
 
-   :param trainer: The dot-notated import path to the training class to be used with the chat bot.
-   :type trainer: str
-
    :param filters: A list of dot-notated import paths to filter classes to be used by the chat bot.
    :type filters: list
 
@@ -53,7 +50,6 @@ Example chat bot parameters
        ],
        input_adapter='my.input.AdapterClass',
        output_adapter='my.output.AdapterClass',
-       trainer='my.trainer.TrainerClass',
        filters=[
            'my.filter.FilterClass1',
            'my.filter.FilterClass2'

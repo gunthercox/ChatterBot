@@ -26,9 +26,12 @@ class DataCachingTests(ChatBotTestCase):
         logic_adapter.set_chatbot(self.chatbot)
         self.chatbot.logic_adapters = [logic_adapter]
 
-        self.chatbot.set_trainer(ListTrainer, **self.get_kwargs())
+        self.trainer = ListTrainer(
+            self.chatbot,
+            show_training_progress=False
+        )
 
-        self.chatbot.train([
+        self.trainer.train([
             'Hello',
             'How are you?'
         ])

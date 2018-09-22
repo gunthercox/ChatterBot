@@ -7,8 +7,8 @@ class ListTrainingTests(ChatBotTestCase):
 
     def setUp(self):
         super(ListTrainingTests, self).setUp()
-        self.chatbot.set_trainer(
-            ListTrainer,
+        self.trainer = ListTrainer(
+            self.chatbot,
             show_training_progress=False
         )
 
@@ -30,7 +30,7 @@ class ListTrainingTests(ChatBotTestCase):
             "Can I help you with anything?"
         ]
 
-        self.chatbot.train(conversation)
+        self.trainer.train(conversation)
 
         response = self.chatbot.get_response("Thank you.")
 
@@ -43,8 +43,8 @@ class ListTrainingTests(ChatBotTestCase):
             "I do not like your hat."
         ]
 
-        self.chatbot.train(conversation)
-        self.chatbot.train(conversation)
+        self.trainer.train(conversation)
+        self.trainer.train(conversation)
 
         statements = self.chatbot.storage.filter(
             in_response_to="Do you like my hat?"
@@ -74,7 +74,7 @@ class ListTrainingTests(ChatBotTestCase):
             "Thanks, you too."
         ]
 
-        self.chatbot.train(conversation)
+        self.trainer.train(conversation)
 
         # There should be a total of 9 statements in the database after training
         self.assertEqual(self.chatbot.storage.count(), 9)
@@ -105,7 +105,7 @@ class ListTrainingTests(ChatBotTestCase):
             u'∧ ∨ ⊻ ⊼ ⊽ ⋎ ⋏ ⟑ ⟇ ⩑ ⩒ ⩓ ⩔ ⩕ ⩖ ⩗ ⩘ ⩙ ⩚ ⩛ ⩜ ⩝ ⩞ ⩟ ⩠ ⩢',
         ]
 
-        self.chatbot.train(conversation)
+        self.trainer.train(conversation)
 
         response = self.chatbot.get_response(conversation[1])
 
@@ -121,7 +121,7 @@ class ListTrainingTests(ChatBotTestCase):
             u'Superb! 🎆'
         ]
 
-        self.chatbot.train(conversation)
+        self.trainer.train(conversation)
 
         response = self.chatbot.get_response(conversation[1])
 
@@ -137,7 +137,7 @@ class ListTrainingTests(ChatBotTestCase):
             'Superb!'
         ]
 
-        self.chatbot.train(conversation)
+        self.trainer.train(conversation)
 
         response = self.chatbot.get_response(conversation[1])
 
@@ -156,7 +156,7 @@ class ListTrainingTests(ChatBotTestCase):
 
         similar_question = 'how do I login to gmail?'
 
-        self.chatbot.train(training)
+        self.trainer.train(training)
 
         response_to_trained_set = self.chatbot.get_response('how do you login to gmail?')
         response1 = self.chatbot.get_response(similar_question)
@@ -169,8 +169,8 @@ class ListTrainingTests(ChatBotTestCase):
         """
         Test consecutive trainings with the same responses to different inputs.
         """
-        self.chatbot.train(["A", "B" "C"])
-        self.chatbot.train(["B", "C", "D"])
+        self.trainer.train(["A", "B" "C"])
+        self.trainer.train(["B", "C", "D"])
 
         response1 = self.chatbot.get_response("B")
         response2 = self.chatbot.get_response("C")
@@ -186,7 +186,10 @@ class ChatterBotResponseTests(ChatBotTestCase):
         """
         Set up a database for testing.
         """
-        self.chatbot.set_trainer(ListTrainer)
+        self.trainer = ListTrainer(
+            self.chatbot,
+            show_training_progress=False
+        )
 
         data1 = [
             "african or european?",
@@ -207,9 +210,9 @@ class ChatterBotResponseTests(ChatBotTestCase):
             "Blue."
         ]
 
-        self.chatbot.train(data1)
-        self.chatbot.train(data2)
-        self.chatbot.train(data3)
+        self.trainer.train(data1)
+        self.trainer.train(data2)
+        self.trainer.train(data3)
 
     def test_answer_to_known_input(self):
         """
@@ -232,7 +235,7 @@ class ChatterBotResponseTests(ChatBotTestCase):
         """
         Make sure that the if the last line in a file
         matches the input text then a index error does
-        not occure.
+        not occur.
         """
         input_text = "Siri is my cat"
         response = self.chatbot.get_response(input_text)
