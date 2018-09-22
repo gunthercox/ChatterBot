@@ -11,6 +11,7 @@ venv
 *.egg-info
 *.egg/*
 *.eggs/*
+*.doctrees
 
 # Database files
 *.sqlite3
