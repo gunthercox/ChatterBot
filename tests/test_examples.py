@@ -1,12 +1,4 @@
 from unittest import TestCase, SkipTest
-import sys
-import os
-
-
-# Insert the examples root directory into the PYTHONPATH
-current_directory = os.path.dirname(os.path.abspath(__file__))
-parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
-sys.path.insert(0, parent_directory)
 
 
 class ExamplesSmokeTestCase(TestCase):
@@ -16,10 +8,10 @@ class ExamplesSmokeTestCase(TestCase):
     """
 
     def test_basic_example(self):
-        import basic_example # NOQA
+        from examples import basic_example # NOQA
 
     def test_default_response_example(self):
-        import default_response_example # NOQA
+        from examples import default_response_example # NOQA
 
     def test_export_example(self):
         raise SkipTest(
@@ -53,7 +45,7 @@ class ExamplesSmokeTestCase(TestCase):
         )
 
     def test_math_and_time(self):
-        import math_and_time # NOQA
+        from examples import math_and_time # NOQA
 
     def test_microsoft_bot(self):
         raise SkipTest(
@@ -62,7 +54,7 @@ class ExamplesSmokeTestCase(TestCase):
         )
 
     def test_specific_response_example(self):
-        import specific_response_example # NOQA
+        from examples import specific_response_example # NOQA
 
     def test_terminal_example(self):
         raise SkipTest(
