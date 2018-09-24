@@ -1,4 +1,3 @@
-import logging
 import os
 import sys
 from .conversation import Statement
@@ -12,7 +11,6 @@ class Trainer(object):
 
     def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
-        self.logger = logging.getLogger(__name__)
         self.show_training_progress = kwargs.get('show_training_progress', True)
 
     def get_preprocessed_statement(self, input_statement):
@@ -233,7 +231,7 @@ class TwitterTrainer(Trainer):
         # Generate a random word
         random_word = self.random_word(self.random_seed_word, self.lang)
 
-        self.logger.info('Requesting 50 random tweets containing the word {}'.format(random_word))
+        self.chatbot.logger.info('Requesting 50 random tweets containing the word {}'.format(random_word))
         tweets = self.api.GetSearch(term=random_word, count=50, lang=self.lang)
         for tweet in tweets:
             statement = Statement(tweet.text)
@@ -244,9 +242,9 @@ class TwitterTrainer(Trainer):
                     statement.in_response_to = status.text
                     statements.append(statement)
                 except TwitterError as error:
-                    self.logger.warning(str(error))
+                    self.chatbot.logger.warning(str(error))
 
-        self.logger.info('Adding {} tweets with responses'.format(len(statements)))
+        self.chatbot.logger.info('Adding {} tweets with responses'.format(len(statements)))
 
         return statements
 
@@ -294,7 +292,7 @@ class UbuntuCorpusTrainer(Trainer):
         Check if the data file is already downloaded.
         """
         if os.path.exists(file_path):
-            self.logger.info('File is already downloaded')
+            self.chatbot.logger.info('File is already downloaded')
             return True
 
         return False
@@ -305,7 +303,7 @@ class UbuntuCorpusTrainer(Trainer):
         """
 
         if os.path.isdir(file_path):
-            self.logger.info('File is already extracted')
+            self.chatbot.logger.info('File is already extracted')
             return True
         return False
 
@@ -369,7 +367,7 @@ class UbuntuCorpusTrainer(Trainer):
         with tarfile.open(file_path) as tar:
             tar.extractall(path=self.extracted_data_directory, members=track_progress(tar))
 
-        self.logger.info('File extracted to {}'.format(self.extracted_data_directory))
+        self.chatbot.logger.info('File extracted to {}'.format(self.extracted_data_directory))
 
         return True
 
@@ -390,7 +388,7 @@ class UbuntuCorpusTrainer(Trainer):
         )
 
         for file in glob.iglob(extracted_corpus_path):
-            self.logger.info('Training from: {}'.format(file))
+            self.chatbot.logger.info('Training from: {}'.format(file))
 
             with open(file, 'r', encoding='utf-8') as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
