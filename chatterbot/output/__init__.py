@@ -3,7 +3,6 @@ from .microsoft import Microsoft
 from .terminal import TerminalAdapter
 from .mailgun import Mailgun
 from .gitter import Gitter
-from .hipchat import HipChat
 
 __all__ = (
     'OutputAdapter',
@@ -11,5 +10,4 @@ __all__ = (
     'TerminalAdapter',
     'Mailgun',
     'Gitter',
-    'HipChat',
 )

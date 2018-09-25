@@ -25,12 +25,6 @@ class ExamplesSmokeTestCase(TestCase):
             'API are not included in the public repository.'
         )
 
-    def test_hipchat_bot(self):
-        raise SkipTest(
-            'This is being skipped because keys for this '
-            'API are not included in the public repository.'
-        )
-
     def test_learning_feedback_example(self):
         raise SkipTest(
             'This is being skipped because it contains '
