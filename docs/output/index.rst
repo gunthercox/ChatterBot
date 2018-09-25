@@ -38,8 +38,6 @@ communicate with the chat bot.
        output_adapter="chatterbot.output.TerminalAdapter"
    )
 
-.. _hipchat-output-adapter:
-
 Gitter output adapter
 =====================
 
@@ -53,26 +51,6 @@ Gitter output adapter
        gitter_api_token="my-gitter-api-token",
        gitter_room="my-room-name",
        gitter_only_respond_to_mentions=True,
-   )
-
-HipChat output adapter
-======================
-
-.. autofunction:: chatterbot.output.HipChat
-
-This is an output adapter that allows a ChatterBot instance to send responses
-to a `HipChat`_ room.
-
-Be sure to also see the documentation for the :ref:`HipChat input adapter <hipchat-input-adapter>`.
-
-.. code-block:: python
-
-   chatbot = ChatBot(
-       "My ChatterBot",
-       output_adapter="chatterbot.output.HipChat",
-       hipchat_host="https://mydomain.hipchat.com",
-       hipchat_room="my-room-name",
-       hipchat_access_token="my-hipchat-access-token",
    )
 
 .. _microsoft-output-adapter:
@@ -109,5 +87,4 @@ The Mailgun adapter allows the chat bot to send emails using the
    :language: python
 
 .. _`Mailgun API`: https://documentation.mailgun.com/api_reference.html
-.. _HipChat: https://www.hipchat.com/
 .. _Microsoft: https://docs.botframework.com/en-us/restapi/directline/#/Conversations
