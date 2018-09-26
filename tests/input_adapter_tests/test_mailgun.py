@@ -5,5 +5,5 @@ from chatterbot.input import Mailgun
 class MailgunAdapterTests(TestCase):
 
     def setUp(self):
-        super(MailgunAdapterTests, self).setUp()
+        super().setUp()
         self.adapter = Mailgun()
