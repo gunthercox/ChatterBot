@@ -1,8 +1,8 @@
-from django.test import TestCase
+from tests_django.base_case import ChatterBotTestCase
 from chatterbot.ext.django_chatterbot.models import Statement
 
 
-class OutputIntegrationTestCase(TestCase):
+class OutputIntegrationTestCase(ChatterBotTestCase):
     """
     Tests to make sure that output adapters
     function correctly when using Django.
@@ -11,7 +11,7 @@ class OutputIntegrationTestCase(TestCase):
     def test_output_adapter(self):
         from chatterbot.output import OutputAdapter
 
-        adapter = OutputAdapter()
+        adapter = OutputAdapter(self.chatbot)
 
         statement = Statement(text='_')
         result = adapter.process_response(statement)

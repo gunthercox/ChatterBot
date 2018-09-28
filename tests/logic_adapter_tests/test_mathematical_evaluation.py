@@ -1,12 +1,13 @@
-from unittest import TestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.logic import MathematicalEvaluation
 from chatterbot.conversation import Statement
 
 
-class MathematicalEvaluationTests(TestCase):
+class MathematicalEvaluationTests(ChatBotTestCase):
 
     def setUp(self):
-        self.adapter = MathematicalEvaluation()
+        super().setUp()
+        self.adapter = MathematicalEvaluation(self.chatbot)
 
     def test_can_process(self):
         statement = Statement('What is 10 + 10 + 10?')

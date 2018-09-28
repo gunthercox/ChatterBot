@@ -5,7 +5,7 @@ performance based regressions when changes are made.
 """
 
 from random import choice
-from .base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
+from tests.base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer
 from chatterbot import utils

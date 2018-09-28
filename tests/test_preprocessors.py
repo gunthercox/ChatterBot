@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .base_case import ChatBotTestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
 from chatterbot import preprocessors
 

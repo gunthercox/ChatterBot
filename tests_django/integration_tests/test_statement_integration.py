@@ -10,7 +10,7 @@ class StatementIntegrationTestCase(TestCase):
     """
 
     def setUp(self):
-        super(StatementIntegrationTestCase, self).setUp()
+        super().setUp()
 
         from datetime import datetime
         from pytz import UTC

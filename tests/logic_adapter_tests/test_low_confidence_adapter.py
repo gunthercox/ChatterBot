@@ -10,11 +10,8 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
     """
 
     def setUp(self):
-        super(LowConfidenceAdapterTestCase, self).setUp()
-        self.adapter = LowConfidenceAdapter()
-
-        # Add a mock storage adapter to the logic adapter
-        self.adapter.set_chatbot(self.chatbot)
+        super().setUp()
+        self.adapter = LowConfidenceAdapter(self.chatbot)
 
         possible_choices = [
             Statement(

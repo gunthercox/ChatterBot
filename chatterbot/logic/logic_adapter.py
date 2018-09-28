@@ -14,8 +14,8 @@ class LogicAdapter(Adapter):
                                       Defaults to ``get_first_response``.
     """
 
-    def __init__(self, **kwargs):
-        super(LogicAdapter, self).__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
         from chatterbot.comparisons import levenshtein_distance
         from chatterbot.response_selection import get_first_response
 

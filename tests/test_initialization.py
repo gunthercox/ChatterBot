@@ -1,4 +1,4 @@
-from .base_case import ChatBotTestCase
+from tests.base_case import ChatBotTestCase
 
 
 class StringInitializationTestCase(ChatBotTestCase):

@@ -10,7 +10,7 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
     """
 
     def setUp(self):
-        super(BestMatchSentimentComparisonTestCase, self).setUp()
+        super().setUp()
         from chatterbot.trainers import ListTrainer
         from chatterbot.comparisons import sentiment_comparison
 
@@ -20,9 +20,9 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
         )
 
         self.adapter = BestMatch(
+            self.chatbot,
             statement_comparison_function=sentiment_comparison
         )
-        self.adapter.set_chatbot(self.chatbot)
         self.adapter.initialize()
 
     def test_exact_input(self):

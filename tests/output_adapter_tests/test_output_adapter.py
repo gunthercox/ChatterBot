@@ -1,8 +1,8 @@
-from unittest import TestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.output import OutputAdapter
 
 
-class OutputAdapterTestCase(TestCase):
+class OutputAdapterTestCase(ChatBotTestCase):
     """
     This test case is for the OutputAdapter base class.
     Although this class is not intended for direct use,
@@ -11,8 +11,8 @@ class OutputAdapterTestCase(TestCase):
     """
 
     def setUp(self):
-        super(OutputAdapterTestCase, self).setUp()
-        self.adapter = OutputAdapter()
+        super().setUp()
+        self.adapter = OutputAdapter(self.chatbot)
 
     def test_process_response(self):
         """

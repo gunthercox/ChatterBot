@@ -1,8 +1,8 @@
-from unittest import TestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.logic import LogicAdapter
 
 
-class LogicAdapterTestCase(TestCase):
+class LogicAdapterTestCase(ChatBotTestCase):
     """
     This test case is for the LogicAdapter base class.
     Although this class is not intended for direct use,
@@ -11,8 +11,8 @@ class LogicAdapterTestCase(TestCase):
     """
 
     def setUp(self):
-        super(LogicAdapterTestCase, self).setUp()
-        self.adapter = LogicAdapter()
+        super().setUp()
+        self.adapter = LogicAdapter(self.chatbot)
 
     def test_class_name(self):
         """
@@ -32,6 +32,7 @@ class LogicAdapterTestCase(TestCase):
 
     def test_set_statement_comparison_function_string(self):
         adapter = LogicAdapter(
+            self.chatbot,
             statement_comparison_function='chatterbot.comparisons.levenshtein_distance'
         )
         self.assertTrue(callable(adapter.compare_statements))
@@ -39,12 +40,14 @@ class LogicAdapterTestCase(TestCase):
     def test_set_statement_comparison_function_callable(self):
         from chatterbot.comparisons import levenshtein_distance
         adapter = LogicAdapter(
+            self.chatbot,
             statement_comparison_function=levenshtein_distance
         )
         self.assertTrue(callable(adapter.compare_statements))
 
     def test_set_response_selection_method_string(self):
         adapter = LogicAdapter(
+            self.chatbot,
             response_selection_method='chatterbot.response_selection.get_first_response'
         )
         self.assertTrue(callable(adapter.select_response))
@@ -52,6 +55,7 @@ class LogicAdapterTestCase(TestCase):
     def test_set_response_selection_method_callable(self):
         from chatterbot.response_selection import get_first_response
         adapter = LogicAdapter(
+            self.chatbot,
             response_selection_method=get_first_response
         )
         self.assertTrue(callable(adapter.select_response))

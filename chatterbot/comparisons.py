@@ -88,7 +88,7 @@ class SynsetDistance(Comparator):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from .utils import nltk_download_corpus
+        from chatterbot.utils import nltk_download_corpus
 
         nltk_download_corpus('corpora/wordnet')
 
@@ -96,7 +96,7 @@ class SynsetDistance(Comparator):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from .utils import nltk_download_corpus
+        from chatterbot.utils import nltk_download_corpus
 
         nltk_download_corpus('tokenizers/punkt')
 
@@ -104,7 +104,7 @@ class SynsetDistance(Comparator):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from .utils import nltk_download_corpus
+        from chatterbot.utils import nltk_download_corpus
 
         nltk_download_corpus('corpora/stopwords')
 
@@ -173,7 +173,7 @@ class SentimentComparison(Comparator):
         Download the NLTK vader lexicon for sentiment analysis
         that is required for this algorithm to run.
         """
-        from .utils import nltk_download_corpus
+        from chatterbot.utils import nltk_download_corpus
 
         nltk_download_corpus('sentiment/vader_lexicon')
 
@@ -248,7 +248,7 @@ class JaccardSimilarity(Comparator):
         Download the NLTK wordnet corpora that is required for this algorithm
         to run only if the corpora has not already been downloaded.
         """
-        from .utils import nltk_download_corpus
+        from chatterbot.utils import nltk_download_corpus
 
         nltk_download_corpus('corpora/wordnet')
 
