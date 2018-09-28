@@ -10,9 +10,8 @@ class BestMatchTestCase(ChatBotTestCase):
     """
 
     def setUp(self):
-        super(BestMatchTestCase, self).setUp()
-        self.adapter = BestMatch()
-        self.adapter.set_chatbot(self.chatbot)
+        super().setUp()
+        self.adapter = BestMatch(self.chatbot)
 
     def test_no_choices(self):
         """

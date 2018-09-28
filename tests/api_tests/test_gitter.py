@@ -1,5 +1,5 @@
-from unittest import TestCase
 from unittest.mock import Mock
+from tests.base_case import ChatBotTestCase
 from chatterbot.api import gitter
 
 
@@ -39,7 +39,7 @@ def mock_post_response(*args, **kwargs):
     return endpoints[url]
 
 
-class GitterTestCase(TestCase):
+class GitterTestCase(ChatBotTestCase):
 
     def setUp(self):
         super().setUp()

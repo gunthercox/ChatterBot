@@ -5,21 +5,13 @@ class Adapter(object):
     """
     A superclass for all adapter classes.
 
-    :param logger: A python logger.
+    :param chatbot: A ChatBot instance.
+    :param logger: A python logger (optional).
     """
 
-    def __init__(self, **kwargs):
-        self.logger = kwargs.get('logger', logging.getLogger(__name__))
-        self.chatbot = kwargs.get('chatbot')
-
-    def set_chatbot(self, chatbot):
-        """
-        Gives the adapter access to an instance of the ChatBot class.
-
-        :param chatbot: A chat bot instance.
-        :type chatbot: ChatBot
-        """
+    def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     class AdapterMethodNotImplementedError(NotImplementedError):
         """

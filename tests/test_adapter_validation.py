@@ -1,6 +1,6 @@
 from chatterbot import ChatBot
 from chatterbot.adapters import Adapter
-from .base_case import ChatBotTestCase
+from tests.base_case import ChatBotTestCase
 
 
 class AdapterValidationTests(ChatBotTestCase):

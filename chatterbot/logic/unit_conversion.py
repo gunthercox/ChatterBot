@@ -20,8 +20,8 @@ class UnitConversion(LogicAdapter):
         The language is set to 'ENG' for English by default.
     """
 
-    def __init__(self, **kwargs):
-        super(UnitConversion, self).__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
 
         self.language = kwargs.get('language', 'ENG')
         self.cache = {}

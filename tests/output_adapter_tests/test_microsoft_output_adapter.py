@@ -9,6 +9,7 @@ class MicrosoftAdapterTests(MicrosoftTestCase):
         super().setUp()
 
         self.adapter = Microsoft(
+            self.chatbot,
             direct_line_token_or_secret='xtFDtPemROU.cwA.Mcs.qiScdaSx87ffj2l7OjSITqJFoN-9Ado5AgwVeknac94',
             conversation_id='IEyJvnDULgn'
         )

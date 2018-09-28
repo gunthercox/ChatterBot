@@ -11,17 +11,14 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
     """
 
     def setUp(self):
-        super(BestMatchSynsetDistanceTestCase, self).setUp()
+        super().setUp()
         from chatterbot.comparisons import synset_distance
 
         self.adapter = BestMatch(
+            self.chatbot,
             statement_comparison_function=synset_distance
         )
-
         self.adapter.initialize()
-
-        # Add a mock storage adapter to the logic adapter
-        self.adapter.set_chatbot(self.chatbot)
 
     def test_get_closest_statement(self):
         """

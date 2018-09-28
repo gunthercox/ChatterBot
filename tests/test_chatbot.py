@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from .base_case import ChatBotTestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 
@@ -217,9 +217,9 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
         highest confidence available from these matching options.
         """
         self.chatbot.logic_adapters = [
-            TestAdapterA(),
-            TestAdapterB(),
-            TestAdapterC()
+            TestAdapterA(self.chatbot),
+            TestAdapterB(self.chatbot),
+            TestAdapterC(self.chatbot)
         ]
 
         statement = self.chatbot.generate_response(Statement('Howdy!'))
@@ -232,8 +232,8 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
         Test that all system logic adapters and regular logic adapters
         can be retrieved as a list by a single method.
         """
-        adapter_a = TestAdapterA()
-        adapter_b = TestAdapterB()
+        adapter_a = TestAdapterA(self.chatbot)
+        adapter_b = TestAdapterB(self.chatbot)
         self.chatbot.system_logic_adapters = [adapter_a]
         self.chatbot.logic_adapters = [adapter_b]
 

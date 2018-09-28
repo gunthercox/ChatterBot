@@ -11,8 +11,8 @@ class InputAdapterTestCase(ChatBotTestCase):
     """
 
     def setUp(self):
-        super(InputAdapterTestCase, self).setUp()
-        self.adapter = InputAdapter()
+        super().setUp()
+        self.adapter = InputAdapter(self.chatbot)
 
     def test_process_response(self):
         with self.assertRaises(InputAdapter.AdapterMethodNotImplementedError):

@@ -1,7 +1,7 @@
 import os
 import sys
-from .conversation import Statement
-from . import utils
+from chatterbot.conversation import Statement
+from chatterbot import utils
 
 
 class Trainer(object):
@@ -107,9 +107,9 @@ class ChatterBotCorpusTrainer(Trainer):
     ChatterBot dialog corpus.
     """
 
-    def __init__(self, storage, **kwargs):
-        super(ChatterBotCorpusTrainer, self).__init__(storage, **kwargs)
-        from .corpus import Corpus
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
+        from chatterbot.corpus import Corpus
 
         self.corpus = Corpus()
 
@@ -171,8 +171,8 @@ class TwitterTrainer(Trainer):
                          This parameter is optional. Default is None (all languages).
     """
 
-    def __init__(self, storage, **kwargs):
-        super(TwitterTrainer, self).__init__(storage, **kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
         from twitter import Api as TwitterApi
 
         # The word to be used as the first search term when searching for tweets
@@ -266,8 +266,8 @@ class UbuntuCorpusTrainer(Trainer):
     the Ubuntu Dialog Corpus.
     """
 
-    def __init__(self, storage, **kwargs):
-        super(UbuntuCorpusTrainer, self).__init__(storage, **kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
 
         self.data_download_url = kwargs.get(
             'ubuntu_corpus_data_download_url',

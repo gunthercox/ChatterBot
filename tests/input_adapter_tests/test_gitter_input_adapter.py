@@ -9,6 +9,7 @@ class GitterAdapterTests(GitterTestCase):
         super().setUp()
 
         self.adapter = Gitter(
+            self.chatbot,
             gitter_room='',
             gitter_api_token='',
             gitter_sleep_time=0,

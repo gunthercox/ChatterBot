@@ -1,4 +1,4 @@
-from .output_adapter import OutputAdapter
+from chatterbot.output import OutputAdapter
 
 
 class TerminalAdapter(OutputAdapter):

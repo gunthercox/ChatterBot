@@ -1,27 +1,22 @@
-from django.test import TestCase
+from tests_django.base_case import ChatterBotTestCase
 from chatterbot.ext.django_chatterbot.models import Statement
 
 
-class LogicIntegrationTestCase(TestCase):
+class LogicIntegrationTestCase(ChatterBotTestCase):
     """
     Tests to make sure that logic adapters
     function correctly when using Django.
     """
 
     def setUp(self):
-        super(LogicIntegrationTestCase, self).setUp()
-        from chatterbot import ChatBot
-        from chatterbot.ext.django_chatterbot import settings
-
-        self.chatbot = ChatBot(**settings.CHATTERBOT)
+        super().setUp()
 
         Statement.objects.create(text='Default statement')
 
     def test_best_match(self):
         from chatterbot.logic import BestMatch
 
-        adapter = BestMatch()
-        adapter.set_chatbot(self.chatbot)
+        adapter = BestMatch(self.chatbot)
 
         statement1 = Statement.objects.create(
             text='Do you like programming?',
@@ -42,8 +37,7 @@ class LogicIntegrationTestCase(TestCase):
     def test_low_confidence(self):
         from chatterbot.logic import LowConfidenceAdapter
 
-        adapter = LowConfidenceAdapter()
-        adapter.set_chatbot(self.chatbot)
+        adapter = LowConfidenceAdapter(self.chatbot)
 
         statement = Statement(text='Why is the sky blue?')
 
@@ -54,8 +48,7 @@ class LogicIntegrationTestCase(TestCase):
     def test_mathematical_evaluation(self):
         from chatterbot.logic import MathematicalEvaluation
 
-        adapter = MathematicalEvaluation()
-        adapter.set_chatbot(self.chatbot)
+        adapter = MathematicalEvaluation(self.chatbot)
 
         statement = Statement(text='What is 6 + 6?')
 
@@ -67,8 +60,7 @@ class LogicIntegrationTestCase(TestCase):
     def test_time(self):
         from chatterbot.logic import TimeLogicAdapter
 
-        adapter = TimeLogicAdapter()
-        adapter.set_chatbot(self.chatbot)
+        adapter = TimeLogicAdapter(self.chatbot)
 
         statement = Statement(text='What time is it?')
 

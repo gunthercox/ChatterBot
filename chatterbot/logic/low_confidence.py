@@ -1,5 +1,5 @@
 from chatterbot.conversation import Statement
-from .best_match import BestMatch
+from chatterbot.logic.best_match import BestMatch
 
 
 class LowConfidenceAdapter(BestMatch):
@@ -18,8 +18,8 @@ class LowConfidenceAdapter(BestMatch):
           Defaults to ``get_first_response``.
     """
 
-    def __init__(self, **kwargs):
-        super(LowConfidenceAdapter, self).__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
 
         self.confidence_threshold = kwargs.get('threshold', 0.65)
 

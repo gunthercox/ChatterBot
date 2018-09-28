@@ -1,4 +1,4 @@
-from .logic_adapter import LogicAdapter
+from chatterbot.logic import LogicAdapter
 
 
 class NoKnowledgeAdapter(LogicAdapter):
