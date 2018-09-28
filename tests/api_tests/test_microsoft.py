@@ -1,5 +1,5 @@
-from unittest import TestCase
 from unittest.mock import Mock
+from tests.base_case import ChatBotTestCase
 from chatterbot.api import microsoft
 
 
@@ -78,7 +78,7 @@ def mock_get_request(*args, **kwargs):
     return endpoints[url]
 
 
-class MicrosoftTestCase(TestCase):
+class MicrosoftTestCase(ChatBotTestCase):
 
     def setUp(self):
         super().setUp()

@@ -1,5 +1,5 @@
 from datetime import datetime
-from .logic_adapter import LogicAdapter
+from chatterbot.logic import LogicAdapter
 
 
 class TimeLogicAdapter(LogicAdapter):
@@ -15,8 +15,8 @@ class TimeLogicAdapter(LogicAdapter):
           Defaults to a list of English sentences.
     """
 
-    def __init__(self, **kwargs):
-        super(TimeLogicAdapter, self).__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
         from nltk import NaiveBayesClassifier
 
         self.positive = kwargs.get('positive', [

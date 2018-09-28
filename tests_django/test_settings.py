@@ -2,6 +2,7 @@
 Django settings for when tests are run.
 """
 import os
+from chatterbot import constants
 
 DEBUG = True
 
@@ -27,6 +28,8 @@ CHATTERBOT = {
             'import_path': 'chatterbot.logic.MathematicalEvaluation',
         }
     ],
+    'storage_adapter': 'chatterbot.storage.DjangoStorageAdapter',
+    'django_app_name': constants.DEFAULT_DJANGO_APP_NAME,
     'initialize': False
 }
 

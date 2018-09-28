@@ -10,8 +10,8 @@ class Gitter(InputAdapter):
     input statements from a Gitter room.
     """
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
 
         self.gitter_room = kwargs.get('gitter_room')
         self.gitter_api_token = kwargs.get('gitter_api_token')

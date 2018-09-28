@@ -1,4 +1,4 @@
-from .base_case import ChatBotSQLTestCase
+from tests.base_case import ChatBotSQLTestCase
 from chatterbot import response_selection
 from chatterbot.conversation import Statement
 

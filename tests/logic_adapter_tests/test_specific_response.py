@@ -1,16 +1,17 @@
-from unittest import TestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.logic import SpecificResponseAdapter
 from chatterbot.conversation import Statement
 
 
-class SpecificResponseAdapterTestCase(TestCase):
+class SpecificResponseAdapterTestCase(ChatBotTestCase):
     """
     Test cases for the SpecificResponseAdapter
     """
 
     def setUp(self):
-        super(SpecificResponseAdapterTestCase, self).setUp()
+        super().setUp()
         self.adapter = SpecificResponseAdapter(
+            self.chatbot,
             input_text='Open sesame!',
             output_text='Your sesame seed hamburger roll is now open.'
         )

@@ -1,11 +1,11 @@
-from .logic_adapter import LogicAdapter
-from .best_match import BestMatch
-from .low_confidence import LowConfidenceAdapter
-from .mathematical_evaluation import MathematicalEvaluation
-from .no_knowledge_adapter import NoKnowledgeAdapter
-from .specific_response import SpecificResponseAdapter
-from .time_adapter import TimeLogicAdapter
-from .unit_conversion import UnitConversion
+from chatterbot.logic.logic_adapter import LogicAdapter
+from chatterbot.logic.best_match import BestMatch
+from chatterbot.logic.low_confidence import LowConfidenceAdapter
+from chatterbot.logic.mathematical_evaluation import MathematicalEvaluation
+from chatterbot.logic.no_knowledge_adapter import NoKnowledgeAdapter
+from chatterbot.logic.specific_response import SpecificResponseAdapter
+from chatterbot.logic.time_adapter import TimeLogicAdapter
+from chatterbot.logic.unit_conversion import UnitConversion
 
 __all__ = (
     'LogicAdapter',

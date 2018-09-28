@@ -11,8 +11,8 @@ class Microsoft(InputAdapter):
     https://docs.botframework.com/en-us/restapi/directline/#navtitle
     """
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
         import requests
         from requests.packages.urllib3.exceptions import InsecureRequestWarning
         requests.packages.urllib3.disable_warnings(InsecureRequestWarning)

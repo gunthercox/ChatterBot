@@ -8,8 +8,8 @@ class Microsoft(OutputAdapter):
     responses to a Microsoft bot using *Direct Line client protocol*.
     """
 
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
 
         self.direct_line_token_or_secret = kwargs.get(
             'direct_line_token_or_secret'

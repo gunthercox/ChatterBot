@@ -1,12 +1,13 @@
-from unittest import TestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.logic import TimeLogicAdapter
 from chatterbot.conversation import Statement
 
 
-class TimeAdapterTests(TestCase):
+class TimeAdapterTests(ChatBotTestCase):
 
     def setUp(self):
-        self.adapter = TimeLogicAdapter()
+        super().setUp()
+        self.adapter = TimeLogicAdapter(self.chatbot)
 
     def test_positive_input(self):
         statement = Statement("Do you know what time it is?")

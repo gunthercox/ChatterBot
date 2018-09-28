@@ -1,9 +1,9 @@
 import logging
-from .storage import StorageAdapter
-from .logic import LogicAdapter
-from .input import InputAdapter
-from .output import OutputAdapter
-from . import utils
+from chatterbot.storage import StorageAdapter
+from chatterbot.logic import LogicAdapter
+from chatterbot.input import InputAdapter
+from chatterbot.output import OutputAdapter
+from chatterbot import utils
 
 
 class ChatBot(object):
@@ -42,8 +42,8 @@ class ChatBot(object):
         self.system_logic_adapters = []
 
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
-        self.input = utils.initialize_class(input_adapter, **kwargs)
-        self.output = utils.initialize_class(output_adapter, **kwargs)
+        self.input = utils.initialize_class(input_adapter, self, **kwargs)
+        self.output = utils.initialize_class(output_adapter, self, **kwargs)
 
         filters = kwargs.get('filters', tuple())
         self.filters = tuple([utils.import_module(F)() for F in filters])
@@ -51,20 +51,13 @@ class ChatBot(object):
         # Add required system logic adapter
         for system_logic_adapter in system_logic_adapters:
             utils.validate_adapter_class(system_logic_adapter, LogicAdapter)
-            logic_adapter = utils.initialize_class(system_logic_adapter, **kwargs)
-            logic_adapter.set_chatbot(self)
+            logic_adapter = utils.initialize_class(system_logic_adapter, self, **kwargs)
             self.system_logic_adapters.append(logic_adapter)
 
         for adapter in logic_adapters:
             utils.validate_adapter_class(adapter, LogicAdapter)
-            logic_adapter = utils.initialize_class(adapter, **kwargs)
-            logic_adapter.set_chatbot(self)
+            logic_adapter = utils.initialize_class(adapter, self, **kwargs)
             self.logic_adapters.append(logic_adapter)
-
-        # Add the chatbot instance to each adapter to share information such as
-        # the name, the current conversation, or other adapters
-        self.input.set_chatbot(self)
-        self.output.set_chatbot(self)
 
         preprocessors = kwargs.get(
             'preprocessors', [
@@ -193,7 +186,7 @@ class ChatBot(object):
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
-        from .conversation import Statement as StatementObject
+        from chatterbot.conversation import Statement as StatementObject
 
         conversation_statements = self.storage.filter(
             conversation=conversation,

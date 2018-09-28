@@ -1,4 +1,4 @@
-from .logic_adapter import LogicAdapter
+from chatterbot.logic import LogicAdapter
 
 
 class SpecificResponseAdapter(LogicAdapter):
@@ -12,8 +12,8 @@ class SpecificResponseAdapter(LogicAdapter):
           The output text returned by this logic adapter.
     """
 
-    def __init__(self, **kwargs):
-        super(SpecificResponseAdapter, self).__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
         from chatterbot.conversation import Statement
 
         self.input_text = kwargs.get('input_text')

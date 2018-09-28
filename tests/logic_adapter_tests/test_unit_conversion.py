@@ -1,11 +1,12 @@
-from unittest import TestCase
+from tests.base_case import ChatBotTestCase
 from chatterbot.logic import UnitConversion
 from chatterbot.conversation import Statement
 
 
-class UnitConversionTests(TestCase):
+class UnitConversionTests(ChatBotTestCase):
     def setUp(self):
-        self.adapter = UnitConversion()
+        super().setUp()
+        self.adapter = UnitConversion(self.chatbot)
 
     def test_can_process(self):
         statement = Statement('How many inches are in two kilometers?')
