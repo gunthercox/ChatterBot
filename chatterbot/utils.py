@@ -17,7 +17,7 @@ def import_module(dotted_path):
     return getattr(module, module_parts[-1])
 
 
-def initialize_class(data, **kwargs):
+def initialize_class(data, *args, **kwargs):
     """
     :param data: A string or dictionary containing a import_path attribute.
     """
@@ -26,11 +26,11 @@ def initialize_class(data, **kwargs):
         data.update(kwargs)
         Class = import_module(import_path)
 
-        return Class(**data)
+        return Class(*args, **data)
     else:
         Class = import_module(data)
 
-        return Class(**kwargs)
+        return Class(*args, **kwargs)
 
 
 def validate_adapter_class(validate_class, adapter_class):
@@ -46,7 +46,7 @@ def validate_adapter_class(validate_class, adapter_class):
 
     :raises: Adapter.InvalidAdapterTypeException
     """
-    from .adapters import Adapter
+    from chatterbot.adapters import Adapter
 
     # If a dictionary was passed in, check if it has an import_path attribute
     if isinstance(validate_class, dict):
