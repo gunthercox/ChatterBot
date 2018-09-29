@@ -50,6 +50,10 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         null=True
     )
 
+    persona = models.CharField(
+        max_length=constants.PERSONA_MAX_LENGTH
+    )
+
     # This is the confidence with which the chat bot believes
     # this is an accurate response. This value is set when the
     # statement is returned by the chat bot.

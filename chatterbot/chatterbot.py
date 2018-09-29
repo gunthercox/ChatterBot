@@ -156,6 +156,7 @@ class ChatBot(object):
 
         result.confidence = max_confidence
         result.conversation = input_statement.conversation
+        result.persona = 'bot:' + self.name
 
         return result
 

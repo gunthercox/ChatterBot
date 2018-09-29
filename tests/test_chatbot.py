@@ -244,3 +244,11 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
     def test_chatbot_set_for_all_logic_adapters(self):
         for sub_adapter in self.chatbot.get_logic_adapters():
             self.assertEqual(sub_adapter.chatbot, self.chatbot)
+
+    def test_response_persona_is_bot(self):
+        """
+        The response returned from the chatbot should be set to the name of the chatbot.
+        """
+        response = self.chatbot.get_response('Hey everyone!')
+
+        self.assertEqual(response.persona, 'bot:Test Bot')

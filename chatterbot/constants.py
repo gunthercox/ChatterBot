@@ -16,6 +16,11 @@ of a UUID4 with no hyphens.
 '''
 CONVERSATION_LABEL_MAX_LENGTH = 32
 
+'''
+The maximum length of text that can be stored in the persona field of the statement model.
+'''
+PERSONA_MAX_LENGTH = 50
+
 # The maximum length of characters that the name of a tag can contain
 TAG_NAME_MAX_LENGTH = 50
 
