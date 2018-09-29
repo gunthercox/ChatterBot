@@ -22,5 +22,5 @@ class Microsoft(OutputAdapter):
             self.conversation_id,
             statement.text
         )
-        self.logger.info('processing user response {}'.format(data))
+        self.chatbot.logger.info('processing user response {}'.format(data))
         return statement
