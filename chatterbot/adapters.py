@@ -1,17 +1,12 @@
-import logging
-
-
 class Adapter(object):
     """
     A superclass for all adapter classes.
 
     :param chatbot: A ChatBot instance.
-    :param logger: A python logger (optional).
     """
 
     def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
-        self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
     class AdapterMethodNotImplementedError(NotImplementedError):
         """
