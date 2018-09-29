@@ -220,7 +220,8 @@ class SQLStorageAdapter(StorageAdapter):
                 if not record:
                     record = Statement(
                         text=statement.text,
-                        conversation=statement.conversation
+                        conversation=statement.conversation,
+                        persona=statement.persona
                     )
 
             # Update the response value
