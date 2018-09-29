@@ -27,6 +27,7 @@ class StatementMixin(object):
             'created_at': self.created_at.isoformat().split('+', 1)[0],
             'conversation': self.conversation,
             'in_response_to': self.in_response_to,
+            'persona': self.persona,
             'tags': self.get_tags()
         }
 
@@ -52,6 +53,8 @@ class Statement(StatementMixin):
         self.text = text
 
         self.conversation = kwargs.get('conversation', '')
+
+        self.persona = kwargs.get('persona', '')
 
         self.tags = kwargs.pop('tags', [])
         self.in_response_to = kwargs.pop('in_response_to', None)
