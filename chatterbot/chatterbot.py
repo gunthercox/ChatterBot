@@ -13,7 +13,6 @@ class ChatBot(object):
 
     def __init__(self, name, **kwargs):
         self.name = name
-        kwargs['name'] = name
 
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
@@ -26,7 +25,7 @@ class ChatBot(object):
             'chatterbot.logic.BestMatch'
         ])
 
-        input_adapter = kwargs.get('input_adapter', 'chatterbot.input.VariableInputTypeAdapter')
+        input_adapter = kwargs.get('input_adapter', 'chatterbot.input.InputAdapter')
 
         output_adapter = kwargs.get('output_adapter', 'chatterbot.output.OutputAdapter')
 
@@ -85,15 +84,33 @@ class ChatBot(object):
         for logic_adapter in self.get_logic_adapters():
             logic_adapter.initialize()
 
-    def get_response(self, input_item):
+    def get_response(self, statement=None, **kwargs):
         """
         Return the bot's response based on the input.
 
-        :param input_item: An input value.
+        :param statement: An statement object.
         :returns: A response to the input.
         :rtype: Statement
         """
-        input_statement = self.input.process_input(input_item)
+        if isinstance(statement, str):
+            kwargs['text'] = statement
+
+        if statement is None and 'text' not in kwargs:
+            raise self.ChatBotException(
+                'Either a statement object or a "text" keyword '
+                'argument is required. Neither was provided.'
+            )
+
+        if hasattr(statement, 'text'):
+            data = statement.serialize()
+            data.update(kwargs)
+            kwargs = data
+
+        if isinstance(statement, dict):
+            statement.update(kwargs)
+            kwargs = statement
+
+        input_statement = self.input.process_input(kwargs)
 
         # Preprocess the input statement
         for preprocessor in self.preprocessors:
@@ -227,3 +244,6 @@ class ChatBot(object):
         adapters.extend(self.logic_adapters)
         adapters.extend(self.system_logic_adapters)
         return adapters
+
+    class ChatBotException(Exception):
+        pass

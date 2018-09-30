@@ -43,4 +43,4 @@ class Gitter(InputAdapter):
 
         text = gitter.remove_mentions(data['text'])
 
-        return Statement(text)
+        return Statement(text=text)

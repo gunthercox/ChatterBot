@@ -41,7 +41,7 @@ class Microsoft(InputAdapter):
             sleep(3.5)
 
         text = data['text']
-        statement = Statement(text)
+        statement = Statement(text=text)
         self.chatbot.logger.info('processing user statement {}'.format(statement))
 
         return statement

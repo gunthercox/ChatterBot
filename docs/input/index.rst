@@ -15,20 +15,20 @@ to convert it into a format that ChatterBot can understand. This format
 is the :ref:`Statement <conversation_statements>` object found in ChatterBot's
 `conversation` module.
 
-Variable input type adapter
-===========================
+Default input adapter
+=====================
 
-.. autofunction:: chatterbot.input.VariableInputTypeAdapter
+.. autofunction:: chatterbot.input.InputAdapter
 
-The variable input type adapter allows the chat bot to accept a number
-of different input types using the same adapter. This adapter accepts
+The default input adapter for ChatterBot allows the chat bot to accept a
+number of different input types using the same adapter. This adapter accepts
 strings_, dictionaries_ and :ref:`Statements <conversation_statements>`.
 
 .. code-block:: python
 
    chatbot = ChatBot(
        "My ChatterBot",
-       input_adapter="chatterbot.input.VariableInputTypeAdapter"
+       input_adapter="chatterbot.input.InputAdapter"
    )
 
 Terminal input adapter

@@ -23,7 +23,7 @@ to the user.
    :type logic_adapters: list
 
    :param input_adapter: The dot-notated import path to an input adapter class.
-                         Defaults to ``"chatterbot.input.VariableInputTypeAdapter"``.
+                         Defaults to ``"chatterbot.input.InputAdapter"``.
    :type input_adapter: str
 
    :param output_adapter: The dot-notated import path to an output adapter class.

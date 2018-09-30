@@ -121,7 +121,7 @@ For this example we will use a fictitious API endpoint that returns the current 
 
        temperature = data.get('temperature', 'unavailable')
 
-       response_statement = Statement('The current temperature is {}'.format(temperature))
+       response_statement = Statement(text='The current temperature is {}'.format(temperature))
 
        return confidence, response_statement
 
