@@ -70,7 +70,7 @@ class SQLStorageAdapterTestCase(SQLStorageAdapterTestCase):
         self.assertEqual(results[0].text, text)
 
     def test_update_adds_new_statement(self):
-        statement = Statement("New statement")
+        statement = Statement(text="New statement")
         self.adapter.update(statement)
 
         results = self.adapter.filter(text="New statement")
@@ -78,7 +78,7 @@ class SQLStorageAdapterTestCase(SQLStorageAdapterTestCase):
         self.assertEqual(results[0].text, statement.text)
 
     def test_update_modifies_existing_statement(self):
-        statement = Statement("New statement")
+        statement = Statement(text="New statement")
         self.adapter.update(statement)
 
         # Check the initial values
@@ -117,10 +117,10 @@ class SQLStorageAdapterTestCase(SQLStorageAdapterTestCase):
         that are known to be in response to another statement.
         """
         statement_list = [
-            Statement("What... is your quest?"),
-            Statement("This is a phone."),
-            Statement("A what?", in_response_to="This is a phone."),
-            Statement("A phone.", in_response_to="A what?")
+            Statement(text="What... is your quest?"),
+            Statement(text="This is a phone."),
+            Statement(text="A what?", in_response_to="This is a phone."),
+            Statement(text="A phone.", in_response_to="A what?")
         ]
 
         for statement in statement_list:
@@ -139,11 +139,11 @@ class SQLStorageAdapterFilterTestCase(SQLStorageAdapterTestCase):
         super().setUp()
 
         self.statement1 = Statement(
-            "Testing...",
+            text="Testing...",
             in_response_to="Why are you counting?"
         )
         self.statement2 = Statement(
-            "Testing one, two, three.",
+            text="Testing one, two, three.",
             in_response_to="Testing..."
         )
 
@@ -161,11 +161,11 @@ class SQLStorageAdapterFilterTestCase(SQLStorageAdapterTestCase):
 
     def test_filter_equal_results(self):
         statement1 = Statement(
-            "Testing...",
+            text="Testing...",
             in_response_to=None
         )
         statement2 = Statement(
-            "Testing one, two, three.",
+            text="Testing one, two, three.",
             in_response_to=None
         )
         self.adapter.update(statement1)
@@ -229,14 +229,14 @@ class ReadOnlySQLStorageAdapterTestCase(SQLStorageAdapterTestCase):
     def test_update_does_not_add_new_statement(self):
         self.adapter.read_only = True
 
-        statement = Statement("New statement")
+        statement = Statement(text="New statement")
         self.adapter.update(statement)
 
         results = self.adapter.filter(text="New statement")
         self.assertEqual(len(results), 0)
 
     def test_update_does_not_modify_existing_statement(self):
-        statement = Statement("New statement")
+        statement = Statement(text="New statement")
         self.adapter.update(statement)
 
         self.adapter.read_only = True

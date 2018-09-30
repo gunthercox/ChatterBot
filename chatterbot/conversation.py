@@ -38,13 +38,13 @@ class Statement(StatementMixin):
     phrase that someone can say.
     """
 
-    def __init__(self, text, **kwargs):
+    def __init__(self, **kwargs):
         from datetime import datetime
         from dateutil import parser as date_parser
 
         # Try not to allow non-string types to be passed to statements
         try:
-            text = str(text)
+            text = str(kwargs.get('text'))
         except UnicodeEncodeError:
             pass
 

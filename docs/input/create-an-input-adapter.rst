@@ -1,11 +1,9 @@
 Creating a new input adapter
-==============================
+============================
 
 You can write your own input adapters by creating a new class that
 inherits from ``InputAdapter`` and overrides the necessary
 methods established in the base ``InputAdapter`` class.
-
-.. autofunction:: chatterbot.input.InputAdapter
 
 To create your own input adapter you must override the ``process_input``
 method to return a :ref:`Statement <conversation_statements>` object.

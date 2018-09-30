@@ -17,7 +17,7 @@ class GitterAdapterTestCase(GitterTestCase):
         )
 
     def test_process_response(self):
-        statement = Statement('Hello')
+        statement = Statement(text='Hello')
         output_statement = self.adapter.process_response(statement)
 
         self.assertEqual(output_statement, statement)

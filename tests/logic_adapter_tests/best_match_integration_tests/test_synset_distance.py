@@ -27,30 +27,30 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
         filter out any statements that are not in response to a known statement.
         """
         possible_choices = [
-            Statement('This is a lovely bog.', in_response_to='This is a lovely bog.'),
-            Statement('This is a beautiful swamp.', in_response_to='This is a beautiful swamp.'),
-            Statement('It smells like a swamp.', in_response_to='It smells like a swamp.')
+            Statement(text='This is a lovely bog.', in_response_to='This is a lovely bog.'),
+            Statement(text='This is a beautiful swamp.', in_response_to='This is a beautiful swamp.'),
+            Statement(text='It smells like a swamp.', in_response_to='It smells like a swamp.')
         ]
         self.adapter.chatbot.storage.filter = MagicMock(
             return_value=possible_choices
         )
 
-        statement = Statement('This is a lovely swamp.')
+        statement = Statement(text='This is a lovely swamp.')
         match = self.adapter.get(statement)
 
         self.assertEqual('This is a lovely bog.', match)
 
     def test_different_punctuation(self):
         possible_choices = [
-            Statement('Who are you?'),
-            Statement('Are you good?'),
-            Statement('You are good')
+            Statement(text='Who are you?'),
+            Statement(text='Are you good?'),
+            Statement(text='You are good')
         ]
         self.adapter.chatbot.storage.get_response_statements = MagicMock(
             return_value=possible_choices
         )
 
-        statement = Statement('Are you good')
+        statement = Statement(text='Are you good')
         match = self.adapter.get(statement)
 
         self.assertEqual('Are you good?', match)
@@ -64,10 +64,10 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
         self.adapter.chatbot.storage.update = MagicMock()
         self.adapter.chatbot.storage.count = MagicMock(return_value=1)
         self.adapter.chatbot.storage.get_random = MagicMock(
-            return_value=Statement('Random')
+            return_value=Statement(text='Random')
         )
 
-        match = self.adapter.process(Statement('Blah'))
+        match = self.adapter.process(Statement(text='Blah'))
 
         self.assertEqual(match.confidence, 0)
         self.assertEqual(match.text, 'Random')

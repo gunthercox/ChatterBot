@@ -84,7 +84,7 @@ class TimeLogicAdapter(LogicAdapter):
 
         time_features = self.time_question_features(statement.text.lower())
         confidence = self.classifier.classify(time_features)
-        response = Statement('The current time is ' + now.strftime('%I:%M %p'))
+        response = Statement(text='The current time is ' + now.strftime('%I:%M %p'))
 
         response.confidence = confidence
         return response

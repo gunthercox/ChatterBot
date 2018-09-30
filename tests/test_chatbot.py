@@ -9,7 +9,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def setUp(self):
         super(ChatterBotResponseTestCase, self).setUp()
 
-        self.test_statement = Statement('Hello', in_response_to='Hi')
+        self.test_statement = Statement(text='Hello', in_response_to='Hi')
 
     def test_empty_database(self):
         """
@@ -126,16 +126,32 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIsLength(results, 1)
         self.assertIn('test', results[0].get_tags())
 
+    def test_get_response_with_text_and_kwargs(self):
+        self.chatbot.get_response('Hello', conversation='greetings')
+
+        results = self.chatbot.storage.filter(text='Hello')
+
+        self.assertIsLength(results, 1)
+        self.assertEqual(results[0].conversation, 'greetings')
+
+    def test_get_response_missing_text(self):
+        with self.assertRaises(self.chatbot.ChatBotException):
+            self.chatbot.get_response()
+
+    def test_get_response_missing_text_with_conversation(self):
+        with self.assertRaises(self.chatbot.ChatBotException):
+            self.chatbot.get_response(conversation='test')
+
     def test_generate_response(self):
-        statement = Statement('Many insects adopt a tripedal gait for rapid yet stable walking.')
+        statement = Statement(text='Many insects adopt a tripedal gait for rapid yet stable walking.')
         response = self.chatbot.generate_response(statement)
 
         self.assertEqual(response, statement)
         self.assertEqual(response.confidence, 1)
 
     def test_learn_response(self):
-        previous_response = Statement('Define Hemoglobin.')
-        statement = Statement('Hemoglobin is an oxygen-transport metalloprotein.')
+        previous_response = Statement(text='Define Hemoglobin.')
+        statement = Statement(text='Hemoglobin is an oxygen-transport metalloprotein.')
         self.chatbot.learn_response(statement, previous_response)
         results = self.chatbot.storage.filter(text=statement.text)
 
@@ -187,7 +203,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 class TestAdapterA(LogicAdapter):
 
     def process(self, statement):
-        response = Statement('Good morning.')
+        response = Statement(text='Good morning.')
         response.confidence = 0.2
         return response
 
@@ -195,7 +211,7 @@ class TestAdapterA(LogicAdapter):
 class TestAdapterB(LogicAdapter):
 
     def process(self, statement):
-        response = Statement('Good morning.')
+        response = Statement(text='Good morning.')
         response.confidence = 0.5
         return response
 
@@ -203,7 +219,7 @@ class TestAdapterB(LogicAdapter):
 class TestAdapterC(LogicAdapter):
 
     def process(self, statement):
-        response = Statement('Good night.')
+        response = Statement(text='Good night.')
         response.confidence = 0.7
         return response
 
@@ -222,7 +238,7 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
             TestAdapterC(self.chatbot)
         ]
 
-        statement = self.chatbot.generate_response(Statement('Howdy!'))
+        statement = self.chatbot.generate_response(Statement(text='Howdy!'))
 
         self.assertEqual(statement.confidence, 0.5)
         self.assertEqual(statement, 'Good morning.')
@@ -244,6 +260,10 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
     def test_chatbot_set_for_all_logic_adapters(self):
         for sub_adapter in self.chatbot.get_logic_adapters():
             self.assertEqual(sub_adapter.chatbot, self.chatbot)
+        self.assertGreater(
+            len(self.chatbot.get_logic_adapters()), 0,
+            msg='At least one logic adapter is expected for this test.'
+        )
 
     def test_response_persona_is_bot(self):
         """

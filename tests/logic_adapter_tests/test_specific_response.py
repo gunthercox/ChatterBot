@@ -20,7 +20,7 @@ class SpecificResponseAdapterTestCase(ChatBotTestCase):
         """
         Test the case that an exact match is given.
         """
-        statement = Statement('Open sesame!')
+        statement = Statement(text='Open sesame!')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 1)
@@ -30,7 +30,7 @@ class SpecificResponseAdapterTestCase(ChatBotTestCase):
         """
         Test the case that an exact match is not given.
         """
-        statement = Statement('Open says me!')
+        statement = Statement(text='Open says me!')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 0)

@@ -7,7 +7,7 @@ bot = ChatBot(
     logic_adapters=[
         "chatterbot.logic.UnitConversion",
     ],
-    input_adapter="chatterbot.input.VariableInputTypeAdapter",
+    input_adapter="chatterbot.input.InputAdapter",
     output_adapter="chatterbot.output.OutputAdapter"
 )
 

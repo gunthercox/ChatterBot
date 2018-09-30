@@ -10,14 +10,14 @@ class TimeAdapterTests(ChatBotTestCase):
         self.adapter = TimeLogicAdapter(self.chatbot)
 
     def test_positive_input(self):
-        statement = Statement("Do you know what time it is?")
+        statement = Statement(text="Do you know what time it is?")
         response = self.adapter.process(statement)
 
         self.assertEqual(response.confidence, 1)
         self.assertIn("The current time is ", response.text)
 
     def test_negative_input(self):
-        statement = Statement("What is an example of a pachyderm?")
+        statement = Statement(text="What is an example of a pachyderm?")
         response = self.adapter.process(statement)
 
         self.assertEqual(response.confidence, 0)

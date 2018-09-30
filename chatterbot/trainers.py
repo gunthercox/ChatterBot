@@ -234,7 +234,7 @@ class TwitterTrainer(Trainer):
         self.chatbot.logger.info('Requesting 50 random tweets containing the word {}'.format(random_word))
         tweets = self.api.GetSearch(term=random_word, count=50, lang=self.lang)
         for tweet in tweets:
-            statement = Statement(tweet.text)
+            statement = Statement(text=tweet.text)
 
             if tweet.in_reply_to_status_id:
                 try:
