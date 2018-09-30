@@ -3,7 +3,6 @@ from chatterbot.input.microsoft import Microsoft
 from chatterbot.input.gitter import Gitter
 from chatterbot.input.mailgun import Mailgun
 from chatterbot.input.terminal import TerminalAdapter
-from chatterbot.input.variable_input_type_adapter import VariableInputTypeAdapter
 
 
 __all__ = (
@@ -12,5 +11,4 @@ __all__ = (
     'Gitter',
     'Mailgun',
     'TerminalAdapter',
-    'VariableInputTypeAdapter',
 )
