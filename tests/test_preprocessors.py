@@ -22,21 +22,21 @@ class CleanWhitespacePreprocessorTestCase(ChatBotTestCase):
     """
 
     def test_clean_whitespace(self):
-        statement = Statement('\tThe quick \nbrown fox \rjumps over \vthe \alazy \fdog\\.')
+        statement = Statement(text='\tThe quick \nbrown fox \rjumps over \vthe \alazy \fdog\\.')
         cleaned = preprocessors.clean_whitespace(self.chatbot, statement)
         normal_text = 'The quick brown fox jumps over \vthe \alazy \fdog\\.'
 
         self.assertEqual(cleaned.text, normal_text)
 
     def test_leading_or_trailing_whitespace_removed(self):
-        statement = Statement('     The quick brown fox jumps over the lazy dog.   ')
+        statement = Statement(text='     The quick brown fox jumps over the lazy dog.   ')
         cleaned = preprocessors.clean_whitespace(self.chatbot, statement)
         normal_text = 'The quick brown fox jumps over the lazy dog.'
 
         self.assertEqual(cleaned.text, normal_text)
 
     def test_consecutive_spaces_removed(self):
-        statement = Statement('The       quick brown     fox      jumps over the lazy dog.')
+        statement = Statement(text='The       quick brown     fox      jumps over the lazy dog.')
         cleaned = preprocessors.clean_whitespace(self.chatbot, statement)
         normal_text = 'The quick brown fox jumps over the lazy dog.'
 
@@ -52,8 +52,10 @@ class HTMLUnescapePreprocessorTestCase(ChatBotTestCase):
 
         # implicit concatenation
         statement = Statement(
-            'The quick brown fox &lt;b&gt;jumps&lt;/b&gt; over'
-            ' the <a href="http://lazy.com">lazy</a> dog.'
+            text=(
+                'The quick brown fox &lt;b&gt;jumps&lt;/b&gt; over'
+                ' the <a href="http://lazy.com">lazy</a> dog.'
+            )
         )
 
         normal_text = (
@@ -72,7 +74,7 @@ class ConvertToASCIIPreprocessorTestCase(ChatBotTestCase):
     """
 
     def test_convert_to_ascii(self):
-        statement = Statement(u'Klüft skräms inför på fédéral électoral große')
+        statement = Statement(text=u'Klüft skräms inför på fédéral électoral große')
         cleaned = preprocessors.convert_to_ascii(self.chatbot, statement)
         normal_text = 'Kluft skrams infor pa federal electoral groe'
 

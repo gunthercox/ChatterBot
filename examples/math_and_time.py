@@ -8,7 +8,7 @@ bot = ChatBot(
         "chatterbot.logic.MathematicalEvaluation",
         "chatterbot.logic.TimeLogicAdapter"
     ],
-    input_adapter="chatterbot.input.VariableInputTypeAdapter",
+    input_adapter="chatterbot.input.InputAdapter",
     output_adapter="chatterbot.output.OutputAdapter"
 )
 

@@ -14,6 +14,6 @@ class MicrosoftInputAdapterTests(MicrosoftTestCase):
         )
 
     def test_process_input(self):
-        statement = Statement('Hi! What is your name?')
+        statement = Statement(text='Hi! What is your name?')
         data = self.adapter.process_input(statement)
         self.assertEqual('Hi! What is your name?', data)

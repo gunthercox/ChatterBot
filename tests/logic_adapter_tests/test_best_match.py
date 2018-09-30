@@ -20,7 +20,7 @@ class BestMatchTestCase(ChatBotTestCase):
         self.adapter.chatbot.storage.filter = MagicMock(return_value=[])
         self.adapter.chatbot.storage.count = MagicMock(return_value=0)
 
-        statement = Statement('What is your quest?')
+        statement = Statement(text='What is your quest?')
 
         with self.assertRaises(BestMatch.EmptyDatasetException):
             self.adapter.get(statement)

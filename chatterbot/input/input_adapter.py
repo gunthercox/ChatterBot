@@ -4,7 +4,7 @@ from chatterbot.conversation import Statement
 
 class InputAdapter(Adapter):
     """
-    This is an abstract class that represents the
+    This class provides base methods and represents the
     interface that all input adapters should implement.
     """
 

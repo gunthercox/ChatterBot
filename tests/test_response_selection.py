@@ -7,15 +7,15 @@ class ResponseSelectionTests(ChatBotSQLTestCase):
 
     def test_get_most_frequent_response(self):
         statement_list = [
-            Statement('What... is your quest?', in_response_to='Hello'),
-            Statement('What... is your quest?', in_response_to='Hello'),
-            Statement('This is a phone.', in_response_to='Hello'),
-            Statement('This is a phone.', in_response_to='Hello'),
-            Statement('This is a phone.', in_response_to='Hello'),
-            Statement('This is a phone.', in_response_to='Hello'),
-            Statement('A what?', in_response_to='Hello'),
-            Statement('A what?', in_response_to='Hello'),
-            Statement('A phone.', in_response_to='Hello')
+            Statement(text='What... is your quest?', in_response_to='Hello'),
+            Statement(text='What... is your quest?', in_response_to='Hello'),
+            Statement(text='This is a phone.', in_response_to='Hello'),
+            Statement(text='This is a phone.', in_response_to='Hello'),
+            Statement(text='This is a phone.', in_response_to='Hello'),
+            Statement(text='This is a phone.', in_response_to='Hello'),
+            Statement(text='A what?', in_response_to='Hello'),
+            Statement(text='A what?', in_response_to='Hello'),
+            Statement(text='A phone.', in_response_to='Hello')
         ]
 
         for statement in statement_list:
@@ -25,7 +25,7 @@ class ResponseSelectionTests(ChatBotSQLTestCase):
             )
 
         output = response_selection.get_most_frequent_response(
-            Statement('Hello'),
+            Statement(text='Hello'),
             statement_list,
             self.chatbot.storage
         )
@@ -34,22 +34,22 @@ class ResponseSelectionTests(ChatBotSQLTestCase):
 
     def test_get_first_response(self):
         statement_list = [
-            Statement('What... is your quest?'),
-            Statement('A what?'),
-            Statement('A quest.')
+            Statement(text='What... is your quest?'),
+            Statement(text='A what?'),
+            Statement(text='A quest.')
         ]
 
-        output = response_selection.get_first_response(Statement('Hello'), statement_list)
+        output = response_selection.get_first_response(Statement(text='Hello'), statement_list)
 
         self.assertEqual('What... is your quest?', output)
 
     def test_get_random_response(self):
         statement_list = [
-            Statement('This is a phone.'),
-            Statement('A what?'),
-            Statement('A phone.')
+            Statement(text='This is a phone.'),
+            Statement(text='A what?'),
+            Statement(text='A phone.')
         ]
 
-        output = response_selection.get_random_response(Statement('Hello'), statement_list)
+        output = response_selection.get_random_response(Statement(text='Hello'), statement_list)
 
         self.assertTrue(output)

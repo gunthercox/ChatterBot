@@ -33,7 +33,7 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
             'Thank you.'
         ])
 
-        happy_statement = Statement('I enjoy raspberry ice cream.')
+        happy_statement = Statement(text='I enjoy raspberry ice cream.')
         response = self.adapter.process(happy_statement)
 
         self.assertEqual(response.confidence, 1)
@@ -48,7 +48,7 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
             'Thank you.'
         ])
 
-        happy_statement = Statement('I enjoy raspberry.')
+        happy_statement = Statement(text='I enjoy raspberry.')
         response = self.adapter.process(happy_statement)
 
         self.assertEqual(response.text, 'I am glad to hear that.')
