@@ -23,7 +23,7 @@ class ChatterBotApiView(View):
 
         * The JSON data should contain a 'text' attribute.
         """
-        input_data = json.loads(request.read().decode('utf-8'))
+        input_data = json.loads(request.body.decode('utf-8'))
 
         if 'text' not in input_data:
             return JsonResponse({

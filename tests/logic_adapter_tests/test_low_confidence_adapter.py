@@ -15,27 +15,27 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
 
         possible_choices = [
             Statement(
-                'Who do you love?',
+                text='Who do you love?',
                 in_response_to='I hear you are going on a quest?'
             ),
             Statement(
-                'What is the meaning of life?',
+                text='What is the meaning of life?',
                 in_response_to='Yuck, black licorice jelly beans.'
             ),
             Statement(
-                'I am Iron Man.',
+                text='I am Iron Man.',
                 in_response_to='What... is your quest?'
             ),
             Statement(
-                'What... is your quest?',
+                text='What... is your quest?',
                 in_response_to='I am Iron Man.'
             ),
             Statement(
-                'Yuck, black licorice jelly beans.',
+                text='Yuck, black licorice jelly beans.',
                 in_response_to='What is the meaning of life?'
             ),
             Statement(
-                'I hear you are going on a quest?',
+                text='I hear you are going on a quest?',
                 in_response_to='Who do you love?'
             ),
         ]
@@ -45,7 +45,7 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         """
         Test the case that a high confidence response is known.
         """
-        statement = Statement('What is your quest?')
+        statement = Statement(text='What is your quest?')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 0)
@@ -55,7 +55,7 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         """
         Test the case that a high confidence response is not known.
         """
-        statement = Statement('Is this a tomato?')
+        statement = Statement(text='Is this a tomato?')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 1)
@@ -69,7 +69,7 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
             Statement(text='No')
         ]
 
-        statement = Statement('Is this a tomato?')
+        statement = Statement(text='Is this a tomato?')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 1)

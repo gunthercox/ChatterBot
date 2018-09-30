@@ -6,7 +6,7 @@ from chatterbot.conversation import Statement
 class StatementTests(TestCase):
 
     def setUp(self):
-        self.statement = Statement("A test statement.")
+        self.statement = Statement(text="A test statement.")
 
     def test_string_equality(self):
         """

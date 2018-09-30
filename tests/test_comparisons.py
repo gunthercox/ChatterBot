@@ -13,8 +13,8 @@ class LevenshteinDistanceTestCase(TestCase):
         """
         Falsy values should match by zero.
         """
-        statement = Statement('')
-        other_statement = Statement('Hello')
+        statement = Statement(text='')
+        other_statement = Statement(text='Hello')
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -24,8 +24,8 @@ class LevenshteinDistanceTestCase(TestCase):
         """
         Falsy values should match by zero.
         """
-        statement = Statement('Hello')
-        other_statement = Statement('')
+        statement = Statement(text='Hello')
+        other_statement = Statement(text='')
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -36,8 +36,8 @@ class LevenshteinDistanceTestCase(TestCase):
         Test that an exception is not raised if a statement is initialized
         with an integer value as its text attribute.
         """
-        statement = Statement(2)
-        other_statement = Statement('Hello')
+        statement = Statement(text=2)
+        other_statement = Statement(text='Hello')
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -47,8 +47,8 @@ class LevenshteinDistanceTestCase(TestCase):
         """
         Test that text capitalization is ignored.
         """
-        statement = Statement('Hi HoW ArE yOu?')
-        other_statement = Statement('hI hOw are YoU?')
+        statement = Statement(text='Hi HoW ArE yOu?')
+        other_statement = Statement(text='hI hOw are YoU?')
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -78,8 +78,8 @@ class SentimentComparisonTestCase(TestCase):
         """
         Test that text capitalization is ignored.
         """
-        statement = Statement('Hi HoW ArE yOu?')
-        other_statement = Statement('hI hOw are YoU?')
+        statement = Statement(text='Hi HoW ArE yOu?')
+        other_statement = Statement(text='hI hOw are YoU?')
 
         # Prepare to do the comparison
         functions = comparisons.sentiment_comparison.get_initialization_functions()

@@ -41,11 +41,11 @@ class DataCachingTests(ChatBotTestCase):
         Test that an additional data attribute can be added to the statement
         and that this attribute is saved.
         """
-        self.chatbot.get_response('Hello')
+        self.chatbot.get_response('Hello', conversation='test')
         results = self.chatbot.storage.filter(
             text='Hello',
             in_response_to=None,
-            conversation='default'
+            conversation='test'
         )
 
         self.assertEqual(len(results), 1)

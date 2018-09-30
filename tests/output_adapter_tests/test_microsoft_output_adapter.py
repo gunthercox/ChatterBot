@@ -15,6 +15,6 @@ class MicrosoftAdapterTests(MicrosoftTestCase):
         )
 
     def test_process_response(self):
-        statement = Statement('Hi! What is your name?')
+        statement = Statement(text='Hi! What is your name?')
         data = self.adapter.process_response(statement)
         self.assertEqual('Hi! What is your name?', data)

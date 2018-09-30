@@ -24,7 +24,7 @@ class TkinterGUIExample(tk.Tk):
             logic_adapters=[
                 "chatterbot.logic.BestMatch"
             ],
-            input_adapter="chatterbot.input.VariableInputTypeAdapter",
+            input_adapter="chatterbot.input.InputAdapter",
             output_adapter="chatterbot.output.OutputAdapter",
             database_uri="../database.db"
         )

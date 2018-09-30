@@ -88,7 +88,7 @@ class ChatBot(object):
         """
         Return the bot's response based on the input.
 
-        :param statement: An statement object.
+        :param statement: An statement object or string.
         :returns: A response to the input.
         :rtype: Statement
         """

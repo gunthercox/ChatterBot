@@ -19,7 +19,7 @@ class TerminalAdapterTests(ChatBotTestCase):
         For consistency across io adapters, the
         terminal adaper should return the output value.
         """
-        statement = Statement("Come with me if you want to live.")
+        statement = Statement(text="Come with me if you want to live.")
 
         self.assertEqual(
             self.adapter.process_response(statement),
