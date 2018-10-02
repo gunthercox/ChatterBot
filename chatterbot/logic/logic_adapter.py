@@ -92,8 +92,5 @@ class LogicAdapter(Adapter):
 
     class EmptyDatasetException(Exception):
 
-        def __init__(self, value='An empty set was received when at least one statement was expected.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)
+        def __init__(self, message='An empty set was received when at least one statement was expected.'):
+            super().__init__(message)
