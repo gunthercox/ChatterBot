@@ -96,8 +96,5 @@ class Statement(StatementMixin):
 
     class InvalidTypeException(Exception):
 
-        def __init__(self, value='Received an unexpected value type.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)
+        def __init__(self, message='Received an unexpected value type.'):
+            super().__init__(message)

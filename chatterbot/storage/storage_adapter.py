@@ -131,11 +131,9 @@ class StorageAdapter(object):
 
     class EmptyDatabaseException(Exception):
 
-        def __init__(self, value='The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database.'):
-            self.value = value
-
-        def __str__(self):
-            return repr(self.value)
+        def __init__(self, message=None):
+            default = 'The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database.'
+            super().__init__(message or default)
 
     class AdapterMethodNotImplementedError(NotImplementedError):
         """
