@@ -34,15 +34,12 @@ class Trainer(object):
         the required methods on the Trainer base class.
         """
 
-        def __init__(self, value=None):
+        def __init__(self, message=None):
             default = (
                 'A training class must be specified before calling train(). ' +
                 'See http://chatterbot.readthedocs.io/en/stable/training.html'
             )
-            self.value = value or default
-
-        def __str__(self):
-            return repr(self.value)
+            super().__init__(message or default)
 
     def _generate_export_data(self):
         result = []
