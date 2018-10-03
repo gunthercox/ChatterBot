@@ -106,6 +106,14 @@ class SentimentComparisonTestCase(TestCase):
 
 class JaccardSimilarityTestCase(TestCase):
 
+    def setUp(self):
+        super().setUp()
+
+        # Initialize the comparison function
+        functions = comparisons.jaccard_similarity.get_initialization_functions()
+        for _, function in functions.items():
+            function()
+
     def test_get_initialization_functions(self):
         """
         Test that the initialization functions are returned.
