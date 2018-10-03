@@ -1,4 +1,4 @@
-from unittest import TestCase, SkipTest
+from unittest import TestCase
 from chatterbot.storage import MongoDatabaseAdapter
 from chatterbot.conversation import Statement
 
@@ -24,7 +24,7 @@ class MongoAdapterTestCase(TestCase):
             )
 
         except ServerSelectionTimeoutError:
-            raise SkipTest("Unable to connect to mongo database.")
+            self.skipTest("Unable to connect to mongo database.")
 
     def tearDown(self):
         """

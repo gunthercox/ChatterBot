@@ -1,4 +1,4 @@
-from unittest import TestCase, SkipTest
+from unittest import TestCase
 
 
 class ExamplesSmokeTestCase(TestCase):
@@ -14,26 +14,25 @@ class ExamplesSmokeTestCase(TestCase):
         from examples import default_response_example # NOQA
 
     def test_export_example(self):
-        raise SkipTest(
-            'This is being skipped to avoid '
-            'creating files durring tests.'
+        self.skipTest(
+            'This is being skipped to avoid creating files during tests.'
         )
 
     def test_gitter_example(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped because keys for this '
             'API are not included in the public repository.'
         )
 
     def test_learning_feedback_example(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped because it contains '
             'a while loop in the code body and will not '
             'terminate on its own.'
         )
 
     def test_mailgun_example(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped because keys for this '
             'API are not included in the public repository.'
         )
@@ -42,7 +41,7 @@ class ExamplesSmokeTestCase(TestCase):
         from examples import math_and_time # NOQA
 
     def test_microsoft_bot(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped because keys for this '
             'API are not included in the public repository.'
         )
@@ -51,33 +50,33 @@ class ExamplesSmokeTestCase(TestCase):
         from examples import specific_response_example # NOQA
 
     def test_terminal_example(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped because it contains '
             'a while loop in the code body and will not '
             'terminate on its own.'
         )
 
     def test_terminal_mongo_example(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped so that we do not have '
             'to check if Mongo DB is running before running '
             'this test.'
         )
 
     def test_tkinter_gui(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped so that we do not open up '
-            'a GUI durring testing.'
+            'a GUI during testing.'
         )
 
     def test_twitter_training_example(self):
-        raise SkipTest(
+        self.skipTest(
             'This is being skipped because keys for this '
             'API are not included in the public repository.'
         )
 
     def test_ubuntu_corpus_training_example(self):
-        raise SkipTest(
+        self.skipTest(
             'This test is being skipped because it takes '
             'hours to download and train from this corpus.'
         )

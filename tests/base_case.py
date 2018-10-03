@@ -1,5 +1,4 @@
-from unittest import TestCase
-from unittest import SkipTest
+from unittest import TestCase, SkipTest
 from chatterbot import ChatBot
 
 
