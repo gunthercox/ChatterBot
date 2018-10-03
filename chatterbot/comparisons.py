@@ -134,7 +134,10 @@ class SynsetDistance(Comparator):
         # Because path_similarity returns a value between 0 and 1,
         # max_possible_similarity is the number of words in the longer
         # of the two input statements.
-        max_possible_similarity = max(
+        max_possible_similarity = min(
+            len(statement.text.split()),
+            len(other_statement.text.split())
+        ) / max(
             len(statement.text.split()),
             len(other_statement.text.split())
         )
@@ -241,8 +244,6 @@ class JaccardSimilarity(Comparator):
     .. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index
     """
 
-    SIMILARITY_THRESHOLD = 0.5
-
     def initialize_nltk_wordnet(self):
         """
         Download the NLTK wordnet corpora that is required for this algorithm
@@ -261,14 +262,20 @@ class JaccardSimilarity(Comparator):
         import nltk
         import string
 
+        # Get default English stopwords and extend with punctuation
+        stopwords = nltk.corpus.stopwords.words('english')
+        stopwords.append('')
+
+        lemmatizer = nltk.stem.wordnet.WordNetLemmatizer()
+
+        # Make both strings lowercase
         a = statement.text.lower()
         b = other_statement.text.lower()
 
-        # Get default English stopwords and extend with punctuation
-        stopwords = nltk.corpus.stopwords.words('english')
-        stopwords.extend(string.punctuation)
-        stopwords.append('')
-        lemmatizer = nltk.stem.wordnet.WordNetLemmatizer()
+        # Remove punctuation from each string
+        table = str.maketrans(dict.fromkeys(string.punctuation))
+        a = a.translate(table)
+        b = b.translate(table)
 
         def get_wordnet_pos(pos_tag):
             if pos_tag[1].startswith('J'):
@@ -282,34 +289,26 @@ class JaccardSimilarity(Comparator):
             else:
                 return (pos_tag[0], wordnet.NOUN)
 
-        ratio = 0
-        pos_a = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a)))
-        pos_b = map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b)))
+        pos_a = list(map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a))))
+        pos_b = list(map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b))))
+
         lemma_a = [
             lemmatizer.lemmatize(
-                token.strip(string.punctuation),
-                pos
-            ) for token, pos in pos_a if pos == wordnet.NOUN and token.strip(
-                string.punctuation
-            ) not in stopwords
+                token, pos
+            ) for token, pos in pos_a if token not in stopwords
         ]
         lemma_b = [
             lemmatizer.lemmatize(
-                token.strip(string.punctuation),
-                pos
-            ) for token, pos in pos_b if pos == wordnet.NOUN and token.strip(
-                string.punctuation
-            ) not in stopwords
+                token, pos
+            ) for token, pos in pos_b if token not in stopwords
         ]
 
         # Calculate Jaccard similarity
-        try:
-            numerator = len(set(lemma_a).intersection(lemma_b))
-            denominator = float(len(set(lemma_a).union(lemma_b)))
-            ratio = numerator / denominator
-        except Exception as e:
-            print('Error', e)
-        return ratio >= self.SIMILARITY_THRESHOLD
+        numerator = len(set(lemma_a).intersection(lemma_b))
+        denominator = float(len(set(lemma_a).union(lemma_b)))
+        ratio = numerator / denominator
+
+        return ratio
 
 
 # ---------------------------------------- #
