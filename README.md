@@ -1,6 +1,6 @@
 ![Chatterbot: Machine learning in Python](https://i.imgur.com/b3SCmGT.png)
 
-# ChatterBot
+# ChatterBot :busts_in_silhouette:
 
 ChatterBot is a machine-learning based conversational dialog engine build in
 Python which makes it possible to generate responses based on collections of
@@ -24,7 +24,7 @@ An example of typical input would be something like this:
 > **user:** You're welcome.  
 > **bot:** Do you like hats?  
 
-## How it works
+## How it works :v:
 
 An untrained instance of ChatterBot starts off with no knowledge of how to communicate. Each time a user enters a statement, the library saves the text that they entered and the text that the statement was in response to. As ChatterBot receives more input the number of responses that it can reply and the accuracy of each response in relation to the input statement increase. The program selects the closest matching response by searching for the closest matching known statement that matches the input, it then returns the most likely response to that statement based on how frequently each response is issued by the people the bot communicates with.
 
@@ -36,7 +36,7 @@ This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBo
 pip install chatterbot
 ```
 
-## Basic Usage
+##  :point_right: Basic Usage
 
 ```
 from chatterbot import ChatBot
@@ -54,7 +54,7 @@ trainer.train("chatterbot.corpus.english")
 chatbot.get_response("Hello, how are you today?")
 ```
 
-# Training data
+# Training data  :fire:
 
 ChatterBot comes with a data utility module that can be used to train chat bots.
 At the moment there is training data for over a dozen languages in this module.
@@ -79,7 +79,7 @@ trainer.train("chatterbot.corpus.english.greetings")
 trainer.train("chatterbot.corpus.english.conversations")
 ```
 
-**Corpus contributions are welcome! Please make a pull request.**
+**Corpus contributions are welcome! Please make a pull request.**  :fire:
 
 # [Documentation](https://chatterbot.readthedocs.io/)
 
@@ -92,7 +92,7 @@ To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), 
 sphinx-build -b html docs/ build/
 ```
 
-# Examples
+# Examples are here :point_down:
 
 For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
 directory in this project's git repository.
@@ -103,7 +103,7 @@ There is also an example [Django project using ChatterBot](https://github.com/gu
 
 See release notes for changes https://github.com/gunthercox/ChatterBot/releases
 
-# Development pattern for contributors
+# Development pattern for contributors :point_down:
 
 1. [Create a fork](https://help.github.com/articles/fork-a-repo/) of
    the [main ChatterBot repository](https://github.com/gunthercox/ChatterBot) on GitHub.
