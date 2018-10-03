@@ -253,6 +253,15 @@ class JaccardSimilarity(Comparator):
 
         nltk_download_corpus('corpora/wordnet')
 
+    def initialize_nltk_averaged_perceptron_tagger(self):
+        """
+        Download the NLTK averaged perceptron tagger that is required for this algorithm
+        to run only if the corpora has not already been downloaded.
+        """
+        from chatterbot.utils import nltk_download_corpus
+
+        nltk_download_corpus('averaged_perceptron_tagger')
+
     def compare(self, statement, other_statement):
         """
         Return the calculated similarity of two
