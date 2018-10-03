@@ -2,7 +2,7 @@
 Test ChatterBot's statement comparison algorithms.
 """
 
-from unittest import TestCase, SkipTest
+from unittest import TestCase
 from chatterbot.conversation import Statement
 from chatterbot import comparisons
 
@@ -69,7 +69,12 @@ class SynsetDistanceTestCase(TestCase):
         """
         Test that text capitalization is ignored.
         """
-        raise SkipTest('This test needs to be created.')
+        statement = Statement(text='Hi HoW ArE yOu?')
+        other_statement = Statement(text='hI hOw are YoU?')
+
+        value = comparisons.synset_distance(statement, other_statement)
+
+        self.assertEqual(value, 1)
 
 
 class SentimentComparisonTestCase(TestCase):
@@ -97,4 +102,9 @@ class JaccardSimilarityTestCase(TestCase):
         """
         Test that text capitalization is ignored.
         """
-        raise SkipTest('This test needs to be created.')
+        statement = Statement(text='Hi HoW ArE yOu?')
+        other_statement = Statement(text='hI hOw are YoU?')
+
+        value = comparisons.jaccard_similarity(statement, other_statement)
+
+        self.assertEqual(value, 1)
