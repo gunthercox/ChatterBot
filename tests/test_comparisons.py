@@ -79,6 +79,14 @@ class SynsetDistanceTestCase(TestCase):
 
 class SentimentComparisonTestCase(TestCase):
 
+    def test_get_initialization_functions(self):
+        """
+        Test that the initialization functions are returned.
+        """
+        functions = comparisons.sentiment_comparison.get_initialization_functions()
+
+        self.assertIn('initialize_nltk_vader_lexicon', functions)
+
     def test_exact_match_different_capitalization(self):
         """
         Test that text capitalization is ignored.
@@ -97,6 +105,15 @@ class SentimentComparisonTestCase(TestCase):
 
 
 class JaccardSimilarityTestCase(TestCase):
+
+    def test_get_initialization_functions(self):
+        """
+        Test that the initialization functions are returned.
+        """
+        functions = comparisons.jaccard_similarity.get_initialization_functions()
+
+        self.assertIn('initialize_nltk_wordnet', functions)
+        self.assertIn('initialize_nltk_averaged_perceptron_tagger', functions)
 
     def test_exact_match_different_capitalization(self):
         """
