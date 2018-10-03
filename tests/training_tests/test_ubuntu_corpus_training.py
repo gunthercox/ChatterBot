@@ -1,6 +1,5 @@
 from unittest.mock import Mock
 from io import BytesIO
-import unittest
 import tarfile
 import os
 
@@ -137,7 +136,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         Test the case that the url being downloaded does not exist.
         """
-        raise unittest.SkipTest('This test needs to be created.')
+        self.skipTest('This test needs to be created.')
 
     def test_extract(self):
         """
