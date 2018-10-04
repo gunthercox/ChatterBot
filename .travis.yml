@@ -6,7 +6,6 @@ python:
 
 os:
   - linux
-  - windows
 
 services:
   - mongodb
