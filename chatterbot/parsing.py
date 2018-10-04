@@ -32,6 +32,42 @@ re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
 re_time = r'(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})(\sam|pm)?|\s?(?P<convention>am|pm))'
 re_separator = 'of|at|on'
 
+NUMBERS = {
+    'zero': 0,
+    'one': 1,
+    'two': 2,
+    'three': 3,
+    'four': 4,
+    'five': 5,
+    'six': 6,
+    'seven': 7,
+    'eight': 8,
+    'nine': 9,
+    'ten': 10,
+    'eleven': 11,
+    'twelve': 12,
+    'thirteen': 13,
+    'fourteen': 14,
+    'fifteen': 15,
+    'sixteen': 16,
+    'seventeen': 17,
+    'eighteen': 18,
+    'nineteen': 19,
+    'twenty': 20,
+    'thirty': 30,
+    'forty': 40,
+    'fifty': 50,
+    'sixty': 60,
+    'seventy': 70,
+    'eighty': 80,
+    'ninety': 90,
+    'hundred': 100,
+    'thousand': 1000,
+    'million': 1000000,
+    'billion': 1000000000,
+    'trillion': 1000000000000,
+}
+
 # A list tuple of regular expressions / parser fn to match
 # Start with the widest match and narrow it down because the order of the match in this list matters
 regex = [
@@ -395,71 +431,6 @@ regex = [
 ]
 
 
-def hashnum(number):
-    """
-    Hash of numbers
-    Append more number to modify your match
-    """
-    if re.match(r'one|^a\b', number, re.IGNORECASE):
-        return 1
-    if re.match(r'two', number, re.IGNORECASE):
-        return 2
-    if re.match(r'three', number, re.IGNORECASE):
-        return 3
-    if re.match(r'four', number, re.IGNORECASE):
-        return 4
-    if re.match(r'five', number, re.IGNORECASE):
-        return 5
-    if re.match(r'six', number, re.IGNORECASE):
-        return 6
-    if re.match(r'seven', number, re.IGNORECASE):
-        return 7
-    if re.match(r'eight', number, re.IGNORECASE):
-        return 8
-    if re.match(r'nine', number, re.IGNORECASE):
-        return 9
-    if re.match(r'ten', number, re.IGNORECASE):
-        return 10
-    if re.match(r'eleven', number, re.IGNORECASE):
-        return 11
-    if re.match(r'twelve', number, re.IGNORECASE):
-        return 12
-    if re.match(r'thirteen', number, re.IGNORECASE):
-        return 13
-    if re.match(r'fourteen', number, re.IGNORECASE):
-        return 14
-    if re.match(r'fifteen', number, re.IGNORECASE):
-        return 15
-    if re.match(r'sixteen', number, re.IGNORECASE):
-        return 16
-    if re.match(r'seventeen', number, re.IGNORECASE):
-        return 17
-    if re.match(r'eighteen', number, re.IGNORECASE):
-        return 18
-    if re.match(r'nineteen', number, re.IGNORECASE):
-        return 19
-    if re.match(r'twenty', number, re.IGNORECASE):
-        return 20
-    if re.match(r'thirty', number, re.IGNORECASE):
-        return 30
-    if re.match(r'forty', number, re.IGNORECASE):
-        return 40
-    if re.match(r'fifty', number, re.IGNORECASE):
-        return 50
-    if re.match(r'sixty', number, re.IGNORECASE):
-        return 60
-    if re.match(r'seventy', number, re.IGNORECASE):
-        return 70
-    if re.match(r'eighty', number, re.IGNORECASE):
-        return 80
-    if re.match(r'ninety', number, re.IGNORECASE):
-        return 90
-    if re.match(r'hundred', number, re.IGNORECASE):
-        return 100
-    if re.match(r'thousand', number, re.IGNORECASE):
-        return 1000
-
-
 def convert_string_to_number(value):
     """
     Convert strings to numbers
@@ -470,7 +441,7 @@ def convert_string_to_number(value):
         return value
     if value.isdigit():
         return int(value)
-    num_list = map(lambda s: hashnum(s), re.findall(numbers + '+', value, re.IGNORECASE))
+    num_list = map(lambda s: NUMBERS[s], re.findall(numbers + '+', value.lower()))
     return sum(num_list)
 
 
