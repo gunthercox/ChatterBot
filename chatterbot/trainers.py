@@ -105,42 +105,48 @@ class ChatterBotCorpusTrainer(Trainer):
     """
 
     def train(self, *corpus_paths):
-        from chatterbot.corpus import load_corpus
+        from chatterbot.corpus import load_corpus, list_corpus_files
 
-        # Train the chat bot with each statement and response pair
+        data_file_paths = []
+
+        # Get the paths to each file the bot will be trained with
         for corpus_path in corpus_paths:
-            for corpus, categories, file_path in load_corpus(corpus_path):
-                for conversation_count, conversation in enumerate(corpus):
+            data_file_paths.extend(list_corpus_files(corpus_path))
 
-                    if self.show_training_progress:
-                        utils.print_progress_bar(
-                            'Training ' + str(os.path.basename(file_path)),
-                            conversation_count + 1,
-                            len(corpus)
-                        )
+        for corpus, categories, file_path in load_corpus(*data_file_paths):
 
-                    previous_statement_text = None
+            # Train the chat bot with each statement and response pair
+            for conversation_count, conversation in enumerate(corpus):
 
-                    for text in conversation:
+                if self.show_training_progress:
+                    utils.print_progress_bar(
+                        'Training ' + str(os.path.basename(file_path)),
+                        conversation_count + 1,
+                        len(corpus)
+                    )
 
-                        _statement = Statement(
-                            text=text,
-                            in_response_to=previous_statement_text,
-                            conversation='training'
-                        )
+                previous_statement_text = None
 
-                        _statement.add_tags(*categories)
+                for text in conversation:
 
-                        statement = self.get_preprocessed_statement(_statement)
+                    _statement = Statement(
+                        text=text,
+                        in_response_to=previous_statement_text,
+                        conversation='training'
+                    )
 
-                        previous_statement_text = statement.text
+                    _statement.add_tags(*categories)
 
-                        self.chatbot.storage.create(
-                            text=statement.text,
-                            in_response_to=statement.in_response_to,
-                            conversation=statement.conversation,
-                            tags=statement.tags
-                        )
+                    statement = self.get_preprocessed_statement(_statement)
+
+                    previous_statement_text = statement.text
+
+                    self.chatbot.storage.create(
+                        text=statement.text,
+                        in_response_to=statement.in_response_to,
+                        conversation=statement.conversation,
+                        tags=statement.tags
+                    )
 
 
 class TwitterTrainer(Trainer):
