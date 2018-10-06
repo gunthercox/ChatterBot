@@ -7,19 +7,20 @@ from chatterbot import corpus
 class CorpusLoadingTestCase(TestCase):
 
     def test_load_corpus_chinese(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.chinese')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.chinese')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_english(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.english')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.english')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_english_greetings(self):
-        corpus_data = list(
-            corpus.load_corpus('chatterbot.corpus.english.greetings')
-        )
+        data_files = corpus.list_corpus_files('chatterbot.corpus.english.greetings')
+        corpus_data = list(corpus.load_corpus(*data_files))
 
         self.assertEqual(len(corpus_data), 1)
 
@@ -30,9 +31,8 @@ class CorpusLoadingTestCase(TestCase):
         self.assertIn('chatterbot_corpus/data/english/greetings.yml', file_path)
 
     def test_load_corpus_english_categories(self):
-        corpus_data = list(
-            corpus.load_corpus('chatterbot.corpus.english.greetings')
-        )
+        data_files = corpus.list_corpus_files('chatterbot.corpus.english.greetings')
+        corpus_data = list(corpus.load_corpus(*data_files))
 
         self.assertEqual(len(corpus_data), 1)
 
@@ -41,52 +41,62 @@ class CorpusLoadingTestCase(TestCase):
             self.assertIn('greetings', categories)
 
     def test_load_corpus_french(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.french')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.french')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_german(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.german')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.german')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_hindi(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.hindi')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.hindi')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_indonesia(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.indonesia')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.indonesia')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_italian(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.italian')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.italian')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_marathi(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.marathi')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.marathi')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_portuguese(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.portuguese')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.portuguese')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_russian(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.russian')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.russian')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_spanish(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.spanish')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.spanish')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
     def test_load_corpus_telugu(self):
-        corpus_data = corpus.load_corpus('chatterbot.corpus.telugu')
+        data_files = corpus.list_corpus_files('chatterbot.corpus.telugu')
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
 
@@ -114,13 +124,15 @@ class CorpusUtilsTestCase(TestCase):
     def test_list_english_corpus_files(self):
         data_files = corpus.list_corpus_files('chatterbot.corpus.english')
 
-        self.assertIn('.yml', data_files[0])
+        for data_file in data_files:
+            self.assertIn('.yml', data_file)
 
     def test_load_corpus(self):
         """
         Test loading the entire corpus of languages.
         """
-        corpus_data = corpus.load_corpus('chatterbot.corpus')
+        corpus_files = corpus.list_corpus_files('chatterbot.corpus')
+        corpus_data = corpus.load_corpus(*corpus_files)
 
         self.assertTrue(len(list(corpus_data)))
 
@@ -140,7 +152,8 @@ class CorpusFilePathTestCase(TestCase):
             )
             test_corpus.write(yml_data)
 
-        corpus_data = list(corpus.load_corpus(file_path))
+        data_files = corpus.list_corpus_files(file_path)
+        corpus_data = list(corpus.load_corpus(*data_files))
 
         # Remove the test file
         if os.path.exists(file_path):
@@ -165,21 +178,21 @@ class CorpusFilePathTestCase(TestCase):
 
     def test_load_corpus_english_greetings(self):
         file_path = os.path.join(corpus.DATA_DIRECTORY, 'english', 'greetings.yml')
-
-        corpus_data = corpus.load_corpus(file_path)
+        data_files = corpus.list_corpus_files(file_path)
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertEqual(len(list(corpus_data)), 1)
 
     def test_load_corpus_english(self):
         file_path = os.path.join(corpus.DATA_DIRECTORY, 'english')
-
-        corpus_data = corpus.load_corpus(file_path)
+        data_files = corpus.list_corpus_files(file_path)
+        corpus_data = corpus.load_corpus(*data_files)
 
         self.assertGreater(len(list(corpus_data)), 1)
 
     def test_load_corpus_english_trailing_slash(self):
         file_path = os.path.join(corpus.DATA_DIRECTORY, 'english') + '/'
-
-        corpus_data = list(corpus.load_corpus(file_path))
+        data_files = corpus.list_corpus_files(file_path)
+        corpus_data = list(corpus.load_corpus(*data_files))
 
         self.assertGreater(len(list(corpus_data)), 1)
