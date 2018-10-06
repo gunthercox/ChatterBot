@@ -55,12 +55,10 @@ def list_corpus_files(dotted_path):
     return paths
 
 
-def load_corpus(dotted_path):
+def load_corpus(*data_file_paths):
     """
     Return the data contained within a specified corpus.
     """
-    data_file_paths = list_corpus_files(dotted_path)
-
     for file_path in data_file_paths:
         corpus = []
         corpus_data = read_corpus(file_path)
