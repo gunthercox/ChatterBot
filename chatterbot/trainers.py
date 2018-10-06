@@ -104,31 +104,17 @@ class ChatterBotCorpusTrainer(Trainer):
     ChatterBot dialog corpus.
     """
 
-    def __init__(self, chatbot, **kwargs):
-        super().__init__(chatbot, **kwargs)
-        from chatterbot.corpus import Corpus
-
-        self.corpus = Corpus()
-
     def train(self, *corpus_paths):
-
-        # Allow a list of corpora to be passed instead of arguments
-        if len(corpus_paths) == 1:
-            if isinstance(corpus_paths[0], list):
-                corpus_paths = corpus_paths[0]
+        from chatterbot.corpus import load_corpus
 
         # Train the chat bot with each statement and response pair
         for corpus_path in corpus_paths:
-
-            corpora = self.corpus.load_corpus(corpus_path)
-
-            corpus_files = self.corpus.list_corpus_files(corpus_path)
-            for corpus_count, corpus in enumerate(corpora):
+            for corpus, categories, file_path in load_corpus(corpus_path):
                 for conversation_count, conversation in enumerate(corpus):
 
                     if self.show_training_progress:
                         utils.print_progress_bar(
-                            str(os.path.basename(corpus_files[corpus_count])) + ' Training',
+                            'Training ' + str(os.path.basename(file_path)),
                             conversation_count + 1,
                             len(corpus)
                         )
@@ -143,7 +129,7 @@ class ChatterBotCorpusTrainer(Trainer):
                             conversation='training'
                         )
 
-                        _statement.add_tags(*corpus.categories)
+                        _statement.add_tags(*categories)
 
                         statement = self.get_preprocessed_statement(_statement)
 
