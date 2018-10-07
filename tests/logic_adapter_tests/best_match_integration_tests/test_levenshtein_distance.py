@@ -33,7 +33,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
             Statement(text='Yuck, black licorice jelly beans.', in_response_to='What is the meaning of life?'),
             Statement(text='I hear you are going on a quest?', in_response_to='Who do you love?'),
         ]
-        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.get_response_statements = MagicMock(return_value=possible_choices)
 
         statement = Statement(text='What is your quest?')
 
@@ -45,7 +45,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         possible_choices = [
             Statement(text='What is your quest?', in_response_to='What is your quest?')
         ]
-        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.get_response_statements = MagicMock(return_value=possible_choices)
 
         statement = Statement(text='What is your quest?')
         match = self.adapter.get(statement)
@@ -56,7 +56,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         possible_choices = [
             Statement(text='xxyy', in_response_to='xxyy')
         ]
-        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.get_response_statements = MagicMock(return_value=possible_choices)
 
         statement = Statement(text='wwxx')
         match = self.adapter.get(statement)
@@ -67,7 +67,7 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         possible_choices = [
             Statement(text='xxx', in_response_to='xxx')
         ]
-        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
+        self.adapter.chatbot.storage.get_response_statements = MagicMock(return_value=possible_choices)
 
         statement = Statement(text='yyy')
         match = self.adapter.get(statement)
