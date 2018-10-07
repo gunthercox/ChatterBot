@@ -1,4 +1,3 @@
-from unittest.mock import MagicMock
 from chatterbot.logic import LowConfidenceAdapter
 from chatterbot.conversation import Statement
 from tests.base_case import ChatBotTestCase
@@ -13,33 +12,30 @@ class LowConfidenceAdapterTestCase(ChatBotTestCase):
         super().setUp()
         self.adapter = LowConfidenceAdapter(self.chatbot)
 
-        possible_choices = [
-            Statement(
-                text='Who do you love?',
-                in_response_to='I hear you are going on a quest?'
-            ),
-            Statement(
-                text='What is the meaning of life?',
-                in_response_to='Yuck, black licorice jelly beans.'
-            ),
-            Statement(
-                text='I am Iron Man.',
-                in_response_to='What... is your quest?'
-            ),
-            Statement(
-                text='What... is your quest?',
-                in_response_to='I am Iron Man.'
-            ),
-            Statement(
-                text='Yuck, black licorice jelly beans.',
-                in_response_to='What is the meaning of life?'
-            ),
-            Statement(
-                text='I hear you are going on a quest?',
-                in_response_to='Who do you love?'
-            ),
-        ]
-        self.adapter.chatbot.storage.filter = MagicMock(return_value=possible_choices)
+        self.chatbot.storage.create(
+            text='Who do you love?',
+            in_response_to='I hear you are going on a quest?'
+        )
+        self.chatbot.storage.create(
+            text='What is the meaning of life?',
+            in_response_to='Yuck, black licorice jelly beans.'
+        )
+        self.chatbot.storage.create(
+            text='I am Iron Man.',
+            in_response_to='What... is your quest?'
+        )
+        self.chatbot.storage.create(
+            text='What... is your quest?',
+            in_response_to='I am Iron Man.'
+        )
+        self.chatbot.storage.create(
+            text='Yuck, black licorice jelly beans.',
+            in_response_to='What is the meaning of life?'
+        )
+        self.chatbot.storage.create(
+            text='I hear you are going on a quest?',
+            in_response_to='Who do you love?'
+        )
 
     def test_high_confidence(self):
         """
