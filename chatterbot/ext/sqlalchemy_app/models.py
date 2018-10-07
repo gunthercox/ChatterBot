@@ -57,7 +57,9 @@ class Statement(Base, StatementMixin):
     )
 
     conversation = Column(
-        String(constants.CONVERSATION_LABEL_MAX_LENGTH)
+        String(constants.CONVERSATION_LABEL_MAX_LENGTH),
+        nullable=False,
+        server_default=''
     )
 
     created_at = Column(
@@ -77,7 +79,9 @@ class Statement(Base, StatementMixin):
     )
 
     persona = Column(
-        String(constants.PERSONA_MAX_LENGTH)
+        String(constants.PERSONA_MAX_LENGTH),
+        nullable=False,
+        server_default=''
     )
 
     def get_tags(self):
