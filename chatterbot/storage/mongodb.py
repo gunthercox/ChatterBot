@@ -1,3 +1,4 @@
+import re
 from chatterbot.storage import StorageAdapter
 
 
@@ -227,6 +228,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         _response_query = {
             'in_response_to': {
                 '$ne': None
+            },
+            'persona': {
+                '$not': re.compile('^bot:*')
             }
         }
 

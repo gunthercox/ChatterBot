@@ -136,8 +136,9 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Statement = self.get_model('statement')
 
-        statements_with_responses = Statement.objects.filter(
-            in_response_to__isnull=False
+        statements_with_responses = Statement.objects.exclude(
+            in_response_to__isnull=True,
+            persona__startswith='bot:'
         ).values_list('in_response_to', flat=True)
 
         return Statement.objects.filter(text__in=statements_with_responses)
