@@ -263,6 +263,27 @@ class SQLStorageAdapter(StorageAdapter):
         session.close()
         return statement
 
+    def get_response_statements(self):
+        """
+        Return only statements that are in response to another statement.
+        A statement must exist which lists the closest matching statement in the
+        in_response_to field. Otherwise, the logic adapter may find a closest
+        matching statement that does not have a known response.
+        """
+        statement_list = self.filter()
+        response_statements = set()
+        statements_for_response_statements = []
+
+        for statement in statement_list:
+            if statement.in_response_to is not None:
+                response_statements.add(statement.in_response_to)
+
+        for statement in statement_list:
+            if statement.text in response_statements:
+                statements_for_response_statements.append(statement)
+
+        return statements_for_response_statements
+
     def drop(self):
         """
         Drop the database attached to a given adapter.

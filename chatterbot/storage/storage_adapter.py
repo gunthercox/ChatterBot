@@ -111,23 +111,10 @@ class StorageAdapter(object):
         A statement must exist which lists the closest matching statement in the
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
-
-        This method may be overridden by a child class to provide more a
-        efficient method to get these results.
         """
-        statement_list = self.filter()
-        response_statements = set()
-        statements_for_response_statements = []
-
-        for statement in statement_list:
-            if statement.in_response_to is not None:
-                response_statements.add(statement.in_response_to)
-
-        for statement in statement_list:
-            if statement.text in response_statements:
-                statements_for_response_statements.append(statement)
-
-        return statements_for_response_statements
+        raise self.AdapterMethodNotImplementedError(
+            'The `get_response_statements` method is not implemented by this adapter.'
+        )
 
     class EmptyDatabaseException(Exception):
 
