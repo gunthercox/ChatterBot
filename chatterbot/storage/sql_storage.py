@@ -275,8 +275,9 @@ class SQLStorageAdapter(StorageAdapter):
         statements_for_response_statements = []
 
         for statement in statement_list:
-            if statement.in_response_to is not None:
-                response_statements.add(statement.in_response_to)
+            if not statement.persona.startswith('bot:'):
+                if statement.in_response_to is not None:
+                    response_statements.add(statement.in_response_to)
 
         for statement in statement_list:
             if statement.text in response_statements:
