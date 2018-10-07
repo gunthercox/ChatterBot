@@ -31,7 +31,7 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
             Statement(text='This is a beautiful swamp.', in_response_to='This is a beautiful swamp.'),
             Statement(text='It smells like a swamp.', in_response_to='It smells like a swamp.')
         ]
-        self.adapter.chatbot.storage.filter = MagicMock(
+        self.adapter.chatbot.storage.get_response_statements = MagicMock(
             return_value=possible_choices
         )
 

@@ -270,19 +270,29 @@ class SQLStorageAdapter(StorageAdapter):
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
-        statement_list = self.filter()
-        response_statements = set()
+        Statement = self.get_model('statement')
+
+        session = self.Session()
+
+        statement_list = session.query(Statement).filter(
+            Statement.in_response_to.isnot(None),
+            ~Statement.persona.startswith('bot:')
+        )
+
+        response_statements = set(
+            statement.in_response_to for statement in statement_list
+        )
+
         statements_for_response_statements = []
 
-        for statement in statement_list:
-            if not statement.persona.startswith('bot:'):
-                if statement.in_response_to is not None:
-                    response_statements.add(statement.in_response_to)
+        for statement in session.query(Statement).filter(
+            Statement.text.in_(response_statements)
+        ):
+            statements_for_response_statements.append(
+                self.model_to_object(statement)
+            )
 
-        for statement in statement_list:
-            if statement.text in response_statements:
-                statements_for_response_statements.append(statement)
-
+        session.close()
         return statements_for_response_statements
 
     def drop(self):
