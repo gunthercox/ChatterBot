@@ -375,7 +375,7 @@ class UbuntuCorpusTrainer(Trainer):
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
 
-        # Extract if the directory doesn not already exists
+        # Extract if the directory does not already exist
         if not self.is_extracted(self.extracted_data_directory):
             self.extract(corpus_download_path)
 

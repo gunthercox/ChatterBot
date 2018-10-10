@@ -142,7 +142,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         self.adapter.create(text="A what?", in_response_to="This is a phone.")
         self.adapter.create(text="A phone.", in_response_to="A what?")
 
-        responses = self.adapter.get_response_statements()
+        responses = list(self.adapter.get_response_statements())
 
         self.assertIn("This is a phone.", responses)
         self.assertIn("A what?", responses)
@@ -158,7 +158,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         self.adapter.create(text='That is awesome to hear.', in_response_to='I am doing great.', persona='bot:Test')
         self.adapter.create(text='Thank you.', in_response_to='That is awesome to hear.')
 
-        responses = self.adapter.get_response_statements()
+        responses = list(self.adapter.get_response_statements())
 
         self.assertIn('Hello', responses)
         self.assertIn('I am doing great.', responses)

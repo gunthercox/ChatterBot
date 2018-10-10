@@ -299,37 +299,44 @@ class SQLStorageAdapter(StorageAdapter):
         session.close()
         return statement
 
-    def get_response_statements(self):
+    def get_response_statements(self, page_size=1000):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
+        from sqlalchemy import func
+
         Statement = self.get_model('statement')
 
         session = self.Session()
 
-        statement_list = session.query(Statement).filter(
-            Statement.in_response_to.isnot(None)
-        )
+        total_statements = session.query(func.count(Statement.id)).scalar()
 
-        response_statements = set(
-            statement.in_response_to for statement in statement_list
-        )
+        start = 0
+        stop = min(page_size, total_statements)
 
-        statements_for_response_statements = []
+        while stop <= total_statements:
 
-        for statement in session.query(Statement).filter(
-            Statement.text.in_(response_statements),
-            ~Statement.persona.startswith('bot:')
-        ):
-            statements_for_response_statements.append(
-                self.model_to_object(statement)
+            statement_set = session.query(Statement).filter(
+                Statement.in_response_to.isnot(None)
+            ).slice(start, stop)
+
+            start += page_size
+            stop += page_size
+
+            response_statements = set(
+                statement.in_response_to for statement in statement_set
             )
 
+            for statement in session.query(Statement).filter(
+                Statement.text.in_(response_statements),
+                ~Statement.persona.startswith('bot:')
+            ):
+                yield self.model_to_object(statement)
+
         session.close()
-        return statements_for_response_statements
 
     def drop(self):
         """
