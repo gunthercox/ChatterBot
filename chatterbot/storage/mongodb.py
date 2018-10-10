@@ -228,40 +228,52 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         self.statements.delete_one({'text': statement_text})
 
-    def get_response_statements(self):
+    def get_response_statements(self, page_size=1000):
         """
         Return only statements that are in response to another statement.
         A statement must exist which lists the closest matching statement in the
         in_response_to field. Otherwise, the logic adapter may find a closest
         matching statement that does not have a known response.
         """
+        total_statements = self.count()
+        start = 0
+
         _response_query = {
             'in_response_to': {
                 '$ne': None
             }
         }
 
-        response_query = self.statements.find(_response_query)
+        while start <= total_statements:
 
-        responses = set(
-            statement['in_response_to'] for statement in response_query
-        )
+            response_query = self.statements.find(
+                _response_query
+            ).skip(
+                start
+            ).limit(
+                page_size
+            )
 
-        _statement_query = {
-            'text': {
-                '$in': list(responses)
-            },
-            'persona': {
-                '$not': re.compile('^bot:*')
+            start += page_size
+
+            responses = set(
+                statement['in_response_to'] for statement in response_query
+            )
+
+            _statement_query = {
+                'text': {
+                    '$in': list(responses)
+                },
+                'persona': {
+                    '$not': re.compile('^bot:*')
+                }
             }
-        }
 
-        _statement_query.update(self.base_query.value())
-        statement_query = self.statements.find(_statement_query)
-        statement_objects = []
-        for statement in list(statement_query):
-            statement_objects.append(self.mongo_to_object(statement))
-        return statement_objects
+            _statement_query.update(self.base_query.value())
+            statement_query = self.statements.find(_statement_query)
+
+            for statement in list(statement_query):
+                yield self.mongo_to_object(statement)
 
     def drop(self):
         """

@@ -30,6 +30,21 @@ class LogicAdapter(Adapter):
             if isinstance(import_path, str):
                 kwargs['response_selection_method'] = import_module(import_path)
 
+        '''
+        The maximum amount of similarity between two statement that is required
+        before the search process is halted. The search for a matching statement
+        will continue until a statement with a greater than or equal similarity
+        is found or the search set is exhausted.
+        '''
+        self.maximum_similarity_threshold = kwargs.get(
+            'maximum_similarity_threshold', 0.99
+        )
+
+        # The maximum number of records to load into memory at a time when searching
+        self.search_page_size = kwargs.get(
+            'search_page_size', 1000
+        )
+
         # By default, compare statements using Levenshtein distance
         self.compare_statements = kwargs.get(
             'statement_comparison_function',
@@ -89,8 +104,3 @@ class LogicAdapter(Adapter):
         This is typically used for logging and debugging.
         """
         return str(self.__class__.__name__)
-
-    class EmptyDatasetException(Exception):
-
-        def __init__(self, message='An empty set was received when at least one statement was expected.'):
-            super().__init__(message)
