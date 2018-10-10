@@ -275,8 +275,7 @@ class SQLStorageAdapter(StorageAdapter):
         session = self.Session()
 
         statement_list = session.query(Statement).filter(
-            Statement.in_response_to.isnot(None),
-            ~Statement.persona.startswith('bot:')
+            Statement.in_response_to.isnot(None)
         )
 
         response_statements = set(
@@ -286,7 +285,8 @@ class SQLStorageAdapter(StorageAdapter):
         statements_for_response_statements = []
 
         for statement in session.query(Statement).filter(
-            Statement.text.in_(response_statements)
+            Statement.text.in_(response_statements),
+            ~Statement.persona.startswith('bot:')
         ):
             statements_for_response_statements.append(
                 self.model_to_object(statement)
