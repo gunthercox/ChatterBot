@@ -147,7 +147,7 @@ def get_greatest_confidence(statement, options):
     return max(values)
 
 
-def get_response_time(chatbot):
+def get_response_time(chatbot, statement='Hello'):
     """
     Returns the amount of time taken for a given
     chat bot to return a response.
@@ -162,7 +162,7 @@ def get_response_time(chatbot):
 
     start_time = time.time()
 
-    chatbot.get_response('Hello')
+    chatbot.get_response(statement)
 
     return time.time() - start_time
 
