@@ -125,10 +125,12 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
         s3 = self.adapter.create(text="A what?", in_response_to=s2.text)
         self.adapter.create(text="A phone.", in_response_to=s3.text)
 
-        responses = self.adapter.get_response_statements()
+        responses = [
+            response.text for response in list(self.adapter.get_response_statements())
+        ]
 
-        self.assertTrue(responses.filter(text="This is a phone.").exists())
-        self.assertTrue(responses.filter(text="A what?").exists())
+        self.assertIn("This is a phone.", responses)
+        self.assertIn("A what?", responses)
         self.assertEqual(len(responses), 2)
 
     def test_get_response_statements_bot_responses_filtered_out(self):
@@ -141,10 +143,12 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
         self.adapter.create(text='That is awesome to hear.', in_response_to='I am doing great.', persona='bot:Test')
         self.adapter.create(text='Thank you.', in_response_to='That is awesome to hear.')
 
-        responses = self.adapter.get_response_statements()
+        responses = [
+            response.text for response in list(self.adapter.get_response_statements())
+        ]
 
-        self.assertTrue(responses.filter(text='Hello').exists())
-        self.assertTrue(responses.filter(text='I am doing great.').exists())
+        self.assertIn('Hello', responses)
+        self.assertIn('I am doing great.', responses)
         self.assertEqual(len(responses), 2)
 
 

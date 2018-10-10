@@ -12,20 +12,9 @@ class BestMatch(LogicAdapter):
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
-        statement_list = self.chatbot.storage.get_response_statements()
-
-        if not statement_list:
-            if self.chatbot.storage.count():
-                # Use a randomly picked statement
-                self.chatbot.logger.info(
-                    'No statements have known responses. ' +
-                    'Choosing a random response to return.'
-                )
-                random_response = self.chatbot.storage.get_random()
-                random_response.confidence = 0
-                return random_response
-            else:
-                raise self.EmptyDatasetException()
+        statement_list = self.chatbot.storage.get_response_statements(
+            self.search_page_size
+        )
 
         closest_match = input_statement
         closest_match.confidence = 0
@@ -37,6 +26,10 @@ class BestMatch(LogicAdapter):
             if confidence > closest_match.confidence:
                 statement.confidence = confidence
                 closest_match = statement
+
+            # Stop searching if a match that is close enough is found
+            if closest_match.confidence >= self.maximum_similarity_threshold:
+                break
 
         return closest_match
 
