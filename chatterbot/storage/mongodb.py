@@ -228,24 +228,21 @@ class MongoDatabaseAdapter(StorageAdapter):
         _response_query = {
             'in_response_to': {
                 '$ne': None
-            },
-            'persona': {
-                '$not': re.compile('^bot:*')
             }
         }
 
         response_query = self.statements.find(_response_query)
 
-        responses = []
-        for r in response_query:
-            try:
-                responses.append(r['in_response_to'])
-            except TypeError:
-                pass
+        responses = set(
+            statement['in_response_to'] for statement in response_query
+        )
 
         _statement_query = {
             'text': {
-                '$in': responses
+                '$in': list(responses)
+            },
+            'persona': {
+                '$not': re.compile('^bot:*')
             }
         }
 
