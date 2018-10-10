@@ -4,10 +4,12 @@ various chat bot configurations to help prevent
 performance based regressions when changes are made.
 """
 
+from warnings import warn
 from random import choice
 from tests.base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot import ChatBot
-from chatterbot.trainers import ListTrainer
+from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer, UbuntuCorpusTrainer
+from chatterbot.logic import BestMatch
 from chatterbot import utils
 
 
@@ -27,36 +29,53 @@ STATEMENT_LIST = [
     ) for _ in range(0, 10)
 ]
 
+def get_list_trainer(chatbot):
+    return ListTrainer(
+        chatbot,
+        show_training_progress=False
+    )
+
+
+def get_chatterbot_corpus_trainer(chatbot):
+    return ChatterBotCorpusTrainer(
+        chatbot,
+        show_training_progress=False
+    )
+
+
+def get_ubuntu_corpus_trainer(chatbot):
+    return UbuntuCorpusTrainer(
+        chatbot,
+        show_training_progress=False
+    )
+
 
 class BenchmarkingMixin(object):
 
-    def assert_response_duration(self, maximum_duration, test_kwargs):
+    def assert_response_duration_is_less_than(self, maximum_duration, strict=False):
         """
         Assert that the response time did not exceed the maximum allowed amount.
+
+        :param strict: If set to true, test will fail if the maximum duration is exceeded.
         """
         from sys import stdout
 
-        chatbot = ChatBot('Benchmark', **test_kwargs)
-
-        trainer = ListTrainer(
-            chatbot,
-            show_training_progress=False
-        )
-
-        trainer.train(STATEMENT_LIST)
-
-        duration = utils.get_response_time(chatbot)
+        duration = utils.get_response_time(self.chatbot)
 
         stdout.write('\nBENCHMARK: Duration was %f seconds\n' % duration)
 
-        if duration > maximum_duration:
-            raise AssertionError(
-                '{duration} was greater than the maximum allowed '
-                'response time of {maximum_duration}'.format(
-                    duration=duration,
-                    maximum_duration=maximum_duration
-                )
+        failure_message = (
+            '{duration} was greater than the maximum allowed '
+            'response time of {maximum_duration}'.format(
+                duration=duration,
+                maximum_duration=maximum_duration
             )
+        )
+
+        if strict and duration > maximum_duration:
+            raise AssertionError(failure_message)
+        elif duration > maximum_duration:
+            warn(failure_message)
 
 
 class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
@@ -73,39 +92,44 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
         """
         Test the levenshtein distance comparison algorithm.
         """
-        kwargs = self.get_kwargs()
-        kwargs.update({
-            'logic_adapters': [
-                {
-                    'import_path': 'chatterbot.logic.BestMatch',
-                    'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance',
-                    'response_selection_method': 'chatterbot.response_selection.get_first_response'
-                }
-            ]
-        })
+        self.chatbot.logic_adapters[0] = BestMatch(
+            self.chatbot,
+            statement_comparison_function='chatterbot.comparisons.levenshtein_distance',
+            response_selection_method='chatterbot.response_selection.get_first_response'
+        )
 
-        self.assert_response_duration(1, kwargs)
+        trainer = get_list_trainer(self.chatbot)
+        trainer.train(STATEMENT_LIST)
+
+        self.assert_response_duration_is_less_than(1)
 
     def test_synset_distance_comparisons(self):
         """
         Test the synset distance comparison algorithm.
         """
-        kwargs = self.get_kwargs()
-        kwargs.update({
-            'logic_adapters': [
-                {
-                    'import_path': 'chatterbot.logic.BestMatch',
-                    'statement_comparison_function': 'chatterbot.comparisons.synset_distance',
-                    'response_selection_method': 'chatterbot.response_selection.get_first_response'
-                }
-            ]
-        })
+        self.chatbot.logic_adapters[0] = BestMatch(
+            self.chatbot,
+            statement_comparison_function='chatterbot.comparisons.synset_distance',
+            response_selection_method='chatterbot.response_selection.get_first_response'
+        )
 
-        self.assert_response_duration(3.5, kwargs)
+        trainer = get_list_trainer(self.chatbot)
+        trainer.train(STATEMENT_LIST)
 
-    def test_english_corpus_training(self):
+        self.assert_response_duration_is_less_than(3)
+
+    def test_get_response_after_chatterbot_corpus_training(self):
         """
-        Test the amount of time it takes to train with the English corpus.
+        Test response time after training with the ChatterBot corpus.
+        """
+        trainer = get_chatterbot_corpus_trainer(self.chatbot)
+        trainer.train('chatterbot.corpus')
+
+        self.assert_response_duration_is_less_than(3)
+
+    def test_get_response_after_ubuntu_corpus_training(self):
+        """
+        Test response time after training with the Ubuntu corpus.
         """
         self.skipTest('TODO: This test needs to be written.')
 
@@ -124,38 +148,43 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
         """
         Test the levenshtein distance comparison algorithm.
         """
-        kwargs = self.get_kwargs()
-        kwargs.update({
-            'logic_adapters': [
-                {
-                    'import_path': 'chatterbot.logic.BestMatch',
-                    'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance',
-                    'response_selection_method': 'chatterbot.response_selection.get_first_response'
-                }
-            ]
-        })
+        self.chatbot.logic_adapters[0] = BestMatch(
+            self.chatbot,
+            statement_comparison_function='chatterbot.comparisons.levenshtein_distance',
+            response_selection_method='chatterbot.response_selection.get_first_response'
+        )
 
-        self.assert_response_duration(1, kwargs)
+        trainer = get_list_trainer(self.chatbot)
+        trainer.train(STATEMENT_LIST)
+
+        self.assert_response_duration_is_less_than(1)
 
     def test_synset_distance_comparisons(self):
         """
         Test the synset distance comparison algorithm.
         """
-        kwargs = self.get_kwargs()
-        kwargs.update({
-            'logic_adapters': [
-                {
-                    'import_path': 'chatterbot.logic.BestMatch',
-                    'statement_comparison_function': 'chatterbot.comparisons.synset_distance',
-                    'response_selection_method': 'chatterbot.response_selection.get_first_response'
-                }
-            ]
-        })
+        self.chatbot.logic_adapters[0] = BestMatch(
+            self.chatbot,
+            statement_comparison_function='chatterbot.comparisons.synset_distance',
+            response_selection_method='chatterbot.response_selection.get_first_response'
+        )
 
-        self.assert_response_duration(3.5, kwargs)
+        trainer = get_list_trainer(self.chatbot)
+        trainer.train(STATEMENT_LIST)
 
-    def test_english_corpus_training(self):
+        self.assert_response_duration_is_less_than(3)
+
+    def test_get_response_after_chatterbot_corpus_training(self):
         """
-        Test the amount of time it takes to train with the English corpus.
+        Test response time after training with the ChatterBot corpus.
+        """
+        trainer = get_chatterbot_corpus_trainer(self.chatbot)
+        trainer.train('chatterbot.corpus')
+
+        self.assert_response_duration_is_less_than(3)
+
+    def test_get_response_after_ubuntu_corpus_training(self):
+        """
+        Test response time after training with the Ubuntu corpus.
         """
         self.skipTest('TODO: This test needs to be written.')
