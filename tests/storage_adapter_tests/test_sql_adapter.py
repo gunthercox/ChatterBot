@@ -375,6 +375,24 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
         self.assertIn('first', results[0].get_tags())
         self.assertIn('second', results[1].get_tags())
 
+    def test_create_many_duplicate_tags(self):
+        """
+        The storage adapter should not create a statement with tags
+        that are duplicates.
+        """
+        self.adapter.create_many([
+            {
+                'text': 'testing',
+                'tags': ['ab', 'ab']
+            }
+        ])
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(len(results[0].get_tags()), 1)
+        self.assertEqual(results[0].get_tags(), ['ab'])
+
 
 class StorageAdapterUpdateTests(SQLStorageAdapterTestCase):
     """
