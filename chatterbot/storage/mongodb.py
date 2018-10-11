@@ -160,6 +160,12 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return Statement(**kwargs)
 
+    def create_many(self, statements):
+        """
+        Creates multiple statement entries.
+        """
+        self.statements.insert_many(statements)
+
     def update(self, statement):
         data = statement.serialize()
         data.pop('id', None)
