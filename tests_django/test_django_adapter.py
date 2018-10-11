@@ -320,6 +320,41 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
         self.assertEqual(len(results[0].get_tags()), 1)
         self.assertEqual(results[0].get_tags(), ['ab'])
 
+    def test_create_many_text(self):
+        self.adapter.create_many([
+            {
+                'text': 'A'
+            },
+            {
+                'text': 'B'
+            }
+        ])
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0].text, 'A')
+        self.assertEqual(results[1].text, 'B')
+
+    def test_create_many_tags(self):
+        self.adapter.create_many([
+            {
+                'text': 'A',
+                'tags': ['first', 'letter']
+            },
+            {
+                'text': 'B',
+                'tags': ['second', 'letter']
+            }
+        ])
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 2)
+        self.assertIn('letter', results[0].get_tags())
+        self.assertIn('letter', results[1].get_tags())
+        self.assertIn('first', results[0].get_tags())
+        self.assertIn('second', results[1].get_tags())
+
 
 class StorageAdapterUpdateTests(DjangoAdapterTestCase):
     """

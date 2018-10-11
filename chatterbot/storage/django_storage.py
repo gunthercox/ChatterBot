@@ -67,12 +67,42 @@ class DjangoStorageAdapter(StorageAdapter):
 
         statement.save()
 
+        tags_to_add = []
+
         for _tag in tags:
             tag, _ = Tag.objects.get_or_create(name=_tag)
+            tags_to_add.append(tag)
 
-            statement.tags.add(tag)
+        statement.tags.add(*tags_to_add)
 
         return statement
+
+    def create_many(self, statements):
+        """
+        Creates multiple statement entries.
+        """
+        Statement = self.get_model('statement')
+        Tag = self.get_model('tag')
+
+        tag_cache = {}
+
+        for statement_data in statements:
+
+            tags = set(statement_data.pop('tags', []))
+
+            statement = Statement.objects.create(**statement_data)
+
+            tags_to_add = []
+
+            for tag_name in tags:
+                if tag_name in tag_cache:
+                    tag = tag_cache[tag_name]
+                else:
+                    tag, _ = Tag.objects.get_or_create(name=tag_name)
+                    tag_cache[tag_name] = tag
+                tags_to_add.append(tag)
+
+            statement.tags.add(*tags_to_add)
 
     def update(self, statement):
         """
