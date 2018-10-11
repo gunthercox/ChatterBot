@@ -80,6 +80,14 @@ class StorageAdapter(object):
             'The `create` method is not implemented by this adapter.'
         )
 
+    def create_many(self, statements):
+        """
+        Creates multiple statement entries.
+        """
+        raise self.AdapterMethodNotImplementedError(
+            'The `create_many` method is not implemented by this adapter.'
+        )
+
     def update(self, statement):
         """
         Modifies an entry in the database.

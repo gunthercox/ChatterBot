@@ -30,6 +30,10 @@ class StorageAdapterTestCase(TestCase):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
             self.adapter.create()
 
+    def test_create_many(self):
+        with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
+            self.adapter.create_many([])
+
     def test_update(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
             self.adapter.update('')

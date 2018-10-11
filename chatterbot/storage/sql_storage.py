@@ -196,6 +196,42 @@ class SQLStorageAdapter(StorageAdapter):
 
         return statement_object
 
+    def create_many(self, statements):
+        """
+        Creates multiple statement entries.
+        """
+        Statement = self.get_model('statement')
+        Tag = self.get_model('tag')
+
+        session = self.Session()
+
+        create_statements = []
+        create_tags = {}
+
+        for statement_data in statements:
+
+            tags = set(statement_data.pop('tags', []))
+
+            statement = Statement(**statement_data)
+
+            for tag_name in tags:
+                if tag_name in create_tags:
+                    tag = create_tags[tag_name]
+                else:
+                    tag = session.query(Tag).filter_by(name=tag_name).first()
+
+                    if not tag:
+                        # Create the tag if it does not exist
+                        tag = Tag(name=tag_name)
+
+                    create_tags[tag_name] = tag
+
+                statement.tags.append(tag)
+            create_statements.append(statement)
+
+        session.add_all(create_statements)
+        session.commit()
+
     def update(self, statement):
         """
         Modifies an entry in the database.
