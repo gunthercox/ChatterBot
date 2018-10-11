@@ -164,6 +164,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Creates multiple statement entries.
         """
+        for statement in statements:
+            if 'tags' in statement:
+                statement['tags'] = list(set(statement['tags']))
+
         self.statements.insert_many(statements)
 
     def update(self, statement):
