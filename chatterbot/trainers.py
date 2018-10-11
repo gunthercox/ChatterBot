@@ -73,6 +73,8 @@ class ListTrainer(Trainer):
         """
         previous_statement_text = None
 
+        statements_to_create = []
+
         for conversation_count, text in enumerate(conversation):
             if self.show_training_progress:
                 utils.print_progress_bar(
@@ -90,12 +92,14 @@ class ListTrainer(Trainer):
 
             previous_statement_text = statement.text
 
-            self.chatbot.storage.create(
-                text=statement.text,
-                in_response_to=statement.in_response_to,
-                conversation=statement.conversation,
-                tags=statement.tags
-            )
+            statements_to_create.append({
+                'text': statement.text,
+                'in_response_to': statement.in_response_to,
+                'conversation': statement.conversation,
+                'tags': statement.tags
+            })
+
+        self.chatbot.storage.create_many(statements_to_create)
 
 
 class ChatterBotCorpusTrainer(Trainer):
@@ -114,6 +118,8 @@ class ChatterBotCorpusTrainer(Trainer):
             data_file_paths.extend(list_corpus_files(corpus_path))
 
         for corpus, categories, file_path in load_corpus(*data_file_paths):
+
+            statements_to_create = []
 
             # Train the chat bot with each statement and response pair
             for conversation_count, conversation in enumerate(corpus):
@@ -141,12 +147,14 @@ class ChatterBotCorpusTrainer(Trainer):
 
                     previous_statement_text = statement.text
 
-                    self.chatbot.storage.create(
-                        text=statement.text,
-                        in_response_to=statement.in_response_to,
-                        conversation=statement.conversation,
-                        tags=statement.tags
-                    )
+                    statements_to_create.append({
+                        'text': statement.text,
+                        'in_response_to': statement.in_response_to,
+                        'conversation': statement.conversation,
+                        'tags': statement.tags
+                    })
+
+            self.chatbot.storage.create_many(statements_to_create)
 
 
 class TwitterTrainer(Trainer):
@@ -379,6 +387,8 @@ class UbuntuCorpusTrainer(Trainer):
         for file in glob.iglob(extracted_corpus_path):
             self.chatbot.logger.info('Training from: {}'.format(file))
 
+            statements_to_create = []
+
             with open(file, 'r', encoding='utf-8') as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
@@ -404,9 +414,11 @@ class UbuntuCorpusTrainer(Trainer):
 
                         previous_statement_text = statement.text
 
-                        self.chatbot.storage.create(
-                            text=statement.text,
-                            in_response_to=statement.in_response_to,
-                            conversation=statement.conversation,
-                            tags=statement.tags
-                        )
+                        statements_to_create.append({
+                            'text': statement.text,
+                            'in_response_to': statement.in_response_to,
+                            'conversation': statement.conversation,
+                            'tags': statement.tags
+                        })
+
+            self.chatbot.storage.create_many(statements_to_create)
