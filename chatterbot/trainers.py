@@ -385,11 +385,13 @@ class UbuntuCorpusTrainer(Trainer):
             '**', '**', '*.tsv'
         )
 
+        BATCH_SIZE = 1000
+
+        statements_to_create = []
+        batch_count = 0
+        statement_count = 0
+
         for tsv_file in glob.iglob(extracted_corpus_path):
-            print('Training from: {}'.format(tsv_file))
-
-            statements_to_create = []
-
             with open(tsv_file, 'r', encoding='utf-8') as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
@@ -420,5 +422,18 @@ class UbuntuCorpusTrainer(Trainer):
                             'conversation': statement.conversation,
                             'tags': statement.tags
                         })
+                        statement_count += 1
 
-            self.chatbot.storage.create_many(statements_to_create)
+            if statement_count >= BATCH_SIZE:
+                batch_count += 1
+
+                print('Training with batch {} containing {} statements.'.format(
+                    batch_count, statement_count
+                ))
+
+                self.chatbot.storage.create_many(statements_to_create)
+                statements_to_create = []
+                statement_count = 0
+
+        # Insert the remaining statements
+        self.chatbot.storage.create_many(statements_to_create)
