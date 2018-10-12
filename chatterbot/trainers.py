@@ -265,6 +265,7 @@ class UbuntuCorpusTrainer(Trainer):
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
+        home_directory = os.path.expanduser('~')
 
         self.data_download_url = kwargs.get(
             'ubuntu_corpus_data_download_url',
@@ -273,7 +274,7 @@ class UbuntuCorpusTrainer(Trainer):
 
         self.data_directory = kwargs.get(
             'ubuntu_corpus_data_directory',
-            './data/'
+            os.path.join(home_directory, 'ubuntu_data')
         )
 
         self.extracted_data_directory = os.path.join(
@@ -369,8 +370,8 @@ class UbuntuCorpusTrainer(Trainer):
         return True
 
     def train(self):
-        import glob
         import csv
+        import glob
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
@@ -384,12 +385,12 @@ class UbuntuCorpusTrainer(Trainer):
             '**', '**', '*.tsv'
         )
 
-        for file in glob.iglob(extracted_corpus_path):
-            self.chatbot.logger.info('Training from: {}'.format(file))
+        for tsv_file in glob.iglob(extracted_corpus_path):
+            print('Training from: {}'.format(tsv_file))
 
             statements_to_create = []
 
-            with open(file, 'r', encoding='utf-8') as tsv:
+            with open(tsv_file, 'r', encoding='utf-8') as tsv:
                 reader = csv.reader(tsv, delimiter='\t')
 
                 previous_statement_text = None
@@ -404,7 +405,6 @@ class UbuntuCorpusTrainer(Trainer):
                                 conversation='training'
                             )
                         )
-                        print(text, len(row))
 
                         statement.add_tags('datetime:' + row[0])
                         statement.add_tags('speaker:' + row[1])

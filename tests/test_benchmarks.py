@@ -4,10 +4,10 @@ various chat bot configurations to help prevent
 performance based regressions when changes are made.
 """
 
+from unittest import skip
 from warnings import warn
 from random import choice
 from tests.base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
-from chatterbot import ChatBot
 from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer, UbuntuCorpusTrainer
 from chatterbot.logic import BestMatch
 from chatterbot import utils
@@ -28,6 +28,7 @@ STATEMENT_LIST = [
         *[choice(WORDBANK) for __ in range(0, 10)]
     ) for _ in range(0, 10)
 ]
+
 
 def get_list_trainer(chatbot):
     return ListTrainer(
@@ -127,11 +128,15 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
 
         self.assert_response_duration_is_less_than(3)
 
+    @skip('Test marked as skipped due to execution time.')
     def test_get_response_after_ubuntu_corpus_training(self):
         """
         Test response time after training with the Ubuntu corpus.
         """
-        self.skipTest('TODO: This test needs to be written.')
+        trainer = get_ubuntu_corpus_trainer(self.chatbot)
+        trainer.train()
+
+        self.assert_response_duration_is_less_than(6)
 
 
 class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
@@ -183,8 +188,12 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
 
         self.assert_response_duration_is_less_than(3)
 
+    @skip('Test marked as skipped due to execution time.')
     def test_get_response_after_ubuntu_corpus_training(self):
         """
         Test response time after training with the Ubuntu corpus.
         """
-        self.skipTest('TODO: This test needs to be written.')
+        trainer = get_ubuntu_corpus_trainer(self.chatbot)
+        trainer.train()
+
+        self.assert_response_duration_is_less_than(6)
