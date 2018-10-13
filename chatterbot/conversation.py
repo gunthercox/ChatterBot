@@ -24,6 +24,7 @@ class StatementMixin(object):
         return {
             'id': self.id,
             'text': self.text,
+            'stemmed_text': self.stemmed_text,
             'created_at': self.created_at.isoformat().split('+', 1)[0],
             'conversation': self.conversation,
             'in_response_to': self.in_response_to,
@@ -51,6 +52,7 @@ class Statement(StatementMixin):
         self.id = kwargs.get('id')
 
         self.text = text
+        self.stemmed_text = kwargs.get('stemmed_text', '')
 
         self.conversation = kwargs.get('conversation', '')
 
