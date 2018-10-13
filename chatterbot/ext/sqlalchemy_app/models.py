@@ -56,6 +56,12 @@ class Statement(Base, StatementMixin):
         String(constants.STATEMENT_TEXT_MAX_LENGTH)
     )
 
+    stemmed_text = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=False,
+        server_default=''
+    )
+
     conversation = Column(
         String(constants.CONVERSATION_LABEL_MAX_LENGTH),
         nullable=False,

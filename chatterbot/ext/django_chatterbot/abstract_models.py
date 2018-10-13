@@ -31,9 +31,12 @@ class AbstractBaseStatement(models.Model, StatementMixin):
     """
 
     text = models.CharField(
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH
+    )
+
+    stemmed_text = models.CharField(
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
-        blank=False,
-        null=False
+        blank=True
     )
 
     conversation = models.CharField(
