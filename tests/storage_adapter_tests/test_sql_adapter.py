@@ -228,40 +228,6 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.assertIn("The air contains Oxygen.", results_text_list)
 
 
-class ReadOnlySQLStorageAdapterTests(SQLStorageAdapterTestCase):
-
-    def setUp(self):
-        """
-        Make the adapter writable before every test.
-        """
-        super().setUp()
-        self.adapter.read_only = False
-
-    def test_update_does_not_add_new_statement(self):
-        self.adapter.read_only = True
-
-        statement = Statement(text="New statement")
-        self.adapter.update(statement)
-
-        results = self.adapter.filter(text="New statement")
-        self.assertEqual(len(results), 0)
-
-    def test_update_does_not_modify_existing_statement(self):
-        statement = Statement(text="New statement")
-        self.adapter.update(statement)
-
-        self.adapter.read_only = True
-
-        statement.in_response_to = "New statement"
-        self.adapter.update(statement)
-
-        results = self.adapter.filter(text="New statement")
-
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].text, statement.text)
-        self.assertEqual(results[0].in_response_to, None)
-
-
 class SQLOrderingTests(SQLStorageAdapterTestCase):
     """
     Test cases for the ordering of sets of statements.
