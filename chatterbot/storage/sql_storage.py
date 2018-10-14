@@ -3,62 +3,46 @@ from chatterbot.storage import StorageAdapter
 
 class SQLStorageAdapter(StorageAdapter):
     """
-    SQLStorageAdapter allows ChatterBot to store conversation
-    data semi-structured T-SQL database, virtually, any database
-    that SQL Alchemy supports.
-
-    Notes:
-        Tables may change (and will), so, save your training data.
-        There is no data migration (yet).
-        Performance test not done yet.
-        Tests using other databases not finished.
+    The SQLStorageAdapter allows ChatterBot to store conversation
+    data in any database supported by the SQL Alchemy ORM.
 
     All parameters are optional, by default a sqlite database is used.
 
     It will check if tables are present, if they are not, it will attempt
     to create the required tables.
 
-    :keyword database_uri: eg: sqlite:///database_test.db", use database_uri or database,
-        database_uri can be specified to choose database driver (database parameter will be ignored).
+    :keyword database_uri: eg: sqlite:///database_test.db',
+        The database_uri can be specified to choose database driver.
     :type database_uri: str
-
-    :keyword read_only: False by default, makes all operations read only, has priority over all DB operations
-        so, create, update, delete will NOT be executed
-    :type read_only: bool
     """
 
     def __init__(self, **kwargs):
         super(SQLStorageAdapter, self).__init__(**kwargs)
 
+        from re import search
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
-        self.database_uri = self.kwargs.get("database_uri", False)
+        self.database_uri = self.kwargs.get('database_uri', False)
 
         # None results in a sqlite in-memory database as the default
         if self.database_uri is None:
-            self.database_uri = "sqlite://"
+            self.database_uri = 'sqlite://'
 
         # Create a file database if the database is not a connection string
         if not self.database_uri:
-            self.database_uri = "sqlite:///db.sqlite3"
+            self.database_uri = 'sqlite:///db.sqlite3'
 
         self.engine = create_engine(self.database_uri, convert_unicode=True)
-
-        from re import search
 
         if search('^sqlite://', self.database_uri):
             from sqlalchemy.engine import Engine
             from sqlalchemy import event
 
-            @event.listens_for(Engine, "connect")
+            @event.listens_for(Engine, 'connect')
             def set_sqlite_pragma(dbapi_connection, connection_record):
                 dbapi_connection.execute('PRAGMA journal_mode=WAL')
                 dbapi_connection.execute('PRAGMA synchronous=NORMAL')
-
-        self.read_only = self.kwargs.get(
-            "read_only", False
-        )
 
         if not self.engine.dialect.has_table(self.engine, 'Statement'):
             self.create_database()
@@ -355,10 +339,7 @@ class SQLStorageAdapter(StorageAdapter):
     def _session_finish(self, session, statement_text=None):
         from sqlalchemy.exc import InvalidRequestError
         try:
-            if not self.read_only:
-                session.commit()
-            else:
-                session.rollback()
+            session.commit()
         except InvalidRequestError:
             # Log the statement text and the exception
             self.logger.exception(statement_text)
