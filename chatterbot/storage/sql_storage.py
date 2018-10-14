@@ -19,7 +19,6 @@ class SQLStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super(SQLStorageAdapter, self).__init__(**kwargs)
 
-        from re import search
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
@@ -35,7 +34,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         self.engine = create_engine(self.database_uri, convert_unicode=True)
 
-        if search('^sqlite://', self.database_uri):
+        if self.database_uri.startswith('sqlite://'):
             from sqlalchemy.engine import Engine
             from sqlalchemy import event
 
