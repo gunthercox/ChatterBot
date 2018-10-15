@@ -46,3 +46,17 @@ def convert_to_ascii(chatbot, statement):
 
     statement.text = str(text)
     return statement
+
+def tweet_clean(chatbot, statement):
+    """
+    Strips links, # from hashtags and mentions
+    """
+    import re
+    
+    text = re.sub('http\S+\s*', '', text)  # remove URLs
+    text = re.sub('RT|cc', '', text)  # remove 'RT' and 'cc'
+    text = re.sub('#', '', text)  # remove # from hashtags
+    text = re.sub('@\S+', '', text)  # remove mentions
+    text = re.sub('\s+', ' ', text)  # remove extra whitespace
+    statement.text = str(text)
+    return statement
