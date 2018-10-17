@@ -68,6 +68,79 @@ NUMBERS = {
     'trillion': 1000000000000,
 }
 
+
+# Mapping of Month name and Value
+HASHMONTHS = {
+    'january': 1,
+    'jan': 1,
+    'february': 2,
+    'feb': 2,
+    'march': 3,
+    'mar': 3,
+    'april': 4,
+    'apr': 4,
+    'may': 5,
+    'june': 6,
+    'jun': 6,
+    'july': 7,
+    'jul': 7,
+    'august': 8,
+    'aug': 8,
+    'september': 9,
+    'sep': 9,
+    'october': 10,
+    'oct': 10,
+    'november': 11,
+    'nov': 11,
+    'december': 12,
+    'dec': 12
+}
+
+# Days to number mapping
+HASHWEEKDAYS = {
+    'monday': 0,
+    'mon': 0,
+    'tuesday': 1,
+    'tue': 1,
+    'wednesday': 2,
+    'wed': 2,
+    'thursday': 3,
+    'thu': 3,
+    'friday': 4,
+    'fri': 4,
+    'saturday': 5,
+    'sat': 5,
+    'sunday': 6,
+    'sun': 6
+}
+
+# Ordinal to number
+HASHORDINALS = {
+    'zeroth': 0,
+    'first': 1,
+    'second': 2,
+    'third': 3,
+    'fourth': 4,
+    'forth': 4,
+    'fifth': 5,
+    'sixth': 6,
+    'seventh': 7,
+    'eighth': 8,
+    'ninth': 9,
+    'tenth': 10,
+    'eleventh': 11,
+    'twelfth': 12,
+    'thirteenth': 13,
+    'fourteenth': 14,
+    'fifteenth': 15,
+    'sixteenth': 16,
+    'seventeenth': 17,
+    'eighteenth': 18,
+    'nineteenth': 19,
+    'twentieth': 20,
+    'last': -1
+}
+
 # A list tuple of regular expressions / parser fn to match
 # Start with the widest match and narrow it down because the order of the match in this list matters
 regex = [
@@ -646,79 +719,6 @@ def next_week_day(base_date, weekday):
     while day.weekday() != weekday:
         day = day + timedelta(days=1)
     return day
-
-
-# Mapping of Month name and Value
-HASHMONTHS = {
-    'january': 1,
-    'jan': 1,
-    'february': 2,
-    'feb': 2,
-    'march': 3,
-    'mar': 3,
-    'april': 4,
-    'apr': 4,
-    'may': 5,
-    'june': 6,
-    'jun': 6,
-    'july': 7,
-    'jul': 7,
-    'august': 8,
-    'aug': 8,
-    'september': 9,
-    'sep': 9,
-    'october': 10,
-    'oct': 10,
-    'november': 11,
-    'nov': 11,
-    'december': 12,
-    'dec': 12
-}
-
-# Days to number mapping
-HASHWEEKDAYS = {
-    'monday': 0,
-    'mon': 0,
-    'tuesday': 1,
-    'tue': 1,
-    'wednesday': 2,
-    'wed': 2,
-    'thursday': 3,
-    'thu': 3,
-    'friday': 4,
-    'fri': 4,
-    'saturday': 5,
-    'sat': 5,
-    'sunday': 6,
-    'sun': 6
-}
-
-# Ordinal to number
-HASHORDINALS = {
-    'zeroth': 0,
-    'first': 1,
-    'second': 2,
-    'third': 3,
-    'fourth': 4,
-    'forth': 4,
-    'fifth': 5,
-    'sixth': 6,
-    'seventh': 7,
-    'eighth': 8,
-    'ninth': 9,
-    'tenth': 10,
-    'eleventh': 11,
-    'twelfth': 12,
-    'thirteenth': 13,
-    'fourteenth': 14,
-    'fifteenth': 15,
-    'sixteenth': 16,
-    'seventeenth': 17,
-    'eighteenth': 18,
-    'nineteenth': 19,
-    'twentieth': 20,
-    'last': -1
-}
 
 
 def datetime_parsing(text, base_date=datetime.now()):
