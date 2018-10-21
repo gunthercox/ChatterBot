@@ -9,6 +9,17 @@ from settings import GITTER
 # logging.basicConfig(level=logging.INFO)
 
 
+'''
+To use this example, create a new file called settings.py.
+In settings.py define the following:
+
+GITTER = {
+    "API_TOKEN": "my-api-token",
+    "ROOM": "example_project/test_room"
+}
+'''
+
+
 chatbot = ChatBot(
     'GitterBot',
     gitter_room=GITTER['ROOM'],
