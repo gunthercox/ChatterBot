@@ -19,18 +19,18 @@ month_names_long = (
 month_names = month_names_long + '|jan|feb|mar|apr|may|jun|jul|aug|sep|oct|nov|dec'
 day_nearest_names = 'today|yesterday|tomorrow|tonight|tonite'
 numbers = (
-    '(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten|'
-    'eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|'
-    'eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|'
-    'eighty|ninety|hundred|thousand)'
+    r'(^a(?=\s)|one|two|three|four|five|six|seven|eight|nine|ten|'
+    r'eleven|twelve|thirteen|fourteen|fifteen|sixteen|seventeen|'
+    r'eighteen|nineteen|twenty|thirty|forty|fifty|sixty|seventy|'
+    r'eighty|ninety|hundred|thousand)'
 )
 re_dmy = '(' + '|'.join(day_variations + minute_variations + year_variations + week_variations + month_variations) + ')'
-re_duration = '(before|after|earlier|later|ago|from\snow)'
-re_year = '(19|20)\d{2}|^(19|20)\d{2}'
-re_timeframe = 'this|coming|next|following|previous|last|end\sof\sthe'
-re_ordinal = 'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
+re_duration = r'(before|after|earlier|later|ago|from\snow)'
+re_year = r'(19|20)\d{2}|^(19|20)\d{2}'
+re_timeframe = r'this|coming|next|following|previous|last|end\sof\sthe'
+re_ordinal = r'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
 re_time = r'(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})(\sam|pm)?|\s?(?P<convention>am|pm))'
-re_separator = 'of|at|on'
+re_separator = r'of|at|on'
 
 NUMBERS = {
     'zero': 0,
