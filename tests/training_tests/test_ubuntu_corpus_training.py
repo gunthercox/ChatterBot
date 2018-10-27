@@ -27,16 +27,16 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
     def _get_data(self):
 
         data1 = (
-            b'2004-11-04T16:49:00.000Z	tom	jane	Hello\n' +
-            b'2004-11-04T16:49:00.000Z	tom	jane	Is anyone there?\n' +
-            b'2004-11-04T16:49:00.000Z	jane		Yes\n' +
+            b'2004-11-04T16:49:00.000Z	tom	jane	Hello\n'
+            b'2004-11-04T16:49:00.000Z	tom	jane	Is anyone there?\n'
+            b'2004-11-04T16:49:00.000Z	jane		Yes\n'
             b'\n'
         )
 
         data2 = (
-            b'2004-11-04T16:49:00.000Z	tom	jane	Hello\n' +
-            b'2004-11-04T16:49:00.000Z	tom		Is anyone there?\n' +
-            b'2004-11-04T16:49:00.000Z	jane		Yes\n' +
+            b'2004-11-04T16:49:00.000Z	tom	jane	Hello\n'
+            b'2004-11-04T16:49:00.000Z	tom		Is anyone there?\n'
+            b'2004-11-04T16:49:00.000Z	jane		Yes\n'
             b'\n'
         )
 
