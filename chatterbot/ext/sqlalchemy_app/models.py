@@ -56,7 +56,7 @@ class Statement(Base, StatementMixin):
         String(constants.STATEMENT_TEXT_MAX_LENGTH)
     )
 
-    stemmed_text = Column(
+    search_text = Column(
         String(constants.STATEMENT_TEXT_MAX_LENGTH),
         nullable=False,
         server_default=''
@@ -82,6 +82,12 @@ class Statement(Base, StatementMixin):
     in_response_to = Column(
         String(constants.STATEMENT_TEXT_MAX_LENGTH),
         nullable=True
+    )
+
+    search_in_response_to = Column(
+        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        nullable=False,
+        server_default=''
     )
 
     persona = Column(

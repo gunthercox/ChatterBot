@@ -10,7 +10,12 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddField(
             model_name='statement',
-            name='stemmed_text',
+            name='search_text',
+            field=models.CharField(blank=True, max_length=400),
+        ),
+        migrations.AddField(
+            model_name='statement',
+            name='search_in_response_to',
             field=models.CharField(blank=True, max_length=400),
         ),
     ]
