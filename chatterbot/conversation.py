@@ -24,10 +24,11 @@ class StatementMixin(object):
         return {
             'id': self.id,
             'text': self.text,
-            'stemmed_text': self.stemmed_text,
+            'search_text': self.search_text,
             'created_at': self.created_at.isoformat().split('+', 1)[0],
             'conversation': self.conversation,
             'in_response_to': self.in_response_to,
+            'search_in_response_to': self.search_in_response_to,
             'persona': self.persona,
             'tags': self.get_tags()
         }
@@ -52,7 +53,7 @@ class Statement(StatementMixin):
         self.id = kwargs.get('id')
 
         self.text = text
-        self.stemmed_text = kwargs.get('stemmed_text', '')
+        self.search_text = kwargs.get('search_text', '')
 
         self.conversation = kwargs.get('conversation', '')
 
@@ -60,6 +61,7 @@ class Statement(StatementMixin):
 
         self.tags = kwargs.pop('tags', [])
         self.in_response_to = kwargs.pop('in_response_to', None)
+        self.search_in_response_to = kwargs.get('search_in_response_to', '')
         self.created_at = kwargs.get('created_at', datetime.now())
 
         if not isinstance(self.created_at, datetime):

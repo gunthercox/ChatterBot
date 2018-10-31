@@ -34,7 +34,7 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH
     )
 
-    stemmed_text = models.CharField(
+    search_text = models.CharField(
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
         blank=True
     )
@@ -51,6 +51,11 @@ class AbstractBaseStatement(models.Model, StatementMixin):
     in_response_to = models.CharField(
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
         null=True
+    )
+
+    search_in_response_to = models.CharField(
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
+        blank=True
     )
 
     persona = models.CharField(
