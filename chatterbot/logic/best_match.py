@@ -13,13 +13,22 @@ class BestMatch(LogicAdapter):
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
+        self.chatbot.logger.info('Beginning search for close text match')
+
+        input_search_text = self.chatbot.storage.stemmer.get_bigram_pair_string(
+            input_statement.text
+        )
+
         statement_list = self.chatbot.storage.filter(
+            search_text_contains=input_search_text,
             persona_not_startswith='bot:',
             page_size=self.search_page_size
         )
 
         closest_match = input_statement
         closest_match.confidence = 0
+
+        self.chatbot.logger.info('Processing search results')
 
         # Find the closest matching known statement
         for statement in statement_list:
@@ -28,6 +37,9 @@ class BestMatch(LogicAdapter):
             if confidence > closest_match.confidence:
                 statement.confidence = confidence
                 closest_match = statement
+                self.chatbot.logger.info('Similar text found: {} {}'.format(
+                    closest_match.text, confidence
+                ))
 
             # Stop searching if a match that is close enough is found
             if closest_match.confidence >= self.maximum_similarity_threshold:
