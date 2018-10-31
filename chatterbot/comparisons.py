@@ -271,7 +271,7 @@ class JaccardSimilarity(Comparator):
         import nltk
         import string
 
-        # Get default English stopwords and extend with punctuation
+        # Get default English stopwords
         stopwords = nltk.corpus.stopwords.words('english')
         stopwords.append('')
 
