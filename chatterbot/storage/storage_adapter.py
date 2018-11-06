@@ -1,4 +1,5 @@
 import logging
+from chatterbot.stemming import SimpleStemmer
 
 
 class StorageAdapter(object):
@@ -15,6 +16,10 @@ class StorageAdapter(object):
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
         self.adapter_supports_queries = True
         self.base_query = None
+
+        self.stemmer = SimpleStemmer(language=kwargs.get(
+            'stemmer_language', 'english'
+        ))
 
     def get_model(self, model_name):
         """

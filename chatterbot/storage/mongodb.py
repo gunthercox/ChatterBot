@@ -154,6 +154,13 @@ class MongoDatabaseAdapter(StorageAdapter):
         if 'tags' in kwargs:
             kwargs['tags'] = list(set(kwargs['tags']))
 
+        if 'search_text' not in kwargs:
+            kwargs['search_text'] = self.stemmer.stem(kwargs['text'])
+
+        if 'search_in_response_to' not in kwargs:
+            if kwargs.get('in_response_to'):
+                kwargs['search_in_response_to'] = self.stemmer.stem(kwargs['in_response_to'])
+
         inserted = self.statements.insert_one(kwargs)
 
         kwargs['id'] = inserted.inserted_id
@@ -168,12 +175,24 @@ class MongoDatabaseAdapter(StorageAdapter):
             if 'tags' in statement:
                 statement['tags'] = list(set(statement['tags']))
 
+            if 'search_text' not in statement:
+                statement['search_text'] = self.stemmer.stem(statement['text'])
+
+            if 'search_in_response_to' not in statement:
+                if statement.get('in_response_to'):
+                    statement['search_in_response_to'] = self.stemmer.stem(statement['in_response_to'])
+
         self.statements.insert_many(statements)
 
     def update(self, statement):
         data = statement.serialize()
         data.pop('id', None)
         data.pop('tags', None)
+
+        data['search_text'] = self.stemmer.stem(data['text'])
+
+        if data.get('in_response_to'):
+            data['search_in_response_to'] = self.stemmer.stem(data['in_response_to'])
 
         update_data = {
             '$set': data

@@ -156,6 +156,13 @@ class SQLStorageAdapter(StorageAdapter):
 
         tags = set(kwargs.pop('tags', []))
 
+        if 'search_text' not in kwargs:
+            kwargs['search_text'] = self.stemmer.stem(kwargs['text'])
+
+        if 'search_in_response_to' not in kwargs:
+            if kwargs.get('in_response_to'):
+                kwargs['search_in_response_to'] = self.stemmer.stem(kwargs['in_response_to'])
+
         statement = Statement(**kwargs)
 
         for _tag in tags:
@@ -194,6 +201,13 @@ class SQLStorageAdapter(StorageAdapter):
         for statement_data in statements:
 
             tags = set(statement_data.pop('tags', []))
+
+            if 'search_text' not in statement_data:
+                statement_data['search_text'] = self.stemmer.stem(statement_data['text'])
+
+            if 'search_in_response_to' not in statement_data:
+                if statement_data.get('in_response_to'):
+                    statement_data['search_in_response_to'] = self.stemmer.stem(statement_data['in_response_to'])
 
             statement = Statement(**statement_data)
 
@@ -247,6 +261,11 @@ class SQLStorageAdapter(StorageAdapter):
             record.in_response_to = statement.in_response_to
 
             record.created_at = statement.created_at
+
+            record.search_text = self.stemmer.stem(statement.text)
+
+            if statement.in_response_to:
+                record.search_in_response_to = self.stemmer.stem(statement.in_response_to)
 
             for _tag in statement.tags:
                 tag = session.query(Tag).filter_by(name=_tag).first()

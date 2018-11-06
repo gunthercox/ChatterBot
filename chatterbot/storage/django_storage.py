@@ -63,6 +63,13 @@ class DjangoStorageAdapter(StorageAdapter):
 
         tags = kwargs.pop('tags', [])
 
+        if 'search_text' not in kwargs:
+            kwargs['search_text'] = self.stemmer.stem(kwargs['text'])
+
+        if 'search_in_response_to' not in kwargs:
+            if kwargs.get('in_response_to'):
+                kwargs['search_in_response_to'] = self.stemmer.stem(kwargs['in_response_to'])
+
         statement = Statement(**kwargs)
 
         statement.save()
@@ -90,6 +97,13 @@ class DjangoStorageAdapter(StorageAdapter):
 
             tags = set(statement_data.pop('tags', []))
 
+            if 'search_text' not in statement_data:
+                statement_data['search_text'] = self.stemmer.stem(statement_data['text'])
+
+            if 'search_in_response_to' not in statement_data:
+                if statement_data.get('in_response_to'):
+                    statement_data['search_in_response_to'] = self.stemmer.stem(statement_data['in_response_to'])
+
             statement = Statement.objects.create(**statement_data)
 
             tags_to_add = []
@@ -116,8 +130,10 @@ class DjangoStorageAdapter(StorageAdapter):
         else:
             statement = Statement.objects.create(
                 text=statement.text,
+                search_text=self.stemmer.stem(statement.text),
                 conversation=statement.conversation,
                 in_response_to=statement.in_response_to,
+                search_in_response_to=self.stemmer.stem(statement.in_response_to),
                 created_at=statement.created_at
             )
 

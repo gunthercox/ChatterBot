@@ -10,7 +10,12 @@ class SimpleStemmer(object):
     """
 
     def __init__(self, language='english'):
+        from chatterbot.utils import nltk_download_corpus
+
         self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
+
+        # Download the stopwords corpus if needed
+        nltk_download_corpus('stopwords')
 
         # Get list of stopwords from the NLTK corpus
         self.stopwords = nltk.corpus.stopwords.words(language)
