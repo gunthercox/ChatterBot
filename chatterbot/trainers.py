@@ -1,6 +1,7 @@
 import os
 import sys
 from chatterbot.conversation import Statement
+from chatterbot.stemming import SimpleStemmer
 from chatterbot import utils
 
 
@@ -12,6 +13,10 @@ class Trainer(object):
     def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
         self.show_training_progress = kwargs.get('show_training_progress', True)
+
+        self.stemmer = SimpleStemmer(language=kwargs.get(
+            'stemmer_language', 'english'
+        ))
 
     def get_preprocessed_statement(self, input_statement):
         """
@@ -72,6 +77,7 @@ class ListTrainer(Trainer):
         statements that represents a single conversation.
         """
         previous_statement_text = None
+        previous_statement_search_text = ''
 
         statements_to_create = []
 
@@ -82,15 +88,20 @@ class ListTrainer(Trainer):
                     conversation_count + 1, len(conversation)
                 )
 
+            statement_search_text = self.stemmer.stem(text)
+
             statement = self.get_preprocessed_statement(
                 Statement(
                     text=text,
+                    search_text=statement_search_text,
                     in_response_to=previous_statement_text,
+                    search_in_response_to=previous_statement_search_text,
                     conversation='training'
                 )
             )
 
             previous_statement_text = statement.text
+            previous_statement_search_text = statement_search_text
 
             statements_to_create.append({
                 'text': statement.text,
@@ -132,12 +143,17 @@ class ChatterBotCorpusTrainer(Trainer):
                     )
 
                 previous_statement_text = None
+                previous_statement_search_text = ''
 
                 for text in conversation:
 
+                    statement_search_text = self.stemmer.stem(text)
+
                     _statement = Statement(
                         text=text,
+                        search_text=statement_search_text,
                         in_response_to=previous_statement_text,
+                        search_in_response_to=previous_statement_search_text,
                         conversation='training'
                     )
 
@@ -146,6 +162,7 @@ class ChatterBotCorpusTrainer(Trainer):
                     statement = self.get_preprocessed_statement(_statement)
 
                     previous_statement_text = statement.text
+                    previous_statement_search_text = statement_search_text
 
                     statements_to_create.append({
                         'text': statement.text,
@@ -396,14 +413,19 @@ class UbuntuCorpusTrainer(Trainer):
                 reader = csv.reader(tsv, delimiter='\t')
 
                 previous_statement_text = None
+                previous_statement_search_text = ''
 
                 for row in reader:
                     if len(row) > 0:
                         text = row[3]
+                        statement_search_text = self.stemmer.stem(text)
+
                         statement = self.get_preprocessed_statement(
                             Statement(
                                 text=text,
+                                search_text=statement_search_text,
                                 in_response_to=previous_statement_text,
+                                search_in_response_to=previous_statement_search_text,
                                 conversation='training'
                             )
                         )
@@ -414,8 +436,6 @@ class UbuntuCorpusTrainer(Trainer):
                         if row[2].strip():
                             statement.add_tags('addressing_speaker:', row[2])
 
-                        previous_statement_text = statement.text
-
                         statements_to_create.append({
                             'text': statement.text,
                             'in_response_to': statement.in_response_to,
@@ -423,6 +443,9 @@ class UbuntuCorpusTrainer(Trainer):
                             'tags': statement.tags
                         })
                         statement_count += 1
+
+                        previous_statement_text = statement.text
+                        previous_statement_search_text = statement_search_text
 
             if statement_count >= BATCH_SIZE:
                 batch_count += 1
