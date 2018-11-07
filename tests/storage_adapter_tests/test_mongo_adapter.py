@@ -319,6 +319,28 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'testing')
 
+    def test_create_search_text(self):
+        self.adapter.create(
+            text='testing',
+            search_text='test'
+        )
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].search_text, 'test')
+
+    def test_create_search_in_response_to(self):
+        self.adapter.create(
+            text='testing',
+            search_in_response_to='test'
+        )
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].search_in_response_to, 'test')
+
     def test_create_tags(self):
         self.adapter.create(text='testing', tags=['a', 'b'])
 
@@ -356,6 +378,42 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].text, 'A')
         self.assertEqual(results[1].text, 'B')
+
+    def test_create_many_search_text(self):
+        self.adapter.create_many([
+            {
+                'text': 'A',
+                'search_text': 'a'
+            },
+            {
+                'text': 'B',
+                'search_text': 'b'
+            }
+        ])
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0].search_text, 'a')
+        self.assertEqual(results[1].search_text, 'b')
+
+    def test_create_many_search_in_response_to(self):
+        self.adapter.create_many([
+            {
+                'text': 'A',
+                'search_in_response_to': 'a'
+            },
+            {
+                'text': 'B',
+                'search_in_response_to': 'b'
+            }
+        ])
+
+        results = self.adapter.filter()
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0].search_in_response_to, 'a')
+        self.assertEqual(results[1].search_in_response_to, 'b')
 
     def test_create_many_tags(self):
         self.adapter.create_many([
