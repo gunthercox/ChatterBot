@@ -79,5 +79,20 @@ class TwitterTrainerTestCase(ChatBotTestCase):
     def test_train(self):
         self.trainer.train()
 
-        statement_created = self.trainer.chatbot.storage.filter()
-        self.assertTrue(len(statement_created))
+        statements = self.trainer.chatbot.storage.filter()
+
+        self.assertGreater(len(statements), 1)
+
+    def test_train_sets_search_text(self):
+        self.trainer.train()
+        statements = self.trainer.chatbot.storage.filter()
+
+        self.assertGreater(len(statements), 1)
+        self.assertEqual(statements[0].search_text, 'ur u')
+
+    def test_train_sets_search_in_response_to(self):
+        self.trainer.train()
+        statements = self.trainer.chatbot.storage.filter()
+
+        self.assertGreater(len(statements), 1)
+        self.assertEqual(statements[0].search_in_response_to, 'ur u')

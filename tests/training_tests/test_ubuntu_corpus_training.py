@@ -164,6 +164,32 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         response = self.chatbot.get_response('Is anyone there?')
         self.assertEqual(response, 'Yes')
 
+    def test_train_sets_search_text(self):
+        """
+        Test that the chat bot is trained using data from the Ubuntu Corpus.
+        """
+        self._create_test_corpus(self._get_data())
+
+        self.trainer.train()
+        self._destroy_test_corpus()
+
+        results = self.chatbot.storage.filter(text='Is anyone there?')
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0].search_text, 'nyo')
+
+    def test_train_sets_search_in_response_to(self):
+        """
+        Test that the chat bot is trained using data from the Ubuntu Corpus.
+        """
+        self._create_test_corpus(self._get_data())
+
+        self.trainer.train()
+        self._destroy_test_corpus()
+
+        results = self.chatbot.storage.filter(in_response_to='Is anyone there?')
+        self.assertEqual(len(results), 2)
+        self.assertEqual(results[0].search_in_response_to, 'nyo')
+
     def test_is_extracted(self):
         """
         Test that a check can be done for if the corpus has aleady been extracted.
