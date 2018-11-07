@@ -44,14 +44,45 @@ class ListTrainingTests(ChatBotTestCase):
         ]
 
         self.trainer.train(conversation)
+
+        statements = self.chatbot.storage.filter(
+            in_response_to="Do you like my hat?"
+        )
+
+        self.assertIsLength(statements, 1)
+        self.assertEqual(statements[0].in_response_to, "Do you like my hat?")
+
+    def test_training_sets_search_text(self):
+
+        conversation = [
+            "Do you like my hat?",
+            "I do not like your hat."
+        ]
+
         self.trainer.train(conversation)
 
         statements = self.chatbot.storage.filter(
             in_response_to="Do you like my hat?"
         )
 
-        self.assertIsLength(statements, 2)
-        self.assertEqual(statements[0].in_response_to, "Do you like my hat?")
+        self.assertIsLength(statements, 1)
+        self.assertEqual(statements[0].search_text, "ik")
+
+    def test_training_sets_search_in_response_to(self):
+
+        conversation = [
+            "Do you like my hat?",
+            "I do not like your hat."
+        ]
+
+        self.trainer.train(conversation)
+
+        statements = self.chatbot.storage.filter(
+            in_response_to="Do you like my hat?"
+        )
+
+        self.assertIsLength(statements, 1)
+        self.assertEqual(statements[0].search_in_response_to, "ik")
 
     def test_database_has_correct_format(self):
         """
