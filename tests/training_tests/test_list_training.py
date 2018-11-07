@@ -36,7 +36,7 @@ class ListTrainingTests(ChatBotTestCase):
 
         self.assertEqual(response.text, "You are welcome.")
 
-    def test_training_increments_occurrence_count(self):
+    def test_training_sets_in_response_to(self):
 
         conversation = [
             "Do you like my hat?",
