@@ -35,5 +35,5 @@ Creating new preprocessors
 It is simple to create your own preprocessors. A preprocessor is just a function
 with a few requirements.
 
-1. It must take two parameters, the first is a ``ChatBot`` instance, the second is a ``Statement`` instance.
+1. It must take one parameter, a ``Statement`` instance.
 2. It must return a statement instance.
