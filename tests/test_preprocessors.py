@@ -23,21 +23,21 @@ class CleanWhitespacePreprocessorTestCase(ChatBotTestCase):
 
     def test_clean_whitespace(self):
         statement = Statement(text='\tThe quick \nbrown fox \rjumps over \vthe \alazy \fdog\\.')
-        cleaned = preprocessors.clean_whitespace(self.chatbot, statement)
+        cleaned = preprocessors.clean_whitespace(statement)
         normal_text = 'The quick brown fox jumps over \vthe \alazy \fdog\\.'
 
         self.assertEqual(cleaned.text, normal_text)
 
     def test_leading_or_trailing_whitespace_removed(self):
         statement = Statement(text='     The quick brown fox jumps over the lazy dog.   ')
-        cleaned = preprocessors.clean_whitespace(self.chatbot, statement)
+        cleaned = preprocessors.clean_whitespace(statement)
         normal_text = 'The quick brown fox jumps over the lazy dog.'
 
         self.assertEqual(cleaned.text, normal_text)
 
     def test_consecutive_spaces_removed(self):
         statement = Statement(text='The       quick brown     fox      jumps over the lazy dog.')
-        cleaned = preprocessors.clean_whitespace(self.chatbot, statement)
+        cleaned = preprocessors.clean_whitespace(statement)
         normal_text = 'The quick brown fox jumps over the lazy dog.'
 
         self.assertEqual(cleaned.text, normal_text)
@@ -63,7 +63,7 @@ class HTMLUnescapePreprocessorTestCase(ChatBotTestCase):
             ' the <a href="http://lazy.com">lazy</a> dog.'
         )
 
-        cleaned = preprocessors.unescape_html(self.chatbot, statement)
+        cleaned = preprocessors.unescape_html(statement)
 
         self.assertEqual(cleaned.text, normal_text)
 
@@ -75,7 +75,7 @@ class ConvertToASCIIPreprocessorTestCase(ChatBotTestCase):
 
     def test_convert_to_ascii(self):
         statement = Statement(text=u'Klüft skräms inför på fédéral électoral große')
-        cleaned = preprocessors.convert_to_ascii(self.chatbot, statement)
+        cleaned = preprocessors.convert_to_ascii(statement)
         normal_text = 'Kluft skrams infor pa federal electoral groe'
 
         self.assertEqual(cleaned.text, normal_text)

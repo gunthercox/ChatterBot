@@ -114,7 +114,7 @@ class ChatBot(object):
 
         # Preprocess the input statement
         for preprocessor in self.preprocessors:
-            input_statement = preprocessor(self, input_statement)
+            input_statement = preprocessor(input_statement)
 
         response = self.generate_response(input_statement)
 

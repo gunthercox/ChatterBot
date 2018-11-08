@@ -4,7 +4,7 @@ Statement pre-processors.
 """
 
 
-def clean_whitespace(chatbot, statement):
+def clean_whitespace(statement):
     """
     Remove any consecutive whitespace characters from the statement text.
     """
@@ -22,7 +22,7 @@ def clean_whitespace(chatbot, statement):
     return statement
 
 
-def unescape_html(chatbot, statement):
+def unescape_html(statement):
     """
     Convert escaped html characters into unescaped html characters.
     For example: "&lt;b&gt;" becomes "<b>".
@@ -34,7 +34,7 @@ def unescape_html(chatbot, statement):
     return statement
 
 
-def convert_to_ascii(chatbot, statement):
+def convert_to_ascii(statement):
     """
     Converts unicode characters to ASCII character equivalents.
     For example: "på fédéral" becomes "pa federal".
