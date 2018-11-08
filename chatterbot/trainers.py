@@ -23,7 +23,7 @@ class Trainer(object):
         Preprocess the input statement.
         """
         for preprocessor in self.chatbot.preprocessors:
-            input_statement = preprocessor(self, input_statement)
+            input_statement = preprocessor(input_statement)
 
         return input_statement
 
