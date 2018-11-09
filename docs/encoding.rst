@@ -31,7 +31,7 @@ this is just a simple check that a unicode response can be processed.
        response = self.chatbot.get_response(u'سلام')
        self.assertGreater(len(response.text), 0)
 
-This test passes in both Python 2.7 and 3.x. It also verifies that
+This test passes Python 3. It also verifies that
 ChatterBot *can* take unicode input without issue.
 
 How do I fix Python encoding errors?

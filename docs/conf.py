@@ -1,8 +1,3 @@
-# -*- coding: utf-8 -*-
-#
-# ChatterBot documentation build configuration file, created by
-# sphinx-quickstart on Mon May  9 14:38:54 2016.
-
 import sys
 import os
 from datetime import datetime
