@@ -10,13 +10,7 @@ class SQLStorageAdapterTestCase(TestCase):
         """
         Instantiate the adapter before any tests in the test case run.
         """
-        cls.adapter = SQLStorageAdapter()
-
-    def setUp(self):
-        """
-        Create the tables in the database before each test is run.
-        """
-        self.adapter.create_database()
+        cls.adapter = SQLStorageAdapter(database_uri=None)
 
     def tearDown(self):
         """
