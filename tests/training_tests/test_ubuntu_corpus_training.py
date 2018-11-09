@@ -16,6 +16,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         super(UbuntuCorpusTrainerTestCase, self).setUp()
         self.trainer = UbuntuCorpusTrainer(
             self.chatbot,
+            ubuntu_corpus_data_directory='./.ubuntu_test_data/',
             show_training_progress=False
         )
 
