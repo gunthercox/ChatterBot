@@ -342,10 +342,18 @@ class SQLStorageAdapter(StorageAdapter):
 
     def drop(self):
         """
-        Drop the database attached to a given adapter.
+        Drop the database.
         """
-        from chatterbot.ext.sqlalchemy_app.models import Base
-        Base.metadata.drop_all(self.engine)
+        Statement = self.get_model('statement')
+        Tag = self.get_model('tag')
+
+        session = self.Session()
+
+        session.query(Statement).delete()
+        session.query(Tag).delete()
+
+        session.commit()
+        session.close()
 
     def create_database(self):
         """
