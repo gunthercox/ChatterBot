@@ -2,7 +2,6 @@ from unittest.mock import Mock
 from io import BytesIO
 import tarfile
 import os
-
 from tests.base_case import ChatBotTestCase
 from chatterbot.trainers import UbuntuCorpusTrainer
 
