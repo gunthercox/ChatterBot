@@ -25,7 +25,7 @@ print('Type something to begin...')
 
 while True:
     try:
-        bot_input = bot.get_response(None)
+        bot_input = bot.get_response('')
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
