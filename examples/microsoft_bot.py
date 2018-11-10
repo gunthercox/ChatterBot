@@ -24,7 +24,7 @@ trainer.train('chatterbot.corpus.english')
 # The following loop will execute each time the user enters input
 while True:
     try:
-        response = chatbot.get_response(None)
+        response = chatbot.get_response('')
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
