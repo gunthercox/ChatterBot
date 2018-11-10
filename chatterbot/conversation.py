@@ -1,3 +1,7 @@
+from datetime import datetime
+from dateutil import parser as date_parser
+
+
 class StatementMixin(object):
     """
     This class has shared methods used to
@@ -41,24 +45,12 @@ class Statement(StatementMixin):
     """
 
     def __init__(self, **kwargs):
-        from datetime import datetime
-        from dateutil import parser as date_parser
-
-        # Try not to allow non-string types to be passed to statements
-        try:
-            text = str(kwargs.get('text'))
-        except UnicodeEncodeError:
-            pass
 
         self.id = kwargs.get('id')
-
-        self.text = text
+        self.text = str(kwargs.get('text'))
         self.search_text = kwargs.get('search_text', '')
-
         self.conversation = kwargs.get('conversation', '')
-
         self.persona = kwargs.get('persona', '')
-
         self.tags = kwargs.pop('tags', [])
         self.in_response_to = kwargs.pop('in_response_to', None)
         self.search_in_response_to = kwargs.get('search_in_response_to', '')
