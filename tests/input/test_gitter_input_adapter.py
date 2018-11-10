@@ -1,9 +1,9 @@
 from chatterbot.conversation import Statement
-from chatterbot.output import Gitter
-from tests.api_tests.test_gitter import GitterTestCase
+from chatterbot.input import Gitter
+from tests.api.test_gitter import GitterTestCase
 
 
-class GitterAdapterTestCase(GitterTestCase):
+class GitterAdapterTests(GitterTestCase):
 
     def setUp(self):
         super().setUp()
@@ -16,8 +16,7 @@ class GitterAdapterTestCase(GitterTestCase):
             gitter_only_respond_to_mentions=False
         )
 
-    def test_process_response(self):
+    def test_process_input(self):
         statement = Statement(text='Hello')
-        output_statement = self.adapter.process_response(statement)
-
-        self.assertEqual(output_statement, statement)
+        data = self.adapter.process_input(statement)
+        self.assertEqual('Hello', data)

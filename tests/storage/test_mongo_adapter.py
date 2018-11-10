@@ -5,26 +5,37 @@ from chatterbot.conversation import Statement
 
 class MongoAdapterTestCase(TestCase):
 
-    def setUp(self):
+    @classmethod
+    def setUpClass(cls):
         """
-        Instantiate the adapter.
+        Instantiate the adapter before any tests in the test case run.
         """
         from pymongo.errors import ServerSelectionTimeoutError
         from pymongo import MongoClient
 
-        # Skip these tests if a mongo client is not running
+        cls.has_mongo_connection = False
+
         try:
             client = MongoClient(
                 serverSelectionTimeoutMS=0.1
             )
             client.server_info()
 
-            self.adapter = MongoDatabaseAdapter(
-                database_uri="mongodb://localhost:27017/chatterbot_test_database"
+            cls.adapter = MongoDatabaseAdapter(
+                database_uri='mongodb://localhost:27017/chatterbot_test_database'
             )
 
+            cls.has_mongo_connection = False
+
         except ServerSelectionTimeoutError:
-            self.skipTest("Unable to connect to mongo database.")
+            pass
+
+    def setUp(self):
+        """
+        Skip these tests if a mongo client is not running.
+        """
+        if not self.has_mongo_connection:
+            self.skipTest('Unable to connect to mongo database.')
 
     def tearDown(self):
         """
