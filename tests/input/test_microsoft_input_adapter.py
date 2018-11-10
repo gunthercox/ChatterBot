@@ -1,6 +1,6 @@
 from chatterbot.conversation import Statement
 from chatterbot.input import Microsoft
-from tests.api_tests.test_microsoft import MicrosoftTestCase
+from tests.api.test_microsoft import MicrosoftTestCase
 
 
 class MicrosoftInputAdapterTests(MicrosoftTestCase):
