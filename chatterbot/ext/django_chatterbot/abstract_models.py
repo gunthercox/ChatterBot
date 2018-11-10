@@ -90,8 +90,7 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         (Overrides the method from StatementMixin)
         """
         for _tag in tags:
-            if not self.tags.filter(name=_tag).exists():
-                self.tags.create(name=_tag)
+            self.tags.get_or_create(name=_tag)
 
 
 class AbstractBaseTag(models.Model):
@@ -102,6 +101,7 @@ class AbstractBaseTag(models.Model):
     """
 
     name = models.SlugField(
+        primary_key=True,
         max_length=constants.TAG_NAME_MAX_LENGTH
     )
 
