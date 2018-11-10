@@ -97,8 +97,3 @@ class Statement(StatementMixin):
         Save the statement in the database.
         """
         self.storage.update(self)
-
-    class InvalidTypeException(Exception):
-
-        def __init__(self, message='Received an unexpected value type.'):
-            super().__init__(message)
