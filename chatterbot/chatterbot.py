@@ -164,7 +164,9 @@ class ChatBot(object):
         # If multiple adapters agree on the same statement,
         # then that statement is more likely to be the correct response
         if len(results) >= 3:
-            statements = [s[1] for s in results]
+            statements = tuple(
+                s[1] for s in results
+            )
             count = Counter(statements)
             most_common = count.most_common()
             if most_common[0][1] > 1:
