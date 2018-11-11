@@ -10,9 +10,9 @@ class StorageAdapterTestCase(TestCase):
     basic functionality are triggered when needed.
     """
 
-    def setUp(self):
-        super(StorageAdapterTestCase, self).setUp()
-        self.adapter = StorageAdapter()
+    @classmethod
+    def setUpClass(cls):
+        cls.adapter = StorageAdapter()
 
     def test_count(self):
         with self.assertRaises(StorageAdapter.AdapterMethodNotImplementedError):
