@@ -103,12 +103,7 @@ class ListTrainer(Trainer):
             previous_statement_text = statement.text
             previous_statement_search_text = statement_search_text
 
-            statements_to_create.append({
-                'text': statement.text,
-                'in_response_to': statement.in_response_to,
-                'conversation': statement.conversation,
-                'tags': statement.tags
-            })
+            statements_to_create.append(statement)
 
         self.chatbot.storage.create_many(statements_to_create)
 
@@ -149,7 +144,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
                     statement_search_text = self.stemmer.stem(text)
 
-                    _statement = Statement(
+                    statement = Statement(
                         text=text,
                         search_text=statement_search_text,
                         in_response_to=previous_statement_text,
@@ -157,19 +152,14 @@ class ChatterBotCorpusTrainer(Trainer):
                         conversation='training'
                     )
 
-                    _statement.add_tags(*categories)
+                    statement.add_tags(*categories)
 
-                    statement = self.get_preprocessed_statement(_statement)
+                    statement = self.get_preprocessed_statement(statement)
 
                     previous_statement_text = statement.text
                     previous_statement_search_text = statement_search_text
 
-                    statements_to_create.append({
-                        'text': statement.text,
-                        'in_response_to': statement.in_response_to,
-                        'conversation': statement.conversation,
-                        'tags': statement.tags
-                    })
+                    statements_to_create.append(statement)
 
             self.chatbot.storage.create_many(statements_to_create)
 
@@ -436,12 +426,7 @@ class UbuntuCorpusTrainer(Trainer):
                         if row[2].strip():
                             statement.add_tags('addressing_speaker:', row[2])
 
-                        statements_to_create.append({
-                            'text': statement.text,
-                            'in_response_to': statement.in_response_to,
-                            'conversation': statement.conversation,
-                            'tags': statement.tags
-                        })
+                        statements_to_create.append(statement)
                         statement_count += 1
 
                         previous_statement_text = statement.text
