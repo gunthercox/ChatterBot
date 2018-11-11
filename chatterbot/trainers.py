@@ -1,5 +1,9 @@
 import os
 import sys
+import csv
+import time
+from multiprocessing import Pool, Manager
+from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
 from chatterbot.stemming import SimpleStemmer
 from chatterbot import utils
@@ -264,6 +268,41 @@ class TwitterTrainer(Trainer):
                 )
 
 
+def read_file(files, queue, preprocessors, stemmer):
+
+    statements_from_file = []
+
+    for tsv_file in files:
+        with open(tsv_file, 'r', encoding='utf-8') as tsv:
+            reader = csv.reader(tsv, delimiter='\t')
+
+            previous_statement_text = None
+            previous_statement_search_text = ''
+
+            for row in reader:
+                if len(row) > 0:
+                    statement = Statement(
+                        text=row[3],
+                        in_response_to=previous_statement_text,
+                        conversation='training',
+                        created_at=date_parser.parse(row[0]),
+                        persona=row[1]
+                    )
+
+                    for preprocessor in preprocessors:
+                        statement = preprocessor(statement)
+
+                    statement.search_text = stemmer.stem(statement.text)
+                    statement.search_in_response_to = previous_statement_search_text
+
+                    previous_statement_text = statement.text
+                    previous_statement_search_text = statement.search_text
+
+                    statements_from_file.append(statement)
+
+    queue.put(tuple(statements_from_file))
+
+
 class UbuntuCorpusTrainer(Trainer):
     """
     Allow chatbots to be trained with the data from
@@ -377,8 +416,10 @@ class UbuntuCorpusTrainer(Trainer):
         return True
 
     def train(self):
-        import csv
         import glob
+        from chatterbot.stemming import SimpleStemmer
+
+        stemmer = SimpleStemmer()
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
@@ -392,56 +433,76 @@ class UbuntuCorpusTrainer(Trainer):
             '**', '**', '*.tsv'
         )
 
-        BATCH_SIZE = 1000
+        manager = Manager()
+        queue = manager.Queue()
+        pool = Pool()
 
-        statements_to_create = []
-        batch_count = 0
-        statement_count = 0
+        def chunks(l, n):
+            for i in range(0, len(l), n):
+                yield l[i:i + n]
 
-        for tsv_file in glob.iglob(extracted_corpus_path):
-            with open(tsv_file, 'r', encoding='utf-8') as tsv:
-                reader = csv.reader(tsv, delimiter='\t')
+        file_list = glob.glob(extracted_corpus_path)
 
-                previous_statement_text = None
-                previous_statement_search_text = ''
+        file_groups = list(chunks(file_list, 10000))
 
-                for row in reader:
-                    if len(row) > 0:
-                        text = row[3]
-                        statement_search_text = self.stemmer.stem(text)
+        arguments = [
+            (file_group, queue, self.chatbot.preprocessors, stemmer) for file_group in file_groups
+        ]
 
-                        statement = self.get_preprocessed_statement(
-                            Statement(
-                                text=text,
-                                search_text=statement_search_text,
-                                in_response_to=previous_statement_text,
-                                search_in_response_to=previous_statement_search_text,
-                                conversation='training'
-                            )
-                        )
+        batch_number = 0
+        remaining_batches = len(arguments)
 
-                        statement.add_tags('datetime:' + row[0])
-                        statement.add_tags('speaker:' + row[1])
+        map_result = pool.starmap_async(read_file, arguments)
 
-                        if row[2].strip():
-                            statement.add_tags('addressing_speaker:', row[2])
+        start_time = time.time()
 
-                        statements_to_create.append(statement)
-                        statement_count += 1
+        print('After map call')
 
-                        previous_statement_text = statement.text
-                        previous_statement_search_text = statement_search_text
+        while True:
 
-            if statement_count >= BATCH_SIZE:
-                batch_count += 1
+            if not queue.empty():
+                queue_statemens = queue.get()
 
-                print('Training with batch {} containing {} statements.'.format(
-                    batch_count, statement_count
+                batch_number += 1
+                remaining_batches -= 1
+
+                print('Training with batch {} with {} batches remaining..'.format(
+                    batch_number,
+                    remaining_batches
                 ))
 
-                self.chatbot.storage.create_many(statements_to_create)
-                statements_to_create = []
-                statement_count = 0
+                elapsed_time = time.time() - start_time
+                time_per_batch = elapsed_time / batch_number
+                remaining_time = time_per_batch * remaining_batches
 
-        # Insert the remaining statements
-        self.chatbot.storage.create_many(statements_to_create)
+                print('{:.0f} hours {:.0f} minutes {:.0f} seconds elapsed.'.format(
+                    elapsed_time // 3600 % 24,
+                    elapsed_time // 60 % 60,
+                    elapsed_time % 60
+                ))
+
+                print('{:.0f} hours {:.0f} minutes {:.0f} seconds remaining.'.format(
+                    remaining_time // 3600 % 24,
+                    remaining_time // 60 % 60,
+                    remaining_time % 60
+                ))
+                print('---')
+
+                self.chatbot.storage.create_many(queue_statemens)
+
+            if map_result.ready() and queue.empty():
+                break
+
+            time.sleep(0.1)
+
+        print('Pool about to close')
+
+        pool.close()
+
+        print('Pool closed')
+
+        pool.join()
+
+        print('Pool joined')
+
+        print('Training took', time.time() - start_time, 'seconds.')

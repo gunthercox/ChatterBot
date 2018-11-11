@@ -44,6 +44,20 @@ class Statement(StatementMixin):
     phrase that someone can say.
     """
 
+    __slots__ = (
+        'id',
+        'text',
+        'search_text',
+        'conversation',
+        'persona',
+        'tags',
+        'in_response_to',
+        'search_in_response_to',
+        'created_at',
+        'confidence',
+        'storage',
+    )
+
     def __init__(self, **kwargs):
 
         self.id = kwargs.get('id')
