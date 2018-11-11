@@ -1,6 +1,7 @@
 from django.test import TestCase
 from chatterbot.storage import DjangoStorageAdapter
-from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
+from chatterbot.conversation import Statement as StatementObject
+from chatterbot.ext.django_chatterbot.models import Statement
 
 
 class DjangoAdapterTestCase(TestCase):
@@ -54,7 +55,7 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
         self.assertEqual(results.first().text, statement.text)
 
     def test_update_adds_new_statement(self):
-        statement = StatementModel(text="New statement")
+        statement = Statement(text="New statement")
         self.adapter.update(statement)
 
         results = self.adapter.filter(text="New statement")
@@ -157,12 +158,12 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
     def setUp(self):
         super().setUp()
 
-        self.statement1 = StatementModel(
+        self.statement1 = Statement(
             text="Testing...",
             in_response_to="Why are you counting?"
         )
 
-        self.statement2 = StatementModel(
+        self.statement2 = Statement(
             text="Testing one, two, three.",
             in_response_to=self.statement1.text
         )
@@ -258,7 +259,7 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         statement = self.adapter.create(text='Test statement')
         statement.confidence = 0.5
 
-        statement_updated = StatementModel.objects.get(pk=statement.id)
+        statement_updated = Statement.objects.get(pk=statement.id)
 
         self.assertEqual(statement_updated.confidence, 0)
 
@@ -348,12 +349,8 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
 
     def test_create_many_text(self):
         self.adapter.create_many([
-            {
-                'text': 'A'
-            },
-            {
-                'text': 'B'
-            }
+            StatementObject(text='A'),
+            StatementObject(text='B')
         ])
 
         results = self.adapter.filter()
@@ -364,14 +361,8 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
 
     def test_create_many_search_text(self):
         self.adapter.create_many([
-            {
-                'text': 'A',
-                'search_text': 'a'
-            },
-            {
-                'text': 'B',
-                'search_text': 'b'
-            }
+            StatementObject(text='A', search_text='a'),
+            StatementObject(text='B', search_text='b')
         ])
 
         results = self.adapter.filter()
@@ -382,14 +373,8 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
 
     def test_create_many_search_in_response_to(self):
         self.adapter.create_many([
-            {
-                'text': 'A',
-                'search_in_response_to': 'a'
-            },
-            {
-                'text': 'B',
-                'search_in_response_to': 'b'
-            }
+            StatementObject(text='A', search_in_response_to='a'),
+            StatementObject(text='B', search_in_response_to='b')
         ])
 
         results = self.adapter.filter()
@@ -400,14 +385,8 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
 
     def test_create_many_tags(self):
         self.adapter.create_many([
-            {
-                'text': 'A',
-                'tags': ['first', 'letter']
-            },
-            {
-                'text': 'B',
-                'tags': ['second', 'letter']
-            }
+            StatementObject(text='A', tags=['first', 'letter']),
+            StatementObject(text='B', tags=['second', 'letter'])
         ])
         results = self.adapter.filter()
 
@@ -423,10 +402,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
         that are duplicates.
         """
         self.adapter.create_many([
-            {
-                'text': 'testing',
-                'tags': ['ab', 'ab']
-            }
+            StatementObject(text='testing', tags=['ab', 'ab'])
         ])
 
         results = self.adapter.filter()

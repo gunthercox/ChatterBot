@@ -376,12 +376,8 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
 
     def test_create_many_text(self):
         self.adapter.create_many([
-            {
-                'text': 'A'
-            },
-            {
-                'text': 'B'
-            }
+            Statement(text='A'),
+            Statement(text='B')
         ])
 
         results = self.adapter.filter()
@@ -392,14 +388,8 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
 
     def test_create_many_search_text(self):
         self.adapter.create_many([
-            {
-                'text': 'A',
-                'search_text': 'a'
-            },
-            {
-                'text': 'B',
-                'search_text': 'b'
-            }
+            Statement(text='A', search_text='a'),
+            Statement(text='B', search_text='b')
         ])
 
         results = self.adapter.filter()
@@ -410,14 +400,8 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
 
     def test_create_many_search_in_response_to(self):
         self.adapter.create_many([
-            {
-                'text': 'A',
-                'search_in_response_to': 'a'
-            },
-            {
-                'text': 'B',
-                'search_in_response_to': 'b'
-            }
+            Statement(text='A', search_in_response_to='a'),
+            Statement(text='B', search_in_response_to='b')
         ])
 
         results = self.adapter.filter()
@@ -428,14 +412,8 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
 
     def test_create_many_tags(self):
         self.adapter.create_many([
-            {
-                'text': 'A',
-                'tags': ['first', 'letter']
-            },
-            {
-                'text': 'B',
-                'tags': ['second', 'letter']
-            }
+            Statement(text='A', tags=['first', 'letter']),
+            Statement(text='B', tags=['second', 'letter'])
         ])
         results = self.adapter.filter()
 
@@ -451,10 +429,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
         that are duplicates.
         """
         self.adapter.create_many([
-            {
-                'text': 'testing',
-                'tags': ['ab', 'ab']
-            }
+            Statement(text='testing', tags=['ab', 'ab'])
         ])
 
         results = self.adapter.filter()
