@@ -58,15 +58,15 @@ class Statement(StatementMixin):
         'storage',
     )
 
-    def __init__(self, **kwargs):
+    def __init__(self, text, in_response_to=None, **kwargs):
 
         self.id = kwargs.get('id')
-        self.text = str(kwargs.get('text'))
+        self.text = str(text)
         self.search_text = kwargs.get('search_text', '')
         self.conversation = kwargs.get('conversation', '')
         self.persona = kwargs.get('persona', '')
         self.tags = kwargs.pop('tags', [])
-        self.in_response_to = kwargs.pop('in_response_to', None)
+        self.in_response_to = in_response_to
         self.search_in_response_to = kwargs.get('search_in_response_to', '')
         self.created_at = kwargs.get('created_at', datetime.now())
 
