@@ -13,4 +13,4 @@ class TerminalAdapter(InputAdapter):
         Read the user's input from the terminal.
         """
         user_input = input()
-        return Statement(user_input)
+        return Statement(text=user_input)
