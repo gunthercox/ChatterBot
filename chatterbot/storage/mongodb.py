@@ -171,18 +171,29 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Creates multiple statement entries.
         """
+        create_statements = []
+
         for statement in statements:
-            if 'tags' in statement:
-                statement['tags'] = list(set(statement['tags']))
+            statement_data = {
+                'text': statement.text,
+                'search_text': statement.search_text,
+                'conversation': statement.conversation,
+                'persona': statement.persona,
+                'in_response_to': statement.in_response_to,
+                'search_in_response_to': statement.search_in_response_to,
+                'created_at': statement.created_at,
+                'tags': list(set(statement.tags))
+            }
 
-            if 'search_text' not in statement:
-                statement['search_text'] = self.stemmer.stem(statement['text'])
+            if not statement.search_text:
+                statement_data['search_text'] = self.stemmer.stem(statement.text)
 
-            if 'search_in_response_to' not in statement:
-                if statement.get('in_response_to'):
-                    statement['search_in_response_to'] = self.stemmer.stem(statement['in_response_to'])
+            if not statement.search_in_response_to and statement.in_response_to:
+                statement_data['search_in_response_to'] = self.stemmer.stem(statement.in_response_to)
 
-        self.statements.insert_many(statements)
+            create_statements.append(statement_data)
+
+        self.statements.insert_many(create_statements)
 
     def update(self, statement):
         data = statement.serialize()

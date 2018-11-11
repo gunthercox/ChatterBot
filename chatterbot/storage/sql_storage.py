@@ -198,20 +198,25 @@ class SQLStorageAdapter(StorageAdapter):
         create_statements = []
         create_tags = {}
 
-        for statement_data in statements:
+        for statement in statements:
 
-            tags = set(statement_data.pop('tags', []))
+            statement_model_object = Statement(
+                text=statement.text,
+                search_text=statement.search_text,
+                conversation=statement.conversation,
+                persona=statement.persona,
+                in_response_to=statement.in_response_to,
+                search_in_response_to=statement.search_in_response_to,
+                created_at=statement.created_at
+            )
 
-            if 'search_text' not in statement_data:
-                statement_data['search_text'] = self.stemmer.stem(statement_data['text'])
+            if not statement.search_text:
+                statement_model_object.search_text = self.stemmer.stem(statement.text)
 
-            if 'search_in_response_to' not in statement_data:
-                if statement_data.get('in_response_to'):
-                    statement_data['search_in_response_to'] = self.stemmer.stem(statement_data['in_response_to'])
+            if not statement.search_in_response_to and statement.in_response_to:
+                statement_model_object.search_in_response_to = self.stemmer.stem(statement.in_response_to)
 
-            statement = Statement(**statement_data)
-
-            for tag_name in tags:
+            for tag_name in statement.tags:
                 if tag_name in create_tags:
                     tag = create_tags[tag_name]
                 else:
@@ -223,8 +228,8 @@ class SQLStorageAdapter(StorageAdapter):
 
                     create_tags[tag_name] = tag
 
-                statement.tags.append(tag)
-            create_statements.append(statement)
+                statement_model_object.tags.append(tag)
+            create_statements.append(statement_model_object)
 
         session.add_all(create_statements)
         session.commit()
