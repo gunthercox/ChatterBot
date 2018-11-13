@@ -92,7 +92,7 @@ class ListTrainer(Trainer):
                     conversation_count + 1, len(conversation)
                 )
 
-            statement_search_text = self.stemmer.stem(text)
+            statement_search_text = self.stemmer.get_bigram_pair_string(text)
 
             statement = self.get_preprocessed_statement(
                 Statement(
@@ -146,7 +146,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
                 for text in conversation:
 
-                    statement_search_text = self.stemmer.stem(text)
+                    statement_search_text = self.stemmer.get_bigram_pair_string(text)
 
                     statement = Statement(
                         text=text,
@@ -292,7 +292,7 @@ def read_file(files, queue, preprocessors, stemmer):
                     for preprocessor in preprocessors:
                         statement = preprocessor(statement)
 
-                    statement.search_text = stemmer.stem(statement.text)
+                    statement.search_text = stemmer.get_bigram_pair_string(statement.text)
                     statement.search_in_response_to = previous_statement_search_text
 
                     previous_statement_text = statement.text
