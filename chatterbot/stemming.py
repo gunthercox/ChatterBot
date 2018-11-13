@@ -21,7 +21,7 @@ class SimpleStemmer(object):
         self.stopwords = nltk.corpus.stopwords.words(language)
         self.stopwords.append('')
 
-    def stem(self, text):
+    def get_stemmed_word_list(self, text):
 
         # Remove punctuation
         text = text.translate(self.punctuation_table)
@@ -42,6 +42,36 @@ class SimpleStemmer(object):
                 stop = start * -1
                 word = word[start:stop]
 
-                words.append(word)
+                if word:
+                    words.append(word)
 
-        return ' '.join(words)[:-1]
+        return words
+
+    def get_bigram_pair_string(self, text):
+        """
+        Return bigram pairs of stemmed text for a given string.
+        For example:
+
+        "Hello Dr. Salazar. How are you today?"
+        "[ell alaza] [alaza oda]"
+        "ellalaza alazaoda"
+        """
+        words = self.get_stemmed_word_list(text)
+
+        bigrams = []
+
+        word_count = len(words)
+
+        if word_count <= 1:
+            bigrams = words
+
+        for index in range(0, word_count - 1):
+            bigram = words[index] + words[index + 1]
+            bigrams.append(bigram)
+
+        return ' '.join(bigrams)
+
+    def stem(self, text):
+        words = self.get_stemmed_word_list(text)
+
+        return ' '.join(words)

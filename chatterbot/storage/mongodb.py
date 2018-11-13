@@ -155,11 +155,11 @@ class MongoDatabaseAdapter(StorageAdapter):
             kwargs['tags'] = list(set(kwargs['tags']))
 
         if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.stemmer.stem(kwargs['text'])
+            kwargs['search_text'] = self.stemmer.get_bigram_pair_string(kwargs['text'])
 
         if 'search_in_response_to' not in kwargs:
             if kwargs.get('in_response_to'):
-                kwargs['search_in_response_to'] = self.stemmer.stem(kwargs['in_response_to'])
+                kwargs['search_in_response_to'] = self.stemmer.get_bigram_pair_string(kwargs['in_response_to'])
 
         inserted = self.statements.insert_one(kwargs)
 
@@ -186,10 +186,10 @@ class MongoDatabaseAdapter(StorageAdapter):
             }
 
             if not statement.search_text:
-                statement_data['search_text'] = self.stemmer.stem(statement.text)
+                statement_data['search_text'] = self.stemmer.get_bigram_pair_string(statement.text)
 
             if not statement.search_in_response_to and statement.in_response_to:
-                statement_data['search_in_response_to'] = self.stemmer.stem(statement.in_response_to)
+                statement_data['search_in_response_to'] = self.stemmer.get_bigram_pair_string(statement.in_response_to)
 
             create_statements.append(statement_data)
 
@@ -200,10 +200,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         data.pop('id', None)
         data.pop('tags', None)
 
-        data['search_text'] = self.stemmer.stem(data['text'])
+        data['search_text'] = self.stemmer.get_bigram_pair_string(data['text'])
 
         if data.get('in_response_to'):
-            data['search_in_response_to'] = self.stemmer.stem(data['in_response_to'])
+            data['search_in_response_to'] = self.stemmer.get_bigram_pair_string(data['in_response_to'])
 
         update_data = {
             '$set': data
