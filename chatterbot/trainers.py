@@ -435,45 +435,53 @@ class UbuntuCorpusTrainer(Trainer):
 
         manager = Manager()
         queue = manager.Queue()
-        pool = Pool()
 
-        def chunks(l, n):
-            for i in range(0, len(l), n):
-                yield l[i:i + n]
+        def chunks(items, items_per_chunk):
+            for start_index in range(0, len(items), items_per_chunk):
+                end_index = start_index + items_per_chunk
+                yield items[start_index:end_index]
 
         file_list = glob.glob(extracted_corpus_path)
 
-        file_groups = list(chunks(file_list, 10000))
+        file_groups = tuple(chunks(file_list, 10000))
 
-        arguments = [
-            (file_group, queue, self.chatbot.preprocessors, stemmer) for file_group in file_groups
-        ]
+        argument_groups = tuple(
+            (
+                file_names,
+                queue,
+                self.chatbot.preprocessors,
+                stemmer,
+            ) for file_names in file_groups
+        )
 
+        pool_batches = chunks(argument_groups, 9)
+
+        total_batches = len(file_groups)
         batch_number = 0
-        remaining_batches = len(arguments)
-
-        map_result = pool.starmap_async(read_file, arguments)
 
         start_time = time.time()
 
-        print('After map call')
+        with Pool() as pool:
+            for pool_batch in pool_batches:
+                pool.starmap(read_file, pool_batch)
 
-        while True:
+                while True:
 
-            if not queue.empty():
-                queue_statemens = queue.get()
+                    if queue.empty():
+                        break
 
-                batch_number += 1
-                remaining_batches -= 1
+                    batch_number += 1
 
-                print('Training with batch {} with {} batches remaining..'.format(
-                    batch_number,
-                    remaining_batches
-                ))
+                    print('Training with batch {} with {} batches remaining...'.format(
+                        batch_number,
+                        total_batches - batch_number
+                    ))
+
+                    self.chatbot.storage.create_many(queue.get())
 
                 elapsed_time = time.time() - start_time
                 time_per_batch = elapsed_time / batch_number
-                remaining_time = time_per_batch * remaining_batches
+                remaining_time = time_per_batch * (total_batches - batch_number)
 
                 print('{:.0f} hours {:.0f} minutes {:.0f} seconds elapsed.'.format(
                     elapsed_time // 3600 % 24,
@@ -487,22 +495,5 @@ class UbuntuCorpusTrainer(Trainer):
                     remaining_time % 60
                 ))
                 print('---')
-
-                self.chatbot.storage.create_many(queue_statemens)
-
-            if map_result.ready() and queue.empty():
-                break
-
-            time.sleep(0.1)
-
-        print('Pool about to close')
-
-        pool.close()
-
-        print('Pool closed')
-
-        pool.join()
-
-        print('Pool joined')
 
         print('Training took', time.time() - start_time, 'seconds.')
