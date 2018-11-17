@@ -78,10 +78,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
 
-        # Convert a single sting into a list if only one tag is provided
-        if type(tags) == str:
-            tags = [tags]
-
         if tags:
             kwargs['tags'] = {
                 '$in': tags
@@ -277,7 +273,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
             statement_query = self.statements.find(_statement_query)
 
-            for statement in list(statement_query):
+            for statement in statement_query:
                 yield self.mongo_to_object(statement)
 
     def drop(self):

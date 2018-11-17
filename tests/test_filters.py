@@ -29,7 +29,7 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
             'Hi',
             'Hello',
             'How are you?',
-            'I am good.',
+            'I am good',
             'Glad to hear',
             'How are you?'
         ])
