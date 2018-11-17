@@ -6,7 +6,7 @@ from chatterbot.trainers import ListTrainer
 class ListTrainingTests(ChatBotTestCase):
 
     def setUp(self):
-        super(ListTrainingTests, self).setUp()
+        super().setUp()
         self.trainer = ListTrainer(
             self.chatbot,
             show_training_progress=False
@@ -213,7 +213,7 @@ class ListTrainingTests(ChatBotTestCase):
 class ChatterBotResponseTests(ChatBotTestCase):
 
     def setUp(self):
-        super(ChatterBotResponseTests, self).setUp()
+        super().setUp()
         """
         Set up a database for testing.
         """
