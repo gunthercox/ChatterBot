@@ -21,31 +21,44 @@ class SimpleStemmer(object):
         self.stopwords = nltk.corpus.stopwords.words(language)
         self.stopwords.append('')
 
-    def get_stemmed_word_list(self, text):
+    def get_stemmed_word_list(self, text, size=4):
 
-        # Remove punctuation
-        text = text.translate(self.punctuation_table)
+        stemmed_words = []
 
         # Make the text lowercase
         text = text.lower()
 
-        words = []
+        # Remove punctuation
+        text_with_punctuation_removed = text.translate(self.punctuation_table)
+
+        if text_with_punctuation_removed:
+            text = text_with_punctuation_removed
+
+        words = text.split(' ')
+
+        # Do not stem singe-word strings that are less than the size limit for characters
+        if len(words) == 1 and len(words[0]) < size:
+            return words
 
         # Generate the stemmed text
-        for word in text.split(' '):
+        for word in words:
 
             # Remove stopwords
             if word not in self.stopwords:
 
                 # Chop off the ends of the word
-                start = len(word) // 4
+                start = len(word) // size
                 stop = start * -1
                 word = word[start:stop]
 
                 if word:
-                    words.append(word)
+                    stemmed_words.append(word)
 
-        return words
+        # Return the word list if it could not be stemmed
+        if not stemmed_words and words:
+            return words
+
+        return stemmed_words
 
     def get_bigram_pair_string(self, text):
         """
