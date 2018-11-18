@@ -38,6 +38,7 @@ class DjangoStorageAdapter(StorageAdapter):
 
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
+        exclude_text = kwargs.pop('exclude_text', None)
 
         # Convert a single sting into a list if only one tag is provided
         if type(tags) == str:
@@ -47,6 +48,11 @@ class DjangoStorageAdapter(StorageAdapter):
             kwargs['tags__name__in'] = tags
 
         statements = Statement.objects.filter(**kwargs)
+
+        if exclude_text:
+            statements = statements.exclude(
+                text__in=exclude_text
+            )
 
         if order_by:
             statements = statements.order_by(*order_by)
