@@ -2,33 +2,6 @@ import re
 from chatterbot.storage import StorageAdapter
 
 
-class Query(object):
-
-    def __init__(self, query={}):
-        self.query = query
-
-    def value(self):
-        return self.query.copy()
-
-    def raw(self, data):
-        query = self.query.copy()
-
-        query.update(data)
-
-        return Query(query)
-
-    def statement_in_response_to_not_in(self, statements):
-        query = self.query.copy()
-
-        if 'in_response_to' not in query:
-            query['in_response_to'] = {}
-
-        if '$nin' not in query['in_response_to']:
-            query['in_response_to']['$nin'] = statements
-
-        return Query(query)
-
-
 class MongoDatabaseAdapter(StorageAdapter):
     """
     The MongoDatabaseAdapter is an interface that allows
@@ -68,8 +41,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         # The mongo collection of statement documents
         self.statements = self.database['statements']
 
-        self.base_query = Query()
-
     def get_statement_model(self):
         """
         Return the class for the statement model.
@@ -103,8 +74,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         import pymongo
 
-        query = self.base_query
-
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
 
@@ -112,16 +81,12 @@ class MongoDatabaseAdapter(StorageAdapter):
         if type(tags) == str:
             tags = [tags]
 
-        query = query.raw(kwargs)
-
         if tags:
-            query = query.raw({
-                'tags': {
-                    '$in': tags
-                }
-            })
+            kwargs['tags'] = {
+                '$in': tags
+            }
 
-        matches = self.statements.find(query.value())
+        matches = self.statements.find(kwargs)
 
         if order_by:
 
@@ -299,7 +264,6 @@ class MongoDatabaseAdapter(StorageAdapter):
                 }
             }
 
-            _statement_query.update(self.base_query.value())
             statement_query = self.statements.find(_statement_query)
 
             for statement in list(statement_query):
