@@ -135,8 +135,6 @@ class ChatBot(object):
         """
         from collections import Counter
 
-        self.storage.generate_base_query(self, input_statement.conversation)
-
         results = []
         result = None
         max_confidence = -1

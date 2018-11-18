@@ -8,14 +8,13 @@ class StorageAdapter(object):
     that all storage adapters should implement.
     """
 
-    def __init__(self, base_query=None, *args, **kwargs):
+    def __init__(self, *args, **kwargs):
         """
         Initialize common attributes shared by all storage adapters.
         """
         self.kwargs = kwargs
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
         self.adapter_supports_queries = True
-        self.base_query = None
 
         self.stemmer = SimpleStemmer(language=kwargs.get(
             'stemmer_language', 'english'
@@ -37,14 +36,6 @@ class StorageAdapter(object):
         get_model_method = getattr(self, 'get_%s_model' % (model_name, ))
 
         return get_model_method()
-
-    def generate_base_query(self, chatterbot, conversation):
-        """
-        Create a base query for the storage adapter.
-        """
-        if self.adapter_supports_queries:
-            for filter_instance in chatterbot.filters:
-                self.base_query = filter_instance.filter_selection(chatterbot, conversation)
 
     def count(self):
         """
