@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 
-
 # Uncomment the following lines to enable verbose logging
 # import logging
 # logging.basicConfig(level=logging.INFO)
@@ -12,9 +11,6 @@ bot = ChatBot(
     storage_adapter='chatterbot.storage.MongoDatabaseAdapter',
     logic_adapters=[
         'chatterbot.logic.BestMatch'
-    ],
-    filters=[
-        'chatterbot.filters.RepetitiveResponseFilter'
     ],
     input_adapter='chatterbot.input.TerminalAdapter',
     output_adapter='chatterbot.output.TerminalAdapter',

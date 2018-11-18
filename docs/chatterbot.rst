@@ -30,9 +30,6 @@ to the user.
                           Defaults to ``"chatterbot.output.OutputAdapter"``.
    :type output_adapter: str
 
-   :param filters: A list of dot-notated import paths to filter classes to be used by the chat bot.
-   :type filters: list
-
    :param logger: A ``Logger`` object.
    :type logger: logging.Logger
 
@@ -50,10 +47,6 @@ Example chat bot parameters
        ],
        input_adapter='my.input.AdapterClass',
        output_adapter='my.output.AdapterClass',
-       filters=[
-           'my.filter.FilterClass1',
-           'my.filter.FilterClass2'
-       ],
        logger=custom_logger
    )
 

@@ -64,7 +64,7 @@ Contents:
    input/index
    output/index
    storage/index
-   filters/index
+   filters
    chatterbot
    conversations
    comparisons

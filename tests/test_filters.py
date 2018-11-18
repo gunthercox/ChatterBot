@@ -1,9 +1,10 @@
 from tests.base_case import ChatBotMongoTestCase
+from chatterbot import filters
 
 
 class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
     """
-    Test case for the RepetitiveResponseFilter class.
+    Test case for the repetitive response filter.
     """
 
     def test_filter_selection(self):
@@ -11,10 +12,9 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
         Test that repetitive responses are filtered out of the results.
         """
         from chatterbot.conversation import Statement
-        from chatterbot.filters import RepetitiveResponseFilter
         from chatterbot.trainers import ListTrainer
 
-        self.chatbot.filters = (RepetitiveResponseFilter(), )
+        self.chatbot.filters = (filters.get_recent_repeated_responses, )
 
         self.trainer = ListTrainer(
             self.chatbot,
@@ -38,5 +38,5 @@ class RepetitiveResponseFilterTestCase(ChatBotMongoTestCase):
         first_response = self.chatbot.get_response(statement)
         second_response = self.chatbot.get_response(statement)
 
-        self.assertEqual('I am good.', first_response.text)
+        self.assertEqual('How are you?', first_response.text)
         self.assertEqual('Hi', second_response.text)
