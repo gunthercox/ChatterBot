@@ -155,27 +155,20 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
 
 class DjangoAdapterFilterTests(DjangoAdapterTestCase):
 
-    def setUp(self):
-        super().setUp()
-
-        self.statement1 = Statement(
-            text="Testing...",
-            in_response_to="Why are you counting?"
-        )
-
-        self.statement2 = Statement(
-            text="Testing one, two, three.",
-            in_response_to=self.statement1.text
-        )
-
     def test_filter_text_no_matches(self):
-        self.adapter.update(self.statement1)
+        self.adapter.create(
+            text='Testing...',
+            in_response_to='Why are you counting?'
+        )
         results = self.adapter.filter(text="Howdy")
 
         self.assertEqual(len(results), 0)
 
     def test_filter_in_response_to_no_matches(self):
-        self.adapter.update(self.statement1)
+        self.adapter.create(
+            text='Testing...',
+            in_response_to='Why are you counting?'
+        )
 
         results = self.adapter.filter(in_response_to="Maybe")
         self.assertEqual(len(results), 0)
@@ -191,17 +184,26 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.assertTrue(results.filter(text=statement2.text).exists())
 
     def test_filter_contains_result(self):
-        self.adapter.update(self.statement1)
-        self.adapter.update(self.statement2)
+        self.adapter.create(
+            text='Testing...',
+            in_response_to='Why are you counting?'
+        )
+        self.adapter.create(
+            text='Testing one, two, three.',
+            in_response_to='Testing...'
+        )
 
         results = self.adapter.filter(
             in_response_to="Why are you counting?"
         )
         self.assertEqual(results.count(), 1)
-        self.assertTrue(results.filter(text=self.statement1.text).exists())
+        self.assertTrue(results.filter(text='Testing...').exists())
 
     def test_filter_contains_no_result(self):
-        self.adapter.update(self.statement1)
+        self.adapter.create(
+            text='Testing...',
+            in_response_to='Why are you counting?'
+        )
 
         results = self.adapter.filter(
             in_response_to="How do you do?"
@@ -262,6 +264,19 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         statement_updated = Statement.objects.get(pk=statement.id)
 
         self.assertEqual(statement_updated.confidence, 0)
+
+    def test_exclude_text(self):
+        self.adapter.create(text='Hello!')
+        self.adapter.create(text='Hi everyone!')
+
+        results = self.adapter.filter(
+            exclude_text=[
+                'Hello!'
+            ]
+        )
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, 'Hi everyone!')
 
 
 class DjangoOrderingTests(DjangoAdapterTestCase):
