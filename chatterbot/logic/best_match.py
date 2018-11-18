@@ -1,4 +1,5 @@
 from chatterbot.logic import LogicAdapter
+from chatterbot import filters
 
 
 class BestMatch(LogicAdapter):
@@ -48,9 +49,15 @@ class BestMatch(LogicAdapter):
             input_statement.text, closest_match.text
         ))
 
+        recent_repeated_responses = filters.get_recent_repeated_responses(
+            self.chatbot,
+            input_statement.conversation
+        )
+
         # Get all statements that are in response to the closest match
         response_list = self.chatbot.storage.filter(
-            in_response_to=closest_match.text
+            in_response_to=closest_match.text,
+            exclude_text=recent_repeated_responses
         )
 
         if response_list:
@@ -64,6 +71,7 @@ class BestMatch(LogicAdapter):
                 response_list,
                 self.chatbot.storage
             )
+
             response.confidence = closest_match.confidence
             self.chatbot.logger.info('Response selected. Using "{}"'.format(response.text))
         else:
