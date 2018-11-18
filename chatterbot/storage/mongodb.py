@@ -76,6 +76,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
+        exclude_text = kwargs.pop('exclude_text', None)
 
         # Convert a single sting into a list if only one tag is provided
         if type(tags) == str:
@@ -85,6 +86,16 @@ class MongoDatabaseAdapter(StorageAdapter):
             kwargs['tags'] = {
                 '$in': tags
             }
+
+        if exclude_text:
+            if 'text' not in kwargs:
+                kwargs['text'] = {}
+            elif 'text' in kwargs and isinstance(kwargs['text'], str):
+                text = kwargs.pop('text')
+                kwargs['text'] = {
+                    '$eq': text
+                }
+            kwargs['text']['$nin'] = exclude_text
 
         matches = self.statements.find(kwargs)
 

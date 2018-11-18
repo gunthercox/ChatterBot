@@ -178,28 +178,22 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
 class MongoAdapterFilterTestCase(MongoAdapterTestCase):
 
-    def setUp(self):
-        super(MongoAdapterFilterTestCase, self).setUp()
-
-        self.statement1 = Statement(
-            text="Testing...",
-            in_response_to="Why are you counting?"
-        )
-        self.statement2 = Statement(
-            text="Testing one, two, three.",
-            in_response_to="Testing..."
-        )
-
     def test_filter_text_no_matches(self):
-        self.adapter.update(self.statement1)
-        results = self.adapter.filter(text="Howdy")
+        self.adapter.create(
+            text='Testing...',
+            in_response_to='Why are you counting?'
+        )
+        results = self.adapter.filter(text='Howdy')
 
         self.assertEqual(len(results), 0)
 
     def test_filter_in_response_to_no_matches(self):
-        self.adapter.update(self.statement1)
+        self.adapter.create(
+            text='Testing...',
+            in_response_to='Why are you counting?'
+        )
 
-        results = self.adapter.filter(in_response_to="Maybe")
+        results = self.adapter.filter(in_response_to='Maybe')
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -272,6 +266,19 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.assertEqual(len(results_text_list), 2)
         self.assertIn("Hi everyone!", results_text_list)
         self.assertIn("The air contains Oxygen.", results_text_list)
+
+    def test_exclude_text(self):
+        self.adapter.create(text='Hello!')
+        self.adapter.create(text='Hi everyone!')
+
+        results = self.adapter.filter(
+            exclude_text=[
+                'Hello!'
+            ]
+        )
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, 'Hi everyone!')
 
 
 class MongoOrderingTestCase(MongoAdapterTestCase):
@@ -439,7 +446,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
         self.assertEqual(results[0].get_tags(), ['ab'])
 
 
-class StorageAdapterUpdateTestCase(MongoAdapterFilterTestCase):
+class StorageAdapterUpdateTestCase(MongoAdapterTestCase):
     """
     Tests for the update function of the storage adapter.
     """
