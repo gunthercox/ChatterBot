@@ -281,7 +281,6 @@ class JaccardSimilarity(Comparator):
 
         # Get default English stopwords
         stopwords = nltk.corpus.stopwords.words('english')
-        stopwords.append('')
 
         lemmatizer = nltk.stem.wordnet.WordNetLemmatizer()
 

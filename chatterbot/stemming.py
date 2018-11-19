@@ -19,7 +19,6 @@ class SimpleStemmer(object):
 
         # Get list of stopwords from the NLTK corpus
         self.stopwords = nltk.corpus.stopwords.words(language)
-        self.stopwords.append('')
 
     def get_stemmed_words(self, text, size=4):
 
