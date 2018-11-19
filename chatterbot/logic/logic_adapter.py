@@ -37,7 +37,7 @@ class LogicAdapter(Adapter):
         is found or the search set is exhausted.
         '''
         self.maximum_similarity_threshold = kwargs.get(
-            'maximum_similarity_threshold', 0.99
+            'maximum_similarity_threshold', 0.95
         )
 
         # The maximum number of records to load into memory at a time when searching
