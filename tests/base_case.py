@@ -24,10 +24,10 @@ class ChatBotTestCase(TestCase):
 
     def get_kwargs(self):
         return {
-            'input_adapter': 'chatterbot.input.InputAdapter',
-            'output_adapter': 'chatterbot.output.OutputAdapter',
             # Run the test database in-memory
-            'database_uri': None
+            'database_uri': None,
+            # Don't execute initialization processes such as downloading required data
+            'initialize': False
         }
 
 
