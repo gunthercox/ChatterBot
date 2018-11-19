@@ -78,8 +78,19 @@ class ChatBot(object):
         """
         Do any work that needs to be done before the responses can be returned.
         """
+        initialization_functions = {}
+
+        initialization_functions.update(
+            self.storage.stemmer.get_initialization_functions()
+        )
+
         for logic_adapter in self.get_logic_adapters():
-            logic_adapter.initialize()
+            initialization_functions.update(
+                logic_adapter.get_initialization_functions()
+            )
+
+        for function in initialization_functions.values():
+            function()
 
     def get_response(self, statement=None, **kwargs):
         """
