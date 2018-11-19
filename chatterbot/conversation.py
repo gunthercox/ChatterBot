@@ -1,3 +1,4 @@
+from pytz import UTC
 from datetime import datetime
 from dateutil import parser as date_parser
 
@@ -72,6 +73,10 @@ class Statement(StatementMixin):
 
         if not isinstance(self.created_at, datetime):
             self.created_at = date_parser.parse(self.created_at)
+
+        # Set timezone to UTC if no timezone was provided
+        if not self.created_at.tzinfo:
+            self.created_at = self.created_at.replace(tzinfo=UTC)
 
         # This is the confidence with which the chat bot believes
         # this is an accurate response. This value is set when the
