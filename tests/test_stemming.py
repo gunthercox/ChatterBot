@@ -8,24 +8,26 @@ class StemmerTests(TestCase):
         self.stemmer = stemming.SimpleStemmer()
 
     def test_stemming(self):
-        stemmed_text = self.stemmer.stem('Hello, how are you doing on this awesome day?')
+        stemmed_text = self.stemmer.get_stemmed_words(
+            'Hello, how are you doing on this awesome day?'
+        )
 
-        self.assertEqual(stemmed_text, 'ell wesom')
+        self.assertEqual(stemmed_text, ['ell', 'wesom'])
 
     def test_string_becomes_lowercase(self):
-        stemmed_text = self.stemmer.stem('THIS IS HOW IT BEGINS!')
+        stemmed_text = self.stemmer.get_stemmed_words('THIS IS HOW IT BEGINS!')
 
-        self.assertEqual(stemmed_text, 'egin')
+        self.assertEqual(stemmed_text, ['egin'])
 
     def test_stemming_medium_sized_words(self):
-        stemmed_text = self.stemmer.stem('Hello, my name is Gunther.')
+        stemmed_text = self.stemmer.get_stemmed_words('Hello, my name is Gunther.')
 
-        self.assertEqual(stemmed_text, 'ell am unthe')
+        self.assertEqual(stemmed_text, ['ell', 'am', 'unthe'])
 
     def test_stemming_long_words(self):
-        stemmed_text = self.stemmer.stem('I play several orchestra instruments for pleasuer.')
+        stemmed_text = self.stemmer.get_stemmed_words('I play several orchestra instruments for pleasuer.')
 
-        self.assertEqual(stemmed_text, 'la evera chest strumen easu')
+        self.assertEqual(stemmed_text, ['la', 'evera', 'chest', 'strumen', 'easu'])
 
     def test_get_bigram_pair_string_punctuation_only(self):
         bigram_string = self.stemmer.get_bigram_pair_string(

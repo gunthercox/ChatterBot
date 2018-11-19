@@ -21,7 +21,7 @@ class SimpleStemmer(object):
         self.stopwords = nltk.corpus.stopwords.words(language)
         self.stopwords.append('')
 
-    def get_stemmed_word_list(self, text, size=4):
+    def get_stemmed_words(self, text, size=4):
 
         stemmed_words = []
 
@@ -69,7 +69,7 @@ class SimpleStemmer(object):
         "[ell alaza] [alaza oda]"
         "ellalaza alazaoda"
         """
-        words = self.get_stemmed_word_list(text)
+        words = self.get_stemmed_words(text)
 
         bigrams = []
 
@@ -83,8 +83,3 @@ class SimpleStemmer(object):
             bigrams.append(bigram)
 
         return ' '.join(bigrams)
-
-    def stem(self, text):
-        words = self.get_stemmed_word_list(text)
-
-        return ' '.join(words)
