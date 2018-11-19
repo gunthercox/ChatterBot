@@ -12,11 +12,23 @@ from chatterbot import utils
 class Trainer(object):
     """
     Base class for all other trainer classes.
+
+    :param boolean show_training_progress: Show progress indicators for the
+           trainer. The environment variable ``CHATTERBOT_SHOW_TRAINING_PROGRESS``
+           can also be set to control this. ``show_training_progress`` will override
+           the environment variable if it is set.
+
+    :param str stemmer_language: The language that the stemmer uses to remove stopwords.
     """
 
     def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
-        self.show_training_progress = kwargs.get('show_training_progress', True)
+
+        environment_default = os.getenv('CHATTERBOT_SHOW_TRAINING_PROGRESS', True)
+        self.show_training_progress = kwargs.get(
+            'show_training_progress',
+            environment_default
+        )
 
         self.stemmer = SimpleStemmer(language=kwargs.get(
             'stemmer_language', 'english'
