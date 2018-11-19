@@ -12,8 +12,18 @@ class SimpleStemmer(object):
     def __init__(self, language='english'):
         self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
 
-        # Get list of stopwords from the NLTK corpus
-        self.stopwords = nltk.corpus.stopwords.words(language)
+        self.language = language
+
+        self.stopwords = None
+
+    def get_stopwords(self):
+        """
+        Get the list of stopwords from the NLTK corpus.
+        """
+        if not self.stopwords:
+            self.stopwords = nltk.corpus.stopwords.words(self.language)
+
+        return self.stopwords
 
     def get_initialization_functions(self):
         """
@@ -67,7 +77,7 @@ class SimpleStemmer(object):
         for word in words:
 
             # Remove stopwords
-            if word not in self.stopwords:
+            if word not in self.get_stopwords():
 
                 # Chop off the ends of the word
                 start = len(word) // size
