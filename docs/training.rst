@@ -28,8 +28,6 @@ ChatterBot comes with training classes built in, or you can create your own
 if needed. To use a training class you call `train()` on an instance that
 has been initialized with your chat bot.
 
-.. _training-classes:
-
 Training classes
 ================
 
@@ -45,10 +43,15 @@ For example, if you were to run bot of the following training calls, then the re
 both statements of "Hi there!" and "Greetings!" by saying "Hello".
 
 .. code-block:: python
+   :caption: chatbot.py
 
+    chatbot = ChatBot('Training Example')
+
+.. code-block:: python
+   :caption: train.py
+
+   from chatbot import chatbot
    from chatterbot.trainers import ListTrainer
-
-   chatbot = ChatBot("Training Example")
    
    trainer = ListTrainer(chatbot)
 
@@ -66,6 +69,7 @@ You can also provide longer lists of training conversations.
 This will establish each item in the list as a possible response to it's predecessor in the list.
 
 .. code-block:: python
+   :caption: train.py
 
    trainer.train([
        "How are you?",
@@ -86,10 +90,15 @@ quickly train your bot to communicate. To do so, simply specify the corpus
 data modules you want to use.
 
 .. code-block:: python
+   :caption: chatbot.py
 
+    chatbot = ChatBot('Training Example')
+
+.. code-block:: python
+   :caption: train.py
+
+   from chatbot import chatbot
    from chatterbot.trainers import ChatterBotCorpusTrainer
-
-   chatbot = ChatBot("Training Example")
 
    trainer = ChatterBotCorpusTrainer(chatbot)
 
@@ -105,6 +114,7 @@ For example, if you only wish to train based on the english greetings and
 conversations corpora then you would simply specify them.
 
 .. code-block:: python
+   :caption: train.py
 
    trainer.train(
        "chatterbot.corpus.english.greetings",
@@ -114,6 +124,7 @@ conversations corpora then you would simply specify them.
 You can also specify file paths to corpus files or directories of corpus files when calling the ``train`` method.
 
 .. code-block:: python
+   :caption: train.py
 
    trainer.train(
        "./data/greetings_corpus/custom.corpus.json",
