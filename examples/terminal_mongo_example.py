@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 
 # Uncomment the following lines to enable verbose logging
