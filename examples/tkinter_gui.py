@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 import tkinter as tk
 try:

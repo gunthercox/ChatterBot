@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from tests.base_case import ChatBotTestCase
 from chatterbot.trainers import ListTrainer
 

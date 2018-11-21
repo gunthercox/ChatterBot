@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from unittest import TestCase
 from datetime import timedelta, datetime
 from chatterbot import parsing

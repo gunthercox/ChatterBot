@@ -57,16 +57,6 @@ class LogicAdapter(Adapter):
             get_first_response
         )
 
-    def get_initialization_functions(self):
-        """
-        Return a dictionary of functions to be run once when the chat bot is instantiated.
-        """
-        return self.compare_statements.get_initialization_functions()
-
-    def initialize(self):
-        for function in self.get_initialization_functions().values():
-            function()
-
     def can_process(self, statement):
         """
         A preliminary check that is called to determine if a

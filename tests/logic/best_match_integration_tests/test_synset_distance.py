@@ -18,7 +18,6 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
             self.chatbot,
             statement_comparison_function=synset_distance
         )
-        self.adapter.initialize()
 
     def test_get_closest_statement(self):
         """
