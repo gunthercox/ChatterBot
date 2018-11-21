@@ -8,6 +8,7 @@ to connect to different storage backends.
 .. toctree::
    :maxdepth: 1
 
+   text-search
    create-a-storage-adapter
 
 The storage adapter that your bot uses can be specified by setting
