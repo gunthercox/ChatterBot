@@ -248,6 +248,28 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         self.assertEqual(response.text, 'C')
 
+    def test_search_text_results_after_training(self):
+        """
+        ChatterBot should return close matches to an input
+        string when filtering using the search_text parameter.
+        """
+        self.chatbot.storage.create_many([
+            Statement('Example A for search.'),
+            Statement('Another example.'),
+            Statement('Example B for search.'),
+            Statement(text='Another statement.'),
+        ])
+
+        results = self.chatbot.storage.filter(
+            search_text=self.chatbot.storage.stemmer.get_bigram_pair_string(
+                'Example A for search.'
+            )
+        )
+
+        self.assertEqual('Example A for search.', results[0].text)
+        self.assertEqual('Example B for search.', results[1].text)
+        self.assertIsLength(results, 2)
+
 
 class TestAdapterA(LogicAdapter):
 
