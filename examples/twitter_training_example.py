@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from chatterbot import ChatBot
 from chatterbot.trainers import TwitterTrainer
 from settings import TWITTER

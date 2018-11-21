@@ -18,23 +18,6 @@ class Comparator:
     def compare(self, statement_a, statement_b):
         return 0
 
-    def get_initialization_functions(self):
-        """
-        Return all initialization methods for the comparison algorithm.
-        Initialization methods must start with 'initialize_' and
-        take no parameters.
-        """
-        initialization_methods = [
-            (
-                method,
-                getattr(self, method),
-            ) for method in dir(self) if method.startswith('initialize_')
-        ]
-
-        return {
-            key: value for (key, value) in initialization_methods
-        }
-
 
 class LevenshteinDistance(Comparator):
     """

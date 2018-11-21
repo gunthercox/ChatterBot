@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from tests.base_case import ChatBotTestCase
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
@@ -7,9 +6,59 @@ from chatterbot.conversation import Statement
 class ChatterBotResponseTestCase(ChatBotTestCase):
 
     def setUp(self):
-        super(ChatterBotResponseTestCase, self).setUp()
+        super().setUp()
 
         self.test_statement = Statement(text='Hello', in_response_to='Hi')
+
+    def test_get_initialization_functions(self):
+        """
+        Test that the initialization functions are returned.
+        """
+        functions = self.chatbot.get_initialization_functions()
+
+        self.assertIn('initialize_nltk_stopwords', functions)
+        self.assertIsLength(functions, 1)
+
+    def test_get_initialization_functions_synset_distance(self):
+        """
+        Test that the initialization functions are returned.
+        """
+        from chatterbot.comparisons import synset_distance
+
+        self.chatbot.logic_adapters[0].compare_statements = synset_distance
+        functions = self.chatbot.get_initialization_functions()
+
+        self.assertIn('initialize_nltk_stopwords', functions)
+        self.assertIn('initialize_nltk_wordnet', functions)
+        self.assertIn('initialize_nltk_punkt', functions)
+        self.assertIsLength(functions, 3)
+
+    def test_get_initialization_functions_sentiment_comparison(self):
+        """
+        Test that the initialization functions are returned.
+        """
+        from chatterbot.comparisons import sentiment_comparison
+
+        self.chatbot.logic_adapters[0].compare_statements = sentiment_comparison
+        functions = self.chatbot.get_initialization_functions()
+
+        self.assertIn('initialize_nltk_stopwords', functions)
+        self.assertIn('initialize_nltk_vader_lexicon', functions)
+        self.assertIsLength(functions, 2)
+
+    def test_get_initialization_functions_jaccard_similarity(self):
+        """
+        Test that the initialization functions are returned.
+        """
+        from chatterbot.comparisons import jaccard_similarity
+
+        self.chatbot.logic_adapters[0].compare_statements = jaccard_similarity
+        functions = self.chatbot.get_initialization_functions()
+
+        self.assertIn('initialize_nltk_wordnet', functions)
+        self.assertIn('initialize_nltk_stopwords', functions)
+        self.assertIn('initialize_nltk_averaged_perceptron_tagger', functions)
+        self.assertIsLength(functions, 3)
 
     def test_empty_database(self):
         """

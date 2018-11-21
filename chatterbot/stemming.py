@@ -16,6 +16,14 @@ class SimpleStemmer(object):
 
         self.stopwords = None
 
+    def initialize_nltk_stopwords(self):
+        """
+        Download required NLTK stopwords corpus if it has not already been downloaded.
+        """
+        from chatterbot.utils import nltk_download_corpus
+
+        nltk_download_corpus('stopwords')
+
     def get_stopwords(self):
         """
         Get the list of stopwords from the NLTK corpus.
@@ -24,35 +32,6 @@ class SimpleStemmer(object):
             self.stopwords = nltk.corpus.stopwords.words(self.language)
 
         return self.stopwords
-
-    def get_initialization_functions(self):
-        """
-        Return all initialization methods for the comparison algorithm.
-        Initialization methods must start with 'initialize_' and
-        take no parameters.
-        """
-        initialization_methods = [
-            (
-                method,
-                getattr(self, method),
-            ) for method in dir(self) if method.startswith('initialize_')
-        ]
-
-        return {
-            key: value for (key, value) in initialization_methods
-        }
-
-    def initialize(self):
-        for function in self.get_initialization_functions().values():
-            function()
-
-    def initialize_nltk_stopwords(self):
-        """
-        Download required NLTK stopwords corpus if it has not already been downloaded.
-        """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('stopwords')
 
     def get_stemmed_words(self, text, size=4):
 

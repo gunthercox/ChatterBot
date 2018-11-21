@@ -74,22 +74,24 @@ class ChatBot(object):
         if kwargs.get('initialize', True):
             self.initialize()
 
-    def initialize(self):
-        """
-        Do any work that needs to be done before the responses can be returned.
-        """
-        initialization_functions = {}
-
-        initialization_functions.update(
-            self.storage.stemmer.get_initialization_functions()
+    def get_initialization_functions(self):
+        initialization_functions = utils.get_initialization_functions(
+            self, 'storage.stemmer'
         )
 
         for logic_adapter in self.get_logic_adapters():
-            initialization_functions.update(
-                logic_adapter.get_initialization_functions()
+            logic_adapter_functions = utils.get_initialization_functions(
+                logic_adapter, 'compare_statements'
             )
+            initialization_functions.update(logic_adapter_functions)
 
-        for function in initialization_functions.values():
+        return initialization_functions
+
+    def initialize(self):
+        """
+        Do any work that needs to be done before the chatbot can process responses.
+        """
+        for function in self.get_initialization_functions().values():
             function()
 
     def get_response(self, statement=None, **kwargs):
@@ -248,10 +250,7 @@ class ChatBot(object):
         """
         Return a list of all logic adapters being used, including system logic adapters.
         """
-        adapters = []
-        adapters.extend(self.logic_adapters)
-        adapters.extend(self.system_logic_adapters)
-        return adapters
+        return self.logic_adapters + self.system_logic_adapters
 
     class ChatBotException(Exception):
         pass

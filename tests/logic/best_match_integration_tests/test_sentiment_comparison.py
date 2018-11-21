@@ -23,7 +23,6 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
             self.chatbot,
             statement_comparison_function=sentiment_comparison
         )
-        self.adapter.initialize()
 
     def test_exact_input(self):
         self.trainer.train([
