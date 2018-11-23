@@ -228,6 +228,17 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
 
+    def test_persona_not_startswith(self):
+        self.adapter.create(text='Hello!', persona='bot:tester')
+        self.adapter.create(text='Hi everyone!', persona='user:person')
+
+        results = self.adapter.filter(
+            persona_not_startswith='bot:'
+        )
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, 'Hi everyone!')
+
 
 class SQLOrderingTests(SQLStorageAdapterTestCase):
     """
