@@ -42,11 +42,11 @@ class DataCachingTests(ChatBotTestCase):
         and that this attribute is saved.
         """
         self.chatbot.get_response('Hello', conversation='test')
-        results = self.chatbot.storage.filter(
+        results = list(self.chatbot.storage.filter(
             text='Hello',
             in_response_to=None,
             conversation='test'
-        )
+        ))
 
         self.assertEqual(len(results), 1)
         self.assertIn('pos_tags:NN', results[0].get_tags())

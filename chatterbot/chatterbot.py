@@ -216,10 +216,10 @@ class ChatBot(object):
         """
         from chatterbot.conversation import Statement as StatementObject
 
-        conversation_statements = self.storage.filter(
+        conversation_statements = list(self.storage.filter(
             conversation=conversation,
             order_by=['id']
-        )
+        ))
 
         # Get the most recent statement in the conversation if one exists
         latest_statement = conversation_statements[-1] if conversation_statements else None
@@ -227,11 +227,11 @@ class ChatBot(object):
         if latest_statement:
             if latest_statement.in_response_to:
 
-                response_statements = self.storage.filter(
+                response_statements = list(self.storage.filter(
                     conversation=conversation,
                     text=latest_statement.in_response_to,
                     order_by=['id']
-                )
+                ))
 
                 if response_statements:
                     return response_statements[-1]

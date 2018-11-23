@@ -10,7 +10,7 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
     """
 
     def setUp(self):
-        super(ChatterBotCorpusTrainingTestCase, self).setUp()
+        super().setUp()
         self.trainer = ChatterBotCorpusTrainer(
             self.chatbot,
             show_training_progress=False
@@ -19,14 +19,14 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
     def test_train_with_english_greeting_corpus(self):
         self.trainer.train('chatterbot.corpus.english.greetings')
 
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
 
     def test_train_with_english_greeting_corpus_search_text(self):
         self.trainer.train('chatterbot.corpus.english.greetings')
 
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
         self.assertEqual(results[0].search_text, 'ell')
@@ -34,7 +34,7 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
     def test_train_with_english_greeting_corpus_search_in_response_to(self):
         self.trainer.train('chatterbot.corpus.english.greetings')
 
-        results = self.chatbot.storage.filter(in_response_to='Hello')
+        results = list(self.chatbot.storage.filter(in_response_to='Hello'))
 
         self.assertGreater(len(results), 1)
         self.assertEqual(results[0].search_in_response_to, 'ell')
@@ -42,7 +42,7 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
     def test_train_with_english_greeting_corpus_tags(self):
         self.trainer.train('chatterbot.corpus.english.greetings')
 
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
         statement = results[0]
@@ -53,12 +53,12 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
             'chatterbot.corpus.english.greetings',
             'chatterbot.corpus.english.conversations',
         )
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
 
     def test_train_with_english_corpus(self):
         self.trainer.train('chatterbot.corpus.english')
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
