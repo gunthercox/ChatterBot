@@ -36,6 +36,7 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Statement = self.get_model('statement')
 
+        page_size = kwargs.get('page_size', 1000)
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
@@ -63,7 +64,8 @@ class DjangoStorageAdapter(StorageAdapter):
         if order_by:
             statements = statements.order_by(*order_by)
 
-        return statements
+        for statement in statements.iterator(chunk_size=page_size):
+            yield statement
 
     def create(self, **kwargs):
         """

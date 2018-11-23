@@ -74,6 +74,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         import pymongo
 
+        page_size = kwargs.get('page_size', 1000)
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
@@ -120,12 +121,11 @@ class MongoDatabaseAdapter(StorageAdapter):
 
             matches = matches.sort(mongo_ordering)
 
-        results = []
+        total_statements = matches.count()
 
-        for match in list(matches):
-            results.append(self.mongo_to_object(match))
-
-        return results
+        for start_index in range(0, total_statements, page_size):
+            for match in matches.skip(start_index).limit(page_size):
+                yield self.mongo_to_object(match)
 
     def create(self, **kwargs):
         """

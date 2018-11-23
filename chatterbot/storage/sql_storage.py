@@ -110,6 +110,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
+        page_size = kwargs.get('page_size', 1000)
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
@@ -147,14 +148,13 @@ class SQLStorageAdapter(StorageAdapter):
 
             statements = statements.order_by(*order_by)
 
-        results = []
+        total_statements = statements.count()
 
-        for statement in statements:
-            results.append(self.model_to_object(statement))
+        for start_index in range(0, total_statements, page_size):
+            for statement in statements.slice(start_index, start_index + page_size):
+                yield self.model_to_object(statement)
 
         session.close()
-
-        return results
 
     def create(self, **kwargs):
         """

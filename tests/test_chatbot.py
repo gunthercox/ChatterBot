@@ -77,7 +77,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement_text = 'Wow!'
         response = self.chatbot.get_response(statement_text)
 
-        results = self.chatbot.storage.filter(text=statement_text)
+        results = list(self.chatbot.storage.filter(text=statement_text))
 
         self.assertIsLength(results, 1)
         self.assertEqual(response, statement_text)
@@ -103,7 +103,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.chatbot.storage.update(self.test_statement)
 
         response = self.chatbot.get_response('Hi')
-        results = self.chatbot.storage.filter(text=response.text)
+        results = list(self.chatbot.storage.filter(text=response.text))
 
         self.assertEqual(response, self.test_statement.text)
         self.assertIsLength(results, 1)
@@ -116,10 +116,10 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.text, 'Hello')
 
         second_response = self.chatbot.get_response('How are you?')
-        results = self.chatbot.storage.filter(text=second_response.text)
+        results = list(self.chatbot.storage.filter(text=second_response.text))
 
         # Make sure that the second response was saved to the database
-        self.assertIsLength(self.chatbot.storage.filter(text='How are you?'), 1)
+        self.assertIsLength(list(self.chatbot.storage.filter(text='How are you?')), 1)
 
         self.assertEqual(second_response, self.test_statement.text)
         self.assertIsLength(results, 1)
@@ -170,7 +170,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
             self.test_statement
         )
 
-        results = self.chatbot.storage.filter(text=self.test_statement.text)
+        results = list(self.chatbot.storage.filter(text=self.test_statement.text))
 
         self.assertIsLength(results, 1)
         self.assertIn('test', results[0].get_tags())
@@ -178,7 +178,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_get_response_with_text_and_kwargs(self):
         self.chatbot.get_response('Hello', conversation='greetings')
 
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertIsLength(results, 1)
         self.assertEqual(results[0].conversation, 'greetings')
@@ -202,7 +202,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         previous_response = Statement(text='Define Hemoglobin.')
         statement = Statement(text='Hemoglobin is an oxygen-transport metalloprotein.')
         self.chatbot.learn_response(statement, previous_response)
-        results = self.chatbot.storage.filter(text=statement.text)
+        results = list(self.chatbot.storage.filter(text=statement.text))
 
         self.assertIsLength(results, 1)
 
@@ -212,7 +212,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         self.chatbot.read_only = True
         self.chatbot.get_response('Hi!')
-        results = self.chatbot.storage.filter(text='Hi!')
+        results = list(self.chatbot.storage.filter(text='Hi!'))
 
         self.assertIsLength(results, 0)
 
@@ -260,11 +260,11 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
             Statement(text='Another statement.'),
         ])
 
-        results = self.chatbot.storage.filter(
+        results = list(self.chatbot.storage.filter(
             search_text=self.chatbot.storage.stemmer.get_bigram_pair_string(
                 'Example A for search.'
             )
-        )
+        ))
 
         self.assertEqual('Example A for search.', results[0].text)
         self.assertEqual('Example B for search.', results[1].text)

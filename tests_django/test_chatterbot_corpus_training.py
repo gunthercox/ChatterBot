@@ -18,20 +18,20 @@ class ChatterBotCorpusTrainingTestCase(ChatterBotTestCase):
         )
 
     def tearDown(self):
-        super().setUp()
+        super().tearDown()
         self.chatbot.storage.drop()
 
     def test_train_with_english_greeting_corpus(self):
         self.trainer.train('chatterbot.corpus.english.greetings')
 
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
 
     def test_train_with_english_greeting_corpus_tags(self):
         self.trainer.train('chatterbot.corpus.english.greetings')
 
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
         statement = results[0]
@@ -42,12 +42,12 @@ class ChatterBotCorpusTrainingTestCase(ChatterBotTestCase):
             'chatterbot.corpus.english.greetings',
             'chatterbot.corpus.english.conversations',
         )
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
 
     def test_train_with_english_corpus(self):
         self.trainer.train('chatterbot.corpus.english')
-        results = self.chatbot.storage.filter(text='Hello')
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)

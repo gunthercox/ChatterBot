@@ -49,7 +49,8 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         Test that None is returned by the find method
         when a matching statement is not found.
         """
-        self.assertEqual(len(self.adapter.filter(text="Non-existant")), 0)
+        results = list(self.adapter.filter(text="Non-existant"))
+        self.assertEqual(len(results), 0)
 
     def test_filter_text_statement_found(self):
         """
@@ -58,7 +59,7 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         """
         text = "New statement"
         self.adapter.create(text=text)
-        results = self.adapter.filter(text=text)
+        results = list(self.adapter.filter(text=text))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, text)
@@ -67,7 +68,7 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         statement = Statement(text="New statement")
         self.adapter.update(statement)
 
-        results = self.adapter.filter(text="New statement")
+        results = list(self.adapter.filter(text="New statement"))
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, statement.text)
 
@@ -76,7 +77,7 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         self.adapter.update(statement)
 
         # Check the initial values
-        results = self.adapter.filter(text=statement.text)
+        results = list(self.adapter.filter(text=statement.text))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].in_response_to, None)
@@ -86,7 +87,7 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         self.adapter.update(statement)
 
         # Check that the values have changed
-        results = self.adapter.filter(text=statement.text)
+        results = list(self.adapter.filter(text=statement.text))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].in_response_to, "New response")
@@ -103,7 +104,7 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         self.adapter.remove(text)
         results = self.adapter.filter(text=text)
 
-        self.assertEqual(results, [])
+        self.assertEqual(list(results), [])
 
     def test_get_response_statements(self):
         """
@@ -145,7 +146,7 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
             text='Testing...',
             in_response_to='Why are you counting?'
         )
-        results = self.adapter.filter(text="Howdy")
+        results = list(self.adapter.filter(text="Howdy"))
 
         self.assertEqual(len(results), 0)
 
@@ -155,7 +156,8 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
             in_response_to='Why are you counting?'
         )
 
-        results = self.adapter.filter(in_response_to="Maybe")
+        results = list(self.adapter.filter(in_response_to="Maybe"))
+
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -170,7 +172,8 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
-        results = self.adapter.filter(in_response_to=None)
+        results = list(self.adapter.filter(in_response_to=None))
+
         self.assertEqual(len(results), 2)
         self.assertIn(statement1, results)
         self.assertIn(statement2, results)
@@ -183,7 +186,7 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.adapter.create(text="Testing...")
         self.adapter.create(text="Testing one, two, three.")
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
 
@@ -219,11 +222,11 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.adapter.create(text='Hello!')
         self.adapter.create(text='Hi everyone!')
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             exclude_text=[
                 'Hello!'
             ]
-        )
+        ))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
@@ -232,9 +235,9 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.adapter.create(text='Hello!', persona='bot:tester')
         self.adapter.create(text='Hi everyone!', persona='user:person')
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             persona_not_startswith='bot:'
-        )
+        ))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
@@ -252,7 +255,7 @@ class SQLOrderingTests(SQLStorageAdapterTestCase):
         self.adapter.update(statement_b)
         self.adapter.update(statement_a)
 
-        results = self.adapter.filter(order_by=['text'])
+        results = list(self.adapter.filter(order_by=['text']))
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -276,7 +279,7 @@ class SQLOrderingTests(SQLStorageAdapterTestCase):
         self.adapter.update(statement_b)
         self.adapter.update(statement_a)
 
-        results = self.adapter.filter(order_by=['created_at'])
+        results = list(self.adapter.filter(order_by=['created_at']))
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -291,7 +294,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
     def test_create_text(self):
         self.adapter.create(text='testing')
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'testing')
@@ -302,7 +305,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
             search_text='test'
         )
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].search_text, 'test')
@@ -313,7 +316,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
             search_in_response_to='test'
         )
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].search_in_response_to, 'test')
@@ -321,7 +324,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
     def test_create_tags(self):
         self.adapter.create(text='testing', tags=['a', 'b'])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertIn('a', results[0].get_tags())
@@ -334,7 +337,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
         """
         self.adapter.create(text='testing', tags=['ab', 'ab'])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(len(results[0].get_tags()), 1)
@@ -346,7 +349,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
             Statement(text='B')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].text, 'A')
@@ -358,7 +361,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
             Statement(text='B', search_text='b')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_text, 'a')
@@ -370,7 +373,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
             Statement(text='B', search_in_response_to='b')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_in_response_to, 'a')
@@ -381,7 +384,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
             Statement(text='A', tags=['first', 'letter']),
             Statement(text='B', tags=['second', 'letter'])
         ])
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertIn('letter', results[0].get_tags())
@@ -398,7 +401,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
             Statement(text='testing', tags=['ab', 'ab'])
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(len(results[0].get_tags()), 1)
@@ -415,7 +418,7 @@ class StorageAdapterUpdateTests(SQLStorageAdapterTestCase):
         statement.add_tags('a', 'b')
         self.adapter.update(statement)
 
-        statements = self.adapter.filter()
+        statements = list(self.adapter.filter())
 
         self.assertEqual(len(statements), 1)
         self.assertIn('a', statements[0].get_tags())
@@ -430,7 +433,7 @@ class StorageAdapterUpdateTests(SQLStorageAdapterTestCase):
         statement.add_tags('ab')
         self.adapter.update(statement)
 
-        statements = self.adapter.filter()
+        statements = list(self.adapter.filter())
 
         self.assertEqual(len(statements), 1)
         self.assertEqual(len(statements[0].get_tags()), 1)

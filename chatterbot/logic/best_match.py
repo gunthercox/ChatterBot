@@ -55,10 +55,10 @@ class BestMatch(LogicAdapter):
         )
 
         # Get all statements that are in response to the closest match
-        response_list = self.chatbot.storage.filter(
+        response_list = list(self.chatbot.storage.filter(
             search_in_response_to=closest_match.search_text,
             exclude_text=recent_repeated_responses
-        )
+        ))
 
         if response_list:
             self.chatbot.logger.info(
