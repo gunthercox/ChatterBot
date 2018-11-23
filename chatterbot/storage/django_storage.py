@@ -193,32 +193,3 @@ class DjangoStorageAdapter(StorageAdapter):
 
         Statement.objects.all().delete()
         Tag.objects.all().delete()
-
-    def get_response_statements(self, page_size=1000):
-        """
-        Return only statements that are in response to another statement.
-        A statement must exist which lists the closest matching statement in the
-        in_response_to field. Otherwise, the logic adapter may find a closest
-        matching statement that does not have a known response.
-        """
-        Statement = self.get_model('statement')
-
-        total_statements = self.count()
-        start = 0
-        stop = min(page_size, total_statements)
-
-        while stop <= total_statements:
-
-            statements_with_responses = Statement.objects.filter(
-                in_response_to__isnull=False
-            )[start:stop].values_list('in_response_to', flat=True)
-
-            start += page_size
-            stop += page_size
-
-            for statement in Statement.objects.exclude(
-                persona__startswith='bot:'
-            ).filter(
-                text__in=statements_with_responses
-            ):
-                yield statement
