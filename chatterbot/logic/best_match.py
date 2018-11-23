@@ -13,8 +13,9 @@ class BestMatch(LogicAdapter):
         Takes a statement string and a list of statement strings.
         Returns the closest matching statement from the list.
         """
-        statement_list = self.chatbot.storage.get_response_statements(
-            self.search_page_size
+        statement_list = self.chatbot.storage.filter(
+
+            #page_size=self.search_page_size
         )
 
         closest_match = input_statement

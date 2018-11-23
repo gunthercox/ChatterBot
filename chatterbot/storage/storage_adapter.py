@@ -109,17 +109,6 @@ class StorageAdapter(object):
             'The `drop` method is not implemented by this adapter.'
         )
 
-    def get_response_statements(self):
-        """
-        Return only statements that are in response to another statement.
-        A statement must exist which lists the closest matching statement in the
-        in_response_to field. Otherwise, the logic adapter may find a closest
-        matching statement that does not have a known response.
-        """
-        raise self.AdapterMethodNotImplementedError(
-            'The `get_response_statements` method is not implemented by this adapter.'
-        )
-
     class EmptyDatabaseException(Exception):
 
         def __init__(self, message=None):

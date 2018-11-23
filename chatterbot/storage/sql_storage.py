@@ -320,13 +320,8 @@ class SQLStorageAdapter(StorageAdapter):
 
     def get_response_statements(self, page_size=1000):
         """
-        Return only statements that are in response to another statement.
-        A statement must exist which lists the closest matching statement in the
-        in_response_to field. Otherwise, the logic adapter may find a closest
-        matching statement that does not have a known response.
+        TODO: Remove this class
         """
-        from sqlalchemy import func
-
         Statement = self.get_model('statement')
 
         session = self.Session()

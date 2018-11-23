@@ -25,13 +25,10 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
         test statements is only required because the logic adapter will
         filter out any statements that are not in response to a known statement.
         """
-        possible_choices = [
+        self.chatbot.storage.create_many(
             Statement(text='This is a lovely bog.', in_response_to='This is a lovely bog.'),
             Statement(text='This is a beautiful swamp.', in_response_to='This is a beautiful swamp.'),
             Statement(text='It smells like a swamp.', in_response_to='It smells like a swamp.')
-        ]
-        self.adapter.chatbot.storage.get_response_statements = MagicMock(
-            return_value=possible_choices
         )
 
         statement = Statement(text='This is a lovely swamp.')
@@ -40,13 +37,10 @@ class BestMatchSynsetDistanceTestCase(ChatBotTestCase):
         self.assertEqual('This is a lovely bog.', match)
 
     def test_different_punctuation(self):
-        possible_choices = [
+        self.adapter.chatbot.storage.create_many(
             Statement(text='Who are you?'),
             Statement(text='Are you good?'),
             Statement(text='You are good')
-        ]
-        self.adapter.chatbot.storage.get_response_statements = MagicMock(
-            return_value=possible_choices
         )
 
         statement = Statement(text='Are you good')
