@@ -44,9 +44,9 @@ class ListTrainingTests(ChatBotTestCase):
 
         self.trainer.train(conversation)
 
-        statements = self.chatbot.storage.filter(
+        statements = list(self.chatbot.storage.filter(
             in_response_to="Do you like my hat?"
-        )
+        ))
 
         self.assertIsLength(statements, 1)
         self.assertEqual(statements[0].in_response_to, "Do you like my hat?")
@@ -60,9 +60,9 @@ class ListTrainingTests(ChatBotTestCase):
 
         self.trainer.train(conversation)
 
-        statements = self.chatbot.storage.filter(
+        statements = list(self.chatbot.storage.filter(
             in_response_to="Do you like my hat?"
-        )
+        ))
 
         self.assertIsLength(statements, 1)
         self.assertEqual(statements[0].search_text, "ik")
@@ -76,9 +76,9 @@ class ListTrainingTests(ChatBotTestCase):
 
         self.trainer.train(conversation)
 
-        statements = self.chatbot.storage.filter(
+        statements = list(self.chatbot.storage.filter(
             in_response_to="Do you like my hat?"
-        )
+        ))
 
         self.assertIsLength(statements, 1)
         self.assertEqual(statements[0].search_in_response_to, "ik")
@@ -110,15 +110,12 @@ class ListTrainingTests(ChatBotTestCase):
         self.assertEqual(self.chatbot.storage.count(), 9)
 
         # The first statement should be in response to another statement
-        self.assertIsNone(
-            self.chatbot.storage.filter(text=conversation[0])[0].in_response_to
-        )
+        first_statement = list(self.chatbot.storage.filter(text=conversation[0]))
+        self.assertIsNone(first_statement[0].in_response_to)
 
         # The second statement should be in response to the first statement
-        self.assertEqual(
-            self.chatbot.storage.filter(text=conversation[1])[0].in_response_to,
-            conversation[0]
-        )
+        second_statement = list(self.chatbot.storage.filter(text=conversation[1]))
+        self.assertEqual(second_statement[0].in_response_to, conversation[0])
 
     def test_training_with_unicode_characters(self):
         """

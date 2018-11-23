@@ -173,7 +173,8 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         self.trainer.train()
         self._destroy_test_corpus()
 
-        results = self.chatbot.storage.filter(text='Is anyone there?')
+        results = list(self.chatbot.storage.filter(text='Is anyone there?'))
+
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_text, 'nyon')
 
@@ -186,7 +187,8 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         self.trainer.train()
         self._destroy_test_corpus()
 
-        results = self.chatbot.storage.filter(in_response_to='Is anyone there?')
+        results = list(self.chatbot.storage.filter(in_response_to='Is anyone there?'))
+
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_in_response_to, 'nyon')
 

@@ -41,7 +41,8 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
         Test that None is returned by the find method
         when a matching statement is not found.
         """
-        self.assertEqual(self.adapter.filter(text="Non-existant").count(), 0)
+        results = list(self.adapter.filter(text="Non-existant"))
+        self.assertEqual(len(results), 0)
 
     def test_filter_statement_found(self):
         """
@@ -50,25 +51,28 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
         """
         statement = self.adapter.create(text="New statement")
 
-        results = self.adapter.filter(text="New statement")
-        self.assertEqual(results.count(), 1)
-        self.assertEqual(results.first().text, statement.text)
+        results = list(self.adapter.filter(text="New statement"))
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, statement.text)
 
     def test_update_adds_new_statement(self):
         statement = Statement(text="New statement")
         self.adapter.update(statement)
 
-        results = self.adapter.filter(text="New statement")
-        self.assertEqual(results.count(), 1)
-        self.assertEqual(results.first().text, statement.text)
+        results = list(self.adapter.filter(text="New statement"))
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, statement.text)
 
     def test_update_modifies_existing_statement(self):
         statement = self.adapter.create(text="New statement")
         other_statement = self.adapter.create(text="New response")
 
         # Check the initial values
-        results = self.adapter.filter(text=statement.text)
-        self.assertEqual(results.first().in_response_to, None)
+        results = list(self.adapter.filter(text=statement.text))
+
+        self.assertEqual(results[0].in_response_to, None)
 
         statement.in_response_to = other_statement.text
 
@@ -76,8 +80,9 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
         self.adapter.update(statement)
 
         # Check that the values have changed
-        results = self.adapter.filter(text=statement.text)
-        self.assertEqual(results.first().in_response_to, other_statement.text)
+        results = list(self.adapter.filter(text=statement.text))
+
+        self.assertEqual(results[0].in_response_to, other_statement.text)
 
     def test_get_random_returns_statement(self):
         statement = self.adapter.create(text="New statement")
@@ -95,26 +100,26 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
             in_response_to="No"
         )
 
-        results = self.adapter.filter(text="Do you like this?")
+        results = list(self.adapter.filter(text="Do you like this?"))
 
-        self.assertEqual(results.count(), 2)
+        self.assertEqual(len(results), 2)
 
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."
         statement = self.adapter.create(text=text)
 
         self.adapter.remove(statement.text)
-        results = self.adapter.filter(text=text)
+        results = list(self.adapter.filter(text=text))
 
-        self.assertEqual(results.count(), 0)
+        self.assertEqual(len(results), 0)
 
     def test_remove_response(self):
         text = "Sometimes you have to run before you can walk."
         statement = self.adapter.create(text=text)
         self.adapter.remove(statement.text)
-        results = self.adapter.filter(text=text)
+        results = list(self.adapter.filter(text=text))
 
-        self.assertEqual(results.count(), 0)
+        self.assertEqual(len(results), 0)
 
     def test_get_response_statements(self):
         """
@@ -160,7 +165,7 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
             text='Testing...',
             in_response_to='Why are you counting?'
         )
-        results = self.adapter.filter(text="Howdy")
+        results = list(self.adapter.filter(text="Howdy"))
 
         self.assertEqual(len(results), 0)
 
@@ -170,18 +175,23 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
             in_response_to='Why are you counting?'
         )
 
-        results = self.adapter.filter(in_response_to="Maybe")
+        results = list(self.adapter.filter(in_response_to="Maybe"))
+
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
         statement1 = self.adapter.create(text="Testing...")
         statement2 = self.adapter.create(text="Testing one, two, three.")
 
-        results = self.adapter.filter(in_response_to=None)
+        results = list(self.adapter.filter(in_response_to=None))
 
-        self.assertEqual(results.count(), 2)
-        self.assertTrue(results.filter(text=statement1.text).exists())
-        self.assertTrue(results.filter(text=statement2.text).exists())
+        self.assertEqual(len(results), 2)
+
+        text_for_statements = [
+            statement.text for statement in results
+        ]
+        self.assertIn(statement1.text, text_for_statements)
+        self.assertIn(statement2.text, text_for_statements)
 
     def test_filter_contains_result(self):
         self.adapter.create(
@@ -193,11 +203,11 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
             in_response_to='Testing...'
         )
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             in_response_to="Why are you counting?"
-        )
-        self.assertEqual(results.count(), 1)
-        self.assertTrue(results.filter(text='Testing...').exists())
+        ))
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, 'Testing...')
 
     def test_filter_contains_no_result(self):
         self.adapter.create(
@@ -205,10 +215,10 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
             in_response_to='Why are you counting?'
         )
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             in_response_to="How do you do?"
-        )
-        self.assertEqual(results.count(), 0)
+        ))
+        self.assertEqual(len(results), 0)
 
     def test_filter_no_parameters(self):
         """
@@ -218,7 +228,7 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.adapter.create(text="Testing...")
         self.adapter.create(text="Testing one, two, three.")
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
 
@@ -227,7 +237,7 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
         self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
 
-        results = self.adapter.filter(tags="greeting")
+        results = list(self.adapter.filter(tags="greeting"))
 
         results_text_list = [statement.text for statement in results]
 
@@ -240,9 +250,9 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
         self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             tags=["exclamation", "fact"]
-        )
+        ))
 
         results_text_list = [statement.text for statement in results]
 
@@ -269,11 +279,11 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.adapter.create(text='Hello!')
         self.adapter.create(text='Hi everyone!')
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             exclude_text=[
                 'Hello!'
             ]
-        )
+        ))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
@@ -282,9 +292,9 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.adapter.create(text='Hello!', persona='bot:tester')
         self.adapter.create(text='Hi everyone!', persona='user:person')
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             persona_not_startswith='bot:'
-        )
+        ))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
@@ -299,7 +309,7 @@ class DjangoOrderingTests(DjangoAdapterTestCase):
         statement_a = self.adapter.create(text='A is the first letter of the alphabet.')
         statement_b = self.adapter.create(text='B is the second letter of the alphabet.')
 
-        results = self.adapter.filter(order_by=['text'])
+        results = list(self.adapter.filter(order_by=['text']))
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -309,7 +319,7 @@ class DjangoOrderingTests(DjangoAdapterTestCase):
         statement_a = self.adapter.create(text='A is the first letter of the alphabet.')
         statement_b = self.adapter.create(text='B is the second letter of the alphabet.')
 
-        results = self.adapter.filter(order_by=['-text'])
+        results = list(self.adapter.filter(order_by=['-text']))
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[1], statement_a)
@@ -324,7 +334,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
     def test_create_text(self):
         self.adapter.create(text='testing')
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'testing')
@@ -335,7 +345,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
             search_text='test'
         )
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].search_text, 'test')
@@ -346,7 +356,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
             search_in_response_to='test'
         )
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].search_in_response_to, 'test')
@@ -354,7 +364,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
     def test_create_tags(self):
         self.adapter.create(text='testing', tags=['a', 'b'])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertIn('a', results[0].get_tags())
@@ -367,7 +377,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
         """
         self.adapter.create(text='testing', tags=['ab', 'ab'])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(len(results[0].get_tags()), 1)
@@ -379,7 +389,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
             StatementObject(text='B')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].text, 'A')
@@ -391,7 +401,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
             StatementObject(text='B', search_text='b')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_text, 'a')
@@ -403,7 +413,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
             StatementObject(text='B', search_in_response_to='b')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_in_response_to, 'a')
@@ -414,7 +424,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
             StatementObject(text='A', tags=['first', 'letter']),
             StatementObject(text='B', tags=['second', 'letter'])
         ])
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertIn('letter', results[0].get_tags())
@@ -431,7 +441,7 @@ class StorageAdapterCreateTests(DjangoAdapterTestCase):
             StatementObject(text='testing', tags=['ab', 'ab'])
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(len(results[0].get_tags()), 1)
@@ -448,7 +458,7 @@ class StorageAdapterUpdateTests(DjangoAdapterTestCase):
         statement.add_tags('a', 'b')
         self.adapter.update(statement)
 
-        statements = self.adapter.filter()
+        statements = list(self.adapter.filter())
 
         self.assertEqual(len(statements), 1)
         self.assertIn('a', statements[0].get_tags())
@@ -463,7 +473,7 @@ class StorageAdapterUpdateTests(DjangoAdapterTestCase):
         statement.add_tags('ab')
         self.adapter.update(statement)
 
-        statements = self.adapter.filter()
+        statements = list(self.adapter.filter())
 
         self.assertEqual(len(statements), 1)
         self.assertEqual(len(statements[0].get_tags()), 1)
