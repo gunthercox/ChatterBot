@@ -77,6 +77,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
+        persona_not_startswith = kwargs.pop('persona_not_startswith', None)
 
         if tags:
             kwargs['tags'] = {
@@ -92,6 +93,16 @@ class MongoDatabaseAdapter(StorageAdapter):
                     '$eq': text
                 }
             kwargs['text']['$nin'] = exclude_text
+
+        if persona_not_startswith:
+            if 'persona' not in kwargs:
+                kwargs['persona'] = {}
+            elif 'persona' in kwargs and isinstance(kwargs['persona'], str):
+                persona = kwargs.pop('persona')
+                kwargs['persona'] = {
+                    '$eq': persona
+                }
+            kwargs['persona']['$not'] = re.compile('^bot:*')
 
         matches = self.statements.find(kwargs)
 
