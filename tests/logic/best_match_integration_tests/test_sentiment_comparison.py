@@ -44,7 +44,8 @@ class BestMatchSentimentComparisonTestCase(ChatBotTestCase):
             'What is your favorite flavor of ice cream?',
             'I enjoy raspberry ice cream.',
             'I am glad to hear that.',
-            'Thank you.'
+            'Thank you, what is yours?',
+            'Mine is chocolate.'
         ])
 
         happy_statement = Statement(text='I enjoy raspberry.')
