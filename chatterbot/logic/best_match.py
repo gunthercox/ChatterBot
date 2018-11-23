@@ -45,8 +45,8 @@ class BestMatch(LogicAdapter):
 
         # Select the closest match to the input statement
         closest_match = self.get(input_statement)
-        self.chatbot.logger.info('Using "{}" as a close match to "{}"'.format(
-            closest_match.text, input_statement.text
+        self.chatbot.logger.info('Using "{}" as a close match to "{}" with a confidence of {}'.format(
+            closest_match.text, input_statement.text, closest_match.confidence
         ))
 
         recent_repeated_responses = filters.get_recent_repeated_responses(

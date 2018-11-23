@@ -120,7 +120,7 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
 
         self.assertIn("This is a phone.", responses)
         self.assertIn("A what?", responses)
-        self.assertEqual(len(responses), 2)
+        self.assertEqual(len(responses), 4)
 
     def test_get_response_statements_bot_responses_filtered_out(self):
         """
@@ -136,7 +136,7 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
 
         self.assertIn('Hello', responses)
         self.assertIn('I am doing great.', responses)
-        self.assertEqual(len(responses), 2)
+        self.assertEqual(len(responses), 3)
 
 
 class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):

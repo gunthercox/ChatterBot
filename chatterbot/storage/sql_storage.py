@@ -331,28 +331,16 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
-        total_statements = session.query(func.count(Statement.id)).scalar()
+        matching_statements = session.query(Statement).filter(
+            ~Statement.persona.startswith('bot:')
+        )
 
-        start = 0
-        stop = min(page_size, total_statements)
+        total_statements = matching_statements.count()
 
-        while stop <= total_statements:
+        print('Length of statement set =', total_statements)
 
-            statement_set = session.query(Statement).filter(
-                Statement.in_response_to.isnot(None)
-            ).slice(start, stop)
-
-            start += page_size
-            stop += page_size
-
-            response_statements = set(
-                statement.in_response_to for statement in statement_set
-            )
-
-            for statement in session.query(Statement).filter(
-                Statement.text.in_(response_statements),
-                ~Statement.persona.startswith('bot:')
-            ):
+        for start_index in range(0, total_statements, page_size):
+            for statement in matching_statements.slice(start_index, start_index + page_size):
                 yield self.model_to_object(statement)
 
         session.close()
