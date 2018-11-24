@@ -14,8 +14,8 @@ class BestMatch(LogicAdapter):
         Returns the closest matching statement from the list.
         """
         statement_list = self.chatbot.storage.filter(
-
-            #page_size=self.search_page_size
+            persona_not_startswith='bot:',
+            page_size=self.search_page_size
         )
 
         closest_match = input_statement

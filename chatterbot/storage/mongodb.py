@@ -74,7 +74,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         import pymongo
 
-        page_size = kwargs.get('page_size', 1000)
+        page_size = kwargs.pop('page_size', 1000)
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
@@ -105,11 +105,9 @@ class MongoDatabaseAdapter(StorageAdapter):
                 }
             kwargs['persona']['$not'] = re.compile('^bot:*')
 
-        matches = self.statements.find(kwargs)
+        mongo_ordering = []
 
         if order_by:
-
-            mongo_ordering = []
 
             # Sort so that newer datetimes appear first
             if 'created_at' in order_by:
@@ -119,13 +117,15 @@ class MongoDatabaseAdapter(StorageAdapter):
             for order in order_by:
                 mongo_ordering.append((order, pymongo.ASCENDING))
 
-            matches = matches.sort(mongo_ordering)
-
-        total_statements = matches.count()
+        total_statements = self.statements.find(kwargs).count()
 
         for start_index in range(0, total_statements, page_size):
-            for match in matches.skip(start_index).limit(page_size):
-                yield self.mongo_to_object(match)
+            if mongo_ordering:
+                for match in self.statements.find(kwargs).sort(mongo_ordering).skip(start_index).limit(page_size):
+                    yield self.mongo_to_object(match)
+            else:
+                for match in self.statements.find(kwargs).skip(start_index).limit(page_size):
+                    yield self.mongo_to_object(match)
 
     def create(self, **kwargs):
         """

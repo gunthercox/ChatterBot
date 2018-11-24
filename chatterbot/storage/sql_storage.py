@@ -110,7 +110,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
-        page_size = kwargs.get('page_size', 1000)
+        page_size = kwargs.pop('page_size', 1000)
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
@@ -317,28 +317,6 @@ class SQLStorageAdapter(StorageAdapter):
 
         session.close()
         return statement
-
-    def get_response_statements(self, page_size=1000):
-        """
-        TODO: Remove this class
-        """
-        Statement = self.get_model('statement')
-
-        session = self.Session()
-
-        matching_statements = session.query(Statement).filter(
-            ~Statement.persona.startswith('bot:')
-        )
-
-        total_statements = matching_statements.count()
-
-        print('Length of statement set =', total_statements)
-
-        for start_index in range(0, total_statements, page_size):
-            for statement in matching_statements.slice(start_index, start_index + page_size):
-                yield self.model_to_object(statement)
-
-        session.close()
 
     def drop(self):
         """
