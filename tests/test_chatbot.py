@@ -115,7 +115,9 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         response = self.chatbot.get_response('Hi')
         self.assertEqual(response.text, 'Hello')
 
-        second_response = self.chatbot.get_response('How are you?')
+        statement = Statement(text='How are you?', in_response_to='Hello')
+
+        second_response = self.chatbot.get_response(statement)
         results = list(self.chatbot.storage.filter(text=second_response.text))
 
         # Make sure that the second response was saved to the database
