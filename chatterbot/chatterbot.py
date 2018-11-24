@@ -131,6 +131,8 @@ class ChatBot(object):
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.get_latest_response(input_statement.conversation)
 
+        response.in_response_to = previous_statement
+
         if not self.read_only:
             self.learn_response(input_statement, previous_statement)
 
@@ -202,7 +204,7 @@ class ChatBot(object):
         ))
 
         # Save the statement after selecting a response
-        self.storage.create(
+        return self.storage.create(
             text=statement.text,
             in_response_to=previous_statement_text,
             conversation=statement.conversation,

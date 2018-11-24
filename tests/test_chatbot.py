@@ -5,11 +5,6 @@ from chatterbot.conversation import Statement
 
 class ChatterBotResponseTestCase(ChatBotTestCase):
 
-    def setUp(self):
-        super().setUp()
-
-        self.test_statement = Statement(text='Hello', in_response_to='Hi')
-
     def test_get_initialization_functions(self):
         """
         Test that the initialization functions are returned.
@@ -60,27 +55,104 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIn('initialize_nltk_averaged_perceptron_tagger', functions)
         self.assertIsLength(functions, 3)
 
-    def test_empty_database(self):
+    def test_no_statements_known(self):
         """
         If there is no statements in the database, then the
         user's input is the only thing that can be returned.
         """
-        response = self.chatbot.get_response('How are you?')
-
-        self.assertEqual('How are you?', response)
-
-    def test_statement_saved_empty_database(self):
-        """
-        Test that when database is empty, the first
-        statement is saved and returned as a response.
-        """
-        statement_text = 'Wow!'
+        statement_text = 'How are you?'
         response = self.chatbot.get_response(statement_text)
-
         results = list(self.chatbot.storage.filter(text=statement_text))
 
+        self.assertEqual(response.text, statement_text)
+        self.assertEqual(response.confidence, 1)
+
+        # Make sure that the input was saved
         self.assertIsLength(results, 1)
-        self.assertEqual(response, statement_text)
+        self.assertEqual(results[0].text, statement_text)
+
+    def test_one_statement_known_no_response(self):
+        """
+        Test the case where a single statement is known, but
+        it is not in response to any other statement.
+        """
+        self.chatbot.storage.create(text='Hello', in_response_to=None)
+
+        response = self.chatbot.get_response('Hi')
+
+        self.assertEqual(response.confidence, 0)
+        self.assertEqual(response.text, 'Hello')
+
+    def test_one_statement_one_response_known(self):
+        """
+        Test the case that one response is known and there is a response
+        entry for it in the database.
+        """
+        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+
+        response = self.chatbot.get_response('Hi')
+
+        self.assertEqual(response.confidence, 0)
+        self.assertEqual(response.text, 'Hello')
+
+    def test_two_statements_one_response_known(self):
+        """
+        Test the case that one response is known and there is a response
+        entry for it in the database.
+        """
+        self.chatbot.storage.create(text='Hi', in_response_to=None)
+        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+
+        response = self.chatbot.get_response('Hi')
+
+        self.assertEqual(response.confidence, 1)
+        self.assertEqual(response.text, 'Hello')
+
+    def test_three_statements_two_responses_known(self):
+        self.chatbot.storage.create(text='Hi', in_response_to=None)
+        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+        self.chatbot.storage.create(text='How are you?', in_response_to='Hello')
+
+        first_response = self.chatbot.get_response('Hi')
+        second_response = self.chatbot.get_response('How are you?')
+
+        self.assertEqual(first_response.confidence, 1)
+        self.assertEqual(first_response.text, 'Hello')
+        self.assertEqual(second_response.confidence, 0)
+
+    def test_four_statements_three_responses_known(self):
+        self.chatbot.storage.create(text='Hi', in_response_to=None)
+        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+        self.chatbot.storage.create(text='How are you?', in_response_to='Hello')
+        self.chatbot.storage.create(text='I am well.', in_response_to='How are you?')
+
+        first_response = self.chatbot.get_response('Hi')
+        second_response = self.chatbot.get_response('How are you?')
+
+        self.assertEqual(first_response.confidence, 1)
+        self.assertEqual(first_response.text, 'Hello')
+        self.assertEqual(second_response.confidence, 1)
+        self.assertEqual(second_response.text, 'I am well.')
+
+    def test_second_response_unknown(self):
+        self.chatbot.storage.create(text='Hi', in_response_to=None)
+        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+
+        first_response = self.chatbot.get_response('Hi')
+        second_response = self.chatbot.get_response('How are you?')
+
+        results = list(self.chatbot.storage.filter(text='How are you?'))
+
+        self.assertEqual(first_response.confidence, 1)
+        self.assertEqual(first_response.text, 'Hello')
+        self.assertEqual(first_response.in_response_to, 'Hi')
+
+        self.assertEqual(second_response.confidence, 0)
+        self.assertEqual(second_response.in_response_to, 'Hi')
+
+        # Make sure that the second response was saved to the database
+        self.assertIsLength(results, 1)
+        self.assertEqual(results[0].in_response_to, 'Hi')
 
     def test_statement_added_to_conversation(self):
         """
@@ -91,41 +163,6 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         self.assertEqual(statement.text, response)
         self.assertEqual(response.conversation, 'test')
-
-    def test_response_known(self):
-        self.chatbot.storage.update(self.test_statement)
-
-        response = self.chatbot.get_response('Hi')
-
-        self.assertEqual(response, self.test_statement.text)
-
-    def test_response_format(self):
-        self.chatbot.storage.update(self.test_statement)
-
-        response = self.chatbot.get_response('Hi')
-        results = list(self.chatbot.storage.filter(text=response.text))
-
-        self.assertEqual(response, self.test_statement.text)
-        self.assertIsLength(results, 1)
-        self.assertEqual(results[0].in_response_to, 'Hi')
-
-    def test_second_response_format(self):
-        self.chatbot.storage.update(self.test_statement)
-
-        response = self.chatbot.get_response('Hi')
-        self.assertEqual(response.text, 'Hello')
-
-        statement = Statement(text='How are you?', in_response_to='Hello')
-
-        second_response = self.chatbot.get_response(statement)
-        results = list(self.chatbot.storage.filter(text=second_response.text))
-
-        # Make sure that the second response was saved to the database
-        self.assertIsLength(list(self.chatbot.storage.filter(text='How are you?')), 1)
-
-        self.assertEqual(second_response, self.test_statement.text)
-        self.assertIsLength(results, 1)
-        self.assertEqual(results[0].in_response_to, 'Hi')
 
     def test_get_response_unicode(self):
         """
@@ -167,12 +204,13 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         If an input statement has tags added to it,
         that data should saved with the input statement.
         """
-        self.test_statement.add_tags('test')
-        self.chatbot.get_response(
-            self.test_statement
-        )
+        self.chatbot.get_response(Statement(
+            text='Hello',
+            in_response_to='Hi',
+            tags=['test']
+        ))
 
-        results = list(self.chatbot.storage.filter(text=self.test_statement.text))
+        results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertIsLength(results, 1)
         self.assertIn('test', results[0].get_tags())
