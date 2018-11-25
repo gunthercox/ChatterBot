@@ -40,6 +40,15 @@ class LogicAdapter(Adapter):
             'maximum_similarity_threshold', 0.95
         )
 
+        '''
+        The excluded_words parameter allows a list of words to be set that will
+        prevent the logic adapter from returning statements that have text
+        containing any of those words. This can be useful for preventing your
+        chat bot from saying swears when it is being demonstrated in front of
+        an audience.
+        '''
+        self.excluded_words = kwargs.get('excluded_words')
+
         # The maximum number of records to load into memory at a time when searching
         self.search_page_size = kwargs.get(
             'search_page_size', 1000
