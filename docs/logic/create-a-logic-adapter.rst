@@ -6,12 +6,6 @@ You can write your own logic adapters by creating a new class that
 inherits from ``LogicAdapter`` and overrides the necessary
 methods established in the ``LogicAdapter`` base class.
 
-Logic adapter methods
-=====================
-
-.. autoclass:: chatterbot.logic.LogicAdapter
-   :members:
-
 Example logic adapter
 =====================
 
@@ -21,8 +15,9 @@ Example logic adapter
 
 
    class MyLogicAdapter(LogicAdapter):
+
        def __init__(self, **kwargs):
-           super(MyLogicAdapter, self).__init__(**kwargs)
+           super().__init__(**kwargs)
 
        def can_process(self, statement):
            return True
