@@ -25,7 +25,7 @@ class MongoAdapterTestCase(TestCase):
                 database_uri='mongodb://localhost:27017/chatterbot_test_database'
             )
 
-            cls.has_mongo_connection = False
+            cls.has_mongo_connection = True
 
         except ServerSelectionTimeoutError:
             pass
@@ -66,34 +66,34 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         Test that None is returned by the find method
         when a matching statement is not found.
         """
-        self.assertEqual(len(self.adapter.filter(text="Non-existant")), 0)
+        results = list(self.adapter.filter(text='Non-existant'))
+        self.assertEqual(len(results), 0)
 
     def test_filter_text_statement_found(self):
         """
         Test that a matching statement is returned
         when it exists in the database.
         """
-        text = "New statement"
-        self.adapter.create(text=text)
-        results = self.adapter.filter(text=text)
+        self.adapter.create(text='New statement')
+        results = list(self.adapter.filter(text='New statement'))
 
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].text, text)
+        self.assertEqual(results[0].text, 'New statement')
 
     def test_update_adds_new_statement(self):
-        statement = Statement(text="New statement")
-        self.adapter.update(statement)
+        self.adapter.create(text='New statement')
 
-        results = self.adapter.filter(text="New statement")
+        results = list(self.adapter.filter(text='New statement'))
+
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].text, statement.text)
+        self.assertEqual(results[0].text, 'New statement')
 
     def test_update_modifies_existing_statement(self):
         statement = Statement(text="New statement")
         self.adapter.update(statement)
 
         # Check the initial values
-        results = self.adapter.filter(text=statement.text)
+        results = list(self.adapter.filter(text=statement.text))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].in_response_to, None)
@@ -104,7 +104,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         self.adapter.update(statement)
 
         # Check that the values have changed
-        results = self.adapter.filter(text=statement.text)
+        results = list(self.adapter.filter(text=statement.text))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].in_response_to, "New response")
@@ -131,7 +131,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         text = "Sometimes you have to run before you can walk."
         self.adapter.create(text=text)
         self.adapter.remove(text)
-        results = self.adapter.filter(text=text)
+        results = list(self.adapter.filter(text=text))
 
         self.assertEqual(results, [])
 
@@ -139,7 +139,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         text = "Sometimes you have to run before you can walk."
         self.adapter.create(text='', in_response_to=text)
         self.adapter.remove(text)
-        results = self.adapter.filter(text=text)
+        results = list(self.adapter.filter(text=text))
 
         self.assertEqual(results, [])
 
@@ -151,7 +151,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
             text='Testing...',
             in_response_to='Why are you counting?'
         )
-        results = self.adapter.filter(text='Howdy')
+        results = list(self.adapter.filter(text='Howdy'))
 
         self.assertEqual(len(results), 0)
 
@@ -161,7 +161,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
             in_response_to='Why are you counting?'
         )
 
-        results = self.adapter.filter(in_response_to='Maybe')
+        results = list(self.adapter.filter(in_response_to='Maybe'))
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
@@ -176,7 +176,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.adapter.update(statement1)
         self.adapter.update(statement2)
 
-        results = self.adapter.filter(in_response_to=[])
+        results = list(self.adapter.filter(in_response_to=[]))
         self.assertEqual(len(results), 2)
         self.assertIn(statement1, results)
         self.assertIn(statement2, results)
@@ -189,7 +189,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.adapter.create(text="Testing...")
         self.adapter.create(text="Testing one, two, three.")
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
 
@@ -197,9 +197,9 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.adapter.create(text="A", in_response_to="Yes")
         self.adapter.create(text="B", in_response_to="No")
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             in_response_to="Yes"
-        )
+        ))
 
         # Get the first response
         response = results[0]
@@ -212,7 +212,7 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
         self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
 
-        results = self.adapter.filter(tags="greeting")
+        results = list(self.adapter.filter(tags=["greeting"]))
 
         results_text_list = [statement.text for statement in results]
 
@@ -225,9 +225,9 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
         self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             tags=["exclamation", "fact"]
-        )
+        ))
 
         results_text_list = [statement.text for statement in results]
 
@@ -239,11 +239,11 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.adapter.create(text='Hello!')
         self.adapter.create(text='Hi everyone!')
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             exclude_text=[
                 'Hello!'
             ]
-        )
+        ))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
@@ -252,9 +252,9 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.adapter.create(text='Hello!', persona='bot:tester')
         self.adapter.create(text='Hi everyone!', persona='user:person')
 
-        results = self.adapter.filter(
+        results = list(self.adapter.filter(
             persona_not_startswith='bot:'
-        )
+        ))
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
@@ -272,7 +272,7 @@ class MongoOrderingTestCase(MongoAdapterTestCase):
         self.adapter.update(statement_b)
         self.adapter.update(statement_a)
 
-        results = self.adapter.filter(order_by=['text'])
+        results = list(self.adapter.filter(order_by=['text']))
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -296,7 +296,7 @@ class MongoOrderingTestCase(MongoAdapterTestCase):
         self.adapter.update(statement_b)
         self.adapter.update(statement_a)
 
-        results = self.adapter.filter(order_by=['created_at'])
+        results = list(self.adapter.filter(order_by=['created_at']))
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0], statement_a)
@@ -311,7 +311,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
     def test_create_text(self):
         self.adapter.create(text='testing')
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'testing')
@@ -322,7 +322,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
             search_text='test'
         )
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].search_text, 'test')
@@ -333,7 +333,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
             search_in_response_to='test'
         )
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].search_in_response_to, 'test')
@@ -341,7 +341,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
     def test_create_tags(self):
         self.adapter.create(text='testing', tags=['a', 'b'])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertIn('a', results[0].get_tags())
@@ -354,7 +354,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
         """
         self.adapter.create(text='testing', tags=['ab', 'ab'])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(len(results[0].get_tags()), 1)
@@ -366,7 +366,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
             Statement(text='B')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].text, 'A')
@@ -378,7 +378,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
             Statement(text='B', search_text='b')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_text, 'a')
@@ -390,7 +390,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
             Statement(text='B', search_in_response_to='b')
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_in_response_to, 'a')
@@ -401,7 +401,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
             Statement(text='A', tags=['first', 'letter']),
             Statement(text='B', tags=['second', 'letter'])
         ])
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
         self.assertIn('letter', results[0].get_tags())
@@ -418,7 +418,7 @@ class StorageAdapterCreateTestCase(MongoAdapterTestCase):
             Statement(text='testing', tags=['ab', 'ab'])
         ])
 
-        results = self.adapter.filter()
+        results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
         self.assertEqual(len(results[0].get_tags()), 1)
@@ -435,7 +435,7 @@ class StorageAdapterUpdateTestCase(MongoAdapterTestCase):
         statement.add_tags('a', 'b')
         self.adapter.update(statement)
 
-        statements = self.adapter.filter()
+        statements = list(self.adapter.filter())
 
         self.assertEqual(len(statements), 1)
         self.assertIn('a', statements[0].get_tags())
@@ -450,7 +450,7 @@ class StorageAdapterUpdateTestCase(MongoAdapterTestCase):
         statement.add_tags('ab')
         self.adapter.update(statement)
 
-        statements = self.adapter.filter()
+        statements = list(self.adapter.filter())
 
         self.assertEqual(len(statements), 1)
         self.assertEqual(len(statements[0].get_tags()), 1)

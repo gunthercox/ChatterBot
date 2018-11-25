@@ -163,7 +163,7 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
         self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
 
-        results = self.adapter.filter(tags="greeting")
+        results = self.adapter.filter(tags=["greeting"])
 
         results_text_list = [statement.text for statement in results]
 

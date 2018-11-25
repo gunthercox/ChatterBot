@@ -201,7 +201,7 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
         self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
 
-        results = list(self.adapter.filter(tags="greeting"))
+        results = list(self.adapter.filter(tags=["greeting"]))
 
         results_text_list = [statement.text for statement in results]
 
