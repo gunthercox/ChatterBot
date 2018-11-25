@@ -7,11 +7,31 @@ class LogicAdapter(Adapter):
     This is an abstract class that represents the interface
     that all logic adapters should implement.
 
-    :param statement_comparison_function: The dot-notated import path to a statement comparison function.
-                                          Defaults to ``levenshtein_distance``.
+    :param statement_comparison_function: The dot-notated import path
+        to a statement comparison function.
+        Defaults to ``levenshtein_distance``.
 
     :param response_selection_method: The a response selection method.
-                                      Defaults to ``get_first_response``.
+        Defaults to ``get_first_response``.
+
+    :param maximum_similarity_threshold:
+        The maximum amount of similarity between two statement that is required
+        before the search process is halted. The search for a matching statement
+        will continue until a statement with a greater than or equal similarity
+        is found or the search set is exhausted.
+        Defaults to 0.95
+
+    :param excluded_words:
+        The excluded_words parameter allows a list of words to be set that will
+        prevent the logic adapter from returning statements that have text
+        containing any of those words. This can be useful for preventing your
+        chat bot from saying swears when it is being demonstrated in front of
+        an audience.
+        Defaults to None
+
+    :param search_page_size:
+        The maximum number of records to load into memory at a time when searching
+        Defaults to 1000
     """
 
     def __init__(self, chatbot, **kwargs):
@@ -30,26 +50,12 @@ class LogicAdapter(Adapter):
             if isinstance(import_path, str):
                 kwargs['response_selection_method'] = import_module(import_path)
 
-        '''
-        The maximum amount of similarity between two statement that is required
-        before the search process is halted. The search for a matching statement
-        will continue until a statement with a greater than or equal similarity
-        is found or the search set is exhausted.
-        '''
         self.maximum_similarity_threshold = kwargs.get(
             'maximum_similarity_threshold', 0.95
         )
 
-        '''
-        The excluded_words parameter allows a list of words to be set that will
-        prevent the logic adapter from returning statements that have text
-        containing any of those words. This can be useful for preventing your
-        chat bot from saying swears when it is being demonstrated in front of
-        an audience.
-        '''
         self.excluded_words = kwargs.get('excluded_words')
 
-        # The maximum number of records to load into memory at a time when searching
         self.search_page_size = kwargs.get(
             'search_page_size', 1000
         )

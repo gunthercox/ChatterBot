@@ -29,6 +29,15 @@ take priority.
    )
 
 
+Common attributes
+=================
+
+Each logic adapter inherits the following attributes and methods.
+
+.. autoclass:: chatterbot.logic.LogicAdapter
+   :members:
+
+
 Best Match Adapter
 ==================
 
