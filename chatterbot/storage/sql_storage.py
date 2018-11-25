@@ -105,6 +105,8 @@ class SQLStorageAdapter(StorageAdapter):
         listed attributes and in which all values match
         for all listed attributes will be returned.
         """
+        from sqlalchemy import or_
+
         Statement = self.get_model('statement')
         Tag = self.get_model('tag')
 
@@ -114,6 +116,7 @@ class SQLStorageAdapter(StorageAdapter):
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
+        exclude_text_words = kwargs.pop('exclude_text_words', [])
         persona_not_startswith = kwargs.pop('persona_not_startswith', None)
 
         # Convert a single sting into a list if only one tag is provided
@@ -133,6 +136,14 @@ class SQLStorageAdapter(StorageAdapter):
         if exclude_text:
             statements = statements.filter(
                 ~Statement.text.in_(exclude_text)
+            )
+
+        if exclude_text_words:
+            or_word_query = [
+                Statement.text.ilike('%' + word + '%') for word in exclude_text_words
+            ]
+            statements = statements.filter(
+                ~or_(*or_word_query)
             )
 
         if persona_not_startswith:
