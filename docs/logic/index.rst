@@ -13,11 +13,6 @@ Logic adapters determine the logic for how ChatterBot selects a response to a gi
 The logic adapter that your bot uses can be specified by setting the ``logic_adapters`` parameter
 to the import path of the logic adapter you want to use.
 
-It is possible to enter any number of logic adapters for your bot to use.
-If multiple adapters are used, then the bot will return the response with
-the highest calculated confidence value. If multiple adapters return the
-same confidence, then the adapter that is entered into the list first will
-take priority.
 
 .. code-block:: python
 
@@ -27,6 +22,16 @@ take priority.
            "chatterbot.logic.BestMatch"
        ]
    )
+
+
+It is possible to enter any number of logic adapters for your bot to use.
+If multiple adapters are used, then the bot will return the response with
+the highest calculated confidence value. If multiple adapters return the
+same confidence, then the adapter that is entered into the list first will
+take priority.
+
+.. image:: ../_static/dialog-processing-flow.svg
+   :alt: ChatterBot dialog processing flow
 
 
 Common logic adapter attributes
