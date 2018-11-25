@@ -3,7 +3,7 @@ Storage Adapters
 ================
 
 Storage adapters provide an interface that allows ChatterBot
-to connect to different storage backends.
+to connect to different storage technologies.
 
 .. toctree::
    :maxdepth: 1
@@ -21,6 +21,16 @@ storage adapter you want to use.
        "My ChatterBot",
        storage_adapter="chatterbot.storage.SQLStorageAdapter"
    )
+
+
+Common storage adapter attributes
+=================================
+
+Each storage adapter inherits the following attributes and methods.
+
+.. autoclass:: chatterbot.storage.StorageAdapter
+   :members:
+
 
 SQL Storage Adapter
 ===================
