@@ -34,12 +34,15 @@ class DjangoStorageAdapter(StorageAdapter):
         Returns a list of statements in the database
         that match the parameters specified.
         """
+        from django.db.models import Q
+
         Statement = self.get_model('statement')
 
         kwargs.pop('page_size', 1000)
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
         exclude_text = kwargs.pop('exclude_text', None)
+        exclude_text_words = kwargs.pop('exclude_text_words', [])
         persona_not_startswith = kwargs.pop('persona_not_startswith', None)
 
         # Convert a single sting into a list if only one tag is provided
@@ -54,6 +57,15 @@ class DjangoStorageAdapter(StorageAdapter):
         if exclude_text:
             statements = statements.exclude(
                 text__in=exclude_text
+            )
+
+        if exclude_text_words:
+            or_query = [
+                ~Q(text__icontains=word) for word in exclude_text_words
+            ]
+
+            statements = statements.filter(
+                *or_query
             )
 
         if persona_not_startswith:
