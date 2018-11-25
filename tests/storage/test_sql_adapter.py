@@ -199,6 +199,20 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
 
+    def test_exclude_text_words(self):
+        self.adapter.create(text='This is a good example.')
+        self.adapter.create(text='This is a bad example.')
+        self.adapter.create(text='This is a worse example.')
+
+        results = list(self.adapter.filter(
+            exclude_text_words=[
+                'bad', 'worse'
+            ]
+        ))
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, 'This is a good example.')
+
     def test_persona_not_startswith(self):
         self.adapter.create(text='Hello!', persona='bot:tester')
         self.adapter.create(text='Hi everyone!', persona='user:person')
