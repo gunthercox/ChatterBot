@@ -87,7 +87,7 @@ class StorageAdapter(object):
 
         :param persona_not_startswith: If the ``persona`` field of a
             statement starts with the value specified by this parameter,
-            then the statement will not be returned in the result set. 
+            then the statement will not be returned in the result set.
             Defaults to None
         """
         raise self.AdapterMethodNotImplementedError(
