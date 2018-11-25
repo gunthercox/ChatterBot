@@ -62,6 +62,33 @@ class StorageAdapter(object):
         of attributes. Only objects which contain
         all listed attributes and in which all values
         match for all listed attributes will be returned.
+
+        :param page_size: The maximum number of records to load into
+            memory at once when returning results.
+            Defaults to 1000
+
+        :param order_by: The field name that should be used to determine
+            the order that results are returned in.
+            Defaults to None
+
+        :param tags: A list of tags. When specified, the results will only
+            include statements that have a tag in the provided list.
+            Defaults to [] (empty list)
+
+        :param exclude_text: If the ``text`` of a statement is an exact match
+            for the value of this parameter the statement will not be
+            included in the result set.
+            Defaults to None
+
+        :param exclude_text_words: If the ``text`` of a statement contains a
+            word from this list then the statement will not be included in
+            the result set.
+            Defaults to [] (empty list)
+
+        :param persona_not_startswith: If the ``persona`` field of a
+            statement starts with the value specified by this parameter,
+            then the statement will not be returned in the result set. 
+            Defaults to None
         """
         raise self.AdapterMethodNotImplementedError(
             'The `filter` method is not implemented by this adapter.'

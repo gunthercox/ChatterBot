@@ -29,8 +29,8 @@ take priority.
    )
 
 
-Common attributes
-=================
+Common logic adapter attributes
+=================================
 
 Each logic adapter inherits the following attributes and methods.
 
