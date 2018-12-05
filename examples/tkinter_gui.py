@@ -25,7 +25,7 @@ class TkinterGUIExample(tk.Tk):
             ],
             input_adapter="chatterbot.input.InputAdapter",
             output_adapter="chatterbot.output.OutputAdapter",
-            database_uri="../database.db"
+            database_uri="sqlite:///database.db"
         )
 
         self.title("Chatterbot")
