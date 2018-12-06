@@ -6,8 +6,6 @@ from chatterbot.trainers import ChatterBotCorpusTrainer
 # import logging
 # logging.basicConfig(level=logging.INFO)
 
-CONVERSATION = 'example_learning_conversation'
-
 # Create a new instance of a ChatBot
 bot = ChatBot(
     "Terminal",
@@ -40,9 +38,8 @@ print("Type something to begin...")
 while True:
     try:
         input_statement = bot.input.process_input()
-        statement, response = bot.generate_response(
-            input_statement,
-            CONVERSATION
+        response = bot.generate_response(
+            input_statement
         )
 
         bot.output.process_response(response)
@@ -50,7 +47,7 @@ while True:
         if get_feedback():
             print("please input the correct one")
             response1 = bot.input.process_input()
-            bot.learn_response(CONVERSATION, response1, input_statement)
+            bot.learn_response(response1, input_statement)
             print("Responses added to bot!")
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
