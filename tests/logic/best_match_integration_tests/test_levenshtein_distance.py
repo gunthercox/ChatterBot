@@ -49,7 +49,10 @@ class BestMatchLevenshteinDistanceTestCase(ChatBotTestCase):
         self.assertEqual(match.confidence, 1)
 
     def test_confidence_half_match(self):
-        self.chatbot.storage.create(text='xxyy', in_response_to='xxyy')
+        # Assume that the storage adapter returns a partial match
+        self.adapter.chatbot.storage.filter = MagicMock(return_value=[
+            Statement(text='xxyy')
+        ])
 
         statement = Statement(text='wwxx')
         match = self.adapter.get(statement)

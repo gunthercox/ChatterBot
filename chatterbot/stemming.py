@@ -207,7 +207,7 @@ class PosHypernymStemmer(object):
 
         for index in range(1, word_count):
             word = words[index].lower()
-            previous_word_pos = pos_tags[index - 1][1]
+            previous_word_pos = pos_tags[index][1]
             if word not in self.get_stopwords() and len(word) > 1:
                 bigram = previous_word_pos + ':' + hypernyms[index].lower()
                 high_quality_bigrams.append(bigram)
