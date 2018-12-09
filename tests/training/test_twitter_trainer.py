@@ -88,11 +88,11 @@ class TwitterTrainerTestCase(ChatBotTestCase):
         statements = list(self.trainer.chatbot.storage.filter())
 
         self.assertGreater(len(statements), 1)
-        self.assertEqual(statements[0].search_text, 'urub')
+        self.assertEqual(statements[0].search_text, 'VBP:sure NNP:jewel')
 
     def test_train_sets_search_in_response_to(self):
         self.trainer.train()
         statements = list(self.trainer.chatbot.storage.filter())
 
         self.assertGreater(len(statements), 1)
-        self.assertEqual(statements[0].search_in_response_to, 'urub')
+        self.assertEqual(statements[0].search_in_response_to, 'VBP:sure NNP:jewel')
