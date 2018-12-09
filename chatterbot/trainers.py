@@ -429,9 +429,8 @@ class UbuntuCorpusTrainer(Trainer):
 
     def train(self):
         import glob
-        from chatterbot.stemming import SimpleStemmer
 
-        stemmer = SimpleStemmer()
+        stemmer = SimpleStemmer(language=self.stemmer.language)
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
