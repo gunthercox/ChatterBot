@@ -185,27 +185,38 @@ class PosHypernymStemmer(object):
         words = text.split()
 
         # Separate punctuation from last word in string
-        word_with_punctuation_removed = words[-1].strip(string.punctuation)
+        if words:
+            word_with_punctuation_removed = words[-1].strip(string.punctuation)
 
-        if word_with_punctuation_removed:
-            words[-1] = word_with_punctuation_removed
+            if word_with_punctuation_removed:
+                words[-1] = word_with_punctuation_removed
 
         pos_tags = pos_tag(words)
 
         hypernyms = self.get_hypernyms(pos_tags)
 
-        bigrams = []
+        high_quality_bigrams = []
+        all_bigrams = []
 
         word_count = len(words)
 
         if word_count <= 1:
-            bigrams = words
-            if bigrams:
-                bigrams[0] = bigrams[0].lower()
+            all_bigrams = words
+            if all_bigrams:
+                all_bigrams[0] = all_bigrams[0].lower()
 
         for index in range(1, word_count):
-            if words[index].lower() not in self.get_stopwords():
-                bigram = pos_tags[index - 1][1] + ':' + hypernyms[index].lower()
-                bigrams.append(bigram)
+            word = words[index].lower()
+            previous_word_pos = pos_tags[index - 1][1]
+            if word not in self.get_stopwords() and len(word) > 1:
+                bigram = previous_word_pos + ':' + hypernyms[index].lower()
+                high_quality_bigrams.append(bigram)
+                all_bigrams.append(bigram)
+            else:
+                bigram = previous_word_pos + ':' + word
+                all_bigrams.append(bigram)
 
-        return ' '.join(bigrams)
+        if high_quality_bigrams:
+            all_bigrams = high_quality_bigrams
+
+        return ' '.join(all_bigrams)
