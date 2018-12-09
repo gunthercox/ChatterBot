@@ -44,6 +44,7 @@ class DjangoStorageAdapter(StorageAdapter):
         exclude_text = kwargs.pop('exclude_text', None)
         exclude_text_words = kwargs.pop('exclude_text_words', [])
         persona_not_startswith = kwargs.pop('persona_not_startswith', None)
+        search_text_contains = kwargs.pop('search_text_contains', None)
 
         # Convert a single sting into a list if only one tag is provided
         if type(tags) == str:
@@ -71,6 +72,16 @@ class DjangoStorageAdapter(StorageAdapter):
         if persona_not_startswith:
             statements = statements.exclude(
                 persona__startswith='bot:'
+            )
+
+        if search_text_contains:
+            or_query = Q()
+
+            for word in search_text_contains.split(' '):
+                or_query |= Q(search_text__contains=word)
+
+            statements = statements.filter(
+                or_query
             )
 
         if order_by:
