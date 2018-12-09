@@ -12,7 +12,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         functions = self.chatbot.get_initialization_functions()
 
         self.assertIn('initialize_nltk_stopwords', functions)
-        self.assertIsLength(functions, 1)
+        self.assertIn('initialize_nltk_wordnet', functions)
+        self.assertIsLength(functions, 2)
 
     def test_get_initialization_functions_synset_distance(self):
         """
@@ -38,8 +39,9 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         functions = self.chatbot.get_initialization_functions()
 
         self.assertIn('initialize_nltk_stopwords', functions)
+        self.assertIn('initialize_nltk_wordnet', functions)
         self.assertIn('initialize_nltk_vader_lexicon', functions)
-        self.assertIsLength(functions, 2)
+        self.assertIsLength(functions, 3)
 
     def test_get_initialization_functions_jaccard_similarity(self):
         """

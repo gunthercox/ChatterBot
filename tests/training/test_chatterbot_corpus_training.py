@@ -29,7 +29,7 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
         results = list(self.chatbot.storage.filter(text='Hello'))
 
         self.assertGreater(len(results), 1)
-        self.assertEqual(results[0].search_text, 'ell')
+        self.assertEqual(results[0].search_text, 'hello')
 
     def test_train_with_english_greeting_corpus_search_in_response_to(self):
         self.trainer.train('chatterbot.corpus.english.greetings')
@@ -37,7 +37,7 @@ class ChatterBotCorpusTrainingTestCase(ChatBotTestCase):
         results = list(self.chatbot.storage.filter(in_response_to='Hello'))
 
         self.assertGreater(len(results), 1)
-        self.assertEqual(results[0].search_in_response_to, 'ell')
+        self.assertEqual(results[0].search_in_response_to, 'hello')
 
     def test_train_with_english_greeting_corpus_tags(self):
         self.trainer.train('chatterbot.corpus.english.greetings')

@@ -5,7 +5,7 @@ import time
 from multiprocessing import Pool, Manager
 from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
-from chatterbot.stemming import SimpleStemmer
+from chatterbot.stemming import PosHypernymStemmer
 from chatterbot import utils
 
 
@@ -30,7 +30,7 @@ class Trainer(object):
             environment_default
         )
 
-        self.stemmer = SimpleStemmer(language=kwargs.get(
+        self.stemmer = PosHypernymStemmer(language=kwargs.get(
             'stemmer_language', 'english'
         ))
 
@@ -430,7 +430,7 @@ class UbuntuCorpusTrainer(Trainer):
     def train(self):
         import glob
 
-        stemmer = SimpleStemmer(language=self.stemmer.language)
+        stemmer = PosHypernymStemmer(language=self.stemmer.language)
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)

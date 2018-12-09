@@ -131,7 +131,7 @@ class PosHypernymStemmerTests(TestCase):
             'Hello, how are you doing on this awesome day?'
         )
 
-        self.assertEqual(stemmed_text, 'DT:awesome JJ:time_unit')
+        self.assertEqual(stemmed_text, 'JJ:awesome NN:time_unit')
 
     def test_string_becomes_lowercase(self):
         stemmed_text = self.stemmer.get_bigram_pair_string('THIS IS HOW IT BEGINS!')
@@ -141,12 +141,12 @@ class PosHypernymStemmerTests(TestCase):
     def test_stemming_medium_sized_words(self):
         stemmed_text = self.stemmer.get_bigram_pair_string('Hello, my name is Gunther.')
 
-        self.assertEqual(stemmed_text, 'PRP$:language_unit VBZ:gunther')
+        self.assertEqual(stemmed_text, 'NN:language_unit NNP:gunther')
 
     def test_stemming_long_words(self):
         stemmed_text = self.stemmer.get_bigram_pair_string('I play several orchestra instruments for pleasuer.')
 
-        self.assertEqual(stemmed_text, 'PRP:compete VBP:several JJ:orchestra JJ:device IN:pleasuer')
+        self.assertEqual(stemmed_text, 'VBP:compete JJ:several JJ:orchestra NNS:device NN:pleasuer')
 
     def test_get_bigram_pair_string_punctuation_only(self):
         bigram_string = self.stemmer.get_bigram_pair_string(
@@ -209,18 +209,18 @@ class PosHypernymStemmerTests(TestCase):
             'Hello Dr. Salazar. How are you today?'
         )
 
-        self.assertEqual(bigram_string, 'NNP:scholar NNP:salazar. PRP:present')
+        self.assertEqual(bigram_string, 'NNP:scholar NNP:salazar. NN:present')
 
     def test_get_bigram_pair_string_single_character_words(self):
         bigram_string = self.stemmer.get_bigram_pair_string(
             'a e i o u'
         )
 
-        self.assertEqual(bigram_string, 'DT:e NN:i NN:o VBP:u')
+        self.assertEqual(bigram_string, 'NN:e NN:i VBP:o NN:u')
 
     def test_get_bigram_pair_string_two_character_words(self):
         bigram_string = self.stemmer.get_bigram_pair_string(
             'Lo my mu it is of us'
         )
 
-        self.assertEqual(bigram_string, 'PRP$:letter IN:us')
+        self.assertEqual(bigram_string, 'NN:letter PRP:us')
