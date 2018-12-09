@@ -7,6 +7,13 @@ class SimpleStemmerTests(TestCase):
     def setUp(self):
         self.stemmer = stemming.SimpleStemmer()
 
+    def test_empty_string(self):
+        stemmed_text = self.stemmer.get_bigram_pair_string(
+            ''
+        )
+
+        self.assertEqual(stemmed_text, '')
+
     def test_stemming(self):
         stemmed_text = self.stemmer.get_stemmed_words(
             'Hello, how are you doing on this awesome day?'
@@ -112,6 +119,13 @@ class PosHypernymStemmerTests(TestCase):
     def setUp(self):
         self.stemmer = stemming.PosHypernymStemmer()
 
+    def test_empty_string(self):
+        stemmed_text = self.stemmer.get_bigram_pair_string(
+            ''
+        )
+
+        self.assertEqual(stemmed_text, '')
+
     def test_stemming(self):
         stemmed_text = self.stemmer.get_bigram_pair_string(
             'Hello, how are you doing on this awesome day?'
@@ -202,7 +216,7 @@ class PosHypernymStemmerTests(TestCase):
             'a e i o u'
         )
 
-        self.assertEqual(bigram_string, 'DT:antioxidant VBP:nucleotide')
+        self.assertEqual(bigram_string, 'DT:e NN:i NN:o VBP:u')
 
     def test_get_bigram_pair_string_two_character_words(self):
         bigram_string = self.stemmer.get_bigram_pair_string(
