@@ -273,6 +273,27 @@ class MongoAdapterFilterTestCase(MongoAdapterTestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
 
+    def test_search_text_contains(self):
+        self.adapter.create(text='Hello!', search_text='hello exclamation')
+        self.adapter.create(text='Hi everyone!', search_text='hi everyone')
+
+        results = list(self.adapter.filter(
+            search_text_contains='everyone'
+        ))
+
+        self.assertEqual(len(results), 1)
+        self.assertEqual(results[0].text, 'Hi everyone!')
+
+    def test_search_text_contains_multiple_matches(self):
+        self.adapter.create(text='Hello!', search_text='hello exclamation')
+        self.adapter.create(text='Hi everyone!', search_text='hi everyone')
+
+        results = list(self.adapter.filter(
+            search_text_contains='hello everyone'
+        ))
+
+        self.assertEqual(len(results), 2)
+
 
 class MongoOrderingTestCase(MongoAdapterTestCase):
     """
