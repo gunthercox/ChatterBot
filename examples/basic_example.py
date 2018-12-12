@@ -7,7 +7,7 @@ chatbot = ChatBot('Charlie')
 # Create a new trainer for the chatbox
 trainer = ListTrainer(chatbot.storage)
 
-# Train the chatbot based on the english corpus
+# Train the chatbot based on a list of sentences
 trainer.train([
     "Hi, can I help you?",
     "Sure, I'd like to book a flight to Iceland.",
