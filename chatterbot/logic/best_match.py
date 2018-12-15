@@ -15,7 +15,7 @@ class BestMatch(LogicAdapter):
         """
         self.chatbot.logger.info('Beginning search for close text match')
 
-        input_search_text = self.chatbot.storage.stemmer.get_bigram_pair_string(
+        input_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(
             input_statement.text
         )
 

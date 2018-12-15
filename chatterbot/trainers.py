@@ -5,7 +5,7 @@ import time
 from multiprocessing import Pool, Manager
 from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
-from chatterbot.stemming import PosHypernymStemmer
+from chatterbot.tagging import PosHypernymTagger
 from chatterbot import utils
 
 
@@ -18,7 +18,7 @@ class Trainer(object):
            can also be set to control this. ``show_training_progress`` will override
            the environment variable if it is set.
 
-    :param str stemmer_language: The language that the stemmer uses to remove stopwords.
+    :param str tagger_language: The language that the tagger uses to remove stopwords.
     """
 
     def __init__(self, chatbot, **kwargs):
@@ -30,8 +30,8 @@ class Trainer(object):
             environment_default
         )
 
-        self.stemmer = PosHypernymStemmer(language=kwargs.get(
-            'stemmer_language', 'english'
+        self.tagger = PosHypernymTagger(language=kwargs.get(
+            'tagger_language', 'english'
         ))
 
     def get_preprocessed_statement(self, input_statement):
@@ -104,7 +104,7 @@ class ListTrainer(Trainer):
                     conversation_count + 1, len(conversation)
                 )
 
-            statement_search_text = self.stemmer.get_bigram_pair_string(text)
+            statement_search_text = self.tagger.get_bigram_pair_string(text)
 
             statement = self.get_preprocessed_statement(
                 Statement(
@@ -158,7 +158,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
                 for text in conversation:
 
-                    statement_search_text = self.stemmer.get_bigram_pair_string(text)
+                    statement_search_text = self.tagger.get_bigram_pair_string(text)
 
                     statement = Statement(
                         text=text,
@@ -280,7 +280,7 @@ class TwitterTrainer(Trainer):
                 )
 
 
-def read_file(files, queue, preprocessors, stemmer):
+def read_file(files, queue, preprocessors, tagger):
 
     statements_from_file = []
 
@@ -304,7 +304,7 @@ def read_file(files, queue, preprocessors, stemmer):
                     for preprocessor in preprocessors:
                         statement = preprocessor(statement)
 
-                    statement.search_text = stemmer.get_bigram_pair_string(statement.text)
+                    statement.search_text = tagger.get_bigram_pair_string(statement.text)
                     statement.search_in_response_to = previous_statement_search_text
 
                     previous_statement_text = statement.text
@@ -430,7 +430,7 @@ class UbuntuCorpusTrainer(Trainer):
     def train(self):
         import glob
 
-        stemmer = PosHypernymStemmer(language=self.stemmer.language)
+        tagger = PosHypernymTagger(language=self.tagger.language)
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
@@ -461,7 +461,7 @@ class UbuntuCorpusTrainer(Trainer):
                 file_names,
                 queue,
                 self.chatbot.preprocessors,
-                stemmer,
+                tagger,
             ) for file_names in file_groups
         )
 
