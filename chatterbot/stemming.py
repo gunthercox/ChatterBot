@@ -1,5 +1,6 @@
 import string
 from nltk import pos_tag
+from nltk.data import load as load_data
 from nltk.corpus import wordnet, stopwords
 
 
@@ -120,8 +121,6 @@ class PosHypernymStemmer(object):
     """
 
     def __init__(self, language='english'):
-        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
-
         self.language = language
 
         self.stopwords = None
@@ -182,32 +181,41 @@ class PosHypernymStemmer(object):
 
         DT:beautiful JJ:wetland
         """
-        words = text.split()
+        WORD_INDEX = 0
+        POS_INDEX = 1
 
-        # Separate punctuation from last word in string
-        if words:
-            word_with_punctuation_removed = words[-1].strip(string.punctuation)
+        pos_tags = []
 
-            if word_with_punctuation_removed:
-                words[-1] = word_with_punctuation_removed
+        sentence_detector = load_data('tokenizers/punkt/english.pickle')
 
-        pos_tags = pos_tag(words)
+        for sentence in sentence_detector.tokenize(text.strip()):
+
+            # Remove punctuation
+            if sentence and sentence[-1] in string.punctuation:
+                sentence_with_punctuation_removed = sentence[:-1]
+
+                if sentence_with_punctuation_removed:
+                    sentence = sentence_with_punctuation_removed
+
+            words = sentence.split()
+
+            pos_tags.extend(pos_tag(words))
 
         hypernyms = self.get_hypernyms(pos_tags)
 
         high_quality_bigrams = []
         all_bigrams = []
 
-        word_count = len(words)
+        word_count = len(pos_tags)
 
-        if word_count <= 1:
-            all_bigrams = words
-            if all_bigrams:
-                all_bigrams[0] = all_bigrams[0].lower()
+        if word_count == 1:
+            all_bigrams.append(
+                pos_tags[0][WORD_INDEX].lower()
+            )
 
         for index in range(1, word_count):
-            word = words[index].lower()
-            previous_word_pos = pos_tags[index][1]
+            word = pos_tags[index][WORD_INDEX].lower()
+            previous_word_pos = pos_tags[index - 1][POS_INDEX]
             if word not in self.get_stopwords() and len(word) > 1:
                 bigram = previous_word_pos + ':' + hypernyms[index].lower()
                 high_quality_bigrams.append(bigram)
