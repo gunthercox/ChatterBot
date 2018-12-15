@@ -1,22 +1,8 @@
 import string
+from chatterbot.utils import treebank_to_wordnet
 from nltk import pos_tag
 from nltk.data import load as load_data
 from nltk.corpus import wordnet, stopwords
-
-
-def treebank_to_wordnet(pos):
-    """
-    * https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
-    * http://www.nltk.org/_modules/nltk/corpus/reader/wordnet.html
-    """
-    data_map = {
-        'N': wordnet.NOUN,
-        'J': wordnet.ADJ,
-        'V': wordnet.VERB,
-        'R': wordnet.ADV
-    }
-
-    return data_map.get(pos[0])
 
 
 class PosHypernymTagger(object):
