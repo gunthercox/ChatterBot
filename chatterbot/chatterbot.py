@@ -76,7 +76,7 @@ class ChatBot(object):
 
     def get_initialization_functions(self):
         initialization_functions = utils.get_initialization_functions(
-            self, 'storage.stemmer'
+            self, 'storage.tagger'
         )
 
         for logic_adapter in self.get_logic_adapters():

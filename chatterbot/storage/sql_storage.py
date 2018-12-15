@@ -189,11 +189,11 @@ class SQLStorageAdapter(StorageAdapter):
         tags = set(kwargs.pop('tags', []))
 
         if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.stemmer.get_bigram_pair_string(kwargs['text'])
+            kwargs['search_text'] = self.tagger.get_bigram_pair_string(kwargs['text'])
 
         if 'search_in_response_to' not in kwargs:
             if kwargs.get('in_response_to'):
-                kwargs['search_in_response_to'] = self.stemmer.get_bigram_pair_string(kwargs['in_response_to'])
+                kwargs['search_in_response_to'] = self.tagger.get_bigram_pair_string(kwargs['in_response_to'])
 
         statement = Statement(**kwargs)
 
@@ -243,10 +243,10 @@ class SQLStorageAdapter(StorageAdapter):
             )
 
             if not statement.search_text:
-                statement_model_object.search_text = self.stemmer.get_bigram_pair_string(statement.text)
+                statement_model_object.search_text = self.tagger.get_bigram_pair_string(statement.text)
 
             if not statement.search_in_response_to and statement.in_response_to:
-                statement_model_object.search_in_response_to = self.stemmer.get_bigram_pair_string(statement.in_response_to)
+                statement_model_object.search_in_response_to = self.tagger.get_bigram_pair_string(statement.in_response_to)
 
             for tag_name in statement.tags:
                 if tag_name in create_tags:
@@ -299,10 +299,10 @@ class SQLStorageAdapter(StorageAdapter):
 
             record.created_at = statement.created_at
 
-            record.search_text = self.stemmer.get_bigram_pair_string(statement.text)
+            record.search_text = self.tagger.get_bigram_pair_string(statement.text)
 
             if statement.in_response_to:
-                record.search_in_response_to = self.stemmer.get_bigram_pair_string(statement.in_response_to)
+                record.search_in_response_to = self.tagger.get_bigram_pair_string(statement.in_response_to)
 
             for tag_name in statement.tags:
                 tag = session.query(Tag).get(tag_name)
