@@ -303,7 +303,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         ])
 
         results = list(self.chatbot.storage.filter(
-            search_text=self.chatbot.storage.stemmer.get_bigram_pair_string(
+            search_text=self.chatbot.storage.tagger.get_bigram_pair_string(
                 'Example A for search.'
             )
         ))

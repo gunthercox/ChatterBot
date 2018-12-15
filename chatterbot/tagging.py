@@ -4,9 +4,9 @@ from nltk.data import load as load_data
 from nltk.corpus import wordnet, stopwords
 
 
-class SimpleStemmer(object):
+class SimpleTagger(object):
     """
-    A very simple stemming algorithm that removes stopwords and punctuation.
+    A very simple tagging algorithm that removes stopwords and punctuation.
     It then removes the beginning and ending characters of each word.
     This should work for any language.
     """
@@ -35,9 +35,9 @@ class SimpleStemmer(object):
 
         return self.stopwords
 
-    def get_stemmed_words(self, text, size=4):
+    def get_tagged_words(self, text, size=4):
 
-        stemmed_words = []
+        tagged_words = []
 
         # Make the text lowercase
         text = text.lower()
@@ -50,11 +50,11 @@ class SimpleStemmer(object):
 
         words = text.split(' ')
 
-        # Do not stem singe-word strings that are less than the size limit for characters
+        # Do not tag singe-word strings that are less than the size limit for characters
         if len(words) == 1 and len(words[0]) < size:
             return words
 
-        # Generate the stemmed text
+        # Generate the tagged text
         for word in words:
 
             # Remove stopwords
@@ -66,24 +66,24 @@ class SimpleStemmer(object):
                 word = word[start:stop]
 
                 if word:
-                    stemmed_words.append(word)
+                    tagged_words.append(word)
 
-        # Return the word list if it could not be stemmed
-        if not stemmed_words and words:
+        # Return the word list if it could not be tagged
+        if not tagged_words and words:
             return words
 
-        return stemmed_words
+        return tagged_words
 
     def get_bigram_pair_string(self, text):
         """
-        Return bigram pairs of stemmed text for a given string.
+        Return bigram pairs of tagged text for a given string.
         For example:
 
         "Hello Dr. Salazar. How are you today?"
         "[ell alaza] [alaza oda]"
         "ellalaza alazaoda"
         """
-        words = self.get_stemmed_words(text)
+        words = self.get_tagged_words(text)
 
         bigrams = []
 
@@ -114,7 +114,7 @@ def treebank_to_wordnet(pos):
     return data_map.get(pos[0])
 
 
-class PosHypernymStemmer(object):
+class PosHypernymTagger(object):
     """
     For each non-stopword in a string, return a string where each word is a
     hypernym preceded by the part of speech of the word before it.

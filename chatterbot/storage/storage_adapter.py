@@ -1,5 +1,5 @@
 import logging
-from chatterbot.stemming import PosHypernymStemmer
+from chatterbot.tagging import PosHypernymTagger
 
 
 class StorageAdapter(object):
@@ -16,8 +16,8 @@ class StorageAdapter(object):
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
         self.adapter_supports_queries = True
 
-        self.stemmer = PosHypernymStemmer(language=kwargs.get(
-            'stemmer_language', 'english'
+        self.tagger = PosHypernymTagger(language=kwargs.get(
+            'tagger_language', 'english'
         ))
 
     def get_model(self, model_name):
