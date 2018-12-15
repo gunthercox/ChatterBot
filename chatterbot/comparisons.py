@@ -2,6 +2,7 @@
 This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
+from chatterbot import utils
 
 # Use python-Levenshtein if available
 try:
@@ -71,25 +72,19 @@ class SynsetDistance(Comparator):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('corpora/wordnet')
+        utils.nltk_download_corpus('corpora/wordnet')
 
     def initialize_nltk_punkt(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('tokenizers/punkt')
+        utils.nltk_download_corpus('tokenizers/punkt')
 
     def initialize_nltk_stopwords(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('corpora/stopwords')
+        utils.nltk_download_corpus('corpora/stopwords')
 
     def compare(self, statement, other_statement):
         """
@@ -103,7 +98,6 @@ class SynsetDistance(Comparator):
         """
         from nltk.corpus import wordnet
         from nltk import word_tokenize
-        from chatterbot import utils
         import itertools
 
         tokens1 = word_tokenize(statement.text.lower())
@@ -159,9 +153,7 @@ class SentimentComparison(Comparator):
         Download the NLTK vader lexicon for sentiment analysis
         that is required for this algorithm to run.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('sentiment/vader_lexicon')
+        utils.nltk_download_corpus('sentiment/vader_lexicon')
 
     def compare(self, statement, other_statement):
         """
@@ -232,33 +224,26 @@ class JaccardSimilarity(Comparator):
         Download the NLTK wordnet corpora that is required for this algorithm
         to run only if the corpora has not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('corpora/wordnet')
+        utils.nltk_download_corpus('corpora/wordnet')
 
     def initialize_nltk_averaged_perceptron_tagger(self):
         """
         Download the NLTK averaged perceptron tagger that is required for this algorithm
         to run only if the corpora has not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('averaged_perceptron_tagger')
+        utils.nltk_download_corpus('averaged_perceptron_tagger')
 
     def initialize_nltk_stopwords(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('corpora/stopwords')
+        utils.nltk_download_corpus('corpora/stopwords')
 
     def compare(self, statement, other_statement):
         """
         Return the calculated similarity of two
         statements based on the Jaccard index.
         """
-        from nltk.corpus import wordnet
         import nltk
         import string
 
@@ -276,29 +261,17 @@ class JaccardSimilarity(Comparator):
         a = a.translate(table)
         b = b.translate(table)
 
-        def get_wordnet_pos(pos_tag):
-            if pos_tag[1].startswith('J'):
-                return (pos_tag[0], wordnet.ADJ)
-            elif pos_tag[1].startswith('V'):
-                return (pos_tag[0], wordnet.VERB)
-            elif pos_tag[1].startswith('N'):
-                return (pos_tag[0], wordnet.NOUN)
-            elif pos_tag[1].startswith('R'):
-                return (pos_tag[0], wordnet.ADV)
-            else:
-                return (pos_tag[0], wordnet.NOUN)
-
-        pos_a = list(map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(a))))
-        pos_b = list(map(get_wordnet_pos, nltk.pos_tag(nltk.tokenize.word_tokenize(b))))
+        pos_a = nltk.pos_tag(nltk.tokenize.word_tokenize(a))
+        pos_b = nltk.pos_tag(nltk.tokenize.word_tokenize(b))
 
         lemma_a = [
             lemmatizer.lemmatize(
-                token, pos
+                token, utils.treebank_to_wordnet(pos)
             ) for token, pos in pos_a if token not in stopwords
         ]
         lemma_b = [
             lemmatizer.lemmatize(
-                token, pos
+                token, utils.treebank_to_wordnet(pos)
             ) for token, pos in pos_b if token not in stopwords
         ]
 
