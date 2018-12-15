@@ -12,7 +12,6 @@ class UtilityTests(TestCase):
     def test_nltk_download_corpus(self):
         downloaded = utils.nltk_download_corpus('wordnet')
         self.assertTrue(downloaded)
-        self.skipTest('Test needs to be created')
 
     def test_remove_stop_words(self):
         from chatterbot.utils import nltk_download_corpus
@@ -37,6 +36,12 @@ class UtilityTests(TestCase):
         value = utils.get_greatest_confidence(statement, options)
 
         self.assertEqual(value, 0.85)
+
+    def test_treebank_to_wordnet(self):
+        self.assertEqual(utils.treebank_to_wordnet('NNS'), 'n')
+
+    def test_treebank_to_wordnet_no_match(self):
+        self.assertEqual(utils.treebank_to_wordnet('XXX'), None)
 
 
 class UtilityChatBotTestCase(ChatBotTestCase):
