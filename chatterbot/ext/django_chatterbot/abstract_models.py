@@ -7,6 +7,7 @@ from django.conf import settings
 
 DJANGO_APP_NAME = constants.DEFAULT_DJANGO_APP_NAME
 STATEMENT_MODEL = 'Statement'
+TAG_MODEL = 'Tag'
 
 if hasattr(settings, 'CHATTERBOT'):
     """
@@ -23,11 +24,28 @@ if hasattr(settings, 'CHATTERBOT'):
     )
 
 
+class AbstractBaseTag(models.Model):
+    """
+    The abstract base tag allows other models to be created
+    using the attributes that exist on the default models.
+    """
+
+    name = models.SlugField(
+        max_length=constants.TAG_NAME_MAX_LENGTH,
+        unique=True
+    )
+
+    class Meta:
+        abstract = True
+
+    def __str__(self):
+        return self.name
+
+
 class AbstractBaseStatement(models.Model, StatementMixin):
     """
-    The abstract base statement allows other models to
-    be created using the attributes that exist on the
-    default models.
+    The abstract base statement allows other models to be created
+    using the attributes that exist on the default models.
     """
 
     text = models.CharField(
@@ -62,6 +80,11 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         max_length=constants.PERSONA_MAX_LENGTH
     )
 
+    tags = models.ManyToManyField(
+        TAG_MODEL,
+        related_name='statements'
+    )
+
     # This is the confidence with which the chat bot believes
     # this is an accurate response. This value is set when the
     # statement is returned by the chat bot.
@@ -91,27 +114,3 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         """
         for _tag in tags:
             self.tags.get_or_create(name=_tag)
-
-
-class AbstractBaseTag(models.Model):
-    """
-    The abstract base tag allows other models to
-    be created using the attributes that exist on the
-    default models.
-    """
-
-    name = models.SlugField(
-        primary_key=True,
-        max_length=constants.TAG_NAME_MAX_LENGTH
-    )
-
-    statements = models.ManyToManyField(
-        STATEMENT_MODEL,
-        related_name='tags'
-    )
-
-    class Meta:
-        abstract = True
-
-    def __str__(self):
-        return self.name

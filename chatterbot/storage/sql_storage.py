@@ -198,7 +198,7 @@ class SQLStorageAdapter(StorageAdapter):
         statement = Statement(**kwargs)
 
         for tag_name in tags:
-            tag = session.query(Tag).get(tag_name)
+            tag = session.query(Tag).filter_by(name=tag_name).first()
 
             if not tag:
                 # Create the tag
@@ -252,7 +252,7 @@ class SQLStorageAdapter(StorageAdapter):
                 if tag_name in create_tags:
                     tag = create_tags[tag_name]
                 else:
-                    tag = session.query(Tag).get(tag_name)
+                    tag = session.query(Tag).filter_by(name=tag_name).first()
 
                     if not tag:
                         # Create the tag if it does not exist
@@ -305,7 +305,7 @@ class SQLStorageAdapter(StorageAdapter):
                 record.search_in_response_to = self.tagger.get_bigram_pair_string(statement.in_response_to)
 
             for tag_name in statement.tags:
-                tag = session.query(Tag).get(tag_name)
+                tag = session.query(Tag).filter_by(name=tag_name).first()
 
                 if not tag:
                     # Create the record

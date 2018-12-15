@@ -19,6 +19,12 @@ class ModelBase(object):
         """
         return cls.__name__.lower()
 
+    id = Column(
+        Integer,
+        primary_key=True,
+        autoincrement=True
+    )
+
 
 Base = declarative_base(cls=ModelBase)
 
@@ -26,7 +32,7 @@ Base = declarative_base(cls=ModelBase)
 tag_association_table = Table(
     'tag_association',
     Base.metadata,
-    Column('tag_name', Integer, ForeignKey('tag.name')),
+    Column('tag_id', Integer, ForeignKey('tag.id')),
     Column('statement_id', Integer, ForeignKey('statement.id'))
 )
 
@@ -38,7 +44,7 @@ class Tag(Base):
 
     name = Column(
         String(constants.TAG_NAME_MAX_LENGTH),
-        primary_key=True
+        unique=True
     )
 
 
@@ -46,12 +52,6 @@ class Statement(Base, StatementMixin):
     """
     A Statement represents a sentence or phrase.
     """
-
-    id = Column(
-        Integer,
-        primary_key=True,
-        autoincrement=True
-    )
 
     text = Column(
         String(constants.STATEMENT_TEXT_MAX_LENGTH)
