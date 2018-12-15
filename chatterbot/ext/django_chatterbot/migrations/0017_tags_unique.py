@@ -10,16 +10,19 @@ class Migration(migrations.Migration):
     operations = [
         migrations.RemoveField(
             model_name='tag',
-            name='id',
+            name='statements',
+        ),
+        migrations.AddField(
+            model_name='statement',
+            name='tags',
+            field=models.ManyToManyField(
+                related_name='statements',
+                to='django_chatterbot.Tag'
+            ),
         ),
         migrations.AlterField(
             model_name='tag',
             name='name',
-            field=models.SlugField(primary_key=True, serialize=False),
-        ),
-        migrations.AlterField(
-            model_name='tag',
-            name='statements',
-            field=models.ManyToManyField(related_name='tags', to='django_chatterbot.Statement'),
+            field=models.SlugField(unique=True),
         ),
     ]
