@@ -1,6 +1,7 @@
 """
 ChatterBot utility functions
 """
+from nltk.corpus import wordnet
 
 
 def import_module(dotted_path):
@@ -128,6 +129,22 @@ def nltk_download_corpus(resource_path):
         )
 
     return downloaded
+
+
+def treebank_to_wordnet(pos):
+    """
+    Convert Treebank part-of-speech tags to Wordnet part-of-speech tags.
+    * https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
+    * http://www.nltk.org/_modules/nltk/corpus/reader/wordnet.html
+    """
+    data_map = {
+        'N': wordnet.NOUN,
+        'J': wordnet.ADJ,
+        'V': wordnet.VERB,
+        'R': wordnet.ADV
+    }
+
+    return data_map.get(pos[0])
 
 
 def remove_stopwords(tokens, language):
