@@ -224,6 +224,20 @@ class DjangoAdapterFilterTests(DjangoAdapterTestCase):
         self.assertIn("Hi everyone!", results_text_list)
         self.assertIn("The air contains Oxygen.", results_text_list)
 
+    def test_filter_page_size(self):
+        self.adapter.create(text='A')
+        self.adapter.create(text='B')
+        self.adapter.create(text='C')
+
+        results = self.adapter.filter(page_size=2)
+
+        results_text_list = [statement.text for statement in results]
+
+        self.assertEqual(len(results_text_list), 3)
+        self.assertIn('A', results_text_list)
+        self.assertIn('B', results_text_list)
+        self.assertIn('C', results_text_list)
+
     def test_confidence(self):
         """
         Test that the confidence value is not saved to the database.
