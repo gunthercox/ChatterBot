@@ -34,6 +34,14 @@ class PosHypernymTagger(object):
 
         nltk_download_corpus('corpora/wordnet')
 
+    def initialize_nltk_punkt(self):
+        """
+        Download required NLTK punkt corpus if it has not already been downloaded.
+        """
+        from chatterbot.utils import nltk_download_corpus
+
+        nltk_download_corpus('punkt')
+
     def get_stopwords(self):
         """
         Get the list of stopwords from the NLTK corpus.
