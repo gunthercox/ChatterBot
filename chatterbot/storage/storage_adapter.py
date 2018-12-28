@@ -89,6 +89,12 @@ class StorageAdapter(object):
             statement starts with the value specified by this parameter,
             then the statement will not be returned in the result set.
             Defaults to None
+
+        :param search_text_contains: If the ``search_text`` field of a
+            statement contains a word that is in the string provided to
+            this parameter, then the statement will be included in the
+            result set.
+            Defaults to None
         """
         raise self.AdapterMethodNotImplementedError(
             'The `filter` method is not implemented by this adapter.'
