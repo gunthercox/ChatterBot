@@ -12,9 +12,9 @@ class PosHypernymTagger(object):
     """
 
     def __init__(self, language='english'):
-        self.sentence_detector = load_data('tokenizers/punkt/english.pickle')
-
         self.language = language
+
+        self.sentence_detector = None
 
         self.stopwords = None
 
@@ -46,10 +46,19 @@ class PosHypernymTagger(object):
         """
         Get the list of stopwords from the NLTK corpus.
         """
-        if not self.stopwords:
+        if self.stopwords is None:
             self.stopwords = stopwords.words(self.language)
 
         return self.stopwords
+
+    def get_sentence_detector(self):
+        """
+        Get the initialized sentence detector.
+        """
+        if self.sentence_detector is None:
+            self.sentence_detector = load_data('tokenizers/punkt/english.pickle')
+
+        return self.sentence_detector
 
     def get_hypernyms(self, pos_tags):
         """
@@ -87,7 +96,9 @@ class PosHypernymTagger(object):
 
         pos_tags = []
 
-        for sentence in self.sentence_detector.tokenize(text.strip()):
+        sentence_detector = self.get_sentence_detector()
+
+        for sentence in sentence_detector.tokenize(text.strip()):
 
             # Remove punctuation
             if sentence and sentence[-1] in string.punctuation:
