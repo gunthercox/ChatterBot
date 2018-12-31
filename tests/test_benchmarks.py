@@ -10,7 +10,7 @@ from random import choice
 from tests.base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer, UbuntuCorpusTrainer
 from chatterbot.logic import BestMatch
-from chatterbot import utils
+from chatterbot import comparisons, response_selection, utils
 
 
 WORDBANK = (
@@ -95,8 +95,8 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function='chatterbot.comparisons.levenshtein_distance',
-            response_selection_method='chatterbot.response_selection.get_first_response'
+            statement_comparison_function=comparisons.levenshtein_distance,
+            response_selection_method=response_selection.get_first_response
         )
 
         trainer = get_list_trainer(self.chatbot)
@@ -110,8 +110,8 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function='chatterbot.comparisons.synset_distance',
-            response_selection_method='chatterbot.response_selection.get_first_response'
+            statement_comparison_function=comparisons.synset_distance,
+            response_selection_method=response_selection.get_first_response
         )
 
         trainer = get_list_trainer(self.chatbot)
@@ -155,8 +155,8 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function='chatterbot.comparisons.levenshtein_distance',
-            response_selection_method='chatterbot.response_selection.get_first_response'
+            statement_comparison_function=comparisons.levenshtein_distance,
+            response_selection_method=response_selection.get_first_response
         )
 
         trainer = get_list_trainer(self.chatbot)
@@ -170,8 +170,8 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function='chatterbot.comparisons.synset_distance',
-            response_selection_method='chatterbot.response_selection.get_first_response'
+            statement_comparison_function=comparisons.synset_distance,
+            response_selection_method=response_selection.get_first_response
         )
 
         trainer = get_list_trainer(self.chatbot)
