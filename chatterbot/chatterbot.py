@@ -3,6 +3,7 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.input import InputAdapter
 from chatterbot.output import OutputAdapter
+from chatterbot.search import Search
 from chatterbot import utils
 
 
@@ -13,6 +14,12 @@ class ChatBot(object):
 
     def __init__(self, name, **kwargs):
         self.name = name
+
+        primary_search_algorithm = Search(self, **kwargs)
+
+        self.search_algorithms = {
+            primary_search_algorithm.name: primary_search_algorithm
+        }
 
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
@@ -79,11 +86,11 @@ class ChatBot(object):
             self, 'storage.tagger'
         )
 
-        for logic_adapter in self.get_logic_adapters():
-            logic_adapter_functions = utils.get_initialization_functions(
-                logic_adapter, 'compare_statements'
+        for search_algorithm in self.search_algorithms.values():
+            search_algorithm_functions = utils.get_initialization_functions(
+                search_algorithm, 'compare_statements'
             )
-            initialization_functions.update(logic_adapter_functions)
+            initialization_functions.update(search_algorithm_functions)
 
         return initialization_functions
 
