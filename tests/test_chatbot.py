@@ -22,7 +22,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         from chatterbot.comparisons import synset_distance
 
-        self.chatbot.logic_adapters[0].compare_statements = synset_distance
+        list(self.chatbot.search_algorithms.values())[0].compare_statements = synset_distance
         functions = self.chatbot.get_initialization_functions()
 
         self.assertIn('initialize_nltk_stopwords', functions)
@@ -36,7 +36,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         from chatterbot.comparisons import sentiment_comparison
 
-        self.chatbot.logic_adapters[0].compare_statements = sentiment_comparison
+        list(self.chatbot.search_algorithms.values())[0].compare_statements = sentiment_comparison
         functions = self.chatbot.get_initialization_functions()
 
         self.assertIn('initialize_nltk_stopwords', functions)
@@ -51,7 +51,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         from chatterbot.comparisons import jaccard_similarity
 
-        self.chatbot.logic_adapters[0].compare_statements = jaccard_similarity
+        list(self.chatbot.search_algorithms.values())[0].compare_statements = jaccard_similarity
         functions = self.chatbot.get_initialization_functions()
 
         self.assertIn('initialize_nltk_wordnet', functions)
