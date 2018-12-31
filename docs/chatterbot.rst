@@ -69,13 +69,13 @@ which specifies the import path to the adapter class.
        logic_adapters=[
            {
                'import_path': 'my.logic.AdapterClass1',
-               'statement_comparison_function': 'chatterbot.comparisons.levenshtein_distance'
-               'response_selection_method': 'chatterbot.response_selection.get_first_response'
+               'statement_comparison_function': chatterbot.comparisons.levenshtein_distance
+               'response_selection_method': chatterbot.response_selection.get_first_response
            },
            {
                'import_path': 'my.logic.AdapterClass2',
-               'statement_comparison_function': 'my.custom.comparison_function'
-               'response_selection_method': 'my.custom.selection_method'
+               'statement_comparison_function': my_custom_comparison_function
+               'response_selection_method': my_custom_selection_method
            }
        ],
        input_adapter={
