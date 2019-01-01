@@ -153,7 +153,7 @@ class SentimentComparison(Comparator):
         Download the NLTK vader lexicon for sentiment analysis
         that is required for this algorithm to run.
         """
-        utils.nltk_download_corpus('sentiment/vader_lexicon')
+        utils.nltk_download_corpus('vader_lexicon')
 
     def compare(self, statement, other_statement):
         """
