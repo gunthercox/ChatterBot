@@ -12,15 +12,80 @@ class BestMatchTestCase(ChatBotTestCase):
         super().setUp()
         self.adapter = BestMatch(self.chatbot)
 
-    def test_no_choices(self):
+    def test_no_data(self):
         """
-        An exception should be raised if there is no data in the database.
+        If there is no data to return, an exception should be raised.
         """
         statement = Statement(text='What is your quest?')
-        response = self.adapter.get(statement)
+        response = self.adapter.process(statement)
 
         self.assertEqual(response.text, 'What is your quest?')
         self.assertEqual(response.confidence, 0)
+
+    def test_no_choices(self):
+        """
+        The input should be returned as the closest match if there
+        are no other results to return.
+        """
+        self.chatbot.storage.create(text='Random')
+
+        statement = Statement(text='What is your quest?')
+        response = self.adapter.process(statement)
+
+        self.assertEqual(response.text, 'Random')
+        self.assertEqual(response.confidence, 0)
+
+    def test_no_known_responses(self):
+        """
+        A match can be selected which has no known responses.
+        In this case a random response will be returned, but the confidence
+        should be zero because it is a random choice.
+        """
+        from unittest.mock import MagicMock
+
+        self.chatbot.storage.update = MagicMock()
+        self.chatbot.storage.count = MagicMock(return_value=1)
+        self.chatbot.storage.get_random = MagicMock(
+            return_value=Statement(text='Random')
+        )
+
+        match = self.adapter.process(Statement(text='Blah'))
+
+        self.assertEqual(match.confidence, 0)
+        self.assertEqual(match.text, 'Random')
+
+    def test_match_with_no_response(self):
+        """
+        A response to the input should be returned if a response is known.
+        """
+        self.chatbot.storage.create(
+            text='To eat pasta.',
+            in_response_to='What is your quest?'
+        )
+
+        statement = Statement(text='What is your quest?')
+        response = self.adapter.process(statement)
+
+        self.assertEqual(response.text, 'To eat pasta.')
+        self.assertEqual(response.confidence, 0)
+
+    def test_match_with_response(self):
+        """
+        The response to the input should be returned if a response is known.
+        """
+        self.chatbot.storage.create(
+            text='To eat pasta.',
+            in_response_to='What is your quest?'
+        )
+        self.chatbot.storage.create(
+            text='What is your quest?'
+        )
+
+        statement = Statement(text='What is your quest?')
+        response = self.adapter.process(statement)
+
+        self.assertEqual(response.text, 'To eat pasta.')
+        self.assertEqual(response.confidence, 1)
 
     def test_excluded_words(self):
         """

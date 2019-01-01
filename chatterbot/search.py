@@ -1,3 +1,6 @@
+from chatterbot.conversation import Statement
+
+
 class Search:
     """
     :param statement_comparison_function: The dot-notated import path
@@ -36,12 +39,16 @@ class Search:
         """
         self.chatbot.logger.info('Beginning search for close text match')
 
-        # TODO: Use input_statement.search_text if already generated
-        #   Maybe do this ahead of time (when the chatbot gets the input)
-        #   and just put a warning here if the input statement has no search text.
-        input_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(
-            input_statement.text
-        )
+        input_search_text = input_statement.search_text
+
+        if not input_statement.search_text:
+            self.chatbot.logger.warn(
+                'No value for search_text was available on the provided input'
+            )
+
+            input_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(
+                input_statement.text
+            )
 
         statement_list = self.chatbot.storage.filter(
             search_text_contains=input_search_text,
@@ -49,7 +56,7 @@ class Search:
             page_size=self.search_page_size
         )
 
-        closest_match = input_statement
+        closest_match = Statement(text='')
         closest_match.confidence = 0
 
         self.chatbot.logger.info('Processing search results')
