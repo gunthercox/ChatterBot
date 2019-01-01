@@ -4,6 +4,7 @@ from chatterbot.logic import LogicAdapter
 from chatterbot.input import InputAdapter
 from chatterbot.output import OutputAdapter
 from chatterbot.search import Search
+from chatterbot.conversation import Statement
 from chatterbot import utils
 
 
@@ -138,10 +139,16 @@ class ChatBot(object):
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.get_latest_response(input_statement.conversation)
 
-        response.in_response_to = previous_statement
-
         if not self.read_only:
             self.learn_response(input_statement, previous_statement)
+
+            # Save the response generated for the input
+            self.storage.create(
+                text=response.text,
+                in_response_to=response.in_response_to,
+                conversation=response.conversation,
+                persona=response.persona
+            )
 
         # Process the response output with the output adapter
         return self.output.process_response(response)
@@ -190,11 +197,16 @@ class ChatBot(object):
                 result = most_common[0][0]
                 max_confidence = utils.get_greatest_confidence(result, results)
 
-        result.confidence = max_confidence
-        result.conversation = input_statement.conversation
-        result.persona = 'bot:' + self.name
+        response = Statement(
+            text=result.text,
+            in_response_to=input_statement.text,
+            conversation=input_statement.conversation,
+            persona='bot:' + self.name
+        )
 
-        return result
+        response.confidence = max_confidence
+
+        return response
 
     def learn_response(self, statement, previous_statement):
         """
@@ -210,7 +222,7 @@ class ChatBot(object):
             previous_statement_text
         ))
 
-        # Save the statement after selecting a response
+        # Save the input statement
         return self.storage.create(
             text=statement.text,
             in_response_to=previous_statement_text,
