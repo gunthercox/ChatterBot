@@ -2,6 +2,7 @@ from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
 from chatterbot.search import Search
 from chatterbot import comparisons
+from chatterbot import utils
 
 
 class SearchTestCase(ChatBotTestCase):
@@ -90,6 +91,13 @@ class SearchComparisonFunctionSentimentComparisonTests(ChatBotTestCase):
             self.chatbot,
             statement_comparison_function=comparisons.sentiment_comparison
         )
+
+        # Make sure the required NLTK data files are downloaded
+        for function in utils.get_initialization_functions(
+            self.search_algorithm,
+            'compare_statements'
+        ).values():
+            function()
 
     def test_exact_input(self):
         self.chatbot.storage.create(text='What is your favorite flavor of ice cream?')

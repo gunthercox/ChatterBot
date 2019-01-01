@@ -14,7 +14,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIn('initialize_nltk_stopwords', functions)
         self.assertIn('initialize_nltk_wordnet', functions)
         self.assertIn('initialize_nltk_punkt', functions)
-        self.assertIsLength(functions, 3)
+        self.assertIn('initialize_nltk_averaged_perceptron_tagger', functions)
+        self.assertIsLength(functions, 4)
 
     def test_get_initialization_functions_synset_distance(self):
         """
@@ -28,7 +29,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIn('initialize_nltk_stopwords', functions)
         self.assertIn('initialize_nltk_wordnet', functions)
         self.assertIn('initialize_nltk_punkt', functions)
-        self.assertIsLength(functions, 3)
+        self.assertIn('initialize_nltk_averaged_perceptron_tagger', functions)
+        self.assertIsLength(functions, 4)
 
     def test_get_initialization_functions_sentiment_comparison(self):
         """
@@ -43,7 +45,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIn('initialize_nltk_wordnet', functions)
         self.assertIn('initialize_nltk_vader_lexicon', functions)
         self.assertIn('initialize_nltk_punkt', functions)
-        self.assertIsLength(functions, 4)
+        self.assertIn('initialize_nltk_averaged_perceptron_tagger', functions)
+        self.assertIsLength(functions, 5)
 
     def test_get_initialization_functions_jaccard_similarity(self):
         """

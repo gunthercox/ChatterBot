@@ -42,6 +42,15 @@ class PosHypernymTagger(object):
 
         nltk_download_corpus('punkt')
 
+    def initialize_nltk_averaged_perceptron_tagger(self):
+        """
+        Download the NLTK averaged perceptron tagger that is required for this algorithm
+        to run only if the corpora has not already been downloaded.
+        """
+        from chatterbot.utils import nltk_download_corpus
+
+        nltk_download_corpus('averaged_perceptron_tagger')
+
     def get_stopwords(self):
         """
         Get the list of stopwords from the NLTK corpus.
