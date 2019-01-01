@@ -6,7 +6,7 @@ from django.urls import reverse
 class ViewTestCase(TestCase):
 
     def setUp(self):
-        super(ViewTestCase, self).setUp()
+        super().setUp()
         self.url = reverse('main')
 
     def test_get_main_page(self):
@@ -24,7 +24,7 @@ class ApiTestCase(TestCase):
     """
 
     def setUp(self):
-        super(ApiTestCase, self).setUp()
+        super().setUp()
         self.api_url = reverse('chatterbot')
 
     def test_post(self):
@@ -73,7 +73,7 @@ class ApiIntegrationTestCase(TestCase):
     """
 
     def setUp(self):
-        super(ApiIntegrationTestCase, self).setUp()
+        super().setUp()
         self.api_url = reverse('chatterbot')
 
     def test_get(self):

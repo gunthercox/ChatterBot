@@ -6,7 +6,7 @@ from django.urls import reverse
 class ApiTestCase(TestCase):
 
     def setUp(self):
-        super(ApiTestCase, self).setUp()
+        super().setUp()
         self.api_url = reverse('chatterbot')
 
     def test_invalid_text(self):

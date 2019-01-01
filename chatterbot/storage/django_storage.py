@@ -193,7 +193,13 @@ class DjangoStorageAdapter(StorageAdapter):
         Returns a random statement from the database
         """
         Statement = self.get_model('statement')
-        return Statement.objects.order_by('?').first()
+
+        statement = Statement.objects.order_by('?').first()
+
+        if statement is None:
+            raise self.EmptyDatabaseException()
+
+        return statement
 
     def remove(self, statement_text):
         """
