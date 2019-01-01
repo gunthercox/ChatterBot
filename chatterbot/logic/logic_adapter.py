@@ -1,5 +1,5 @@
 from chatterbot.adapters import Adapter
-from chatterbot.search import Search
+from chatterbot.search import IndexedTextSearch
 
 
 class LogicAdapter(Adapter):
@@ -28,7 +28,7 @@ class LogicAdapter(Adapter):
 
         self.search_algorithm_name = kwargs.get(
             'search_algorithm_name',
-            Search.name
+            IndexedTextSearch.name
         )
 
         self.search_algorithm = self.chatbot.search_algorithms[
