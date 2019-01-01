@@ -1,5 +1,5 @@
 from chatterbot.adapters import Adapter
-from chatterbot.utils import import_module
+from chatterbot.search import Search
 
 
 class LogicAdapter(Adapter):
@@ -7,12 +7,9 @@ class LogicAdapter(Adapter):
     This is an abstract class that represents the interface
     that all logic adapters should implement.
 
-    :param statement_comparison_function: The dot-notated import path
-        to a statement comparison function.
-        Defaults to ``levenshtein_distance``.
-
-    :param response_selection_method: The a response selection method.
-        Defaults to ``get_first_response``.
+    :param search_algorithm_name: The name of the search algorithm that should
+        be used to search for close matches to the provided input.
+        Defaults to the value of ``Search.name``.
 
     :param maximum_similarity_threshold:
         The maximum amount of similarity between two statement that is required
@@ -21,49 +18,25 @@ class LogicAdapter(Adapter):
         is found or the search set is exhausted.
         Defaults to 0.95
 
-    :param excluded_words:
-        The excluded_words parameter allows a list of words to be set that will
-        prevent the logic adapter from returning statements that have text
-        containing any of those words. This can be useful for preventing your
-        chat bot from saying swears when it is being demonstrated in front of
-        an audience.
-        Defaults to None
-
-    :param search_page_size:
-        The maximum number of records to load into memory at a time when searching
-        Defaults to 1000
+    :param response_selection_method: The a response selection method.
+        Defaults to ``get_first_response``.
     """
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
-        from chatterbot.comparisons import levenshtein_distance
         from chatterbot.response_selection import get_first_response
 
-        # Import string module parameters
-        if 'statement_comparison_function' in kwargs:
-            import_path = kwargs.get('statement_comparison_function')
-            if isinstance(import_path, str):
-                kwargs['statement_comparison_function'] = import_module(import_path)
+        self.search_algorithm_name = kwargs.get(
+            'search_algorithm_name',
+            Search.name
+        )
 
-        if 'response_selection_method' in kwargs:
-            import_path = kwargs.get('response_selection_method')
-            if isinstance(import_path, str):
-                kwargs['response_selection_method'] = import_module(import_path)
+        self.search_algorithm = self.chatbot.search_algorithms[
+            self.search_algorithm_name
+        ]
 
         self.maximum_similarity_threshold = kwargs.get(
             'maximum_similarity_threshold', 0.95
-        )
-
-        self.excluded_words = kwargs.get('excluded_words')
-
-        self.search_page_size = kwargs.get(
-            'search_page_size', 1000
-        )
-
-        # By default, compare statements using Levenshtein distance
-        self.compare_statements = kwargs.get(
-            'statement_comparison_function',
-            levenshtein_distance
         )
 
         # By default, select the first available response
