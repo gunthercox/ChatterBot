@@ -176,21 +176,31 @@ class ListTrainingTests(ChatBotTestCase):
         question (which is similar to the one present in the training set)
         when asked repeatedly.
         """
-        training = [
+        training_data = [
             'how do you login to gmail?',
             'Goto gmail.com, enter your login information and hit enter!'
         ]
 
         similar_question = 'how do I login to gmail?'
 
-        self.trainer.train(training)
+        self.trainer.train(training_data)
 
-        response_to_trained_set = self.chatbot.get_response('how do you login to gmail?')
-        response1 = self.chatbot.get_response(similar_question)
-        response2 = self.chatbot.get_response(similar_question)
+        response_to_trained_set = self.chatbot.get_response(
+            text='how do you login to gmail?',
+            conversation='a'
+        )
+        response1 = self.chatbot.get_response(
+            text=similar_question,
+            conversation='b'
+        )
+        response2 = self.chatbot.get_response(
+            text=similar_question,
+            conversation='c'
+        )
 
-        self.assertEqual(response_to_trained_set, response1)
-        self.assertEqual(response1.text, response2.text)
+        self.assertEqual(response_to_trained_set.text, training_data[1])
+        self.assertEqual(response1.text, training_data[1])
+        self.assertEqual(response2.text, training_data[1])
 
     def test_consecutive_trainings_same_responses_different_inputs(self):
         """
