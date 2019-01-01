@@ -1,5 +1,4 @@
 from chatterbot.logic import LogicAdapter
-from chatterbot.storage import StorageAdapter
 from chatterbot import filters
 
 
@@ -22,13 +21,6 @@ class BestMatch(LogicAdapter):
         super().__init__(chatbot, **kwargs)
 
         self.excluded_words = kwargs.get('excluded_words')
-
-    def can_process(self, statement):
-        """
-        Check that the chatbot's storage adapter is available to the logic
-        adapter and there is at least one statement in the database.
-        """
-        return self.chatbot.storage.count()
 
     def process(self, input_statement):
         search_results = self.search_algorithm.search(input_statement)
@@ -111,17 +103,6 @@ class BestMatch(LogicAdapter):
             response.confidence = closest_match.confidence
             self.chatbot.logger.info('Alternate response selected. Using "{}"'.format(response.text))
         else:
-            try:
-                response = self.chatbot.storage.get_random()
-            except StorageAdapter.EmptyDatabaseException:
-                response = input_statement
-            self.chatbot.logger.info(
-                'No response to "{}" found. Selecting a random response.'.format(
-                    closest_match.text
-                )
-            )
-
-            # Set confidence to zero because a random response is selected
-            response.confidence = 0
+            response = self.get_default_response(input_statement)
 
         return response

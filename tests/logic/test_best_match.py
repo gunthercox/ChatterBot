@@ -110,3 +110,27 @@ class BestMatchTestCase(ChatBotTestCase):
 
         self.assertEqual(response.confidence, 1)
         self.assertEqual(response.text, 'Counting is fun!')
+
+    def test_low_confidence(self):
+        """
+        Test the case that a high confidence response is not known.
+        """
+        statement = Statement(text='Is this a tomato?')
+        match = self.adapter.process(statement)
+
+        self.assertEqual(match.confidence, 0)
+        self.assertEqual(match.text, statement.text)
+
+    def test_low_confidence_options_list(self):
+        """
+        Test the case that a high confidence response is not known.
+        """
+        self.adapter.default_responses = [
+            Statement(text='No')
+        ]
+
+        statement = Statement(text='Is this a tomato?')
+        match = self.adapter.process(statement)
+
+        self.assertEqual(match.confidence, 0)
+        self.assertEqual(match.text, 'No')

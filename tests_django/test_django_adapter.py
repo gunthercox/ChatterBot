@@ -90,6 +90,12 @@ class DjangoStorageAdapterTests(DjangoAdapterTestCase):
         random_statement = self.adapter.get_random()
         self.assertEqual(random_statement.text, statement.text)
 
+    def test_get_random_no_data(self):
+        from chatterbot.storage import StorageAdapter
+
+        with self.assertRaises(StorageAdapter.EmptyDatabaseException):
+            self.adapter.get_random()
+
     def test_filter_by_text_multiple_results(self):
         self.adapter.create(
             text="Do you like this?",

@@ -24,11 +24,6 @@ class ChatBot(object):
 
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
-        # These are logic adapters that are required for normal operation
-        system_logic_adapters = kwargs.get('system_logic_adapters', (
-            'chatterbot.logic.NoKnowledgeAdapter',
-        ))
-
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
         ])
@@ -45,18 +40,9 @@ class ChatBot(object):
         # Logic adapters used by the chat bot
         self.logic_adapters = []
 
-        # Required logic adapters that must always be present
-        self.system_logic_adapters = []
-
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
         self.input = utils.initialize_class(input_adapter, self, **kwargs)
         self.output = utils.initialize_class(output_adapter, self, **kwargs)
-
-        # Add required system logic adapter
-        for system_logic_adapter in system_logic_adapters:
-            utils.validate_adapter_class(system_logic_adapter, LogicAdapter)
-            logic_adapter = utils.initialize_class(system_logic_adapter, self, **kwargs)
-            self.system_logic_adapters.append(logic_adapter)
 
         for adapter in logic_adapters:
             utils.validate_adapter_class(adapter, LogicAdapter)
@@ -165,7 +151,7 @@ class ChatBot(object):
         result = None
         max_confidence = -1
 
-        for adapter in self.get_logic_adapters():
+        for adapter in self.logic_adapters:
             if adapter.can_process(input_statement):
 
                 output = adapter.process(input_statement)
@@ -266,12 +252,6 @@ class ChatBot(object):
                 return latest_statement
 
         return None
-
-    def get_logic_adapters(self):
-        """
-        Return a list of all logic adapters being used, including system logic adapters.
-        """
-        return self.logic_adapters + self.system_logic_adapters
 
     class ChatBotException(Exception):
         pass
