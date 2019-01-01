@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
-from chatterbot.search import Search
+from chatterbot.search import IndexedTextSearch
 from chatterbot import comparisons
 from chatterbot import utils
 
@@ -9,7 +9,7 @@ class SearchTestCase(ChatBotTestCase):
 
     def setUp(self):
         super().setUp()
-        self.search_algorithm = Search(self.chatbot)
+        self.search_algorithm = IndexedTextSearch(self.chatbot)
 
     def test_search_no_results(self):
         """
@@ -40,7 +40,7 @@ class SearchComparisonFunctionSynsetDistanceTests(ChatBotTestCase):
 
     def setUp(self):
         super().setUp()
-        self.search_algorithm = Search(
+        self.search_algorithm = IndexedTextSearch(
             self.chatbot,
             statement_comparison_function=comparisons.synset_distance
         )
@@ -87,7 +87,7 @@ class SearchComparisonFunctionSentimentComparisonTests(ChatBotTestCase):
 
     def setUp(self):
         super().setUp()
-        self.search_algorithm = Search(
+        self.search_algorithm = IndexedTextSearch(
             self.chatbot,
             statement_comparison_function=comparisons.sentiment_comparison
         )
@@ -135,7 +135,7 @@ class SearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTestCase
 
     def setUp(self):
         super().setUp()
-        self.search_algorithm = Search(
+        self.search_algorithm = IndexedTextSearch(
             self.chatbot,
             statement_comparison_function=comparisons.levenshtein_distance
         )
