@@ -72,9 +72,10 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.text, statement_text)
         self.assertEqual(response.confidence, 1)
 
-        # Make sure that the input was saved
-        self.assertIsLength(results, 1)
+        # Make sure that the input and output were saved
+        self.assertIsLength(results, 2)
         self.assertEqual(results[0].text, statement_text)
+        self.assertEqual(results[1].text, statement_text)
 
     def test_one_statement_known_no_response(self):
         """
@@ -143,8 +144,14 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.chatbot.storage.create(text='Hi', in_response_to=None)
         self.chatbot.storage.create(text='Hello', in_response_to='Hi')
 
-        first_response = self.chatbot.get_response('Hi')
-        second_response = self.chatbot.get_response('How are you?')
+        first_response = self.chatbot.get_response(
+            text='Hi',
+            conversation='test'
+        )
+        second_response = self.chatbot.get_response(
+            text='How are you?',
+            conversation='test'
+        )
 
         results = list(self.chatbot.storage.filter(text='How are you?'))
 
@@ -153,7 +160,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(first_response.in_response_to, 'Hi')
 
         self.assertEqual(second_response.confidence, 0)
-        self.assertEqual(second_response.in_response_to, 'Hi')
+        self.assertEqual(second_response.in_response_to, 'How are you?')
 
         # Make sure that the second response was saved to the database
         self.assertIsLength(results, 1)
@@ -217,16 +224,18 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         results = list(self.chatbot.storage.filter(text='Hello'))
 
-        self.assertIsLength(results, 1)
+        self.assertIsLength(results, 2)
         self.assertIn('test', results[0].get_tags())
+        self.assertEqual(results[1].get_tags(), [])
 
     def test_get_response_with_text_and_kwargs(self):
         self.chatbot.get_response('Hello', conversation='greetings')
 
         results = list(self.chatbot.storage.filter(text='Hello'))
 
-        self.assertIsLength(results, 1)
+        self.assertIsLength(results, 2)
         self.assertEqual(results[0].conversation, 'greetings')
+        self.assertEqual(results[1].conversation, 'greetings')
 
     def test_get_response_missing_text(self):
         with self.assertRaises(self.chatbot.ChatBotException):
