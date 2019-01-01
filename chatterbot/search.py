@@ -1,7 +1,7 @@
 from chatterbot.conversation import Statement
 
 
-class Search:
+class IndexedTextSearch:
     """
     :param statement_comparison_function: The dot-notated import path
         to a statement comparison function.
@@ -12,7 +12,7 @@ class Search:
         Defaults to 1000
     """
 
-    name = 'search'
+    name = 'indexed_text_search'
 
     def __init__(self, chatbot, **kwargs):
         from chatterbot.comparisons import levenshtein_distance

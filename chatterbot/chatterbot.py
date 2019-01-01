@@ -3,7 +3,7 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.input import InputAdapter
 from chatterbot.output import OutputAdapter
-from chatterbot.search import Search
+from chatterbot.search import IndexedTextSearch
 from chatterbot.conversation import Statement
 from chatterbot import utils
 
@@ -16,7 +16,7 @@ class ChatBot(object):
     def __init__(self, name, **kwargs):
         self.name = name
 
-        primary_search_algorithm = Search(self, **kwargs)
+        primary_search_algorithm = IndexedTextSearch(self, **kwargs)
 
         self.search_algorithms = {
             primary_search_algorithm.name: primary_search_algorithm
