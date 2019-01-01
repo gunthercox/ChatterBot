@@ -5,6 +5,7 @@ Test ChatterBot's statement comparison algorithms.
 from unittest import TestCase
 from chatterbot.conversation import Statement
 from chatterbot import comparisons
+from chatterbot import utils
 
 
 class LevenshteinDistanceTestCase(TestCase):
@@ -70,6 +71,15 @@ class SynsetDistanceTestCase(TestCase):
 
 
 class SentimentComparisonTestCase(TestCase):
+
+    def setUp(self):
+        super().setUp()
+
+        # Make sure the required NLTK data files are downloaded
+        for function in utils.get_initialization_functions(
+            comparisons, 'sentiment_comparison'
+        ).values():
+            function()
 
     def test_exact_match_different_capitalization(self):
         """
