@@ -1,5 +1,7 @@
 from chatterbot.adapters import Adapter
+from chatterbot.storage import StorageAdapter
 from chatterbot.search import IndexedTextSearch
+from chatterbot.conversation import Statement
 
 
 class LogicAdapter(Adapter):
@@ -18,8 +20,15 @@ class LogicAdapter(Adapter):
         is found or the search set is exhausted.
         Defaults to 0.95
 
-    :param response_selection_method: The a response selection method.
-        Defaults to ``get_first_response``.
+    :param response_selection_method:
+          The a response selection method.
+          Defaults to ``get_first_response``
+    :type response_selection_method: collections.abc.Callable
+
+    :param default_response:
+          The default response returned by this logic adaper
+          if there is no other possible response to return.
+    :type default_response: str or list or tuple
     """
 
     def __init__(self, chatbot, **kwargs):
@@ -44,6 +53,18 @@ class LogicAdapter(Adapter):
             'response_selection_method',
             get_first_response
         )
+
+        default_responses = kwargs.get('default_response', [])
+
+        # Convert a single string into a list
+        if isinstance(default_responses, str):
+            default_responses = [
+                default_responses
+            ]
+
+        self.default_responses = [
+            Statement(text=default) for default in default_responses
+        ]
 
     def can_process(self, statement):
         """
@@ -74,6 +95,30 @@ class LogicAdapter(Adapter):
         :rtype: Statement
         """
         raise self.AdapterMethodNotImplementedError()
+
+    def get_default_response(self, input_statement):
+        """
+        This method is called when a logic adapter is unable to generate any
+        other meaningful response.
+        """
+        from random import choice
+
+        if self.default_responses:
+            response = choice(self.default_responses)
+        else:
+            try:
+                response = self.chatbot.storage.get_random()
+            except StorageAdapter.EmptyDatabaseException:
+                response = input_statement
+
+        self.chatbot.logger.info(
+            'No known response to the input was found. Selecting a random response.'
+        )
+
+        # Set confidence to zero because a random response is selected
+        response.confidence = 0
+
+        return response
 
     @property
     def class_name(self):

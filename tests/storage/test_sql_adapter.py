@@ -98,6 +98,12 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         random_statement = self.adapter.get_random()
         self.assertEqual(random_statement.text, "New statement")
 
+    def test_get_random_no_data(self):
+        from chatterbot.storage import StorageAdapter
+
+        with self.assertRaises(StorageAdapter.EmptyDatabaseException):
+            self.adapter.get_random()
+
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."
         self.adapter.create(text=text)

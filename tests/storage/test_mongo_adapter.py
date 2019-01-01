@@ -116,6 +116,12 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
         self.assertEqual(random_statement.text, text)
 
+    def test_get_random_no_data(self):
+        from chatterbot.storage import StorageAdapter
+
+        with self.assertRaises(StorageAdapter.EmptyDatabaseException):
+            self.adapter.get_random()
+
     def test_mongo_to_object(self):
         self.adapter.create(text='Hello', in_response_to='Hi')
         statement_data = self.adapter.statements.find_one({'text': 'Hello'})

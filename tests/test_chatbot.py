@@ -73,7 +73,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         results = list(self.chatbot.storage.filter(text=statement_text))
 
         self.assertEqual(response.text, statement_text)
-        self.assertEqual(response.confidence, 1)
+        self.assertEqual(response.confidence, 0)
 
         # Make sure that the input and output were saved
         self.assertIsLength(results, 2)
@@ -253,7 +253,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         response = self.chatbot.generate_response(statement)
 
         self.assertEqual(response, statement)
-        self.assertEqual(response.confidence, 1)
+        self.assertEqual(response.confidence, 0)
 
     def test_learn_response(self):
         previous_response = Statement(text='Define Hemoglobin.')
@@ -371,25 +371,11 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
         self.assertEqual(statement.confidence, 0.5)
         self.assertEqual(statement, 'Good morning.')
 
-    def test_get_logic_adapters(self):
-        """
-        Test that all system logic adapters and regular logic adapters
-        can be retrieved as a list by a single method.
-        """
-        adapter_a = TestAdapterA(self.chatbot)
-        adapter_b = TestAdapterB(self.chatbot)
-        self.chatbot.system_logic_adapters = [adapter_a]
-        self.chatbot.logic_adapters = [adapter_b]
-
-        self.assertIsLength(self.chatbot.get_logic_adapters(), 2)
-        self.assertIn(adapter_a, self.chatbot.get_logic_adapters())
-        self.assertIn(adapter_b, self.chatbot.get_logic_adapters())
-
     def test_chatbot_set_for_all_logic_adapters(self):
-        for sub_adapter in self.chatbot.get_logic_adapters():
+        for sub_adapter in self.chatbot.logic_adapters:
             self.assertEqual(sub_adapter.chatbot, self.chatbot)
         self.assertGreater(
-            len(self.chatbot.get_logic_adapters()), 0,
+            len(self.chatbot.logic_adapters), 0,
             msg='At least one logic adapter is expected for this test.'
         )
 
