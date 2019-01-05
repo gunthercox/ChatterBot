@@ -1,5 +1,6 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
+from chatterbot import languages
 from chatterbot import parsing
 from pint import UnitRegistry
 from mathparse import mathparse
@@ -16,14 +17,14 @@ class UnitConversion(LogicAdapter):
         Bot: '1000.0'
 
     :kwargs:
-        * *language* (``str``) --
-        The language is set to 'ENG' for English by default.
+        * *language* (``object``) --
+        The language is set to ``chatterbot.languages.ENG`` for English by default.
     """
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
 
-        self.language = kwargs.get('language', 'ENG')
+        self.language = kwargs.get('language', languages.ENG)
         self.cache = {}
         self.patterns = [
             (
@@ -110,30 +111,28 @@ class UnitConversion(LogicAdapter):
         :type: `_sre.SRE_Match`
         """
         response = Statement(text='')
-        try:
-            from_parsed = match.group("from")
-            target_parsed = match.group("target")
-            n_statement = match.group("number")
 
-            if n_statement == 'a' or n_statement == 'an':
-                n_statement = '1.0'
+        from_parsed = match.group("from")
+        target_parsed = match.group("target")
+        n_statement = match.group("number")
 
-            n = mathparse.parse(n_statement, self.language)
+        if n_statement == 'a' or n_statement == 'an':
+            n_statement = '1.0'
 
-            ureg = UnitRegistry()
-            from_parsed, target_parsed = self.get_valid_units(ureg, from_parsed, target_parsed)
+        n = mathparse.parse(n_statement, self.language.ISO_639.upper())
 
-            if from_parsed is None or target_parsed is None:
-                raise
+        ureg = UnitRegistry()
+        from_parsed, target_parsed = self.get_valid_units(ureg, from_parsed, target_parsed)
 
+        if from_parsed is None or target_parsed is None:
+            response.confidence = 0.0
+        else:
             from_value = ureg.Quantity(float(n), from_parsed)
             target_value = from_value.to(target_parsed)
             response.confidence = 1.0
             response.text = str(target_value.magnitude)
-        except Exception:
-            response.confidence = 0.0
-        finally:
-            return response
+
+        return response
 
     def can_process(self, statement):
         response = self.process(statement)
