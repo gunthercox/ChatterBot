@@ -58,6 +58,17 @@ class LevenshteinDistanceTestCase(TestCase):
 
 class SynsetDistanceTestCase(TestCase):
 
+    def test_exact_match_different_stopwords(self):
+        """
+        Test that stopwords are ignored.
+        """
+        statement = Statement(text='What is matter?')
+        other_statement = Statement(text='What is the matter?')
+
+        value = comparisons.synset_distance(statement, other_statement)
+
+        self.assertEqual(value, 1)
+
     def test_exact_match_different_capitalization(self):
         """
         Test that text capitalization is ignored.
