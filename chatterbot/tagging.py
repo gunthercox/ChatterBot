@@ -15,7 +15,7 @@ class PosHypernymTagger(object):
     def __init__(self, language=None):
         self.language = language or languages.ENG
 
-        self.sentence_detector = None
+        self.sentence_tokenizer = None
 
         self.stopwords = None
 
@@ -61,14 +61,16 @@ class PosHypernymTagger(object):
 
         return self.stopwords
 
-    def get_sentence_detector(self):
+    def get_sentence_tokenizer(self):
         """
         Get the initialized sentence detector.
         """
-        if self.sentence_detector is None:
-            self.sentence_detector = load_data('tokenizers/punkt/english.pickle')
+        if self.sentence_tokenizer is None:
+            self.sentence_tokenizer = load_data('tokenizers/punkt/{language}.pickle'.format(
+                language=self.language.ENGLISH_NAME.lower()
+            ))
 
-        return self.sentence_detector
+        return self.sentence_tokenizer
 
     def get_hypernyms(self, pos_tags):
         """
@@ -106,9 +108,9 @@ class PosHypernymTagger(object):
 
         pos_tags = []
 
-        sentence_detector = self.get_sentence_detector()
+        sentence_tokenizer = self.get_sentence_tokenizer()
 
-        for sentence in sentence_detector.tokenize(text.strip()):
+        for sentence in sentence_tokenizer.tokenize(text.strip()):
 
             # Remove punctuation
             if sentence and sentence[-1] in string.punctuation:
