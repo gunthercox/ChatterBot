@@ -30,10 +30,6 @@ class Trainer(object):
             environment_default
         )
 
-        self.tagger = PosHypernymTagger(language=kwargs.get(
-            'tagger_language', 'english'
-        ))
-
     def get_preprocessed_statement(self, input_statement):
         """
         Preprocess the input statement.
@@ -104,7 +100,7 @@ class ListTrainer(Trainer):
                     conversation_count + 1, len(conversation)
                 )
 
-            statement_search_text = self.tagger.get_bigram_pair_string(text)
+            statement_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(text)
 
             statement = self.get_preprocessed_statement(
                 Statement(
@@ -158,7 +154,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
                 for text in conversation:
 
-                    statement_search_text = self.tagger.get_bigram_pair_string(text)
+                    statement_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(text)
 
                     statement = Statement(
                         text=text,
@@ -430,7 +426,7 @@ class UbuntuCorpusTrainer(Trainer):
     def train(self):
         import glob
 
-        tagger = PosHypernymTagger(language=self.tagger.language)
+        tagger = PosHypernymTagger(language=self.chatbot.storage.tagger.language)
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
