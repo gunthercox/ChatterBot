@@ -1,5 +1,6 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
+from chatterbot import languages
 
 
 class MathematicalEvaluation(LogicAdapter):
@@ -14,14 +15,14 @@ class MathematicalEvaluation(LogicAdapter):
         Bot: 'Three plus five equals eight'
 
     :kwargs:
-        * *language* (``str``) --
-          The language is set to 'ENG' for English by default.
+        * *language* (``object``) --
+          The language is set to ``chatterbot.languages.ENG`` for English by default.
     """
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
 
-        self.language = kwargs.get('language', 'ENG')
+        self.language = kwargs.get('language', languages.ENG)
         self.cache = {}
 
     def can_process(self, statement):
@@ -49,13 +50,13 @@ class MathematicalEvaluation(LogicAdapter):
             return cached_result
 
         # Getting the mathematical terms within the input statement
-        expression = mathparse.extract_expression(input_text, language=self.language)
+        expression = mathparse.extract_expression(input_text, language=self.language.ISO_639.upper())
 
         response = Statement(text=expression)
 
         try:
             response.text += ' = ' + str(
-                mathparse.parse(expression, language=self.language)
+                mathparse.parse(expression, language=self.language.ISO_639.upper())
             )
 
             # The confidence is 1 if the expression could be evaluated
