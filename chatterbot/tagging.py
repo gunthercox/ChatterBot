@@ -1,4 +1,5 @@
 import string
+from chatterbot import languages
 from chatterbot.utils import treebank_to_wordnet
 from nltk import pos_tag
 from nltk.data import load as load_data
@@ -11,8 +12,8 @@ class PosHypernymTagger(object):
     hypernym preceded by the part of speech of the word before it.
     """
 
-    def __init__(self, language='english'):
-        self.language = language
+    def __init__(self, language=None):
+        self.language = language or languages.ENG
 
         self.sentence_detector = None
 
@@ -56,7 +57,7 @@ class PosHypernymTagger(object):
         Get the list of stopwords from the NLTK corpus.
         """
         if self.stopwords is None:
-            self.stopwords = stopwords.words(self.language)
+            self.stopwords = stopwords.words(self.language.ENGLISH_NAME.lower())
 
         return self.stopwords
 

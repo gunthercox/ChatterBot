@@ -141,27 +141,6 @@ def treebank_to_wordnet(pos):
     return data_map.get(pos[0])
 
 
-def remove_stopwords(tokens, language):
-    """
-    Takes a language (i.e. 'english'), and a set of word tokens.
-    Returns the tokenized text with any stopwords removed.
-    Stop words are words like "is, the, a, ..."
-
-    Be sure to download the required NLTK corpus before calling this function:
-    - from chatterbot.utils import nltk_download_corpus
-    - nltk_download_corpus('corpora/stopwords')
-    """
-    from nltk.corpus import stopwords
-
-    # Get the stopwords for the specified language
-    stop_words = stopwords.words(language)
-
-    # Remove the stop words from the set of word tokens
-    tokens = set(tokens) - set(stop_words)
-
-    return tokens
-
-
 def get_greatest_confidence(statement, options):
     """
     Returns the greatest confidence value for a statement that occurs
