@@ -1,11 +1,19 @@
 from unittest import TestCase
+from chatterbot import languages
 from chatterbot import tagging
+from chatterbot import utils
 
 
 class PosHypernymTaggerTests(TestCase):
 
     def setUp(self):
         self.tagger = tagging.PosHypernymTagger()
+
+        # Make sure the required NLTK data files are downloaded
+        for function in utils.get_initialization_functions(
+            self, 'tagger'
+        ).values():
+            function()
 
     def test_empty_string(self):
         tagged_text = self.tagger.get_bigram_pair_string(
@@ -20,6 +28,39 @@ class PosHypernymTaggerTests(TestCase):
         )
 
         self.assertEqual(tagged_text, 'DT:awesome JJ:time_unit')
+
+    def test_tagging_english(self):
+        self.tagger = tagging.PosHypernymTagger(
+            language=languages.ENG
+        )
+
+        tagged_text = self.tagger.get_bigram_pair_string(
+            'Hello, how are you doing on this awesome day?'
+        )
+
+        self.assertEqual(tagged_text, 'DT:awesome JJ:time_unit')
+
+    def test_tagging_french(self):
+        self.tagger = tagging.PosHypernymTagger(
+            language=languages.FRE
+        )
+
+        tagged_text = self.tagger.get_bigram_pair_string(
+            'Salut comment allez-vous?'
+        )
+
+        self.assertEqual(tagged_text, 's:comment c:allez-vous')
+
+    def test_tagging_russian(self):
+        self.tagger = tagging.PosHypernymTagger(
+            language=languages.RUS
+        )
+
+        tagged_text = self.tagger.get_bigram_pair_string(
+            'Привет, как ты?'
+        )
+
+        self.assertEqual(tagged_text, 'п:как к:ты')
 
     def test_string_becomes_lowercase(self):
         tagged_text = self.tagger.get_bigram_pair_string('THIS IS HOW IT BEGINS!')
