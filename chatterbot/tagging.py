@@ -1,9 +1,10 @@
 import string
 from chatterbot import languages
-from chatterbot.utils import treebank_to_wordnet
+from chatterbot import utils
 from nltk import pos_tag
 from nltk.data import load as load_data
 from nltk.corpus import wordnet, stopwords
+from nltk.corpus.reader.wordnet import WordNetError
 
 
 class PosHypernymTagger(object):
@@ -23,34 +24,26 @@ class PosHypernymTagger(object):
         """
         Download required NLTK stopwords corpus if it has not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('stopwords')
+        utils.nltk_download_corpus('stopwords')
 
     def initialize_nltk_wordnet(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('corpora/wordnet')
+        utils.nltk_download_corpus('corpora/wordnet')
 
     def initialize_nltk_punkt(self):
         """
         Download required NLTK punkt corpus if it has not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('punkt')
+        utils.nltk_download_corpus('punkt')
 
     def initialize_nltk_averaged_perceptron_tagger(self):
         """
         Download the NLTK averaged perceptron tagger that is required for this algorithm
         to run only if the corpora has not already been downloaded.
         """
-        from chatterbot.utils import nltk_download_corpus
-
-        nltk_download_corpus('averaged_perceptron_tagger')
+        utils.nltk_download_corpus('averaged_perceptron_tagger')
 
     def get_stopwords(self):
         """
@@ -61,16 +54,41 @@ class PosHypernymTagger(object):
 
         return self.stopwords
 
-    def get_sentence_tokenizer(self):
+    def tokenize_sentence(self, sentence):
         """
-        Get the initialized sentence detector.
+        Tokenize the provided sentence.
         """
         if self.sentence_tokenizer is None:
-            self.sentence_tokenizer = load_data('tokenizers/punkt/{language}.pickle'.format(
-                language=self.language.ENGLISH_NAME.lower()
-            ))
+            try:
+                self.sentence_tokenizer = load_data('tokenizers/punkt/{language}.pickle'.format(
+                    language=self.language.ENGLISH_NAME.lower()
+                ))
+            except LookupError:
+                # Fall back to English sentence splitting rules if a language is not supported
+                self.sentence_tokenizer = load_data('tokenizers/punkt/{language}.pickle'.format(
+                    language=languages.ENG.ENGLISH_NAME.lower()
+                ))
 
-        return self.sentence_tokenizer
+        return self.sentence_tokenizer.tokenize(sentence)
+
+    def stem_words(self, words):
+        """
+        Return the first character of the word in place of a part-of-speech tag.
+        """
+        return [
+            (word, word.lower()[0], ) for word in words
+        ]
+
+    def get_pos_tags(self, words):
+        try:
+            # pos_tag supports eng and rus
+            tags = pos_tag(words, lang=self.language.ISO_639)
+        except NotImplementedError:
+            tags = self.stem_words(words)
+        except LookupError:
+            tags = self.stem_words(words)
+
+        return tags
 
     def get_hypernyms(self, pos_tags):
         """
@@ -79,7 +97,13 @@ class PosHypernymTagger(object):
         results = []
 
         for word, pos in pos_tags:
-            synsets = wordnet.synsets(word, treebank_to_wordnet(pos))
+            try:
+                synsets = wordnet.synsets(word, utils.treebank_to_wordnet(pos), lang=self.language.ISO_639)
+            except WordNetError:
+                synsets = None
+            except LookupError:
+                # Don't return any synsets if the language is not supported
+                synsets = None
 
             if synsets:
                 synset = synsets[0]
@@ -108,9 +132,7 @@ class PosHypernymTagger(object):
 
         pos_tags = []
 
-        sentence_tokenizer = self.get_sentence_tokenizer()
-
-        for sentence in sentence_tokenizer.tokenize(text.strip()):
+        for sentence in self.tokenize_sentence(text.strip()):
 
             # Remove punctuation
             if sentence and sentence[-1] in string.punctuation:
@@ -121,7 +143,7 @@ class PosHypernymTagger(object):
 
             words = sentence.split()
 
-            pos_tags.extend(pos_tag(words))
+            pos_tags.extend(self.get_pos_tags(words))
 
         hypernyms = self.get_hypernyms(pos_tags)
 
