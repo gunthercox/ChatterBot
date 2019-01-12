@@ -5,8 +5,7 @@ class StringInitializationTestCase(ChatBotTestCase):
 
     def get_kwargs(self):
         return {
-            'input_adapter': 'chatterbot.input.InputAdapter',
-            'output_adapter': 'chatterbot.output.OutputAdapter',
+            'storage_adapter': 'chatterbot.storage.SQLStorageAdapter',
             'database_uri': None
         }
 
@@ -19,14 +18,6 @@ class StringInitializationTestCase(ChatBotTestCase):
         self.assertEqual(len(self.chatbot.logic_adapters), 1)
         self.assertTrue(isinstance(self.chatbot.logic_adapters[0], BestMatch))
 
-    def test_input_initialized(self):
-        from chatterbot.input import InputAdapter
-        self.assertTrue(isinstance(self.chatbot.input, InputAdapter))
-
-    def test_output_initialized(self):
-        from chatterbot.output import OutputAdapter
-        self.assertTrue(isinstance(self.chatbot.output, OutputAdapter))
-
 
 class DictionaryInitializationTestCase(ChatBotTestCase):
 
@@ -35,12 +26,6 @@ class DictionaryInitializationTestCase(ChatBotTestCase):
             'storage_adapter': {
                 'import_path': 'chatterbot.storage.SQLStorageAdapter',
                 'database_uri': None
-            },
-            'input_adapter': {
-                'import_path': 'chatterbot.input.InputAdapter'
-            },
-            'output_adapter': {
-                'import_path': 'chatterbot.output.OutputAdapter'
             },
             'logic_adapters': [
                 {
@@ -62,11 +47,3 @@ class DictionaryInitializationTestCase(ChatBotTestCase):
         self.assertEqual(len(self.chatbot.logic_adapters), 2)
         self.assertTrue(isinstance(self.chatbot.logic_adapters[0], BestMatch))
         self.assertTrue(isinstance(self.chatbot.logic_adapters[1], MathematicalEvaluation))
-
-    def test_input_initialized(self):
-        from chatterbot.input import InputAdapter
-        self.assertTrue(isinstance(self.chatbot.input, InputAdapter))
-
-    def test_output_initialized(self):
-        from chatterbot.output import OutputAdapter
-        self.assertTrue(isinstance(self.chatbot.output, OutputAdapter))

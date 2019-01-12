@@ -34,8 +34,6 @@ setup(
     author_email=AUTHOR_EMAIL,
     packages=[
         'chatterbot',
-        'chatterbot.input',
-        'chatterbot.output',
         'chatterbot.storage',
         'chatterbot.logic',
         'chatterbot.api',
