@@ -1,4 +1,5 @@
 from chatterbot import ChatBot
+from chatterbot.conversation import Statement
 
 """
 This example shows how to create a chat bot that
@@ -13,12 +14,7 @@ element from the user.
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Feedback Learning Bot',
-    storage_adapter='chatterbot.storage.SQLStorageAdapter',
-    logic_adapters=[
-        'chatterbot.logic.BestMatch'
-    ],
-    input_adapter='chatterbot.input.TerminalAdapter',
-    output_adapter='chatterbot.output.TerminalAdapter'
+    storage_adapter='chatterbot.storage.SQLStorageAdapter'
 )
 
 
@@ -40,16 +36,20 @@ print('Type something to begin...')
 # The following loop will execute each time the user enters input
 while True:
     try:
-        input_statement = bot.input.process_input()
+        input_statement = Statement(text=input())
         response = bot.generate_response(
             input_statement
         )
-        print('\n Is "{}" this a coherent response to "{}"? \n'.format(response, input_statement))
 
+        print('\n Is "{}" a coherent response to "{}"? \n'.format(
+            response.text,
+            input_statement.text
+        ))
         if get_feedback():
-            bot.learn_response(response, input_statement)
-
-        bot.output.process_response(response)
+            print('please input the correct one')
+            correct_response = Statement(text=input())
+            bot.learn_response(correct_response, input_statement)
+            print('Responses added to bot!')
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):

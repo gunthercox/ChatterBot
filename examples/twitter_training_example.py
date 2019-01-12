@@ -27,8 +27,6 @@ chatbot = ChatBot(
     logic_adapters=[
         "chatterbot.logic.BestMatch"
     ],
-    input_adapter="chatterbot.input.TerminalAdapter",
-    output_adapter="chatterbot.output.TerminalAdapter",
     database_uri="./twitter-database.db",
     twitter_consumer_key=TWITTER["CONSUMER_KEY"],
     twitter_consumer_secret=TWITTER["CONSUMER_SECRET"],

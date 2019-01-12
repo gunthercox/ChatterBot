@@ -13,12 +13,6 @@ Glossary
    storage adapter
       A class that allows a chat bot to store information somewhere, such as a database.
 
-   input adapter
-      An adapter class that gets input from somewhere and provides it to the chat bot.
-
-   output adapter
-      An adapter class that returns a chat bot's response.
-
    corpus
       In linguistics, a corpus (plural corpora) or text corpus is a large
       and structured set of texts. They are used to do statistical analysis

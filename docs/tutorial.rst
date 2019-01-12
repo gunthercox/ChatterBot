@@ -76,23 +76,6 @@ already exist.
    If you do not specify an adapter in your constructor,
    the SQLStorageAdapter adapter will be used automatically.
 
-Input and output adapters
--------------------------
-
-Next, we will add in parameters to specify the input and output terminal
-adapter. The input terminal adapter simply reads the user's input from
-the terminal. The output terminal adapter prints the chat bot's response.
-
-.. code-block:: python
-
-   bot = ChatBot(
-       'Norman',
-       storage_adapter='chatterbot.storage.SQLStorageAdapter',
-       input_adapter='chatterbot.input.TerminalAdapter',
-       output_adapter='chatterbot.output.TerminalAdapter',
-       database_uri='./database.sqlite3'
-   )
-
 Specifying logic adapters
 -------------------------
 
@@ -111,8 +94,6 @@ operations.
    bot = ChatBot(
        'Norman',
        storage_adapter='chatterbot.storage.SQLStorageAdapter',
-       input_adapter='chatterbot.input.TerminalAdapter',
-       output_adapter='chatterbot.output.TerminalAdapter',
        logic_adapters=[
            'chatterbot.logic.MathematicalEvaluation',
            'chatterbot.logic.TimeLogicAdapter'

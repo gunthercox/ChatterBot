@@ -11,8 +11,6 @@ bot = ChatBot(
     logic_adapters=[
         'chatterbot.logic.BestMatch'
     ],
-    input_adapter='chatterbot.input.TerminalAdapter',
-    output_adapter='chatterbot.output.TerminalAdapter',
     database_uri='mongodb://localhost:27017/chatterbot-database'
 )
 
@@ -20,7 +18,11 @@ print('Type something to begin...')
 
 while True:
     try:
-        bot_input = bot.get_response('')
+        user_input = input()
+
+        bot_response = bot.get_response(user_input)
+
+        print(bot_response)
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):

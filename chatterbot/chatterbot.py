@@ -1,8 +1,6 @@
 import logging
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
-from chatterbot.input import InputAdapter
-from chatterbot.output import OutputAdapter
 from chatterbot.search import IndexedTextSearch
 from chatterbot.conversation import Statement
 from chatterbot import utils
@@ -28,21 +26,19 @@ class ChatBot(object):
             'chatterbot.logic.BestMatch'
         ])
 
-        input_adapter = kwargs.get('input_adapter', 'chatterbot.input.InputAdapter')
+        if 'input_adapter' in kwargs:
+            raise Exception('input adapter')
 
-        output_adapter = kwargs.get('output_adapter', 'chatterbot.output.OutputAdapter')
+        if 'output_adapter' in kwargs:
+            raise Exception('output adapter')
 
         # Check that each adapter is a valid subclass of it's respective parent
         utils.validate_adapter_class(storage_adapter, StorageAdapter)
-        utils.validate_adapter_class(input_adapter, InputAdapter)
-        utils.validate_adapter_class(output_adapter, OutputAdapter)
 
         # Logic adapters used by the chat bot
         self.logic_adapters = []
 
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
-        self.input = utils.initialize_class(input_adapter, self, **kwargs)
-        self.output = utils.initialize_class(output_adapter, self, **kwargs)
 
         for adapter in logic_adapters:
             utils.validate_adapter_class(adapter, LogicAdapter)
@@ -114,7 +110,7 @@ class ChatBot(object):
             statement.update(kwargs)
             kwargs = statement
 
-        input_statement = self.input.process_input(kwargs)
+        input_statement = Statement(**kwargs)
 
         # Preprocess the input statement
         for preprocessor in self.preprocessors:
@@ -136,8 +132,7 @@ class ChatBot(object):
                 persona=response.persona
             )
 
-        # Process the response output with the output adapter
-        return self.output.process_response(response)
+        return response
 
     def generate_response(self, input_statement):
         """
