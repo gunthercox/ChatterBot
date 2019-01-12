@@ -61,8 +61,6 @@ Contents:
    training
    preprocessors
    logic/index
-   input/index
-   output/index
    storage/index
    filters
    chatterbot

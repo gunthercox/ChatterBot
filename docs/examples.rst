@@ -46,21 +46,12 @@ inputs.
 .. literalinclude:: ../examples/math_and_time.py
    :language: python
 
-Gitter Example
-==============
-
-ChatterBot works great with chat rooms. An example for the
-popular service *Gitter* demonstrates this.
-
-.. literalinclude:: ../examples/gitter_example.py
-   :language: python
-
 Using SQL Adapter
 =================
 
 ChatterBot data can be saved and retrieved from SQL databases.
 
-.. literalinclude:: ../examples/sql/memory_sql_example.py
+.. literalinclude:: ../examples/memory_sql_example.py
    :language: python
 
 Read only mode
