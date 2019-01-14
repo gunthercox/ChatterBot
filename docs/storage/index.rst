@@ -43,3 +43,24 @@ MongoDB Storage Adapter
 
 .. autoclass:: chatterbot.storage.MongoDatabaseAdapter
    :members:
+
+Database Migrations
+===================
+
+Various frameworks such as Django and SQL Alchemy support
+functionality that allows revisions to be made to databases
+programmatically. This makes it possible for updates and
+revisions to structures in the database to be be applied
+in consecutive version releases.
+
+The following explains the included migration process for
+each of the databases that ChatterBot comes with support for.
+
+* Django: Full schema migrations and data migrations will
+  be included with each release.
+* SQL Alchemy: No migrations are currently provided in
+  releases. If you require migrations between versions
+  `Alembic`_ is the recommended solution for generating them.
+* MongoDB: No migrations are provided.
+
+.. _Alembic: https://alembic.sqlalchemy.org
