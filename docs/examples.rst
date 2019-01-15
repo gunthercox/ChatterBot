@@ -4,6 +4,10 @@ Examples
 
 The following examples are available to help you get started with ChatterBot.
 
+.. note::
+   Before you run any example, you will need to install ChatterBot on your system.
+   See the :ref:`Setup guide <Installation>` for instructions.
+
 Simple Example
 ==============
 
