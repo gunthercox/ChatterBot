@@ -31,6 +31,25 @@ class SearchTestCase(ChatBotTestCase):
 
         self.assertEqual(results, [])
 
+    def test_search_additional_parameters(self):
+        """
+        It should be possible to pass additional parameters in to use for searching.
+        """
+        self.chatbot.storage.create_many([
+            Statement(text='A', conversation='test_1'),
+            Statement(text='A', conversation='test_2')
+        ])
+
+        statement = Statement(text='A')
+
+        results = list(self.search_algorithm.search(
+            statement, conversation='test_1'
+        ))
+
+        self.assertIsLength(results, 1)
+        self.assertEqual(results[0].text, 'A')
+        self.assertEqual(results[0].conversation, 'test_1')
+
 
 class SearchComparisonFunctionSynsetDistanceTests(ChatBotTestCase):
     """

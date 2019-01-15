@@ -27,7 +27,7 @@ class SpecificResponseAdapter(LogicAdapter):
 
         return False
 
-    def process(self, statement):
+    def process(self, statement, additional_response_selection_parameters=None):
 
         if statement == self.input_text:
             self.response_statement.confidence = 1

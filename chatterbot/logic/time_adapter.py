@@ -1,5 +1,6 @@
 from datetime import datetime
 from chatterbot.logic import LogicAdapter
+from chatterbot.conversation import Statement
 
 
 class TimeLogicAdapter(LogicAdapter):
@@ -80,9 +81,7 @@ class TimeLogicAdapter(LogicAdapter):
 
         return features
 
-    def process(self, statement):
-        from chatterbot.conversation import Statement
-
+    def process(self, statement, additional_response_selection_parameters=None):
         now = datetime.now()
 
         time_features = self.time_question_features(statement.text.lower())
