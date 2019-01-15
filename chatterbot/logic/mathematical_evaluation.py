@@ -34,7 +34,7 @@ class MathematicalEvaluation(LogicAdapter):
         self.cache[statement.text] = response
         return response.confidence == 1
 
-    def process(self, statement):
+    def process(self, statement, additional_response_selection_parameters=None):
         """
         Takes a statement string.
         Returns the equation from the statement with the mathematical terms solved.

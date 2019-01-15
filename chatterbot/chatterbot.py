@@ -92,6 +92,8 @@ class ChatBot(object):
         :returns: A response to the input.
         :rtype: Statement
         """
+        additional_response_selection_parameters = kwargs.pop('additional_response_selection_parameters', {})
+
         if isinstance(statement, str):
             kwargs['text'] = statement
 
@@ -116,7 +118,7 @@ class ChatBot(object):
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(input_statement)
 
-        response = self.generate_response(input_statement)
+        response = self.generate_response(input_statement, additional_response_selection_parameters)
 
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.get_latest_response(input_statement.conversation)
@@ -134,7 +136,7 @@ class ChatBot(object):
 
         return response
 
-    def generate_response(self, input_statement):
+    def generate_response(self, input_statement, additional_response_selection_parameters=None):
         """
         Return a response based on a given input statement.
 
@@ -149,7 +151,7 @@ class ChatBot(object):
         for adapter in self.logic_adapters:
             if adapter.can_process(input_statement):
 
-                output = adapter.process(input_statement)
+                output = adapter.process(input_statement, additional_response_selection_parameters)
                 results.append((output.confidence, output, ))
 
                 self.logger.info(
