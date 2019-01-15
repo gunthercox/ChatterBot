@@ -27,7 +27,8 @@ For more details on installing Django, see the `Django documentation`_.
 Installed Apps
 --------------
 
-Add `chatterbot.ext.django_chatterbot` to your `INSTALLED_APPS`
+Add ``chatterbot.ext.django_chatterbot`` to your ``INSTALLED_APPS`` in the
+``settings.py`` file of your Django project.
 
 .. code-block:: python
 
