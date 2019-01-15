@@ -22,7 +22,7 @@ class BestMatch(LogicAdapter):
 
         self.excluded_words = kwargs.get('excluded_words')
 
-    def process(self, input_statement):
+    def process(self, input_statement, additional_response_selection_parameters=None):
         search_results = self.search_algorithm.search(input_statement)
 
         # Use the input statement as the closest match if no other results are found
@@ -50,24 +50,32 @@ class BestMatch(LogicAdapter):
                 index, recent_repeated_response
             ))
 
+        response_selection_parameters = {
+            'search_in_response_to': closest_match.search_text,
+            'exclude_text': recent_repeated_responses,
+            'exclude_text_words': self.excluded_words
+        }
+
+        alternate_response_selection_parameters = {
+            'search_in_response_to': self.chatbot.storage.tagger.get_bigram_pair_string(
+                input_statement.text
+            ),
+            'exclude_text': recent_repeated_responses,
+            'exclude_text_words': self.excluded_words
+        }
+
+        if additional_response_selection_parameters:
+            response_selection_parameters.update(additional_response_selection_parameters)
+            alternate_response_selection_parameters.update(additional_response_selection_parameters)
+
         # Get all statements that are in response to the closest match
-        response_list = list(self.chatbot.storage.filter(
-            search_in_response_to=closest_match.search_text,
-            exclude_text=recent_repeated_responses,
-            exclude_text_words=self.excluded_words
-        ))
+        response_list = list(self.chatbot.storage.filter(**response_selection_parameters))
 
         alternate_response_list = []
 
         if not response_list:
             self.chatbot.logger.info('No responses found. Generating alternate response list.')
-            alternate_response_list = list(self.chatbot.storage.filter(
-                search_in_response_to=self.chatbot.storage.tagger.get_bigram_pair_string(
-                    input_statement.text
-                ),
-                exclude_text=recent_repeated_responses,
-                exclude_text_words=self.excluded_words
-            ))
+            alternate_response_list = list(self.chatbot.storage.filter(**alternate_response_selection_parameters))
 
         if response_list:
             self.chatbot.logger.info(

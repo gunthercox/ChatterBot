@@ -179,6 +179,22 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(statement.text, response)
         self.assertEqual(response.conversation, 'test')
 
+    def test_get_response_additional_response_selection_parameters(self):
+        self.chatbot.storage.create_many([
+            Statement('A', conversation='test_1'),
+            Statement('B', conversation='test_1', in_response_to='A'),
+            Statement('A', conversation='test_2'),
+            Statement('C', conversation='test_2', in_response_to='A'),
+        ])
+
+        statement = Statement(text='A', conversation='test_3')
+        response = self.chatbot.get_response(statement, additional_response_selection_parameters={
+            'conversation': 'test_2'
+        })
+
+        self.assertEqual(response.text, 'C')
+        self.assertEqual(response.conversation, 'test_3')
+
     def test_get_response_unicode(self):
         """
         Test the case that a unicode string is passed in.
@@ -330,7 +346,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
 class TestAdapterA(LogicAdapter):
 
-    def process(self, statement):
+    def process(self, statement, additional_response_selection_parameters=None):
         response = Statement(text='Good morning.')
         response.confidence = 0.2
         return response
@@ -338,7 +354,7 @@ class TestAdapterA(LogicAdapter):
 
 class TestAdapterB(LogicAdapter):
 
-    def process(self, statement):
+    def process(self, statement, additional_response_selection_parameters=None):
         response = Statement(text='Good morning.')
         response.confidence = 0.5
         return response
@@ -346,7 +362,7 @@ class TestAdapterB(LogicAdapter):
 
 class TestAdapterC(LogicAdapter):
 
-    def process(self, statement):
+    def process(self, statement, additional_response_selection_parameters=None):
         response = Statement(text='Good night.')
         response.confidence = 0.7
         return response

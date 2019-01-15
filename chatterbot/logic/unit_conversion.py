@@ -139,7 +139,7 @@ class UnitConversion(LogicAdapter):
         self.cache[statement.text] = response
         return response.confidence == 1.0
 
-    def process(self, statement):
+    def process(self, statement, additional_response_selection_parameters=None):
         response = Statement(text='')
         input_text = statement.text
         try:

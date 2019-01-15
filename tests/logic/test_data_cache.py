@@ -9,7 +9,7 @@ class DummyMutatorLogicAdapter(LogicAdapter):
     the resulting statement before it is returned.
     """
 
-    def process(self, statement):
+    def process(self, statement, additional_response_selection_parameters=None):
         statement.add_tags('pos_tags:NN')
 
         self.chatbot.storage.update(statement)

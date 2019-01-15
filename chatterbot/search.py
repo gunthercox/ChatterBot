@@ -28,13 +28,17 @@ class IndexedTextSearch:
             'search_page_size', 1000
         )
 
-    def search(self, input_statement):
+    def search(self, input_statement, **additional_parameters):
         """
         Search for close matches to the input. Confidence scores for
         subsequent results will order of increasing value.
 
         :param input_statement: A statement.
         :type input_statement: chatterbot.conversation.Statement
+
+        :param **additional_parameters: Additional parameters to be passed
+            to the ``filter`` method of the storage adapter when searching.
+
         :rtype: Generator yielding one closest matching statement at a time.
         """
         self.chatbot.logger.info('Beginning search for close text match')
@@ -50,11 +54,16 @@ class IndexedTextSearch:
                 input_statement.text
             )
 
-        statement_list = self.chatbot.storage.filter(
-            search_text_contains=input_search_text,
-            persona_not_startswith='bot:',
-            page_size=self.search_page_size
-        )
+        search_parameters = {
+            'search_text_contains': input_search_text,
+            'persona_not_startswith': 'bot:',
+            'page_size': self.search_page_size
+        }
+
+        if additional_parameters:
+            search_parameters.update(additional_parameters)
+
+        statement_list = self.chatbot.storage.filter(**search_parameters)
 
         closest_match = Statement(text='')
         closest_match.confidence = 0
