@@ -126,7 +126,7 @@ You can speed up this process by training him with examples of existing conversa
 
 .. code-block:: python
 
-   from chatterbot.training import ListTrainer
+   from chatterbot.trainers import ListTrainer
 
    trainer = ListTrainer(bot)
 
