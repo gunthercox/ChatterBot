@@ -59,7 +59,7 @@ By default, this adapter will create a `SQLite`_ database.
 
 The ``database`` parameter is used to specify the path to the database
 that the chat bot will use. For this example we will call the database
-`database.sqlite3`. this file will be created automatically if it doesn't
+`sqlite:///database.sqlite3`. this file will be created automatically if it doesn't
 already exist.
 
 .. code-block:: python
@@ -67,7 +67,7 @@ already exist.
    bot = ChatBot(
        'Norman',
        storage_adapter='chatterbot.storage.SQLStorageAdapter',
-       database_uri='./database.sqlite3'
+       database_uri='sqlite:///database.sqlite3'
    )
 
 .. note::
@@ -98,7 +98,7 @@ operations.
            'chatterbot.logic.MathematicalEvaluation',
            'chatterbot.logic.TimeLogicAdapter'
        ],
-       database_uri='./database.sqlite3'
+       database_uri='sqlite:///database.sqlite3'
    )
 
 Getting a response from your chat bot
