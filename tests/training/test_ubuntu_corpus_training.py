@@ -12,7 +12,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
     """
 
     def setUp(self):
-        super(UbuntuCorpusTrainerTestCase, self).setUp()
+        super().setUp()
         self.trainer = UbuntuCorpusTrainer(
             self.chatbot,
             ubuntu_corpus_data_directory='./.ubuntu_test_data/',
@@ -20,7 +20,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         )
 
     def tearDown(self):
-        super(UbuntuCorpusTrainerTestCase, self).tearDown()
+        super().tearDown()
 
         self._remove_data()
 

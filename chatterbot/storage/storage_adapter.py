@@ -13,9 +13,7 @@ class StorageAdapter(object):
         """
         Initialize common attributes shared by all storage adapters.
         """
-        self.kwargs = kwargs
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
-        self.adapter_supports_queries = True
 
         self.tagger = PosHypernymTagger(language=kwargs.get(
             'tagger_language', languages.ENG
@@ -24,17 +22,12 @@ class StorageAdapter(object):
     def get_model(self, model_name):
         """
         Return the model class for a given model name.
+
+        model_name is case insensitive.
         """
-
-        # The string must be lowercase
-        model_name = model_name.lower()
-
-        kwarg_model_key = '%s_model' % (model_name, )
-
-        if kwarg_model_key in self.kwargs:
-            return self.kwargs.get(kwarg_model_key)
-
-        get_model_method = getattr(self, 'get_%s_model' % (model_name, ))
+        get_model_method = getattr(self, 'get_%s_model' % (
+            model_name.lower(),
+        ))
 
         return get_model_method()
 

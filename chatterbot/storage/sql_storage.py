@@ -17,12 +17,12 @@ class SQLStorageAdapter(StorageAdapter):
     """
 
     def __init__(self, **kwargs):
-        super(SQLStorageAdapter, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
         from sqlalchemy import create_engine
         from sqlalchemy.orm import sessionmaker
 
-        self.database_uri = self.kwargs.get('database_uri', False)
+        self.database_uri = kwargs.get('database_uri', False)
 
         # None results in a sqlite in-memory database as the default
         if self.database_uri is None:
@@ -47,9 +47,6 @@ class SQLStorageAdapter(StorageAdapter):
             self.create_database()
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
-
-        # ChatterBot's internal query builder is not yet supported for this adapter
-        self.adapter_supports_queries = False
 
     def get_statement_model(self):
         """

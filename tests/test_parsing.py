@@ -12,7 +12,7 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
     """
 
     def setUp(self):
-        super(DateTimeParsingFunctionIntegrationTestCases, self).setUp()
+        super().setUp()
         self.base_date = datetime.now()
 
     def test_captured_pattern_is_on_date(self):
