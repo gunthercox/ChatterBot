@@ -18,11 +18,11 @@ class MongoDatabaseAdapter(StorageAdapter):
     """
 
     def __init__(self, **kwargs):
-        super(MongoDatabaseAdapter, self).__init__(**kwargs)
+        super().__init__(**kwargs)
         from pymongo import MongoClient
         from pymongo.errors import OperationFailure
 
-        self.database_uri = self.kwargs.get(
+        self.database_uri = kwargs.get(
             'database_uri', 'mongodb://localhost:27017/chatterbot-database'
         )
 
