@@ -9,9 +9,8 @@ class DjangoStorageAdapter(StorageAdapter):
     """
 
     def __init__(self, **kwargs):
-        super(DjangoStorageAdapter, self).__init__(**kwargs)
+        super().__init__(**kwargs)
 
-        self.adapter_supports_queries = False
         self.django_app_name = kwargs.get(
             'django_app_name',
             constants.DEFAULT_DJANGO_APP_NAME

@@ -5,7 +5,7 @@ from chatterbot.trainers import ListTrainer
 class DatabaseExportTests(ChatBotTestCase):
 
     def setUp(self):
-        super(DatabaseExportTests, self).setUp()
+        super().setUp()
         self.trainer = ListTrainer(
             self.chatbot,
             show_training_progress=False
