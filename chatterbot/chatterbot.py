@@ -26,12 +26,6 @@ class ChatBot(object):
             'chatterbot.logic.BestMatch'
         ])
 
-        if 'input_adapter' in kwargs:
-            raise Exception('input adapter')
-
-        if 'output_adapter' in kwargs:
-            raise Exception('output adapter')
-
         # Check that each adapter is a valid subclass of it's respective parent
         utils.validate_adapter_class(storage_adapter, StorageAdapter)
 
