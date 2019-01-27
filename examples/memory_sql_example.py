@@ -8,6 +8,7 @@ from chatterbot import ChatBot
 bot = ChatBot(
     'SQLMemoryTerminal',
     storage_adapter='chatterbot.storage.SQLStorageAdapter',
+    database_uri=None,
     logic_adapters=[
         'chatterbot.logic.MathematicalEvaluation',
         'chatterbot.logic.TimeLogicAdapter',
@@ -15,17 +16,8 @@ bot = ChatBot(
     ]
 )
 
-print('Type something to begin...')
+# Get a few responses from the bot
 
-# The following loop will execute each time the user enters input
-while True:
-    try:
-        user_input = input()
+bot.get_response('What time is it?')
 
-        bot_response = bot.get_response(user_input)
-
-        print(bot_response)
-
-    # Press ctrl-c or ctrl-d on the keyboard to exit
-    except (KeyboardInterrupt, EOFError, SystemExit):
-        break
+bot.get_response('What is 7 plus 7?')
