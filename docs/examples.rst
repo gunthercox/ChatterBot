@@ -72,7 +72,7 @@ you can set `read_only=True` as a parameter when initializing the bot.
 More Examples
 =============
 
-Even more examples can be found in the `examples` directory in on GitHub:
+Even more examples can be found in the ``examples`` directory on GitHub:
 https://github.com/gunthercox/ChatterBot/tree/master/examples 
 
 .. _install MongoDB: https://docs.mongodb.com/manual/installation/
