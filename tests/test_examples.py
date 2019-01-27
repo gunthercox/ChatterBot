@@ -51,7 +51,7 @@ class ExamplesSmokeTestCase(TestCase):
             'a GUI during testing.'
         )
 
-    def test_ubuntu_corpus_training_example(self):
+    def test_training_example_ubuntu_corpus(self):
         self.skipTest(
             'This test is being skipped because it takes '
             'hours to download and train from this corpus.'
