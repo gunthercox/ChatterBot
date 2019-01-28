@@ -16,20 +16,20 @@ Example logic adapter
 
    class MyLogicAdapter(LogicAdapter):
 
-       def __init__(self, **kwargs):
-           super().__init__(**kwargs)
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
 
        def can_process(self, statement):
            return True
 
-       def process(self, statement):
+       def process(self, input_statement, additional_response_selection_parameters):
            import random
 
            # Randomly select a confidence between 0 and 1
            confidence = random.uniform(0, 1)
 
            # For this example, we will just return the input as output
-           selected_statement = statement
+           selected_statement = input_statement
            selected_statement.confidence = confidence
 
            return selected_statement
@@ -100,7 +100,7 @@ For this example we will use a fictitious API endpoint that returns the current 
        else:
            return False
 
-   def process(self, statement):
+   def process(self, input_statement, additional_response_selection_parameters):
        from chatterbot.conversation import Statement
        import requests
 
@@ -135,8 +135,8 @@ information passed to it by the ChatBot class.
 .. code-block:: python
 
    class MyLogicAdapter(LogicAdapter):
-       def __init__(self, **kwargs):
-           super().__init__(**kwargs)
+       def __init__(self, chatbot, **kwargs):
+           super().__init__(chatbot, **kwargs)
 
            self.api_key = kwargs.get('secret_key')
 
