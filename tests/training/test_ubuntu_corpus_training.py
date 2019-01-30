@@ -162,7 +162,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         self._destroy_test_corpus()
 
         response = self.chatbot.get_response('Is anyone there?')
-        self.assertEqual(response, 'Yes')
+        self.assertEqual(response.text, 'Yes')
 
     def test_train_sets_search_text(self):
         """

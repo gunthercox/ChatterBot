@@ -176,7 +176,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement = Statement(text='Wow!', conversation='test')
         response = self.chatbot.get_response(statement)
 
-        self.assertEqual(statement.text, response)
+        self.assertEqual(statement.text, response.text)
         self.assertEqual(response.conversation, 'test')
 
     def test_get_response_additional_response_selection_parameters(self):
@@ -268,7 +268,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         statement = Statement(text='Many insects adopt a tripedal gait for rapid yet stable walking.')
         response = self.chatbot.generate_response(statement)
 
-        self.assertEqual(response, statement)
+        self.assertEqual(response.text, statement.text)
         self.assertEqual(response.confidence, 0)
 
     def test_learn_response(self):
@@ -385,7 +385,7 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
         statement = self.chatbot.generate_response(Statement(text='Howdy!'))
 
         self.assertEqual(statement.confidence, 0.5)
-        self.assertEqual(statement, 'Good morning.')
+        self.assertEqual(statement.text, 'Good morning.')
 
     def test_chatbot_set_for_all_logic_adapters(self):
         for sub_adapter in self.chatbot.logic_adapters:
