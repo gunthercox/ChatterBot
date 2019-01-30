@@ -136,7 +136,7 @@ class ListTrainingTests(ChatBotTestCase):
 
         response = self.chatbot.get_response(conversation[1])
 
-        self.assertEqual(response, conversation[2])
+        self.assertEqual(response.text, conversation[2])
 
     def test_training_with_emoji_characters(self):
         """
@@ -152,7 +152,7 @@ class ListTrainingTests(ChatBotTestCase):
 
         response = self.chatbot.get_response(conversation[1])
 
-        self.assertEqual(response, conversation[2])
+        self.assertEqual(response.text, conversation[2])
 
     def test_training_with_unicode_bytestring(self):
         """
@@ -168,7 +168,7 @@ class ListTrainingTests(ChatBotTestCase):
 
         response = self.chatbot.get_response(conversation[1])
 
-        self.assertEqual(response, conversation[2])
+        self.assertEqual(response.text, conversation[2])
 
     def test_similar_sentence_gets_same_response_multiple_times(self):
         """
