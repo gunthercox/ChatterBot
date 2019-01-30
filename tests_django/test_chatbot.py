@@ -120,7 +120,7 @@ class ChatBotTests(ChatterBotTestCase):
         statement = Statement(text='Wow!', conversation='test')
         response = self.chatbot.get_response(statement)
 
-        self.assertEqual(statement.text, response)
+        self.assertEqual(statement.text, response.text)
         self.assertEqual(response.conversation, 'test')
 
     def test_get_response_additional_response_selection_parameters(self):
@@ -212,7 +212,7 @@ class ChatBotTests(ChatterBotTestCase):
         statement = Statement(text='Many insects adopt a tripedal gait for rapid yet stable walking.')
         response = self.chatbot.generate_response(statement)
 
-        self.assertEqual(response, statement)
+        self.assertEqual(response.text, statement.text)
         self.assertEqual(response.confidence, 0)
 
     def test_learn_response(self):
