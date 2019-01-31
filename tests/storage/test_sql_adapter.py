@@ -148,9 +148,13 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
 
         results = list(self.adapter.filter(in_response_to=None))
 
+        results_text = [
+            result.text for result in results
+        ]
+
         self.assertEqual(len(results), 2)
-        self.assertIn(statement1, results)
-        self.assertIn(statement2, results)
+        self.assertIn(statement1.text, results_text)
+        self.assertIn(statement2.text, results_text)
 
     def test_filter_no_parameters(self):
         """
@@ -281,8 +285,8 @@ class SQLOrderingTests(SQLStorageAdapterTestCase):
         results = list(self.adapter.filter(order_by=['text']))
 
         self.assertEqual(len(results), 2)
-        self.assertEqual(results[0], statement_a)
-        self.assertEqual(results[1], statement_b)
+        self.assertEqual(statement_a.text, results[0].text)
+        self.assertEqual(statement_b.text, results[1].text)
 
     def test_order_by_created_at(self):
         from datetime import datetime, timedelta
@@ -305,8 +309,8 @@ class SQLOrderingTests(SQLStorageAdapterTestCase):
         results = list(self.adapter.filter(order_by=['created_at']))
 
         self.assertEqual(len(results), 2)
-        self.assertEqual(results[0], statement_a)
-        self.assertEqual(results[1], statement_b)
+        self.assertEqual(statement_a.text, results[0].text)
+        self.assertEqual(statement_b.text, results[1].text)
 
 
 class StorageAdapterCreateTests(SQLStorageAdapterTestCase):

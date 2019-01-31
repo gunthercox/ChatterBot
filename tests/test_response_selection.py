@@ -41,7 +41,7 @@ class ResponseSelectionTests(ChatBotSQLTestCase):
 
         output = response_selection.get_first_response(Statement(text='Hello'), statement_list)
 
-        self.assertEqual('What... is your quest?', output)
+        self.assertEqual(output.text, 'What... is your quest?')
 
     def test_get_random_response(self):
         statement_list = [
