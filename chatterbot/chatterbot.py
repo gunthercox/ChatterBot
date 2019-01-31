@@ -136,8 +136,6 @@ class ChatBot(object):
 
         :param input_statement: The input statement to be processed.
         """
-        from collections import Counter
-
         results = []
         result = None
         max_confidence = -1
@@ -146,7 +144,7 @@ class ChatBot(object):
             if adapter.can_process(input_statement):
 
                 output = adapter.process(input_statement, additional_response_selection_parameters)
-                results.append((output.confidence, output, ))
+                results.append(output)
 
                 self.logger.info(
                     '{} selected "{}" as a response with a confidence of {}'.format(
@@ -162,17 +160,35 @@ class ChatBot(object):
                     'Not processing the statement using {}'.format(adapter.class_name)
                 )
 
+        class ResultOption:
+            def __init__(self, statement, count=1):
+                self.statement = statement
+                self.count = count
+
         # If multiple adapters agree on the same statement,
         # then that statement is more likely to be the correct response
         if len(results) >= 3:
-            statements = tuple(
-                s[1] for s in results
-            )
-            count = Counter(statements)
-            most_common = count.most_common()
-            if most_common[0][1] > 1:
-                result = most_common[0][0]
-                max_confidence = utils.get_greatest_confidence(result, results)
+            result_options = {}
+            for result_option in results:
+                result_string = result_option.text + ':' + (result_option.in_response_to or '')
+
+                if result_string in result_options:
+                    result_options[result_string].count += 1
+                    if result_options[result_string].statement.confidence < result_option.confidence:
+                        result_options[result_string].statement = result_option
+                else:
+                    result_options[result_string] = ResultOption(
+                        result_option
+                    )
+
+            most_common = list(result_options.values())[0]
+
+            for result_option in result_options.values():
+                if result_option.count > most_common.count:
+                    most_common = result_option
+
+            if most_common.count > 1:
+                result = most_common.statement
 
         response = Statement(
             text=result.text,
@@ -181,7 +197,7 @@ class ChatBot(object):
             persona='bot:' + self.name
         )
 
-        response.confidence = max_confidence
+        response.confidence = result.confidence
 
         return response
 

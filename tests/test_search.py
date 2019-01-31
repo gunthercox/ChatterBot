@@ -80,7 +80,7 @@ class SearchComparisonFunctionSynsetDistanceTests(ChatBotTestCase):
         results = list(self.search_algorithm.search(statement))
 
         self.assertIsLength(results, 1)
-        self.assertEqual(results[0], 'This is a lovely bog.')
+        self.assertEqual(results[0].text, 'This is a lovely bog.')
         self.assertGreater(results[0].confidence, 0)
 
     def test_different_punctuation(self):
@@ -94,7 +94,7 @@ class SearchComparisonFunctionSynsetDistanceTests(ChatBotTestCase):
         results = list(self.search_algorithm.search(statement))
 
         self.assertIsLength(results, 1)
-        self.assertEqual(results[0], 'Are you good?')
+        self.assertEqual(results[0].text, 'Are you good?')
 
 
 class SearchComparisonFunctionSentimentComparisonTests(ChatBotTestCase):
@@ -179,7 +179,7 @@ class SearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTestCase
         results = list(self.search_algorithm.search(statement))
 
         self.assertIsLength(results, 1)
-        self.assertEqual(results[0], 'What... is your quest?')
+        self.assertEqual(results[0].text, 'What... is your quest?')
 
     def test_confidence_exact_match(self):
         self.chatbot.storage.create(text='What is your quest?', in_response_to='What is your quest?')
