@@ -91,19 +91,6 @@ class Statement(StatementMixin):
     def __repr__(self):
         return '<Statement text:%s>' % (self.text)
 
-    def __hash__(self):
-        in_response_to = self.in_response_to or ''
-        return hash(self.text + ':' + in_response_to)
-
-    def __eq__(self, other):
-        if not other:
-            return False
-
-        if isinstance(other, Statement):
-            return self.text == other.text
-
-        return self.text == other
-
     def save(self):
         """
         Save the statement in the database.
