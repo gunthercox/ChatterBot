@@ -13,17 +13,6 @@ class UtilityTests(TestCase):
         downloaded = utils.nltk_download_corpus('wordnet')
         self.assertTrue(downloaded)
 
-    def test_get_greatest_confidence(self):
-        statement = 'Hello'
-        options = [
-            (0.50, 'Hello'),
-            (0.85, 'Hello'),
-            (0.42, 'Hello')
-        ]
-        value = utils.get_greatest_confidence(statement, options)
-
-        self.assertEqual(value, 0.85)
-
     def test_treebank_to_wordnet(self):
         self.assertEqual(utils.treebank_to_wordnet('NNS'), 'n')
 
