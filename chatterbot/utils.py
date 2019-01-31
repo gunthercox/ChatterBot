@@ -141,22 +141,6 @@ def treebank_to_wordnet(pos):
     return data_map.get(pos[0])
 
 
-def get_greatest_confidence(statement, options):
-    """
-    Returns the greatest confidence value for a statement that occurs
-    multiple times in the set of options.
-
-    :param statement: A statement object.
-    :param options: A tuple in the format of (confidence, statement).
-    """
-    values = []
-    for option in options:
-        if option[1] == statement:
-            values.append(option[0])
-
-    return max(values)
-
-
 def get_response_time(chatbot, statement='Hello'):
     """
     Returns the amount of time taken for a given
