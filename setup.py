@@ -2,8 +2,18 @@
 """
 ChatterBot setup file.
 """
+import sys
+import platform
 from setuptools import setup
 
+
+if sys.version_info[0] < 3:
+    raise Exception(
+        'You are tying to install ChatterBot on Python version {}.\n'
+        'Please install ChatterBot in Python 3 instead.'.format(
+            platform.python_version()
+        )
+    )
 
 # Dynamically retrieve the version information from the chatterbot module
 CHATTERBOT = __import__('chatterbot')
