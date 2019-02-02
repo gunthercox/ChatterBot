@@ -88,6 +88,8 @@ class ChatBot(object):
         """
         additional_response_selection_parameters = kwargs.pop('additional_response_selection_parameters', {})
 
+        persist_values_to_response = kwargs.pop('persist_values_to_response', {})
+
         if isinstance(statement, str):
             kwargs['text'] = statement
 
@@ -117,6 +119,11 @@ class ChatBot(object):
 
         response = self.generate_response(input_statement, additional_response_selection_parameters)
 
+        # Update any response data that needs to be changed
+        if persist_values_to_response:
+            for response_value in persist_values_to_response:
+                setattr(response, response_value, persist_values_to_response[response_value])
+
         # Learn that the user's input was a valid response to the chat bot's previous output
         previous_statement = self.get_latest_response(input_statement.conversation)
 
@@ -124,12 +131,7 @@ class ChatBot(object):
             self.learn_response(input_statement, previous_statement)
 
             # Save the response generated for the input
-            self.storage.create(
-                text=response.text,
-                in_response_to=response.in_response_to,
-                conversation=response.conversation,
-                persona=response.persona
-            )
+            self.storage.create(**response.serialize())
 
         return response
 
