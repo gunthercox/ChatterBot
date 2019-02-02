@@ -53,6 +53,8 @@ class Statement(Base, StatementMixin):
     A Statement represents a sentence or phrase.
     """
 
+    confidence = 0
+
     text = Column(
         String(constants.STATEMENT_TEXT_MAX_LENGTH)
     )
@@ -102,3 +104,11 @@ class Statement(Base, StatementMixin):
         Return a list of tags for this statement.
         """
         return [tag.name for tag in self.tags]
+
+    def add_tags(self, *tags):
+        """
+        Add a list of strings to the statement as tags.
+        """
+        self.tags.extend([
+            Tag(name=tag) for tag in tags
+        ])
