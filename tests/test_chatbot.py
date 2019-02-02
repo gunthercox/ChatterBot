@@ -5,6 +5,23 @@ from chatterbot.conversation import Statement
 
 class ChatterBotResponseTestCase(ChatBotTestCase):
 
+    def test_conversation_values_persisted_to_response(self):
+        response = self.chatbot.get_response('Hello', persist_values_to_response={
+            'conversation': 'test 1'
+        })
+        self.assertEqual(response.conversation, 'test 1')
+
+    def test_tag_values_persisted_to_response(self):
+        response = self.chatbot.get_response('Hello', persist_values_to_response={
+            'tags': [
+                'tag 1',
+                'tag 2'
+            ]
+        })
+        self.assertEqual(len(response.tags), 2)
+        self.assertIn('tag 1', response.get_tags())
+        self.assertIn('tag 2', response.get_tags())
+
     def test_get_initialization_functions(self):
         """
         Test that the initialization functions are returned.
