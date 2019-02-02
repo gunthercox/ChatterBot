@@ -91,22 +91,25 @@ class ChatBot(object):
         if isinstance(statement, str):
             kwargs['text'] = statement
 
+        if isinstance(statement, dict):
+            kwargs.update(statement)
+
         if statement is None and 'text' not in kwargs:
             raise self.ChatBotException(
                 'Either a statement object or a "text" keyword '
                 'argument is required. Neither was provided.'
             )
 
-        if hasattr(statement, 'text'):
-            data = statement.serialize()
-            data.update(kwargs)
-            kwargs = data
+        if hasattr(statement, 'serialize'):
+            kwargs.update(**statement.serialize())
 
-        if isinstance(statement, dict):
-            statement.update(kwargs)
-            kwargs = statement
+        tags = kwargs.pop('tags', [])
 
-        input_statement = Statement(**kwargs)
+        text = kwargs.pop('text')
+
+        input_statement = Statement(text=text, **kwargs)
+
+        input_statement.add_tags(*tags)
 
         # Preprocess the input statement
         for preprocessor in self.preprocessors:
@@ -215,12 +218,14 @@ class ChatBot(object):
             previous_statement_text
         ))
 
+        statement_tags = statement.get_tags()
+
         # Save the input statement
         return self.storage.create(
             text=statement.text,
             in_response_to=previous_statement_text,
             conversation=statement.conversation,
-            tags=statement.tags
+            tags=statement_tags
         )
 
     def get_latest_response(self, conversation):

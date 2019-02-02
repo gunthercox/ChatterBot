@@ -178,16 +178,9 @@ class MongoDatabaseAdapter(StorageAdapter):
         create_statements = []
 
         for statement in statements:
-            statement_data = {
-                'text': statement.text,
-                'search_text': statement.search_text,
-                'conversation': statement.conversation,
-                'persona': statement.persona,
-                'in_response_to': statement.in_response_to,
-                'search_in_response_to': statement.search_in_response_to,
-                'created_at': statement.created_at,
-                'tags': list(set(statement.tags))
-            }
+            statement_data = statement.serialize()
+            tag_data = list(set(statement_data.pop('tags', [])))
+            statement_data['tags'] = tag_data
 
             if not statement.search_text:
                 statement_data['search_text'] = self.tagger.get_bigram_pair_string(statement.text)
