@@ -131,15 +131,10 @@ class DjangoStorageAdapter(StorageAdapter):
 
         for statement in statements:
 
-            statement_model_object = Statement(
-                text=statement.text,
-                search_text=statement.search_text,
-                conversation=statement.conversation,
-                persona=statement.persona,
-                in_response_to=statement.in_response_to,
-                search_in_response_to=statement.search_in_response_to,
-                created_at=statement.created_at
-            )
+            statement_data = statement.serialize()
+            tag_data = statement_data.pop('tags', [])
+
+            statement_model_object = Statement(**statement_data)
 
             if not statement.search_text:
                 statement_model_object.search_text = self.tagger.get_bigram_pair_string(statement.text)
@@ -151,7 +146,7 @@ class DjangoStorageAdapter(StorageAdapter):
 
             tags_to_add = []
 
-            for tag_name in statement.tags:
+            for tag_name in tag_data:
                 if tag_name in tag_cache:
                     tag = tag_cache[tag_name]
                 else:
