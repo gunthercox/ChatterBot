@@ -226,22 +226,17 @@ class ChatBot(object):
         previous_statement_text = previous_statement
 
         if not isinstance(previous_statement, (str, type(None), )):
-            previous_statement_text = previous_statement.text
+            statement.in_response_to = previous_statement.text
+        elif isinstance(previous_statement, str):
+            statement.in_response_to = previous_statement
 
         self.logger.info('Adding "{}" as a response to "{}"'.format(
             statement.text,
             previous_statement_text
         ))
 
-        statement_tags = statement.get_tags()
-
         # Save the input statement
-        return self.storage.create(
-            text=statement.text,
-            in_response_to=previous_statement_text,
-            conversation=statement.conversation,
-            tags=statement_tags
-        )
+        return self.storage.create(**statement.serialize())
 
     def get_latest_response(self, conversation):
         """
