@@ -1,5 +1,6 @@
 from tests.base_case import ChatBotTestCase
 from chatterbot.trainers import ListTrainer
+from chatterbot import preprocessors
 
 
 class ListTrainingTests(ChatBotTestCase):
@@ -10,6 +11,24 @@ class ListTrainingTests(ChatBotTestCase):
             self.chatbot,
             show_training_progress=False
         )
+
+    def test_training_cleans_whitespace(self):
+        """
+        Test that the ``clean_whitespace`` preprocessor is used during
+        the training process.
+        """
+        self.chatbot.preprocessors = [preprocessors.clean_whitespace]
+
+        self.trainer.train([
+            'Can I help you with anything?',
+            'No, I     think I am all set.',
+            'Okay, have a nice day.',
+            'Thank you, you too.'
+        ])
+
+        response = self.chatbot.get_response('Can I help you with anything?')
+
+        self.assertEqual(response.text, 'No, I think I am all set.')
 
     def test_training_adds_statements(self):
         """
