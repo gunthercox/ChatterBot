@@ -132,11 +132,8 @@ class ChatBot(object):
             for response_value in persist_values_to_response:
                 setattr(response, response_value, persist_values_to_response[response_value])
 
-        # Learn that the user's input was a valid response to the chat bot's previous output
-        previous_statement = self.get_latest_response(input_statement.conversation)
-
         if not self.read_only:
-            self.learn_response(input_statement, previous_statement)
+            self.learn_response(input_statement)
 
             # Save the response generated for the input
             self.storage.create(**response.serialize())
@@ -214,13 +211,21 @@ class ChatBot(object):
 
         return response
 
-    def learn_response(self, statement, previous_statement):
+    def learn_response(self, statement, previous_statement=None):
         """
         Learn that the statement provided is a valid response.
         """
+        if not previous_statement:
+            previous_statement = statement.in_response_to
+
+        if not previous_statement:
+            previous_statement = self.get_latest_response(statement.conversation)
+            if previous_statement:
+                previous_statement = previous_statement.text
+
         previous_statement_text = previous_statement
 
-        if previous_statement is not None:
+        if not isinstance(previous_statement, (str, type(None), )):
             previous_statement_text = previous_statement.text
 
         self.logger.info('Adding "{}" as a response to "{}"'.format(
