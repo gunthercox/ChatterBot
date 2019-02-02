@@ -85,6 +85,14 @@ class ChatBot(object):
         :param statement: An statement object or string.
         :returns: A response to the input.
         :rtype: Statement
+
+        :param additional_response_selection_parameters: Parameters to pass to the
+            chat bot's logic adapters to control response selection.
+        :type additional_response_selection_parameters: dict
+
+        :param persist_values_to_response: Values that should be saved to the response
+            that the chat bot generates.
+        :type persist_values_to_response: dict
         """
         additional_response_selection_parameters = kwargs.pop('additional_response_selection_parameters', {})
 
