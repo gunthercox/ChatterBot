@@ -22,6 +22,21 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIn('tag 1', response.get_tags())
         self.assertIn('tag 2', response.get_tags())
 
+    def test_in_response_to_provided(self):
+        """
+        Test that the process of looking up the previous response
+        in the conversation is ignored if a previous response is provided.
+        """
+        self.chatbot.get_response(
+            text='Hello',
+            in_response_to='Unique previous response.'
+        )
+        statement = self.chatbot.storage.filter(
+            text='Hello',
+            in_response_to='Unique previous response.'
+        )
+        self.assertIsNotNone(statement)
+
     def test_get_initialization_functions(self):
         """
         Test that the initialization functions are returned.
