@@ -2,7 +2,6 @@ import logging
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import IndexedTextSearch
-from chatterbot.conversation import Statement
 from chatterbot import utils
 
 
@@ -94,6 +93,8 @@ class ChatBot(object):
             that the chat bot generates.
         :type persist_values_to_response: dict
         """
+        Statement = self.storage.get_object('statement')
+
         additional_response_selection_parameters = kwargs.pop('additional_response_selection_parameters', {})
 
         persist_values_to_response = kwargs.pop('persist_values_to_response', {})
@@ -129,8 +130,14 @@ class ChatBot(object):
 
         # Update any response data that needs to be changed
         if persist_values_to_response:
-            for response_value in persist_values_to_response:
-                setattr(response, response_value, persist_values_to_response[response_value])
+            for response_key in persist_values_to_response:
+                response_value = persist_values_to_response[response_key]
+                if response_key == 'tags':
+                    input_statement.add_tags(*response_value)
+                    response.add_tags(*response_value)
+                else:
+                    setattr(input_statement, response_key, response_value)
+                    setattr(response, response_key, response_value)
 
         if not self.read_only:
             self.learn_response(input_statement)
@@ -146,6 +153,8 @@ class ChatBot(object):
 
         :param input_statement: The input statement to be processed.
         """
+        Statement = self.storage.get_object('statement')
+
         results = []
         result = None
         max_confidence = -1
