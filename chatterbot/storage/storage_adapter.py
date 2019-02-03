@@ -31,6 +31,29 @@ class StorageAdapter(object):
 
         return get_model_method()
 
+    def get_object(self, object_name):
+        """
+        Return the class for a given object name.
+
+        object_name is case insensitive.
+        """
+        get_model_method = getattr(self, 'get_%s_object' % (
+            object_name.lower(),
+        ))
+
+        return get_model_method()
+
+    def get_statement_object(self):
+        from chatterbot.conversation import Statement
+
+        StatementModel = self.get_model('statement')
+
+        Statement.statement_field_names.extend(
+            StatementModel.extra_statement_field_names
+        )
+
+        return Statement
+
     def count(self):
         """
         Return the number of entries in the database.
