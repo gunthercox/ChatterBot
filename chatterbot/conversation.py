@@ -9,21 +9,25 @@ class StatementMixin(object):
     normalize different statement models.
     """
 
+    statement_field_names = [
+        'id',
+        'text',
+        'search_text',
+        'conversation',
+        'persona',
+        'tags',
+        'in_response_to',
+        'search_in_response_to',
+        'created_at',
+    ]
+
+    extra_statement_field_names = []
+
     def get_statement_field_names(self):
         """
         Return the list of field names for the statement.
         """
-        return [
-            'id',
-            'text',
-            'search_text',
-            'conversation',
-            'persona',
-            'tags',
-            'in_response_to',
-            'search_in_response_to',
-            'created_at',
-        ]
+        return self.statement_field_names + self.extra_statement_field_names
 
     def get_tags(self):
         """
