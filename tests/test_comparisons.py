@@ -1,7 +1,9 @@
 """
 Test ChatterBot's statement comparison algorithms.
 """
-
+import os
+import sys
+sys.path.append('/home/sandisk/Work/ChatterBot')
 from unittest import TestCase
 from chatterbot.conversation import Statement
 from chatterbot import comparisons
@@ -115,4 +117,44 @@ class JaccardSimilarityTestCase(TestCase):
 
         value = comparisons.jaccard_similarity(statement, other_statement)
 
+        self.assertEqual(value, 1)
+
+
+class EmbeddedWordVecComparisonTestCase(TestCase):
+
+    def setUp(self):
+        super().setUp()
+
+
+    def test_wordvec_distance_statement_false(self):
+        """
+        Falsy values should match by zero.
+        """
+        statement = Statement(text='')
+        other_statement = Statement(text='Hello')
+
+        value = comparisons.embedded_wordvector(statement, other_statement)
+
+        self.assertEqual(value, 0)
+
+    def test_wordvec_distance_other_statement_false(self):
+        """
+        Falsy values should match by zero.
+        """
+        statement = Statement(text='Hello')
+        other_statement = Statement(text='')
+
+        value = comparisons.embedded_wordvector(statement, other_statement)
+
+        self.assertEqual(value, 0)
+
+    def test_exact_match_different_capitalization(self):
+        """
+        Test that text capitalization is ignored.
+        """
+        statement = Statement(text='Hi HoW ArE yOu?')
+        other_statement = Statement(text='hI hOw are YoU?')
+
+        value = comparisons.embedded_wordvector(statement, other_statement)
+        print('3', value)
         self.assertEqual(value, 1)
