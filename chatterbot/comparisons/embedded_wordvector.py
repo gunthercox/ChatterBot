@@ -118,7 +118,7 @@ class EmbeddedWordVector(Comparator):
 
 
 
-    def compare(self, statement, other_statement):
+    def compare(self, statement, bot_statements_list):
         """
         Return the similarity of two statements based on
         their calculated sentiment values.
@@ -126,25 +126,32 @@ class EmbeddedWordVector(Comparator):
         :return: The percent of similarity between the sentiment value.
         :rtype: float
         """
-        # Make both strings lowercase
-        a = statement.text.lower()
-        b = other_statement.text.lower()
+        m_confidence = 0.0
+        m_statement = None
+        for other_statement in bot_statements_list:
+            # Make both strings lowercase
+            a = statement.text.lower()
+            b = other_statement.text.lower()
 
-        # Remove punctuation from each string
-        a = a.translate(self.punctuation_table)
-        b = b.translate(self.punctuation_table)
+            # Remove punctuation from each string
+            a = a.translate(self.punctuation_table)
+            b = b.translate(self.punctuation_table)
 
-        if not a or not b:
-            return 0.0
+            if not a or not b:
+                continue
 
-        st_hash = hashlib.md5(a.encode('utf-8')).hexdigest()
-        v1 = self.short_term_cache.get(st_hash, self.sentences_to_vectors(a))
-        self.short_term_cache[st_hash] = v1
+            st_hash = hashlib.md5(a.encode('utf-8')).hexdigest()
+            v1 = self.short_term_cache.get(st_hash, self.sentences_to_vectors(a))
+            self.short_term_cache[st_hash] = v1
 
-        lt_hash = hashlib.md5(b.encode('utf-8')).hexdigest()
-        v2 = self.long_term_cache.get(lt_hash, self.sentences_to_vectors(b))
-        self.long_term_cache[lt_hash] = v2
+            lt_hash = hashlib.md5(b.encode('utf-8')).hexdigest()
+            v2 = self.long_term_cache.get(lt_hash, self.sentences_to_vectors(b))
+            self.long_term_cache[lt_hash] = v2
 
-        difference = self.l2_dist(v1[a], v2[b])
+            difference = 1.0 - self.l2_dist(v1[a], v2[b])
+            if difference > m_confidence:
+                m_confidence = difference
+                m_statement = other_statement
+                m_statement.m_confidence = m_confidence
 
-        return 1.0 - difference
+        return m_statement

@@ -15,13 +15,13 @@ class IndexedTextSearch:
     name = 'indexed_text_search'
 
     def __init__(self, chatbot, **kwargs):
-        from chatterbot.comparisons import levenshtein_distance
+        from chatterbot.comparisons import embedded_wordvector
 
         self.chatbot = chatbot
 
         self.compare_statements = kwargs.get(
             'statement_comparison_function',
-            levenshtein_distance
+            embedded_wordvector
         )
 
         self.search_page_size = kwargs.get(
@@ -71,15 +71,5 @@ class IndexedTextSearch:
         self.chatbot.logger.info('Processing search results')
 
         # Find the closest matching known statement
-        for statement in statement_list:
-            confidence = self.compare_statements(input_statement, statement)
-
-            if confidence > closest_match.confidence:
-                statement.confidence = confidence
-                closest_match = statement
-
-                self.chatbot.logger.info('Similar text found: {} {}'.format(
-                    closest_match.text, confidence
-                ))
-
-                yield closest_match
+        statement = self.compare_statements(input_statement, statement_list)
+        yield statement
