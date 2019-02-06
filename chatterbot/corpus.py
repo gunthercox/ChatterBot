@@ -40,8 +40,7 @@ def read_corpus(file_name):
 
 def list_corpus_files(dotted_path):
     """
-    Return a list of file paths to each data file in
-    the specified corpus.
+    Return a list of file paths to each data file in the specified corpus.
     """
     corpus_path = get_file_path(dotted_path, extension=CORPUS_EXTENSION)
     paths = []
