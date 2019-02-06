@@ -213,8 +213,7 @@ def read_file(files, queue, preprocessors, tagger):
 
 class UbuntuCorpusTrainer(Trainer):
     """
-    Allow chatbots to be trained with the data from
-    the Ubuntu Dialog Corpus.
+    Allow chatbots to be trained with the data from the Ubuntu Dialog Corpus.
     """
 
     def __init__(self, chatbot, **kwargs):
