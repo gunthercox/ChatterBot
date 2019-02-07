@@ -1,7 +1,7 @@
 class Comparator:
 
-    def __call__(self, statement_a, statement_b):
-        return self.compare(statement_a, statement_b)
+    def __call__(self, statement_a, statements):
+        return self.compare(statement_a, statements)
 
-    def compare(self, statement_a, statement_b):
+    def compare(self, statement_a, statements):
         return 0

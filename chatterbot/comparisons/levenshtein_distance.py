@@ -17,29 +17,36 @@ class LevenshteinDistance(Comparator):
     based on the Levenshtein distance algorithm.
     """
 
-    def compare(self, statement, other_statement):
+    def compare(self, statement, bot_statement_list):
         """
         Compare the two input statements.
 
         :return: The percent of similarity between the text of the statements.
         :rtype: float
         """
-
         # Return 0 if either statement has a falsy text value
-        if not statement.text or not other_statement.text:
+        if not statement.text or not bot_statement_list:
             return 0
 
         # Get the lowercase version of both strings
         statement_text = str(statement.text.lower())
-        other_statement_text = str(other_statement.text.lower())
+        m_confidence = 0.0
+        m_statement = ''
+        for other_statement in bot_statement_list:
+            print(other_statement.text)
+            other_statement_text = str(other_statement.text.lower())
 
-        similarity = SequenceMatcher(
-            None,
-            statement_text,
-            other_statement_text
-        )
+            similarity = SequenceMatcher(
+                None,
+                statement_text,
+                other_statement_text
+            )
 
-        # Calculate a decimal percent of the similarity
-        percent = round(similarity.ratio(), 2)
+            # Calculate a decimal percent of the similarity
+            percent = round(similarity.ratio(), 2)
+            if percent > m_confidence:
+                m_confidence = percent
+                m_statement = other_statement
 
-        return percent
+        m_statement.confidence = m_confidence
+        return m_statement

@@ -4,7 +4,7 @@ This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
 
-from .levelshtein_distance import LevenshteinDistance
+from .levenshtein_distance import LevenshteinDistance
 from .synset_distance import SynsetDistance
 from .sentiment_comparison import SentimentComparison
 from .jaccard_similarity import JaccardSimilarity
@@ -16,8 +16,9 @@ sentiment_comparison = SentimentComparison()
 jaccard_similarity = JaccardSimilarity()
 embedded_wordvector = EmbeddedWordVector()
 
+
 __all__ = (
-    'levelshtein_distance',
+    'levenshtein_distance',
     'synset_distance',
     'sentiment_comparison',
     'jaccard_similarity',

@@ -1,14 +1,20 @@
 from .comparator import Comparator
-from collections import OrderedDict
-from chatterbot import languages
-from nltk.corpus import stopwords
-import numpy as np
-from sklearn.decomposition import PCA
-import spacy
-import math
-import string
 import hashlib
 import logging
+import math
+import os
+import pickle
+import string
+from collections import defaultdict
+
+import numpy as np
+import spacy
+from nltk.corpus import stopwords
+from sklearn import cluster, metrics
+from sklearn.decomposition import PCA
+
+from chatterbot import languages
+from chatterbot.conversation import Statement
 
 # FIXME: spurious runtime divide errors from numpy.
 np.seterr(divide='ignore', invalid='ignore')
@@ -17,17 +23,8 @@ nlp = spacy.load('en_core_web_lg')
 
 logger = logging.getLogger(__name__)
 
+NUM_CLUSTERS=10
 
-class CacheDict(OrderedDict):
-    def __init__(self, *args, max=0, **kwargs):
-        self._max = max
-        super().__init__(*args, **kwargs)
-
-    def __setitem__(self, key, value):
-        OrderedDict.__setitem__(self, key, value)
-        if self._max > 0:
-            if len(self) > self._max:
-                self.popitem(False)
 
 class EmbeddedWordVector(Comparator):
     """
@@ -44,8 +41,15 @@ class EmbeddedWordVector(Comparator):
 
         self.stopwords = stopwords.words(self.language.ENGLISH_NAME.lower())
 
-        self.short_term_cache = CacheDict(max=1000)
-        self.long_term_cache = CacheDict(max=10000)
+        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
+
+        self.model = None
+        self.clusters = None
+        self.lines = []
+
+        if os.path.exists('cluster.pickle'):
+            with open('cluster.pickle', 'rb') as rb:
+                self.model = pickle.load(rb)
 
     def get_word_frequency(self, word_text):
         return 0.0001 # TODO user Counter on chatbot statements for better match
@@ -86,18 +90,18 @@ class EmbeddedWordVector(Comparator):
         # convert the above sentences to vectors using spacy's large model vectors
         word_list = {}
         for word in sentence.strip().split(' '):
-            if word not in self.stopwords:
-                token = nlp.vocab[word]
-                if token.has_vector:  # ignore OOVs
-                    word_list[word] = token.vector
-                else:
-                    logger.debug(f'Ignoring {word} coz no vector found.')
+            # if word not in self.stopwords:
+            token = nlp.vocab[word]
+            if token.has_vector:  # ignore OOVs
+                word_list[word] = token.vector
+            else:
+                logger.debug(f'Ignoring {word} coz no vector found.')
 
-        sentence_vector_lookup = {}
+        sentence_vector_lookup = None
         if len(word_list) > 0:  # did we find any words (not an empty set)
             sentence_vectors = self.word_to_vec(word_list, embedding_size)  # all vectors converted together
             for i in range(len(sentence_vectors)):
-                sentence_vector_lookup[sentence] = sentence_vectors[i]
+                sentence_vector_lookup = sentence_vectors[i]
 
         return sentence_vector_lookup
 
@@ -110,48 +114,76 @@ class EmbeddedWordVector(Comparator):
                 delta = v1[i] - v2[i]
                 sum += delta * delta
         diff = math.sqrt(sum)
-        if diff < 3.0:
-            diff = diff/3.0
-        else:
-            diff = 1.0
         return diff
 
+
+    def cluster_indices_group(self, clustNum, labels_array):
+        return np.where(labels_array == clustNum)[0]
+
+
+    def model_create_or_load(self):
+        if not os.path.exists("cluster.pickle"):
+            vectors = []
+            for l in self.lines:
+                l = l.text.translate(self.punctuation_table)
+                v = self.sentences_to_vectors(l)
+                if v is not None and v is not [None]:
+                    vectors.append(v)
+                else:
+                    print('FATAL: Ignoring sentence will cause kmeans skewed index', l)
+
+            vectors = np.asarray(vectors)
+            self.model = cluster.KMeans(n_clusters=NUM_CLUSTERS)
+            self.model.fit(vectors)
+            with open("cluster.pickle","wb") as rb:
+                pickle.dump(self.model, rb)
+
+        return True
+
+
+    def clusters_create_or_load(self):
+        self.clusters = defaultdict(set)
+        for i in range(1, NUM_CLUSTERS + 1):
+            for c in self.cluster_indices_group(i, self.model.labels_):
+                self.clusters[i].add(self.lines[c])
+        return True
 
 
     def compare(self, statement, bot_statements_list):
         """
-        Return the similarity of two statements based on
-        their calculated sentiment values.
+        Return the similarity of two statements embedded vector distance.
 
-        :return: The percent of similarity between the sentiment value.
+        :return: vector distance
         :rtype: float
         """
-        m_confidence = 0.0
-        m_statement = None
-        for other_statement in bot_statements_list:
-            # Make both strings lowercase
-            a = statement.text.lower()
-            b = other_statement.text.lower()
+        self.lines = list(bot_statements_list)
 
-            # Remove punctuation from each string
-            a = a.translate(self.punctuation_table)
-            b = b.translate(self.punctuation_table)
+        if not self.model:
+            self.model_create_or_load()
 
-            if not a or not b:
-                continue
+        if not self.clusters:
+            self.clusters_create_or_load()
 
-            st_hash = hashlib.md5(a.encode('utf-8')).hexdigest()
-            v1 = self.short_term_cache.get(st_hash, self.sentences_to_vectors(a))
-            self.short_term_cache[st_hash] = v1
+        text = statement.text
+        v1 = self.sentences_to_vectors(text.translate(self.punctuation_table))
+        v = v1.reshape(1, -1)
+        index = self.model.predict(v)[0]
 
-            lt_hash = hashlib.md5(b.encode('utf-8')).hexdigest()
-            v2 = self.long_term_cache.get(lt_hash, self.sentences_to_vectors(b))
-            self.long_term_cache[lt_hash] = v2
+        min_match = 0.0
+        m_confidence = 100.0
+        m_statement = Statement('')
 
-            difference = 1.0 - self.l2_dist(v1[a], v2[b])
-            if difference > m_confidence:
-                m_confidence = difference
-                m_statement = other_statement
-                m_statement.m_confidence = m_confidence
+        for vals in self.clusters[index]:
+            v2 = self.sentences_to_vectors(vals.text.translate(self.punctuation_table))
+            dist = self.l2_dist(v1, v2)
+            min_match = max(min_match, dist)
+            if dist < m_confidence:
+                m_confidence = dist
+                m_statement = vals
 
+        if min_match != 0.0:
+            m_statement.confidence = 1.0 - m_confidence / min_match
+        else:
+            m_statement.confidence = 1.0
         return m_statement
+
