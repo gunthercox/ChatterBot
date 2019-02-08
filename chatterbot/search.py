@@ -1,6 +1,3 @@
-from chatterbot.conversation import Statement
-
-
 class IndexedTextSearch:
     """
     :param statement_comparison_function: The dot-notated import path
@@ -15,17 +12,17 @@ class IndexedTextSearch:
     name = 'indexed_text_search'
 
     def __init__(self, chatbot, **kwargs):
-        from chatterbot.comparisons import levenshtein_distance
+        from chatterbot.comparisons import embedded_wordvector, levenshtein_distance
 
         self.chatbot = chatbot
 
         self.compare_statements = kwargs.get(
             'statement_comparison_function',
-            levenshtein_distance
+            embedded_wordvector
         )
 
         self.search_page_size = kwargs.get(
-            'search_page_size', 1000
+            'search_page_size', 10000
         )
 
     def search(self, input_statement, **additional_parameters):
@@ -45,17 +42,12 @@ class IndexedTextSearch:
 
         input_search_text = input_statement.search_text
 
-        if not input_statement.search_text:
-            self.chatbot.logger.warn(
+        if not input_search_text:
+            self.chatbot.logger.debug(
                 'No value for search_text was available on the provided input'
             )
 
-            input_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(
-                input_statement.text
-            )
-
         search_parameters = {
-            'search_text_contains': input_search_text,
             'persona_not_startswith': 'bot:',
             'page_size': self.search_page_size
         }
@@ -65,21 +57,7 @@ class IndexedTextSearch:
 
         statement_list = self.chatbot.storage.filter(**search_parameters)
 
-        closest_match = Statement(text='')
-        closest_match.confidence = 0
-
         self.chatbot.logger.info('Processing search results')
-
         # Find the closest matching known statement
-        for statement in statement_list:
-            confidence = self.compare_statements(input_statement, statement)
-
-            if confidence > closest_match.confidence:
-                statement.confidence = confidence
-                closest_match = statement
-
-                self.chatbot.logger.info('Similar text found: {} {}'.format(
-                    closest_match.text, confidence
-                ))
-
-                yield closest_match
+        statement = self.compare_statements(input_statement, statement_list)
+        yield statement
