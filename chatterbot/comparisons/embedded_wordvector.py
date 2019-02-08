@@ -90,18 +90,21 @@ class EmbeddedWordVector(Comparator):
         # convert the above sentences to vectors using spacy's large model vectors
         word_list = {}
         for word in sentence.strip().split(' '):
-            # if word not in self.stopwords:
-            token = nlp.vocab[word]
-            if token.has_vector:  # ignore OOVs
-                word_list[word] = token.vector
-            else:
-                logger.debug(f'Ignoring {word} coz no vector found.')
+            if word not in self.stopwords:
+                token = nlp.vocab[word]
+                if token.has_vector:  # ignore OOVs
+                    word_list[word] = token.vector
+                else:
+                    logger.debug(f'Ignoring {word} coz no vector found.')
+
+        # if a sentence contains all stop words, we tag it a filler
+        if len(word_list) == 0:
+            word_list['filler'] = nlp('filler').vector
 
         sentence_vector_lookup = None
-        if len(word_list) > 0:  # did we find any words (not an empty set)
-            sentence_vectors = self.word_to_vec(word_list, embedding_size)  # all vectors converted together
-            for i in range(len(sentence_vectors)):
-                sentence_vector_lookup = sentence_vectors[i]
+        sentence_vectors = self.word_to_vec(word_list, embedding_size)  # all vectors converted together
+        for i in range(len(sentence_vectors)):
+            sentence_vector_lookup = sentence_vectors[i]
 
         return sentence_vector_lookup
 
@@ -181,9 +184,9 @@ class EmbeddedWordVector(Comparator):
                 m_confidence = dist
                 m_statement = vals
 
+        m_statement.confidence = 0.0
         if min_match != 0.0:
             m_statement.confidence = 1.0 - m_confidence / min_match
-        else:
-            m_statement.confidence = 1.0
+
         return m_statement
 

@@ -1,4 +1,5 @@
 from .comparator import Comparator
+from chatterbot.conversation import Statement
 
 # Use python-Levenshtein if available
 try:
@@ -31,9 +32,8 @@ class LevenshteinDistance(Comparator):
         # Get the lowercase version of both strings
         statement_text = str(statement.text.lower())
         m_confidence = 0.0
-        m_statement = ''
+        m_statement = Statement('')
         for other_statement in bot_statement_list:
-            print(other_statement.text)
             other_statement_text = str(other_statement.text.lower())
 
             similarity = SequenceMatcher(
