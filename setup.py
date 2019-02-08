@@ -40,7 +40,8 @@ setup(
         'chatterbot.ext.sqlalchemy_app',
         'chatterbot.ext.django_chatterbot',
         'chatterbot.ext.django_chatterbot.migrations',
-        'chatterbot.comparisons'
+        'chatterbot.comparisons',
+        'chatterbot.search'
     ],
     package_dir={'chatterbot': 'chatterbot'},
     include_package_data=True,

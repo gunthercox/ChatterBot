@@ -1,8 +1,8 @@
 import logging
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
-from chatterbot.search import IndexedTextSearch
 from chatterbot.conversation import Statement
+from chatterbot.search import IndexedTextSearch
 from chatterbot import utils
 
 
@@ -14,7 +14,9 @@ class ChatBot(object):
     def __init__(self, name, **kwargs):
         self.name = name
 
-        primary_search_algorithm = IndexedTextSearch(self, **kwargs)
+        search_algo = kwargs.get('primary_search_algorithm', 'chatterbot.search.IndexedTextSearch')
+
+        primary_search_algorithm = utils.initialize_class(search_algo, chatbot=self, **kwargs)
 
         self.search_algorithms = {
             primary_search_algorithm.name: primary_search_algorithm
@@ -36,7 +38,7 @@ class ChatBot(object):
 
         for adapter in logic_adapters:
             utils.validate_adapter_class(adapter, LogicAdapter)
-            logic_adapter = utils.initialize_class(adapter, self, **kwargs)
+            logic_adapter = utils.initialize_class(adapter, self, search_algorithm_name=primary_search_algorithm.name, **kwargs)
             self.logic_adapters.append(logic_adapter)
 
         preprocessors = kwargs.get(

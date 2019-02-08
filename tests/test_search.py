@@ -29,7 +29,9 @@ class SearchTestCase(ChatBotTestCase):
 
         results = list(self.search_algorithm.search(statement))
 
-        self.assertEqual(results, [])
+        statement = results[0].text
+
+        self.assertEqual(statement, '')
 
     def test_search_additional_parameters(self):
         """
@@ -215,4 +217,5 @@ class SearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTestCase
         statement = Statement(text='yyy')
         results = list(self.search_algorithm.search(statement))
 
-        self.assertIsLength(results, 0)
+        self.assertIsLength(results, 1)
+        self.assertAlmostEqual( results[0].confidence, 0.0 )

@@ -17,7 +17,7 @@ class LevenshteinDistanceTestCase(TestCase):
         Falsy values should match by zero.
         """
         statement = Statement(text='')
-        other_statement = Statement(text='Hello')
+        other_statement = [Statement(text='Hello')]
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -28,7 +28,7 @@ class LevenshteinDistanceTestCase(TestCase):
         Falsy values should match by zero.
         """
         statement = Statement(text='Hello')
-        other_statement = Statement(text='')
+        other_statement = [Statement(text='')]
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -40,7 +40,7 @@ class LevenshteinDistanceTestCase(TestCase):
         with an integer value as its text attribute.
         """
         statement = Statement(text=2)
-        other_statement = Statement(text='Hello')
+        other_statement = [Statement(text='Hello')]
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -51,7 +51,7 @@ class LevenshteinDistanceTestCase(TestCase):
         Test that text capitalization is ignored.
         """
         statement = Statement(text='Hi HoW ArE yOu?')
-        other_statement = Statement(text='hI hOw are YoU?')
+        other_statement = [Statement(text='hI hOw are YoU?')]
 
         value = comparisons.levenshtein_distance(statement, other_statement)
 
@@ -65,7 +65,7 @@ class SynsetDistanceTestCase(TestCase):
         Test that stopwords are ignored.
         """
         statement = Statement(text='What is matter?')
-        other_statement = Statement(text='What is the matter?')
+        other_statement = [Statement(text='What is the matter?')]
 
         value = comparisons.synset_distance(statement, other_statement)
 
@@ -76,7 +76,7 @@ class SynsetDistanceTestCase(TestCase):
         Test that text capitalization is ignored.
         """
         statement = Statement(text='Hi HoW ArE yOu?')
-        other_statement = Statement(text='hI hOw are YoU?')
+        other_statement = [Statement(text='hI hOw are YoU?')]
 
         value = comparisons.synset_distance(statement, other_statement)
 
@@ -131,7 +131,7 @@ class EmbeddedWordVecComparisonTestCase(TestCase):
         Falsy values should match by zero.
         """
         statement = Statement(text='')
-        other_statement = Statement(text='Hello')
+        other_statement = [Statement(text='Hello')]
 
         value = comparisons.embedded_wordvector(statement, other_statement)
 
@@ -142,7 +142,7 @@ class EmbeddedWordVecComparisonTestCase(TestCase):
         Falsy values should match by zero.
         """
         statement = Statement(text='Hello')
-        other_statement = Statement(text='')
+        other_statement = [Statement(text='')]
 
         value = comparisons.embedded_wordvector(statement, other_statement)
 
@@ -153,7 +153,7 @@ class EmbeddedWordVecComparisonTestCase(TestCase):
         Test that text capitalization is ignored.
         """
         statement = Statement(text='Hi HoW ArE yOu?')
-        other_statement = Statement(text='hI hOw are YoU?')
+        other_statement = [Statement(text='hI hOw are YoU?')]
 
         value = comparisons.embedded_wordvector(statement, other_statement)
         print('3', value)
