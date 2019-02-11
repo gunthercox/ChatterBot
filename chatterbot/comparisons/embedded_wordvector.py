@@ -1,5 +1,4 @@
 from .comparator import Comparator
-import hashlib
 import logging
 import math
 import os
@@ -9,6 +8,8 @@ from collections import defaultdict
 
 import numpy as np
 import spacy
+from spacy.vectors import Vectors
+from spacy.strings import hash_string
 from nltk.corpus import stopwords
 from sklearn import cluster, metrics
 from sklearn.decomposition import PCA
@@ -46,10 +47,15 @@ class EmbeddedWordVector(Comparator):
         self.model = None
         self.clusters = None
         self.lines = []
+        self.vocab = Vectors(shape=(20000, 300)) # 20000 sentences with 300 as dimension
 
-        if os.path.exists('cluster.pickle'):
-            with open('cluster.pickle', 'rb') as rb:
+        if os.path.exists('models/cluster.pickle'):
+            with open('models/cluster.pickle', 'rb') as rb:
                 self.model = pickle.load(rb)
+            self.vocab.from_disk('models/sentences.vocab')
+
+        elif not os.path.exists('models'):
+            os.makedirs('./models')
 
     def get_word_frequency(self, word_text):
         return 0.0001 # TODO user Counter on chatbot statements for better match
@@ -91,7 +97,7 @@ class EmbeddedWordVector(Comparator):
         word_list = {}
         for word in sentence.strip().split(' '):
             if word not in self.stopwords:
-                token = nlp.vocab[word]
+                token = nlp.vocab[word.lower()]
                 if token.has_vector:  # ignore OOVs
                     word_list[word] = token.vector
                 else:
@@ -125,20 +131,23 @@ class EmbeddedWordVector(Comparator):
 
 
     def model_create_or_load(self):
-        if not os.path.exists("cluster.pickle"):
+        if not os.path.exists("models/cluster.pickle"):
             vectors = []
             for l in self.lines:
                 l = l.text.translate(self.punctuation_table)
                 v = self.sentences_to_vectors(l)
                 if v is not None and v is not [None]:
                     vectors.append(v)
+                    self.vocab.add(l, vector=v)
                 else:
-                    print('FATAL: Ignoring sentence will cause kmeans skewed index', l)
+                    logger.warning('FATAL: Ignoring sentence will cause kmeans skewed index ' + l)
+
+            self.vocab.to_disk('models/sentences.vocab')
 
             vectors = np.asarray(vectors)
             self.model = cluster.KMeans(n_clusters=NUM_CLUSTERS)
             self.model.fit(vectors)
-            with open("cluster.pickle","wb") as rb:
+            with open("models/cluster.pickle","wb") as rb:
                 pickle.dump(self.model, rb)
 
         return True
@@ -149,6 +158,8 @@ class EmbeddedWordVector(Comparator):
         for i in range(1, NUM_CLUSTERS + 1):
             for c in self.cluster_indices_group(i, self.model.labels_):
                 self.clusters[i].add(self.lines[c])
+            sz = len(self.clusters[i])
+            logger.debug(f"bucket {i} has {sz} elements")
         return True
 
 
@@ -159,34 +170,46 @@ class EmbeddedWordVector(Comparator):
         :return: vector distance
         :rtype: float
         """
-        self.lines = list(bot_statements_list)
+        logger.debug("Word2vec entering")
+        if len(self.lines) == 0:
+            #FIXME: This can be optimized
+            self.lines = list(bot_statements_list)
+            logger.debug("loaded lines")
 
         if not self.model:
             self.model_create_or_load()
+            logger.debug("created model")
 
         if not self.clusters:
             self.clusters_create_or_load()
+            logger.debug("created clusters")
 
-        text = statement.text
-        v1 = self.sentences_to_vectors(text.translate(self.punctuation_table))
+        text = statement.text.translate(self.punctuation_table)
+        logger.debug(f"word2vec looking up {text}")
+        v1 = self.sentences_to_vectors(text)
         v = v1.reshape(1, -1)
         index = self.model.predict(v)[0]
+        logger.critical(f"predicted {index} for input")
 
         min_match = 0.0
         m_confidence = 100.0
         m_statement = Statement('')
-
+        ii = 0
         for vals in self.clusters[index]:
-            v2 = self.sentences_to_vectors(vals.text.translate(self.punctuation_table))
+            ii += 1
+            plain_text = vals.text.translate(self.punctuation_table)
+            num_id = hash_string(plain_text)
+            v2 = self.vocab[num_id]
             dist = self.l2_dist(v1, v2)
             min_match = max(min_match, dist)
             if dist < m_confidence:
                 m_confidence = dist
                 m_statement = vals
-
+        logger.debug(f"compared {ii} values")
         m_statement.confidence = 0.0
         if min_match != 0.0:
             m_statement.confidence = 1.0 - m_confidence / min_match
 
+        logger.debug(f"Closest match found {m_statement.text}")
         return m_statement
 

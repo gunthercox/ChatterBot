@@ -24,7 +24,7 @@ class ClusteredTextSearch:
         )
 
         self.search_page_size = kwargs.get(
-            'search_page_size', 10000
+            'search_page_size', 20000
         )
 
     def search(self, input_statement, **additional_parameters):
