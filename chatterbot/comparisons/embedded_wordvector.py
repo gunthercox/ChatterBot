@@ -1,21 +1,23 @@
-from .comparator import Comparator
 import logging
 import math
 import os
 import pickle
 import string
 from collections import defaultdict
+from random import randint
 
 import numpy as np
 import spacy
-from spacy.vectors import Vectors
-from spacy.strings import hash_string
 from nltk.corpus import stopwords
 from sklearn import cluster, metrics
 from sklearn.decomposition import PCA
+from spacy.strings import hash_string
+from spacy.vectors import Vectors
 
 from chatterbot import languages
 from chatterbot.conversation import Statement
+
+from .comparator import Comparator
 
 # FIXME: spurious runtime divide errors from numpy.
 np.seterr(divide='ignore', invalid='ignore')
@@ -49,13 +51,6 @@ class EmbeddedWordVector(Comparator):
         self.lines = []
         self.vocab = Vectors(shape=(20000, 300)) # 20000 sentences with 300 as dimension
 
-        if os.path.exists('models/cluster.pickle'):
-            with open('models/cluster.pickle', 'rb') as rb:
-                self.model = pickle.load(rb)
-            self.vocab.from_disk('models/sentences.vocab')
-
-        elif not os.path.exists('models'):
-            os.makedirs('./models')
 
     def get_word_frequency(self, word_text):
         return 0.0001 # TODO user Counter on chatbot statements for better match
@@ -130,11 +125,17 @@ class EmbeddedWordVector(Comparator):
         return np.where(labels_array == clustNum)[0]
 
 
-    def model_create_or_load(self):
+    def model_create_or_load(self, bot_statements_list):
+        if not os.path.exists('models'):
+            os.makedirs('./models')
+
         if not os.path.exists("models/cluster.pickle"):
             vectors = []
+            self.lines = list(bot_statements_list)
+            logger.debug("loaded lines")
+
             for l in self.lines:
-                l = l.text.translate(self.punctuation_table)
+                l = l.text.translate(self.punctuation_table).lower()
                 v = self.sentences_to_vectors(l)
                 if v is not None and v is not [None]:
                     vectors.append(v)
@@ -149,6 +150,15 @@ class EmbeddedWordVector(Comparator):
             self.model.fit(vectors)
             with open("models/cluster.pickle","wb") as rb:
                 pickle.dump(self.model, rb)
+            with open('models/sentences.txt', 'w') as rb:
+                rb.writelines(map(lambda s: s.text + '\n', self.lines))
+
+        elif os.path.exists('models/cluster.pickle'):
+            with open('models/cluster.pickle', 'rb') as rb:
+                self.model = pickle.load(rb)
+            self.vocab.from_disk('models/sentences.vocab')
+            with open('models/sentences.txt', 'r') as rb:
+                self.lines = [ Statement(l.strip()) for l in rb.readlines()]
 
         return True
 
@@ -171,13 +181,8 @@ class EmbeddedWordVector(Comparator):
         :rtype: float
         """
         logger.debug("Word2vec entering")
-        if len(self.lines) == 0:
-            #FIXME: This can be optimized
-            self.lines = list(bot_statements_list)
-            logger.debug("loaded lines")
-
         if not self.model:
-            self.model_create_or_load()
+            self.model_create_or_load(bot_statements_list)
             logger.debug("created model")
 
         if not self.clusters:
@@ -189,7 +194,9 @@ class EmbeddedWordVector(Comparator):
         v1 = self.sentences_to_vectors(text)
         v = v1.reshape(1, -1)
         index = self.model.predict(v)[0]
-        logger.critical(f"predicted {index} for input")
+        if index == 0: #prediction failed
+            index = randint(1, NUM_CLUSTERS)
+        logger.debug(f"predicted {index} for input")
 
         min_match = 0.0
         m_confidence = 100.0
@@ -197,7 +204,7 @@ class EmbeddedWordVector(Comparator):
         ii = 0
         for vals in self.clusters[index]:
             ii += 1
-            plain_text = vals.text.translate(self.punctuation_table)
+            plain_text = vals.text.translate(self.punctuation_table).lower()
             num_id = hash_string(plain_text)
             v2 = self.vocab[num_id]
             dist = self.l2_dist(v1, v2)
@@ -212,4 +219,3 @@ class EmbeddedWordVector(Comparator):
 
         logger.debug(f"Closest match found {m_statement.text}")
         return m_statement
-
