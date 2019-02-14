@@ -26,7 +26,7 @@ nlp = spacy.load('en_core_web_lg')
 
 logger = logging.getLogger(__name__)
 
-NUM_CLUSTERS=10
+NUM_CLUSTERS=20
 
 
 class EmbeddedWordVector(Comparator):
@@ -169,7 +169,7 @@ class EmbeddedWordVector(Comparator):
             for c in self.cluster_indices_group(i, self.model.labels_):
                 self.clusters[i].add(self.lines[c])
             sz = len(self.clusters[i])
-            logger.debug(f"bucket {i} has {sz} elements")
+            logger.critical(f"bucket {i} has {sz} elements")
         return True
 
 
@@ -196,7 +196,7 @@ class EmbeddedWordVector(Comparator):
         index = self.model.predict(v)[0]
         if index == 0: #prediction failed
             index = randint(1, NUM_CLUSTERS)
-        logger.debug(f"predicted {index} for input")
+        logger.critical(f"predicted {index} for input")
 
         min_match = 0.0
         m_confidence = 100.0
@@ -212,10 +212,10 @@ class EmbeddedWordVector(Comparator):
             if dist < m_confidence:
                 m_confidence = dist
                 m_statement = vals
-        logger.debug(f"compared {ii} values")
+        logger.critical(f"compared {ii} values")
         m_statement.confidence = 0.0
         if min_match != 0.0:
             m_statement.confidence = 1.0 - m_confidence / min_match
 
-        logger.debug(f"Closest match found {m_statement.text}")
+        logger.critical(f"Closest match found {m_statement.text} @ {m_statement.confidence}")
         return m_statement
