@@ -4,6 +4,7 @@ designed to compare one statement to another.
 """
 from chatterbot import utils
 from chatterbot import languages
+from chatterbot import tokenizers
 from nltk.corpus import wordnet, stopwords
 
 # Use python-Levenshtein if available
@@ -77,17 +78,13 @@ class SynsetDistance(Comparator):
 
         self.stopwords = None
 
+        self.word_tokenizer = None
+
     def initialize_nltk_wordnet(self):
         """
         Download required NLTK corpora if they have not already been downloaded.
         """
         utils.nltk_download_corpus('corpora/wordnet')
-
-    def initialize_nltk_punkt(self):
-        """
-        Download required NLTK corpora if they have not already been downloaded.
-        """
-        utils.nltk_download_corpus('tokenizers/punkt')
 
     def initialize_nltk_stopwords(self):
         """
@@ -104,6 +101,15 @@ class SynsetDistance(Comparator):
 
         return self.stopwords
 
+    def get_word_tokenizer(self):
+        """
+        Get the word tokenizer for this comparison algorithm.
+        """
+        if self.word_tokenizer is None:
+            self.word_tokenizer = tokenizers.get_word_tokenizer(self.language)
+
+        return self.word_tokenizer
+
     def compare(self, statement, other_statement):
         """
         Compare the two input statements.
@@ -114,11 +120,12 @@ class SynsetDistance(Comparator):
         .. _wordnet: http://www.nltk.org/howto/wordnet.html
         .. _NLTK: http://www.nltk.org/
         """
-        from nltk import word_tokenize
         import itertools
 
-        tokens1 = word_tokenize(statement.text.lower())
-        tokens2 = word_tokenize(other_statement.text.lower())
+        word_tokenizer = self.get_word_tokenizer()
+
+        tokens1 = word_tokenizer.tokenize(statement.text.lower())
+        tokens2 = word_tokenizer.tokenize(other_statement.text.lower())
 
         # Get the stopwords for the current language
         stop_word_set = set(self.get_stopwords())
@@ -266,6 +273,8 @@ class JaccardSimilarity(Comparator):
 
         self.lemmatizer = None
 
+        self.word_tokenizer = None
+
     def initialize_nltk_wordnet(self):
         """
         Download the NLTK wordnet corpora that is required for this algorithm
@@ -306,12 +315,23 @@ class JaccardSimilarity(Comparator):
 
         return self.lemmatizer
 
+    def get_word_tokenizer(self):
+        """
+        Get the word tokenizer for this comparison algorithm.
+        """
+        if self.word_tokenizer is None:
+            self.word_tokenizer = tokenizers.get_word_tokenizer(self.language)
+
+        return self.word_tokenizer
+
     def compare(self, statement, other_statement):
         """
         Return the calculated similarity of two
         statements based on the Jaccard index.
         """
-        from nltk import pos_tag, tokenize
+        from nltk import pos_tag
+
+        word_tokenizer = self.get_word_tokenizer()
 
         # Get the stopwords for the current language
         stopwords = self.get_stopwords()
@@ -326,8 +346,8 @@ class JaccardSimilarity(Comparator):
         a = a.translate(self.punctuation_table)
         b = b.translate(self.punctuation_table)
 
-        pos_a = pos_tag(tokenize.word_tokenize(a))
-        pos_b = pos_tag(tokenize.word_tokenize(b))
+        pos_a = pos_tag(word_tokenizer.tokenize(a))
+        pos_b = pos_tag(word_tokenizer.tokenize(b))
 
         lemma_a = [
             lemmatizer.lemmatize(
