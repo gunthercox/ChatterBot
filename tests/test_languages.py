@@ -15,4 +15,4 @@ class LanguageClassTests(TestCase):
                 self.assertTrue(hasattr(obj, 'ENGLISH_NAME'))
                 self.assertEqual(name, obj.ISO_639.upper())
 
-        self.assertEqual(len(language_classes), 408)
+        self.assertEqual(len(language_classes), 410)
