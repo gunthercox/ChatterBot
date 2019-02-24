@@ -26,8 +26,16 @@ DESCRIPTION = CHATTERBOT.__doc__
 with open('README.md') as f:
     LONG_DESCRIPTION = f.read()
 
+REQUIREMENTS = []
+DEPENDENCIES = []
+
 with open('requirements.txt') as requirements:
-    REQUIREMENTS = requirements.readlines()
+    for requirement in requirements.readlines():
+        if requirement.startswith('git+git://'):
+            DEPENDENCIES.append(requirement)
+        else:
+            REQUIREMENTS.append(requirement)
+
 
 setup(
     name='ChatterBot',
@@ -54,6 +62,7 @@ setup(
     package_dir={'chatterbot': 'chatterbot'},
     include_package_data=True,
     install_requires=REQUIREMENTS,
+    dependency_links=DEPENDENCIES,
     python_requires='>=3.4, <4',
     license='BSD',
     zip_safe=True,

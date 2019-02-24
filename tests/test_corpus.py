@@ -58,8 +58,8 @@ class CorpusLoadingTestCase(TestCase):
 
         self.assertTrue(len(list(corpus_data)))
 
-    def test_load_corpus_indonesia(self):
-        data_files = corpus.list_corpus_files('chatterbot.corpus.indonesia')
+    def test_load_corpus_indonesian(self):
+        data_files = corpus.list_corpus_files('chatterbot.corpus.indonesian')
         corpus_data = corpus.load_corpus(*data_files)
 
         self.assertTrue(len(list(corpus_data)))
