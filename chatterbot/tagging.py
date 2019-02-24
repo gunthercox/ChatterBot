@@ -1,8 +1,8 @@
 import string
 from chatterbot import languages
 from chatterbot import utils
+from chatterbot.tokenizers import get_sentence_tokenizer
 from nltk import pos_tag
-from nltk.data import load as load_data
 from nltk.corpus import wordnet, stopwords
 from nltk.corpus.reader.wordnet import WordNetError
 
@@ -32,12 +32,6 @@ class PosHypernymTagger(object):
         """
         utils.nltk_download_corpus('corpora/wordnet')
 
-    def initialize_nltk_punkt(self):
-        """
-        Download required NLTK punkt corpus if it has not already been downloaded.
-        """
-        utils.nltk_download_corpus('punkt')
-
     def initialize_nltk_averaged_perceptron_tagger(self):
         """
         Download the NLTK averaged perceptron tagger that is required for this algorithm
@@ -59,15 +53,7 @@ class PosHypernymTagger(object):
         Tokenize the provided sentence.
         """
         if self.sentence_tokenizer is None:
-            try:
-                self.sentence_tokenizer = load_data('tokenizers/punkt/{language}.pickle'.format(
-                    language=self.language.ENGLISH_NAME.lower()
-                ))
-            except LookupError:
-                # Fall back to English sentence splitting rules if a language is not supported
-                self.sentence_tokenizer = load_data('tokenizers/punkt/{language}.pickle'.format(
-                    language=languages.ENG.ENGLISH_NAME.lower()
-                ))
+            self.sentence_tokenizer = get_sentence_tokenizer(self.language)
 
         return self.sentence_tokenizer.tokenize(sentence)
 
