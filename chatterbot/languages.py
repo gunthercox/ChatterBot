@@ -1983,6 +1983,16 @@ class ZHA:
     ENGLISH_NAME = 'Zhuang'
 
 
+class ZHS:
+    ISO_639 = 'zhs'
+    ENGLISH_NAME = 'SimplifiedChinese'
+
+
+class ZHT:
+    ISO_639 = 'zht'
+    ENGLISH_NAME = 'TraditionalChinese'
+
+
 class ZUL:
     ISO_639 = 'zul'
     ENGLISH_NAME = 'Zulu'
