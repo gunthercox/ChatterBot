@@ -40,10 +40,10 @@ class PosLemmaTaggerTests(TestCase):
         )
 
         tagged_text = self.tagger.get_bigram_pair_string(
-            'TODO'
+            'Ich spreche nicht viel Deutsch.'
         )
 
-        self.assertEqual(tagged_text, '')
+        self.assertEqual(tagged_text, 'PRON:sprechen VERB:Deutsch')
 
     def test_string_becomes_lowercase(self):
         tagged_text = self.tagger.get_bigram_pair_string('THIS IS HOW IT BEGINS!')
