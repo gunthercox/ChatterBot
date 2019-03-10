@@ -115,7 +115,7 @@ class SearchComparisonFunctionSentimentComparisonTests(ChatBotTestCase):
         for function in utils.get_initialization_functions(
             self.search_algorithm,
             'compare_statements'
-        ).values():
+        ):
             function()
 
     def test_exact_input(self):

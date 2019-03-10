@@ -21,21 +21,14 @@ def import_module(dotted_path):
 def get_initialization_functions(obj, attribute):
     """
     Return all initialization methods for the comparison algorithm.
-    Initialization methods must start with 'initialize_' and
-    take no parameters.
+    Initialization methods must start with 'initialize_' and take no parameters.
     """
-    initialization_methods = {}
-
     attribute_parts = attribute.split('.')
     outermost_attribute = getattr(obj, attribute_parts.pop(0))
     for next_attribute in attribute_parts:
         outermost_attribute = getattr(outermost_attribute, next_attribute)
 
-    for method in dir(outermost_attribute):
-        if method.startswith('initialize_'):
-            initialization_methods[method] = getattr(outermost_attribute, method)
-
-    return initialization_methods
+    return getattr(outermost_attribute, 'initialization_functions', [])
 
 
 def initialize_class(data, *args, **kwargs):
@@ -184,7 +177,37 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
     percent = float(iteration_counter) / total_items
     hashes = '#' * int(round(percent * progress_bar_length))
     spaces = ' ' * (progress_bar_length - len(hashes))
-    sys.stdout.write("\r{0}: [{1}] {2}%".format(description, hashes + spaces, int(round(percent * 100))))
+    sys.stdout.write('\r{0}: [{1}] {2}%'.format(description, hashes + spaces, int(round(percent * 100))))
     sys.stdout.flush()
     if total_items == iteration_counter:
-        print("\r")
+        print('\r')
+
+
+def download_nltk_stopwords():
+    """
+    Download required NLTK stopwords corpus if it has not already been downloaded.
+    """
+    nltk_download_corpus('stopwords')
+
+
+def download_nltk_wordnet():
+    """
+    Download required NLTK corpora if they have not already been downloaded.
+    """
+    nltk_download_corpus('corpora/wordnet')
+
+
+def download_nltk_averaged_perceptron_tagger():
+    """
+    Download the NLTK averaged perceptron tagger that is required for this algorithm
+    to run only if the corpora has not already been downloaded.
+    """
+    nltk_download_corpus('averaged_perceptron_tagger')
+
+
+def download_nltk_vader_lexicon():
+    """
+    Download the NLTK vader lexicon for sentiment analysis
+    that is required for this algorithm to run.
+    """
+    nltk_download_corpus('vader_lexicon')
