@@ -5,6 +5,55 @@ from chatterbot.tokenizers import get_sentence_tokenizer
 from nltk import pos_tag
 from nltk.corpus import wordnet, stopwords
 from nltk.corpus.reader.wordnet import WordNetError
+import spacy
+
+
+class PosLemmaTagger(object):
+
+    def __init__(self, language=None):
+        self.language = language or languages.ENG
+
+        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
+
+        self.nlp = spacy.load(self.language.ISO_639[0:2].lower())
+
+    def get_bigram_pair_string(self, text):
+        """
+        Return a string of text containing part-of-speech, lemma pairs.
+        """
+        bigram_pairs = []
+
+        if len(text) <= 2:
+            text_without_punctuation = text.translate(self.punctuation_table)
+            if len(text_without_punctuation) >= 1:
+                text = text_without_punctuation
+
+        document = self.nlp(text)
+
+        if len(text) <= 2:
+            bigram_pairs = [
+                token.lemma_ for token in document
+            ]
+        else:
+            non_stopword_tokens = [
+                token for token in document if token.is_alpha and not token.is_stop
+            ]
+
+            enumerated_non_stopword_tokens = enumerate(non_stopword_tokens)
+            next(enumerated_non_stopword_tokens)
+
+            for index, token in enumerated_non_stopword_tokens:
+                bigram_pairs.append('{}:{}'.format(
+                    non_stopword_tokens[index - 1].pos_,
+                    token.lemma_
+                ))
+
+        if not bigram_pairs:
+            bigram_pairs = [
+                token.lemma_ for token in document
+            ]
+
+        return ' '.join(bigram_pairs)
 
 
 class PosHypernymTagger(object):

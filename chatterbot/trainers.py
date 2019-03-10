@@ -5,7 +5,7 @@ import time
 from multiprocessing import Pool, Manager
 from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
-from chatterbot.tagging import PosHypernymTagger
+from chatterbot.tagging import PosLemmaTagger
 from chatterbot import utils
 
 
@@ -325,7 +325,7 @@ class UbuntuCorpusTrainer(Trainer):
     def train(self):
         import glob
 
-        tagger = PosHypernymTagger(language=self.chatbot.storage.tagger.language)
+        tagger = PosLemmaTagger(language=self.chatbot.storage.tagger.language)
 
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
