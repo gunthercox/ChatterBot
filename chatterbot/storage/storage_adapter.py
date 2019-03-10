@@ -1,6 +1,6 @@
 import logging
 from chatterbot import languages
-from chatterbot.tagging import PosLemmaTagger
+from chatterbot.tagging import PosHypernymTagger
 
 
 class StorageAdapter(object):
@@ -15,7 +15,7 @@ class StorageAdapter(object):
         """
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
-        self.tagger = PosLemmaTagger(language=kwargs.get(
+        self.tagger = PosHypernymTagger(language=kwargs.get(
             'tagger_language', languages.ENG
         ))
 
