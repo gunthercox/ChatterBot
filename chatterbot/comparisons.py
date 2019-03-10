@@ -80,17 +80,10 @@ class SynsetDistance(Comparator):
 
         self.word_tokenizer = None
 
-    def initialize_nltk_wordnet(self):
-        """
-        Download required NLTK corpora if they have not already been downloaded.
-        """
-        utils.nltk_download_corpus('corpora/wordnet')
-
-    def initialize_nltk_stopwords(self):
-        """
-        Download required NLTK corpora if they have not already been downloaded.
-        """
-        utils.nltk_download_corpus('corpora/stopwords')
+        self.initialization_functions = [
+            utils.download_nltk_wordnet,
+            utils.download_nltk_stopwords
+        ]
 
     def get_stopwords(self):
         """
@@ -180,12 +173,9 @@ class SentimentComparison(Comparator):
 
         self.sentiment_analyzer = None
 
-    def initialize_nltk_vader_lexicon(self):
-        """
-        Download the NLTK vader lexicon for sentiment analysis
-        that is required for this algorithm to run.
-        """
-        utils.nltk_download_corpus('vader_lexicon')
+        self.initialization_functions = [
+            utils.download_nltk_vader_lexicon
+        ]
 
     def get_sentiment_analyzer(self):
         """
@@ -275,25 +265,11 @@ class JaccardSimilarity(Comparator):
 
         self.word_tokenizer = None
 
-    def initialize_nltk_wordnet(self):
-        """
-        Download the NLTK wordnet corpora that is required for this algorithm
-        to run only if the corpora has not already been downloaded.
-        """
-        utils.nltk_download_corpus('corpora/wordnet')
-
-    def initialize_nltk_averaged_perceptron_tagger(self):
-        """
-        Download the NLTK averaged perceptron tagger that is required for this algorithm
-        to run only if the corpora has not already been downloaded.
-        """
-        utils.nltk_download_corpus('averaged_perceptron_tagger')
-
-    def initialize_nltk_stopwords(self):
-        """
-        Download required NLTK corpora if they have not already been downloaded.
-        """
-        utils.nltk_download_corpus('corpora/stopwords')
+        self.initialization_functions = [
+            utils.download_nltk_wordnet,
+            utils.download_nltk_averaged_perceptron_tagger,
+            utils.download_nltk_stopwords
+        ]
 
     def get_stopwords(self):
         """
