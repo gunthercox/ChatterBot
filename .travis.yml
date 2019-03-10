@@ -15,7 +15,7 @@ env:
 
 install:
   - pip install tox coveralls codeclimate-test-reporter spacy
-  - python -m spacy download en
+  - python -m spacy download en de
 
 addons:
     code_climate:

@@ -15,7 +15,7 @@ class PosLemmaTagger(object):
 
         self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
 
-        self.nlp = spacy.load(self.language.ISO_639[0:2].lower())
+        self.nlp = spacy.load(self.language.ISO_639_1.lower())
 
     def get_bigram_pair_string(self, text):
         """
