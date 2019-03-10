@@ -20,24 +20,11 @@ class PosHypernymTagger(object):
 
         self.stopwords = None
 
-    def initialize_nltk_stopwords(self):
-        """
-        Download required NLTK stopwords corpus if it has not already been downloaded.
-        """
-        utils.nltk_download_corpus('stopwords')
-
-    def initialize_nltk_wordnet(self):
-        """
-        Download required NLTK corpora if they have not already been downloaded.
-        """
-        utils.nltk_download_corpus('corpora/wordnet')
-
-    def initialize_nltk_averaged_perceptron_tagger(self):
-        """
-        Download the NLTK averaged perceptron tagger that is required for this algorithm
-        to run only if the corpora has not already been downloaded.
-        """
-        utils.nltk_download_corpus('averaged_perceptron_tagger')
+        self.initialization_functions = [
+            utils.download_nltk_stopwords,
+            utils.download_nltk_wordnet,
+            utils.download_nltk_averaged_perceptron_tagger
+        ]
 
     def get_stopwords(self):
         """

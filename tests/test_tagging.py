@@ -10,9 +10,7 @@ class PosHypernymTaggerTests(TestCase):
         self.tagger = tagging.PosHypernymTagger()
 
         # Make sure the required NLTK data files are downloaded
-        for function in utils.get_initialization_functions(
-            self, 'tagger'
-        ).values():
+        for function in utils.get_initialization_functions(self, 'tagger'):
             function()
 
     def test_empty_string(self):

@@ -58,9 +58,11 @@ class ChatBot(object):
             self.initialize()
 
     def get_initialization_functions(self):
-        initialization_functions = utils.get_initialization_functions(
+        initialization_functions = set()
+
+        initialization_functions.update(utils.get_initialization_functions(
             self, 'storage.tagger'
-        )
+        ))
 
         for search_algorithm in self.search_algorithms.values():
             search_algorithm_functions = utils.get_initialization_functions(
@@ -74,7 +76,7 @@ class ChatBot(object):
         """
         Do any work that needs to be done before the chatbot can process responses.
         """
-        for function in self.get_initialization_functions().values():
+        for function in self.get_initialization_functions():
             function()
 
     def get_response(self, statement=None, **kwargs):

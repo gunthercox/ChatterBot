@@ -89,7 +89,7 @@ class SentimentComparisonTestCase(TestCase):
         # Make sure the required NLTK data files are downloaded
         for function in utils.get_initialization_functions(
             comparisons, 'sentiment_comparison'
-        ).values():
+        ):
             function()
 
     def test_exact_match_different_capitalization(self):
