@@ -43,12 +43,12 @@ class PosLemmaTaggerTests(TestCase):
             'Ich spreche nicht viel Deutsch.'
         )
 
-        self.assertEqual(tagged_text, 'PRON:sprechen VERB:Deutsch')
+        self.assertEqual(tagged_text, 'VERB:deutsch')
 
     def test_string_becomes_lowercase(self):
         tagged_text = self.tagger.get_bigram_pair_string('THIS IS HOW IT BEGINS!')
 
-        self.assertEqual(tagged_text, 'DET:be VERB:how ADV:it PRON:begin')
+        self.assertEqual(tagged_text, 'DET:be VERB:how ADV:it NOUN:begin')
 
     def test_tagging_medium_sized_words(self):
         tagged_text = self.tagger.get_bigram_pair_string('Hello, my name is Gunther.')
@@ -58,7 +58,7 @@ class PosLemmaTaggerTests(TestCase):
     def test_tagging_long_words(self):
         tagged_text = self.tagger.get_bigram_pair_string('I play several orchestra instruments for pleasure.')
 
-        self.assertEqual(tagged_text, 'PRON:play VERB:orchestra NOUN:instrument NOUN:pleasure')
+        self.assertEqual(tagged_text, 'VERB:orchestra ADJ:instrument NOUN:pleasure')
 
     def test_get_bigram_pair_string_punctuation_only(self):
         bigram_string = self.tagger.get_bigram_pair_string(
@@ -121,14 +121,14 @@ class PosLemmaTaggerTests(TestCase):
             'Hello Dr. Salazar. How are you today?'
         )
 
-        self.assertEqual(bigram_string, 'INTJ:salazar PROPN:how ADV:today')
+        self.assertEqual(bigram_string, 'INTJ:salazar PROPN:today')
 
     def test_get_bigram_pair_string_single_character_words(self):
         bigram_string = self.tagger.get_bigram_pair_string(
             'a e i o u'
         )
 
-        self.assertEqual(bigram_string, 'NOUN:o X:u')
+        self.assertEqual(bigram_string, 'NOUN:o NOUN:u')
 
     def test_get_bigram_pair_string_two_character_words(self):
         bigram_string = self.tagger.get_bigram_pair_string(

@@ -32,25 +32,27 @@ class PosLemmaTagger(object):
 
         if len(text) <= 2:
             bigram_pairs = [
-                token.lemma_ for token in document
+                token.lemma_.lower() for token in document
             ]
         else:
-            non_stopword_tokens = [
+            tokens = [
                 token for token in document if token.is_alpha and not token.is_stop
             ]
 
-            enumerated_non_stopword_tokens = enumerate(non_stopword_tokens)
-            next(enumerated_non_stopword_tokens)
+            if len(tokens) < 2:
+                tokens = [
+                    token for token in document if token.is_alpha
+                ]
 
-            for index, token in enumerated_non_stopword_tokens:
+            for index in range(1, len(tokens)):
                 bigram_pairs.append('{}:{}'.format(
-                    non_stopword_tokens[index - 1].pos_,
-                    token.lemma_
+                    tokens[index - 1].pos_,
+                    tokens[index].lemma_.lower()
                 ))
 
         if not bigram_pairs:
             bigram_pairs = [
-                token.lemma_ for token in document
+                token.lemma_.lower() for token in document
             ]
 
         return ' '.join(bigram_pairs)
