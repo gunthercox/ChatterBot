@@ -253,6 +253,11 @@ class ChatBot(object):
             statement.search_in_response_to = previous_statement.search_text
             previous_statement_text = previous_statement.text
 
+        self.logger.info('Adding "{}" as a response to "{}"'.format(
+            statement.text,
+            previous_statement_text
+        ))
+
         # Save the input statement
         return self.storage.create(**statement.serialize())
 
