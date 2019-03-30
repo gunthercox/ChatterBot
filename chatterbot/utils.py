@@ -203,11 +203,3 @@ def download_nltk_averaged_perceptron_tagger():
     to run only if the corpora has not already been downloaded.
     """
     nltk_download_corpus('averaged_perceptron_tagger')
-
-
-def download_nltk_vader_lexicon():
-    """
-    Download the NLTK vader lexicon for sentiment analysis
-    that is required for this algorithm to run.
-    """
-    nltk_download_corpus('vader_lexicon')

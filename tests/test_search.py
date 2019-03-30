@@ -2,7 +2,6 @@ from tests.base_case import ChatBotTestCase
 from chatterbot.conversation import Statement
 from chatterbot.search import IndexedTextSearch
 from chatterbot import comparisons
-from chatterbot import utils
 
 
 class SearchTestCase(ChatBotTestCase):
@@ -95,55 +94,6 @@ class SearchComparisonFunctionSynsetDistanceTests(ChatBotTestCase):
 
         self.assertIsLength(results, 1)
         self.assertEqual(results[0].text, 'Are you good?')
-
-
-class SearchComparisonFunctionSentimentComparisonTests(ChatBotTestCase):
-    """
-    Test that the search algorithm works correctly with the
-    sentiment comparison function by using the similarity
-    of sentiment polarity.
-    """
-
-    def setUp(self):
-        super().setUp()
-        self.search_algorithm = IndexedTextSearch(
-            self.chatbot,
-            statement_comparison_function=comparisons.sentiment_comparison
-        )
-
-        # Make sure the required NLTK data files are downloaded
-        for function in utils.get_initialization_functions(
-            self.search_algorithm,
-            'compare_statements'
-        ):
-            function()
-
-    def test_exact_input(self):
-        self.chatbot.storage.create(text='What is your favorite flavor of ice cream?')
-        self.chatbot.storage.create(text='I enjoy raspberry ice cream.')
-        self.chatbot.storage.create(text='I am glad to hear that.')
-        self.chatbot.storage.create(text='Thank you.')
-
-        happy_statement = Statement(text='I enjoy raspberry ice cream.')
-        results = list(self.search_algorithm.search(happy_statement))
-
-        self.assertIsLength(results, 1)
-        self.assertEqual(results[0].text, 'I enjoy raspberry ice cream.')
-        self.assertEqual(results[0].confidence, 1)
-
-    def test_close_input(self):
-        self.chatbot.storage.create(text='What is your favorite flavor of ice cream?')
-        self.chatbot.storage.create(text='I enjoy raspberry ice cream.')
-        self.chatbot.storage.create(text='I am glad to hear that.')
-        self.chatbot.storage.create(text='Thank you, what is yours?')
-        self.chatbot.storage.create(text='Mine is chocolate.')
-
-        happy_statement = Statement(text='I enjoy raspberry.')
-        results = list(self.search_algorithm.search(happy_statement))
-
-        self.assertIsLength(results, 1)
-        self.assertEqual(results[0].text, 'I enjoy raspberry ice cream.')
-        self.assertAlmostEqual(results[0].confidence, 0.75, places=1)
 
 
 class SearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTestCase):
