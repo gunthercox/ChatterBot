@@ -48,13 +48,13 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIn('download_nltk_averaged_perceptron_tagger', str(functions))
         self.assertIsLength(functions, 3)
 
-    def test_get_initialization_functions_synset_distance(self):
+    def test_get_initialization_functions_spacy_similarity(self):
         """
         Test that the initialization functions are returned.
         """
-        from chatterbot.comparisons import synset_distance
+        from chatterbot.comparisons import spacy_similarity
 
-        list(self.chatbot.search_algorithms.values())[0].compare_statements = synset_distance
+        list(self.chatbot.search_algorithms.values())[0].compare_statements = spacy_similarity
         functions = self.chatbot.get_initialization_functions()
 
         self.assertIn('download_nltk_stopwords', str(functions))
