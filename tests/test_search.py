@@ -50,17 +50,17 @@ class SearchTestCase(ChatBotTestCase):
         self.assertEqual(results[0].conversation, 'test_1')
 
 
-class SearchComparisonFunctionSynsetDistanceTests(ChatBotTestCase):
+class SearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
     """
     Test that the search algorithm works correctly with the
-    synset distance comparison function.
+    spacy similarity comparison function.
     """
 
     def setUp(self):
         super().setUp()
         self.search_algorithm = IndexedTextSearch(
             self.chatbot,
-            statement_comparison_function=comparisons.synset_distance
+            statement_comparison_function=comparisons.spacy_similarity
         )
 
     def test_get_closest_statement(self):
@@ -78,9 +78,14 @@ class SearchComparisonFunctionSynsetDistanceTests(ChatBotTestCase):
         statement = Statement(text='This is a lovely swamp.')
         results = list(self.search_algorithm.search(statement))
 
-        self.assertIsLength(results, 1)
-        self.assertEqual(results[0].text, 'This is a lovely bog.')
+        self.assertIsLength(results, 2)
+
+        results_text = [result.text for result in results]
+
+        self.assertIn('This is a lovely bog.', results_text)
+        self.assertIn('This is a beautiful swamp.', results_text)
         self.assertGreater(results[0].confidence, 0)
+        self.assertGreater(results[1].confidence, 0)
 
     def test_different_punctuation(self):
         self.chatbot.storage.create_many([

@@ -55,18 +55,18 @@ class LevenshteinDistanceTestCase(TestCase):
         self.assertEqual(value, 1)
 
 
-class SynsetDistanceTestCase(TestCase):
+class SpacySimilarityTests(TestCase):
 
     def test_exact_match_different_stopwords(self):
         """
-        Test that stopwords are ignored.
+        Test sentences with different stopwords.
         """
         statement = Statement(text='What is matter?')
         other_statement = Statement(text='What is the matter?')
 
-        value = comparisons.synset_distance(statement, other_statement)
+        value = comparisons.spacy_similarity(statement, other_statement)
 
-        self.assertEqual(value, 1)
+        self.assertAlmostEqual(value, 0.9, places=1)
 
     def test_exact_match_different_capitalization(self):
         """
@@ -75,9 +75,9 @@ class SynsetDistanceTestCase(TestCase):
         statement = Statement(text='Hi HoW ArE yOu?')
         other_statement = Statement(text='hI hOw are YoU?')
 
-        value = comparisons.synset_distance(statement, other_statement)
+        value = comparisons.spacy_similarity(statement, other_statement)
 
-        self.assertEqual(value, 1)
+        self.assertAlmostEqual(value, 0.8, places=1)
 
 
 class JaccardSimilarityTestCase(TestCase):
