@@ -1,10 +1,17 @@
 from unittest import TestCase, SkipTest
 from chatterbot import ChatBot
+from chatterbot import utils
 
 
 class ChatBotTestCase(TestCase):
 
     def setUp(self):
+
+        # Make sure that test requirements are downloaded
+        utils.download_nltk_stopwords()
+        utils.download_nltk_wordnet()
+        utils.download_nltk_averaged_perceptron_tagger()
+
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
 
     def tearDown(self):
