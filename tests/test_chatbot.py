@@ -62,21 +62,6 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIn('download_nltk_averaged_perceptron_tagger', str(functions))
         self.assertIsLength(functions, 3)
 
-    def test_get_initialization_functions_sentiment_comparison(self):
-        """
-        Test that the initialization functions are returned.
-        """
-        from chatterbot.comparisons import sentiment_comparison
-
-        list(self.chatbot.search_algorithms.values())[0].compare_statements = sentiment_comparison
-        functions = self.chatbot.get_initialization_functions()
-
-        self.assertIn('download_nltk_stopwords', str(functions))
-        self.assertIn('download_nltk_wordnet', str(functions))
-        self.assertIn('download_nltk_vader_lexicon', str(functions))
-        self.assertIn('download_nltk_averaged_perceptron_tagger', str(functions))
-        self.assertIsLength(functions, 4)
-
     def test_get_initialization_functions_jaccard_similarity(self):
         """
         Test that the initialization functions are returned.
