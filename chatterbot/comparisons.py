@@ -6,12 +6,10 @@ from chatterbot import utils
 from chatterbot import languages
 from chatterbot import tokenizers
 from nltk.corpus import wordnet, stopwords
-
-# Use python-Levenshtein if available
-try:
-    from Levenshtein.StringMatcher import StringMatcher as SequenceMatcher
-except ImportError:
-    from difflib import SequenceMatcher
+from nltk import pos_tag
+from nltk.stem.wordnet import WordNetLemmatizer
+from difflib import SequenceMatcher
+import itertools
 
 
 class Comparator:
@@ -33,7 +31,7 @@ class LevenshteinDistance(Comparator):
     based on the Levenshtein distance algorithm.
     """
 
-    def compare(self, statement, other_statement):
+    def compare(self, statement_a, statement_b):
         """
         Compare the two input statements.
 
@@ -42,17 +40,17 @@ class LevenshteinDistance(Comparator):
         """
 
         # Return 0 if either statement has a falsy text value
-        if not statement.text or not other_statement.text:
+        if not statement_a.text or not statement_b.text:
             return 0
 
         # Get the lowercase version of both strings
-        statement_text = str(statement.text.lower())
-        other_statement_text = str(other_statement.text.lower())
+        statement_a_text = str(statement_a.text.lower())
+        statement_b_text = str(statement_b.text.lower())
 
         similarity = SequenceMatcher(
             None,
-            statement_text,
-            other_statement_text
+            statement_a_text,
+            statement_b_text
         )
 
         # Calculate a decimal percent of the similarity
@@ -103,7 +101,7 @@ class SynsetDistance(Comparator):
 
         return self.word_tokenizer
 
-    def compare(self, statement, other_statement):
+    def compare(self, statement_a, statement_b):
         """
         Compare the two input statements.
 
@@ -113,12 +111,10 @@ class SynsetDistance(Comparator):
         .. _wordnet: http://www.nltk.org/howto/wordnet.html
         .. _NLTK: http://www.nltk.org/
         """
-        import itertools
-
         word_tokenizer = self.get_word_tokenizer()
 
-        tokens1 = word_tokenizer.tokenize(statement.text.lower())
-        tokens2 = word_tokenizer.tokenize(other_statement.text.lower())
+        tokens1 = word_tokenizer.tokenize(statement_a.text.lower())
+        tokens2 = word_tokenizer.tokenize(statement_b.text.lower())
 
         # Get the stopwords for the current language
         stop_word_set = set(self.get_stopwords())
@@ -223,8 +219,6 @@ class JaccardSimilarity(Comparator):
         Get the lemmatizer.
         """
         if self.lemmatizer is None:
-            from nltk.stem.wordnet import WordNetLemmatizer
-
             self.lemmatizer = WordNetLemmatizer()
 
         return self.lemmatizer
@@ -238,13 +232,11 @@ class JaccardSimilarity(Comparator):
 
         return self.word_tokenizer
 
-    def compare(self, statement, other_statement):
+    def compare(self, statement_a, statement_b):
         """
         Return the calculated similarity of two
         statements based on the Jaccard index.
         """
-        from nltk import pos_tag
-
         word_tokenizer = self.get_word_tokenizer()
 
         # Get the stopwords for the current language
@@ -253,8 +245,8 @@ class JaccardSimilarity(Comparator):
         lemmatizer = self.get_lemmatizer()
 
         # Make both strings lowercase
-        a = statement.text.lower()
-        b = other_statement.text.lower()
+        a = statement_a.text.lower()
+        b = statement_b.text.lower()
 
         # Remove punctuation from each string
         a = a.translate(self.punctuation_table)
