@@ -5,7 +5,6 @@ Test ChatterBot's statement comparison algorithms.
 from unittest import TestCase
 from chatterbot.conversation import Statement
 from chatterbot import comparisons
-from chatterbot import utils
 
 
 class LevenshteinDistanceTestCase(TestCase):
@@ -77,29 +76,6 @@ class SynsetDistanceTestCase(TestCase):
         other_statement = Statement(text='hI hOw are YoU?')
 
         value = comparisons.synset_distance(statement, other_statement)
-
-        self.assertEqual(value, 1)
-
-
-class SentimentComparisonTestCase(TestCase):
-
-    def setUp(self):
-        super().setUp()
-
-        # Make sure the required NLTK data files are downloaded
-        for function in utils.get_initialization_functions(
-            comparisons, 'sentiment_comparison'
-        ):
-            function()
-
-    def test_exact_match_different_capitalization(self):
-        """
-        Test that text capitalization is ignored.
-        """
-        statement = Statement(text='Hi HoW ArE yOu?')
-        other_statement = Statement(text='hI hOw are YoU?')
-
-        value = comparisons.sentiment_comparison(statement, other_statement)
 
         self.assertEqual(value, 1)
 

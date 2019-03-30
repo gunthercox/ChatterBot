@@ -162,68 +162,6 @@ class SynsetDistance(Comparator):
         return max_similarity / max_possible_similarity
 
 
-class SentimentComparison(Comparator):
-    """
-    Calculate the similarity of two statements based on the closeness of
-    the sentiment value calculated for each statement.
-    """
-
-    def __init__(self):
-        super().__init__()
-
-        self.sentiment_analyzer = None
-
-        self.initialization_functions = [
-            utils.download_nltk_vader_lexicon
-        ]
-
-    def get_sentiment_analyzer(self):
-        """
-        Get the initialized sentiment analyzer.
-        """
-        if self.sentiment_analyzer is None:
-            from nltk.sentiment.vader import SentimentIntensityAnalyzer
-
-            self.sentiment_analyzer = SentimentIntensityAnalyzer()
-
-        return self.sentiment_analyzer
-
-    def compare(self, statement, other_statement):
-        """
-        Return the similarity of two statements based on
-        their calculated sentiment values.
-
-        :return: The percent of similarity between the sentiment value.
-        :rtype: float
-        """
-        sentiment_analyzer = self.get_sentiment_analyzer()
-        statement_polarity = sentiment_analyzer.polarity_scores(statement.text.lower())
-        statement2_polarity = sentiment_analyzer.polarity_scores(other_statement.text.lower())
-
-        statement_greatest_polarity = 'neu'
-        statement_greatest_score = -1
-        for polarity in sorted(statement_polarity):
-            if statement_polarity[polarity] > statement_greatest_score:
-                statement_greatest_polarity = polarity
-                statement_greatest_score = statement_polarity[polarity]
-
-        statement2_greatest_polarity = 'neu'
-        statement2_greatest_score = -1
-        for polarity in sorted(statement2_polarity):
-            if statement2_polarity[polarity] > statement2_greatest_score:
-                statement2_greatest_polarity = polarity
-                statement2_greatest_score = statement2_polarity[polarity]
-
-        # Check if the polarity if of a different type
-        if statement_greatest_polarity != statement2_greatest_polarity:
-            return 0
-
-        values = [statement_greatest_score, statement2_greatest_score]
-        difference = max(values) - min(values)
-
-        return 1.0 - difference
-
-
 class JaccardSimilarity(Comparator):
     """
     Calculates the similarity of two statements based on the Jaccard index.
@@ -349,5 +287,4 @@ class JaccardSimilarity(Comparator):
 
 levenshtein_distance = LevenshteinDistance()
 synset_distance = SynsetDistance()
-sentiment_comparison = SentimentComparison()
 jaccard_similarity = JaccardSimilarity()

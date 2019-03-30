@@ -13,10 +13,6 @@ def setup_module():
         ),
         LogicAdapter(
             chatbot,
-            statement_comparison_function=comparisons.sentiment_comparison
-        ),
-        LogicAdapter(
-            chatbot,
             statement_comparison_function=comparisons.synset_distance
         ),
     ]
