@@ -5,11 +5,11 @@ designed to compare one statement to another.
 from chatterbot import utils
 from chatterbot import languages
 from chatterbot import tokenizers
-from nltk.corpus import wordnet, stopwords
+from nltk.corpus import stopwords
 from nltk import pos_tag
 from nltk.stem.wordnet import WordNetLemmatizer
 from difflib import SequenceMatcher
-import itertools
+import spacy
 
 
 class Comparator:
@@ -59,14 +59,9 @@ class LevenshteinDistance(Comparator):
         return percent
 
 
-class SynsetDistance(Comparator):
+class SpacySimilarity(Comparator):
     """
-    Calculate the similarity of two statements.
-    This is based on the total maximum synset similarity between each word in each sentence.
-
-    This algorithm uses the `wordnet`_ functionality of `NLTK`_ to determine the similarity
-    of two statements based on the path similarity between each token of each statement.
-    This is essentially an evaluation of the closeness of synonyms.
+    Calculate the similarity of two statements using Spacy models.
     """
 
     def __init__(self):
@@ -74,32 +69,7 @@ class SynsetDistance(Comparator):
 
         self.language = languages.ENG
 
-        self.stopwords = None
-
-        self.word_tokenizer = None
-
-        self.initialization_functions = [
-            utils.download_nltk_wordnet,
-            utils.download_nltk_stopwords
-        ]
-
-    def get_stopwords(self):
-        """
-        Get the list of stopwords from the NLTK corpus.
-        """
-        if self.stopwords is None:
-            self.stopwords = stopwords.words(self.language.ENGLISH_NAME.lower())
-
-        return self.stopwords
-
-    def get_word_tokenizer(self):
-        """
-        Get the word tokenizer for this comparison algorithm.
-        """
-        if self.word_tokenizer is None:
-            self.word_tokenizer = tokenizers.get_word_tokenizer(self.language)
-
-        return self.word_tokenizer
+        self.nlp = spacy.load(self.language.ISO_639_1)
 
     def compare(self, statement_a, statement_b):
         """
@@ -107,55 +77,11 @@ class SynsetDistance(Comparator):
 
         :return: The percent of similarity between the closest synset distance.
         :rtype: float
-
-        .. _wordnet: http://www.nltk.org/howto/wordnet.html
-        .. _NLTK: http://www.nltk.org/
         """
-        word_tokenizer = self.get_word_tokenizer()
+        document_a = self.nlp(statement_a.text)
+        document_b = self.nlp(statement_b.text)
 
-        tokens1 = word_tokenizer.tokenize(statement_a.text.lower())
-        tokens2 = word_tokenizer.tokenize(statement_b.text.lower())
-
-        # Get the stopwords for the current language
-        stop_word_set = set(self.get_stopwords())
-
-        # Remove all stop words from the list of word tokens
-        tokens1 = set(tokens1) - stop_word_set
-        tokens2 = set(tokens2) - stop_word_set
-
-        # The maximum possible similarity is an exact match
-        # Because path_similarity returns a value between 0 and 1,
-        # max_possible_similarity is the number of words in the longer
-        # of the two input statements.
-        max_possible_similarity = min(
-            len(tokens1),
-            len(tokens2)
-        ) / max(
-            len(tokens1),
-            len(tokens2)
-        )
-
-        max_similarity = 0.0
-
-        # Get the highest matching value for each possible combination of words
-        for combination in itertools.product(*[tokens1, tokens2]):
-
-            synset1 = wordnet.synsets(combination[0])
-            synset2 = wordnet.synsets(combination[1])
-
-            if synset1 and synset2:
-
-                # Get the highest similarity for each combination of synsets
-                for synset in itertools.product(*[synset1, synset2]):
-                    similarity = synset[0].path_similarity(synset[1])
-
-                    if similarity and (similarity > max_similarity):
-                        max_similarity = similarity
-
-        if max_possible_similarity == 0:
-            return 0
-
-        return max_similarity / max_possible_similarity
+        return document_a.similarity(document_b)
 
 
 class JaccardSimilarity(Comparator):
@@ -278,5 +204,5 @@ class JaccardSimilarity(Comparator):
 
 
 levenshtein_distance = LevenshteinDistance()
-synset_distance = SynsetDistance()
+spacy_similarity = SpacySimilarity()
 jaccard_similarity = JaccardSimilarity()
