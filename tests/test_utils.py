@@ -9,16 +9,6 @@ class UtilityTests(TestCase):
         datetime = utils.import_module('datetime.datetime')
         self.assertTrue(hasattr(datetime, 'now'))
 
-    def test_nltk_download_corpus(self):
-        downloaded = utils.nltk_download_corpus('wordnet')
-        self.assertTrue(downloaded)
-
-    def test_treebank_to_wordnet(self):
-        self.assertEqual(utils.treebank_to_wordnet('NNS'), 'n')
-
-    def test_treebank_to_wordnet_no_match(self):
-        self.assertEqual(utils.treebank_to_wordnet('XXX'), None)
-
 
 class UtilityChatBotTestCase(ChatBotTestCase):
 

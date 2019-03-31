@@ -11,7 +11,3 @@ class CommandLineInterfaceTests(TestCase):
     def test_get_chatterbot_version(self):
         version = main.get_chatterbot_version()
         self.assertEqual(version, __version__)
-
-    def test_get_nltk_data_directories(self):
-        directories = main.get_nltk_data_directories()
-        self.assertIn('/', directories)

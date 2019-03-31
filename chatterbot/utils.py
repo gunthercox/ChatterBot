@@ -1,7 +1,6 @@
 """
 ChatterBot utility functions
 """
-from nltk.corpus import wordnet
 
 
 def import_module(dotted_path):
@@ -84,56 +83,6 @@ def validate_adapter_class(validate_class, adapter_class):
         )
 
 
-def nltk_download_corpus(resource_path):
-    """
-    Download the specified NLTK corpus file
-    unless it has already been downloaded.
-
-    Returns True if the corpus needed to be downloaded.
-    """
-    from nltk.data import find
-    from nltk import download
-    from os.path import split, sep
-    from zipfile import BadZipfile
-
-    # Download the NLTK data only if it is not already downloaded
-    _, corpus_name = split(resource_path)
-
-    if not resource_path.endswith(sep):
-        resource_path = resource_path + sep
-
-    downloaded = False
-
-    try:
-        find(resource_path)
-    except LookupError:
-        download(corpus_name)
-        downloaded = True
-    except BadZipfile:
-        raise BadZipfile(
-            'The NLTK corpus file being opened is not a zipfile, '
-            'or it has been corrupted and needs to be manually deleted.'
-        )
-
-    return downloaded
-
-
-def treebank_to_wordnet(pos):
-    """
-    Convert Treebank part-of-speech tags to Wordnet part-of-speech tags.
-    * https://www.ling.upenn.edu/courses/Fall_2003/ling001/penn_treebank_pos.html
-    * http://www.nltk.org/_modules/nltk/corpus/reader/wordnet.html
-    """
-    data_map = {
-        'N': wordnet.NOUN,
-        'J': wordnet.ADJ,
-        'V': wordnet.VERB,
-        'R': wordnet.ADV
-    }
-
-    return data_map.get(pos[0])
-
-
 def get_response_time(chatbot, statement='Hello'):
     """
     Returns the amount of time taken for a given
@@ -181,25 +130,3 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
     sys.stdout.flush()
     if total_items == iteration_counter:
         print('\r')
-
-
-def download_nltk_stopwords():
-    """
-    Download required NLTK stopwords corpus if it has not already been downloaded.
-    """
-    nltk_download_corpus('stopwords')
-
-
-def download_nltk_wordnet():
-    """
-    Download required NLTK corpora if they have not already been downloaded.
-    """
-    nltk_download_corpus('corpora/wordnet')
-
-
-def download_nltk_averaged_perceptron_tagger():
-    """
-    Download the NLTK averaged perceptron tagger that is required for this algorithm
-    to run only if the corpora has not already been downloaded.
-    """
-    nltk_download_corpus('averaged_perceptron_tagger')

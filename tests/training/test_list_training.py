@@ -84,7 +84,7 @@ class ListTrainingTests(ChatBotTestCase):
         ))
 
         self.assertIsLength(statements, 1)
-        self.assertEqual(statements[0].search_text, 'RB:kind PRP$:headdress')
+        self.assertEqual(statements[0].search_text, 'VERB:hat')
 
     def test_training_sets_search_in_response_to(self):
 
@@ -100,7 +100,7 @@ class ListTrainingTests(ChatBotTestCase):
         ))
 
         self.assertIsLength(statements, 1)
-        self.assertEqual(statements[0].search_in_response_to, 'PRP:kind PRP$:headdress')
+        self.assertEqual(statements[0].search_in_response_to, 'VERB:hat')
 
     def test_database_has_correct_format(self):
         """

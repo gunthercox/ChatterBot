@@ -78,7 +78,7 @@ class SearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         statement = Statement(text='This is a lovely swamp.')
         results = list(self.search_algorithm.search(statement))
 
-        self.assertIsLength(results, 2)
+        self.assertIsLength(results, 1)
 
         results_text = [result.text for result in results]
 
