@@ -43,10 +43,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         """
         functions = self.chatbot.get_initialization_functions()
 
-        self.assertIn('download_nltk_stopwords', str(functions))
-        self.assertIn('download_nltk_wordnet', str(functions))
-        self.assertIn('download_nltk_averaged_perceptron_tagger', str(functions))
-        self.assertIsLength(functions, 3)
+        self.assertIsLength(functions, 0)
 
     def test_get_initialization_functions_spacy_similarity(self):
         """
@@ -57,10 +54,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         list(self.chatbot.search_algorithms.values())[0].compare_statements = spacy_similarity
         functions = self.chatbot.get_initialization_functions()
 
-        self.assertIn('download_nltk_stopwords', str(functions))
-        self.assertIn('download_nltk_wordnet', str(functions))
-        self.assertIn('download_nltk_averaged_perceptron_tagger', str(functions))
-        self.assertIsLength(functions, 3)
+        self.assertIsLength(functions, 0)
 
     def test_get_initialization_functions_jaccard_similarity(self):
         """
@@ -71,10 +65,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         list(self.chatbot.search_algorithms.values())[0].compare_statements = jaccard_similarity
         functions = self.chatbot.get_initialization_functions()
 
-        self.assertIn('download_nltk_wordnet', str(functions))
-        self.assertIn('download_nltk_stopwords', str(functions))
-        self.assertIn('download_nltk_averaged_perceptron_tagger', str(functions))
-        self.assertIsLength(functions, 3)
+        self.assertIsLength(functions, 0)
 
     def test_no_statements_known(self):
         """
@@ -352,9 +343,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
             )
         ))
 
+        self.assertEqual(len(results), 1)
         self.assertEqual('Example A for search.', results[0].text)
-        self.assertEqual('Example B for search.', results[1].text)
-        self.assertIsLength(results, 2)
 
 
 class TestAdapterA(LogicAdapter):
