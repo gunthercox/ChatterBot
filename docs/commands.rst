@@ -13,15 +13,3 @@ you have then you can run the following command.
 .. code-block:: bash
 
    python -m chatterbot --version
-
-Locate NLTK data
-=================
-
-ChatterBot uses the Natural Language Toolkit (NLTK) for various
-language processing functions. ChatterBot downloads additional
-data that is required by NLTK. The following command can be used
-to find all NLTK data directories that contain files.
-
-.. code-block:: bash
-
-   python -m chatterbot list_nltk_data
