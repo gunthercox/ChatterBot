@@ -17,19 +17,6 @@ def import_module(dotted_path):
     return getattr(module, module_parts[-1])
 
 
-def get_initialization_functions(obj, attribute):
-    """
-    Return all initialization methods for the comparison algorithm.
-    Initialization methods must start with 'initialize_' and take no parameters.
-    """
-    attribute_parts = attribute.split('.')
-    outermost_attribute = getattr(obj, attribute_parts.pop(0))
-    for next_attribute in attribute_parts:
-        outermost_attribute = getattr(outermost_attribute, next_attribute)
-
-    return getattr(outermost_attribute, 'initialization_functions', [])
-
-
 def initialize_class(data, *args, **kwargs):
     """
     :param data: A string or dictionary containing a import_path attribute.
