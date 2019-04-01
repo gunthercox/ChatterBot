@@ -54,31 +54,6 @@ class ChatBot(object):
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)
 
-        if kwargs.get('initialize', True):
-            self.initialize()
-
-    def get_initialization_functions(self):
-        initialization_functions = set()
-
-        initialization_functions.update(utils.get_initialization_functions(
-            self, 'storage.tagger'
-        ))
-
-        for search_algorithm in self.search_algorithms.values():
-            search_algorithm_functions = utils.get_initialization_functions(
-                search_algorithm, 'compare_statements'
-            )
-            initialization_functions.update(search_algorithm_functions)
-
-        return initialization_functions
-
-    def initialize(self):
-        """
-        Do any work that needs to be done before the chatbot can process responses.
-        """
-        for function in self.get_initialization_functions():
-            function()
-
     def get_response(self, statement=None, **kwargs):
         """
         Return the bot's response based on the input.

@@ -37,36 +37,6 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         )
         self.assertIsNotNone(statement)
 
-    def test_get_initialization_functions(self):
-        """
-        Test that the initialization functions are returned.
-        """
-        functions = self.chatbot.get_initialization_functions()
-
-        self.assertIsLength(functions, 0)
-
-    def test_get_initialization_functions_spacy_similarity(self):
-        """
-        Test that the initialization functions are returned.
-        """
-        from chatterbot.comparisons import spacy_similarity
-
-        list(self.chatbot.search_algorithms.values())[0].compare_statements = spacy_similarity
-        functions = self.chatbot.get_initialization_functions()
-
-        self.assertIsLength(functions, 0)
-
-    def test_get_initialization_functions_jaccard_similarity(self):
-        """
-        Test that the initialization functions are returned.
-        """
-        from chatterbot.comparisons import jaccard_similarity
-
-        list(self.chatbot.search_algorithms.values())[0].compare_statements = jaccard_similarity
-        functions = self.chatbot.get_initialization_functions()
-
-        self.assertIsLength(functions, 0)
-
     def test_no_statements_known(self):
         """
         If there is no statements in the database, then the
