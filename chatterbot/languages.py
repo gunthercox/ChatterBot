@@ -2408,3 +2408,10 @@ class ZZA:
     ISO_639_1 = ''
     ISO_639 = 'zza'
     ENGLISH_NAME = 'Zaza'
+
+
+def get_language_classes():
+    import sys
+    import inspect
+
+    return inspect.getmembers(sys.modules[__name__], inspect.isclass)
