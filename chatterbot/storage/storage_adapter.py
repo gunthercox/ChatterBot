@@ -12,6 +12,8 @@ class StorageAdapter(object):
     def __init__(self, *args, **kwargs):
         """
         Initialize common attributes shared by all storage adapters.
+
+        :param str tagger_language: The language that the tagger uses to remove stopwords.
         """
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 

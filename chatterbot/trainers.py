@@ -17,8 +17,6 @@ class Trainer(object):
            trainer. The environment variable ``CHATTERBOT_SHOW_TRAINING_PROGRESS``
            can also be set to control this. ``show_training_progress`` will override
            the environment variable if it is set.
-
-    :param str tagger_language: The language that the tagger uses to remove stopwords.
     """
 
     def __init__(self, chatbot, **kwargs):
