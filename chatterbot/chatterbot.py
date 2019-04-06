@@ -13,12 +13,6 @@ class ChatBot(object):
     def __init__(self, name, **kwargs):
         self.name = name
 
-        primary_search_algorithm = IndexedTextSearch(self, **kwargs)
-
-        self.search_algorithms = {
-            primary_search_algorithm.name: primary_search_algorithm
-        }
-
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
         logic_adapters = kwargs.get('logic_adapters', [
@@ -32,6 +26,12 @@ class ChatBot(object):
         self.logic_adapters = []
 
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
+
+        primary_search_algorithm = IndexedTextSearch(self, **kwargs)
+
+        self.search_algorithms = {
+            primary_search_algorithm.name: primary_search_algorithm
+        }
 
         for adapter in logic_adapters:
             utils.validate_adapter_class(adapter, LogicAdapter)

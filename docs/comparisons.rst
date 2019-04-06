@@ -43,9 +43,9 @@ is shown below.
 .. code-block:: python
 
    from chatterbot import ChatBot
-   from chatterbot.comparisons import levenshtein_distance
+   from chatterbot.comparisons import LevenshteinDistance
 
    chatbot = ChatBot(
        # ...
-       statement_comparison_function=levenshtein_distance
+       statement_comparison_function=LevenshteinDistance
    )

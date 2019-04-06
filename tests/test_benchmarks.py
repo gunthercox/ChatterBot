@@ -95,7 +95,7 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function=comparisons.levenshtein_distance,
+            statement_comparison_function=comparisons.LevenshteinDistance,
             response_selection_method=response_selection.get_first_response
         )
 
@@ -110,7 +110,7 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function=comparisons.spacy_similarity,
+            statement_comparison_function=comparisons.SpacySimilarity,
             response_selection_method=response_selection.get_first_response
         )
 
@@ -155,7 +155,7 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function=comparisons.levenshtein_distance,
+            statement_comparison_function=comparisons.LevenshteinDistance,
             response_selection_method=response_selection.get_first_response
         )
 
@@ -170,7 +170,7 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
-            statement_comparison_function=comparisons.spacy_similarity,
+            statement_comparison_function=comparisons.SpacySimilarity,
             response_selection_method=response_selection.get_first_response
         )
 
