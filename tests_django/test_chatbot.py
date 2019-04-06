@@ -283,6 +283,27 @@ class ChatBotTests(ChatterBotTestCase):
             )
         ))
 
+        self.assertEqual(len(results), 1, msg=[r.text for r in results])
+        self.assertEqual('Example A for search.', results[0].text)
+
+    def test_search_text_contains_results_after_training(self):
+        """
+        ChatterBot should return close matches to an input
+        string when filtering using the search_text parameter.
+        """
+        self.chatbot.storage.create_many([
+            Statement('Example A for search.'),
+            Statement('Another example.'),
+            Statement('Example B for search.'),
+            Statement(text='Another statement.'),
+        ])
+
+        results = list(self.chatbot.storage.filter(
+            search_text_contains=self.chatbot.storage.tagger.get_bigram_pair_string(
+                'Example A for search.'
+            )
+        ))
+
+        self.assertEqual(len(results), 2, msg=[r.text for r in results])
         self.assertEqual('Example A for search.', results[0].text)
         self.assertEqual('Example B for search.', results[1].text)
-        self.assertEqual(len(results), 2)

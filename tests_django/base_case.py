@@ -1,9 +1,9 @@
 from chatterbot import ChatBot
-from django.test import TestCase
+from django.test import TransactionTestCase
 from tests_django import test_settings
 
 
-class ChatterBotTestCase(TestCase):
+class ChatterBotTestCase(TransactionTestCase):
 
     def setUp(self):
         super().setUp()

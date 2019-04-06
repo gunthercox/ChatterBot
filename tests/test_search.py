@@ -79,13 +79,8 @@ class SearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         results = list(self.search_algorithm.search(statement))
 
         self.assertIsLength(results, 1)
-
-        results_text = [result.text for result in results]
-
-        self.assertIn('This is a lovely bog.', results_text)
-        self.assertIn('This is a beautiful swamp.', results_text)
+        self.assertEqual(results[0].text, 'This is a beautiful swamp.')
         self.assertGreater(results[0].confidence, 0)
-        self.assertGreater(results[1].confidence, 0)
 
     def test_different_punctuation(self):
         self.chatbot.storage.create_many([
@@ -97,8 +92,9 @@ class SearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         statement = Statement(text='Are you good')
         results = list(self.search_algorithm.search(statement))
 
-        self.assertIsLength(results, 1)
-        self.assertEqual(results[0].text, 'Are you good?')
+        self.assertEqual(len(results), 2, msg=[r.search_text for r in results])
+        # Note: the last statement in the list always has the highest confidence
+        self.assertEqual(results[-1].text, 'Are you good?')
 
 
 class SearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTestCase):
@@ -117,23 +113,22 @@ class SearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTestCase
     def test_get_closest_statement(self):
         """
         Note, the content of the in_response_to field for each of the
-        test statements is only required because the logic adapter will
-        filter out any statements that are not in response to a known statement.
+        test statements is only required because the search process will
+        filter out any statements that are not in response to something.
         """
         self.chatbot.storage.create_many([
-            Statement(text='Who do you love?', in_response_to='I hear you are going on a quest?'),
-            Statement(text='What is the meaning of life?', in_response_to='Yuck, black licorice jelly beans.'),
-            Statement(text='I am Iron Man.', in_response_to='What... is your quest?'),
-            Statement(text='What... is your quest?', in_response_to='I am Iron Man.'),
-            Statement(text='Yuck, black licorice jelly beans.', in_response_to='What is the meaning of life?'),
-            Statement(text='I hear you are going on a quest?', in_response_to='Who do you love?'),
+            Statement(text='What is the meaning of life?', in_response_to='...'),
+            Statement(text='I am Iron Man.', in_response_to='...'),
+            Statement(text='What... is your quest?', in_response_to='...'),
+            Statement(text='Yuck, black licorice jelly beans.', in_response_to='...'),
+            Statement(text='I hear you are going on a quest?', in_response_to='...'),
         ])
 
         statement = Statement(text='What is your quest?')
 
         results = list(self.search_algorithm.search(statement))
 
-        self.assertIsLength(results, 1)
+        self.assertEqual(len(results), 1, msg=[r.text for r in results])
         self.assertEqual(results[0].text, 'What... is your quest?')
 
     def test_confidence_exact_match(self):
