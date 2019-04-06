@@ -5,7 +5,7 @@ class IndexedTextSearch:
     """
     :param statement_comparison_function: The dot-notated import path
         to a statement comparison function.
-        Defaults to ``levenshtein_distance``.
+        Defaults to ``LevenshteinDistance``.
 
     :param search_page_size:
         The maximum number of records to load into memory at a time when searching.
@@ -15,13 +15,17 @@ class IndexedTextSearch:
     name = 'indexed_text_search'
 
     def __init__(self, chatbot, **kwargs):
-        from chatterbot.comparisons import levenshtein_distance
+        from chatterbot.comparisons import LevenshteinDistance
 
         self.chatbot = chatbot
 
-        self.compare_statements = kwargs.get(
+        statement_comparison_function = kwargs.get(
             'statement_comparison_function',
-            levenshtein_distance
+            LevenshteinDistance
+        )
+
+        self.compare_statements = statement_comparison_function(
+            language=self.chatbot.storage.tagger.language
         )
 
         self.search_page_size = kwargs.get(
