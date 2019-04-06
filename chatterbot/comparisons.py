@@ -2,12 +2,15 @@
 This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
-from chatterbot import languages
 from difflib import SequenceMatcher
 import spacy
 
 
 class Comparator:
+
+    def __init__(self, language):
+
+        self.language = language
 
     def __call__(self, statement_a, statement_b):
         return self.compare(statement_a, statement_b)
@@ -59,10 +62,8 @@ class SpacySimilarity(Comparator):
     Calculate the similarity of two statements using Spacy models.
     """
 
-    def __init__(self):
-        super().__init__()
-
-        self.language = languages.ENG
+    def __init__(self, language):
+        super().__init__(language)
 
         self.nlp = spacy.load(self.language.ISO_639_1)
 
@@ -105,10 +106,8 @@ class JaccardSimilarity(Comparator):
     .. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index
     """
 
-    def __init__(self):
-        super().__init__()
-
-        self.language = languages.ENG
+    def __init__(self, language):
+        super().__init__(language)
 
         self.nlp = spacy.load(self.language.ISO_639_1)
 
@@ -134,11 +133,3 @@ class JaccardSimilarity(Comparator):
         ratio = numerator / denominator
 
         return ratio
-
-
-# ---------------------------------------- #
-
-
-levenshtein_distance = LevenshteinDistance()
-spacy_similarity = SpacySimilarity()
-jaccard_similarity = JaccardSimilarity()

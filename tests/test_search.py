@@ -60,7 +60,7 @@ class SearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         super().setUp()
         self.search_algorithm = IndexedTextSearch(
             self.chatbot,
-            statement_comparison_function=comparisons.spacy_similarity
+            statement_comparison_function=comparisons.SpacySimilarity
         )
 
     def test_get_closest_statement(self):
@@ -107,7 +107,7 @@ class SearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTestCase
         super().setUp()
         self.search_algorithm = IndexedTextSearch(
             self.chatbot,
-            statement_comparison_function=comparisons.levenshtein_distance
+            statement_comparison_function=comparisons.LevenshteinDistance
         )
 
     def test_get_closest_statement(self):
