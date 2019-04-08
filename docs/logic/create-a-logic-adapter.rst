@@ -15,9 +15,8 @@ Example logic adapter
 
 
    class MyLogicAdapter(LogicAdapter):
-
-    def __init__(self, chatbot, **kwargs):
-        super().__init__(chatbot, **kwargs)
+       def __init__(self, chatbot, **kwargs):
+           super().__init__(chatbot, **kwargs)
 
        def can_process(self, statement):
            return True
