@@ -1,18 +1,22 @@
-import sys
 import os
+import sys
+import configparser
 from datetime import datetime
 import sphinx_rtd_theme
 
 
-# Insert the project root dir as the first element in the PYTHONPATH.
-# This lets us ensure that the source package is imported, and that its version is used.
+config = configparser.ConfigParser()
+
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
+config_file_path = os.path.join(parent_directory, 'setup.cfg')
+
+config.read(config_file_path)
+
+# Insert the project root dir as the first element in the PYTHONPATH.
+# This lets us ensure that the source package is imported, and used to generate the documentation.
 sys.path.insert(0, parent_directory)
 
-import chatterbot # NOQA
-
-# -- General configuration ------------------------------------------------
 
 # Sphinx extension modules
 extensions = [
@@ -41,14 +45,17 @@ master_doc = 'index'
 
 # General information about the project
 project = 'ChatterBot'
-copyright = '{}, {}'.format(datetime.now().year, chatterbot.__author__)
-author = chatterbot.__author__
-
-# The short X.Y version
-version = chatterbot.__version__
+author = config['chatterbot']['author']
+copyright = '{}, {}'.format(
+    datetime.now().year,
+    author
+)
 
 # The full version, including alpha/beta/rc tags
-release = chatterbot.__version__
+release = config['chatterbot']['version']
+
+# The short X.Y version
+version = config['chatterbot']['version'].rsplit('.', 1)[0]
 
 language = 'en'
 

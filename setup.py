@@ -2,8 +2,10 @@
 """
 ChatterBot setup file.
 """
+import os
 import sys
 import platform
+import configparser
 from setuptools import setup
 
 
@@ -15,13 +17,17 @@ if sys.version_info[0] < 3:
         )
     )
 
-# Dynamically retrieve the version information from the chatterbot module
-CHATTERBOT = __import__('chatterbot')
-VERSION = CHATTERBOT.__version__
-AUTHOR = CHATTERBOT.__author__
-AUTHOR_EMAIL = CHATTERBOT.__email__
-URL = CHATTERBOT.__url__
-DESCRIPTION = CHATTERBOT.__doc__
+config = configparser.ConfigParser()
+
+current_directory = os.path.dirname(os.path.abspath(__file__))
+config_file_path = os.path.join(current_directory, 'setup.cfg')
+
+config.read(config_file_path)
+
+VERSION = config['chatterbot']['version']
+AUTHOR = config['chatterbot']['author']
+AUTHOR_EMAIL = config['chatterbot']['email']
+URL = config['chatterbot']['url']
 
 with open('README.md') as f:
     LONG_DESCRIPTION = f.read()
@@ -45,7 +51,7 @@ setup(
     project_urls={
         'Documentation': 'https://chatterbot.readthedocs.io',
     },
-    description=DESCRIPTION,
+    description='ChatterBot is a machine learning, conversational dialog engine.',
     long_description=LONG_DESCRIPTION,
     long_description_content_type='text/markdown',
     author=AUTHOR,
