@@ -23,7 +23,6 @@ venv
 
 examples/settings.py
 examples/ubuntu_dialogs*
-sentence_tokenizer.pickle
 .env
 .out
 
