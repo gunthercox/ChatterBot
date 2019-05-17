@@ -3,7 +3,6 @@ This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
 from difflib import SequenceMatcher
-import spacy
 
 
 class Comparator:
@@ -64,6 +63,7 @@ class SpacySimilarity(Comparator):
 
     def __init__(self, language):
         super().__init__(language)
+        import spacy
 
         self.nlp = spacy.load(self.language.ISO_639_1)
 
