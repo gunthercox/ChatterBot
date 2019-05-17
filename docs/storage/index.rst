@@ -41,6 +41,13 @@ SQL Storage Adapter
 MongoDB Storage Adapter
 =======================
 
+.. note::
+
+   Before you can use this storage adapter you will need to install
+   `pymongo`_. Consider adding ``pymongo`` to your project's
+   ``requirements.txt`` file so you can keep track of your dependencies
+   and their versions.
+
 .. autoclass:: chatterbot.storage.MongoDatabaseAdapter
    :members:
 
@@ -64,3 +71,4 @@ each of the databases that ChatterBot comes with support for.
 * MongoDB: No migrations are provided.
 
 .. _Alembic: https://alembic.sqlalchemy.org
+.. _pymongo: https://pypi.org/project/pymongo/

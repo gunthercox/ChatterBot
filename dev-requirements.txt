@@ -1,6 +1,7 @@
 coveralls
 flake8
 nose
+pymongo>=3.3,<4.0
 twine
 twython
 sphinx>=1.8,<1.9
