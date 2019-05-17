@@ -17,7 +17,9 @@ class StorageAdapter(object):
         """
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
-        self.tagger = PosLemmaTagger(language=kwargs.get(
+        Tagger = kwargs.get('tagger', PosLemmaTagger)
+
+        self.tagger = Tagger(language=kwargs.get(
             'tagger_language', languages.ENG
         ))
 

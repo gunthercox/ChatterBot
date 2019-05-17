@@ -108,6 +108,7 @@ class JaccardSimilarity(Comparator):
 
     def __init__(self, language):
         super().__init__(language)
+        import spacy
 
         self.nlp = spacy.load(self.language.ISO_639_1)
 

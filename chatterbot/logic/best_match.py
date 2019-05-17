@@ -57,7 +57,7 @@ class BestMatch(LogicAdapter):
         }
 
         alternate_response_selection_parameters = {
-            'search_in_response_to': self.chatbot.storage.tagger.get_bigram_pair_string(
+            'search_in_response_to': self.chatbot.storage.tagger.get_text_index_string(
                 input_statement.text
             ),
             'exclude_text': recent_repeated_responses,
