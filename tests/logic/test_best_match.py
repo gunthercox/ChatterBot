@@ -134,3 +134,33 @@ class BestMatchTestCase(ChatBotTestCase):
 
         self.assertEqual(match.confidence, 0)
         self.assertEqual(match.text, 'No')
+
+    def test_text_search_algorithm(self):
+        """
+        Test that a close match is found when the text_search algorithm is used.
+        """
+        self.adapter = BestMatch(
+            self.chatbot,
+            search_algorithm_name='text_search'
+        )
+
+        self.chatbot.storage.create(
+            text='I am hungry.'
+        )
+        self.chatbot.storage.create(
+            text='Okay, what would you like to eat?',
+            in_response_to='I am hungry.'
+        )
+        self.chatbot.storage.create(
+            text='Can you help me?'
+        )
+        self.chatbot.storage.create(
+            text='Sure, what seems to be the problem?',
+            in_response_to='Can you help me?'
+        )
+
+        statement = Statement(text='Could you help me?')
+        match = self.adapter.process(statement)
+
+        self.assertEqual(match.confidence, 0.82)
+        self.assertEqual(match.text, 'Sure, what seems to be the problem?')
