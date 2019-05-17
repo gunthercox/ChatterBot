@@ -11,7 +11,7 @@ class SQLStorageAdapter(StorageAdapter):
     It will check if tables are present, if they are not, it will attempt
     to create the required tables.
 
-    :keyword database_uri: eg: sqlite:///database_test.db',
+    :keyword database_uri: eg: sqlite:///database_test.sqlite3',
         The database_uri can be specified to choose database driver.
     :type database_uri: str
     """
