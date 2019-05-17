@@ -1,9 +1,9 @@
 bin
 build
 dist
-include
-lib
 venv
+.env
+.out
 .tox
 .coverage
 *.pyc
@@ -15,16 +15,3 @@ venv
 
 # Database files
 *.sqlite3
-*.db
-
-# IntelliJ
-.idea
-*.iml
-
-examples/settings.py
-examples/ubuntu_dialogs*
-.env
-.out
-
-# ignore Ubuntu corpus files
-data
