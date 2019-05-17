@@ -14,7 +14,7 @@ bot = ChatBot(
         'chatterbot.logic.TimeLogicAdapter',
         'chatterbot.logic.BestMatch'
     ],
-    database_uri='sqlite:///database.db'
+    database_uri='sqlite:///database.sqlite3'
 )
 
 print('Type something to begin...')
