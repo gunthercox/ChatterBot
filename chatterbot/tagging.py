@@ -1,18 +1,31 @@
 import string
 from chatterbot import languages
-import spacy
+
+
+class LowercaseTagger(object):
+    """
+    Returns the text in lowercase.
+    """
+
+    def __init__(self, language=None):
+        pass
+
+    def get_text_index_string(self, text):
+        return text.lower()
 
 
 class PosLemmaTagger(object):
 
     def __init__(self, language=None):
+        import spacy
+
         self.language = language or languages.ENG
 
         self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
 
         self.nlp = spacy.load(self.language.ISO_639_1.lower())
 
-    def get_bigram_pair_string(self, text):
+    def get_text_index_string(self, text):
         """
         Return a string of text containing part-of-speech, lemma pairs.
         """

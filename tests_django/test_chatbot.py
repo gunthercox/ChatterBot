@@ -278,7 +278,7 @@ class ChatBotTests(ChatterBotTestCase):
         ])
 
         results = list(self.chatbot.storage.filter(
-            search_text=self.chatbot.storage.tagger.get_bigram_pair_string(
+            search_text=self.chatbot.storage.tagger.get_text_index_string(
                 'Example A for search.'
             )
         ))
@@ -299,7 +299,7 @@ class ChatBotTests(ChatterBotTestCase):
         ])
 
         results = list(self.chatbot.storage.filter(
-            search_text_contains=self.chatbot.storage.tagger.get_bigram_pair_string(
+            search_text_contains=self.chatbot.storage.tagger.get_text_index_string(
                 'Example A for search.'
             )
         ))

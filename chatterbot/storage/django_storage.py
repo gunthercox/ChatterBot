@@ -100,11 +100,11 @@ class DjangoStorageAdapter(StorageAdapter):
         tags = kwargs.pop('tags', [])
 
         if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.tagger.get_bigram_pair_string(kwargs['text'])
+            kwargs['search_text'] = self.tagger.get_text_index_string(kwargs['text'])
 
         if 'search_in_response_to' not in kwargs:
             if kwargs.get('in_response_to'):
-                kwargs['search_in_response_to'] = self.tagger.get_bigram_pair_string(kwargs['in_response_to'])
+                kwargs['search_in_response_to'] = self.tagger.get_text_index_string(kwargs['in_response_to'])
 
         statement = Statement(**kwargs)
 
@@ -137,10 +137,10 @@ class DjangoStorageAdapter(StorageAdapter):
             statement_model_object = Statement(**statement_data)
 
             if not statement.search_text:
-                statement_model_object.search_text = self.tagger.get_bigram_pair_string(statement.text)
+                statement_model_object.search_text = self.tagger.get_text_index_string(statement.text)
 
             if not statement.search_in_response_to and statement.in_response_to:
-                statement_model_object.search_in_response_to = self.tagger.get_bigram_pair_string(statement.in_response_to)
+                statement_model_object.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
 
             statement_model_object.save()
 
@@ -168,10 +168,10 @@ class DjangoStorageAdapter(StorageAdapter):
         else:
             statement = Statement.objects.create(
                 text=statement.text,
-                search_text=self.tagger.get_bigram_pair_string(statement.text),
+                search_text=self.tagger.get_text_index_string(statement.text),
                 conversation=statement.conversation,
                 in_response_to=statement.in_response_to,
-                search_in_response_to=self.tagger.get_bigram_pair_string(statement.in_response_to),
+                search_in_response_to=self.tagger.get_text_index_string(statement.in_response_to),
                 created_at=statement.created_at
             )
 

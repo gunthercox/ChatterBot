@@ -108,10 +108,10 @@ class ChatBot(object):
         # Make sure the input statement has its search text saved
 
         if not input_statement.search_text:
-            input_statement.search_text = self.storage.tagger.get_bigram_pair_string(input_statement.text)
+            input_statement.search_text = self.storage.tagger.get_text_index_string(input_statement.text)
 
         if not input_statement.search_in_response_to and input_statement.in_response_to:
-            input_statement.search_in_response_to = self.storage.tagger.get_bigram_pair_string(input_statement.in_response_to)
+            input_statement.search_in_response_to = self.storage.tagger.get_text_index_string(input_statement.in_response_to)
 
         response = self.generate_response(input_statement, additional_response_selection_parameters)
 
