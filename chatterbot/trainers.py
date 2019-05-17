@@ -97,7 +97,7 @@ class ListTrainer(Trainer):
                     conversation_count + 1, len(conversation)
                 )
 
-            statement_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(text)
+            statement_search_text = self.chatbot.storage.tagger.get_text_index_string(text)
 
             statement = self.get_preprocessed_statement(
                 Statement(
@@ -151,7 +151,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
                 for text in conversation:
 
-                    statement_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(text)
+                    statement_search_text = self.chatbot.storage.tagger.get_text_index_string(text)
 
                     statement = Statement(
                         text=text,
@@ -336,7 +336,7 @@ class UbuntuCorpusTrainer(Trainer):
                             for preprocessor in self.chatbot.preprocessors:
                                 statement = preprocessor(statement)
 
-                            statement.search_text = tagger.get_bigram_pair_string(statement.text)
+                            statement.search_text = tagger.get_text_index_string(statement.text)
                             statement.search_in_response_to = previous_statement_search_text
 
                             previous_statement_text = statement.text

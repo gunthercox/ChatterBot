@@ -50,7 +50,7 @@ class IndexedTextSearch:
                 'No value for search_text was available on the provided input'
             )
 
-            input_search_text = self.chatbot.storage.tagger.get_bigram_pair_string(
+            input_search_text = self.chatbot.storage.tagger.get_text_index_string(
                 input_statement.text
             )
 
