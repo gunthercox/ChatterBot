@@ -8,7 +8,7 @@ class LowercaseTagger(object):
     """
 
     def __init__(self, language=None):
-        pass
+        self.language = language or languages.ENG
 
     def get_text_index_string(self, text):
         return text.lower()
