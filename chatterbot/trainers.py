@@ -58,8 +58,9 @@ class Trainer(object):
     def _generate_export_data(self):
         result = []
         for statement in self.chatbot.storage.filter():
-            if statement.in_response_to:
-                result.append([statement.in_response_to, statement.text])
+            conversation = [statement.in_response_to, statement.text]
+            if statement.in_response_to and conversation not in result:
+                result.append(conversation)
 
         return result
 
