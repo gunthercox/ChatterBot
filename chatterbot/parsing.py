@@ -28,7 +28,7 @@ re_duration = r'(before|after|earlier|later|ago|from\snow)'
 re_year = r'(19|20)\d{2}|^(19|20)\d{2}'
 re_timeframe = r'this|coming|next|following|previous|last|end\sof\sthe'
 re_ordinal = r'st|nd|rd|th|first|second|third|fourth|fourth|' + re_timeframe
-re_time = r'(?P<hour>\d{1,2})(\:(?P<minute>\d{1,2})(\sam|pm)?|\s?(?P<convention>am|pm))'
+re_time = r'(?P<hour>\d{1,2})(?=\s?(\:\d|(a|p)m))(\:(?P<minute>\d{1,2}))?(\s?(?P<convention>(am|pm)))?'
 re_separator = r'of|at|on'
 
 NUMBERS = {
