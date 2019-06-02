@@ -645,7 +645,7 @@ def date_from_adverb(base_date, name):
     # Reset date to start of the day
     adverb_date = datetime(base_date.year, base_date.month, base_date.day)
     if name == 'today' or name == 'tonite' or name == 'tonight':
-        return adverb_date.today()
+        return adverb_date.today().replace(hour=0, minute=0, second=0, microsecond=0)
     elif name == 'yesterday':
         return adverb_date - timedelta(days=1)
     elif name == 'tomorrow' or name == 'tom':
