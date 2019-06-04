@@ -124,6 +124,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             or_regex = '|'.join([
                 '{}'.format(word) for word in search_text_contains.split(' ')
             ])
+            or_regex = re.escape(or_regex)
             kwargs['search_text'] = re.compile(or_regex)
 
         mongo_ordering = []
