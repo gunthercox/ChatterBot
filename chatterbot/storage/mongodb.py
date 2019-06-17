@@ -124,7 +124,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             or_regex = '|'.join([
                 '({})'.format(word) for word in search_text_contains.split(' ')
             ])
-            kwargs['search_text'] = re.compile("(?<!^)\s+(?=[A-Z])(?!.\s)").split(or_regex)
+            kwargs['search_text'] = re.findall(r'[A-Z]+[^A-Z]*', or_regex)
 
         mongo_ordering = []
 
