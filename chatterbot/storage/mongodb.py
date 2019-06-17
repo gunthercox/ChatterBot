@@ -122,7 +122,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         if search_text_contains:
             or_regex = '|'.join([
-                '({})'.format(word) for word in search_text_contains.split(' ')
+                '{}'.format(word) for word in search_text_contains.split(' ')
             ])
             kwargs['search_text'] = re.compile(re.escape(or_regex))
 
