@@ -121,9 +121,8 @@ class MongoDatabaseAdapter(StorageAdapter):
             kwargs['persona']['$not'] = re.compile('^bot:*')
 
         if search_text_contains:
-            search_text_contains = re.escape(search_text_contains)
             or_regex = '|'.join([
-                '{}'.format(word) for word in search_text_contains.split(' ')
+                '{}'.format(re.escape(word)) for word in search_text_contains.split(' ')
             ])
             kwargs['search_text'] = re.compile(or_regex)
 
