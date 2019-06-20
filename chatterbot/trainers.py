@@ -170,7 +170,8 @@ class ChatterBotCorpusTrainer(Trainer):
 
                     statements_to_create.append(statement)
 
-            self.chatbot.storage.create_many(statements_to_create)
+            if statements_to_create:
+                self.chatbot.storage.create_many(statements_to_create)
 
 
 class UbuntuCorpusTrainer(Trainer):
