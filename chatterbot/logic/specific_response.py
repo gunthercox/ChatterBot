@@ -22,7 +22,7 @@ class SpecificResponseAdapter(LogicAdapter):
         self.response_statement = Statement(text=output_text)
 
     def can_process(self, statement):
-        if statement == self.input_text:
+        if statement.text == self.input_text:
             return True
 
         return False
