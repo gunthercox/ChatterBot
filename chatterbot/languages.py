@@ -779,7 +779,7 @@ class GRB:
 
 
 class GRE:
-    ISO_639_1 = ''
+    ISO_639_1 = 'el'
     ISO_639 = 'gre'
     ENGLISH_NAME = 'Greek'
 
