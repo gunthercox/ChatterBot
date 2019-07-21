@@ -45,7 +45,7 @@ while True:
             response.text,
             input_statement.text
         ))
-        if get_feedback() == False:
+        if get_feedback() is False:
             print('please input the correct one')
             correct_response = Statement(text=input())
             bot.learn_response(correct_response, input_statement)
