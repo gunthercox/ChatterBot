@@ -45,11 +45,12 @@ while True:
             response.text,
             input_statement.text
         ))
-        if get_feedback():
+        while get_feedback():
             print('please input the correct one')
             correct_response = Statement(text=input())
             bot.learn_response(correct_response, input_statement)
             print('Responses added to bot!')
+            break
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
