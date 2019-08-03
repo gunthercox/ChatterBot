@@ -211,20 +211,24 @@ class ChatBot(object):
         """
         Learn that the statement provided is a valid response.
         """
+        from chatterbot.conversation import Statement
+
         if not previous_statement:
             previous_statement = statement.in_response_to
 
         if not previous_statement:
             previous_statement = self.get_latest_response(statement.conversation)
-            if previous_statement:
-                previous_statement = previous_statement.text
 
         previous_statement_text = previous_statement
 
-        if not isinstance(previous_statement, (str, type(None), )):
+        if not isinstance(previous_statement, (Statement, str, type(None), )):
             statement.in_response_to = previous_statement.text
         elif isinstance(previous_statement, str):
             statement.in_response_to = previous_statement
+        elif isinstance(previous_statement, Statement):
+            statement.in_response_to = previous_statement.text
+            statement.search_in_response_to = previous_statement.search_text
+            previous_statement_text = previous_statement.text
 
         self.logger.info('Adding "{}" as a response to "{}"'.format(
             statement.text,
