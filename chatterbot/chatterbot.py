@@ -140,8 +140,6 @@ class ChatBot(object):
 
         :param input_statement: The input statement to be processed.
         """
-        Statement = self.storage.get_object('statement')
-
         results = []
         result = None
         max_confidence = -1
@@ -196,6 +194,10 @@ class ChatBot(object):
             if most_common.count > 1:
                 result = most_common.statement
 
+        return self.create_response(input_statement, result)
+
+    def create_response(self, input_statement, result):
+        Statement = self.storage.get_object('statement')
         response = Statement(
             text=result.text,
             in_response_to=input_statement.text,
