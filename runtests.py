@@ -6,6 +6,7 @@ This is the test runner for the ChatterBot's Django tests.
 
 import os
 import sys
+import numpy as np
 
 import django
 from django.conf import settings
@@ -17,6 +18,10 @@ if __name__ == '__main__':
     TestRunner = get_runner(settings)
     test_runner = TestRunner(
         verbosity=2
+
     )
+    
     failures = test_runner.run_tests(['tests_django'])
-    sys.exit(bool(failures))
+    if bool(failures)==1:
+        sys.exit()
+        
