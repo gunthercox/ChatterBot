@@ -1,0 +1,18 @@
+Usage of AutoSploit for attacking targets without prior mutual consent is illegal in pretty much every sense of the word. It is the
+end user's responsibility to obey all applicable local, state, and federal laws. Developers assume no liability and are not responsible
+for any misuse or damage caused by this program or any component thereof. 
+
+Developers do not encourage nor condone any illegal activity;
+
+In OffSec/RedTeam engagements it is important however to mind your operational security. With that in mind, please consider the following:
+
+ - Use AutoSploit on a VPS through a proxy(chain) or Tor
+ - Keep calm and wipe/data-poison the logs or use tools to do so
+ - Never connect from your local IP address
+ - Keep a low profile, AutoSploit is loud
+
+
+In closing, knowledge is not illegal and anybody that tells you learning is wrong is a fool.
+Get as much out of this program as we got from writing it. Remember though, common sense and a sense of ethics go a long way.
+
+Thank you.

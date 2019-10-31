@@ -1,0 +1,38 @@
++------------------------------------------------------------------------+
+|              AutoSploit General Usage and Information                  |
++------------------------------------------------------------------------+
+| As the name suggests AutoSploit attempts to automate the exploitation  |
+| of remote hosts. Targets are collected by employing the Shodan.io API. |
+|                                                                        |
+| The 'Gather Hosts' option will open a dialog from which you can        |
+| enter platform specific search queries such as 'Apache' or 'IIS'.      |
+| Upon doing so a list of candidates will be retrieved and saved to      |
+| hosts.txt in the current working directory.                            |
+| Options to load a custom list of hosts has been                        |
+| included.                                                              |
+| After this operation has been completed the 'Exploit' option will      |
+| go about the business of attempting to exploit these targets by        |
+| running a range of Metasploit modules against them.                    |
+|                                                                        |
+| Workspace, local host and local port for MSF facilitated               |
+| back connections are configured through the dialog that comes up       |
+| before the 'Exploit' module is started.                                |
+|                                                                        |
++-------------------+----------------------------------------------------+
+|     Option        |                   Summary                          |
++-------------------+----------------------------------------------------+
+| 1. Usage/Legal    | Display this informational message & Disclaimer    |
+| 2. Gather Hosts   | Query Shodan for a list of platform specific IPs.  |
+| 3. Custom Hosts   | Load in a custom list of IPs/Rhosts                |
+| 4. Single Host    | Add a single host to list and/or exploit directly  |
+| 5. View Hosts     | Print gathered IPs/RHOSTS.                         |
+| 6. Exploit        | Configure MSF and Start exploiting gathered targets|
+| 99. Quit          | Exits AutoSploit.                                  |
++-------------------+----------------------------------------------------+
+|                         Legal Disclaimer                               |
++------------------------------------------------------------------------+
+| Usage of AutoSploit for attacking targets without prior mutual consent |
+| is illegal. It is the end user's responsibility to obey all applicable |
+| local, state, and federal laws. Developers assume no liability and are |
+| not responsible for any misuse or damage caused by this program.       |
++------------------------------------------------------------------------+

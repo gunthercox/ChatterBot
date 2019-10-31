@@ -1,0 +1,12 @@
+development: &pgsql
+  adapter:   postgresql
+  database:  postgres
+  username:  postgres
+  password:  s3cr3t
+  host:      msfdb
+  port:      5432
+  pool:      200
+timeout:     5
+
+production:  &production
+  <<:        *pgsql

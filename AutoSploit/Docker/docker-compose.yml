@@ -1,0 +1,29 @@
+version:         '3'
+
+services:
+  autosploit:
+    build:
+      context:   .
+    ports:
+      - 80:80
+      - 443:433
+      - 4444:4444
+    networks:
+      - haknet
+    depends_on:
+      - postgres
+  postgres:
+    image:       postgres
+    environment:
+      - POSTGRES_PASSWORD=s3cr3t
+    networks:
+      - haknet
+    volumes:
+      - db:/var/lib/postgresql/data
+
+networks:
+  haknet:
+    driver:      bridge
+
+volumes:
+  db:
