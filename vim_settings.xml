@@ -1,0 +1,52 @@
+<application>
+  <component name="VimSettings">
+    <state version="4" enabled="true" />
+    <globalmarks />
+    <filemarks>
+      <file name="/start_script.py" timestamp="1562286735387">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="$USER_HOME$/versioneer.py" timestamp="1562803598814" />
+      <file name="/Dummy.txt" timestamp="1562803309039">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="/Python Console" timestamp="1562287484386">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="/__init__" timestamp="1561741918305">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="/fragment.py" timestamp="1561707935009">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="/Dummy.jql" timestamp="1561847882472">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="/Dummy.youtrack" timestamp="1561847882925">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="/XML Fragment (workspace1.xml:11).xml" timestamp="1561521117638">
+        <mark key="[" line="0" column="0" />
+      </file>
+      <file name="$USER_HOME$/Documents/GitHub/AutoAIAnt/metakernel/examples/workspace2.xml" timestamp="1561707712600">
+        <mark key="[" line="0" column="382" />
+      </file>
+      <file name="/Dummy.regexp" timestamp="1561847883597">
+        <mark key="[" line="0" column="0" />
+      </file>
+    </filemarks>
+    <jumps />
+    <registers />
+    <search>
+      <last-dir>0</last-dir>
+      <show-last>false</show-last>
+    </search>
+    <history>
+      <history-search />
+      <history-cmd />
+      <history-expr />
+      <history-input />
+    </history>
+    <shortcut-conflicts />
+  </component>
+</application>
