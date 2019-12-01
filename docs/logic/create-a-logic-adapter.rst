@@ -74,7 +74,7 @@ but statements such as "Do you know what time it is?" will not be processed.
 .. code-block:: python
 
    def can_process(self, statement):
-       if statement.text.startswith('Hey Mike')
+       if statement.text.startswith('Hey Mike'):
            return True
        else:
            return False
@@ -94,7 +94,7 @@ For this example we will use a fictitious API endpoint that returns the current 
        'what' and 'is' and 'temperature'.
        """
        words = ['what', 'is', 'temperature']
-       if all(x in statement.text.split() for x in words)
+       if all(x in statement.text.split() for x in words):
            return True
        else:
            return False
