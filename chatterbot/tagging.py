@@ -22,8 +22,12 @@ class PosLemmaTagger(object):
         self.language = language or languages.ENG
 
         self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
-
-        self.nlp = spacy.load(self.language.ISO_639_1.lower())
+        
+        # gives error Can't find model 'en'. It doesn't seem to be a shortcut link, a Python package or a valid path to a data directory.
+        # self.nlp = spacy.load(self.language.ISO_639_1.lower())
+        
+        # change to normal loading for nlp
+        self.nlp = spacy.load("en_core_web_sm)
 
     def get_text_index_string(self, text):
         """
