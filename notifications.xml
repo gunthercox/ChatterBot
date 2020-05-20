@@ -1,0 +1,19 @@
+<application>
+  <component name="NotificationConfiguration">
+    <notification groupId="Debugger messages" displayType="TOOL_WINDOW" />
+    <notification groupId="Execution" displayType="STICKY_BALLOON" />
+    <notification groupId="Find in Path" displayType="TOOL_WINDOW" />
+    <notification groupId="Find Problems" displayType="STICKY_BALLOON" />
+    <notification groupId="Indexing" />
+    <notification groupId="Package requirements" />
+    <notification groupId="Pipfile Watcher" displayType="STICKY_BALLOON" />
+    <notification groupId="Plugins AutoSwitch" />
+    <notification groupId="Plugins updates" displayType="STICKY_BALLOON" />
+    <notification groupId="Project Startup Tasks Messages" />
+    <notification groupId="PyCharm Professional Advertiser" displayType="STICKY_BALLOON" />
+    <notification groupId="Python Stub Packages Advertiser" displayType="STICKY_BALLOON" />
+    <notification groupId="Required Plugins" displayType="STICKY_BALLOON" />
+    <notification groupId="scrolling-capabilities-debug" displayType="STICKY_BALLOON" />
+    <notification groupId="Vcs Important Messages" />
+  </component>
+</application>

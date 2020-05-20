@@ -1,0 +1,9 @@
+<toolSet name="External Tools">
+  <tool name="interperate" showInMainMenu="false" showInEditor="false" showInProject="false" showInSearchPopup="false" disabled="false" useConsole="true" showConsoleOnStdOut="false" showConsoleOnStdErr="false" synchronizeAfterRun="true">
+    <exec>
+      <option name="COMMAND" />
+      <option name="PARAMETERS" />
+      <option name="WORKING_DIRECTORY" value="$PyInterpreterDirectory$" />
+    </exec>
+  </tool>
+</toolSet>

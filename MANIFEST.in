@@ -1,8 +1,6 @@
-include LICENSE
+include setup.py
+include calysto_processing/__init__.py
+include calysto_processing/__main__.py
+include calysto_processing/kernel.py
 include README.md
-include requirements.txt
-include setup.cfg
-
-global-exclude __pycache__
-global-exclude *.py[co]
-global-exclude .*
+include calysto_processing/images/*.png

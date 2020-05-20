@@ -1,0 +1,5 @@
+<application>
+  <component name="HttpConfigurable">
+    <option name="USE_PROXY_PAC" value="true" />
+  </component>
+</application>
