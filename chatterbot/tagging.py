@@ -27,7 +27,7 @@ class PosLemmaTagger(object):
         # self.nlp = spacy.load(self.language.ISO_639_1.lower())
         
         # change to normal loading for nlp
-        self.nlp = spacy.load("en_core_web_sm)
+        self.nlp = spacy.load("en_core_web_sm")
 
     def get_text_index_string(self, text):
         """
