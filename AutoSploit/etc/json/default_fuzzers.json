@@ -1,0 +1,24 @@
+{
+  "exploits": [
+    "auxiliary/fuzzers/ftp/client_ftp",
+    "auxiliary/fuzzers/ftp/ftp_pre_post",
+    "auxiliary/fuzzers/http/http_form_field",
+    "auxiliary/fuzzers/http/http_get_uri_long",
+    "auxiliary/fuzzers/http/http_get_uri_strings",
+    "auxiliary/fuzzers/ntp/ntp_protocol_fuzzer",
+    "auxiliary/fuzzers/smb/smb2_negotiate_corrupt",
+    "auxiliary/fuzzers/smb/smb_create_pipe",
+    "auxiliary/fuzzers/smb/smb_create_pipe_corrupt",
+    "auxiliary/fuzzers/smb/smb_negotiate_corrupt ",
+    "auxiliary/fuzzers/smb/smb_ntlm1_login_corrupt",
+    "auxiliary/fuzzers/smb/smb_tree_connect",
+    "auxiliary/fuzzers/smb/smb_tree_connect_corrupt",
+    "auxiliary/fuzzers/smtp/smtp_fuzzer",
+    "auxiliary/fuzzers/ssh/ssh_kexinit_corrupt",
+    "auxiliary/fuzzers/ssh/ssh_version_15",
+    "auxiliary/fuzzers/ssh/ssh_version_2",
+    "auxiliary/fuzzers/ssh/ssh_version_corrupt",
+    "auxiliary/fuzzers/tds/tds_login_corrupt",
+    "auxiliary/fuzzers/tds/tds_login_username"
+  ]
+}

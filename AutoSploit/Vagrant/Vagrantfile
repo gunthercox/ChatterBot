@@ -1,0 +1,28 @@
+# Use as a strating point to spin up a box in lightsail.
+# the vagrant-lightsail plugin is required
+# You probably also need to:
+# - Configure the ssh keys path
+# - Install and configure the aws-cli package
+
+Vagrant.configure('2') do |config|
+	config.vm.synced_folder ".", "/vagrant", type: "rsync",
+		rsync__exclude: ".git/",
+		rsync__auto: true
+
+	config.ssh.private_key_path		= '/path/to/id_rsa'
+	config.ssh.username				= 'ubuntu'
+	config.vm.box					= 'lightsail'
+	config.vm.box_url				= 'https://github.com/thejandroman/vagrant-lightsail/raw/master/box/lightsail.box'
+	config.vm.hostname				= 'autosploit-launcher'
+
+	config.vm.provider :lightsail do |provider, override|
+		provider.port_info		 	= [{ from_port: 0, to_port: 65535, protocol:
+		'all' }]
+		provider.keypair_name		= 'id_rsa'
+		provider.bundle_id			= 'small_1_0'
+	end
+
+	config.vm.provision "bootstrap", type: "shell", run: "once" do |s|
+		s.path	= "./bootstrap/bootstrap.sh"
+	end
+end
