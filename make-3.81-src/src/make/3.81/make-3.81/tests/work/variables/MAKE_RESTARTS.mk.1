@@ -1,0 +1,6 @@
+
+all: ; @:
+$(info MAKE_RESTARTS=$(MAKE_RESTARTS))
+include foo.x
+foo.x: ; @echo "include bar.x" > $@
+bar.x: ; @touch $@

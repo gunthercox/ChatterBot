@@ -1,0 +1,66 @@
+{
+  "name": "async-exit-hook",
+  "version": "2.0.1",
+  "description": "Run some code when the process exits (supports async hooks and pm2 clustering)",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/tapppi/async-exit-hook.git"
+  },
+  "author": {
+    "name": "Tapani Moilanen",
+    "email": "moilanen.tapani@gmail.com",
+    "url": "https://github.com/tapppi"
+  },
+  "contributors": [
+    {
+      "name": "Sindre Sorhus",
+      "email": "sindresorhus@gmail.com",
+      "url": "http://sindresorhus.com"
+    }
+  ],
+  "engines": {
+    "node": ">=0.12.0"
+  },
+  "scripts": {
+    "test": "xo && nyc ava",
+    "release": "standard-version"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "exit",
+    "quit",
+    "process",
+    "hook",
+    "graceful",
+    "handler",
+    "shutdown",
+    "sigterm",
+    "sigint",
+    "sighup",
+    "pm2",
+    "cluster",
+    "child",
+    "reload",
+    "async",
+    "terminate",
+    "kill",
+    "stop",
+    "event"
+  ],
+  "devDependencies": {
+    "ava": "^0.21.0",
+    "coveralls": "^2.11.14",
+    "nyc": "^10.3.2",
+    "standard-version": "^4.2.0",
+    "xo": "^0.18.2"
+  },
+  "ava": {
+    "files": [
+      "test/*.js",
+      "!tests/cases/*"
+    ]
+  }
+}

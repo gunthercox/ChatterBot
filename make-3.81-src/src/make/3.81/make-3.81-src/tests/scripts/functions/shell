@@ -1,0 +1,23 @@
+#                                                                    -*-perl-*-
+
+$description = 'Test the $(shell ...) function.';
+
+$details = '';
+
+
+# Test shells inside rules.
+run_make_test('.PHONY: all
+all: ; @echo $(shell echo hi)
+','','hi');
+
+
+# Test shells inside exported environment variables.
+# This is the test that fails if we try to put make exported variables into
+# the environment for a $(shell ...) call.
+run_make_test('
+export HI = $(shell echo hi)
+.PHONY: all
+all: ; @echo $$HI
+','','hi');
+
+1;

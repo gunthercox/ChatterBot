@@ -1,0 +1,57 @@
+#                                                                    -*-perl-*-
+$description = "Test the -q option.\n";
+
+$details = "Try various uses of -q and ensure they all give the correct results.\n";
+
+# TEST 0
+
+run_make_test('
+one:
+two: ;
+three: ; :
+four: ; $(.XY)
+five: ; \
+ $(.XY)
+six: ; \
+ $(.XY)
+	$(.XY)
+seven: ; \
+ $(.XY)
+	: foo
+	$(.XY)
+',
+              '-q one', '');
+
+# TEST 1
+
+run_make_test(undef, '-q two', '');
+
+# TEST 2
+
+run_make_test(undef, '-q three', '', 256);
+
+# TEST 3
+
+run_make_test(undef, '-q four', '');
+
+# TEST 4
+
+run_make_test(undef, '-q five', '');
+
+# TEST 5
+
+run_make_test(undef, '-q six', '');
+
+# TEST 6
+
+run_make_test(undef, '-q seven', '', 256);
+
+# TEST 7 : Savannah bug # 7144
+
+run_make_test('
+one:: ; @echo one
+one:: ; @echo two
+',
+              '-q', '', 256);
+
+1;

@@ -1,0 +1,174 @@
+2006-02-24  Eli Zaretskii  <eliz@gnu.org>
+
+	* glob.c (my_malloc) [WINDOWS32]: Provide a full ISO C prototype,
+        to avoid compiler warnings.
+
+2005-06-25  Paul D. Smith  <psmith@gnu.org>
+
+	* fnmatch.h, glob.h [WINDOWS32]: Fix ifdefs in headers.
+	Fixes Savannah bug #13477.
+
+2005-03-11  Paul D. Smith  <psmith@gnu.org>
+
+	* glob.c (glob_in_dir): Change FNM_CASEFOLD to be enabled if
+	HAVE_CASE_INSENSITIVE_FS is defined.
+
+2003-01-30  Paul D. Smith  <psmith@gnu.org>
+
+	* glob.h: Patch for FreeBSD by Mike Barcroft <mike@freebsd.org>
+	Reported by Gerald Pfeifer <pfeifer@dbai.tuwien.ac.at>.  On
+	FreeBSD, declare __size_t to simply size_t.
+
+2002-04-22  Paul D. Smith  <psmith@gnu.org>
+
+	* Makefile.am: Use automake 1.6.
+	Use new automake condition USE_LOCAL_GLOB to decide whether or not
+	to build the local GNU glob library or use the system one.
+
+1999-09-12  Paul D. Smith  <psmith@gnu.org>
+
+	* fnmatch.c: Last GLIBC version wouldn't compile outside of GLIBC
+	(undefined reference to internal_function).  Update to the latest
+	version
+
+1999-09-11  Paul Eggert  <eggert@twinsun.com>
+
+	* glob.h (glob): If #defining to glob64, do this before
+	declaring it, so that all declarations and uses match, and
+	do not declare glob64, to avoid a declaration clash.
+	(globfree): Likewise with globfree64.
+
+1999-09-08  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* glob.c (prefix_array) [__MSDOS__,WINDOWS32]: Keep the trailing
+	slash unless DIRNAME is just "x:/".
+
+1999-09-06  Paul D. Smith  <psmith@gnu.org>
+
+	* fnmatch.c: Update to latest version from GLIBC.
+
+1999-07-21  Paul D. Smith  <psmith@gnu.org>
+
+	* glob.c, glob.h, fnmatch.c, fnmatch.h: Update to latest version
+	from GLIBC.
+
+	* fnmatch.c (internal_fnmatch): Use K&R definition syntax, not ANSI.
+	(__strchrnul): This won't exist outside GLIBC, so create one.
+
+	* glob.c: Move getlogin{,_r} prototypes below glob.h to get __P()
+	macro.
+
+1998-08-05  Paul D. Smith  <psmith@gnu.org>
+
+	* configure.in: Remove; configuration for glob is handled by the
+	make configure.in.
+
+1998-07-29  Paul D. Smith  <psmith@gnu.org>
+
+	* glob.c, fnmatch.c: New versions from the GLIBC folks (Ulrich
+	Drepper).  Fixes a bug reported by Eli Zaretski.  Integrates
+	DOS/Windows32 support.
+
+1998-07-27  Kaveh R. Ghazi  <ghazi@caip.rutgers.edu>
+
+	* glob.c (glob): Cast away const on assignment of pattern to dirname.
+	Cast the return type of __alloca() for traditional C compilers.
+
+1998-07-23  Paul D. Smith  <psmith@gnu.org>
+
+	* glob.c, fnmatch.c: New versions of these files from the GLIBC
+	folks (Ulrich Drepper).  Had to re-integrate some DOS/Windows
+	code.
+
+1998-07-10  Paul D. Smith  <psmith@gnu.org>
+
+	* glob.c (glob_in_dir): If no meta chars exist in PATTERN and
+	GLOB_NOCHECK is present, don't look for the file--whether it's
+	found or not, we'll always return it, so why bother searching?
+
+	Also, if we are searching and there are no meta chars, don't
+	bother trying fnmatch() if the strcmp() fails.
+
+1998-05-30  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* glob.c (glob) [__MSDOS__, WINDOWS32]: Compute the directory and
+	filename parts of the pattern correctly when it includes a drive
+	spec.  Disallow wildcards in the drive spec.  Prevent recursion
+	when dirname is of the form "d:/" or "d:".
+	(prefix_array) [__MSDOS__, WINDOWS32]: Don't append a slash to
+	"d:/" and "d:".
+
+1998-05-13  Paul D. Smith  <psmith@gnu.org>
+
+	* SMakefile, Makefile.ami, glob.c, glob.h, fnmatch.c: Updated from
+	the latest glibc version.
+
+1998-04-17  Paul D. Smith  <psmith@gnu.org>
+
+	* configure.in: Create a config.h file instead of setting things
+	on the compile line.  This is because when build.sh runs it merely
+	passes -DHAVE_CONFIG_H to the glob files, just as it does to the
+	make files.
+	* config.h.in: Created by autoheader.
+
+Tue Aug 12 10:52:34 1997  Paul D. Smith  <psmith@baynetworks.com>
+
+	* configure.in: Require autoconf 2.12.
+
+	* glob: Updates from latest GNU libc glob code.
+
+	* glob.c,glob.h,fnmatch.h: Change all WIN32 references to WINDOWS32.
+
+	* glob.h: OSF4 defines macros in such a way that GLOB_ALTDIRFUNC
+	is not defined.  Added a test to the #if which defines it if
+	_GNU_SOURCE is defined; that's set by both glob.c and GNU make.
+
+	* glob.c: SunOS4 w/ cc needs #include <stdio.h>, since assert.h
+	requires stderr but doesn't include stdio.h :-/.
+	(next_brace_sub): De-protoize function definition.
+	(glob): Cast __alloca(); on SunOS4 it uses the default return type
+	of int.
+	(glob): Irix defines getlogin_r() to return a char*; move the
+	extern for that into the _LIBC area since it isn't used except in
+	LIBC anyway.  Likewise, move extern getlogin() into the "else".
+
+Sat Jul 20 21:55:31 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	Win32 hacks from <Rob_Tulloh@tivoli.com>.
+	* posix/glob.c [WIN32]: Don't include <pwd.h>; don't use d_ino;
+	use void * for my_realloc; include <malloc.h> for alloca.
+	(glob) [WIN32]: Use "c:/users/default" for ~ if no HOME variable.
+	* posix/fnmatch.h [WIN32]: Use prototypes even if [!__STDC__].
+	* posix/glob.h: Likewise.
+
+Fri Jul 19 16:56:41 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.h [!_AMIGA && !VMS]: Check this instead of just [!_AMIGA]
+	for `struct stat;' forward decl.
+
+Sat Jun 22 10:44:09 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/glob.c: Include <alloca.h> only [HAVE_ALLOCA_H], not [sparc].
+
+Fri Jun 21 00:27:51 1996  Roland McGrath  <roland@delasyd.gnu.ai.mit.edu>
+
+	* posix/fnmatch.c (fnmatch): Fix \*[*?]+ case to increment name ptr
+ 	only for ?s, not for *s.  Fix from Chet Ramey.
+
+
+Copyright (C) 1988, 1989, 1990, 1991, 1992, 1993, 1994, 1995, 1996, 1997,
+1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006 Free Software
+Foundation, Inc.
+This file is part of GNU Make.
+
+GNU Make is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version.
+
+GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+GNU Make; see the file COPYING.  If not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.

@@ -1,0 +1,5 @@
+
+all: 1 2; @echo success
+-include 1.inc 2.inc
+1.inc: ; @echo ONE.inc; sleep 2; echo TWO.inc; echo '1: ; @echo ONE; sleep 2; echo TWO' > $@
+2.inc: ; @sleep 1; echo THREE.inc; echo '2: ; @sleep 1; echo THREE' > $@

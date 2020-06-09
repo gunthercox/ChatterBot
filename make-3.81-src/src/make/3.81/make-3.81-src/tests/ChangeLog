@@ -1,0 +1,838 @@
+2006-04-01  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/realpath: Don't run tests with multiple
+	initial slashes on Windows: those paths mean something different.
+
+2006-03-19  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/parallelism: Test that the jobserver is
+	properly managed when we have to re-exec the master instance of
+	make.
+
+2006-03-17  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/statipattrules: Add tests for bug #16053.
+
+2006-03-09  Paul Smith  <psmith@gnu.org>
+
+	* scripts/features/escape: Use "pre:" not "p:" to avoid conflicts
+	with DOS drive letters.  Fixes Savannah bug #15947.
+
+	* test_driver.pl (run_each_test): Set the status properly even
+	when a test fails to execute.  Fixes Savannah bug #15942.
+
+	* scripts/functions/foreach: Use a different environment variable
+	other than PATH to avoid differences with Windows platforms.
+	Fixes Savannah bug #15938.
+
+2006-03-05  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (set_more_defaults): Add CYGWIN_NT as a port
+	type W32.  Fixed Savannah bug #15937.
+
+	* scripts/features/default_names: Don't call error() when the test
+	fails.  Fixes Savannah bug #15941.
+
+2006-02-17  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/targetvars: Test a complex construction which
+	guarantees that we have to merge variable lists of different
+	sizes.  Tests for Savannah bug #15757.
+
+2006-02-15  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/error: Make sure filename/lineno information
+	is related to where the error is expanded, not where it's set.
+	* scripts/functions/warning: Ditto.
+	* scripts/functions/foreach: Check for different error conditions.
+	* scripts/functions/word: Ditto.
+	* scripts/variables/negative: Test some variable reference failure
+	conditions.
+	* scripts/options/warn-undefined-variables: Test the
+	--warn-undefined-variables flag.
+
+2006-02-09  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (set_more_defaults): Update valgrind support
+	for newer versions.
+	* test_driver.pl (toplevel): Skip all hidden files/directories (ones
+	beginning with ".").
+
+	* scripts/functions/andor: Tests for $(and ..) and $(or ...)
+	functions.
+
+2006-02-08  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/parallelism: Add a test for bug #15641.
+
+2006-02-06  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-W: Add a test for bug #15341.
+
+2006-01-03  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/variables/automatic: Add a test for bug #8154.
+
+	* README: Update to reflect the current state of the test suite.
+
+2005-12-12  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/parallelism, scripts/functions/wildcard,
+	scripts/targets/FORCE, scripts/targets/PHONY,
+	scripts/targets/SILENT: Use the default setting for
+	$delete_command.  Fixes bug #15085.
+
+	* run_make_tests.pl (get_this_pwd) [VMS]: Use -no_ask with delete_file.
+
+2005-12-11  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/misc/general4: Test implicit rules with '$' in the
+	prereq list & prereq patterns.
+	* scripts/features/se_implicit: Add in .SECONDEXPANSION settings.
+
+2005-12-09  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/patternrules: Add a test for bug #13022.
+
+2005-12-07  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/double_colon: Add a test for bug #14334.
+
+2005-11-17  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/functions/flavor: Add a test for the flavor function.
+
+2005-11-14  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/variables/INCLUDE_DIRS: Add a test for the .INCLUDE_DIRS
+	special variable.
+
+2005-10-24  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/misc/general4: Test '$$' in prerequisites list.
+	* scripts/features/statipattrules: Rewrite to use run_make_test().
+	Add various static pattern info.
+	* scripts/features/se_statpat: Enable .SECONDEXPANSION target.
+	* scripts/features/se_explicit: Add tests for handling '$$' in
+	prerequisite lists with and without setting .SECONDEXPANSION.
+	* scripts/features/order_only: Convert to run_make_test().
+	* run_make_tests.pl (set_more_defaults): If we can't get the value
+	of $(MAKE) from make, then fatal immediately.
+
+2005-08-31  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (get_this_pwd): Require the POSIX module (in
+	an eval to trap errors) and if it exists, use POSIX::getcwd to
+	find the working directory.  If it doesn't exist, go back to the
+	previous methods.  This tries to be more accurate on Windows
+	systems.
+
+2005-08-29  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/abspath: Add some text to the error messages
+	to get a better idea of what's wrong.  Make warnings instead of
+	errors.
+
+	* scripts/features/patspecific_vars: Don't use "test", which is
+	UNIX specific.  Print the values and let the test script match
+	them.
+
+2005-08-25  Paul Smith  <psmith@gnu.org>
+
+	* scripts/variables/SHELL: Use a /./ prefix instead of //: the
+	former works better with non-UNIX environments.  Fixes Savannah
+	bug #14129.
+
+2005-08-13  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/functions/wildcard: Wrap calls to $(wildcard ) with
+	$(sort) so that the resulting order is no longer filesystem-
+	dependant.
+
+2005-08-10  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/statipattrules: Add a test for Savannah bug #13881.
+
+2005-08-07  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/parallelism: Add a test for a bug reported by
+	Michael Matz (matz@suse.de) in which make exits without waiting
+	for all its children in some situations during parallel builds.
+
+2005-07-08  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl: Reset the environment to a clean value every
+	time before we invoke make.  I'm suspicious that the environment
+	isn't handled the same way in Windows as it is in UNIX, and some
+	variables are leaking out beyond the tests they are intended for.
+	Create an %extraENV hash tests can set to add more env. vars.
+	* tests/scripts/features/export: Change to use %extraENV.
+	* tests/scripts/functions/eval: Ditto.
+	* tests/scripts/functions/origin: Ditto.
+	* tests/scripts/options/dash-e: Ditto.
+	* tests/scripts/variables/SHELL: Ditto.
+
+2005-06-27  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-W: Use 'echo >>' instead of touch to update
+	files.
+	* scripts/features/reinvoke: Rewrite to be safer on systems with
+	subsecond timestamps.
+	* scripts/features/patternrules: False exits with different error
+	codes on different systems (for example, Linux => 1, Solaris => 255).
+
+	* scripts/options/dash-W: Set the timestamp to foo.x in the future,
+	to be sure it will be considered updated when it's remade.
+
+2005-06-26  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/shell: New test suite for the shell function.
+
+2005-06-25  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/include: Test include/-include/sinclude with no
+	arguments.  Tests fix for Savannah bug #1761.
+
+	* scripts/misc/general3: Implement comprehensive testing of
+	backslash-newline behavior in command scripts: various types of
+	quoting, fast path / slow path, etc.
+	Tests fix for Savannah bug #1332.
+
+	* scripts/options/symlinks: Test symlinks to non-existent files.
+	Tests fix for Savannah bug #13280.
+
+	* scripts/misc/general3: Test semicolons in variable references.
+	Tests fix for Savannah bug #1454.
+
+	* scripts/variables/MAKE_RESTARTS: New file: test the
+	MAKE_RESTARTS variable.
+	* scripts/options/dash-B: Test re-exec doesn't loop infinitely.
+	Tests fix for Savannah bug #7566.
+	* scripts/options/dash-W: New file: test the -W flag, including
+	re-exec infinite looping.
+
+2005-06-12  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/misc/close_stdout: Add a test for Savannah bug #1328.
+	This test only works on systems that have /dev/full (e.g., Linux).
+
+2005-06-09  Paul D. Smith  <psmith@gnu.org>
+
+        * scripts/functions/foreach: Add a test for Savannah bug #11913.
+
+2005-05-31  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/include: Add a test for Savannah bug #13216.
+	* scripts/features/patternrules: Add a test for Savannah bug #13218.
+
+2005-05-13  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/conditionals: Add tests for the new if... else
+	if... endif syntax.
+
+2005-05-03  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/variables/DEFAULT_GOAL: Rename DEFAULT_TARGET to
+	DEFAULT_GOAL.
+
+2005-05-02  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/parallelism: Add a test for exporting recursive
+	variables containing $(shell ) calls.  Rewrite this script to use
+	run_make_test() everywhere.
+
+2005-04-07  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/targets/SECONDARY: Add a test for Savannah bug #12331.
+
+2005-03-15  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/variables/automatic: Add a test for Savannah bug #12320.
+
+2005-03-10  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/patternrules: Add a test for Savannah bug #12267.
+
+2005-03-09  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/variables/DEFAULT_TARGET: Add a test for Savannah
+	bug #12266.
+
+2005-03-04  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/patternrules: Add a test for Savannah bug #12202.
+
+2005-03-03  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/se_implicit: Add a test for stem
+	termination bug. Add a test for stem triple-expansion bug.
+
+	* scripts/features/se_statpat: Add a test for stem
+	triple-expansion bug.
+
+	* scripts/features/statipattrules: Change test #4 to reflect
+	new way empty prerequisite list is handled.
+
+
+2005-03-01  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/statipattrules: Add a test for
+	Savannah bug #12180.
+
+2005-02-28  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-q: Add a test for Savannah bug # 7144.
+
+	* scripts/options/symlinks: New file to test checking of symlink
+	timestamps.  Can't use filename dash-L because it conflicts with
+	dash-l on case-insensitive filesystems.
+
+	* scripts/variables/MAKEFILE_LIST, scripts/variables/MFILE_LIST:
+	Rename MAKEFILE_LIST test to MFILE_LIST, for systems that need 8.3
+	unique filenames.
+
+2005-02-28  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/variables/DEFAULT_TARGET: Test the .DEFAULT_TARGET
+	special variable.
+
+2005-02-27  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/se_explicit: Test the second expansion in
+	explicit rules.
+	* scripts/features/se_implicit: Test the second expansion in
+	implicit rules.
+	* scripts/features/se_statpat: Test the second expansion in
+	static pattern rules.
+	* scripts/variables/automatic: Fix to work with the second
+	expansion.
+
+	* scripts/misc/general4: Add a test for bug #12091.
+
+2005-02-27  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/eval: Check that eval of targets within
+	command scripts fails.  See Savannah bug # 12124.
+
+2005-02-26  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl (compare_output): If a basic comparison of the
+	log and answer doesn't match, try harder: change all backslashes
+	to slashes and all CRLF to LF.  This helps on DOS/Windows systems.
+
+2005-02-09  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/recursion: Test command line variable settings:
+	only one instance of a given variable should be provided.
+
+2004-11-30  Boris Kolpackov  <boris@kolpackov.net>
+
+	* tests/scripts/functions/abspath: New file: test `abspath'
+	built-in function.
+
+	* tests/scripts/functions/realpath: New file: test `realpath'
+	built-in function.
+
+2004-11-28  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-C [WINDOWS32]: Add a test for bug #10252;
+	this doesn't really test anything useful in UNIX but...
+
+	* scripts/variables/SHELL: New file: test proper handling of SHELL
+	according to POSIX rules.  Fixes bug #1276.
+
+2004-10-21  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/functions/word: Test $(firstword ) and $(lastword ).
+
+2004-10-05  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/patspecific_vars: Test simple/recursive
+	variable expansion.
+
+2004-09-28  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/include: Test dontcare flag inheritance
+	when rebuilding makefiles.
+
+2004-09-27  Boris Kolpackov  <boris@kolpackov.net>
+
+	* scripts/features/patspecific_vars: Test exported variables.
+
+2004-09-22  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (run_make_test): Don't add newlines to the
+	makestring or answer if they are completely empty.
+
+	* scripts/features/patternrules: Rename from implicit_prereq_eval.
+
+	* scripts/test_template: Rework the template.
+
+2004-09-21  Boris Kolpackov  <boris@kolpackov.net>
+
+	* run_make_tests.pl: Change `#!/usr/local/bin/perl' to be
+	`#!/usr/bin/env perl'.
+
+	* scripts/features/implicit_prereq_eval: Test implicit rule
+	prerequisite evaluation code.
+
+2004-09-21  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (run_make_test): Enhance to allow the make
+	string to be undef: in that case it reuses the previous make
+	string.  Allows multiple tests on the same makefile.
+
+	* scripts/variables/flavors: Add some tests for prefix characters
+	interacting with define/endef variables.
+
+2004-09-20  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/substitution: Rewrite to use run_make_test()
+	interface, and add test for substitution failures reported by
+	Markus Mauhart <qwe123@chello.at>.
+
+2004-03-22  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl (run_each_test, toplevel, compare_output): Change
+	to track both the testing categories _AND_ the number of
+	individual tests, and report both sets of numbers.
+
+2004-02-21  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/origin: Set our own environment variable
+	rather than relying on $HOME.
+
+2004-01-21  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/conditionals: Test arguments to ifn?def which
+	contain whitespace (such as a function that is evaluated).  Bug
+	#7257.
+
+2004-01-07  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/order_only: Test order-only prerequisites in
+	pattern rules (patch #2349).
+
+2003-11-02  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/if: Test if on conditionals with trailing
+	whitespace--bug #5798.
+
+	* scripts/functions/eval: Test eval in a non-file context--bug #6195.
+
+2003-04-19  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/patspecific_vars: Test multiple patterns
+	matching the same target--Bug #1405.
+
+2003-04-09  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (set_more_defaults): A new $port_type of
+	'OS/2' for (surprise!) OS/2.  Also choose a wait time of 2 seconds
+	for OS/2.
+
+2003-03-28  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/targets/SECONDARY: Test the "global" .SECONDARY (with
+	not prerequisites)--Bug #2515.
+
+2003-01-30  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/targetvars: Test very long target-specific
+	variable definition lines (longer than the default make buffer
+	length).  Tests patch # 1022.
+
+	* scripts/functions/eval: Test very recursive $(eval ...) calls
+	with simple variable expansion (bug #2238).
+
+	* scripts/functions/word: Test error handling for word and
+	wordlist functions (bug #2407).
+
+2003-01-22  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/call: Test recursive argument masking (bug
+	#1744).
+
+2002-10-25  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/eval: Test using $(eval ...) inside
+	conditionals (Bug #1516).
+
+2002-10-14  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-t: Add a test for handling -t on targets
+	with no commands (Bug #1418).
+
+2002-10-13  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/targetvars: Add a test for exporting
+	target-specific vars (Bug #1391).
+
+2002-10-05  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/variables/automatic: Add tests for $$(@), $${@}, $${@D},
+	and $${@F}.
+
+2002-09-23  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/escape: Test handling of escaped comment
+	characters in targets and prerequisites.
+
+2002-09-18  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/export: Test export/unexport of multiple
+	variables in a single command.
+
+2002-09-17  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/targetvars: Tests for Bug #940: test
+	target-specific and pattern-specific variables in conjunction with
+	double-colon targets.
+
+2002-09-10  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl (compare_output): Match the new format for time
+	skew error messages.
+
+	* scripts/features/export: Created.  Add tests for export/unexport
+	capabilities, including exporting/unexporting expanded variables.
+
+	* scripts/features/conditionals: Add a test for expanded variables
+	in ifdef conditionals.
+
+2002-09-04  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/reinvoke: Change touch/sleep combos to utouch
+	invocations.
+	* scripts/features/vpathgpath: Ditto.
+	* scripts/features/vpathplus: Ditto.
+	* scripts/options/dash-n: Ditto.
+	* scripts/targets/INTERMEDIATE: Ditto.
+	* scripts/targets/SECONDARY: Ditto.
+
+	* scripts/options/dash-t: Added a test for the -t bug fixed by
+	Henning Makholm.  This test was also contributed by Henning.
+
+	* scripts/misc/general4: Add a test suite for obscure algorithmic
+	features of make.  First test: make sure creation subdirectories
+	as prerequisites of targets works properly.
+
+	* scripts/misc/version: Remove this bogus test.
+
+2002-08-07  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/misc/general3: Add a test for makefiles that don't end
+	in newlines.
+
+	* scripts/variables/special: Create tests for the special
+	variables (.VARIABLES and .TARGETS).  Comment out .TARGETS test
+	for now as it's not yet supported.
+
+2002-08-01  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-B: Add a test for the new -B option.
+
+2002-07-11  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (valid_option): Add support for Valgrind.  Use
+	-valgrind option to the test suite.
+	(set_more_defaults): Set up the file descriptor to capture
+	Valgrind output.  We have to unset its close-on-exec flag; we
+	hardcode the value for F_SETFD (2) rather than load it; hopefully
+	this will help us avoid breaking the Windows/DOS test suite.
+
+2002-07-10  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/variables/automatic: Add some tests for $$@, $$(@D), and
+	$$(@F).
+
+	* test_driver.pl (utouch): Create a new function that creates a
+	file with a specific timestamp offset.  Use of this function will
+	let us avoid lots of annoying sleep() invocations in the tests
+	just to get proper timestamping, which will make the tests run a
+	lot faster.  So far it's only used in the automatic test suite.
+
+2002-07-09  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/variables/automatic: Create a test for automatic variables.
+
+2002-07-08  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/order_only: Test new order-only prerequisites.
+
+2002-07-07  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/eval: Test new function.
+	* scripts/functions/value: Test new function.
+	* scripts/variables/MAKEFILE_LIST: Test new variable.
+
+2002-04-28  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/call: New test: transitive closure
+	implementation using $(call ...) to test variable recursion.
+
+2002-04-21  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl (compare_dir_tree): Ignore CVS and RCS
+	directories in the script directories.
+
+2001-05-02  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/variables/flavors: Test define/endef scripts where only
+	one of the command lines is quiet.
+
+2000-06-22  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-q: New file; test the -q option.  Includes
+	a test for PR/1780.
+
+2000-06-21  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/targetvars: Added a test for PR/1709: allowing
+	semicolons in target-specific variable values.
+
+2000-06-19  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/addsuffix: Test for an empty final argument.
+	Actually this bug might have happened for any function, but this
+	one was handy.
+
+2000-06-17  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* scripts/options/general: If parallel jobs are not supported,
+	expect a warning message from Make.
+
+2000-06-15  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* scripts/options/general: Don't try -jN with N != 1 if parallel
+	jobs are not supported.
+
+2000-05-24  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/general: Test general option processing (PR/1716).
+
+2000-04-11  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/strip: Test empty value to strip (PR/1689).
+
+2000-04-08  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* scripts/features/reinvoke: Sleep before updating the target
+	files in the first test, to ensure its time stamp really gets
+	newer; otherwise Make might re-exec more than once.
+
+2000-04-07  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* scripts/features/double_colon: Don't run the parallel tests if
+	parallel jobs aren't supported.
+
+2000-04-04  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/word: wordlist doesn't swap arguments anymore.
+
+2000-03-27  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/statipattrules: Test that static pattern rules
+	whose prerequisite patterns resolve to empty strings throw an
+	error (instead of dumping core).  Fixes PR/1670.
+
+	* scripts/features/reinvoke: Make more robust by touching "b"
+	first, to ensure it's not newer than "a".
+	Reported by Marco Franzen <Marco.Franzen@Thyron.com>.
+	* scripts/options/dash-n: Ditto.
+
+	* scripts/functions/call: Whoops.  The fix to PR/1527 caused
+	recursive invocations of $(call ...) to break.  I can't come up
+	with any way to get both working at the same time, so I backed out
+	the fix to 1527 and added a test case for recursive calls.  This
+	also tests the fix for PR/1610.
+
+	* scripts/features/double_colon: Test that circular dependencies
+	in double-colon rule sets are detected correctly (PR/1671).
+
+2000-03-26  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/targets/INTERMEDIATE: Test that make doesn't remove
+	.INTERMEDIATE files when given on the command line (PR/1669).
+
+2000-03-08  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-k: Add a test for error detection by
+	multiple targets depending on the same prerequisite with -k.
+	For PR/1634.
+
+2000-02-07  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/escape: Add a test for backslash-escaped spaces
+	in a target name (PR/1586).
+
+2000-02-04  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/patspecific_vars: Add a test for pattern-specific
+	target variables inherited from the parent target (PR/1407).
+
+2000-02-02  Paul D. Smith  <psmith@gnu.org>
+
+	* run_make_tests.pl (set_more_defaults): Hard-code the LANG to C
+	to make sure sorting order, etc. is predictable.
+	Reported by Andreas Jaeger <aj@suse.de>.
+
+	* run_make_tests.pl (set_more_defaults): Set the $wtime variable
+	depending on the OS.  Eli Zaretskii <eliz@is.elta.co.il> reports
+	this seems to need to be *4* on DOS/Windows, not just 2.  Keep it
+	1 for other systems.
+	* scripts/features/vpathplus (touchfiles): Use the $wtime value
+	instead of hardcoding 2.
+	* scripts/targets/SECONDARY: Ditto.
+	* scripts/targets/INTERMEDIATE: Ditto.
+
+2000-01-27  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl (toplevel): Don't try to run test scripts which
+	are really directories.
+
+2000-01-23  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/include: Remove a check; the fix caused more
+	problems than the error, so I removed it and removed the test for
+	it.
+
+2000-01-11  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/call: Add a test for PR/1517 and PR/1527: make
+	sure $(call ...) doesn't eval its arguments and that you can
+	invoke foreach from it without looping forever.
+
+1999-12-15  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/targets/INTERMEDIATE: Add a test for PR/1423: make sure
+	.INTERMEDIATE settings on files don't disable them as implicit
+	intermediate possibilities.
+
+1999-12-01  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/double_colon: Add a test for PR/1476: Try
+	double-colon rules as non-goal targets and during parallel builds
+	to make sure they're handled serially.
+
+1999-11-17  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/functions/if: Add a test for PR/1429: put some text
+	after an if-statement to make sure it works.
+
+	* scripts/features/targetvars: Add a test for PR/1380: handling +=
+	in target-specific variable definitions correctly.
+
+1999-10-15  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/variables/MAKEFILES: This was really broken: it didn't
+	test anything at all, really.  Rewrote it, plus added a test for
+	PR/1394.
+
+1999-10-13  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/options/dash-n: Add a test for PR/1379: "-n doesn't
+	behave properly when used with recursive targets".
+
+1999-10-08  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/targetvars: Add a check for PR/1378:
+	"Target-specific vars don't inherit correctly"
+
+1999-09-29  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl (get_osname): Change $fancy_file_names to
+	$short_filenames and reverse the logic.
+	(run_each_test): Change test of non-existent $port_host to use
+	$short_filenames--problem reported by Eli Zaretskii.
+
+1999-09-23  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/parallelism: Add a check to ensure that the
+	jobserver works when we re-invoke.  Also cleaned up the tests a
+	little, reducing the number of rules we use so the test won't need
+	as many "sleep" commands.
+
+1999-09-16  Paul D. Smith  <psmith@gnu.org>
+
+	* scripts/features/reinvoke: Remove invocations of "touch" in
+	makefiles.  See the comments on the touch function rewrite below.
+	Note that UNIX touch behaves the same way if the file already
+	exists: it sets the time to the _local_ time.  We don't want
+	this.  This is probably a good tip for makefile writers in
+	general, actually... where practical.
+	* scripts/options/dash-l: Ditto.
+	* scripts/options/dash-n: Ditto.
+
+	* test_driver.pl (run_each_test): In retrospect, I don't like the
+	.lN/.bN/.dN postfix required by DOS.  So, for non-DOS systems I
+	changed it back to use .log, .base, and .diff.
+
+	* run_make_tests.pl (set_more_defaults): Move the check for the
+	make pathname to here from set_defaults (that's too early since it
+	happens before the command line processing).
+	Create a new variable $port_type, calculated from $osname, to
+	specify what kind of system we're running on.  We should integrate
+	the VOS stuff here, too.
+	(valid_option): Comment out the workdir/-work stuff so people
+	won't be fooled into thinking it works... someone needs to fix
+	this, though!
+
+	* scripts/functions/origin: Use $port_type instead of $osname.
+	* scripts/functions/foreach: Ditto.
+	* scripts/features/default_names: Ditto.
+
+1999-09-15  Paul D. Smith  <psmith@gnu.org>
+
+	* test_driver.pl (touch): Rewrite this function.  Previously it
+	used to use utime() to hard-set the time based on the current
+	local clock, or, if the file didn't exist, it merely created it.
+	This mirrors exactly what real UNIX touch does, but it fails badly
+	on networked filesystems where the FS server clock is skewed from
+	the local clock: normally modifying a file causes it to get a mod
+	time based on the _server's_ clock.  Hard-setting it based on the
+	_local_ clock causes gratuitous errors and makes the tests
+	unreliable except on local filesystems.  The new function will
+	simply modify the file, allowing the filesystem to set the mod
+	time as it sees fit.
+
+	* scripts/features/parallelism: The second test output could
+	change depending on how fast some scripts completed; use "sleep"
+	to force the order we want.
+
+	* test_driver.pl (toplevel): A bug in Perl 5.000 to Perl 5.004
+	means that "%ENV = ();" doesn't do the right thing.  This worked
+	in Perl 4 and was fixed in Perl 5.004_01, but use a loop to delete
+	the environment rather than require specific versions.
+
+	* run_make_tests.pl (set_more_defaults): Don't use Perl 5 s///
+	modifier "s", so the tests will run with Perl 4.
+	(set_more_defaults): Set $pure_log to empty if there's no -logfile
+	option in PURIFYOPTIONS.
+	(setup_for_test): Don't remove any logs unless $pure_log is set.
+
+1999-09-15  Eli Zaretskii  <eliz@is.elta.co.il>
+
+	* scripts/features/reinvoke: Put the SHELL definition in the right
+	test makefile.
+
+1999-09-15  Paul D. Smith  <psmith@gnu.org>
+
+	ChangeLog file for the test suite created.
+
+
+Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,
+2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+This file is part of GNU Make.
+
+GNU Make is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version.
+
+GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+GNU Make; see the file COPYING.  If not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.

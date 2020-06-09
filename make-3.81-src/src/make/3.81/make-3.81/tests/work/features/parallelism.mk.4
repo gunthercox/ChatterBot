@@ -1,0 +1,12 @@
+
+.PHONY: all fail.1 fail.2 fail.3 ok
+all: fail.1 ok fail.2 fail.3
+
+fail.1 fail.2 fail.3:
+	@sleep $(patsubst fail.%,%,$@)
+	@echo Fail
+	@exit 1
+
+ok:
+	@sleep 4
+	@echo Ok done

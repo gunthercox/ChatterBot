@@ -1,0 +1,306 @@
+# -*-Makefile-*- for GNU make on Amiga
+#
+# NOTE: If you have no `make' program at all to process this makefile, run
+# `build.sh' instead.
+#
+# Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+# 2005, 2006 Free Software Foundation, Inc.
+# This file is part of GNU Make.
+#
+# GNU Make is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2, or (at your option) any later version.
+#
+# GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# GNU Make; see the file COPYING.  If not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+#
+#	Makefile for GNU Make
+#
+
+CC = sc
+RM = delete
+
+CFLAGS =
+CPPFLAGS =
+LDFLAGS =
+
+# Define these for your system as follows:
+#	-DNO_ARCHIVES		To disable `ar' archive support.
+#	-DNO_FLOAT		To avoid using floating-point numbers.
+#	-DENUM_BITFIELDS	If the compiler isn't GCC but groks enum foo:2.
+#				Some compilers apparently accept this
+#				without complaint but produce losing code,
+#				so beware.
+# NeXT 1.0a uses an old version of GCC, which required -D__inline=inline.
+# See also `config.h'.
+defines =
+
+# Which flavor of remote job execution support to use.
+# The code is found in `remote-$(REMOTE).c'.
+REMOTE = stub
+
+# If you are using the GNU C library, or have the GNU getopt functions in
+# your C library, you can comment these out.
+GETOPT = getopt.o getopt1.o
+GETOPT_SRC = $(srcdir)getopt.c $(srcdir)getopt1.c $(srcdir)getopt.h
+
+# If you are using the GNU C library, or have the GNU glob functions in
+# your C library, you can comment this out.  GNU make uses special hooks
+# into the glob functions to be more efficient (by using make's directory
+# cache for globbing), so you must use the GNU functions even if your
+# system's C library has the 1003.2 glob functions already.  Also, the glob
+# functions in the AIX and HPUX C libraries are said to be buggy.
+GLOB = glob/glob.lib
+
+# If your system doesn't have alloca, or the one provided is bad, define this.
+ALLOCA = alloca.o
+ALLOCA_SRC = $(srcdir)alloca.c
+
+# If your system needs extra libraries loaded in, define them here.
+# System V probably need -lPW for alloca.  HP-UX 7.0's alloca in
+# libPW.a is broken on HP9000s300 and HP9000s400 machines.  Use
+# alloca.c instead on those machines.
+LOADLIBES =
+
+# Any extra object files your system needs.
+extras = amiga.o
+
+# Common prefix for machine-independent installed files.
+prefix =
+# Common prefix for machine-dependent installed files.
+exec_prefix =
+
+# Directory to install `make' in.
+bindir = sc:c
+# Directory to find libraries in for `-lXXX'.
+libdir = lib:
+# Directory to search by default for included makefiles.
+includedir = include:
+# Directory to install the Info files in.
+infodir = doc:
+# Directory to install the man page in.
+mandir = t:
+# Number to put on the man page filename.
+manext = 1
+# Prefix to put on installed `make' binary file name.
+binprefix =
+# Prefix to put on installed `make' man page file name.
+manprefix = $(binprefix)
+
+# Whether or not make needs to be installed setgid.
+# The value should be either `true' or `false'.
+# On many systems, the getloadavg function (used to implement the `-l'
+# switch) will not work unless make is installed setgid kmem.
+install_setgid = false
+# Install make setgid to this group so it can read /dev/kmem.
+group = sys
+
+# Program to install `make'.
+INSTALL_PROGRAM = copy
+# Program to install the man page.
+INSTALL_DATA = copy
+# Generic install program.
+INSTALL = copy
+
+# Program to format Texinfo source into Info files.
+MAKEINFO = makeinfo
+# Program to format Texinfo source into DVI files.
+TEXI2DVI = texi2dvi
+
+# Programs to make tags files.
+ETAGS = etags -w
+CTAGS = ctags -w
+
+objs = commands.o job.o dir.o file.o misc.o main.o read.o remake.o	\
+       rule.o implicit.o default.o variable.o expand.o function.o	\
+       vpath.o version.o ar.o arscan.o signame.o strcache.o hash.o      \
+       remote-$(REMOTE).o $(GETOPT) $(ALLOCA) $(extras)
+srcs = $(srcdir)commands.c $(srcdir)job.c $(srcdir)dir.c             \
+       $(srcdir)file.c $(srcdir)getloadavg.c $(srcdir)misc.c         \
+       $(srcdir)main.c $(srcdir)read.c $(srcdir)remake.c             \
+       $(srcdir)rule.c $(srcdir)implicit.c $(srcdir)default.c        \
+       $(srcdir)variable.c $(srcdir)expand.c $(srcdir)function.c     \
+       $(srcdir)vpath.c $(srcdir)version.c $(srcdir)hash.c           \
+       $(srcdir)remote-$(REMOTE).c                                     \
+       $(srcdir)ar.c $(srcdir)arscan.c $(srcdir)strcache.c              \
+       $(srcdir)signame.c $(srcdir)signame.h $(GETOPT_SRC)            \
+       $(srcdir)commands.h $(srcdir)dep.h $(srcdir)filedep.h            \
+       $(srcdir)job.h $(srcdir)make.h $(srcdir)rule.h                \
+       $(srcdir)variable.h $(ALLOCA_SRC) $(srcdir)config.h.in
+
+
+.SUFFIXES:
+.SUFFIXES: .o .c .h .ps .dvi .info .texinfo
+
+all: make
+info: make.info
+dvi: make.dvi
+# Some makes apparently use .PHONY as the default goal if it is before `all'.
+.PHONY: all check info dvi
+
+make.info: make.texinfo
+	$(MAKEINFO) -I$(srcdir) $(srcdir)make.texinfo -o make.info
+
+make.dvi: make.texinfo
+	$(TEXI2DVI) $(srcdir)make.texinfo
+
+make.ps: make.dvi
+	dvi2ps make.dvi > make.ps
+
+make: $(objs) $(GLOB)
+	$(CC) Link $(LDFLAGS) $(objs) Lib $(GLOB) $(LOADLIBES) To make.new
+	-delete make
+	rename make.new make
+
+TMPFILE = t:Make$$
+
+$(GLOB):
+	cd glob @@\
+	$(MAKE) -$(MAKEFLAGS) -f Makefile
+
+# -I. is needed to find config.h in the build directory.
+OUTPUT_OPTION =
+.c.o:
+	$(CC) $(defines) IDir "" IDir glob \
+	      $(CPPFLAGS) $(CFLAGS) $< $(OUTPUT_OPTION)
+
+# For some losing Unix makes.
+SHELL = /bin/sh
+#@SET_MAKE@
+
+glob/libglob.a: FORCE config.h
+	cd glob; $(MAKE) libglob.a
+FORCE:
+
+tagsrcs = $(srcs) $(srcdir)remote-*.c
+
+.PHONY: install installdirs
+install: installdirs \
+	 $(bindir)$(binprefix)make $(infodir)make.info \
+	 $(mandir)$(manprefix)make.$(manext)
+
+installdirs:
+	$(SHELL) ${srcdir}/mkinstalldirs $(bindir) $(infodir) $(mandir)
+
+$(bindir)$(binprefix)make: make
+	$(INSTALL_PROGRAM) make $@.new
+	@if $(install_setgid); then \
+	   if chgrp $(group) $@.new && chmod g+s $@.new; then \
+	     echo "chgrp $(group) $@.new && chmod g+s $@.new"; \
+	   else \
+	     echo "$@ needs to be owned by group $(group) and setgid;"; \
+	     echo "otherwise the \`-l' option will probably not work."; \
+	     echo "You may need special privileges to install $@."; \
+	   fi; \
+	 else true; fi
+# Some systems can't deal with renaming onto a running binary.
+	-$(RM) $@.old
+	-mv $@ $@.old
+	mv $@.new $@
+
+$(infodir)make.info: make.info
+	if [ -r ./make.info ]; then dir=.; else dir=$(srcdir); fi; \
+	for file in $${dir}/make.info*; do \
+	  name="`basename $$file`"; \
+	  $(INSTALL_DATA) $$file \
+	    `echo $@ | sed "s,make.info\$$,$$name,"`; \
+	done
+# Run install-info only if it exists.
+# Use `if' instead of just prepending `-' to the
+# line so we notice real errors from install-info.
+# We use `$(SHELL) -c' because some shells do not
+# fail gracefully when there is an unknown command.
+	if $(SHELL) -c 'install-info --version' >/dev/null 2>&1; then \
+	  if [ -r ./make.info ]; then dir=.; else dir=$(srcdir); fi; \
+	  install-info --infodir=$(infodir) $$dir/make.info; \
+	else true; fi
+
+$(mandir)$(manprefix)make.$(manext): make.man
+	$(INSTALL_DATA) $(srcdir)make.man $@
+
+
+loadavg: loadavg.c config.h
+	$(CC) $(defines) -DTEST -I. -I$(srcdir) $(CFLAGS) $(LDFLAGS) \
+	      loadavg.c $(LOADLIBES) -o $@
+# We copy getloadavg.c into a different file rather than compiling it
+# directly because some compilers clobber getloadavg.o in the process.
+loadavg.c: getloadavg.c
+	ln $(srcdir)getloadavg.c loadavg.c || \
+	cp $(srcdir)getloadavg.c loadavg.c
+check-loadavg: loadavg
+	@echo The system uptime program believes the load average to be:
+	-uptime
+	@echo The GNU load average checking code believes:
+	./loadavg
+check: check-loadavg
+
+
+.PHONY: clean realclean distclean mostlyclean
+clean: glob-clean
+	-$(RM) make loadavg "#?.o" core make.dvi
+
+distclean: clean glob-realclean
+	-$(RM) Makefile config.h config.status build.sh
+	-$(RM) config.log config.cache
+	-$(RM) TAGS tags
+	-$(RM) make.?? make.??s make.log make.toc make.*aux
+	-$(RM) loadavg.c
+
+realclean: distclean
+	-$(RM) make.info*
+mostlyclean: clean
+
+.PHONY: glob-clean glob-realclean
+glob-clean glob-realclean:
+	cd glob @@\
+	$(MAKE) $@
+
+# This tells versions [3.59,3.63) of GNU make not to export all variables.
+.NOEXPORT:
+
+# The automatically generated dependencies below may omit config.h
+# because it is included with ``#include <config.h>'' rather than
+# ``#include "config.h"''.  So we add the explicit dependency to make sure.
+$(objs): config.h
+
+# Automatically generated dependencies will be put at the end of the file.
+
+# Automatically generated dependencies.
+commands.o: commands.c make.h dep.h filedef.h variable.h job.h \
+ commands.h
+job.o: job.c make.h job.h filedef.h commands.h variable.h
+dir.o: dir.c make.h
+file.o: file.c make.h dep.h filedef.h job.h commands.h variable.h
+misc.o: misc.c make.h dep.h
+main.o: main.c make.h dep.h filedef.h variable.h job.h commands.h \
+ getopt.h
+read.o: read.c make.h dep.h filedef.h job.h commands.h variable.h \
+ glob/glob.h
+remake.o: remake.c make.h filedef.h job.h commands.h dep.h
+rule.o: rule.c make.h dep.h filedef.h job.h commands.h variable.h \
+ rule.h
+implicit.o: implicit.c make.h rule.h dep.h filedef.h
+default.o: default.c make.h rule.h dep.h filedef.h job.h commands.h \
+ variable.h
+variable.o: variable.c make.h dep.h filedef.h job.h commands.h \
+ variable.h
+expand.o: expand.c make.h filedef.h job.h commands.h variable.h
+function.o: function.c make.h filedef.h variable.h dep.h job.h \
+ commands.h amiga.h
+vpath.o: vpath.c make.h filedef.h variable.h
+strcache.o: strcache.c make.h hash.h
+version.o: version.c
+ar.o: ar.c make.h filedef.h dep.h
+arscan.o: arscan.c make.h
+signame.o: signame.c signame.h
+remote-stub.o: remote-stub.c make.h filedef.h job.h commands.h
+getopt.o: getopt.c
+getopt1.o : getopt1.c getopt.h
+getloadavg.o: getloadavg.c
+amiga.o: amiga.c make.h variable.h amiga.h

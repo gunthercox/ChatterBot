@@ -1,0 +1,11 @@
+
+recurse: ; @$(MAKE) --no-print-directory -f work/features/parallelism.mk.2 INC=yes all
+all: 1 2; @echo success
+
+INC = no
+ifeq ($(INC),yes)
+-include 1.inc 2.inc
+endif
+
+1.inc: ; @echo ONE.inc; sleep 2; echo TWO.inc; echo '1: ; @echo ONE; sleep 2; echo TWO' > $@
+2.inc: ; @sleep 1; echo THREE.inc; echo '2: ; @sleep 1; echo THREE' > $@

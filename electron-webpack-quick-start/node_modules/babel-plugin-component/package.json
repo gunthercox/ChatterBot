@@ -1,0 +1,59 @@
+{
+  "name": "babel-plugin-component",
+  "version": "1.1.1",
+  "description": "Modular build plugin for babel.",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "rm -rf lib && babel src --out-dir lib --ignore __tests__",
+    "test": "mocha --require @babel/register",
+    "debug": "mocha --require @babel/register --require @babel/polyfill --no-timeouts",
+    "lint": "eslint --ext .js src",
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "prepublish": "npm run build"
+  },
+  "pre-commit": [
+    "lint"
+  ],
+  "keywords": [
+    "babel-plugin"
+  ],
+  "author": [
+    "chencheng <sorrycc@gmail.com>",
+    "qingwei-li <cinwell.li@gmail.com>"
+  ],
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/cli": "7.0.0-beta.35",
+    "@babel/core": "7.0.0-beta.35",
+    "@babel/node": "7.0.0-beta.35",
+    "@babel/preset-env": "7.0.0-beta.35",
+    "@babel/preset-react": "7.0.0-beta.35",
+    "@babel/preset-stage-0": "7.0.0-beta.35",
+    "@babel/register": "7.0.0-beta.35",
+    "coveralls": "^2.11.6",
+    "eslint": "^2.7.0",
+    "eslint-config-airbnb": "^6.2.0",
+    "expect": "^1.13.4",
+    "mocha": "4.0.1",
+    "pre-commit": "~1.1.2"
+  },
+  "repository": "ElementUI/babel-plugin-component",
+  "homepage": "https://github.com/ElementUI/babel-plugin-component#readme",
+  "bugs": {
+    "url": "https://github.com/ElementUI/babel-plugin-component/issues"
+  },
+  "babel": {
+    "presets": [
+      "@babel/preset-env",
+      "@babel/preset-react"
+    ]
+  },
+  "files": [
+    "lib",
+    "package.json",
+    "README.md"
+  ],
+  "dependencies": {
+    "@babel/helper-module-imports": "7.0.0-beta.35"
+  }
+}

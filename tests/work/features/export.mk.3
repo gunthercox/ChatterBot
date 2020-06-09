@@ -1,0 +1,19 @@
+
+A = a
+B = b
+C = c
+D = d
+E = e
+F = f
+G = g
+H = h
+I = i
+J = j
+
+SOME = A B C
+
+export F G H I J
+
+export D E $(SOME)
+
+all: ; @echo A=$$A B=$$B C=$$C D=$$D E=$$E F=$$F G=$$G H=$$H I=$$I J=$$J

@@ -1,0 +1,38 @@
+getopt.o getopt.o: ../make-3.81-src/getopt.c ./config.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdio.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/_mingw.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stddef.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stddef.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdarg.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stdarg.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/types.h \
+  ../make-3.81-src/gettext.h D:/Progra~1/GnuWin32/include/libintl.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/locale.h \
+  ../make-3.81-src/getopt.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/string.h
+
+./config.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdio.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/_mingw.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stddef.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stddef.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdarg.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stdarg.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/types.h:
+
+../make-3.81-src/gettext.h:
+
+D:/Progra~1/GnuWin32/include/libintl.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/locale.h:
+
+../make-3.81-src/getopt.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/string.h:

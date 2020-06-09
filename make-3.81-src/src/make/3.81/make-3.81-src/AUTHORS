@@ -1,0 +1,82 @@
+-----------------------------------
+
+GNU make development up to version 3.75 by:
+    Roland McGrath <roland@gnu.org>
+
+
+Development starting with GNU make 3.76 by:
+    Paul D. Smith <psmith@gnu.org>
+
+    Additional development starting with GNU make 3.81 by:
+        Boris Kolpackov <boris@kolpackov.net>
+
+
+GNU Make User's Manual
+  Written by:
+    Richard M. Stallman <rms@gnu.org>
+
+  Edited by:
+    Roland McGrath <roland@gnu.org>
+    Bob Chassell <bob@gnu.org>
+    Melissa Weisshaus <melissa@gnu.org>
+    Paul D. Smith <psmith@gnu.org>
+
+-----------------------------------
+GNU make porting efforts:
+
+  Port to VMS by:
+      Klaus Kaempf <kkaempf@progis.de>
+      Hartmut Becker <Hartmut.Becker@hp.com>
+      Archive support/Bug fixes by:
+        John W. Eaton <jwe@bevo.che.wisc.edu>
+        Martin Zinser <zinser@decus.decus.de>
+
+  Port to Amiga by:
+      Aaron Digulla <digulla@fh-konstanz.de>
+
+  Port to MS-DOS (DJGPP), OS/2, and MS-Windows (native/MinGW) by:
+      DJ Delorie <dj@delorie.com>
+      Rob Tulloh <rob_tulloh@tivoli.com>
+      Eli Zaretskii <eliz@is.elta.co.il>
+      Jonathan Grant <jg@jguk.org>
+      Andreas Beuning <andreas.buening@nexgo.de>
+      Earnie Boyd <earnie@uses.sf.net>
+
+-----------------------------------
+Other contributors:
+
+  Janet Carson <janet_carson@tivoli.com>
+  Howard Chu <hyc@highlandsun.com>
+  Paul Eggert <eggert@twinsun.com>
+  Klaus Heinz <kamar@ease.rhein-main.de>
+  Michael Joosten
+  Jim Kelton <jim_kelton@tivoli.com>
+  David Lubbren <uhay@rz.uni-karlsruhe.de>
+  Tim Magill <tim.magill@telops.gte.com>
+  Markus Mauhart <qwe123@chello.at>
+  Greg McGary <greg@mcgary.org>
+  Thomas Riedl <thomas.riedl@siemens.com>
+  Han-Wen Nienhuys <hanwen@cs.uu.nl>
+  Andreas Schwab <schwab@issan.informatik.uni-dortmund.de>
+  Carl Staelin (Princeton University)
+  Ian Stewartson (Data Logic Limited)
+
+With suggestions/comments/bug reports from a cast of ... well ...
+hundreds, anyway :)
+
+-------------------------------------------------------------------------------
+Copyright (C) 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005, 2006
+Free Software Foundation, Inc.
+This file is part of GNU Make.
+
+GNU Make is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version.
+
+GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+GNU Make; see the file COPYING.  If not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.

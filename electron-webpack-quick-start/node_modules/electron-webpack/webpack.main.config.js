@@ -1,0 +1,1 @@
+module.exports = env => require("./out/main").getMainConfiguration(env)

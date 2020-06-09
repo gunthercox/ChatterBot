@@ -1,0 +1,34 @@
+$description = "The following test creates a makefile to ...";
+
+$details = "";
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE "override define foo\n"
+              ."\@echo First comes the definition.\n"
+              ."\@echo Then comes the override.\n"
+              ."endef\n"
+              ."all: \n"
+              ."\t\$(foo)\n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+&run_make_with_options($makefile,"foo=Hello",&get_logfile);
+
+# Create the answer to what should be produced by this Makefile
+$answer = "First comes the definition.\n"
+         ."Then comes the override.\n";
+
+&compare_output($answer,&get_logfile(1));
+
+1;
+
+
+
+
+
+

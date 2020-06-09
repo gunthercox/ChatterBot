@@ -1,0 +1,7 @@
+*** work/misc/close_stdout.base	Sat Nov 25 01:11:15 2006
+--- work/misc/close_stdout.log	Sat Nov 25 01:11:15 2006
+***************
+*** 1 ****
+! make: write error
+--- 1 ----
+! make: write error: Bad file descriptor

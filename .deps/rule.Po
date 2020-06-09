@@ -1,0 +1,109 @@
+rule.o rule.o: ../make-3.81-src/rule.c ../make-3.81-src/make.h ./config.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/types.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/_mingw.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stddef.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stddef.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/stat.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/signal.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdio.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdarg.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stdarg.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/ctype.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/timeb.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/time.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/time.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/errno.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/unistd.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/io.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdint.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/process.h \
+  ../make-3.81-src/getopt.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/limits.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/param.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdlib.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/string.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/inttypes.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/locale.h \
+  ../make-3.81-src/gettext.h D:/Progra~1/GnuWin32/include/libintl.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/fcntl.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/malloc.h \
+  ../make-3.81-src/dep.h ../make-3.81-src/filedef.h \
+  ../make-3.81-src/hash.h ../make-3.81-src/job.h \
+  ../make-3.81-src/commands.h ../make-3.81-src/variable.h \
+  ../make-3.81-src/rule.h
+
+../make-3.81-src/make.h:
+
+./config.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/types.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/_mingw.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stddef.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stddef.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/stat.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/signal.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdio.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdarg.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stdarg.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/ctype.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/timeb.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/time.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/time.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/errno.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/unistd.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/io.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdint.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/process.h:
+
+../make-3.81-src/getopt.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/limits.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/param.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdlib.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/string.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/inttypes.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/locale.h:
+
+../make-3.81-src/gettext.h:
+
+D:/Progra~1/GnuWin32/include/libintl.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/fcntl.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/malloc.h:
+
+../make-3.81-src/dep.h:
+
+../make-3.81-src/filedef.h:
+
+../make-3.81-src/hash.h:
+
+../make-3.81-src/job.h:
+
+../make-3.81-src/commands.h:
+
+../make-3.81-src/variable.h:
+
+../make-3.81-src/rule.h:

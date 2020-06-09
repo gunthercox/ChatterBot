@@ -1,0 +1,64 @@
+{
+  "name": "electron-download",
+  "version": "4.1.1",
+  "description": "download electron prebuilt binary zips from github releases",
+  "main": "lib/index.js",
+  "bin": {
+    "electron-download": "lib/cli.js"
+  },
+  "scripts": {
+    "lint": "eslint lib test",
+    "unit-tests": "tape test/*.js",
+    "test": "npm run unit-tests && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/electron-userland/electron-download.git"
+  },
+  "author": "max ogden",
+  "license": "BSD-3-Clause",
+  "bugs": {
+    "url": "https://github.com/electron-userland/electron-download/issues"
+  },
+  "homepage": "https://github.com/electron-userland/electron-download#readme",
+  "dependencies": {
+    "debug": "^3.0.0",
+    "env-paths": "^1.0.0",
+    "fs-extra": "^4.0.1",
+    "minimist": "^1.2.0",
+    "nugget": "^2.0.1",
+    "path-exists": "^3.0.0",
+    "rc": "^1.2.1",
+    "semver": "^5.4.1",
+    "sumchecker": "^2.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^4.4.1",
+    "eslint-config-standard": "^10.2.1",
+    "eslint-plugin-import": "^2.7.0",
+    "eslint-plugin-node": "^5.1.1",
+    "eslint-plugin-promise": "^3.5.0",
+    "eslint-plugin-standard": "^3.0.1",
+    "sinon": "^6.1.4",
+    "tape": "^4.8.0",
+    "temp": "^0.8.3"
+  },
+  "eslintConfig": {
+    "extends": "standard",
+    "parserOptions": {
+      "sourceType": "script"
+    },
+    "rules": {
+      "strict": [
+        "error"
+      ],
+      "prefer-const": [
+        "error"
+      ]
+    }
+  },
+  "keywords": [],
+  "engines": {
+    "node": ">= 4.0"
+  }
+}

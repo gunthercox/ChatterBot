@@ -1,0 +1,34 @@
+{
+  "name": "css-hot-loader",
+  "version": "1.4.4",
+  "description": "css hot reload work with extract-text-webpack-plugin",
+  "main": "index.js",
+  "scripts": {
+    "pub": "npm version patch && npm publish && git push origin && git push origin --tags",
+    "cov": "jest --collectCoverageFrom='[\"*.js\"]' --coverage",
+    "ci": "npm run cov && cat ./coverage/lcov.info | ./node_modules/coveralls/bin/coveralls.js",
+    "test": "jest"
+  },
+  "files": [
+    "loader.js",
+    "hotModuleReplacement.js",
+    "index.js"
+  ],
+  "homepage": "https://github.com/shepherdwind/css-hot-loader",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shepherdwind/css-hot-loader.git"
+  },
+  "author": "shepherdwind",
+  "license": "ISC",
+  "dependencies": {
+    "loader-utils": "^1.1.0",
+    "lodash": "^4.17.5",
+    "normalize-url": "^1.9.1"
+  },
+  "devDependencies": {
+    "coveralls": "^2.13.1",
+    "jest": "^20.0.4",
+    "strict-uri-encode": "^2.0.0"
+  }
+}

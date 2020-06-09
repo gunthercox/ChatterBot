@@ -1,0 +1,10 @@
+
+recurse:
+	@echo recurse MAKE_RESTARTS=$$MAKE_RESTARTS
+	@$(MAKE) -f work/variables/MAKE_RESTARTS.mk.2 all
+all:
+	@echo all MAKE_RESTARTS=$$MAKE_RESTARTS
+$(info MAKE_RESTARTS=$(MAKE_RESTARTS))
+include foo.x
+foo.x: ; @echo "include bar.x" > $@
+bar.x: ; @touch $@

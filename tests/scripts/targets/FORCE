@@ -1,0 +1,40 @@
+#                                                                    -*-perl-*-
+
+$description = "The following tests rules without Commands or Dependencies.";
+
+$details = "If the rule ...\n";
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE ".IGNORE :\n";
+print MAKEFILE "clean: FORCE\n";
+print MAKEFILE "\t$delete_command clean\n";
+print MAKEFILE "FORCE:\n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+
+# Create a file named "clean".  This is the same name as the target clean
+# and tricks the target into thinking that it is up to date.  (Unless you
+# use the .PHONY target.
+&touch("clean");
+
+$answer = "$delete_command clean\n";
+&run_make_with_options($makefile,"clean",&get_logfile);
+
+&compare_output($answer,&get_logfile(1));
+
+1;
+
+
+
+
+
+
+
+
+

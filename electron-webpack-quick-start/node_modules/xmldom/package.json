@@ -1,0 +1,22 @@
+{
+  "name": "xmldom",
+  "version": "0.1.27",
+  "description": "A W3C Standard XML DOM(Level2 CORE) implementation and parser(DOMParser/XMLSerializer).",
+  "keywords": ["w3c","dom","xml","parser","javascript","DOMParser","XMLSerializer"],
+  "author": "jindw <jindw@xidea.org> (http://www.xidea.org)",
+  "homepage": "https://github.com/jindw/xmldom",
+  "repository": {"type": "git","url": "git://github.com/jindw/xmldom.git"},
+  "main": "./dom-parser.js",
+  "scripts" : { "test": "proof platform win32 && proof test */*/*.t.js || t/test" },
+  "engines": {"node": ">=0.1"},
+  "dependencies": {},
+  "devDependencies": { "proof": "0.0.28" },
+  "maintainers": [{"name": "jindw","email": "jindw@xidea.org","url": "http://www.xidea.org"}],
+  "contributors": [
+    {"name" : "Yaron Naveh","email" : "yaronn01@gmail.com","web" : "http://webservices20.blogspot.com/"},
+    {"name" : "Harutyun Amirjanyan","email" : "amirjanyan@gmail.com","web" : "https://github.com/nightwing"},
+    {"name" : "Alan Gutierrez","email" : "alan@prettyrobots.com","web" : "http://www.prettyrobots.com/"}
+  ],
+  "bugs": {"email": "jindw@xidea.org","url": "http://github.com/jindw/xmldom/issues"},
+  "licenses": [{"type": "LGPL","url": "http://www.gnu.org/licenses/lgpl.html","MIT":"http://opensource.org/licenses/MIT"}]
+}

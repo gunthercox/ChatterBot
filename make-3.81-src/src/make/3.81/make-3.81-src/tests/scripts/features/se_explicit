@@ -1,0 +1,127 @@
+#                                                                    -*-perl-*-
+$description = "Test second expansion in ordinary rules.";
+
+$details = "";
+
+# TEST #0: Test handing of '$' in prerequisites with and without second
+# expansion.
+
+run_make_test(q!
+ifdef SE
+  .SECONDEXPANSION:
+endif
+foo$$bar: bar$$baz bar$$biz ; @echo '$@ : $^'
+PRE = one two
+bar$$baz: $$(PRE)
+baraz: $$(PRE)
+PRE = three four
+.DEFAULT: ; @echo '$@'
+!,
+              '',
+              "\$\nbar\$biz\nfoo\$bar : bar\$baz bar\$biz");
+
+run_make_test(undef, 'SE=1', "three\nfour\nbariz\nfoo\$bar : baraz bariz");
+
+# TEST #1: automatic variables.
+#
+run_make_test('
+.SECONDEXPANSION:
+.DEFAULT: ; @echo $@
+
+foo: bar baz
+
+foo: biz | buz
+
+foo: $$@.1 \
+     $$<.2 \
+     $$(addsuffix .3,$$^) \
+     $$(addsuffix .4,$$+) \
+     $$|.5 \
+     $$*.6
+
+',
+'',
+'bar
+baz
+biz
+buz
+foo.1
+bar.2
+bar.3
+baz.3
+biz.3
+bar.4
+baz.4
+biz.4
+buz.5
+.6
+');
+
+
+# Test #2: target/pattern -specific variables.
+#
+run_make_test('
+.SECONDEXPANSION:
+.DEFAULT: ; @echo $@
+
+foo.x: $$a $$b
+
+foo.x: a := bar
+
+%.x: b := baz
+
+',
+'',
+'bar
+baz
+');
+
+
+# Test #3: order of prerequisites.
+#
+run_make_test('
+.SECONDEXPANSION:
+.DEFAULT: ; @echo $@
+
+all: foo bar baz
+
+# Subtest #1
+#
+foo: foo.1; @:
+
+foo: foo.2
+
+foo: foo.3
+
+
+# Subtest #2
+#
+bar: bar.2
+
+bar: bar.1; @:
+
+bar: bar.3
+
+
+# Subtest #3
+#
+baz: baz.1
+
+baz: baz.2
+
+baz: ; @:
+
+',
+'',
+'foo.1
+foo.2
+foo.3
+bar.1
+bar.2
+bar.3
+baz.1
+baz.2
+');
+
+# This tells the test driver that the perl test script executed properly.
+1;

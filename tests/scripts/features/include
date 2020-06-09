@@ -1,0 +1,120 @@
+#                                     -*-mode: perl; rm-trailing-spaces: nil-*-
+
+$description = "Test various forms of the GNU make `include' command.";
+
+$details = "\
+Test include, -include, sinclude and various regressions involving them.
+Test extra whitespace at the end of the include, multiple -includes and
+sincludes (should not give an error) and make sure that errors are reported
+for targets that were also -included.";
+
+$makefile2 = &get_tmpfile;
+
+open(MAKEFILE,"> $makefile");
+
+# The contents of the Makefile ...
+
+print MAKEFILE <<EOF;
+\#Extra space at the end of the following file name
+include $makefile2
+all: ; \@echo There should be no errors for this makefile.
+
+-include nonexistent.mk
+-include nonexistent.mk
+sinclude nonexistent.mk
+sinclude nonexistent-2.mk
+-include makeit.mk
+sinclude makeit.mk
+
+error: makeit.mk
+EOF
+
+close(MAKEFILE);
+
+
+open(MAKEFILE,"> $makefile2");
+
+print MAKEFILE "ANOTHER: ; \@echo This is another included makefile\n";
+
+close(MAKEFILE);
+
+# Create the answer to what should be produced by this Makefile
+&run_make_with_options($makefile, "all", &get_logfile);
+$answer = "There should be no errors for this makefile.\n";
+&compare_output($answer, &get_logfile(1));
+
+&run_make_with_options($makefile, "ANOTHER", &get_logfile);
+$answer = "This is another included makefile\n";
+&compare_output($answer, &get_logfile(1));
+
+$makefile = undef;
+
+# Try to build the "error" target; this will fail since we don't know
+# how to create makeit.mk, but we should also get a message (even though
+# the -include suppressed it during the makefile read phase, we should
+# see one during the makefile run phase).
+
+run_make_test
+  ('
+-include foo.mk
+error: foo.mk ; @echo $@
+',
+   '',
+   "#MAKE#: *** No rule to make target `foo.mk', needed by `error'.  Stop.\n",
+   512
+  );
+
+# Make sure that target-specific variables don't impact things.  This could
+# happen because a file record is created when a target-specific variable is
+# set.
+
+run_make_test
+  ('
+bar.mk: foo := baz
+-include bar.mk
+hello: ; @echo hello
+',
+   '',
+   "hello\n"
+  );
+
+
+# Test inheritance of dontcare flag when rebuilding makefiles.
+#
+run_make_test('
+.PHONY: all
+all: ; @:
+
+-include foo
+
+foo: bar; @:
+', '', '');
+
+1;
+
+
+# Make sure that we don't die when the command fails but we dontcare.
+# (Savannah bug #13216).
+#
+run_make_test('
+.PHONY: all
+all:; @:
+
+-include foo
+
+foo: bar; @:
+
+bar:; @exit 1
+', '', '');
+
+# Check include, sinclude, -include with no filenames.
+# (Savannah bug #1761).
+
+run_make_test('
+.PHONY: all
+all:; @:
+include
+-include
+sinclude', '', '');
+
+1;

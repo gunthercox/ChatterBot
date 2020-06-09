@@ -1,0 +1,6 @@
+*** work/variables/INCLUDE_DIRS.base	Sat Nov 25 01:11:35 2006
+--- work/variables/INCLUDE_DIRS.log	Sat Nov 25 01:11:35 2006
+***************
+*** 0 ****
+--- 1 ----
++ work/variables/INCLUDE_DIRS.mk:3: .INCLUDE_DIRS is empty

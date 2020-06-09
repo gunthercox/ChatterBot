@@ -1,0 +1,134 @@
+#define WIN32_LEAN_AND_MEAN
+#include <windows.h>
+#include <winver.h>
+  
+#define VER_FILEVERSION 3,81,2520,1772
+#define VER_FILEVERSION_STR "3.81.2520.1772"
+#define VER_FILELTVERSION_STR "-1"
+#define VER_LEGALCOPYRIGHT_STR "© 2006 Free Software Foundation <www.fsf.org>"
+//#define VER_COMMENT_STR  ""	 
+
+#define VER_FILEDESCRIPTION_STR "Make: GNU make utility to maintain groups of programs"
+#define VER_INTERNALNAME_STR "make"
+#define VER_ORIGINALFILENAME_STR "make.exe"
+#define VER_WWW_STR "http://www.gnu.org/software/make"
+#define VER_COMPANYNAME_STR "GnuWin32 <http://gnuwin32.sourceforge.net>"
+#define VER_LICENSE_STR "This program is free software; you can redistribute it and/or modify it under the terms of the GNU General Public License; see www.gnu.org/copyleft/gpl.html. "
+#define VER_LEGALTRADEMARKS_STR "GnuWin32®, Make®, make®"
+
+#define VER_PRODUCTNAME_STR "Make"
+#define VER_PRODUCTVERSION 3,81,2520,1772
+#define VER_PRODUCTVERSION_STR "3.81.2520.1772"
+
+
+#define OFFICIAL 1
+#define FINAL            1
+
+#define GNUWIN32_SPECIALBUILD_STR	"GNU for Win32 <gnuwin32.sourceforge.net>"
+
+#define VER_FILETYPE			VFT_APP
+#ifndef VER_FILETYPE
+#define VER_FILETYPE                VFT_APP
+#endif
+
+#define VER_FILESUBTYPE             VFT2_UNKNOWN
+
+#ifndef DEBUG
+#define VER_DEBUG                   0
+#else /* DEBUG */
+#define VER_DEBUG                   VS_FF_DEBUG
+#endif
+
+#ifndef PATCHED
+#define VER_PATCHED                   0
+#else /* PATCHED */
+#define VER_PATCHED                   VS_FF_PATCHED
+#endif
+
+#ifndef OFFICIAL
+#define VER_SPECIALBUILD            VS_FF_SPECIALBUILD
+#ifndef VER_SPECIALBUILD_STR
+#define VER_SPECIALBUILD_STR		GNUWIN32_SPECIALBUILD_STR
+#endif
+#else /* OFFICIAL */
+#define VER_SPECIALBUILD            0
+#endif /* OFFICIAL */
+
+#ifndef FINAL
+#define VER_PRIVATEBUILD            VS_FF_PRIVATEBUILD
+#ifndef VER_PRIVATEBUILD_STR
+#define VER_PRIVATEBUILD_STR		"Pre-release"
+#endif /* VER_PRIVATEBUILD_STR */
+#define VER_PRERELEASE              VS_FF_PRERELEASE
+#else /* FINAL */
+#define VER_PRIVATEBUILD            0
+#define VER_PRERELEASE              0
+#endif /* FINAL */
+
+#define VER_FILEFLAGSMASK           VS_FFI_FILEFLAGSMASK
+#define VER_FILEFLAGS               (VER_PRIVATEBUILD|VER_SPECIALBUILD|VER_PRERELEASE|VER_DEBUG|VER_PATCHED)
+
+#define VER_FILEOS                  VOS__WINDOWS32
+
+#ifdef RC_INVOKED
+
+VS_VERSION_INFO         VERSIONINFO
+FILEVERSION     	VER_FILEVERSION
+PRODUCTVERSION  	VER_PRODUCTVERSION
+FILEFLAGSMASK   	VER_FILEFLAGSMASK
+FILEFLAGS       	VER_FILEFLAGS
+FILEOS          	VER_FILEOS
+FILETYPE        	VER_FILETYPE
+FILESUBTYPE     	VER_FILESUBTYPE
+
+BEGIN
+    BLOCK "StringFileInfo"
+    BEGIN
+	BLOCK "040904E4"
+    /* language ID = U.S. English, char set = Windows, Multilingual */
+	BEGIN
+#ifdef VER_COMMENT_STR
+	    VALUE "Comments",          VER_COMMENT_STR
+#endif
+	    VALUE "CompanyName",      VER_COMPANYNAME_STR
+	    VALUE "License",		  VER_LICENSE_STR
+	    VALUE "FileDescription",  VER_FILEDESCRIPTION_STR
+	    VALUE "FileVersion",      VER_FILEVERSION_STR
+#if !(VER_FILETYPE-VFT_DLL)
+	    VALUE "LibToolFileVersion",VER_FILELTVERSION_STR
+#endif
+		VALUE "InternalName",     VER_INTERNALNAME_STR
+#ifdef VER_LEGALCOPYRIGHT_STR
+		VALUE "LegalCopyright",   VER_LEGALCOPYRIGHT_STR
+#endif
+#ifdef VER_LEGALTRADEMARKS_STR
+	    VALUE "LegalTrademarks",  VER_LEGALTRADEMARKS_STR
+#endif
+	    VALUE "OriginalFilename", VER_ORIGINALFILENAME_STR
+	    VALUE "ProductName",      VER_PRODUCTNAME_STR
+	    VALUE "ProductVersion",   VER_PRODUCTVERSION_STR
+#ifdef VER_PATCHLEVEL_STR
+	    VALUE "Patch level",  VER_PATCHLEVEL_STR
+#endif
+#ifdef VER_PRIVATEBUILD_STR
+	    VALUE "PrivateBuild",  VER_PRIVATEBUILD_STR
+#endif
+#ifdef VER_SPECIALBUILD_STR
+	    VALUE "SpecialBuild",  VER_SPECIALBUILD_STR
+#endif
+#ifdef VER_AUTHOR_STR
+	    VALUE "Authors",  VER_AUTHOR_STR
+#endif
+#ifdef VER_WWW_STR
+	    VALUE "WWW",  VER_WWW_STR
+#endif
+END
+    END
+    BLOCK "VarFileInfo"
+    BEGIN
+	VALUE "Translation", 0x409, 1252
+    END
+END
+
+#endif /*  RC_INVOKED */
+500 ICON MOVEABLE PURE LOADONCALL DISCARDABLE "gnu.ico"

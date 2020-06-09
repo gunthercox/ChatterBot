@@ -1,0 +1,20 @@
+#                                                                    -*-perl-*-
+
+$description = "This tests the CURDIR varaible.";
+
+$details = "Echo CURDIR both with and without -C.  Also ensure overrides work.";
+
+open(MAKEFILE,"> $makefile");
+print MAKEFILE "all: ; \@echo \$(CURDIR)\n";
+close(MAKEFILE);
+
+
+# TEST #1
+# -------
+
+&run_make_with_options($makefile,"",&get_logfile);
+$answer = "$pwd\n";
+&compare_output($answer,&get_logfile(1));
+
+
+1;

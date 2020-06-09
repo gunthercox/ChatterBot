@@ -1,0 +1,27 @@
+{
+  "name": "single-line-log",
+  "description": "Keep writing to the same line in the terminal. Very useful when you write progress bars, or a status message during longer operations",
+  "keywords": [
+    "single",
+    "line",
+    "log",
+    "output",
+    "overwrite",
+    "collapse",
+    "stdout",
+    "terminal",
+    "tty",
+    "cli",
+    "shell"
+  ],
+  "version": "1.1.2",
+  "repository": "git://github.com/freeall/single-line-log.git",
+  "license": "MIT",
+  "author": "Tobias Baunbæk <freeall@gmail.com>",
+  "dependencies": {
+    "string-width": "^1.0.1"
+  },
+  "scripts": {
+    "test": "node test.js"
+  }
+}

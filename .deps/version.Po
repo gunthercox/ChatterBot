@@ -1,0 +1,3 @@
+version.o version.o: ../make-3.81-src/version.c ./config.h
+
+./config.h:

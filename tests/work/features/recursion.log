@@ -1,0 +1,13 @@
+make: Entering directory `j:/Devel/make/3.81/make-3.81/tests'
+j:/Devel/make/3.81/make-3.81/make -f work/features/recursion.mk foo
+make[1]: Entering directory `j:/Devel/make/3.81/make-3.81/tests'
+j:/Devel/make/3.81/make-3.81/make
+MAKELEVEL = 1
+j:/Devel/make/3.81/make-3.81/make -f work/features/recursion.mk last
+make[2]: Entering directory `j:/Devel/make/3.81/make-3.81/tests'
+j:/Devel/make/3.81/make-3.81/make
+MAKELEVEL = 2
+THE END
+make[2]: Leaving directory `j:/Devel/make/3.81/make-3.81/tests'
+make[1]: Leaving directory `j:/Devel/make/3.81/make-3.81/tests'
+make: Leaving directory `j:/Devel/make/3.81/make-3.81/tests'

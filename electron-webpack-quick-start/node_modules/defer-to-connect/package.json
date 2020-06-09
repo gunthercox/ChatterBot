@@ -1,0 +1,24 @@
+{
+  "name": "defer-to-connect",
+  "version": "1.0.2",
+  "description": "The safe way to handle the `connect` socket event",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "socket",
+    "connect",
+    "event"
+  ],
+  "author": "Szymon Marczak",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/szmarczak/defer-to-connect.git"
+  },
+  "bugs": {
+    "url": "https://github.com/szmarczak/defer-to-connect/issues"
+  },
+  "homepage": "https://github.com/szmarczak/defer-to-connect#readme"
+}

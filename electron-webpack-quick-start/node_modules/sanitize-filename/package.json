@@ -1,0 +1,35 @@
+{
+  "name": "sanitize-filename",
+  "version": "1.6.1",
+  "description": "Sanitize a string for use as a filename",
+  "keywords": [
+    "file",
+    "name",
+    "filename",
+    "sanitize",
+    "validate",
+    "escape"
+  ],
+  "license": "WTFPL OR ISC",
+  "author": "Parsha Pourkhomami",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:parshap/node-sanitize-filename.git"
+  },
+  "scripts": {
+    "test": "tape test.js",
+    "test-browser": "zuul --local --open -- test.js",
+    "test-browser-sauce": "zuul -- test.js"
+  },
+  "dependencies": {
+    "truncate-utf8-bytes": "^1.0.0"
+  },
+  "devDependencies": {
+    "browserify": "^13.0.0",
+    "concat-stream": "^1.5.1",
+    "mktemp": "^0.4.0",
+    "tape": "^4.2.2",
+    "zuul": "^3.7.2"
+  }
+}

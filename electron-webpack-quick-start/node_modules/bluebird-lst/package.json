@@ -1,0 +1,16 @@
+{
+  "name": "bluebird-lst",
+  "version": "1.0.9",
+  "description": "Bluebird — longStackTraces: true, cancellation: true",
+  "author": "Vladimir Krivosheev",
+  "license": "MIT",
+  "repository": "develar/fs-extra-p",
+  "homepage": "https://github.com/develar/fs-extra-p",
+  "files": [
+    "index.*"
+  ],
+  "dependencies": {
+    "bluebird": "^3.5.5"
+  },
+  "typings": "./index.d.ts"
+}

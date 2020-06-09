@@ -1,0 +1,24 @@
+version: 1.0.{build}
+environment:
+  nodejs_version: "lts"
+
+platform:
+  - x64
+
+cache:
+  - node_modules
+  - '%USERPROFILE%\.electron'
+
+install:
+  - ps: Install-Product node $env:nodejs_version
+  - npm install
+
+test_script:
+  # Output useful info for debugging.
+  - node --version
+  - npm --version
+  # run tests
+  - npm test
+
+build_script:
+- cmd: npm run compile

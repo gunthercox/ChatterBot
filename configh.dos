@@ -1,0 +1,117 @@
+/* configh.dos -- hand-massaged config.h file for MS-DOS builds         -*-C-*-
+
+Copyright (C) 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003,
+2004, 2005, 2006 Free Software Foundation, Inc.
+This file is part of GNU Make.
+
+GNU Make is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version.
+
+GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+GNU Make; see the file COPYING.  If not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.  */
+
+/* Many things are defined already by a system header.  */
+#include <sys/config.h>
+
+#if __DJGPP__ > 2 || __DJGPP_MINOR__ > 1
+
+/* Define if `sys_siglist' is declared by <signal.h>.  */
+# define SYS_SIGLIST_DECLARED 1
+
+/* Define this if the C library defines the variable `_sys_siglist'.  */
+# define HAVE_SYS_SIGLIST 1
+
+#else
+
+/* Define NSIG.  */
+# define NSIG SIGMAX
+
+#endif
+
+/* Use high resolution file timestamps if nonzero. */
+#define FILE_TIMESTAMP_HI_RES 0
+
+/* Define to 1 if you have `alloca', as a function or macro. */
+#define HAVE_ALLOCA 1
+
+/* Define if you have the fdopen function.  */
+#define HAVE_FDOPEN 1
+
+/* Define to 1 if you have the `getgroups' function. */
+#define HAVE_GETGROUPS 1
+
+/* Define if you have the <memory.h> header file.  */
+#define HAVE_MEMORY_H 1
+
+/* Define if you have the mkstemp function.  */
+#define HAVE_MKSTEMP 1
+
+/* Define to 1 if you have the `mktemp' function. */
+#define HAVE_MKTEMP 1
+
+/* Define to 1 if you have the `setlinebuf' function. */
+#define HAVE_SETLINEBUF 1
+
+/* Define to 1 if you have the `setvbuf' function. */
+#define HAVE_SETVBUF 1
+
+#define SCCS_GET "get"
+
+/* Define to `unsigned long' or `unsigned long long'
+   if <inttypes.h> doesn't define.  */
+#define uintmax_t unsigned long long
+
+/* Define the type of the first arg to select().  */
+#define fd_set_size_t int
+
+/* Define if you have the select function.  */
+#define HAVE_SELECT 1
+
+/* Define if your compiler conforms to the ANSI C standard. */
+#define HAVE_ANSI_COMPILER 1
+
+/* Define to 1 if you have the <stdarg.h> header file. */
+#define HAVE_STDARG_H 1
+
+/* Define if you have the vprintf library function.  */
+#undef HAVE_VPRINTF
+#define HAVE_VPRINTF 1
+
+/* Name of the package */
+#define PACKAGE "make"
+
+/* Define to the address where bug reports for this package should be sent. */
+#define PACKAGE_BUGREPORT "bug-make@gnu.org"
+
+/* Define to the full name of this package. */
+#define PACKAGE_NAME "GNU make"
+
+/* Define to the full name and version of this package. */
+#define PACKAGE_STRING "GNU make 3.81"
+
+/* Define to the one symbol short name of this package. */
+#define PACKAGE_TARNAME "make"
+
+/* Define to the version of this package. */
+#define PACKAGE_VERSION "3.81"
+
+/* Define to 1 if the C compiler supports function prototypes. */
+#define PROTOTYPES 1
+
+/* Define to 1 if `sys_siglist' is declared by <signal.h> or <unistd.h>. */
+#define SYS_SIGLIST_DECLARED 1
+
+/* Version number of package */
+#define VERSION "3.81"
+
+/* Build host information. */
+#define MAKE_HOST "i386-pc-msdosdjgpp"
+
+/* Grok DOS paths (drive specs and backslash path element separators) */
+#define HAVE_DOS_PATHS

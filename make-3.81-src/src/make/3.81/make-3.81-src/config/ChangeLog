@@ -1,0 +1,44 @@
+2006-03-09  Paul Smith  <psmith@gnu.org>
+
+	* dospaths.m4: Add MSYS to the list of targets allowing DOS-style
+	pathnames.  Reported by David Ergo <david.ergo@alterface.com>.
+
+2005-07-01  Paul D. Smith  <psmith@gnu.org>
+
+	* Makefile.am (EXTRA_DIST): Added more M4 files to EXTRA_DIST, so
+	users can re-run aclocal.
+
+2003-04-30  Paul D. Smith  <psmith@gnu.org>
+
+	* dospaths.m4: New macro to test for DOS-style pathnames, based on
+	coreutils 5.0 "dos.m4" by Jim Meyering.
+
+2002-04-21  gettextize  <bug-gnu-gettext@gnu.org>
+
+	* codeset.m4: New file, from gettext-0.11.1.
+	* gettext.m4: New file, from gettext-0.11.1.
+	* glibc21.m4: New file, from gettext-0.11.1.
+	* iconv.m4: New file, from gettext-0.11.1.
+	* isc-posix.m4: New file, from gettext-0.11.1.
+	* lcmessage.m4: New file, from gettext-0.11.1.
+	* lib-ld.m4: New file, from gettext-0.11.1.
+	* lib-link.m4: New file, from gettext-0.11.1.
+	* lib-prefix.m4: New file, from gettext-0.11.1.
+	* progtest.m4: New file, from gettext-0.11.1.
+	* Makefile.am: New file.
+
+
+Copyright (C) 2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+This file is part of GNU Make.
+
+GNU Make is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version.
+
+GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+GNU Make; see the file COPYING.  If not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.

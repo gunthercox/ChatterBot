@@ -1,0 +1,118 @@
+diff -ipuwr --binary --strip-trailing-cr -x '*.bak' -x '*.orig' -x '*.rej' -x '*.new' -x '*~' -x debian -x '*.po' -x '*.pot' make-3.81-orig/Makefile.in make-3.81-src/Makefile.in
+--- make-3.81-orig/Makefile.in	2006-04-01 08:40:04.000000000 +0200
++++ make-3.81-src/Makefile.in	2006-11-25 01:45:00.078125000 +0100
+@@ -35,7 +35,8 @@
+ 
+ srcdir = @srcdir@
+ top_srcdir = @top_srcdir@
+-VPATH = @srcdir@
++resdir = @top_builddir@res
++VPATH = @srcdir@ $(resdir)
+ pkgdatadir = $(datadir)/@PACKAGE@
+ pkglibdir = $(libdir)/@PACKAGE@
+ pkgincludedir = $(includedir)/@PACKAGE@
+@@ -104,7 +105,7 @@ am_make_OBJECTS = ar$U.$(OBJEXT) arscan$
+ 	read$U.$(OBJEXT) remake$U.$(OBJEXT) $(am__objects_1) \
+ 	rule$U.$(OBJEXT) signame$U.$(OBJEXT) strcache$U.$(OBJEXT) \
+ 	variable$U.$(OBJEXT) version$U.$(OBJEXT) vpath$U.$(OBJEXT) \
+-	hash$U.$(OBJEXT)
++	hash$U.$(OBJEXT) make-res$U.$(OBJEXT)
+ make_OBJECTS = $(am_make_OBJECTS)
+ am__DEPENDENCIES_1 =
+ @WINDOWSENV_TRUE@am__DEPENDENCIES_2 = $(am__DEPENDENCIES_1)
+@@ -177,7 +178,7 @@ INSTALL_SCRIPT = @INSTALL_SCRIPT@
+ INSTALL_STRIP_PROGRAM = @INSTALL_STRIP_PROGRAM@
+ INTLLIBS = @INTLLIBS@
+ KMEM_GROUP = @KMEM_GROUP@
+-LDFLAGS = @LDFLAGS@
++LDFLAGS = @LDFLAGS@ $(VERSADD)
+ LIBICONV = @LIBICONV@
+ LIBINTL = @LIBINTL@
+ LIBOBJS = @LIBOBJS@
+@@ -213,6 +214,9 @@ USE_LOCAL_GLOB_FALSE = @USE_LOCAL_GLOB_F
+ USE_LOCAL_GLOB_TRUE = @USE_LOCAL_GLOB_TRUE@
+ USE_NLS = @USE_NLS@
+ VERSION = @VERSION@
++MAJOR=$(shell echo $(VERSION) | sed -e "s/\..*$$//")
++MINOR=$(shell echo $(VERSION) | sed -e "s/^[^\.]*\.0*\([0-9]\+\).*$$/\1/") 
++VERSADD = -Wl,--major-image-version=$(MAJOR) -Wl,--minor-image-version=$(MINOR) 
+ WINDOWSENV_FALSE = @WINDOWSENV_FALSE@
+ WINDOWSENV_TRUE = @WINDOWSENV_TRUE@
+ XGETTEXT = @XGETTEXT@
+@@ -267,7 +271,7 @@ SUBDIRS = glob config po doc $(MAYBE_W32
+ make_SOURCES = ar.c arscan.c commands.c default.c dir.c expand.c file.c \
+ 		function.c getopt.c getopt1.c implicit.c job.c main.c \
+ 		misc.c read.c remake.c $(remote) rule.c signame.c \
+-		strcache.c variable.c version.c vpath.c hash.c
++		strcache.c variable.c version.c vpath.c hash.c make-res.rc
+ 
+ EXTRA_make_SOURCES = vmsjobs.c remote-stub.c remote-cstms.c
+ noinst_HEADERS = commands.h dep.h filedef.h job.h make.h rule.h variable.h \
+@@ -326,7 +330,7 @@ all: config.h
+ 	$(MAKE) $(AM_MAKEFLAGS) all-recursive
+ 
+ .SUFFIXES:
+-.SUFFIXES: .c .o .obj
++.SUFFIXES: .c .o .obj .rc .exe
+ am--refresh:
+ 	@:
+ $(srcdir)/Makefile.in:  $(srcdir)/Makefile.am  $(am__configure_deps)
+@@ -455,6 +459,10 @@ mostlyclean-kr:
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vmsjobs$U.Po@am__quote@
+ @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/vpath$U.Po@am__quote@
+ 
++# Rule to make compiled resource (Windows)
++.rc.o:
++	windres --include-dir=$(resdir) -i $< -o $@
++	
+ .c.o:
+ @am__fastdepCC_TRUE@	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
+ @am__fastdepCC_TRUE@	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+diff -ipuwr --binary --strip-trailing-cr -x '*.bak' -x '*.orig' -x '*.rej' -x '*.new' -x '*~' -x debian -x '*.po' -x '*.pot' make-3.81-orig/read.c make-3.81-src/read.c
+--- make-3.81-orig/read.c	2006-03-17 15:24:20.000000000 +0100
++++ make-3.81-src/read.c	2006-11-25 00:50:32.609375000 +0100
+@@ -954,7 +954,7 @@ eval (struct ebuffer *ebuf, int set_defa
+               }
+ 
+             colonp = find_char_unquote(p2, ':', 0, 0, 0);
+-#ifdef HAVE_DOS_PATHS
++#if defined HAVE_DOS_PATHS || defined __CYGWIN32__
+             /* The drive spec brain-damage strikes again...  */
+             /* Note that the only separators of targets in this context
+                are whitespace and a left paren.  If others are possible,
+@@ -1127,7 +1127,7 @@ eval (struct ebuffer *ebuf, int set_defa
+                    || isspace ((unsigned char)p[-1])))
+           p = 0;
+ #endif
+-#ifdef HAVE_DOS_PATHS
++#if defined HAVE_DOS_PATHS || defined __CYGWIN32__
+         {
+           int check_again;
+ 
+@@ -1228,7 +1228,7 @@ eval (struct ebuffer *ebuf, int set_defa
+                 /* See if this target's name does not start with a `.',
+                    unless it contains a slash.  */
+                 if (*name == '.' && strchr (name, '/') == 0
+-#ifdef HAVE_DOS_PATHS
++#if defined HAVE_DOS_PATHS || defined __CYGWIN32__
+                     && strchr (name, '\\') == 0
+ #endif
+                     )
+@@ -2290,7 +2290,7 @@ parse_file_seq (char **stringp, int stop
+ 	p = find_char_unquote (p+1, stopchar, VMS_COMMA, 1, 0);
+       }
+ #endif
+-#ifdef HAVE_DOS_PATHS
++#if defined HAVE_DOS_PATHS || defined __CYGWIN32__
+     /* For DOS paths, skip a "C:\..." or a "C:/..." until we find the
+        first colon which isn't followed by a slash or a backslash.
+        Note that tokens separated by spaces should be treated as separate
+@@ -2745,7 +2745,7 @@ get_next_mword (char *buffer, char *deli
+           goto done_word;
+ 
+         case ':':
+-#ifdef HAVE_DOS_PATHS
++#if defined HAVE_DOS_PATHS || defined __CYGWIN32__
+ 	  /* A word CAN include a colon in its drive spec.  The drive
+ 	     spec is allowed either at the beginning of a word, or as part
+ 	     of the archive member name, like in "libfoo.a(d:/foo/bar.o)".  */

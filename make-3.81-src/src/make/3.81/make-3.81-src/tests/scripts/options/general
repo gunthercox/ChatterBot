@@ -1,0 +1,35 @@
+#                                                                    -*-perl-*-
+$description = "Test generic option processing.\n";
+
+open(MAKEFILE, "> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE "foo 1foo: ; \@echo \$\@\n";
+
+close(MAKEFILE);
+
+# TEST 0
+
+&run_make_with_options($makefile, "-j 1foo", &get_logfile);
+if (!$parallel_jobs) {
+  $answer = "$make_name: Parallel jobs (-j) are not supported on this platform.\n$make_name: Resetting to single job (-j1) mode.\n1foo\n";
+}
+else {
+  $answer = "1foo\n";
+}
+
+# TEST 1
+
+# This test prints the usage string; I don't really know a good way to
+# test it.  I guess I could invoke make with a known-bad option to see
+# what the usage looks like, then compare it to what I get here... :(
+
+# If I were always on UNIX, I could invoke it with 2>/dev/null, then
+# just check the error code.
+
+&run_make_with_options($makefile, "-j1foo 2>/dev/null", &get_logfile, 512);
+$answer = "";
+&compare_output($answer, &get_logfile(1));
+
+1;

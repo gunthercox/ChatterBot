@@ -1,0 +1,39 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Program Files (x86)\Yarn\bin\yarn.js
+
+PATH: 
+  C:\Users\Tmas\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\local\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\usr\bin;C:\Program Files\Git\mingw64\bin;C:\Program Files\Git\usr\bin;C:\Users\Tmas\bin;C:\Program Files (x86)\Common Files\Oracle\Java\javapath;C:\WINDOWS\system32;C:\WINDOWS;C:\WINDOWS\System32\Wbem;C:\WINDOWS\System32\WindowsPowerShell\v1.0;C:\Program Files (x86)\ATI Technologies\ATI.ACE\Core-Static;C:\Program Files\Git\cmd;C:\Program Files (x86)\Yarn\bin;C:\Program Files\nodejs;C:\WINDOWS\System32\OpenSSH;C:\Users\Tmas\AppData\Local\Programs\Python\Python38-32\Scripts;C:\Users\Tmas\AppData\Local\Programs\Python\Python38-32;C:\Users\Tmas\Miniconda3;C:\Users\Tmas\Miniconda3\Library\mingw-w64\bin;C:\Users\Tmas\Miniconda3\Library\usr\bin;C:\Users\Tmas\Miniconda3\Library\bin;C:\Users\Tmas\Miniconda3\Scripts;C:\Users\Tmas\AppData\Local\Programs\Python\Python37-32\Scripts;C:\Users\Tmas\AppData\Local\Programs\Python\Python37-32;C:\Users\Tmas\AppData\Local\GitHubDesktop\bin;C:\Users\Tmas\AppData\Local\atom\bin;C:\Users\Tmas\AppData\Local\JetBrains\PyCharm Community Edition 2019.2\bin;C:\Users\Tmas\AppData\Local\Yarn\bin;C:\Users\Tmas\AppData\Roaming\npm;C:\Users\Tmas\AppData\Local\Google\Cloud SDK\google-cloud-sdk\bin;C:\Users\Tmas\AppData\Local\Microsoft\WindowsApps;C:\Program Files\Git\usr\bin\vendor_perl;C:\Program Files\Git\usr\bin\core_perl
+
+Yarn version: 
+  1.17.3
+
+Node version: 
+  10.16.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  Error: getaddrinfo ENOTFOUND registry.yarnpkg.com registry.yarnpkg.com:443
+      at GetAddrInfoReqWrap.onlookup [as oncomplete] (dns.js:56:26)
+
+npm manifest: 
+  {
+    "name": "chatterbot",
+    "version": "1.0.1",
+    "description": "a a.i. chat bot built to maintin customers and my appointments.",
+    "main": "ye",
+    "repository": "yes",
+    "author": "tomasm.nelson@gmail.com",
+    "license": "MIT",
+    "private": true,
+    "dependencies": {
+      "babel": "^6.23.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile

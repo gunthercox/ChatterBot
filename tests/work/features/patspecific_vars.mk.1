@@ -1,0 +1,34 @@
+
+.PHONY: all
+
+all: inherit := good $$t
+all: bar baz
+
+b%: pattern := good $$t
+
+global := orginal $$t
+
+
+# normal target
+#
+ifdef rec
+bar: a = global: $(global) pattern: $(pattern) inherit: $(inherit)
+else
+bar: a := global: $(global) pattern: $(pattern) inherit: $(inherit)
+endif
+
+bar: ; @echo 'normal: $a;'
+
+
+# pattern target
+#
+ifdef rec
+%z: a = global: $(global) pattern: $(pattern) inherit: $(inherit)
+else
+%z: a := global: $(global) pattern: $(pattern) inherit: $(inherit)
+endif
+
+%z: ; @echo 'pattrn: $a;'
+
+
+global := new $$t

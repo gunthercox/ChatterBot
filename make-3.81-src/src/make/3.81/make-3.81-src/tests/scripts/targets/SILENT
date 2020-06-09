@@ -1,0 +1,42 @@
+#                                                                    -*-perl-*-
+
+$description = "The following tests the special target .SILENT.  By simply\n"
+              ."mentioning this as a target, it tells make not to print\n"
+              ."commands before executing them.";
+
+$details = "This test is the same as the clean test except that it should\n"
+          ."not echo its command before deleting the specified file.\n";
+
+$example = "EXAMPLE_FILE";
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE ".SILENT : clean\n";
+print MAKEFILE "clean: \n";
+print MAKEFILE "\t$delete_command EXAMPLE_FILE\n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+&touch($example);
+
+$answer = "";
+&run_make_with_options($makefile,"clean",&get_logfile,0);
+if (-f $example) {
+  $test_passed = 0;
+}
+&compare_output($answer,&get_logfile(1));
+
+1;
+
+
+
+
+
+
+
+
+

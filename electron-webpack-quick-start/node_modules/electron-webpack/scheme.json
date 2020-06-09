@@ -1,0 +1,169 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "additionalProperties": false,
+  "definitions": {
+    "ElectronWebpackConfigurationMain": {
+      "additionalProperties": false,
+      "properties": {
+        "extraEntries": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "additionalProperties": {
+                "anyOf": [
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "items": {
+                      "type": "string"
+                    },
+                    "type": "array"
+                  }
+                ]
+              },
+              "type": "object"
+            },
+            {
+              "type": "string"
+            }
+          ],
+          "description": "The extra [entry points](https://webpack.js.org/concepts/entry-points/)."
+        },
+        "sourceDirectory": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "webpackConfig": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    },
+    "ElectronWebpackConfigurationRenderer": {
+      "additionalProperties": false,
+      "properties": {
+        "dll": {
+          "anyOf": [
+            {
+              "items": {
+                "type": "string"
+              },
+              "type": "array"
+            },
+            {
+              "type": "object"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "sourceDirectory": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "template": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "webpackConfig": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "webpackDllConfig": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "type": "object"
+    }
+  },
+  "properties": {
+    "commonDistDirectory": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "commonSourceDirectory": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "electronVersion": {
+      "type": "string"
+    },
+    "externals": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    },
+    "main": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ElectronWebpackConfigurationMain"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "projectDir": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "renderer": {
+      "anyOf": [
+        {
+          "$ref": "#/definitions/ElectronWebpackConfigurationRenderer"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "staticSourceDirectory": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "title": {
+      "type": [
+        "string",
+        "boolean",
+        "null"
+      ]
+    },
+    "whiteListedModules": {
+      "items": {
+        "type": "string"
+      },
+      "type": "array"
+    }
+  },
+  "type": "object"
+}

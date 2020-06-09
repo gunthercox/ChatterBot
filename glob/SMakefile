@@ -1,0 +1,66 @@
+# Makefile for standalone distribution of libglob.a (fnmatch, glob).
+# Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+# 2005, 2006 Free Software Foundation, Inc.
+# This file is part of GNU Make.
+#
+# GNU Make is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2, or (at your option) any later version.
+#
+# GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# GNU Make; see the file COPYING.  If not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# Ultrix 2.2 make doesn't expand the value of VPATH.
+VPATH = /glob/
+# This must repeat the value, because configure will remove `VPATH = .'.
+srcdir = /glob/
+
+CC = sc
+CPPFLAGS =
+CFLAGS =
+MAKE = smake
+RM = delete
+
+# Information determined by configure.
+DEFS = Define HAVE_HEADER_STDC Define HAVE_UNISTD_H Define HAVE_STRING_H \
+	Define HAVE_DIRENT_H
+
+# How to invoke ar.
+AR = join
+ARFLAGS = as
+
+# How to invoke ranlib.
+RANLIB = ;
+
+.PHONY: all
+all: glob.lib
+
+glob.lib : glob.o fnmatch.o
+	$(AR) $(ARFLAGS) $@ glob.o fnmatch.o
+	$(RANLIB) $@
+
+# For some reason, Unix make wants the dependencies on the source files.
+# Otherwise it refuses to use an implicit rule!
+# And, get this: it doesn't work to use $(srcdir)foo.c!!
+glob.o: $(srcdir)glob.h $(srcdir)fnmatch.h glob.c
+fnmatch.o: $(srcdir)fnmatch.h fnmatch.c
+
+.c.o:
+	$(CC) IDir "" \
+	      $(DEFS) $(CPPFLAGS) $(CFLAGS) $< $(OUTPUT_OPTION)
+
+.PHONY: clean realclean glob-clean glob-realclean distclean
+clean glob-clean:
+	-$(RM) -f glob.lib *.o core
+distclean glob-realclean: clean
+	-$(RM) -f TAGS tags Makefile config.status config.h config.log
+realcean: distclean
+
+# For inside the C library.
+glob.tar glob.tar.Z:
+	$(MAKE) -C .. $@

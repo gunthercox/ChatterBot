@@ -1,0 +1,164 @@
+Making check in glob
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/glob' wordt binnengegaan
+make[1]: Er is niets te doen voor 'check'.
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/glob' wordt verlaten
+Making check in config
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/config' wordt binnengegaan
+make[1]: Er is niets te doen voor 'check'.
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/config' wordt verlaten
+Making check in po
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/po' wordt binnengegaan
+make[1]: Er is niets te doen voor 'check'.
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/po' wordt verlaten
+Making check in doc
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/doc' wordt binnengegaan
+make[1]: Er is niets te doen voor 'check'.
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/doc' wordt verlaten
+Making check in w32
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/w32' wordt binnengegaan
+make[1]: Er is niets te doen voor 'check'.
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81/w32' wordt verlaten
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81' wordt binnengegaan
+make  loadavg.exe
+make[2]: Map '/cygdrive/j/Devel/make/3.81/make-3.81' wordt binnengegaan
+if gcc -DLOCALEDIR=\"c:/progra~1/Make/share/locale\" -DLIBDIR=\"c:/progra~1/Make/lib\" -DINCLUDEDIR=\"c:/progra~1/Make/include\" -DHAVE_CONFIG_H -I. -I../make-3.81-src -I.  -DTEST -ID:/Progra~1/GnuWin32/include      -Wall -O3 -fms-extensions -mms-bitfields -fno-exceptions -fomit-frame-pointer -march=i386 -ffast-math   -MT loadavg-getloadavg.o -MD -MP -MF ".deps/loadavg-getloadavg.Tpo" -c -o loadavg-getloadavg.o `test -f 'getloadavg.c' || echo '../make-3.81-src/'`getloadavg.c; \
+	then mv -f ".deps/loadavg-getloadavg.Tpo" ".deps/loadavg-getloadavg.Po"; else rm -f ".deps/loadavg-getloadavg.Tpo"; exit 1; fi
+../make-3.81-src/getloadavg.c: In function `main':
+../make-3.81-src/getloadavg.c:1025: warning: implicit declaration of function `sleep'
+gcc  -Wall -O3 -fms-extensions -mms-bitfields -fno-exceptions -fomit-frame-pointer -march=i386 -ffast-math    -Wl,-s -Wl,--force-exe-suffix -Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc -Wl,--allow-multiple-definition -Wl,--enable-stdcall-fixup -LD:/Progra~1/GnuWin32/lib    -Wl,--major-image-version=3 -Wl,--minor-image-version=81   -o loadavg.exe  loadavg-getloadavg.o  -Wl,-s  -LD:/Progra~1/GnuWin32/lib  -lintl -lwsock32 -lole32 -luuid -lmsvcp60  
+loadavg-getloadavg.o:getloadavg.c:(.text+0xda): undefined reference to `sleep'
+collect2: ld returned 1 exit status
+make[2]: [loadavg.exe] Fout 1 (genegeerd)
+make[2]: Map '/cygdrive/j/Devel/make/3.81/make-3.81' wordt verlaten
+make  check-local
+make[2]: Map '/cygdrive/j/Devel/make/3.81/make-3.81' wordt binnengegaan
+cd tests && perl ./run_make_tests.pl -make ../make.exe 
+------------------------------------------------------------------------------
+   Running tests for GNU make on CYGWIN_NT-5.1 gamma 1.5.22(0.156/4/2) i686
+                                GNU Make 3.81
+------------------------------------------------------------------------------
+
+Clearing work...
+Finding tests...
+
+features/comments ....................................... ok     (1 passed)
+features/conditionals ................................... ok     (4 passed)
+features/default_names .................................. ok     (2 passed)
+features/double_colon ................................... ok     (10 passed)
+features/echoing ........................................ ok     (4 passed)
+features/errors ......................................... ok     (2 passed)
+features/escape ......................................... ok     (6 passed)
+features/export ......................................... FAILED (9/10 passed)
+features/include ........................................ ok     (7 passed)
+features/mult_rules ..................................... ok     (2 passed)
+features/mult_targets ................................... ok     (2 passed)
+features/order_only ..................................... ok     (10 passed)
+features/override ....................................... ok     (1 passed)
+features/parallelism .................................... FAILED (5/6 passed)
+features/patspecific_vars ............................... FAILED (6/7 passed)
+features/patternrules ................................... ok     (5 passed)
+features/quoting ........................................ ok     (1 passed)
+features/recursion ...................................... FAILED (1/2 passed)
+features/reinvoke ....................................... ok     (4 passed)
+features/se_explicit .................................... ok     (5 passed)
+features/se_implicit .................................... ok     (8 passed)
+features/se_statpat ..................................... ok     (4 passed)
+features/statipattrules ................................. ok     (8 passed)
+features/targetvars ..................................... ok     (20 passed)
+features/varnesting ..................................... ok     (1 passed)
+features/vpath .......................................... ok     (1 passed)
+features/vpath2 ......................................... ok     (1 passed)
+features/vpathgpath ..................................... ok     (1 passed)
+features/vpathplus ...................................... ok     (4 passed)
+functions/abspath ....................................... FAILED (0/1 passed)
+functions/addprefix ..................................... ok     (1 passed)
+functions/addsuffix ..................................... ok     (2 passed)
+functions/andor ......................................... ok     (2 passed)
+functions/basename ...................................... ok     (1 passed)
+functions/call .......................................... ok     (2 passed)
+functions/dir ........................................... ok     (1 passed)
+functions/error ......................................... ok     (5 passed)
+functions/eval .......................................... ok     (9 passed)
+functions/filter-out .................................... ok     (1 passed)
+functions/findstring .................................... ok     (1 passed)
+functions/flavor ........................................ ok     (1 passed)
+functions/foreach ....................................... ok     (4 passed)
+functions/if ............................................ ok     (1 passed)
+functions/join .......................................... ok     (1 passed)
+functions/notdir ........................................ ok     (1 passed)
+functions/origin ........................................ ok     (1 passed)
+functions/realpath ...................................... ok     (1 passed)
+functions/shell ......................................... ok     (2 passed)
+functions/sort .......................................... ok     (1 passed)
+functions/strip ......................................... ok     (2 passed)
+functions/substitution .................................. ok     (3 passed)
+functions/suffix ........................................ ok     (1 passed)
+functions/value ......................................... ok     (1 passed)
+functions/warning ....................................... ok     (4 passed)
+functions/wildcard ...................................... ok     (3 passed)
+functions/word .......................................... ok     (16 passed)
+misc/close_stdout ....................................... FAILED (0/1 passed)
+misc/general1 ........................................... ok     (1 passed)
+misc/general2 ........................................... ok     (1 passed)
+misc/general3 ........................................... FAILED (9/10 passed)
+misc/general4 ........................................... ok     (6 passed)
+options/dash-B .......................................... ok     (7 passed)
+options/dash-C .......................................... FAILED (0/2 passed)
+options/dash-I .......................................... 
+*** Test returned 0
+FAILED (0/2 passed)
+options/dash-W .......................................... ok     (10 passed)
+options/dash-e .......................................... ok     (1 passed)
+options/dash-f .......................................... ok     (4 passed)
+options/dash-k .......................................... ok     (3 passed)
+options/dash-l .......................................... ok     (1 passed)
+options/dash-n .......................................... ok     (4 passed)
+options/dash-q .......................................... ok     (8 passed)
+options/dash-t .......................................... ok     (2 passed)
+options/general ......................................... ok     (1 passed)
+options/symlinks ........................................ N/A
+options/warn-undefined-variables ........................ ok     (2 passed)
+targets/DEFAULT ......................................... FAILED (0/1 passed)
+targets/FORCE ........................................... ok     (1 passed)
+targets/INTERMEDIATE .................................... ok     (8 passed)
+targets/PHONY ........................................... ok     (1 passed)
+targets/SECONDARY ....................................... ok     (8 passed)
+targets/SILENT .......................................... ok     (1 passed)
+targets/clean ........................................... ok     (2 passed)
+variables/CURDIR ........................................ FAILED (0/1 passed)
+variables/DEFAULT_GOAL .................................. ok     (4 passed)
+variables/INCLUDE_DIRS .................................. FAILED (1/2 passed)
+variables/MAKE .......................................... FAILED (0/1 passed)
+variables/MAKECMDGOALS .................................. ok     (3 passed)
+variables/MAKEFILES ..................................... ok     (1 passed)
+variables/MAKELEVEL ..................................... ok     (1 passed)
+variables/MAKE_RESTARTS ................................. FAILED (2/3 passed)
+variables/MFILE_LIST .................................... ok     (1 passed)
+variables/SHELL ......................................... FAILED (1/5 passed)
+variables/automatic ..................................... ok     (5 passed)
+variables/flavors ....................................... ok     (10 passed)
+variables/negative ...................................... ok     (4 passed)
+variables/special ....................................... ok     (1 passed)
+
+19 Tests in 15 Categories Failed (See .diff files in work dir for details) :-(
+
+make[2]: [check-regression] Fout 1 (genegeerd)
+gcc  -Wall -O3 -fms-extensions -mms-bitfields -fno-exceptions -fomit-frame-pointer -march=i386 -ffast-math    -Wl,-s -Wl,--force-exe-suffix -Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc -Wl,--allow-multiple-definition -Wl,--enable-stdcall-fixup -LD:/Progra~1/GnuWin32/lib    -Wl,--major-image-version=3 -Wl,--minor-image-version=81   -o loadavg.exe  loadavg-getloadavg.o  -Wl,-s  -LD:/Progra~1/GnuWin32/lib  -lintl -lwsock32 -lole32 -luuid -lmsvcp60  
+loadavg-getloadavg.o:getloadavg.c:(.text+0xda): undefined reference to `sleep'
+collect2: ld returned 1 exit status
+make[2]: [loadavg.exe] Fout 1 (genegeerd)
+The system uptime program believes the load average to be:
+uptime
+d:\Program Files\GnuWin32\bin\uptime.exe: kan geen boot-tijd vinden: No such file or directory
+make[2]: [check-loadavg] Fout 1 (genegeerd)
+The GNU load average checking code thinks:
+./loadavg.exe
+make[2]: ./loadavg.exe: Opdracht niet gevonden
+make[2]: [check-loadavg] Fout 127 (genegeerd)
+
+===================================================================
+ Regression PASSED: GNU Make 3.81 (i386-pc-mingw32) built with gcc 
+===================================================================
+
+make[2]: Map '/cygdrive/j/Devel/make/3.81/make-3.81' wordt verlaten
+make[1]: Map '/cygdrive/j/Devel/make/3.81/make-3.81' wordt verlaten

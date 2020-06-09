@@ -1,0 +1,8 @@
+language: node_js
+node_js:
+  - 8
+  - 10
+  - 12
+env:
+  - secure: "PORxLVNPhDtEmtY2ykpjKULyV6hR2lZIgM4frKxbwXaGf+0nvSvKEj8CdaEr9yIMm9gS1/BQjGRydtvTkkey9Ri5c6Fx0Ckj+TW2VkAmlEODxFf1buyqNYHPZezRAeANg+kqItO8g1RHtuis0fRyxNITgm7R8919KcsFluBl7Iw="
+script: ./scripts/ci-build.sh

@@ -1,0 +1,74 @@
+{
+  "name": "url-loader",
+  "version": "2.0.1",
+  "description": "A loader for webpack which transforms files into base64 URIs",
+  "license": "MIT",
+  "repository": "webpack-contrib/url-loader",
+  "author": "Tobias Koppers @sokra",
+  "homepage": "https://github.com/webpack-contrib/url-loader",
+  "bugs": "https://github.com/webpack-contrib/url-loader/issues",
+  "main": "dist/cjs.js",
+  "engines": {
+    "node": ">= 8.9.0"
+  },
+  "scripts": {
+    "start": "npm run build -- -w",
+    "prebuild": "npm run clean",
+    "build": "cross-env NODE_ENV=production babel src -d dist --ignore \"src/**/*.test.js\" --copy-files",
+    "clean": "del-cli dist",
+    "commitlint": "commitlint --from=master",
+    "lint:prettier": "prettier \"{**/*,*}.{js,json,md,yml,css}\" --list-different",
+    "lint:js": "eslint --cache src test",
+    "lint": "npm-run-all -l -p \"lint:**\"",
+    "prepare": "npm run build",
+    "release": "standard-version",
+    "security": "npm audit",
+    "test:only": "cross-env NODE_ENV=test jest",
+    "test:watch": "cross-env NODE_ENV=test jest --watch",
+    "test:coverage": "cross-env NODE_ENV=test jest --collectCoverageFrom=\"src/**/*.js\" --coverage",
+    "pretest": "npm run lint",
+    "test": "cross-env NODE_ENV=test npm run test:coverage",
+    "defaults": "webpack-defaults"
+  },
+  "files": [
+    "dist"
+  ],
+  "peerDependencies": {
+    "webpack": "^4.0.0"
+  },
+  "dependencies": {
+    "loader-utils": "^1.1.0",
+    "mime": "^2.4.4",
+    "schema-utils": "^1.0.0"
+  },
+  "devDependencies": {
+    "@babel/cli": "^7.4.4",
+    "@babel/core": "^7.4.5",
+    "@babel/preset-env": "^7.4.5",
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
+    "@webpack-contrib/defaults": "^5.0.1",
+    "@webpack-contrib/eslint-config-webpack": "^3.0.0",
+    "babel-jest": "^24.8.0",
+    "commitlint-azure-pipelines-cli": "^1.0.2",
+    "cross-env": "^5.2.0",
+    "del": "^4.1.1",
+    "del-cli": "^2.0.0",
+    "eslint": "^6.0.1",
+    "eslint-config-prettier": "^5.1.0",
+    "eslint-plugin-import": "^2.18.0",
+    "file-loader": "^4.0.0",
+    "husky": "^2.5.0",
+    "jest": "^24.8.0",
+    "jest-junit": "^6.4.0",
+    "lint-staged": "^8.2.1",
+    "memory-fs": "^0.4.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^1.18.2",
+    "standard-version": "^6.0.1",
+    "webpack": "^4.35.0"
+  },
+  "keywords": [
+    "webpack"
+  ]
+}

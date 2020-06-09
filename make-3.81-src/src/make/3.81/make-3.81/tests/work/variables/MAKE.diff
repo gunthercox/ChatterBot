@@ -1,0 +1,15 @@
+*** work/variables/MAKE.base	Sat Nov 25 01:11:35 2006
+--- work/variables/MAKE.log	Sat Nov 25 01:11:35 2006
+***************
+*** 1,5 ****
+  j:/Devel/make/3.81/make-3.81/make
+! j:/Devel/make/3.81/make-3.81/make -f work/variables/MAKE.mk foo
+! make[1]: Entering directory `/cygdrive/j/Devel/make/3.81/make-3.81/tests'
+  j:/Devel/make/3.81/make-3.81/make
+! make[1]: Leaving directory `/cygdrive/j/Devel/make/3.81/make-3.81/tests'
+--- 1,5 ----
+  j:/Devel/make/3.81/make-3.81/make
+! j:/Devel/make/3.81/make-3.81/make -f work/variables/MAKE.mk foo
+! make[1]: Entering directory `j:/Devel/make/3.81/make-3.81/tests'
+  j:/Devel/make/3.81/make-3.81/make
+! make[1]: Leaving directory `j:/Devel/make/3.81/make-3.81/tests'

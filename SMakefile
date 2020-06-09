@@ -1,0 +1,370 @@
+# -*-Makefile-*- for building GNU make with smake
+#
+# NOTE: If you have no 'make' program at all to process this makefile,
+# run 'build.sh' instead.
+#
+# Copyright (C) 1995, 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004,
+# 2005, 2006 Free Software Foundation, Inc.
+# This file is part of GNU Make.
+#
+# GNU Make is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2, or (at your option) any later version.
+#
+# GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# GNU Make; see the file COPYING.  If not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+#
+#	Makefile for GNU Make
+#
+
+# Ultrix 2.2 make doesn't expand the value of VPATH.
+VPATH = /make-3.81/
+# This must repeat the value, because configure will remove `VPATH = .'.
+srcdir = /make-3.81/
+
+CC = sc
+RM = delete
+MAKE = smake
+
+CFLAGS =
+CPPFLAGS =
+LDFLAGS =
+
+# Define these for your system as follows:
+#	-DNO_ARCHIVES		To disable `ar' archive support.
+#	-DNO_FLOAT		To avoid using floating-point numbers.
+#	-DENUM_BITFIELDS	If the compiler isn't GCC but groks enum foo:2.
+#				Some compilers apparently accept this
+#				without complaint but produce losing code,
+#				so beware.
+# NeXT 1.0a uses an old version of GCC, which required -D__inline=inline.
+# See also `config.h'.
+defines =
+
+# Which flavor of remote job execution support to use.
+# The code is found in `remote-$(REMOTE).c'.
+REMOTE = stub
+
+# If you are using the GNU C library, or have the GNU getopt functions in
+# your C library, you can comment these out.
+GETOPT = getopt.o getopt1.o
+GETOPT_SRC = $(srcdir)getopt.c $(srcdir)getopt1.c $(srcdir)getopt.h
+
+# If you are using the GNU C library, or have the GNU glob functions in
+# your C library, you can comment this out.  GNU make uses special hooks
+# into the glob functions to be more efficient (by using make's directory
+# cache for globbing), so you must use the GNU functions even if your
+# system's C library has the 1003.2 glob functions already.  Also, the glob
+# functions in the AIX and HPUX C libraries are said to be buggy.
+GLOB = Lib glob/glob.lib
+
+# If your system doesn't have alloca, or the one provided is bad, define this.
+ALLOCA = alloca.o
+ALLOCA_SRC = $(srcdir)alloca.c
+
+# If your system needs extra libraries loaded in, define them here.
+# System V probably need -lPW for alloca.  HP-UX 7.0's alloca in
+# libPW.a is broken on HP9000s300 and HP9000s400 machines.  Use
+# alloca.c instead on those machines.
+LOADLIBES =
+
+# Any extra object files your system needs.
+extras = amiga.o
+
+# Common prefix for machine-independent installed files.
+prefix =
+# Common prefix for machine-dependent installed files.
+exec_prefix =
+
+# Directory to install `make' in.
+bindir = sc:c
+# Directory to find libraries in for `-lXXX'.
+libdir = lib:
+# Directory to search by default for included makefiles.
+includedir = include:
+# Directory to install the Info files in.
+infodir = doc:
+# Directory to install the man page in.
+mandir = t:
+# Number to put on the man page filename.
+manext = 1
+# Prefix to put on installed `make' binary file name.
+binprefix =
+# Prefix to put on installed `make' man page file name.
+manprefix = $(binprefix)
+
+# Whether or not make needs to be installed setgid.
+# The value should be either `true' or `false'.
+# On many systems, the getloadavg function (used to implement the `-l'
+# switch) will not work unless make is installed setgid kmem.
+install_setgid = false
+# Install make setgid to this group so it can read /dev/kmem.
+group = sys
+
+# Program to install `make'.
+INSTALL_PROGRAM = copy
+# Program to install the man page.
+INSTALL_DATA = copy
+# Generic install program.
+INSTALL = copy
+
+# Program to format Texinfo source into Info files.
+MAKEINFO = makeinfo
+# Program to format Texinfo source into DVI files.
+TEXI2DVI = texi2dvi
+
+# Programs to make tags files.
+ETAGS = etags -w
+CTAGS = ctags -w
+
+objs = commands.o job.o dir.o file.o misc.o main.o read.o remake.o	\
+       rule.o implicit.o default.o variable.o expand.o function.o	\
+       vpath.o version.o ar.o arscan.o signame.o strcache.o hash.o      \
+       remote-$(REMOTE).o $(GLOB) $(GETOPT) $(ALLOCA) $(extras)
+srcs = $(srcdir)commands.c $(srcdir)job.c $(srcdir)dir.c             \
+       $(srcdir)file.c $(srcdir)getloadavg.c $(srcdir)misc.c         \
+       $(srcdir)main.c $(srcdir)read.c $(srcdir)remake.c             \
+       $(srcdir)rule.c $(srcdir)implicit.c $(srcdir)default.c        \
+       $(srcdir)variable.c $(srcdir)expand.c $(srcdir)function.c     \
+       $(srcdir)vpath.c $(srcdir)version.c $(srcdir)hash.c           \
+       $(srcdir)remote-$(REMOTE).c                                     \
+       $(srcdir)ar.c $(srcdir)arscan.c $(srcdir)strcache.c              \
+       $(srcdir)signame.c $(srcdir)signame.h $(GETOPT_SRC)            \
+       $(srcdir)commands.h $(srcdir)dep.h $(srcdir)file.h            \
+       $(srcdir)job.h $(srcdir)make.h $(srcdir)rule.h                \
+       $(srcdir)variable.h $(ALLOCA_SRC) $(srcdir)config.h.in
+
+
+.SUFFIXES:
+.SUFFIXES: .o .c .h .ps .dvi .info .texinfo
+
+all: make
+info: make.info
+dvi: make.dvi
+# Some makes apparently use .PHONY as the default goal if it is before `all'.
+.PHONY: all check info dvi
+
+make.info: make.texinfo
+	$(MAKEINFO) -I$(srcdir) $(srcdir)make.texinfo -o make.info
+
+make.dvi: make.texinfo
+	$(TEXI2DVI) $(srcdir)make.texinfo
+
+make.ps: make.dvi
+	dvi2ps make.dvi > make.ps
+
+make: $(objs) glob/glob.lib
+	$(CC) Link $(LDFLAGS) $(objs) $(LOADLIBES) To make.new
+	-delete quiet make
+	rename make.new make
+
+# -I. is needed to find config.h in the build directory.
+.c.o:
+	$(CC) $(defines) IDir "" IDir $(srcdir)glob \
+	      $(CPPFLAGS) $(CFLAGS) $< $(OUTPUT_OPTION)
+
+glob/glob.lib:
+	execute <<
+	    cd glob
+	    smake
+<
+
+tagsrcs = $(srcs) $(srcdir)remote-*.c
+TAGS: $(tagsrcs)
+	$(ETAGS) $(tagsrcs)
+tags: $(tagsrcs)
+	$(CTAGS) $(tagsrcs)
+
+.PHONY: install installdirs
+install:
+	copy make sc:c
+
+loadavg: loadavg.c config.h
+	$(CC) $(defines) -DTEST -I. -I$(srcdir) $(CFLAGS) $(LDFLAGS) \
+	      loadavg.c $(LOADLIBES) -o $@
+
+clean: glob-clean
+	-$(RM) -f make loadavg *.o core make.dvi
+
+distclean: clean glob-realclean
+	-$(RM) -f Makefile config.h config.status build.sh
+	-$(RM) -f config.log config.cache
+	-$(RM) -f TAGS tags
+	-$(RM) -f make.?? make.??s make.log make.toc make.*aux
+	-$(RM) -f loadavg.c
+
+realclean: distclean
+	-$(RM) -f make.info*
+
+mostlyclean: clean
+
+.PHONY: glob-clean glob-realclean
+
+glob-clean glob-realclean:
+	execute <<
+	cd glob
+	smake $@
+<
+
+# --------------- DEPENDENCIES
+#
+
+# .deps/alloca.Po
+# dummy
+
+# .deps/ar.Po
+ar.o ar.o: ar.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h dep.h \
+
+# .deps/arscan.Po
+arscan.o arscan.o: arscan.c make.h config.h \
+  getopt.h \
+  gettext.h \
+
+# .deps/commands.Po
+commands.o commands.o: commands.c make.h config.h \
+  getopt.h \
+  gettext.h dep.h filedef.h hash.h variable.h \
+  job.h commands.h
+
+# .deps/default.Po
+default.o default.o: default.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h variable.h rule.h \
+  dep.h job.h commands.h
+
+# .deps/dir.Po
+dir.o dir.o: dir.c make.h config.h \
+  getopt.h \
+  gettext.h hash.h \
+
+# .deps/expand.Po
+expand.o expand.o: expand.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h \
+  job.h commands.h \
+  variable.h rule.h
+
+# .deps/file.Po
+file.o file.o: file.c make.h config.h \
+  getopt.h \
+  gettext.h dep.h filedef.h \
+  hash.h job.h commands.h \
+  variable.h debug.h
+
+# .deps/function.Po
+function.o function.o: function.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h variable.h dep.h \
+  job.h commands.h debug.h
+
+# .deps/getloadavg.Po
+# dummy
+
+# .deps/getopt.Po
+getopt.o getopt.o: getopt.c config.h \
+
+# .deps/getopt1.Po
+getopt1.o getopt1.o: getopt1.c config.h getopt.h \
+
+# .deps/hash.Po
+hash.o hash.o: hash.c make.h config.h \
+  getopt.h \
+  gettext.h hash.h
+
+# .deps/implicit.Po
+implicit.o implicit.o: implicit.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h rule.h dep.h debug.h \
+  variable.h job.h \
+  commands.h
+
+# .deps/job.Po
+job.o job.o: job.c make.h config.h \
+  getopt.h \
+  gettext.h job.h \
+  debug.h filedef.h hash.h \
+  commands.h variable.h \
+
+# .deps/loadavg-getloadavg.Po
+loadavg-getloadavg.o loadavg-getloadavg.o: getloadavg.c config.h \
+  make.h \
+  getopt.h \
+  gettext.h \
+
+# .deps/main.Po
+main.o main.o: main.c make.h config.h \
+  getopt.h \
+  gettext.h dep.h filedef.h hash.h variable.h \
+  job.h commands.h rule.h \
+  debug.h getopt.h \
+
+# .deps/misc.Po
+misc.o misc.o: misc.c make.h config.h \
+  getopt.h \
+  gettext.h dep.h debug.h
+
+# .deps/read.Po
+read.o read.o: read.c make.h config.h \
+  getopt.h \
+  gettext.h \
+  dep.h filedef.h hash.h job.h \
+  commands.h variable.h rule.h debug.h \
+
+# .deps/remake.Po
+remake.o remake.o: remake.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h job.h \
+  commands.h dep.h \
+  variable.h debug.h
+
+# .deps/remote-cstms.Po
+# dummy
+
+# .deps/remote-stub.Po
+remote-stub.o remote-stub.o: remote-stub.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h job.h \
+  commands.h
+
+# .deps/rule.Po
+rule.o rule.o: rule.c make.h config.h \
+  getopt.h \
+  gettext.h dep.h filedef.h hash.h job.h \
+  commands.h variable.h \
+  rule.h
+
+# .deps/signame.Po
+signame.o signame.o: signame.c make.h config.h \
+  getopt.h \
+  gettext.h
+
+# .deps/strcache.Po
+strcache.o strcache.o: strcache.c make.h config.h \
+  getopt.h \
+  gettext.h hash.h
+
+# .deps/variable.Po
+variable.o variable.o: variable.c make.h config.h \
+  getopt.h \
+  gettext.h dep.h filedef.h \
+  hash.h job.h commands.h \
+  variable.h rule.h
+
+# .deps/version.Po
+version.o version.o: version.c config.h
+
+# .deps/vmsjobs.Po
+# dummy
+
+# .deps/vpath.Po
+vpath.o vpath.o: vpath.c make.h config.h \
+  getopt.h \
+  gettext.h filedef.h hash.h variable.h

@@ -1,0 +1,26 @@
+export DEFSPLUS= 
+export INCLUDESPLUS=
+export CFLAGSPLUS=
+export LDFLAGSPLUS=
+export LIBSPLUS= 
+export DLLFLAG=
+sedfiles=Makefile libtool config.h
+#BUILDDIR=$(shell pwd.sh)
+BUILDDIR=$(shell pwd.sh | sed -e "s/\([0-9]\+\)-[a-z]*$$/\1/I")
+SRCDIR=../$(shell basename $(BUILDDIR)-src)
+
+.PHONY: all 
+all: CONF MFSED
+CONF:
+#	if [ -e Makefile.in.sed ]; then \
+#		find.exe $(SRCDIR) -iname Makefile.in -exec sed -i -f Makefile.in.sed '{}' ';' ; \
+#	fi
+	$(SRCDIR)/configure --prefix=c:/progra~1/Make  --exec-prefix=c:/progra~1/Make --srcdir="$(SRCDIR)" \
+		--enable-case-insensitive-file-system
+	
+-include $(DVLDIR)/makefile.chg
+
+#	make all
+#	make check
+#	make install prefix=c:/temp/sed
+                                 

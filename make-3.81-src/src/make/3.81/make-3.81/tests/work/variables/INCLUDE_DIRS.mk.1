@@ -1,0 +1,11 @@
+
+ifeq ($(dir),)
+$(warning dir is empty)
+endif
+
+ifeq ($(filter $(dir),$(.INCLUDE_DIRS)),)
+$(warning .INCLUDE_DIRS does not contain $(dir))
+endif
+
+.PHONY: all
+all:;@:

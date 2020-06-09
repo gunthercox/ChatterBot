@@ -1,0 +1,99 @@
+#                                                                    -*-perl-*-
+$description = "Test the call function.\n";
+
+$details = "Try various uses of call and ensure they all give the correct
+results.\n";
+
+open(MAKEFILE, "> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE <<'EOMAKE';
+# Simple, just reverse two things
+#
+reverse = $2 $1
+
+# A complex `map' function, using recursive `call'.
+#
+map = $(foreach a,$2,$(call $1,$a))
+
+# Test using a builtin; this is silly as it's simpler to do without call
+#
+my-notdir = $(call notdir,$(1))
+
+# Test using non-expanded builtins
+#
+my-foreach = $(foreach $(1),$(2),$(3))
+my-if      = $(if $(1),$(2),$(3))
+
+# Test recursive invocations of call with different arguments
+#
+one = $(1) $(2) $(3)
+two = $(call one,$(1),foo,$(2))
+
+# Test recursion on the user-defined function.  As a special case make
+# won't error due to this.
+# Implement transitive closure using $(call ...)
+#
+DEP_foo = bar baz quux
+DEP_baz = quux blarp
+rest = $(wordlist 2,$(words ${1}),${1})
+tclose = $(if $1,$(firstword $1) \
+		$(call tclose,$(sort ${DEP_$(firstword $1)} $(call rest,$1))))
+
+all: ; @echo '$(call reverse,bar,foo)'; \
+        echo '$(call map,origin,MAKE reverse map)'; \
+        echo '$(call my-notdir,a/b   c/d      e/f)'; \
+        echo '$(call my-foreach)'; \
+        echo '$(call my-foreach,a,,,)'; \
+        echo '$(call my-if,a,b,c)'; \
+        echo '$(call two,bar,baz)'; \
+	echo '$(call tclose,foo)'
+
+
+
+EOMAKE
+
+# These won't work until/unless PR/1527 is resolved.
+#        echo '$(call my-foreach,a,x y z,$(a)$(a))'; \
+#        echo '$(call my-if,,$(warning don't print this),ok)'
+#
+# $answer = "xx yy zz\nok\n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+&run_make_with_options($makefile, "", &get_logfile);
+$answer = "foo bar\ndefault file file\nb d f\n\n\nb\nbar foo baz\nfoo bar baz blarp quux \n";
+&compare_output($answer, &get_logfile(1));
+
+
+# TEST eclipsing of arguments when invoking sub-calls
+
+$makefile2 = &get_tmpfile;
+
+open(MAKEFILE,"> $makefile2");
+
+print MAKEFILE <<'EOF';
+
+all = $1 $2 $3 $4 $5 $6 $7 $8 $9
+
+level1 = $(call all,$1,$2,$3,$4,$5)
+level2 = $(call level1,$1,$2,$3)
+level3 = $(call level2,$1,$2,$3,$4,$5)
+
+all:
+	@echo $(call all,1,2,3,4,5,6,7,8,9,10,11)
+	@echo $(call level1,1,2,3,4,5,6,7,8)
+	@echo $(call level2,1,2,3,4,5,6,7,8)
+	@echo $(call level3,1,2,3,4,5,6,7,8)
+EOF
+
+close(MAKEFILE);
+
+&run_make_with_options($makefile2, "", &get_logfile);
+$answer = "1 2 3 4 5 6 7 8 9\n1 2 3 4 5\n1 2 3\n1 2 3\n";
+&compare_output($answer,&get_logfile(1));
+
+1;

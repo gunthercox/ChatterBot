@@ -1,0 +1,39 @@
+{
+  "name": "nugget",
+  "version": "2.0.1",
+  "description": "minimalist wget clone written in node. HTTP GETs a file and saves it to the current working directory",
+  "main": "index.js",
+  "bin": {
+    "nugget": "bin.js"
+  },
+  "scripts": {
+    "test": "standard && tape test/*.js"
+  },
+  "author": "max ogden",
+  "license": "BSD",
+  "dependencies": {
+    "debug": "^2.1.3",
+    "minimist": "^1.1.0",
+    "pretty-bytes": "^1.0.2",
+    "progress-stream": "^1.1.0",
+    "request": "^2.45.0",
+    "single-line-log": "^1.1.2",
+    "throttleit": "0.0.2"
+  },
+  "devDependencies": {
+    "standard": "^6.0.5",
+    "tape": "^3.0.1",
+    "tape-spawn": "^1.4.2"
+  },
+  "directories": {
+    "test": "test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/maxogden/nugget.git"
+  },
+  "bugs": {
+    "url": "https://github.com/maxogden/nugget/issues"
+  },
+  "homepage": "https://github.com/maxogden/nugget"
+}

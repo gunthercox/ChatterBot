@@ -1,0 +1,12 @@
+{
+  "extends": "airbnb-base",
+  "rules": {
+    "consistent-return": 0,
+    "import/no-unresolved": 0,
+    "max-len": [2, 170],
+    "import/prefer-default-export": 0,
+    "import/no-extraneous-dependencies": 0,
+    "linebreak-style": 0,
+    "no-restricted-syntax": 0
+  }
+}

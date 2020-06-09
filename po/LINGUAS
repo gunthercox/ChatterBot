@@ -1,0 +1,5 @@
+# Set of available languages: 23 languages
+
+be da de es fi fr ga gl he hr id ja ko nl pl pt_BR ru rw sv tr uk vi zh_CN
+
+# Can't seem to get en@quot and en@boldquot to build properly?

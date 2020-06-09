@@ -1,0 +1,313 @@
+This is the VMS version of GNU Make, updated by Hartmut Becker
+
+Changes are based on GNU make 3.80. Latest changes are for OpenVMS/I64
+and new VMS CRTLs.
+
+This version was tested on OpenVMS/I64 V8.2 (field test) with hp C
+X7.1-024 OpenVMS/Alpha V7.3-2 with Compaq C V6.5-001 and OpenVMS/VAX 7.1
+with Compaq C V6.2-003 There are still some warning and informational
+message issued by the compilers.
+
+Build instructions
+Make a 1st version
+       $ @makefile.com
+       $ rena make.exe 1st-make.exe
+Use the 1st version to generate a 2nd version
+       $ mc sys$disk:[]1st-make clean
+       $ mc sys$disk:[]1st-make
+Verify your 2nd version
+       $ rena make.exe 2nd-make.exe
+       $ mc sys$disk:[]2nd-make clean
+       $ mc sys$disk:[]2nd-make
+
+Changes:
+
+. In default.c define variable ARCH as IA64 for VMS on Itanium systems.
+
+. In makefile.vms avoid name collision for glob and globfree.
+
+In newer version of the VMS CRTL there are glob and globfree implemented.
+Compiling and linking may result in
+
+  %ILINK-W-MULDEFLNKG, symbol DECC$GLOBFREE has subsequent linkage definition
+       in module DECC$SHR file SYS$COMMON:[SYSLIB]DECC$SHR.EXE;1
+  %ILINK-W-MULDEF, symbol DECC$GLOBFREE multiply defined
+       in module DECC$SHR file SYS$COMMON:[SYSLIB]DECC$SHR.EXE;1
+
+linker messages (and similar for DECC$GLOB). The messages just say, that
+globfree is a known CRTL whose name was mapped by the compiler to
+DECC$GLOBFREE.  This is done in glob.c as well, so this name is defined
+twice. One possible solution is to use the VMS versions of glob and
+globfree. However, then the build environment needs to figure out if
+there is a new CRTL supporting these or not. This adds complexity. Even
+more, these functions return VMS file specifications, which is not
+expected by the other make sources. There is a switch at run time (a VMS
+logical DECC$GLOB_UNIX_STYLE), which can be set to get Unix style
+names. This may conflict with other software. The recommended solution
+for this is to set this switch just prior to calling main: in an
+initialization routine. This adds more complexity and more VMS specific
+code. It is easier to tell the compiler NOT to map the routine names
+with a simple change in makefile.vms.
+
+Some notes on case sensitive names in rules and on the disk. In the VMS
+template for CONFIG.H case sensitive rules can be enabled with defining
+WANT_CASE_SENSITIVE_TARGETS. For recent version of VMS there is a case
+sensitive file system: ODS5. To make use of that, additionally un-defining
+the HAVE_CASE_INSENSITIVE_FS is required. As these are C macros, different
+versions of make need to be built to have any case sensitivity for VMS
+working. Unfortunately, for ODS5 disks that's not all.
+
+- Usually DCL upcases command line tokens (except strings) and usually the
+  file system is case blind (similar to how Windows systems work)
+	$ set proc/parse=extended/case=sensitive
+  preserves lower and UPPER on the command line and (for this process and all
+  sub-processes) enables case sensitivity in the file system
+
+- Usually the CRTL tries to reverse what DCL did with command line tokens, it
+  lowercases all tokens (except strings)
+	$ define DECC$ARGV_PARSE_STYLE enable
+  passes (the now preserved) lower and UPPER from the command line to main()
+
+- Usually the CRTL upcases the arguments to open() and friends
+	$ define DECC$EFS_CASE_PRESERVE enable
+  preserves the names as is.
+
+It is important to know that not all VMS tools are ready for case sensitivity.
+With this setup some tools may not work as expected. The setup should not
+blindly be applied for all users in default login procedures.
+
+Example? The poor coding gives a compiler message, showing that there are
+different files:
+
+$ dir
+
+Directory ODS5DISK[HB]
+
+A.c;1               B.c;1               c.c;1               X.c;1
+x.c;1
+
+Total of 5 files.
+$ ods5make x.obj
+cc    /obj=x.obj x.c
+
+foo(){lowercase_x();}
+......^
+%CC-I-IMPLICITFUNC, In this statement, the identifier "lowercase_x" is implicitly declared as a function.
+at line number 1 in file ODS5DISK[HB]x.c;1
+$ mc SYS$SYSDEVICE:[HARTMUT.MAKE_3_80P]ods5make X.obj
+cc    /obj=X.obj X.c
+
+foo() {UPPERCASE_X();}
+.......^
+%CC-I-IMPLICITFUNC, In this statement, the identifier "UPPERCASE_X" is implicitly declared as a function.
+at line number 1 in file ODS5DISK[HB]X.c;1
+$ dir
+
+Directory ODS5DISK[HB]
+
+A.c;1               B.c;1               c.c;1               X.c;1
+x.c;1               X.obj;1             x.obj;1
+
+Total of 7 files.
+$
+
+This is the VMS port of GNU Make done by Hartmut.Becker@compaq.com.
+
+It is based on the specific version 3.77k and on 3.78.1. 3.77k was done
+by Klaus Kämpf <kkaempf@rmi.de>, the code was based on the VMS port of
+GNU Make 3.60 by Mike Moretti.
+
+It was ported on OpenVMS/Alpha V7.1, DECC V5.7-006. It was re-build and
+tested on OpenVMS/Alpha V7.2, OpenVMS/VAX 7.1 and 5.5-2. Different
+versions of DECC were used. VAXC was tried: it fails; but it doesn't
+seem worth to get it working. There are still some PTRMISMATCH warnings
+during the compile. Although perl is working on VMS the test scripts
+don't work. The function $shell is still missing.
+
+There is a known bug in some of the VMS CRTLs. It is in the shipped
+versions of VMS V7.2 and V7.2-1 and in the currently (October 1999)
+available ECOs for VMS V7.1 and newer versions. It is fixed in versions
+shipped with newer VMS versions and all ECO kits after October 1999. It
+only shows up during the daylight saving time period (DST): stat()
+returns a modification time 1 hour ahead. This results in GNU make
+warning messages. For a just created source you will see:
+
+ $ gmake x.exe
+ gmake.exe;1: *** Warning: File `x.c' has modification time in the future (940582863 > 940579269)
+ cc    /obj=x.obj x.c
+ link  x.obj    /exe=x.exe
+ gmake.exe;1: *** Warning:  Clock skew detected.  Your build may be incomplete.
+
+
+New in 3.78.1:
+
+Fix a problem with automatically remaking makefiles. GNU make uses an
+execve to restart itself after a successful remake of the makefile. On
+UNIX systems execve replaces the running program with a new one and
+resets all signal handling to the default. On VMS execve creates a child
+process, signal and exit handlers of the parent are still active, and,
+unfortunately, corrupt the exit code from the child. Fix in job.c:
+ignore SIGCHLD.
+
+Added some switches to reflect latest features of DECC. Modifications in
+makefile.vms.
+
+Set some definitions to reflect latest features of DECC. Modifications in
+config.h-vms (which is copied to config.h).
+
+Added extern strcmpi declaration to avoid 'implicitly declared' messages.
+Modification in make.h.
+
+Default rule for C++, conditionals for gcc (GCC_IS_NATIVE) or DEC/Digital/
+Compaq c/c++ compilers. Modifications in default.c.
+
+Usage of opendir() and friends, suppress file version. Modifications in dir.c.
+
+Added VMS specific code to handle ctrl+c and ctrl+y to abort make.
+Modifications in job.c.
+
+Added support to have case sensitive targets and dependencies but to
+still use case blind file names. This is especially useful for Java
+makefiles on VMS:
+
+	.SUFFIXES :
+	.SUFFIXES :	.class .java
+	.java.class :
+		javac "$<
+	HelloWorld.class :      HelloWorld.java
+
+A new macro WANT_CASE_SENSITIVE_TARGETS in config.h-vms was introduced.
+It needs to be enabled to get this feature; default is disabled.  The
+macro HAVE_CASE_INSENSITIVE_FS must not be touched: it is still enabled.
+Modifications in file.c and config.h-vms.
+
+Bootstrap make to start building make is still makefile.com, but make
+needs to be re-made with a make to make a correct version: ignore all
+possible warnings, delete all objects, rename make.exe to a different
+name and run it.
+
+Made some minor modifications to the bootstrap build makefile.com.
+
+This is the VMS port of GNU Make.
+
+It is based on the VMS port of GNU Make 3.60 by Mike Moretti.
+
+This port was done by Klaus Kämpf <kkaempf@rmi.de>
+
+There is first-level support available from proGIS Software, Germany.
+Visit their web-site at http://www.progis.de to get information
+about other vms software and forthcoming updates to gnu make.
+
+New for 3.77:
+
+/bin/sh style I/O redirection is supported. You can now write lines like
+	mcr sys$disk:[]program.exe < input.txt > output.txt &> error.txt
+
+Makefile variables are looked up in the current environment. You can set
+symbols or logicals in DCL and evaluate them in the Makefile via
+$(<name-of-symbol-or-logical>).  Variables defined in the Makefile
+override VMS symbols/logicals !
+
+Functions for file names are working now. See the GNU Make manual for
+$(dir ...)  and $(wildcard ...).  Unix-style and VMS-style names are
+supported as arguments.
+
+The default rules are set up for GNU C. Building an executable from a
+single source file is as easy as 'make file.exe'.
+
+The variable $(ARCH) is predefined as ALPHA or VAX resp. Makefiles for
+different VMS systems can now be written by checking $(ARCH) as in
+  ifeq ($(ARCH),ALPHA)
+    $(ECHO) "On the Alpha"
+  else
+    $(ECHO) "On the VAX"
+  endif
+
+Command lines of excessive length are correctly broken and written to a
+batch file in sys$scratch for later execution. There's no limit to the
+lengths of commands (and no need for .opt files :-) any more.
+
+Empty commands are handled correctly and don't end in a new DCL process.
+
+
+New for 3.76:
+
+John W. Eaton has updated the VMS port to support libraries and VPATH.
+
+
+To build Make, simply type @makefile.  This should compile all the
+necessary files and link Make.  There is also a file called
+makefile.vms.  If you already have GNU Make built you can just use
+Make with this makefile to rebuild.
+
+Here are some notes about GNU Make for VMS:
+
+The cd command is supported if it's called as $(CD). This invokes
+the 'builtin_cd' command which changes the directory.
+Calling 'set def' doesn't do the trick, since a sub-shell is
+spawned for this command, the directory is changed *in this sub-shell*
+and the sub-shell ends.
+
+Libraries are not supported. They were in GNU Make 3.60 but somehow I
+didn't care porting the code. If there is enough interest, I'll do it at
+some later time.
+
+The variable $^ separates files with commas instead of spaces (It's the
+natural thing to do for VMS).
+
+See defaults.c for VMS default suffixes and my definitions for default
+rules and variables.
+
+The shell function is not implemented yet.
+
+Load average routines haven't been implemented for VMS yet.
+
+The default include directory for including other makefiles is
+SYS$SYSROOT:[SYSLIB] (I don't remember why I didn't just use
+SYS$LIBRARY: instead; maybe it wouldn't work that way).
+
+The default makefiles make looks for are: makefile.vms, gnumakefile,
+makefile., and gnumakefile. .
+
+The stat() function and handling of time stamps in VMS is broken, so I
+replaced it with a hack in vmsfunctions.c. I will provide a full rewrite
+somewhere in the future. Be warned, the time resolution inside make is
+less than what vms provides. This might be a problem on the faster Alphas.
+
+You can use a : in a filename only if you preceed it with a backslash ('\').
+E.g.- hobbes\:[bogas.files]
+
+Make ignores success, informational, or warning errors (-S-, -I-, or
+-W-).  But it will stop on -E- and -F- errors. (unless you do something
+to override this in your makefile, or whatever).
+
+Remote stuff isn't implemented yet.
+
+Multiple line DCL commands, such as "if" statements, must be put inside
+command files.  You can run a command file by using \@.
+
+
+VMS changes made for 3.74.3
+
+Lots of default settings are adapted for VMS. See default.c.
+
+Long command lines are now converted to command files.
+
+Comma (',') as a separator is now allowed. See makefile.vms for an example.
+
+-------------------------------------------------------------------------------
+Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+2006 Free Software Foundation, Inc.
+This file is part of GNU Make.
+
+GNU Make is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version.
+
+GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+GNU Make; see the file COPYING.  If not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.

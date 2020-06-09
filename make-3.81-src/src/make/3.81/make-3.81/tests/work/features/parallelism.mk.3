@@ -1,0 +1,9 @@
+
+export HI = $(shell $($@.CMD))
+first.CMD = echo hi
+second.CMD = sleep 4; echo hi
+
+.PHONY: all first second
+all: first second
+
+first second: ; @echo $@; sleep 1; echo $@

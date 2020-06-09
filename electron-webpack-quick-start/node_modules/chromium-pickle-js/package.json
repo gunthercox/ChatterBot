@@ -1,0 +1,21 @@
+{
+  "main": "./lib/exports.js",
+  "name": "chromium-pickle-js",
+  "description": "Binary value packing and unpacking",
+  "version": "0.2.0",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/electron/node-chromium-pickle-js.git"
+  },
+  "bugs": {
+    "url": "https://github.com/electron/node-chromium-pickle-js/issues"
+  },
+  "scripts": {
+    "test": "mocha test && standard"
+  },
+  "devDependencies": {
+    "mocha": "^3.0.2",
+    "standard": "^8.0.0"
+  }
+}

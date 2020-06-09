@@ -1,0 +1,62 @@
+glob.o glob.o: ../../make-3.81-src/glob/glob.c ../config.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/errno.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/_mingw.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/types.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stddef.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stddef.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/stat.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/assert.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdio.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdarg.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stdarg.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/unistd.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/io.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdint.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/process.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/getopt.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/dirent.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdlib.h \
+  g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/string.h \
+  ../../make-3.81-src/glob/fnmatch.h ../../make-3.81-src/glob/glob.h
+
+../config.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/errno.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/_mingw.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/types.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stddef.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stddef.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/sys/stat.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/assert.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdio.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdarg.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/include/stdarg.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/unistd.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/io.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdint.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/process.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/getopt.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/dirent.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/stdlib.h:
+
+g:/mingw/3.4.5/bin/../lib/gcc/mingw32/3.4.5/../../../../include/string.h:
+
+../../make-3.81-src/glob/fnmatch.h:
+
+../../make-3.81-src/glob/glob.h:

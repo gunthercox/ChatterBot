@@ -1,0 +1,55 @@
+{
+  "name": "parse-color",
+  "version": "1.0.0",
+  "description": "parse a css color string (plus hsv and cmyk) into an object",
+  "main": "index.js",
+  "dependencies": {
+    "color-convert": "~0.5.0"
+  },
+  "devDependencies": {
+    "tape": "~1.0.4"
+  },
+  "scripts": {
+    "test": "tape test/*.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/substack/parse-color.git"
+  },
+  "homepage": "https://github.com/substack/parse-color",
+  "keywords": [
+    "rgb",
+    "rgba",
+    "hsl",
+    "hsla",
+    "hsv",
+    "hsva",
+    "cmyk",
+    "cmyka",
+    "color",
+    "css",
+    "alpha"
+  ],
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "license": "MIT",
+  "testling": {
+    "files": "test/*.js",
+    "browsers": [
+      "ie/8..latest",
+      "firefox/16..latest",
+      "firefox/nightly",
+      "chrome/22..latest",
+      "chrome/canary",
+      "opera/12..latest",
+      "opera/next",
+      "safari/5.1..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest",
+      "android-browser/4.2..latest"
+    ]
+  }
+}

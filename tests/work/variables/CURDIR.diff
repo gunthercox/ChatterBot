@@ -1,0 +1,7 @@
+*** work/variables/CURDIR.base	Sat Nov 25 01:11:35 2006
+--- work/variables/CURDIR.log	Sat Nov 25 01:11:35 2006
+***************
+*** 1 ****
+! /cygdrive/j/Devel/make/3.81/make-3.81/tests
+--- 1 ----
+! j:/Devel/make/3.81/make-3.81/tests

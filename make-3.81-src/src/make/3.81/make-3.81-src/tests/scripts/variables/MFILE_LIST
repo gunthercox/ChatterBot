@@ -1,0 +1,30 @@
+#                                                                    -*-perl-*-
+
+$description = "Test the MAKEFILE_LIST variable.";
+
+$makefile2 = &get_tmpfile;
+
+open(MAKEFILE,"> $makefile");
+print MAKEFILE <<EOF;
+m1 := \$(MAKEFILE_LIST)
+include $makefile2
+m3 := \$(MAKEFILE_LIST)
+
+all:
+\t\@echo \$(m1)
+\t\@echo \$(m2)
+\t\@echo \$(m3)
+EOF
+close(MAKEFILE);
+
+
+open(MAKEFILE,"> $makefile2");
+print MAKEFILE "m2 := \$(MAKEFILE_LIST)\n";
+close(MAKEFILE);
+
+
+&run_make_with_options($makefile, "", &get_logfile);
+$answer = "$makefile\n$makefile $makefile2\n$makefile $makefile2\n";
+&compare_output($answer,&get_logfile(1));
+
+1;

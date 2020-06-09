@@ -1,0 +1,41 @@
+{
+  "name": "@posthtml/esm",
+  "version": "1.0.0",
+  "description": "ESM Plugin for PostHTML",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 4"
+  },
+  "main": "lib",
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "lint": "standard --env jest",
+    "test": "jest --verbose --coverage",
+    "docs": "jsdoc2md lib/*.js > PLUGIN.md",
+    "clean": "rm -rf coverage",
+    "release": "standard-version"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "jest": "^22.0.0",
+    "jsdoc-to-markdown": "^3.0.0",
+    "posthtml": "^0.11.0",
+    "standard": "^11.0.0-beta.0",
+    "standard-version": "4.0.0"
+  },
+  "keywords": [
+    "esm",
+    "url",
+    "import",
+    "include",
+    "posthtml",
+    "posthtmlplugin"
+  ],
+  "author": "Michael Ciniawsky <michael.ciniawsky@gmail.com>",
+  "contributors": [],
+  "bugs": "https://github.com/posthtml/esm/issues",
+  "homepage": "https://github.com/posthtml/esm#readme",
+  "repository": "https://github.com/posthtml/esm.git"
+}

@@ -1,0 +1,13 @@
+{
+  "name": "chatterbot",
+  "version": "1.0.1",
+  "description": "a a.i. chat bot built to maintin customers and my appointments.",
+  "main": "ye",
+  "repository": "yes",
+  "author": "tomasm.nelson@gmail.com",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "babel": "^6.23.0"
+  }
+}

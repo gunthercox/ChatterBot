@@ -1,0 +1,53 @@
+{
+  "name": "sumchecker",
+  "version": "2.0.2",
+  "author": "Mark Lee",
+  "license": "Apache-2.0",
+  "description": "Checksum validator",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/malept/sumchecker.git"
+  },
+  "keywords": [
+    "checksum",
+    "hash"
+  ],
+  "bugs": {
+    "url": "https://github.com/malept/sumchecker/issues"
+  },
+  "homepage": "https://github.com/malept/sumchecker#readme",
+  "engines": {
+    "node": ">= 4.0"
+  },
+  "devDependencies": {
+    "codeclimate-test-reporter": "^0.4.0",
+    "eslint": "^3.3.1",
+    "eslint-config-standard": "^6.0.0-beta.3",
+    "eslint-plugin-promise": "^3.3.0",
+    "eslint-plugin-standard": "^2.0.0",
+    "intern": "^3.3.1",
+    "nyc": "^8.1.0"
+  },
+  "dependencies": {
+    "debug": "^2.2.0"
+  },
+  "scripts": {
+    "ci": "eslint . && intern-client config=tests/intern suites=tests/index reporters=Lcov reporters=Console && codeclimate-test-reporter < lcov.info",
+    "test": "eslint . && intern-client config=tests/intern suites=tests/index reporters=Pretty"
+  },
+  "eslintConfig": {
+    "env": {
+      "amd": true
+    },
+    "extends": "standard",
+    "parserOptions": {
+      "sourceType": "script"
+    },
+    "rules": {
+      "strict": [
+        "error"
+      ]
+    }
+  }
+}

@@ -1,0 +1,179 @@
+Changes from 0.4.9 to 3.78 (Sep 6, 1999):
+
+    Lots of new tests.  Renamed to follow the GNU make scheme.  Also
+    added some support for using Purify with make.
+
+    Rob Tulloh contributed some changes to get the test suite running on
+    NT; I tweaked them a bit (hopefully I didn't break anything!)  Note
+    that NT doesn't grok the self-exec funkiness that Unix shells use,
+    so instead I broke that out into a separate shell script
+    "run_make_tests" that invokes perl with the (renamed) script
+    run_make_tests.pl.
+
+    Eli Zaretski contributed changes to get the test suite running on
+    DOS with DJGPP.  I also meddled in these somewhat.
+
+    If you're on DOS or NT you should run "perl.exe run_make_tests.pl ..."
+    If you're on Unix, you can continue to run "./run_make_tests ..." as
+    before.
+
+Changes from 0.4.8 to 0.4.9 (May 14, 1998):
+
+    Release by Paul D. Smith <psmith@baynetworks.com>; I'm the one to
+    blame for problems in this version :).
+
+    Add some perl to test_driver.pl to strip out GNU make clock skew
+    warning messages from the output before comparing it to the
+    known-good output.
+
+    A new test for escaped :'s in filenames (someone on VMS found this
+    didn't work anymore in 3.77): scripts/features/escape.
+
+Changes from 0.4.7 to 0.4.8 (May 14, 1998):
+
+    Release by Paul D. Smith <psmith@baynetworks.com>; I'm the one to
+    blame for problems in this version :).
+
+    New tests for features to be included in GNU make 3.77.
+
+Changes from 0.4.6 to 0.4.7 (August 18, 1997):
+
+    Release by Paul D. Smith <psmith@baynetworks.com>; I'm the one to
+    blame for problems in this version :).
+
+    Reworked some tests to make sure they all work with both perl4 and perl5.
+
+    Work around a bug in perl 5.004 which doesn't clean the environment
+    correctly in all cases (fixed in at least 5.004_02).
+
+    Updated functions/strip to test for newline stripping.
+
+    Keep a $PURIFYOPTIONS env variable if present.
+
+Changes from 0.4.5 to 0.4.6 (April 07, 1997):
+
+    Release by Paul D. Smith <psmith@baynetworks.com>; I'm the one to
+    blame for problems in this version :).
+
+    Updated to work with GNU make 3.76 (and pretests).
+
+    Added new tests and updated existing ones.  Note that the new tests
+    weren't tested with perl 4, however I think they should work.
+
+    Ignore any tests whose filenames end in "~", so that Emacs backup
+    files aren't run.
+
+Changes from 0.4.4 to 0.4.5 (April 29, 1995):
+
+    Updated to be compatible with perl 5.001 as well as 4.036.
+
+    Note: the test suite still won't work on 14-char filesystems
+    (sorry, Kaveh), but I will get to it.
+
+    Also, some tests and stuff still haven't made it in because I
+    haven't had time to write the test scripts for them.  But they,
+    too, will get in eventually.  Contributions of scripts (ie, tests
+    that I can just drop in) are particularly welcome and will be
+    incorporated immediately.
+
+Changes from 0.4.3 to 0.4.4 (March 1995):
+
+    Updated for changes in make 3.72.12, and to ignore CVS directories
+    (thanks go to Jim Meyering for the patches for this).
+
+    Fixed uname call to not make a mess on BSD/OS 2.0 (whose uname -a
+    is very verbose).  Let me know if this doesn't work correctly on
+    your system.
+
+    Changed to display test name while it is running, not just when it
+    finishes.
+
+    Note: the test suite still won't work on 14-char filesystems
+    (sorry, Kaveh), but I will get to it.
+
+    Also, some tests and stuff still haven't made it in because I
+    haven't had time to write the test scripts for them.  But they,
+    too, will get in eventually.
+
+Changes from 0.4 to 0.4.3 (October 1994):
+
+    Fixed bugs (like dependencies on environment variables).
+
+    Caught up with changes in make.
+
+    The load_limit test should now silently ignore a failure due to
+    make not being able to read /dev/kmem.
+
+    Reorganized tests into subdirs and renamed lots of things so that
+    those poor souls who still have to deal with 14-char filename
+    limits won't hate me any more.  Thanks very much to Kaveh R. Ghazi
+    <ghazi@noc.rutgers.edu> for helping me with the implementation and
+    testing of these changes, and for putting up with all my whining
+    about it...
+
+    Added a $| = 1 so that systems that don't seem to automatically
+    flush their output for some reason will still print all the
+    output.  I'd hate for someone to miss out on the smiley that
+    you're supposed to get when all the tests pass... :-)
+
+Changes from 0.3 to 0.4 (August 1993):
+
+    Lost in the mists of time (and my hurry to get it out before I
+    left my job).
+
+Changes from 0.2 to 0.3 (9-30-92):
+
+    Several tests fixed to match the fact that MAKELEVEL > 0 or -C now
+    imply -w.
+
+    parallel_execution test fixed to not use double colon rules any
+    more since their behavior has changed.
+
+    errors_in_commands test fixed to handle different error messages
+    and return codes from rm.
+
+    Several tests fixed to handle -make_path with a relative path
+    and/or a name other than "make" for make.
+
+    dash-e-option test fixed to use $PATH instead of $USER (since the
+    latter does not exist on some System V systems).  This also
+    removes the dependency on getlogin (which fails under certain
+    weird conditions).
+
+    test_driver_core changed so that you can give a test name like
+    scripts/errors_in_commands and it will be handled correctly (handy
+    if you have a shell with filename completion).
+
+Changes from 0.1 to 0.2 (5-4-92):
+
+    README corrected to require perl 4.019, not 4.010.
+
+    -make_path replaces -old.
+
+    errors_in_commands test updated for change in format introduced in
+    make 3.62.6.
+
+    test_driver_core now uses a better way of figuring what OS it is
+    running on (thanks to meyering@cs.utexas.edu (Jim Meyering) for
+    suggesting this, as well as discovering the hard way that the old
+    way (testing for /mnt) fails on his machine).
+
+    Some new tests were added.
+
+
+-------------------------------------------------------------------------------
+Copyright (C) 1992, 1993, 1994, 1995, 1996, 1997, 1998, 1999, 2000, 2001,
+2002, 2003, 2004, 2005, 2006 Free Software Foundation, Inc.
+This file is part of GNU Make.
+
+GNU Make is free software; you can redistribute it and/or modify it under the
+terms of the GNU General Public License as published by the Free Software
+Foundation; either version 2, or (at your option) any later version.
+
+GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License along with
+GNU Make; see the file COPYING.  If not, write to the Free Software
+Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.

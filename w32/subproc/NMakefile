@@ -1,0 +1,60 @@
+# NOTE: If you have no `make' program at all to process this makefile, run
+# `build.bat' instead.
+#
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+# 2006 Free Software Foundation, Inc.
+# This file is part of GNU Make.
+#
+# GNU Make is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2, or (at your option) any later version.
+#
+# GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# GNU Make; see the file COPYING.  If not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+#
+#       NMakefile for GNU Make (subproc library)
+#
+LIB = lib
+CC = cl
+MAKE = nmake
+
+OUTDIR=.
+MAKEFILE=NMakefile
+
+CFLAGS_any = /nologo /MT /W4 /GX /Z7 /YX /D WIN32 /D WINDOWS32 /D _WINDOWS  -I. -I../include -I../../
+CFLAGS_debug = $(CFLAGS_any) /Od /D _DEBUG /FR.\WinDebug\ /Fp.\WinDebug\subproc.pch /Fo.\WinDebug/
+CFLAGS_release = $(CFLAGS_any) /O2 /FR.\WinRel\ /Fp.\WinRel\subproc.pch /Fo.\WinRel/
+
+all: Release Debug
+
+Release:
+	$(MAKE) /f $(MAKEFILE) OUTDIR=WinRel CFLAGS="$(CFLAGS_release)" WinRel/subproc.lib
+Debug:
+	$(MAKE) /f $(MAKEFILE) OUTDIR=WinDebug CFLAGS="$(CFLAGS_debug)" WinDebug/subproc.lib
+
+clean:
+	rmdir /s /q WinRel WinDebug
+	erase *.pdb
+
+$(OUTDIR):
+	if not exist .\$@\nul mkdir .\$@
+
+OBJS = $(OUTDIR)/misc.obj $(OUTDIR)/w32err.obj $(OUTDIR)/sub_proc.obj
+
+$(OUTDIR)/subproc.lib: $(OUTDIR) $(OBJS)
+	$(LIB) -out:$@ @<<
+		$(OBJS)
+<<
+
+.c{$(OUTDIR)}.obj:
+	$(CC) $(CFLAGS) /c $<
+
+$(OUTDIR)/misc.obj: misc.c proc.h
+$(OUTDIR)/sub_proc.obj: sub_proc.c  ../include/sub_proc.h ../include/w32err.h proc.h
+$(OUTDIR)/w32err.obj: w32err.c ../include/w32err.h

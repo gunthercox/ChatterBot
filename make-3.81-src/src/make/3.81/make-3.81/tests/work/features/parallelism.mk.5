@@ -1,0 +1,13 @@
+
+.PHONY: all
+all:; @:
+
+-include foo.d
+
+foo.d: comp
+	@echo building $@
+
+comp: mod_a.o mod_b.o; @:
+
+mod_a.o mod_b.o:
+	@exit 1

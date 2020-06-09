@@ -1,0 +1,83 @@
+#                                                                    -*-perl-*-
+
+$description = "\
+This tests random features of make's algorithms, often somewhat obscure,
+which have either broken at some point in the past or seem likely to
+break.";
+
+run_make_test('
+# Make sure that subdirectories built as prerequisites are actually handled
+# properly.
+
+all: dir/subdir/file.a
+
+dir/subdir: ; @echo mkdir -p dir/subdir
+
+dir/subdir/file.b: dir/subdir ; @echo touch dir/subdir/file.b
+
+dir/subdir/%.a: dir/subdir/%.b ; @echo cp $< $@',
+              '', "mkdir -p dir/subdir\ntouch dir/subdir/file.b\ncp dir/subdir/file.b dir/subdir/file.a\n");
+
+# Test implicit rules
+
+&touch('foo.c');
+run_make_test('foo: foo.o',
+              'CC="@echo cc" OUTPUT_OPTION=',
+              'cc -c foo.c
+cc foo.o -o foo');
+unlink('foo.c');
+
+
+# Test other implicit rule searching
+
+&touch('bar');
+run_make_test('
+test.foo:
+%.foo : baz ; @echo done $<
+%.foo : bar ; @echo done $<
+fox: baz
+',
+              '',
+              'done bar');
+unlink('bar');
+
+
+# Test implicit rules with '$' in the name (see se_implicit)
+
+run_make_test(q!
+%.foo : baz$$bar ; @echo 'done $<'
+%.foo : bar$$baz ; @echo 'done $<'
+test.foo:
+baz$$bar bar$$baz: ; @echo '$@'
+!,
+              '',
+              "baz\$bar\ndone baz\$bar");
+
+
+# Test implicit rules with '$' in the name (see se_implicit)
+# Use the '$' in the pattern.
+
+run_make_test(q!
+%.foo : %$$bar ; @echo 'done $<'
+test.foo:
+test$$bar: ; @echo '$@'
+!,
+              '',
+              "test\$bar\ndone test\$bar");
+
+# Make sure that subdirectories built as prerequisites are actually handled
+# properly... this time with '$'
+
+run_make_test(q!
+
+all: dir/subdir/file.$$a
+
+dir/subdir: ; @echo mkdir -p '$@'
+
+dir/subdir/file.$$b: dir/subdir ; @echo touch '$@'
+
+dir/subdir/%.$$a: dir/subdir/%.$$b ; @echo 'cp $< $@'
+!,
+              '', "mkdir -p dir/subdir\ntouch dir/subdir/file.\$b\ncp dir/subdir/file.\$b dir/subdir/file.\$a\n");
+
+1;

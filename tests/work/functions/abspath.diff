@@ -1,0 +1,8 @@
+*** work/functions/abspath.base	Sat Nov 25 01:11:07 2006
+--- work/functions/abspath.log	Sat Nov 25 01:11:07 2006
+***************
+*** 0 ****
+--- 1,3 ----
++ work/functions/abspath.mk:3: .: abs="j:/Devel/make/3.81/make-3.81/tests" real="j:/Devel/make/3.81/make-3.81/tests/j:/Devel/make/3.81/make-3.81/tests" curdir="j:/Devel/make/3.81/make-3.81/tests"
++ work/functions/abspath.mk:7: ./: abs="j:/Devel/make/3.81/make-3.81/tests" real="j:/Devel/make/3.81/make-3.81/tests/j:/Devel/make/3.81/make-3.81/tests" curdir="j:/Devel/make/3.81/make-3.81/tests"
++ work/functions/abspath.mk:11: .///: abs="j:/Devel/make/3.81/make-3.81/tests" real="j:/Devel/make/3.81/make-3.81/tests/j:/Devel/make/3.81/make-3.81/tests" curdir="j:/Devel/make/3.81/make-3.81/tests"

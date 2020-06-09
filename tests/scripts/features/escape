@@ -1,0 +1,58 @@
+#                                                                    -*-perl-*-
+$description = "Test various types of escaping in makefiles.";
+
+$details = "\
+Make sure that escaping of `:' works in target names.
+Make sure escaping of whitespace works in target names.
+Make sure that escaping of '#' works.";
+
+
+close(MAKEFILE);
+
+
+# TEST 1
+
+run_make_test('
+$(path)foo : ; @echo "touch ($@)"
+
+foo\ bar: ; @echo "touch ($@)"
+
+sharp: foo\#bar.ext
+foo\#bar.ext: ; @echo "foo#bar.ext = ($@)"',
+	      '',
+	      'touch (foo)');
+
+# TEST 2: This one should fail, since the ":" is unquoted.
+
+run_make_test(undef,
+	      'path=pre:',
+	      "#MAKEFILE#:2: *** target pattern contains no `%'.  Stop.",
+	      512);
+
+# TEST 3: This one should work, since we escape the ":".
+
+run_make_test(undef,
+	      "'path=pre\\:'",
+	      'touch (pre:foo)');
+
+# TEST 4: This one should fail, since the escape char is escaped.
+
+run_make_test(undef,
+	      "'path=pre\\\\:'",
+	      "#MAKEFILE#:2: *** target pattern contains no `%'.  Stop.",
+	      512);
+
+# TEST 5: This one should work
+
+run_make_test(undef,
+	      "'foo bar'",
+	      'touch (foo bar)');
+
+# TEST 6: Test escaped comments
+
+run_make_test(undef,
+	      'sharp',
+	      'foo#bar.ext = (foo#bar.ext)');
+
+# This tells the test driver that the perl test script executed properly.
+1;

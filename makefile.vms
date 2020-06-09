@@ -1,0 +1,148 @@
+# -*-Makefile-*- to build GNU make on VMS
+#
+# Copyright (C) 1996, 1997, 1998, 1999, 2000, 2001, 2002, 2003, 2004, 2005,
+# 2006 Free Software Foundation, Inc.
+# This file is part of GNU Make.
+#
+# GNU Make is free software; you can redistribute it and/or modify it under the
+# terms of the GNU General Public License as published by the Free Software
+# Foundation; either version 2, or (at your option) any later version.
+#
+# GNU Make is distributed in the hope that it will be useful, but WITHOUT ANY
+# WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS FOR
+# A PARTICULAR PURPOSE.  See the GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License along with
+# GNU Make; see the file COPYING.  If not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
+
+# VMS extensions from GNU Make 3.60 imported by
+#  Klaus Kämpf (kkaempf@rmi.de)
+# Modified for version 3.78.1 by Hartmut.Becker@compaq.com.
+# Modified for version 3.80 by zinser@decus.de
+# Modified for version 3.81 by Hartmut Becker
+
+CC = cc
+CP = copy
+
+%.obj: %.c
+	$(CC) $(CFLAGS)/obj=$@ $<
+#
+#	Makefile for GNU Make
+#
+
+ifeq ($(CC),cc)
+CFLAGS = $(defines) /include=([],[.glob])/prefix=(all,except=(glob,globfree))/standard=relaxed/warn=(disable=questcompare)
+else
+CFLAGS = $(defines) /include=([],[.glob])
+endif
+#LDFLAGS = /deb
+LDFLAGS =
+
+ifeq ($(CC),cc)
+defines = /define=("unlink=remove","HAVE_CONFIG_H","VMS","allocated_variable_expand_for_file=alloc_var_expand_for_file")
+else
+ifeq ($(ARCH),VAX)
+defines = /define=("HAVE_CONFIG_H","GCC_IS_NATIVE","VAX")
+else
+defines = /define=("HAVE_CONFIG_H","GCC_IS_NATIVE")
+endif
+endif
+
+LOAD_AVG = /define="NO_LDAV"
+
+# If you don't want archive support, comment these out.
+ARCHIVES = ,ar.obj,arscan.obj
+ARCHIVES_SRC = ar.c arscan.c
+
+# If your system needs extra libraries loaded in, define them here.
+# System V probably need -lPW for alloca.
+# if on vax, uncomment the following line
+#LOADLIBES = ,c.opt/opt
+ifeq ($(CC),cc)
+#LOADLIBES =,sys$$library:vaxcrtl.olb/lib
+CRT0 =
+else
+LOADLIBES =,gnu_cc_library:libgcc.olb/lib
+endif
+
+# If your system doesn't have alloca, or the one provided is bad,
+# get it from the Emacs distribution and define these.
+#ALLOCA = ,alloca.obj
+#ALLOCASRC = alloca.c
+
+# If there are remote execution facilities defined,
+# enable them with switches here (see remote-*.c).
+REMOTE =
+
+# Any extra object files your system needs.
+extras = ,signame.obj,remote-stub.obj,vmsfunctions.obj,vmsify.obj
+#,directory.obj
+# as an alternative:
+glob = ,[.glob]glob.obj,[.glob]fnmatch.obj
+getopt = ,getopt.obj,getopt1.obj
+# Directory to install `make' in.
+bindir = []
+# Directory to install the man page in.
+mandir = []
+# Number to put on the man page filename.
+manext = 1
+
+objs = commands.obj,job.obj,dir.obj,file.obj,misc.obj,hash.obj,\
+       main.obj,read.obj,remake.obj,rule.obj,implicit.obj,\
+       default.obj,variable.obj,expand.obj,function.obj,strcache.obj,\
+       vpath.obj,version.obj$(ARCHIVES)$(ALLOCA)$(extras)$(getopt)$(glob)
+srcs = commands.c job.c dir.c file.c misc.c  hash.c \
+	main.c read.c remake.c rule.c implicit.c \
+	default.c variable.c expand.c function.c strcache.c \
+	vpath.c version.c vmsfunctions.c vmsify.c $(ARCHIVES_SRC) $(ALLOCASRC) \
+	commands.h dep.h filedef.h job.h make.h rule.h variable.h
+
+
+.PHONY: all doc
+all: config.h make.exe
+
+doc: make.info make.dvi
+
+
+make.exe: $(objs)
+	$(LD)$(LDFLAGS)/exe=$@ $^$(LOADLIBES)$(CRT0)
+
+.PHONY: clean realclean
+clean:
+	$$ purge [...]
+	-$(RM) make.exe;,*.obj;
+	-$(RM) [.glob]*.obj;
+
+# Automatically generated dependencies.
+commands.obj: commands.c make.h dep.h commands.h filedef.h variable.h job.h
+job.obj: job.c vmsjobs.c make.h commands.h job.h filedef.h variable.h
+dir.obj: dir.c make.h
+file.obj: file.c make.h commands.h dep.h filedef.h variable.h
+misc.obj: misc.c make.h dep.h
+hash.obj: hash.c make.h hash.h
+strcache.obj: strcache.c make.h hash.h
+main.obj: main.c make.h commands.h dep.h filedef.h variable.h job.h
+read.obj: read.c make.h commands.h dep.h filedef.h variable.h
+remake.obj: remake.c make.h commands.h job.h dep.h filedef.h
+rule.obj: rule.c make.h commands.h dep.h filedef.h variable.h rule.h
+implicit.obj: implicit.c make.h rule.h dep.h filedef.h
+default.obj: default.c make.h rule.h dep.h filedef.h commands.h variable.h
+variable.obj: variable.c make.h commands.h variable.h dep.h filedef.h
+expand.obj: expand.c make.h commands.h filedef.h variable.h
+function.obj: function.c make.h variable.h dep.h commands.h job.h
+vpath.obj: vpath.c make.h filedef.h variable.h
+version.obj: version.c config.h
+arscan.obj: arscan.c
+ar.obj: ar.c make.h filedef.h
+signame.obj: signame.c
+remote-stub.obj: remote-stub.c
+[.glob]glob.obj: [.glob]glob.c
+[.glob]fnmatch.obj: [.glob]fnmatch.c
+getopt.obj: getopt.c
+getopt1.obj: getopt1.c
+vmsfunctions.obj: vmsfunctions.c make.h vmsdir.h
+vmsify.obj: vmsify.c make.h
+
+config.h: config.h-vms
+	$(CP) $< $@

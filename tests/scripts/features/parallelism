@@ -1,0 +1,164 @@
+#                                                                    -*-perl-*-
+
+$description = "Test parallelism (-j) option.";
+
+
+$details = "This test creates a makefile with two double-colon default
+rules.  The first rule has a series of sleep and echo commands
+intended to run in series.  The second and third have just an
+echo statement.  When make is called in this test, it is given
+the -j option with a value of 4.  This tells make that it may
+start up to four jobs simultaneously.  In this case, since the
+first command is a sleep command, the output of the second
+and third commands will appear before the first if indeed
+make is running all of these commands in parallel.";
+
+if (!$parallel_jobs) {
+  return -1;
+}
+
+if ($vos) {
+  $sleep_command = "sleep -seconds";
+}
+else {
+  $sleep_command = "sleep";
+}
+
+
+run_make_test("
+all : def_1 def_2 def_3
+def_1 : ; \@echo ONE; $sleep_command 3 ; echo TWO
+def_2 : ; \@$sleep_command 2 ; echo THREE
+def_3 : ; \@$sleep_command 1 ; echo FOUR",
+              '-j4', "ONE\nFOUR\nTHREE\nTWO");
+
+# Test parallelism with included files.  Here we sleep/echo while
+# building the included files, to test that they are being built in
+# parallel.
+run_make_test("
+all: 1 2; \@echo success
+-include 1.inc 2.inc
+1.inc: ; \@echo ONE.inc; $sleep_command 2; echo TWO.inc; echo '1: ; \@echo ONE; $sleep_command 2; echo TWO' > \$\@
+2.inc: ; \@$sleep_command 1; echo THREE.inc; echo '2: ; \@$sleep_command 1; echo THREE' > \$\@",
+              "-j4",
+              "ONE.inc\nTHREE.inc\nTWO.inc\nONE\nTHREE\nTWO\nsuccess\n");
+
+unlink('1.inc', '2.inc');
+
+
+# Test parallelism with included files--this time recurse first and make
+# sure the jobserver works.
+run_make_test("
+recurse: ; \@\$(MAKE) --no-print-directory -f #MAKEFILE# INC=yes all
+all: 1 2; \@echo success
+
+INC = no
+ifeq (\$(INC),yes)
+-include 1.inc 2.inc
+endif
+
+1.inc: ; \@echo ONE.inc; $sleep_command 2; echo TWO.inc; echo '1: ; \@echo ONE; $sleep_command 2; echo TWO' > \$\@
+2.inc: ; \@$sleep_command 1; echo THREE.inc; echo '2: ; \@$sleep_command 1; echo THREE' > \$\@",
+              "-j4",
+              "ONE.inc\nTHREE.inc\nTWO.inc\nONE\nTHREE\nTWO\nsuccess\n");
+
+unlink('1.inc', '2.inc');
+
+# Grant Taylor reports a problem where tokens can be lost (not written back
+# to the pipe when they should be): this happened when there is a $(shell ...)
+# function in an exported recursive variable.  I added some code to check
+# for this situation and print a message if it occurred.  This test used
+# to trigger this code when I added it but no longer does after the fix.
+
+run_make_test("
+export HI = \$(shell \$(\$\@.CMD))
+first.CMD = echo hi
+second.CMD = $sleep_command 4; echo hi
+
+.PHONY: all first second
+all: first second
+
+first second: ; \@echo \$\@; $sleep_command 1; echo \$\@",
+              '-j2', "first\nfirst\nsecond\nsecond");
+
+# Michael Matz <matz@suse.de> reported a bug where if make is running in
+# parallel without -k and two jobs die in a row, but not too close to each
+# other, then make will quit without waiting for the rest of the jobs to die.
+
+run_make_test("
+.PHONY: all fail.1 fail.2 fail.3 ok
+all: fail.1 ok fail.2 fail.3
+
+fail.1 fail.2 fail.3:
+	\@sleep \$(patsubst fail.%,%,\$\@)
+	\@echo Fail
+	\@exit 1
+
+ok:
+	\@sleep 4
+	\@echo Ok done",
+              '-rR -j5', 'Fail
+#MAKE#: *** [fail.1] Error 1
+#MAKE#: *** Waiting for unfinished jobs....
+Fail
+#MAKE#: *** [fail.2] Error 1
+Fail
+#MAKE#: *** [fail.3] Error 1
+Ok done',
+             512);
+
+
+# Test for Savannah bug #15641.
+#
+run_make_test('
+.PHONY: all
+all:; @:
+
+-include foo.d
+
+foo.d: comp
+	@echo building $@
+
+comp: mod_a.o mod_b.o; @:
+
+mod_a.o mod_b.o:
+	@exit 1
+', '-j2', '');
+
+
+# Make sure that all jobserver FDs are closed if we need to re-exec the
+# master copy.
+#
+# First, find the "default" file descriptors we normally use
+# Then make sure they're still used.
+#
+# Right now we don't have a way to run a makefile and capture the output
+# without checking it, so we can't really write this test.
+
+# run_make_test('
+# submake: ; @$(MAKE) --no-print-directory -f #MAKEFILE# fdprint 5>output
+
+# dependfile: ; @echo FOO=bar > $@
+
+# INCL := true
+
+# FOO=foo
+# ifeq ($(INCL),true)
+# -include dependfile
+# endif
+
+# fdprint: ; @echo $(filter --jobserver%,$(MAKEFLAGS))
+
+# recurse: ; @$(MAKE) --no-print-directory -f #MAKEFILE# submake INCL=true',
+#               '-j2 INCL=false fdprint',
+#               'bar');
+
+# unlink('dependfile', 'output');
+
+
+# # Do it again, this time where the include is done by the non-master make.
+# run_make_test(undef, '-j2 recurse INCL=false', 'bar');
+
+# unlink('dependfile', 'output');
+
+1;

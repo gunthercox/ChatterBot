@@ -1,0 +1,14 @@
+{
+  "name": "speedometer",
+  "version": "0.1.4",
+  "repository": "git://github.com/mafintosh/speedometer",
+  "description": "simple speed measurement in javascript",
+  "keywords": [
+    "speed",
+    "bytes",
+    "per",
+    "second",
+    "transfer"
+  ],
+  "author": "Mathias Buus Madsen <mathiasbuus@gmail.com>"
+}

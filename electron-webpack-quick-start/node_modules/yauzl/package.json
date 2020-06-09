@@ -1,0 +1,36 @@
+{
+  "name": "yauzl",
+  "version": "2.4.1",
+  "description": "yet another unzip library for node",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/test.js",
+    "test-cov": "istanbul cover test/test.js",
+    "test-travis": "istanbul cover --report lcovonly test/test.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/thejoshwolfe/yauzl.git"
+  },
+  "keywords": [
+    "unzip",
+    "zip",
+    "stream",
+    "archive",
+    "file"
+  ],
+  "author": "Josh Wolfe <thejoshwolfe@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thejoshwolfe/yauzl/issues"
+  },
+  "homepage": "https://github.com/thejoshwolfe/yauzl",
+  "dependencies": {
+    "fd-slicer": "~1.0.1"
+  },
+  "devDependencies": {
+    "bl": "~1.0.0",
+    "istanbul": "~0.3.4",
+    "pend": "~1.2.0"
+  }
+}

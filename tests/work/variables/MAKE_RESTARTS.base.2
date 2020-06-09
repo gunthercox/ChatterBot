@@ -1,0 +1,10 @@
+MAKE_RESTARTS=
+work/variables/MAKE_RESTARTS.mk.2:8: foo.x: No such file or directory
+MAKE_RESTARTS=1
+foo.x:1: bar.x: No such file or directory
+MAKE_RESTARTS=2
+recurse MAKE_RESTARTS=
+MAKE_RESTARTS=
+make[1]: Entering directory `/cygdrive/j/Devel/make/3.81/make-3.81/tests'
+all MAKE_RESTARTS=
+make[1]: Leaving directory `/cygdrive/j/Devel/make/3.81/make-3.81/tests'

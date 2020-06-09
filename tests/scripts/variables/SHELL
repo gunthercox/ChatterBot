@@ -1,0 +1,56 @@
+#                                                                    -*-perl-*-
+
+$description = "Test proper handling of SHELL.";
+
+# Find the default value when SHELL is not set.  On UNIX it will be /bin/sh,
+# but on other platforms who knows?
+resetENV();
+delete $ENV{SHELL};
+$mshell = `echo 'all:;\@echo \$(SHELL)' | $make_path -f-`;
+chop $mshell;
+
+# According to POSIX, the value of SHELL in the environment has no impact on
+# the value in the makefile.
+# Note %extraENV takes precedence over the default value for the shell.
+
+$extraENV{SHELL} = '/dev/null';
+run_make_test('all:;@echo "$(SHELL)"', '', $mshell);
+
+# According to POSIX, any value of SHELL set in the makefile should _NOT_ be
+# exported to the subshell!  I wanted to set SHELL to be $^X (perl) in the
+# makefile, but make runs $(SHELL) -c 'commandline' and that doesn't work at
+# all when $(SHELL) is perl :-/.  So, we just add an extra initial /./ which
+# works well on UNIX and seems to work OK on at least some non-UNIX systems.
+
+$extraENV{SHELL} = $mshell;
+
+run_make_test("SHELL := /./$mshell\n".'
+all:;@echo "$(SHELL) $$SHELL"
+', '', "/./$mshell $mshell");
+
+# As a GNU make extension, if make's SHELL variable is explicitly exported,
+# then we really _DO_ export it.
+
+$extraENV{SHELL} = $mshell;
+
+run_make_test("export SHELL := /./$mshell\n".'
+all:;@echo "$(SHELL) $$SHELL"
+', '', "/./$mshell /./$mshell");
+
+
+# Test out setting of SHELL, both exported and not, as a target-specific
+# variable.
+
+$extraENV{SHELL} = $mshell;
+
+run_make_test("all: SHELL := /./$mshell\n".'
+all:;@echo "$(SHELL) $$SHELL"
+', '', "/./$mshell $mshell");
+
+$extraENV{SHELL} = $mshell;
+
+run_make_test("all: export SHELL := /./$mshell\n".'
+all:;@echo "$(SHELL) $$SHELL"
+', '', "/./$mshell $mshell");
+
+1;

@@ -1,0 +1,92 @@
+#                                                                    -*-perl-*-
+
+$description = "The following tests the -i option and the '-' in front of \n"
+              ."commands to test that make ignores errors in these commands\n"
+              ."and continues processing.";
+
+$details = "This test runs two makes.  The first runs on a target with a \n"
+          ."command that has a '-' in front of it (and a command that is \n"
+          ."intended to fail) and then a delete command after that is \n"
+          ."intended to succeed.  If make ignores the failure of the first\n"
+          ."command as it is supposed to, then the second command should \n"
+          ."delete a file and this is what we check for.  The second make\n"
+          ."that is run in this test is identical except that the make \n"
+          ."command is given with the -i option instead of the '-' in \n"
+          ."front of the command.  They should run the same. ";
+
+if ($vos)
+{
+   $rm_command = "delete_file";
+}
+else
+{
+   $rm_command = "rm";
+}
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE "clean:\n"
+              ."\t-$rm_command cleanit\n"
+              ."\t$rm_command foo\n"
+	      ."clean2: \n"
+              ."\t$rm_command cleanit\n"
+              ."\t$rm_command foo\n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+&touch("foo");
+
+unlink("cleanit");
+$cleanit_error = `sh -c "$rm_command cleanit 2>&1"`;
+$delete_error_code = $? >> 8;
+
+# TEST #1
+# -------
+
+$answer = "$rm_command cleanit\n"
+         . $cleanit_error
+         ."$make_name: [clean] Error $delete_error_code (ignored)\n"
+         ."$rm_command foo\n";
+
+&run_make_with_options($makefile,"",&get_logfile);
+
+# If make acted as planned, it should ignore the error from the first
+# command in the target and execute the second which deletes the file "foo"
+# This file, therefore, should not exist if the test PASSES.
+if (-f "foo") {
+  $test_passed = 0;
+}
+
+# The output for this on VOS is too hard to replicate, so we only check it
+# on unix.
+if (!$vos)
+{
+   &compare_output($answer,&get_logfile(1));
+}
+
+
+&touch("foo");
+
+# TEST #2
+# -------
+
+$answer = "$rm_command cleanit\n"
+         . $cleanit_error
+         ."$make_name: [clean2] Error $delete_error_code (ignored)\n"
+         ."$rm_command foo\n";
+
+&run_make_with_options($makefile,"clean2 -i",&get_logfile);
+
+if (-f "foo") {
+  $test_passed = 0;
+}
+
+if (!$vos) {
+   &compare_output($answer,&get_logfile(1));
+}
+
+1;

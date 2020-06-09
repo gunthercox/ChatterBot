@@ -1,0 +1,55 @@
+$description = "The following test creates a makefile to verify\n"
+              ."the ability of make to sort lists of object. Sort\n"
+              ."will also remove any duplicate entries. This will also\n"
+              ."be tested.";
+
+$details = "The make file is built with a list of object in a random order\n"
+          ."and includes some duplicates. Make should sort all of the elements\n"
+          ."remove all duplicates\n";
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE "foo := moon_light days \n"
+              ."foo1:= jazz\n"
+              ."bar := captured \n"
+              ."bar2 = boy end, has rise A midnight \n"
+              ."bar3:= \$(foo)\n"
+              ."s1  := _by\n"
+              ."s2  := _and_a\n"
+              ."t1  := \$(addsuffix \$(s1), \$(bar) )\n"
+              ."t2  := \$(addsuffix \$(s2), \$(foo1) )\n" 
+              ."t3  := \$(t2) \$(t2) \$(t2) \$(t2) \$(t2) \$(t2) \$(t2) \$(t2) \$(t2) \$(t2) \n"
+              ."t4  := \$(t3) \$(t3) \$(t3) \$(t3) \$(t3) \$(t3) \$(t3) \$(t3) \$(t3) \$(t3) \n"
+              ."t5  := \$(t4) \$(t4) \$(t4) \$(t4) \$(t4) \$(t4) \$(t4) \$(t4) \$(t4) \$(t4) \n"
+              ."t6  := \$(t5) \$(t5) \$(t5) \$(t5) \$(t5) \$(t5) \$(t5) \$(t5) \$(t5) \$(t5) \n"
+              ."t7  := \$(t6) \$(t6) \$(t6) \n"
+              ."p1  := \$(addprefix \$(foo1), \$(s2) )\n"
+              ."blank:= \n"
+              ."all:\n"
+              ."\t\@echo \$(sort \$(bar2) \$(foo)  \$(addsuffix \$(s1), \$(bar) ) \$(t2) \$(bar2) \$(bar3))\n"
+              ."\t\@echo \$(sort \$(blank) \$(foo) \$(bar2) \$(t1) \$(p1) )\n"
+              ."\t\@echo \$(sort \$(foo) \$(bar2) \$(t1) \$(t4) \$(t5) \$(t7) \$(t6) )\n";
+
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+&run_make_with_options($makefile,"",&get_logfile);
+
+# Create the answer to what should be produced by this Makefile
+$answer = "A boy captured_by days end, has jazz_and_a midnight moon_light rise\n"
+         ."A boy captured_by days end, has jazz_and_a midnight moon_light rise\n"
+         ."A boy captured_by days end, has jazz_and_a midnight moon_light rise\n";
+
+&compare_output($answer,&get_logfile(1));
+
+1;
+
+
+
+
+
+

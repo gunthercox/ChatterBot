@@ -1,0 +1,87 @@
+$description = "The following test creates a makefile to test command \n"
+              ."echoing.  It tests that when a command line starts with \n"
+              ."a '\@', the echoing of that line is suppressed.  It also \n"
+              ."tests the -n option which tells make to ONLY echo the  \n"
+              ."commands and no execution happens.  In this case, even \n"
+              ."the commands with '\@' are printed. Lastly, it tests the \n"
+              ."-s flag which tells make to prevent all echoing, as if \n"
+              ."all commands started with a '\@'.";
+
+$details = "This test is similar to the 'clean' test except that a '\@' has\n"
+          ."been placed in front of the delete command line.  Four tests \n"
+          ."are run here.  First, make is run normally and the first echo\n"
+          ."command should be executed.  In this case there is no '\@' so \n"
+          ."we should expect make to display the command AND display the \n"
+          ."echoed message.  Secondly, make is run with the clean target, \n"
+          ."but since there is a '\@' at the beginning of the command, we\n"
+          ."expect no output; just the deletion of a file which we check \n"
+          ."for.  Third, we give the clean target again except this time\n"
+          ."we give make the -n option.  We now expect the command to be \n"
+          ."displayed but not to be executed.  In this case we need only \n"
+          ."to check the output since an error message would be displayed\n"
+          ."if it actually tried to run the delete command again and the \n"
+          ."file didn't exist. Lastly, we run the first test again with \n"
+          ."the -s option and check that make did not echo the echo \n"
+          ."command before printing the message.";
+
+$example = "EXAMPLE_FILE";
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE "all: \n";
+print MAKEFILE "\techo This makefile did not clean the dir... good\n";
+print MAKEFILE "clean: \n";
+print MAKEFILE "\t\@$delete_command $example\n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+&touch($example);
+
+# TEST #1
+# -------
+
+&run_make_with_options($makefile,"",&get_logfile,0);
+$answer = "echo This makefile did not clean the dir... good\n"
+         ."This makefile did not clean the dir... good\n";
+&compare_output($answer,&get_logfile(1));
+
+
+# TEST #2
+# -------
+
+&run_make_with_options($makefile,"clean",&get_logfile,0);
+if (-f $example) {
+  $test_passed = 0;
+}
+&compare_output('',&get_logfile(1));
+
+# TEST #3
+# -------
+
+&run_make_with_options($makefile,"-n clean",&get_logfile,0);
+$answer = "$delete_command $example\n";
+&compare_output($answer,&get_logfile(1));
+
+
+# TEST #4
+# -------
+
+&run_make_with_options($makefile,"-s",&get_logfile,0);
+$answer = "This makefile did not clean the dir... good\n";
+&compare_output($answer,&get_logfile(1));
+
+
+1;
+
+
+
+
+
+
+
+
+

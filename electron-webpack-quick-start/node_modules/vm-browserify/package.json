@@ -1,0 +1,30 @@
+{
+  "name": "vm-browserify",
+  "version": "1.1.0",
+  "description": "vm module for the browser",
+  "main": "index.js",
+  "repository": {
+    "type": "git",
+    "url": "http://github.com/substack/vm-browserify.git"
+  },
+  "keywords": [
+    "vm",
+    "browser",
+    "eval"
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "browserify": "^16.1.1",
+    "tape": "~2.3.2",
+    "tape-run": "^3.0.4"
+  },
+  "author": {
+    "name": "James Halliday",
+    "email": "mail@substack.net",
+    "url": "http://substack.net"
+  },
+  "scripts": {
+    "test": "browserify test/vm.js | tape-run"
+  },
+  "license": "MIT"
+}

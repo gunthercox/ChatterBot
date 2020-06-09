@@ -1,0 +1,17 @@
+
+foo = f-ok
+bar = b-ok
+
+FOO = foo
+F = f
+
+BAR = bar
+B = b
+
+export $(FOO)
+export $(B)ar
+
+all:
+	@echo foo=$(foo) bar=$(bar)
+	@echo foo=$$foo bar=$$bar
+

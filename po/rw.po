@@ -1,0 +1,2067 @@
+# Kinyarwanda translations for make package.
+# Copyright (C) 2005 Free Software Foundation, Inc.
+# This file is distributed under the same license as the make package.
+# Steve Murphy <murf@e-tools.com>, 2005.
+# Steve performed initial rough translation from compendium built from translations provided by the following translators:
+# Philibert Ndandali  <ndandali@yahoo.fr>, 2005.
+# Viateur MUGENZI <muvia1@yahoo.fr>, 2005.
+# Noëlla Mupole <s24211045@tuks.co.za>, 2005.
+# Carole Karema <karemacarole@hotmail.com>, 2005.
+# JEAN BAPTISTE NGENDAHAYO <ngenda_denis@yahoo.co.uk>, 2005.
+# Augustin KIBERWA  <akiberwa@yahoo.co.uk>, 2005.
+# Donatien NSENGIYUMVA <ndonatienuk@yahoo.co.uk>, 2005.
+# Antoine Bigirimana <antoine@e-tools.com>, 2005.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: make 3.80\n"
+"Report-Msgid-Bugs-To: bug-make@gnu.org\n"
+"POT-Creation-Date: 2006-04-01 01:40-0500\n"
+"PO-Revision-Date: 2005-04-04 10:55-0700\n"
+"Last-Translator: Steven Michael Murphy <murf@e-tools.com>\n"
+"Language-Team: Kinyarwanda <translation-team-rw@lists.sourceforge.net>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+
+#: ar.c:53
+#, fuzzy, c-format
+msgid "attempt to use unsupported feature: `%s'"
+msgstr "Kuri Gukoresha"
+
+#: ar.c:137
+#, fuzzy
+msgid "touch archive member is not available on VMS"
+msgstr "ni OYA Bihari ku"
+
+#: ar.c:168
+#, fuzzy, c-format
+msgid "touch: Archive `%s' does not exist"
+msgstr "OYA"
+
+#: ar.c:171
+#, fuzzy, c-format
+msgid "touch: `%s' is not a valid archive"
+msgstr "ni OYA a Byemewe"
+
+#: ar.c:178
+#, fuzzy, c-format
+msgid "touch: Member `%s' does not exist in `%s'"
+msgstr "OYA in"
+
+#: ar.c:185
+#, fuzzy, c-format
+msgid "touch: Bad return code from ar_member_touch on `%s'"
+msgstr "Garuka ITEGEKONGENGA Bivuye ku"
+
+#: arscan.c:69
+#, fuzzy, c-format
+msgid "lbr$set_module failed to extract module info, status = %d"
+msgstr "Byanze Kuri Modire Ibisobanuro Imimerere"
+
+#: arscan.c:154
+#, fuzzy, c-format
+msgid "lbr$ini_control failed with status = %d"
+msgstr "Byanze Na: Imimerere"
+
+#: arscan.c:165
+#, fuzzy, c-format
+msgid "unable to open library `%s' to lookup member `%s'"
+msgstr "Kuri Gufungura Isomero Kuri GUSHAKISHA"
+
+#: arscan.c:825
+#, fuzzy, c-format
+msgid "Member `%s'%s: %ld bytes at %ld (%ld).\n"
+msgstr "Bayite ku"
+
+#: arscan.c:826
+#, fuzzy
+msgid " (name might be truncated)"
+msgstr "(Izina:"
+
+# svx/source\items\svxitems.src:RID_SVXITEMS_DATE_COMPLETE.text
+#: arscan.c:828
+#, fuzzy, c-format
+msgid "  Date %s"
+msgstr "Itariki:"
+
+#: arscan.c:829
+#, fuzzy, c-format
+msgid "  uid = %d, gid = %d, mode = 0%o.\n"
+msgstr "UID Ubwoko 0"
+
+#: commands.c:422
+msgid "*** Break.\n"
+msgstr ""
+
+#: commands.c:545
+#, fuzzy, c-format
+msgid "*** [%s] Archive member `%s' may be bogus; not deleted"
+msgstr "***[%s]Gicurasi OYA Cyasibwe"
+
+#: commands.c:548
+#, fuzzy, c-format
+msgid "*** Archive member `%s' may be bogus; not deleted"
+msgstr "***Gicurasi OYA Cyasibwe"
+
+#: commands.c:561
+#, fuzzy, c-format
+msgid "*** [%s] Deleting file `%s'"
+msgstr "***[%s]IDOSIYE"
+
+#: commands.c:563
+#, fuzzy, c-format
+msgid "*** Deleting file `%s'"
+msgstr "***IDOSIYE"
+
+#: commands.c:599
+#, fuzzy
+msgid "#  commands to execute"
+msgstr "#Amabwiriza Kuri Gukora"
+
+#: commands.c:602
+#, fuzzy
+msgid " (built-in):"
+msgstr "(in"
+
+#: commands.c:604
+#, fuzzy, c-format
+msgid " (from `%s', line %lu):\n"
+msgstr "(Bivuye Umurongo"
+
+#: dir.c:983
+msgid ""
+"\n"
+"# Directories\n"
+msgstr ""
+
+#: dir.c:995
+#, fuzzy, c-format
+msgid "# %s: could not be stat'd.\n"
+msgstr "#%s:OYA"
+
+#: dir.c:999
+#, fuzzy, c-format
+msgid "# %s (key %s, mtime %d): could not be opened.\n"
+msgstr "#%s(Urufunguzo OYA"
+
+#: dir.c:1003
+#, fuzzy, c-format
+msgid "# %s (device %d, inode [%d,%d,%d]): could not be opened.\n"
+msgstr "#%s(APAREYE OYA"
+
+#: dir.c:1008
+#, fuzzy, c-format
+msgid "# %s (device %ld, inode %ld): could not be opened.\n"
+msgstr "#%s(APAREYE OYA"
+
+#: dir.c:1035
+#, fuzzy, c-format
+msgid "# %s (key %s, mtime %d): "
+msgstr "#%s(Urufunguzo"
+
+#: dir.c:1039
+#, fuzzy, c-format
+msgid "# %s (device %d, inode [%d,%d,%d]): "
+msgstr "#%s(APAREYE"
+
+#: dir.c:1044
+#, fuzzy, c-format
+msgid "# %s (device %ld, inode %ld): "
+msgstr "#%s(APAREYE"
+
+#: dir.c:1050 dir.c:1071
+msgid "No"
+msgstr "Oya"
+
+# scp/source\office\dir.lng:STR_DIR_DATEIEN.text
+#: dir.c:1053 dir.c:1074
+#, fuzzy
+msgid " files, "
+msgstr "Idosiye"
+
+#: dir.c:1055 dir.c:1076
+#, fuzzy
+msgid "no"
+msgstr "Oya"
+
+#: dir.c:1058
+msgid " impossibilities"
+msgstr ""
+
+#: dir.c:1062
+msgid " so far."
+msgstr ""
+
+#: dir.c:1079
+#, fuzzy, c-format
+msgid " impossibilities in %lu directories.\n"
+msgstr "in ububiko bw'amaderese"
+
+#: expand.c:128
+#, fuzzy, c-format
+msgid "Recursive variable `%s' references itself (eventually)"
+msgstr "IMPINDURAGACIRO Indango"
+
+#: expand.c:266
+#, fuzzy
+msgid "unterminated variable reference"
+msgstr "IMPINDURAGACIRO Indango"
+
+#: file.c:270
+#, fuzzy, c-format
+msgid "Commands were specified for file `%s' at %s:%lu,"
+msgstr "kugirango IDOSIYE ku"
+
+#: file.c:275
+#, fuzzy, c-format
+msgid "Commands for file `%s' were found by implicit rule search,"
+msgstr "kugirango IDOSIYE Byabonetse ku Gushaka"
+
+#: file.c:278
+#, fuzzy, c-format
+msgid "but `%s' is now considered the same file as `%s'."
+msgstr "ni NONEAHA i IDOSIYE Nka"
+
+#: file.c:281
+#, fuzzy, c-format
+msgid "Commands for `%s' will be ignored in favor of those for `%s'."
+msgstr "kugirango in Bya kugirango"
+
+#: file.c:301
+#, fuzzy, c-format
+msgid "can't rename single-colon `%s' to double-colon `%s'"
+msgstr "Guhindura izina UMWE Kuri MAHARAKUBIRI"
+
+#: file.c:306
+#, fuzzy, c-format
+msgid "can't rename double-colon `%s' to single-colon `%s'"
+msgstr "Guhindura izina MAHARAKUBIRI Kuri UMWE"
+
+#: file.c:381
+#, fuzzy, c-format
+msgid "*** Deleting intermediate file `%s'"
+msgstr "***IDOSIYE"
+
+#: file.c:385
+#, fuzzy
+msgid "Removing intermediate files...\n"
+msgstr "Idosiye"
+
+#: file.c:781
+#, fuzzy, c-format
+msgid "%s: Timestamp out of range; substituting %s"
+msgstr "%s:Inyuma Bya Urutonde"
+
+# sfx2/sdi\sfxslots.src:SID_CURRENTTIME.text
+#: file.c:782
+#, fuzzy
+msgid "Current time"
+msgstr "Iki Gihe"
+
+#: file.c:881
+#, fuzzy
+msgid "# Not a target:"
+msgstr "#a Intego"
+
+#: file.c:903
+#, fuzzy
+msgid "#  Precious file (prerequisite of .PRECIOUS)."
+msgstr "#IDOSIYE Bya"
+
+#: file.c:905
+#, fuzzy
+msgid "#  Phony target (prerequisite of .PHONY)."
+msgstr "#Intego Bya"
+
+#: file.c:907
+#, fuzzy
+msgid "#  Command-line target."
+msgstr "#Umurongo Intego"
+
+#: file.c:909
+#, fuzzy
+msgid "#  A default, MAKEFILES, or -include/sinclude makefile."
+msgstr "#A Mburabuzi Cyangwa"
+
+#: file.c:911
+#, fuzzy
+msgid "#  Implicit rule search has been done."
+msgstr "#Gushaka Byakozwe"
+
+#: file.c:912
+#, fuzzy
+msgid "#  Implicit rule search has not been done."
+msgstr "#Gushaka OYA Byakozwe"
+
+#: file.c:914
+#, fuzzy, c-format
+msgid "#  Implicit/static pattern stem: `%s'\n"
+msgstr "#Ishusho"
+
+#: file.c:916
+#, fuzzy
+msgid "#  File is an intermediate prerequisite."
+msgstr "#Idosiye ni"
+
+#: file.c:919
+msgid "#  Also makes:"
+msgstr ""
+
+#: file.c:925
+#, fuzzy
+msgid "#  Modification time never checked."
+msgstr "#Igihe Nta narimwe Ivivuwe"
+
+#: file.c:927
+#, fuzzy
+msgid "#  File does not exist."
+msgstr "#Idosiye OYA"
+
+#: file.c:929
+#, fuzzy
+msgid "#  File is very old."
+msgstr "#Idosiye ni ki/ bishaje"
+
+#: file.c:934
+#, fuzzy, c-format
+msgid "#  Last modified %s\n"
+msgstr "#Byahinduwe"
+
+#: file.c:937
+#, fuzzy
+msgid "#  File has been updated."
+msgstr "#Idosiye"
+
+#: file.c:937
+#, fuzzy
+msgid "#  File has not been updated."
+msgstr "#Idosiye OYA"
+
+#: file.c:941
+#, fuzzy
+msgid "#  Commands currently running (THIS IS A BUG)."
+msgstr "#A"
+
+#: file.c:944
+#, fuzzy
+msgid "#  Dependencies commands running (THIS IS A BUG)."
+msgstr "#Amabwiriza A"
+
+#: file.c:953
+msgid "#  Successfully updated."
+msgstr ""
+
+#: file.c:957
+#, fuzzy
+msgid "#  Needs to be updated (-q is set)."
+msgstr "#Kuri Q ni Gushyiraho"
+
+#: file.c:960
+#, fuzzy
+msgid "#  Failed to be updated."
+msgstr "#Kuri"
+
+#: file.c:963
+#, fuzzy
+msgid "#  Invalid value in `update_status' member!"
+msgstr "#Agaciro in"
+
+#: file.c:970
+#, fuzzy
+msgid "#  Invalid value in `command_state' member!"
+msgstr "#Agaciro in"
+
+# LOCALIZATION NOTE (filesFolder):
+#    This is the name of the folder that is created parallel to a HTML file
+#    when it is saved "With Images". The %S section is replaced with the
+#    leaf name of the file being saved (minus extension).
+#: file.c:989
+#, fuzzy
+msgid ""
+"\n"
+"# Files"
+msgstr "#files"
+
+#: file.c:993
+#, fuzzy
+msgid ""
+"\n"
+"# files hash-table stats:\n"
+"# "
+msgstr "#Idosiye imbonerahamwe# stats"
+
+#: function.c:759
+#, fuzzy
+msgid "non-numeric first argument to `word' function"
+msgstr "Bikurikije umubare Itangira Kuri Umumaro"
+
+#: function.c:764
+#, fuzzy
+msgid "first argument to `word' function must be greater than 0"
+msgstr "Itangira Kuri Umumaro Biruta 0"
+
+#: function.c:785
+#, fuzzy
+msgid "non-numeric first argument to `wordlist' function"
+msgstr "Bikurikije umubare Itangira Kuri Umumaro"
+
+#: function.c:787
+#, fuzzy
+msgid "non-numeric second argument to `wordlist' function"
+msgstr "Bikurikije umubare ISEGONDA Kuri Umumaro"
+
+#: function.c:1453
+#, fuzzy, c-format
+msgid "create_child_process: DuplicateHandle(In) failed (e=%ld)\n"
+msgstr "Byanze E"
+
+#: function.c:1464
+#, fuzzy, c-format
+msgid "create_child_process: DuplicateHandle(Err) failed (e=%ld)\n"
+msgstr "Byanze E"
+
+#: function.c:1469
+#, fuzzy, c-format
+msgid "CreatePipe() failed (e=%ld)\n"
+msgstr "Byanze E"
+
+#: function.c:1474
+msgid "windows32_openpipe (): process_init_fd() failed\n"
+msgstr ""
+
+#: function.c:1725
+#, fuzzy, c-format
+msgid "Cleaning up temporary batch file %s\n"
+msgstr "Hejuru By'igihe gito IDOSIYE"
+
+#: function.c:2101
+#, fuzzy, c-format
+msgid "insufficient number of arguments (%d) to function `%s'"
+msgstr "Umubare Bya ingingo Kuri Umumaro"
+
+#: function.c:2113
+#, fuzzy, c-format
+msgid "unimplemented on this platform: function `%s'"
+msgstr "ku iyi Umumaro"
+
+#: function.c:2163
+#, fuzzy, c-format
+msgid "unterminated call to function `%s': missing `%c'"
+msgstr "Kuri Umumaro Ibuze"
+
+#: getopt.c:663
+#, fuzzy, c-format
+msgid "%s: option `%s' is ambiguous\n"
+msgstr "%s:Ihitamo ni"
+
+#: getopt.c:687
+#, fuzzy, c-format
+msgid "%s: option `--%s' doesn't allow an argument\n"
+msgstr "%s:Ihitamo Kwemerera"
+
+#: getopt.c:692
+#, fuzzy, c-format
+msgid "%s: option `%c%s' doesn't allow an argument\n"
+msgstr "%s:Ihitamo Kwemerera"
+
+#: getopt.c:709 getopt.c:882
+#, fuzzy, c-format
+msgid "%s: option `%s' requires an argument\n"
+msgstr "%s:Ihitamo"
+
+#: getopt.c:738
+#, fuzzy, c-format
+msgid "%s: unrecognized option `--%s'\n"
+msgstr "%s:Ihitamo"
+
+#: getopt.c:742
+#, fuzzy, c-format
+msgid "%s: unrecognized option `%c%s'\n"
+msgstr "%s:Ihitamo"
+
+#: getopt.c:768
+#, fuzzy, c-format
+msgid "%s: illegal option -- %c\n"
+msgstr "%s:Ihitamo"
+
+#: getopt.c:771
+#, fuzzy, c-format
+msgid "%s: invalid option -- %c\n"
+msgstr "%s:Sibyo Ihitamo"
+
+#: getopt.c:801 getopt.c:931
+#, fuzzy, c-format
+msgid "%s: option requires an argument -- %c\n"
+msgstr "%s:Ihitamo"
+
+#: getopt.c:848
+#, fuzzy, c-format
+msgid "%s: option `-W %s' is ambiguous\n"
+msgstr "%s:Ihitamo ni"
+
+#: getopt.c:866
+#, fuzzy, c-format
+msgid "%s: option `-W %s' doesn't allow an argument\n"
+msgstr "%s:Ihitamo Kwemerera"
+
+#: hash.c:51
+#, fuzzy, c-format
+msgid "can't allocate %ld bytes for hash table: memory exhausted"
+msgstr "Bayite kugirango imbonerahamwe# Ububiko"
+
+#: hash.c:282
+#, c-format
+msgid "Load=%ld/%ld=%.0f%%, "
+msgstr ""
+
+#: hash.c:284
+#, c-format
+msgid "Rehash=%d, "
+msgstr ""
+
+#: hash.c:285
+#, c-format
+msgid "Collisions=%ld/%ld=%.0f%%"
+msgstr ""
+
+#: implicit.c:41
+#, fuzzy, c-format
+msgid "Looking for an implicit rule for `%s'.\n"
+msgstr "kugirango kugirango"
+
+#: implicit.c:57
+#, fuzzy, c-format
+msgid "Looking for archive-member implicit rule for `%s'.\n"
+msgstr "kugirango kugirango"
+
+#: implicit.c:319
+msgid "Avoiding implicit rule recursion.\n"
+msgstr ""
+
+#: implicit.c:476
+#, fuzzy, c-format
+msgid "Trying pattern rule with stem `%.*s'.\n"
+msgstr "Ishusho Na:"
+
+#: implicit.c:667
+#, c-format
+msgid "Rejecting impossible implicit prerequisite `%s'.\n"
+msgstr ""
+
+#: implicit.c:668
+#, c-format
+msgid "Rejecting impossible rule prerequisite `%s'.\n"
+msgstr ""
+
+#: implicit.c:678
+#, c-format
+msgid "Trying implicit prerequisite `%s'.\n"
+msgstr ""
+
+#: implicit.c:679
+#, c-format
+msgid "Trying rule prerequisite `%s'.\n"
+msgstr ""
+
+#: implicit.c:710
+#, fuzzy, c-format
+msgid "Found prerequisite `%s' as VPATH `%s'\n"
+msgstr "Nka"
+
+#: implicit.c:730
+#, fuzzy, c-format
+msgid "Looking for a rule with intermediate file `%s'.\n"
+msgstr "kugirango a Na: IDOSIYE"
+
+#: job.c:321
+#, fuzzy
+msgid "Cannot create a temporary file\n"
+msgstr "By'igihe gito IDOSIYE"
+
+#: job.c:388
+#, c-format
+msgid "*** [%s] Error 0x%x (ignored)"
+msgstr ""
+
+#: job.c:389
+#, c-format
+msgid "*** [%s] Error 0x%x"
+msgstr ""
+
+#: job.c:393
+#, c-format
+msgid "[%s] Error %d (ignored)"
+msgstr ""
+
+# sw/source\ui\utlui\initui.src:RID_SW_SHELLRES.STR_CALC_DEFAULT.text
+#: job.c:394
+#, fuzzy, c-format
+msgid "*** [%s] Error %d"
+msgstr "***[%s]Ikosa**"
+
+#: job.c:399
+msgid " (core dumped)"
+msgstr ""
+
+#: job.c:488
+#, fuzzy
+msgid "*** Waiting for unfinished jobs...."
+msgstr "***kugirango"
+
+#: job.c:518
+#, c-format
+msgid "Live child 0x%08lx (%s) PID %ld %s\n"
+msgstr ""
+
+#: job.c:520 job.c:701 job.c:804 job.c:1457
+msgid " (remote)"
+msgstr ""
+
+#: job.c:698
+#, c-format
+msgid "Reaping losing child 0x%08lx PID %ld %s\n"
+msgstr ""
+
+#: job.c:699
+#, c-format
+msgid "Reaping winning child 0x%08lx PID %ld %s\n"
+msgstr ""
+
+#: job.c:704
+#, fuzzy, c-format
+msgid "Cleaning up temp batch file %s\n"
+msgstr "Hejuru IDOSIYE"
+
+#: job.c:802
+#, fuzzy, c-format
+msgid "Removing child 0x%08lx PID %ld%s from chain.\n"
+msgstr "Bivuye"
+
+#: job.c:862
+#, fuzzy
+msgid "write jobserver"
+msgstr "Kwandika"
+
+#: job.c:864
+#, fuzzy, c-format
+msgid "Released token for child 0x%08lx (%s).\n"
+msgstr "kugirango"
+
+#: job.c:1383
+#, fuzzy, c-format
+msgid "process_easy() failed to launch process (e=%ld)\n"
+msgstr "Byanze Byanze Kuri E"
+
+#: job.c:1387 job.c:2020
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Counted %d args in failed launch\n"
+msgstr "in Byanze"
+
+#: job.c:1455
+#, fuzzy, c-format
+msgid "Putting child 0x%08lx (%s) PID %ld%s on the chain.\n"
+msgstr "ku i"
+
+#: job.c:1709
+#, fuzzy, c-format
+msgid "Obtained token for child 0x%08lx (%s).\n"
+msgstr "kugirango"
+
+#: job.c:1718
+#, fuzzy
+msgid "read jobs pipe"
+msgstr "Gusoma"
+
+#: job.c:1832
+#, fuzzy
+msgid "cannot enforce load limits on this operating system"
+msgstr "Ibirimo Imbibi ku iyi Sisitemu"
+
+#: job.c:1834
+#, fuzzy
+msgid "cannot enforce load limit: "
+msgstr "Ibirimo"
+
+#: job.c:1907
+msgid "no more file handles: could not duplicate stdin\n"
+msgstr ""
+
+#: job.c:1909
+msgid "no more file handles: could not duplicate stdout\n"
+msgstr ""
+
+#: job.c:1937
+msgid "Could not restore stdin\n"
+msgstr ""
+
+#: job.c:1945
+msgid "Could not restore stdout\n"
+msgstr ""
+
+#: job.c:2016
+#, fuzzy, c-format
+msgid "process_easy() failed failed to launch process (e=%ld)\n"
+msgstr "Byanze Byanze Kuri E"
+
+#: job.c:2046
+#, fuzzy, c-format
+msgid "make reaped child pid %ld, still waiting for pid %ld\n"
+msgstr "Ubwoko Tegereza kugirango"
+
+#: job.c:2085
+#, fuzzy, c-format
+msgid "%s: Command not found"
+msgstr "%s:OYA Byabonetse"
+
+#: job.c:2145
+#, fuzzy, c-format
+msgid "%s: Shell program not found"
+msgstr "%s:Porogaramu OYA Byabonetse"
+
+#: job.c:2154
+msgid "spawnvpe: environment space might be exhausted"
+msgstr ""
+
+#: job.c:2363
+#, fuzzy, c-format
+msgid "$SHELL changed (was `%s', now `%s')\n"
+msgstr "$Byahinduwe NONEAHA"
+
+#: job.c:2789
+#, fuzzy, c-format
+msgid "Creating temporary batch file %s\n"
+msgstr "By'igihe gito IDOSIYE"
+
+#: job.c:2902
+#, fuzzy, c-format
+msgid "%s (line %d) Bad shell context (!unixy && !batch_mode_shell)\n"
+msgstr "%s(Umurongo Igikonoshwa Imvugiro"
+
+# crashrep/source\all\crashrep.lng:%OPTIONS_BUTTON%.text
+#: main.c:291
+#, fuzzy
+msgid "Options:\n"
+msgstr "Amahitamo..."
+
+#: main.c:292
+#, fuzzy
+msgid "  -b, -m                      Ignored for compatibility.\n"
+msgstr "-B M kugirango Bihuye neza"
+
+#: main.c:294
+#, fuzzy
+msgid "  -B, --always-make           Unconditionally make all targets.\n"
+msgstr "-Buri gihe Ubwoko Ubwoko Byose"
+
+#: main.c:296
+#, fuzzy
+msgid ""
+"  -C DIRECTORY, --directory=DIRECTORY\n"
+"                              Change to DIRECTORY before doing anything.\n"
+msgstr "-C bushyinguro Kuri Mbere"
+
+#: main.c:299
+#, fuzzy
+msgid "  -d                          Print lots of debugging information.\n"
+msgstr "-D Bya Ibisobanuro"
+
+#: main.c:301
+#, fuzzy
+msgid ""
+"  --debug[=FLAGS]             Print various types of debugging information.\n"
+msgstr "--Kosora amakosa Bya Ibisobanuro"
+
+#: main.c:303
+#, fuzzy
+msgid ""
+"  -e, --environment-overrides\n"
+"                              Environment variables override makefiles.\n"
+msgstr "-E Ibihinduka"
+
+#: main.c:306
+#, fuzzy
+msgid ""
+"  -f FILE, --file=FILE, --makefile=FILE\n"
+"                              Read FILE as a makefile.\n"
+msgstr "-F IDOSIYE Nka a"
+
+#: main.c:309
+#, fuzzy
+msgid "  -h, --help                  Print this message and exit.\n"
+msgstr "-h Ifashayobora iyi Ubutumwa Na Gusohoka"
+
+#: main.c:311
+#, fuzzy
+msgid "  -i, --ignore-errors         Ignore errors from commands.\n"
+msgstr "-i Kwirengagiza Amakosa Amakosa Bivuye Amabwiriza"
+
+#: main.c:313
+#, fuzzy
+msgid ""
+"  -I DIRECTORY, --include-dir=DIRECTORY\n"
+"                              Search DIRECTORY for included makefiles.\n"
+msgstr "-Gushyiramo kugirango"
+
+#: main.c:316
+#, fuzzy
+msgid ""
+"  -j [N], --jobs[=N]          Allow N jobs at once; infinite jobs with no "
+"arg.\n"
+msgstr "-j ku Rimwe Bidashira Na: Oya"
+
+#: main.c:318
+#, fuzzy
+msgid ""
+"  -k, --keep-going            Keep going when some targets can't be made.\n"
+msgstr "-K Gumana: Ryari:"
+
+#: main.c:320
+#, fuzzy
+msgid ""
+"  -l [N], --load-average[=N], --max-load[=N]\n"
+"                              Don't start multiple jobs unless load is below "
+"N.\n"
+msgstr ""
+"-L Ibirimo Impuzandengo KININI Ibirimo Gutangira Igikubo Ibirimo ni munsi"
+
+#: main.c:323
+msgid ""
+"  -L, --check-symlink-times   Use the latest mtime between symlinks and "
+"target.\n"
+msgstr ""
+
+#: main.c:325
+#, fuzzy
+msgid ""
+"  -n, --just-print, --dry-run, --recon\n"
+"                              Don't actually run any commands; just print "
+"them.\n"
+msgstr "-N Gucapa Gukoresha Gukoresha Amabwiriza Gucapa"
+
+#: main.c:328
+#, fuzzy
+msgid ""
+"  -o FILE, --old-file=FILE, --assume-old=FILE\n"
+"                              Consider FILE to be very old and don't remake "
+"it.\n"
+msgstr "-o ki/ bishaje IDOSIYE ki/ bishaje Kuri ki/ bishaje Na"
+
+#: main.c:331
+#, fuzzy
+msgid "  -p, --print-data-base       Print make's internal database.\n"
+msgstr "-P Gucapa Ibyatanzwe SHINGIRO By'imbere Ububikoshingiro"
+
+#: main.c:333
+#, fuzzy
+msgid ""
+"  -q, --question              Run no commands; exit status says if up to "
+"date.\n"
+msgstr "-Q Oya Amabwiriza Gusohoka Imimerere NIBA Hejuru Kuri Itariki"
+
+#: main.c:335
+#, fuzzy
+msgid "  -r, --no-builtin-rules      Disable the built-in implicit rules.\n"
+msgstr "-R Oya i in"
+
+#: main.c:337
+#, fuzzy
+msgid "  -R, --no-builtin-variables  Disable the built-in variable settings.\n"
+msgstr "-Oya Ibihinduka i in IMPINDURAGACIRO Amagenamiterere"
+
+#: main.c:339
+#, fuzzy
+msgid "  -s, --silent, --quiet       Don't echo commands.\n"
+msgstr "-S Amabwiriza"
+
+#: main.c:341
+#, fuzzy
+msgid ""
+"  -S, --no-keep-going, --stop\n"
+"                              Turns off -k.\n"
+msgstr "-Oya Gumana: Bidakora K"
+
+#: main.c:344
+#, fuzzy
+msgid "  -t, --touch                 Touch targets instead of remaking them.\n"
+msgstr "-T Bya"
+
+#: main.c:346
+#, fuzzy
+msgid ""
+"  -v, --version               Print the version number of make and exit.\n"
+msgstr "-v Verisiyo i Verisiyo Umubare Bya Ubwoko Na Gusohoka"
+
+#: main.c:348
+#, fuzzy
+msgid "  -w, --print-directory       Print the current directory.\n"
+msgstr "-W Gucapa bushyinguro i KIGEZWEHO bushyinguro"
+
+#: main.c:350
+#, fuzzy
+msgid ""
+"  --no-print-directory        Turn off -w, even if it was turned on "
+"implicitly.\n"
+msgstr "--Oya Gucapa bushyinguro Bidakora W ATARIIGIHARWE NIBA ku"
+
+#: main.c:352
+#, fuzzy
+msgid ""
+"  -W FILE, --what-if=FILE, --new-file=FILE, --assume-new=FILE\n"
+"                              Consider FILE to be infinitely new.\n"
+msgstr "-NIBA Gishya IDOSIYE Gishya Kuri Gishya"
+
+#: main.c:355
+#, fuzzy
+msgid ""
+"  --warn-undefined-variables  Warn when an undefined variable is "
+"referenced.\n"
+msgstr "--kidasobanuye Ibihinduka Ryari: kidasobanuye IMPINDURAGACIRO ni"
+
+#: main.c:549
+#, fuzzy
+msgid "empty string invalid as file name"
+msgstr "ubusa Ikurikiranyanyuguti Sibyo Nka IDOSIYE Izina:"
+
+#: main.c:630
+#, fuzzy, c-format
+msgid "unknown debug level specification `%s'"
+msgstr "Kitazwi Kosora amakosa urwego"
+
+#: main.c:670
+#, fuzzy, c-format
+msgid "%s: Interrupt/Exception caught (code = 0x%lx, addr = 0x%lx)\n"
+msgstr "%s:ITEGEKONGENGA Aderesi"
+
+#: main.c:677
+#, fuzzy, c-format
+msgid ""
+"\n"
+"Unhandled exception filter called from program %s\n"
+"ExceptionCode = %lx\n"
+"ExceptionFlags = %lx\n"
+"ExceptionAddress = %lx\n"
+msgstr "Irengayobora(-) Muyunguruzi... Bivuye Porogaramu"
+
+#: main.c:685
+#, fuzzy, c-format
+msgid "Access violation: write operation at address %lx\n"
+msgstr "Kwandika ku Aderesi"
+
+#: main.c:686
+#, fuzzy, c-format
+msgid "Access violation: read operation at address %lx\n"
+msgstr "Gusoma ku Aderesi"
+
+#: main.c:762 main.c:773
+#, fuzzy, c-format
+msgid "find_and_set_shell setting default_shell = %s\n"
+msgstr "Igenamiterere"
+
+#: main.c:814
+#, fuzzy, c-format
+msgid "find_and_set_shell path search set default_shell = %s\n"
+msgstr "Inzira Gushaka Gushyiraho"
+
+#: main.c:1236
+#, fuzzy, c-format
+msgid "%s is suspending for 30 seconds..."
+msgstr "%sni kugirango amasogonda"
+
+#: main.c:1238
+#, fuzzy, c-format
+msgid "done sleep(30). Continuing.\n"
+msgstr "Byakozwe"
+
+#: main.c:1466
+#, fuzzy
+msgid "Makefile from standard input specified twice."
+msgstr "Bivuye Bisanzwe Iyinjiza"
+
+#: main.c:1505 vmsjobs.c:486
+#, fuzzy
+msgid "fopen (temporary file)"
+msgstr "By'igihe gito IDOSIYE"
+
+#: main.c:1511
+#, fuzzy
+msgid "fwrite (temporary file)"
+msgstr "By'igihe gito IDOSIYE"
+
+#: main.c:1640
+#, fuzzy
+msgid "Parallel jobs (-j) are not supported on this platform."
+msgstr "j OYA ku iyi"
+
+#: main.c:1641
+#, fuzzy
+msgid "Resetting to single job (-j1) mode."
+msgstr "Kuri UMWE Ubwoko"
+
+#: main.c:1656
+#, fuzzy
+msgid "internal error: multiple --jobserver-fds options"
+msgstr "By'imbere Ikosa Igikubo Amahitamo"
+
+#: main.c:1664
+#, fuzzy, c-format
+msgid "internal error: invalid --jobserver-fds string `%s'"
+msgstr "By'imbere Ikosa Sibyo Ikurikiranyanyuguti"
+
+#: main.c:1674
+#, fuzzy
+msgid "warning: -jN forced in submake: disabling jobserver mode."
+msgstr "Iburira in Ubwoko"
+
+#: main.c:1684
+msgid "dup jobserver"
+msgstr ""
+
+#: main.c:1687
+#, fuzzy
+msgid ""
+"warning: jobserver unavailable: using -j1.  Add `+' to parent make rule."
+msgstr "Iburira ikoresha Kuri Ubwoko"
+
+#: main.c:1710
+msgid "creating jobs pipe"
+msgstr ""
+
+#: main.c:1725
+msgid "init jobserver pipe"
+msgstr ""
+
+#: main.c:1744
+msgid "Symbolic links not supported: disabling -L."
+msgstr ""
+
+#: main.c:1820
+msgid "Updating makefiles....\n"
+msgstr ""
+
+#: main.c:1845
+#, fuzzy, c-format
+msgid "Makefile `%s' might loop; not remaking it.\n"
+msgstr "OYA"
+
+#: main.c:1924
+#, fuzzy, c-format
+msgid "Failed to remake makefile `%s'."
+msgstr "Kuri"
+
+#: main.c:1941
+#, fuzzy, c-format
+msgid "Included makefile `%s' was not found."
+msgstr "OYA Byabonetse"
+
+#: main.c:1946
+#, fuzzy, c-format
+msgid "Makefile `%s' was not found"
+msgstr "OYA Byabonetse"
+
+#: main.c:2016
+#, fuzzy
+msgid "Couldn't change back to original directory."
+msgstr "Guhindura>> Inyuma Kuri Umwimerere bushyinguro"
+
+#: main.c:2024
+#, fuzzy, c-format
+msgid "Re-executing[%u]:"
+msgstr "Gukora:%s"
+
+#: main.c:2140
+#, fuzzy
+msgid "unlink (temporary file): "
+msgstr "Kureka guhuza By'igihe gito IDOSIYE"
+
+#: main.c:2169
+msgid ".DEFAULT_GOAL contains more than one target"
+msgstr ""
+
+#: main.c:2189
+#, fuzzy
+msgid "No targets specified and no makefile found"
+msgstr "Na Oya Byabonetse"
+
+#: main.c:2191
+msgid "No targets"
+msgstr ""
+
+#: main.c:2196
+msgid "Updating goal targets....\n"
+msgstr ""
+
+#: main.c:2222
+#, fuzzy
+msgid "warning:  Clock skew detected.  Your build may be incomplete."
+msgstr "Iburira SKEW Gicurasi"
+
+#: main.c:2383
+#, fuzzy, c-format
+msgid "Usage: %s [options] [target] ...\n"
+msgstr "Amahitamo Intego"
+
+#: main.c:2389
+#, fuzzy, c-format
+msgid ""
+"\n"
+"This program built for %s\n"
+msgstr "Porogaramu kugirango"
+
+#: main.c:2391
+#, fuzzy, c-format
+msgid ""
+"\n"
+"This program built for %s (%s)\n"
+msgstr "Porogaramu kugirango"
+
+#: main.c:2394
+#, fuzzy, c-format
+msgid "Report bugs to <bug-make@gnu.org>\n"
+msgstr "Kuri Ubwoko org"
+
+#: main.c:2466
+#, fuzzy, c-format
+msgid "the `-%c' option requires a non-empty string argument"
+msgstr "i Ihitamo a Umubare Wuzuye"
+
+#: main.c:2518
+#, fuzzy, c-format
+msgid "the `-%c' option requires a positive integral argument"
+msgstr "i Ihitamo a Umubare Wuzuye"
+
+#: main.c:2942
+#, fuzzy, c-format
+msgid ""
+"%sThis is free software; see the source for copying conditions.\n"
+"%sThere is NO warranty; not even for MERCHANTABILITY or FITNESS FOR A\n"
+"%sPARTICULAR PURPOSE.\n"
+msgstr ""
+"%sThisni Kigenga i Inkomoko kugirango ni OYA ATARIIGIHARWE kugirango Cyangwa"
+
+#: main.c:2948
+#, fuzzy, c-format
+msgid ""
+"\n"
+"%sThis program built for %s\n"
+msgstr "Porogaramu kugirango"
+
+#: main.c:2950
+#, fuzzy, c-format
+msgid ""
+"\n"
+"%sThis program built for %s (%s)\n"
+msgstr "Porogaramu kugirango"
+
+#: main.c:2968
+#, fuzzy, c-format
+msgid ""
+"\n"
+"# Make data base, printed on %s"
+msgstr "#Ibyatanzwe SHINGIRO Byacapwe ku"
+
+#: main.c:2978
+#, fuzzy, c-format
+msgid ""
+"\n"
+"# Finished Make data base on %s\n"
+msgstr "#Ibyatanzwe SHINGIRO ku"
+
+#: main.c:3101
+#, fuzzy, c-format
+msgid "%s: Entering an unknown directory\n"
+msgstr "%s:Kitazwi bushyinguro"
+
+#: main.c:3103
+#, fuzzy, c-format
+msgid "%s: Leaving an unknown directory\n"
+msgstr "%s:Kitazwi bushyinguro"
+
+#: main.c:3106
+#, fuzzy, c-format
+msgid "%s: Entering directory `%s'\n"
+msgstr "%s:bushyinguro"
+
+#: main.c:3109
+#, fuzzy, c-format
+msgid "%s: Leaving directory `%s'\n"
+msgstr "%s:bushyinguro"
+
+#: main.c:3114
+#, fuzzy, c-format
+msgid "%s[%u]: Entering an unknown directory\n"
+msgstr "%s[%u]:Kitazwi bushyinguro"
+
+#: main.c:3117
+#, fuzzy, c-format
+msgid "%s[%u]: Leaving an unknown directory\n"
+msgstr "%s[%u]:Kitazwi bushyinguro"
+
+#: main.c:3121
+#, fuzzy, c-format
+msgid "%s[%u]: Entering directory `%s'\n"
+msgstr "%s[%u]:bushyinguro"
+
+#: main.c:3124
+#, fuzzy, c-format
+msgid "%s[%u]: Leaving directory `%s'\n"
+msgstr "%s[%u]:bushyinguro"
+
+#: misc.c:285
+#, fuzzy
+msgid ".  Stop.\n"
+msgstr ".Hagarara"
+
+# # @name OTHER
+# # @loc none
+#: misc.c:306
+#, fuzzy, c-format
+msgid "Unknown error %d"
+msgstr "Ikosa itazwi"
+
+#: misc.c:316
+#, c-format
+msgid "%s%s: %s"
+msgstr ""
+
+# desktop/source\app\ssodlg.src:DLG_SSOLOGIN.text
+#: misc.c:324
+#, fuzzy, c-format
+msgid "%s: %s"
+msgstr "%s:%s"
+
+#: misc.c:344 misc.c:359 misc.c:376 read.c:3127
+#, fuzzy
+msgid "virtual memory exhausted"
+msgstr "Kitaboneka Ububiko"
+
+#: misc.c:646
+#, fuzzy, c-format
+msgid "%s: user %lu (real %lu), group %lu (real %lu)\n"
+msgstr "%s:Ukoresha: Itsinda"
+
+#: misc.c:667
+msgid "Initialized access"
+msgstr ""
+
+#: misc.c:746
+msgid "User access"
+msgstr ""
+
+#: misc.c:794
+msgid "Make access"
+msgstr ""
+
+#: misc.c:828
+msgid "Child access"
+msgstr ""
+
+#: misc.c:892
+#, fuzzy, c-format
+msgid "write error: %s"
+msgstr "Ikosa Kuri"
+
+#: misc.c:894
+#, fuzzy
+msgid "write error"
+msgstr "Kwandika"
+
+#: read.c:160
+msgid "Reading makefiles...\n"
+msgstr ""
+
+#: read.c:315
+#, c-format
+msgid "Reading makefile `%s'"
+msgstr ""
+
+#: read.c:317
+#, fuzzy, c-format
+msgid " (no default goal)"
+msgstr "(Oya Mburabuzi"
+
+#: read.c:319
+#, fuzzy, c-format
+msgid " (search path)"
+msgstr "(Gushaka Inzira"
+
+#: read.c:321
+#, c-format
+msgid " (don't care)"
+msgstr ""
+
+#: read.c:323
+#, fuzzy, c-format
+msgid " (no ~ expansion)"
+msgstr "(Oya"
+
+#: read.c:623
+#, fuzzy
+msgid "invalid syntax in conditional"
+msgstr "Sibyo in"
+
+#: read.c:633
+msgid "extraneous `endef'"
+msgstr ""
+
+#: read.c:645 read.c:673 variable.c:1316
+#, fuzzy
+msgid "empty variable name"
+msgstr "ubusa IMPINDURAGACIRO Izina:"
+
+#: read.c:662
+#, fuzzy
+msgid "empty `override' directive"
+msgstr "ubusa"
+
+#: read.c:687
+#, fuzzy
+msgid "invalid `override' directive"
+msgstr "Sibyo"
+
+#: read.c:854
+#, fuzzy
+msgid "commands commence before first target"
+msgstr "Amabwiriza Mbere Itangira Intego"
+
+#: read.c:905
+#, fuzzy
+msgid "missing rule before commands"
+msgstr "Ibuze Mbere Amabwiriza"
+
+#: read.c:992
+#, fuzzy, c-format
+msgid "missing separator%s"
+msgstr "Ibuze Mutandukanya"
+
+#: read.c:994
+#, fuzzy
+msgid " (did you mean TAB instead of 8 spaces?)"
+msgstr "(Impuzandengo- Bya 8 Imyanya"
+
+#: read.c:1152
+#, fuzzy
+msgid "missing target pattern"
+msgstr "Ibuze Intego Ishusho"
+
+#: read.c:1154
+#, fuzzy
+msgid "multiple target patterns"
+msgstr "Igikubo Intego"
+
+#: read.c:1158
+#, fuzzy, c-format
+msgid "target pattern contains no `%%'"
+msgstr "Intego Ishusho Kirimo Oya"
+
+#: read.c:1286
+#, fuzzy
+msgid "missing `endif'"
+msgstr "Ibuze"
+
+#: read.c:1377
+#, fuzzy
+msgid "Extraneous text after `endef' directive"
+msgstr "Umwandiko Nyuma"
+
+#: read.c:1411
+#, fuzzy
+msgid "missing `endef', unterminated `define'"
+msgstr "Ibuze"
+
+#: read.c:1454
+#, fuzzy, c-format
+msgid "Extraneous text after `%s' directive"
+msgstr "Umwandiko Nyuma"
+
+#: read.c:1463 read.c:1477
+#, c-format
+msgid "extraneous `%s'"
+msgstr ""
+
+#: read.c:1482
+msgid "only one `else' per conditional"
+msgstr ""
+
+#: read.c:1824
+#, fuzzy
+msgid "Malformed target-specific variable definition"
+msgstr "Intego IMPINDURAGACIRO Insobanuro"
+
+#: read.c:1886
+msgid "prerequisites cannot be defined in command scripts"
+msgstr ""
+
+#: read.c:1921
+#, fuzzy
+msgid "mixed implicit and static pattern rules"
+msgstr "Bivanze Na Ishusho"
+
+#: read.c:1924
+#, fuzzy
+msgid "mixed implicit and normal rules"
+msgstr "Bivanze Na Bisanzwe"
+
+#: read.c:1954
+#, fuzzy, c-format
+msgid "target `%s' doesn't match the target pattern"
+msgstr "Intego BIHUYE i Intego Ishusho"
+
+#: read.c:1973 read.c:2074
+#, fuzzy, c-format
+msgid "target file `%s' has both : and :: entries"
+msgstr "Intego IDOSIYE Byombi Na Ibyinjijwe"
+
+#: read.c:1979
+#, fuzzy, c-format
+msgid "target `%s' given more than once in the same rule."
+msgstr "Intego Birenzeho Rimwe in i"
+
+#: read.c:1988
+#, fuzzy, c-format
+msgid "warning: overriding commands for target `%s'"
+msgstr "Iburira Amabwiriza kugirango Intego"
+
+#: read.c:1991
+#, fuzzy, c-format
+msgid "warning: ignoring old commands for target `%s'"
+msgstr "Iburira ki/ bishaje Amabwiriza kugirango Intego"
+
+#: read.c:2575
+#, fuzzy
+msgid "warning: NUL character seen; rest of line ignored"
+msgstr "Iburira Inyuguti Bya Umurongo"
+
+#: remake.c:229
+#, fuzzy, c-format
+msgid "Nothing to be done for `%s'."
+msgstr "Kuri Byakozwe kugirango"
+
+#: remake.c:230
+#, fuzzy, c-format
+msgid "`%s' is up to date."
+msgstr "`%s'ni Hejuru Kuri Itariki"
+
+#: remake.c:297
+#, fuzzy, c-format
+msgid "Pruning file `%s'.\n"
+msgstr "IDOSIYE"
+
+#: remake.c:349
+#, fuzzy, c-format
+msgid "%sNo rule to make target `%s'%s"
+msgstr "%sNoKuri Ubwoko Intego"
+
+#: remake.c:351
+#, fuzzy, c-format
+msgid "%sNo rule to make target `%s', needed by `%s'%s"
+msgstr "%sNoKuri Ubwoko Intego ku"
+
+#: remake.c:378
+#, fuzzy, c-format
+msgid "Considering target file `%s'.\n"
+msgstr "Intego IDOSIYE"
+
+#: remake.c:385
+#, fuzzy, c-format
+msgid "Recently tried and failed to update file `%s'.\n"
+msgstr "Na Byanze Kuri Kuvugurura IDOSIYE"
+
+#: remake.c:400
+#, fuzzy, c-format
+msgid "File `%s' was considered already.\n"
+msgstr "Idosiye"
+
+#: remake.c:410
+#, fuzzy, c-format
+msgid "Still updating file `%s'.\n"
+msgstr "Ivugurura IDOSIYE"
+
+#: remake.c:413
+#, fuzzy, c-format
+msgid "Finished updating file `%s'.\n"
+msgstr "Ivugurura IDOSIYE"
+
+#: remake.c:434
+#, fuzzy, c-format
+msgid "File `%s' does not exist.\n"
+msgstr "Idosiye OYA"
+
+#: remake.c:441
+#, fuzzy, c-format
+msgid ""
+"*** Warning: .LOW_RESOLUTION_TIME file `%s' has a high resolution time stamp"
+msgstr "***IDOSIYE a kirekire Imikemurire Igihe"
+
+#: remake.c:454 remake.c:962
+#, fuzzy, c-format
+msgid "Found an implicit rule for `%s'.\n"
+msgstr "kugirango"
+
+#: remake.c:456 remake.c:964
+#, fuzzy, c-format
+msgid "No implicit rule found for `%s'.\n"
+msgstr "Byabonetse kugirango"
+
+#: remake.c:462 remake.c:970
+#, fuzzy, c-format
+msgid "Using default commands for `%s'.\n"
+msgstr "Mburabuzi Amabwiriza kugirango"
+
+#: remake.c:484 remake.c:996
+#, c-format
+msgid "Circular %s <- %s dependency dropped."
+msgstr ""
+
+#: remake.c:601
+#, fuzzy, c-format
+msgid "Finished prerequisites of target file `%s'.\n"
+msgstr "Bya Intego IDOSIYE"
+
+#: remake.c:607
+#, fuzzy, c-format
+msgid "The prerequisites of `%s' are being made.\n"
+msgstr "Bya"
+
+#: remake.c:620
+#, fuzzy, c-format
+msgid "Giving up on target file `%s'.\n"
+msgstr "Hejuru ku Intego IDOSIYE"
+
+#: remake.c:625
+#, fuzzy, c-format
+msgid "Target `%s' not remade because of errors."
+msgstr "OYA Bya Amakosa"
+
+#: remake.c:677
+#, fuzzy, c-format
+msgid "Prerequisite `%s' is order-only for target `%s'.\n"
+msgstr "ni Itondekanya kugirango Intego"
+
+#: remake.c:682
+#, fuzzy, c-format
+msgid "Prerequisite `%s' of target `%s' does not exist.\n"
+msgstr "Bya Intego OYA"
+
+#: remake.c:687
+#, fuzzy, c-format
+msgid "Prerequisite `%s' is newer than target `%s'.\n"
+msgstr "ni Intego"
+
+#: remake.c:690
+#, fuzzy, c-format
+msgid "Prerequisite `%s' is older than target `%s'.\n"
+msgstr "ni Intego"
+
+#: remake.c:708
+#, fuzzy, c-format
+msgid "Target `%s' is double-colon and has no prerequisites.\n"
+msgstr "ni MAHARAKUBIRI Na Oya"
+
+#: remake.c:715
+#, fuzzy, c-format
+msgid "No commands for `%s' and no prerequisites actually changed.\n"
+msgstr "Amabwiriza kugirango Na Oya Byahinduwe"
+
+#: remake.c:720
+#, fuzzy, c-format
+msgid "Making `%s' due to always-make flag.\n"
+msgstr "Kuri Buri gihe Ubwoko Ibendera"
+
+#: remake.c:728
+#, fuzzy, c-format
+msgid "No need to remake target `%s'"
+msgstr "Kuri Intego"
+
+#: remake.c:730
+#, fuzzy, c-format
+msgid "; using VPATH name `%s'"
+msgstr ";ikoresha Izina:"
+
+#: remake.c:750
+#, fuzzy, c-format
+msgid "Must remake target `%s'.\n"
+msgstr "Intego"
+
+#: remake.c:756
+#, fuzzy, c-format
+msgid "  Ignoring VPATH name `%s'.\n"
+msgstr "Kwirengagiza Izina:"
+
+#: remake.c:765
+#, fuzzy, c-format
+msgid "Commands of `%s' are being run.\n"
+msgstr "Bya Gukoresha"
+
+#: remake.c:772
+#, fuzzy, c-format
+msgid "Failed to remake target file `%s'.\n"
+msgstr "Kuri Intego IDOSIYE"
+
+#: remake.c:775
+#, fuzzy, c-format
+msgid "Successfully remade target file `%s'.\n"
+msgstr "Intego IDOSIYE"
+
+#: remake.c:778
+#, fuzzy, c-format
+msgid "Target file `%s' needs remade under -q.\n"
+msgstr "IDOSIYE Q"
+
+#: remake.c:1306
+#, fuzzy, c-format
+msgid "Warning: File `%s' has modification time in the future"
+msgstr "Idosiye Igihe in i"
+
+#: remake.c:1313
+#, fuzzy, c-format
+msgid "Warning: File `%s' has modification time %.2g s in the future"
+msgstr "Idosiye Igihe S in i"
+
+#: remake.c:1511
+#, fuzzy, c-format
+msgid ".LIBPATTERNS element `%s' is not a pattern"
+msgstr ""
+".Project- Id- Version: basctl\n"
+"POT- Creation- Date: 2003- 12- 07 17: 13+ 02\n"
+"PO- Revision- Date: 2004- 11- 04 10: 13- 0700\n"
+"Last- Translator: Language- Team:< en@ li. org> MIME- Version: 1. 0\n"
+"Content- Type: text/ plain; charset= UTF- 8\n"
+"Content- Transfer- Encoding: 8bit\n"
+"X- Generator: KBabel 1. 0\n"
+"."
+
+#: remote-cstms.c:125
+#, fuzzy, c-format
+msgid "Customs won't export: %s\n"
+msgstr "Kohereza"
+
+#: rule.c:548
+msgid ""
+"\n"
+"# Implicit Rules"
+msgstr ""
+
+#: rule.c:563
+msgid ""
+"\n"
+"# No implicit rules."
+msgstr ""
+
+#: rule.c:566
+#, c-format
+msgid ""
+"\n"
+"# %u implicit rules, %u"
+msgstr ""
+
+#: rule.c:575
+msgid " terminal."
+msgstr ""
+
+#: rule.c:583
+#, c-format
+msgid "BUG: num_pattern_rules wrong!  %u != %u"
+msgstr ""
+
+#: signame.c:85
+#, fuzzy
+msgid "unknown signal"
+msgstr "Kitazwi"
+
+#: signame.c:93
+msgid "Hangup"
+msgstr ""
+
+#: signame.c:96
+msgid "Interrupt"
+msgstr "Hagarikira aho"
+
+#: signame.c:99
+msgid "Quit"
+msgstr "Kuvamo"
+
+#: signame.c:102
+msgid "Illegal Instruction"
+msgstr ""
+
+#: signame.c:105
+#, fuzzy
+msgid "Trace/breakpoint trap"
+msgstr "Aho bahagarara"
+
+#: signame.c:110
+msgid "Aborted"
+msgstr ""
+
+#: signame.c:113
+msgid "IOT trap"
+msgstr ""
+
+#: signame.c:116
+msgid "EMT trap"
+msgstr ""
+
+#: signame.c:119
+#, fuzzy
+msgid "Floating point exception"
+msgstr "Akadomo Irengayobora(-)"
+
+#: signame.c:122
+msgid "Killed"
+msgstr ""
+
+#: signame.c:125
+#, fuzzy
+msgid "Bus error"
+msgstr "Ikosa"
+
+#: signame.c:128
+msgid "Segmentation fault"
+msgstr ""
+
+#: signame.c:131
+#, fuzzy
+msgid "Bad system call"
+msgstr "Sisitemu"
+
+#: signame.c:134
+msgid "Broken pipe"
+msgstr ""
+
+#: signame.c:137
+msgid "Alarm clock"
+msgstr ""
+
+#: signame.c:140
+msgid "Terminated"
+msgstr ""
+
+#: signame.c:143
+#, fuzzy
+msgid "User defined signal 1"
+msgstr "1."
+
+#: signame.c:146
+#, fuzzy
+msgid "User defined signal 2"
+msgstr "2."
+
+#: signame.c:151 signame.c:154
+msgid "Child exited"
+msgstr ""
+
+#: signame.c:157
+msgid "Power failure"
+msgstr ""
+
+#: signame.c:160
+msgid "Stopped"
+msgstr "Kyahagariswe"
+
+#: signame.c:163
+#, fuzzy
+msgid "Stopped (tty input)"
+msgstr "Iyinjiza"
+
+#: signame.c:166
+#, fuzzy
+msgid "Stopped (tty output)"
+msgstr "Ibisohoka"
+
+#: signame.c:169
+msgid "Stopped (signal)"
+msgstr ""
+
+#: signame.c:172
+#, fuzzy
+msgid "CPU time limit exceeded"
+msgstr "Igihe"
+
+#: signame.c:175
+#, fuzzy
+msgid "File size limit exceeded"
+msgstr "Idosiye Ingano"
+
+#: signame.c:178
+#, fuzzy
+msgid "Virtual timer expired"
+msgstr "Byarengeje igihe"
+
+#: signame.c:181
+#, fuzzy
+msgid "Profiling timer expired"
+msgstr "Byarengeje igihe"
+
+#: signame.c:187
+#, fuzzy
+msgid "Window changed"
+msgstr "Byahinduwe"
+
+#: signame.c:190
+msgid "Continued"
+msgstr ""
+
+#: signame.c:193
+#, fuzzy
+msgid "Urgent I/O condition"
+msgstr "Ibisabwa"
+
+#: signame.c:200 signame.c:209
+msgid "I/O possible"
+msgstr ""
+
+#: signame.c:203
+msgid "SIGWIND"
+msgstr ""
+
+#: signame.c:206
+msgid "SIGPHONE"
+msgstr ""
+
+#: signame.c:212
+msgid "Resource lost"
+msgstr ""
+
+#: signame.c:215
+msgid "Danger signal"
+msgstr ""
+
+#: signame.c:218
+#, fuzzy
+msgid "Information request"
+msgstr "Kubaza..."
+
+#: signame.c:221
+#, fuzzy
+msgid "Floating point co-processor not available"
+msgstr "Akadomo OYA Bihari"
+
+#: strcache.c:210
+#, c-format
+msgid ""
+"\n"
+"%s # of strings in strcache: %d\n"
+msgstr ""
+
+#: strcache.c:211
+#, c-format
+msgid "%s # of strcache buffers: %d\n"
+msgstr ""
+
+#: strcache.c:212
+#, c-format
+msgid "%s strcache size: total = %d / max = %d / min = %d / avg = %d\n"
+msgstr ""
+
+#: strcache.c:214
+#, c-format
+msgid "%s strcache free: total = %d / max = %d / min = %d / avg = %d\n"
+msgstr ""
+
+# Lock column values
+#: variable.c:1369
+msgid "default"
+msgstr "mburabuzi"
+
+#: variable.c:1372
+msgid "environment"
+msgstr ""
+
+#: variable.c:1375
+msgid "makefile"
+msgstr ""
+
+#: variable.c:1378
+#, fuzzy
+msgid "environment under -e"
+msgstr "E"
+
+#: variable.c:1381
+#, fuzzy
+msgid "command line"
+msgstr "Komandi: Umurongo"
+
+#: variable.c:1384
+msgid "`override' directive"
+msgstr ""
+
+#: variable.c:1387
+msgid "automatic"
+msgstr "Byikoresha"
+
+#: variable.c:1396
+#, fuzzy, c-format
+msgid " (from `%s', line %lu)"
+msgstr "(Bivuye Umurongo"
+
+#: variable.c:1438
+#, fuzzy
+msgid "# variable set hash-table stats:\n"
+msgstr "#IMPINDURAGACIRO Gushyiraho imbonerahamwe# stats"
+
+#: variable.c:1449
+msgid ""
+"\n"
+"# Variables\n"
+msgstr ""
+
+#: variable.c:1453
+#, fuzzy
+msgid ""
+"\n"
+"# Pattern-specific Variable Values"
+msgstr "#IMPINDURAGACIRO Uduciro"
+
+#: variable.c:1467
+#, fuzzy
+msgid ""
+"\n"
+"# No pattern-specific variable values."
+msgstr "#Ishusho IMPINDURAGACIRO Uduciro"
+
+#: variable.c:1469
+#, fuzzy, c-format
+msgid ""
+"\n"
+"# %u pattern-specific variable values"
+msgstr "#%uIshusho IMPINDURAGACIRO Uduciro"
+
+#: variable.h:189
+#, c-format
+msgid "warning: undefined variable `%.*s'"
+msgstr ""
+
+#: vmsfunctions.c:94
+#, fuzzy, c-format
+msgid "sys$search failed with %d\n"
+msgstr "sys Gushaka Byanze Na:"
+
+#: vmsjobs.c:71
+#, c-format
+msgid "Warning: Empty redirection\n"
+msgstr ""
+
+#: vmsjobs.c:175
+#, fuzzy, c-format
+msgid "internal error: `%s' command_state"
+msgstr "By'imbere Ikosa"
+
+#: vmsjobs.c:268
+#, fuzzy, c-format
+msgid "-warning, CTRL-Y will leave sub-process(es) around.\n"
+msgstr "-Iburira"
+
+#: vmsjobs.c:284
+#, fuzzy, c-format
+msgid "-warning, you may have to re-enable CTRL-Y handling from DCL.\n"
+msgstr "-Iburira Gicurasi Kuri Gushoboza Bivuye"
+
+#: vmsjobs.c:407
+#, c-format
+msgid "BUILTIN [%s][%s]\n"
+msgstr ""
+
+#: vmsjobs.c:418
+#, c-format
+msgid "BUILTIN CD %s\n"
+msgstr ""
+
+#: vmsjobs.c:436
+#, c-format
+msgid "BUILTIN RM %s\n"
+msgstr ""
+
+#: vmsjobs.c:457
+#, fuzzy, c-format
+msgid "Unknown builtin command '%s'\n"
+msgstr "Komandi:"
+
+#: vmsjobs.c:479
+#, fuzzy, c-format
+msgid "Error, empty command\n"
+msgstr "ubusa"
+
+#: vmsjobs.c:491
+#, fuzzy, c-format
+msgid "Redirected input from %s\n"
+msgstr "Iyinjiza Bivuye"
+
+#: vmsjobs.c:498
+#, fuzzy, c-format
+msgid "Redirected error to %s\n"
+msgstr "Ikosa Kuri"
+
+#: vmsjobs.c:505
+#, fuzzy, c-format
+msgid "Redirected output to %s\n"
+msgstr "Ibisohoka Kuri"
+
+#: vmsjobs.c:568
+#, c-format
+msgid "Executing %s instead\n"
+msgstr ""
+
+#: vmsjobs.c:668
+#, c-format
+msgid "Error spawning, %d\n"
+msgstr ""
+
+#: vpath.c:571
+msgid ""
+"\n"
+"# VPATH Search Paths\n"
+msgstr ""
+
+#: vpath.c:588
+#, fuzzy
+msgid "# No `vpath' search paths."
+msgstr "#Gushaka Inzira"
+
+#: vpath.c:590
+#, fuzzy, c-format
+msgid ""
+"\n"
+"# %u `vpath' search paths.\n"
+msgstr "#%u`Gushaka Inzira"
+
+#: vpath.c:593
+#, fuzzy
+msgid ""
+"\n"
+"# No general (`VPATH' variable) search path."
+msgstr "#Rusange IMPINDURAGACIRO Gushaka Inzira"
+
+#: vpath.c:599
+#, fuzzy
+msgid ""
+"\n"
+"# General (`VPATH' variable) search path:\n"
+"# "
+msgstr "#IMPINDURAGACIRO Gushaka Inzira"
+
+#, fuzzy
+#~ msgid "Syntax error, still inside '\"'\n"
+#~ msgstr "Ikosa Mo Imbere"
+
+#, fuzzy
+#~ msgid "Got a SIGCHLD; %u unreaped children.\n"
+#~ msgstr "a"
+
+#, fuzzy
+#~ msgid "Do not specify -j or --jobs if sh.exe is not available."
+#~ msgstr "OYA j Cyangwa NIBA exe ni OYA Bihari"
+
+#, fuzzy
+#~ msgid "Resetting make for single job mode."
+#~ msgstr "Ubwoko kugirango UMWE Ubwoko"
+
+#, fuzzy
+#~ msgid "no file name for `%sinclude'"
+#~ msgstr "Oya IDOSIYE Izina: kugirango"
+
+#, fuzzy
+#~ msgid "target `%s' leaves prerequisite pattern empty"
+#~ msgstr "Intego Ibibabi Ishusho ubusa"

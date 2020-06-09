@@ -1,0 +1,35 @@
+#								     -*-perl-*-
+
+$description = "The following test creates a makefile to test MAKE \n"
+              ."(very generic)";
+
+$details = "DETAILS";
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE "TMP  := \$(MAKE)\n";
+print MAKEFILE "MAKE := \$(subst X=\$(X),,\$(MAKE))\n\n";
+print MAKEFILE "all:\n";
+print MAKEFILE "\t\@echo \$(TMP)\n";
+print MAKEFILE "\t\$(MAKE) -f $makefile foo\n\n";
+print MAKEFILE "foo:\n";
+print MAKEFILE "\t\@echo \$(MAKE)\n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+# Create the answer to what should be produced by this Makefile
+$answer = "$mkpath\n$mkpath -f $makefile foo\n"
+	. "${make_name}[1]: Entering directory `$pwd'\n"
+	. "$mkpath\n${make_name}[1]: Leaving directory `$pwd'\n";
+
+&run_make_with_options($makefile,"",&get_logfile,0);
+
+&rmfiles("foo");
+# COMPARE RESULTS
+&compare_output($answer,&get_logfile(1));
+
+1;

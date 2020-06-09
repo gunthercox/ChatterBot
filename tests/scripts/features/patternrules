@@ -1,0 +1,149 @@
+#                                                                    -*-perl-*-
+
+$description = "Test pattern rules.";
+
+$details = "";
+
+use Cwd;
+
+$dir = cwd;
+$dir =~ s,.*/([^/]+)$,../$1,;
+
+
+#  TEST #1: Make sure that multiple patterns where the same target
+#           can be built are searched even if the first one fails
+#           to match properly.
+#
+
+run_make_test('
+.PHONY: all
+
+all: case.1 case.2 case.3
+a: void
+
+# 1 - existing file
+%.1: void
+	@exit 1
+%.1: #MAKEFILE#
+	@exit 0
+
+# 2 - phony
+%.2: void
+	@exit 1
+%.2: 2.phony
+	@exit 0
+.PHONY: 2.phony
+
+# 3 - implicit-phony
+%.3: void
+	@exit 1
+%.3: 3.implicit-phony
+	@exit 0
+
+3.implicit-phony:
+',
+'',
+'');
+
+# TEST #2: make sure files that are built via implicit rules are marked
+#          as targets (Savannah bug #12202).
+#
+run_make_test('
+TARGETS := foo foo.out
+
+.PHONY: all foo.in
+
+all: $(TARGETS)
+
+%: %.in
+	@echo $@
+
+%.out: %
+	@echo $@
+
+foo.in: ; @:
+
+',
+'',
+'foo
+foo.out');
+
+
+# TEST #3: make sure intermidite files that also happened to be
+#          prerequisites are not removed (Savannah bug #12267).
+#
+run_make_test('
+$(dir)/foo.o:
+
+$(dir)/foo.y:
+	@echo $@
+
+%.c: %.y
+	touch $@
+
+%.o: %.c
+	@echo $@
+
+.PHONY: install
+install: $(dir)/foo.c
+
+',
+"dir=$dir",
+"$dir/foo.y
+touch $dir/foo.c
+$dir/foo.o");
+
+unlink("$dir/foo.c");
+
+
+# TEST #4: make sure precious flag is set properly for targets
+#          that are built via implicit rules (Savannah bug #13218).
+#
+run_make_test('
+.DELETE_ON_ERROR:
+
+.PRECIOUS: %.bar
+
+%.bar:; @touch $@ && exit 1
+
+$(dir)/foo.bar:
+
+',
+"dir=$dir",
+"#MAKE#: *** [$dir/foo.bar] Error 1",
+512);
+
+unlink("$dir/foo.bar");
+
+
+# TEST #5: make sure targets of a macthed implicit pattern rule never
+#          never considered intermediate (Savannah bug #13022).
+#
+run_make_test('
+.PHONY: all
+all: foo.c foo.o
+
+%.h %.c: %.in
+	touch $*.h
+	touch $*.c
+
+%.o: %.c %.h
+	echo $+ >$@
+
+%.o: %.c
+	@echo wrong rule
+
+foo.in:
+	touch $@
+
+',
+'',
+'touch foo.in
+touch foo.h
+touch foo.c
+echo foo.c foo.h >foo.o');
+
+unlink('foo.in', 'foo.h', 'foo.c', 'foo.o');
+
+# This tells the test driver that the perl test script executed properly.
+1;

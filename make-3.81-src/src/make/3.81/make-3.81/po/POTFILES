@@ -1,0 +1,24 @@
+     ../../make-3.81-src/ar.c \
+     ../../make-3.81-src/arscan.c \
+     ../../make-3.81-src/commands.c \
+     ../../make-3.81-src/dir.c \
+     ../../make-3.81-src/expand.c \
+     ../../make-3.81-src/file.c \
+     ../../make-3.81-src/function.c \
+     ../../make-3.81-src/getopt.c \
+     ../../make-3.81-src/hash.c \
+     ../../make-3.81-src/implicit.c \
+     ../../make-3.81-src/job.c \
+     ../../make-3.81-src/main.c \
+     ../../make-3.81-src/misc.c \
+     ../../make-3.81-src/read.c \
+     ../../make-3.81-src/remake.c \
+     ../../make-3.81-src/remote-cstms.c \
+     ../../make-3.81-src/rule.c \
+     ../../make-3.81-src/signame.c \
+     ../../make-3.81-src/strcache.c \
+     ../../make-3.81-src/variable.c \
+     ../../make-3.81-src/variable.h \
+     ../../make-3.81-src/vmsfunctions.c \
+     ../../make-3.81-src/vmsjobs.c \
+     ../../make-3.81-src/vpath.c

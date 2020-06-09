@@ -1,0 +1,53 @@
+$description = "The following test creates a makefile to override part\n"
+              ."of one Makefile with Another Makefile with the .DEFAULT\n"
+              ."rule.";
+
+$details = "This tests the use of the .DEFAULT special target to say that \n"
+          ."to remake any target that cannot be made fram the information\n"
+          ."in the containing makefile, make should look in another makefile\n"
+          ."This test gives this makefile the target bar which is not \n"
+          ."defined here but passes the target bar on to another makefile\n"
+          ."which does have the target bar defined.\n";
+
+$makefile2 = &get_tmpfile;
+
+open(MAKEFILE,"> $makefile");
+
+# The Contents of the MAKEFILE ...
+
+print MAKEFILE "foo:\n";
+print MAKEFILE "\t\@echo Executing rule FOO\n\n";
+print MAKEFILE ".DEFAULT:\n";
+print MAKEFILE "\t\@\$(MAKE) -f $makefile2 \$\@ \n";
+
+# END of Contents of MAKEFILE
+
+close(MAKEFILE);
+
+
+open(MAKEFILE,"> $makefile2");
+
+print MAKEFILE "bar:\n";
+print MAKEFILE "\t\@echo Executing rule BAR\n\n";
+
+close(MAKEFILE);
+
+&run_make_with_options($makefile,'bar',&get_logfile);
+
+# Create the answer to what should be produced by this Makefile
+$answer = "${make_name}[1]: Entering directory `$pwd'\n"
+        . "Executing rule BAR\n"
+        . "${make_name}[1]: Leaving directory `$pwd'\n";
+
+# COMPARE RESULTS
+
+&compare_output($answer,&get_logfile(1));
+
+# This tells the test driver that the perl test script executed properly.
+1;
+
+
+
+
+
+
