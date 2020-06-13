@@ -1,0 +1,67 @@
+{
+  "name": "remove-bom-buffer",
+  "description": "Remove a byte order mark (BOM) from a buffer.",
+  "version": "3.0.0",
+  "homepage": "https://github.com/jonschlinkert/remove-bom-buffer",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "contributors": [
+    "Blaine Bublitz (https://twitter.com/BlaineBublitz)",
+    "Erik Kemperman (https://github.com/erikkemperman)",
+    "Jon Schlinkert (http://twitter.com/jonschlinkert)"
+  ],
+  "repository": "jonschlinkert/remove-bom-buffer",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/remove-bom-buffer/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "is-buffer": "^1.1.5",
+    "is-utf8": "^0.2.1"
+  },
+  "devDependencies": {
+    "gulp-format-md": "^0.1.11",
+    "mocha": "^3.2.0"
+  },
+  "keywords": [
+    "bom",
+    "buffer",
+    "byte-order-mark",
+    "normalize",
+    "remove",
+    "strip",
+    "strip-bom",
+    "strip-bom-buffer",
+    "strip-bom-string"
+  ],
+  "verb": {
+    "related": {
+      "list": [
+        "cr",
+        "has-bom",
+        "read-file",
+        "strip-bom-string"
+      ]
+    },
+    "toc": false,
+    "layout": "default",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "lint": {
+      "reflinks": true
+    }
+  }
+}

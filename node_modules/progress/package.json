@@ -1,0 +1,21 @@
+{
+    "name": "progress"
+  , "version": "1.1.8"
+  , "description": "Flexible ascii progress bar"
+  , "keywords": ["cli", "progress"]
+  , "author": "TJ Holowaychuk <tj@vision-media.ca>"
+  , "contributors": [
+      {
+          "name": "Christoffer Hallas"
+        , "email": "christoffer.hallas@gmail.com"
+      }
+    , {
+          "name": "Jordan Scales"
+        , "email": "scalesjordan@gmail.com"
+      }
+  ]
+  , "dependencies": {}
+  , "main": "index"
+  , "engines": { "node": ">=0.4.0" }
+  , "repository": "git://github.com/visionmedia/node-progress"
+}

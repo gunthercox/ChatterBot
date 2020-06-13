@@ -1,0 +1,59 @@
+{
+  "name": "glob-stream",
+  "version": "6.1.0",
+  "description": "A Readable Stream interface over node-glob.",
+  "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
+  "contributors": [
+    "Eric Schoffstall <yo@contra.io>",
+    "Blaine Bublitz <blaine.bublitz@gmail.com>"
+  ],
+  "repository": "gulpjs/glob-stream",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "readable.js",
+    "LICENSE"
+  ],
+  "scripts": {
+    "lint": "eslint . && jscs index.js readable.js test/",
+    "pretest": "npm run lint",
+    "test": "mocha --async-only",
+    "cover": "istanbul cover _mocha --report lcovonly",
+    "coveralls": "npm run cover && istanbul-coveralls"
+  },
+  "dependencies": {
+    "extend": "^3.0.0",
+    "glob": "^7.1.1",
+    "glob-parent": "^3.1.0",
+    "is-negated-glob": "^1.0.0",
+    "ordered-read-streams": "^1.0.0",
+    "pumpify": "^1.3.5",
+    "readable-stream": "^2.1.5",
+    "remove-trailing-separator": "^1.0.1",
+    "to-absolute-glob": "^2.0.0",
+    "unique-stream": "^2.0.2"
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "eslint-config-gulp": "^2.0.0",
+    "expect": "^1.19.0",
+    "istanbul": "^0.4.3",
+    "istanbul-coveralls": "^1.0.3",
+    "jscs": "^2.4.0",
+    "jscs-preset-gulp": "^1.0.0",
+    "mississippi": "^1.2.0",
+    "mocha": "^2.4.5"
+  },
+  "keywords": [
+    "glob",
+    "stream",
+    "gulp",
+    "readable",
+    "fs",
+    "files"
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "name": "liftoff",
+  "version": "3.1.0",
+  "description": "Launch your command line tool with ease.",
+  "author": "Tyler Kellen (http://goingslowly.com/)",
+  "contributors": [],
+  "repository": "js-cli/js-liftoff",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.8"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js",
+    "lib",
+    "LICENSE"
+  ],
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "mocha -t 5000 -b -R spec test/index && npm run legacy-test",
+    "legacy-test": "mocha -t 5000 -b -R spec test/launch",
+    "cover": "nyc --reporter=lcov --reporter=text-summary npm test"
+  },
+  "dependencies": {
+    "extend": "^3.0.0",
+    "findup-sync": "^3.0.0",
+    "fined": "^1.0.1",
+    "flagged-respawn": "^1.0.0",
+    "is-plain-object": "^2.0.4",
+    "object.map": "^1.0.0",
+    "rechoir": "^0.6.2",
+    "resolve": "^1.1.7"
+  },
+  "devDependencies": {
+    "chai": "^3.5.0",
+    "coffeescript": "^1.10.0",
+    "eslint": "^2.13.1",
+    "eslint-config-gulp": "^3.0.1",
+    "mocha": "^3.5.3",
+    "nyc": "^13.3.0",
+    "sinon": "~1.17.4"
+  },
+  "keywords": [
+    "command line"
+  ]
+}

@@ -1,0 +1,52 @@
+{
+  "name": "glob-watcher",
+  "version": "5.0.3",
+  "description": "Watch globs and execute a function upon change, with intelligent defaults for debouncing and queueing.",
+  "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
+  "contributors": [],
+  "repository": "gulpjs/glob-watcher",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "scripts": {
+    "lint": "eslint .",
+    "pretest": "npm run lint",
+    "test": "mocha --async-only",
+    "cover": "istanbul cover _mocha --report lcovonly",
+    "coveralls": "npm run cover && istanbul-coveralls"
+  },
+  "dependencies": {
+    "anymatch": "^2.0.0",
+    "async-done": "^1.2.0",
+    "chokidar": "^2.0.0",
+    "is-negated-glob": "^1.0.0",
+    "just-debounce": "^1.0.0",
+    "object.defaults": "^1.1.0"
+  },
+  "devDependencies": {
+    "coveralls": "^2.11.2",
+    "eslint": "^2.13.1",
+    "eslint-config-gulp": "^3.0.1",
+    "expect": "^1.16.0",
+    "istanbul": "^0.4.0",
+    "istanbul-coveralls": "^1.0.1",
+    "mocha": "^2.0.0",
+    "mocha-lcov-reporter": "^1.2.0",
+    "normalize-path": "^2.1.1",
+    "rimraf": "^2.6.1",
+    "through2": "^2.0.1"
+  },
+  "keywords": [
+    "watch",
+    "glob",
+    "async",
+    "queue",
+    "debounce",
+    "callback"
+  ]
+}

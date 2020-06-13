@@ -31,15 +31,15 @@
 # GNU Make; see the file COPYING.  If not, write to the Free Software
 # Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA 02110-1301 USA.
 
-srcdir = ../../make-3.81-src/w32
-top_srcdir = ../../make-3.81-src
-VPATH = ../../make-3.81-src/w32
+srcdir = .
+top_srcdir = ..
+
 pkgdatadir = $(datadir)/make
 pkglibdir = $(libdir)/make
 pkgincludedir = $(includedir)/make
 top_builddir = ..
 am__cd = CDPATH="$${ZSH_VERSION+.}$(PATH_SEPARATOR)" && cd
-INSTALL = /bin/install.exe -cp
+INSTALL = /bin/install -c
 install_sh_DATA = $(install_sh) -c -m 644
 install_sh_PROGRAM = $(install_sh) -c
 install_sh_SCRIPT = $(install_sh) -c
@@ -51,8 +51,8 @@ POST_INSTALL = :
 NORMAL_UNINSTALL = :
 PRE_UNINSTALL = :
 POST_UNINSTALL = :
-build_triplet = i386-pc-mingw32
-host_triplet = i386-pc-mingw32
+build_triplet = i686-pc-mingw32
+host_triplet = i686-pc-mingw32
 subdir = w32
 DIST_COMMON = $(srcdir)/Makefile.am $(srcdir)/Makefile.in
 ACLOCAL_M4 = $(top_srcdir)/aclocal.m4
@@ -88,22 +88,22 @@ DIST_SOURCES = $(libw32_a_SOURCES)
 ETAGS = etags
 CTAGS = ctags
 DISTFILES = $(DIST_COMMON) $(DIST_SOURCES) $(TEXINFOS) $(EXTRA_DIST)
-ACLOCAL = ${SHELL} /cygdrive/j/Devel/make/3.81/make-3.81-src/config/missing --run aclocal-1.9
+ACLOCAL = ${SHELL} /c/users/tmas/documents/github/chatterbot/config/missing --run aclocal-1.9
 ALLOCA = 
 AMDEP_FALSE = #
 AMDEP_TRUE = 
-AMTAR = ${SHELL} /cygdrive/j/Devel/make/3.81/make-3.81-src/config/missing --run tar
+AMTAR = ${SHELL} /c/users/tmas/documents/github/chatterbot/config/missing --run tar
 AR = ar
-AUTOCONF = ${SHELL} /cygdrive/j/Devel/make/3.81/make-3.81-src/config/missing --run autoconf
-AUTOHEADER = ${SHELL} /cygdrive/j/Devel/make/3.81/make-3.81-src/config/missing --run autoheader
-AUTOMAKE = ${SHELL} /cygdrive/j/Devel/make/3.81/make-3.81-src/config/missing --run automake-1.9
+AUTOCONF = ${SHELL} /c/users/tmas/documents/github/chatterbot/config/missing --run autoconf
+AUTOHEADER = ${SHELL} /c/users/tmas/documents/github/chatterbot/config/missing --run autoheader
+AUTOMAKE = ${SHELL} /c/users/tmas/documents/github/chatterbot/config/missing --run automake-1.9
 AWK = gawk
 CC = gcc
-CCDEPMODE = depmode=gcc3
-CFLAGS =  -Wall -O3 -fms-extensions -mms-bitfields -fno-exceptions -fomit-frame-pointer -march=i386 -ffast-math  
+CCDEPMODE = depmode=none
+CFLAGS = -g -O2
 CPP = gcc -E
-CPPFLAGS =        -ID:/Progra~1/GnuWin32/include    
-CYGPATH_W = cygpath -w
+CPPFLAGS = 
+CYGPATH_W = echo
 DEFS = -DHAVE_CONFIG_H
 DEPDIR = .deps
 ECHO_C = 
@@ -115,23 +115,23 @@ GETLOADAVG_LIBS =
 GLOBINC = -I$(srcdir)/glob
 GLOBLIB = glob/libglob.a
 GMSGFMT = :
-INSTALL_DATA = /bin/install.exe -cp
-INSTALL_PROGRAM = /bin/install.exe -cp
+INSTALL_DATA = ${INSTALL} -m 644
+INSTALL_PROGRAM = ${INSTALL}
 INSTALL_SCRIPT = ${INSTALL}
 INSTALL_STRIP_PROGRAM = ${SHELL} $(install_sh) -c -s
-INTLLIBS = -lintl
+INTLLIBS = 
 KMEM_GROUP = 
-LDFLAGS =  -Wl,-s -Wl,--force-exe-suffix -Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc -Wl,--allow-multiple-definition -Wl,--enable-stdcall-fixup -LD:/Progra~1/GnuWin32/lib   
+LDFLAGS = 
 LIBICONV = 
-LIBINTL = -lintl
+LIBINTL = 
 LIBOBJS =  getloadavg$U.o
-LIBS =  -Wl,-s  -LD:/Progra~1/GnuWin32/lib  -lintl -lwsock32 -lole32 -luuid -lmsvcp60  
+LIBS = 
 LTLIBICONV = 
-LTLIBINTL = -lintl
+LTLIBINTL = 
 LTLIBOBJS =  getloadavg$U.lo
-MAKEINFO = ${SHELL} /cygdrive/j/Devel/make/3.81/make-3.81-src/config/missing --run makeinfo
-MAKE_HOST = i386-pc-mingw32
-MKINSTALLDIRS = $(top_builddir)/../make-3.81-src/config/mkinstalldirs
+MAKEINFO = ${SHELL} /c/users/tmas/documents/github/chatterbot/config/missing --run makeinfo
+MAKE_HOST = i686-pc-mingw32
+MKINSTALLDIRS = $(top_builddir)/config/mkinstalldirs
 MSGFMT = :
 MSGMERGE = :
 NEED_SETGID = false
@@ -144,7 +144,7 @@ PACKAGE_TARNAME = make
 PACKAGE_VERSION = 3.81
 PATH_SEPARATOR = :
 PERL = perl
-POSUB = po
+POSUB = 
 RANLIB = ranlib
 REMOTE = stub
 SET_MAKE = 
@@ -155,7 +155,7 @@ USE_CUSTOMS_FALSE =
 USE_CUSTOMS_TRUE = #
 USE_LOCAL_GLOB_FALSE = #
 USE_LOCAL_GLOB_TRUE = 
-USE_NLS = yes
+USE_NLS = no
 VERSION = 3.81
 WINDOWSENV_FALSE = #
 WINDOWSENV_TRUE = 
@@ -163,41 +163,41 @@ XGETTEXT = :
 ac_ct_CC = gcc
 ac_ct_RANLIB = ranlib
 ac_ct_STRIP = 
-am__fastdepCC_FALSE = #
-am__fastdepCC_TRUE = 
-am__include = include
+am__fastdepCC_FALSE = 
+am__fastdepCC_TRUE = #
+am__include = #
 am__leading_dot = .
 am__quote = 
 am__tar = ${AMTAR} chof - "$$tardir"
 am__untar = ${AMTAR} xf -
 bindir = ${exec_prefix}/bin
-build = i386-pc-mingw32
-build_alias = i386-pc-mingw32
-build_cpu = i386
+build = i686-pc-mingw32
+build_alias = 
+build_cpu = i686
 build_os = mingw32
 build_vendor = pc
 datadir = ${prefix}/share
-exec_prefix = c:/progra~1/Make
-host = i386-pc-mingw32
-host_alias = i386-pc-mingw32
-host_cpu = i386
+exec_prefix = ${prefix}
+host = i686-pc-mingw32
+host_alias = 
+host_cpu = i686
 host_os = mingw32
 host_vendor = pc
 includedir = ${prefix}/include
 infodir = ${prefix}/info
-install_sh = /cygdrive/j/Devel/make/3.81/make-3.81-src/config/install-sh
+install_sh = /c/users/tmas/documents/github/chatterbot/config/install-sh
 libdir = ${exec_prefix}/lib
 libexecdir = ${exec_prefix}/libexec
 localstatedir = ${prefix}/var
 mandir = ${prefix}/man
 mkdir_p = mkdir -p --
 oldincludedir = /usr/include
-prefix = c:/progra~1/Make
-program_transform_name = s,$$,,;s,^,,;s/i386-pc-mingw32//
+prefix = /usr/local
+program_transform_name = s,x,x,
 sbindir = ${exec_prefix}/sbin
 sharedstatedir = ${prefix}/com
 sysconfdir = ${prefix}/etc
-target_alias = i386-pc-mingw32
+target_alias = autosploit
 noinst_LIBRARIES = libw32.a
 libw32_a_SOURCES = subproc/misc.c subproc/sub_proc.c subproc/w32err.c \
 		    pathstuff.c
@@ -250,80 +250,80 @@ mostlyclean-compile:
 distclean-compile:
 	-rm -f *.tab.c
 
-include ./$(DEPDIR)/libw32_a-misc.Po
-include ./$(DEPDIR)/libw32_a-pathstuff.Po
-include ./$(DEPDIR)/libw32_a-sub_proc.Po
-include ./$(DEPDIR)/libw32_a-w32err.Po
+# ./$(DEPDIR)/libw32_a-misc.Po
+# ./$(DEPDIR)/libw32_a-pathstuff.Po
+# ./$(DEPDIR)/libw32_a-sub_proc.Po
+# ./$(DEPDIR)/libw32_a-w32err.Po
 
 .c.o:
-	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
-	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
-#	source='$<' object='$@' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(COMPILE) -c $<
+#	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \
+#	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+	source='$<' object='$@' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(COMPILE) -c $<
 
 .c.obj:
-	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ `$(CYGPATH_W) '$<'`; \
-	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
-#	source='$<' object='$@' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(COMPILE) -c `$(CYGPATH_W) '$<'`
+#	if $(COMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ `$(CYGPATH_W) '$<'`; \
+#	then mv -f "$(DEPDIR)/$*.Tpo" "$(DEPDIR)/$*.Po"; else rm -f "$(DEPDIR)/$*.Tpo"; exit 1; fi
+	source='$<' object='$@' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(COMPILE) -c `$(CYGPATH_W) '$<'`
 
 libw32_a-misc.o: subproc/misc.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-misc.o -MD -MP -MF "$(DEPDIR)/libw32_a-misc.Tpo" -c -o libw32_a-misc.o `test -f 'subproc/misc.c' || echo '$(srcdir)/'`subproc/misc.c; \
-	then mv -f "$(DEPDIR)/libw32_a-misc.Tpo" "$(DEPDIR)/libw32_a-misc.Po"; else rm -f "$(DEPDIR)/libw32_a-misc.Tpo"; exit 1; fi
-#	source='subproc/misc.c' object='libw32_a-misc.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-misc.o `test -f 'subproc/misc.c' || echo '$(srcdir)/'`subproc/misc.c
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-misc.o -MD -MP -MF "$(DEPDIR)/libw32_a-misc.Tpo" -c -o libw32_a-misc.o `test -f 'subproc/misc.c' || echo '$(srcdir)/'`subproc/misc.c; \
+#	then mv -f "$(DEPDIR)/libw32_a-misc.Tpo" "$(DEPDIR)/libw32_a-misc.Po"; else rm -f "$(DEPDIR)/libw32_a-misc.Tpo"; exit 1; fi
+	source='subproc/misc.c' object='libw32_a-misc.o' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-misc.o `test -f 'subproc/misc.c' || echo '$(srcdir)/'`subproc/misc.c
 
 libw32_a-misc.obj: subproc/misc.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-misc.obj -MD -MP -MF "$(DEPDIR)/libw32_a-misc.Tpo" -c -o libw32_a-misc.obj `if test -f 'subproc/misc.c'; then $(CYGPATH_W) 'subproc/misc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/misc.c'; fi`; \
-	then mv -f "$(DEPDIR)/libw32_a-misc.Tpo" "$(DEPDIR)/libw32_a-misc.Po"; else rm -f "$(DEPDIR)/libw32_a-misc.Tpo"; exit 1; fi
-#	source='subproc/misc.c' object='libw32_a-misc.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-misc.obj `if test -f 'subproc/misc.c'; then $(CYGPATH_W) 'subproc/misc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/misc.c'; fi`
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-misc.obj -MD -MP -MF "$(DEPDIR)/libw32_a-misc.Tpo" -c -o libw32_a-misc.obj `if test -f 'subproc/misc.c'; then $(CYGPATH_W) 'subproc/misc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/misc.c'; fi`; \
+#	then mv -f "$(DEPDIR)/libw32_a-misc.Tpo" "$(DEPDIR)/libw32_a-misc.Po"; else rm -f "$(DEPDIR)/libw32_a-misc.Tpo"; exit 1; fi
+	source='subproc/misc.c' object='libw32_a-misc.obj' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-misc.obj `if test -f 'subproc/misc.c'; then $(CYGPATH_W) 'subproc/misc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/misc.c'; fi`
 
 libw32_a-sub_proc.o: subproc/sub_proc.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-sub_proc.o -MD -MP -MF "$(DEPDIR)/libw32_a-sub_proc.Tpo" -c -o libw32_a-sub_proc.o `test -f 'subproc/sub_proc.c' || echo '$(srcdir)/'`subproc/sub_proc.c; \
-	then mv -f "$(DEPDIR)/libw32_a-sub_proc.Tpo" "$(DEPDIR)/libw32_a-sub_proc.Po"; else rm -f "$(DEPDIR)/libw32_a-sub_proc.Tpo"; exit 1; fi
-#	source='subproc/sub_proc.c' object='libw32_a-sub_proc.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-sub_proc.o `test -f 'subproc/sub_proc.c' || echo '$(srcdir)/'`subproc/sub_proc.c
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-sub_proc.o -MD -MP -MF "$(DEPDIR)/libw32_a-sub_proc.Tpo" -c -o libw32_a-sub_proc.o `test -f 'subproc/sub_proc.c' || echo '$(srcdir)/'`subproc/sub_proc.c; \
+#	then mv -f "$(DEPDIR)/libw32_a-sub_proc.Tpo" "$(DEPDIR)/libw32_a-sub_proc.Po"; else rm -f "$(DEPDIR)/libw32_a-sub_proc.Tpo"; exit 1; fi
+	source='subproc/sub_proc.c' object='libw32_a-sub_proc.o' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-sub_proc.o `test -f 'subproc/sub_proc.c' || echo '$(srcdir)/'`subproc/sub_proc.c
 
 libw32_a-sub_proc.obj: subproc/sub_proc.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-sub_proc.obj -MD -MP -MF "$(DEPDIR)/libw32_a-sub_proc.Tpo" -c -o libw32_a-sub_proc.obj `if test -f 'subproc/sub_proc.c'; then $(CYGPATH_W) 'subproc/sub_proc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/sub_proc.c'; fi`; \
-	then mv -f "$(DEPDIR)/libw32_a-sub_proc.Tpo" "$(DEPDIR)/libw32_a-sub_proc.Po"; else rm -f "$(DEPDIR)/libw32_a-sub_proc.Tpo"; exit 1; fi
-#	source='subproc/sub_proc.c' object='libw32_a-sub_proc.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-sub_proc.obj `if test -f 'subproc/sub_proc.c'; then $(CYGPATH_W) 'subproc/sub_proc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/sub_proc.c'; fi`
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-sub_proc.obj -MD -MP -MF "$(DEPDIR)/libw32_a-sub_proc.Tpo" -c -o libw32_a-sub_proc.obj `if test -f 'subproc/sub_proc.c'; then $(CYGPATH_W) 'subproc/sub_proc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/sub_proc.c'; fi`; \
+#	then mv -f "$(DEPDIR)/libw32_a-sub_proc.Tpo" "$(DEPDIR)/libw32_a-sub_proc.Po"; else rm -f "$(DEPDIR)/libw32_a-sub_proc.Tpo"; exit 1; fi
+	source='subproc/sub_proc.c' object='libw32_a-sub_proc.obj' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-sub_proc.obj `if test -f 'subproc/sub_proc.c'; then $(CYGPATH_W) 'subproc/sub_proc.c'; else $(CYGPATH_W) '$(srcdir)/subproc/sub_proc.c'; fi`
 
 libw32_a-w32err.o: subproc/w32err.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-w32err.o -MD -MP -MF "$(DEPDIR)/libw32_a-w32err.Tpo" -c -o libw32_a-w32err.o `test -f 'subproc/w32err.c' || echo '$(srcdir)/'`subproc/w32err.c; \
-	then mv -f "$(DEPDIR)/libw32_a-w32err.Tpo" "$(DEPDIR)/libw32_a-w32err.Po"; else rm -f "$(DEPDIR)/libw32_a-w32err.Tpo"; exit 1; fi
-#	source='subproc/w32err.c' object='libw32_a-w32err.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-w32err.o `test -f 'subproc/w32err.c' || echo '$(srcdir)/'`subproc/w32err.c
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-w32err.o -MD -MP -MF "$(DEPDIR)/libw32_a-w32err.Tpo" -c -o libw32_a-w32err.o `test -f 'subproc/w32err.c' || echo '$(srcdir)/'`subproc/w32err.c; \
+#	then mv -f "$(DEPDIR)/libw32_a-w32err.Tpo" "$(DEPDIR)/libw32_a-w32err.Po"; else rm -f "$(DEPDIR)/libw32_a-w32err.Tpo"; exit 1; fi
+	source='subproc/w32err.c' object='libw32_a-w32err.o' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-w32err.o `test -f 'subproc/w32err.c' || echo '$(srcdir)/'`subproc/w32err.c
 
 libw32_a-w32err.obj: subproc/w32err.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-w32err.obj -MD -MP -MF "$(DEPDIR)/libw32_a-w32err.Tpo" -c -o libw32_a-w32err.obj `if test -f 'subproc/w32err.c'; then $(CYGPATH_W) 'subproc/w32err.c'; else $(CYGPATH_W) '$(srcdir)/subproc/w32err.c'; fi`; \
-	then mv -f "$(DEPDIR)/libw32_a-w32err.Tpo" "$(DEPDIR)/libw32_a-w32err.Po"; else rm -f "$(DEPDIR)/libw32_a-w32err.Tpo"; exit 1; fi
-#	source='subproc/w32err.c' object='libw32_a-w32err.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-w32err.obj `if test -f 'subproc/w32err.c'; then $(CYGPATH_W) 'subproc/w32err.c'; else $(CYGPATH_W) '$(srcdir)/subproc/w32err.c'; fi`
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-w32err.obj -MD -MP -MF "$(DEPDIR)/libw32_a-w32err.Tpo" -c -o libw32_a-w32err.obj `if test -f 'subproc/w32err.c'; then $(CYGPATH_W) 'subproc/w32err.c'; else $(CYGPATH_W) '$(srcdir)/subproc/w32err.c'; fi`; \
+#	then mv -f "$(DEPDIR)/libw32_a-w32err.Tpo" "$(DEPDIR)/libw32_a-w32err.Po"; else rm -f "$(DEPDIR)/libw32_a-w32err.Tpo"; exit 1; fi
+	source='subproc/w32err.c' object='libw32_a-w32err.obj' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-w32err.obj `if test -f 'subproc/w32err.c'; then $(CYGPATH_W) 'subproc/w32err.c'; else $(CYGPATH_W) '$(srcdir)/subproc/w32err.c'; fi`
 
 libw32_a-pathstuff.o: pathstuff.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-pathstuff.o -MD -MP -MF "$(DEPDIR)/libw32_a-pathstuff.Tpo" -c -o libw32_a-pathstuff.o `test -f 'pathstuff.c' || echo '$(srcdir)/'`pathstuff.c; \
-	then mv -f "$(DEPDIR)/libw32_a-pathstuff.Tpo" "$(DEPDIR)/libw32_a-pathstuff.Po"; else rm -f "$(DEPDIR)/libw32_a-pathstuff.Tpo"; exit 1; fi
-#	source='pathstuff.c' object='libw32_a-pathstuff.o' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-pathstuff.o `test -f 'pathstuff.c' || echo '$(srcdir)/'`pathstuff.c
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-pathstuff.o -MD -MP -MF "$(DEPDIR)/libw32_a-pathstuff.Tpo" -c -o libw32_a-pathstuff.o `test -f 'pathstuff.c' || echo '$(srcdir)/'`pathstuff.c; \
+#	then mv -f "$(DEPDIR)/libw32_a-pathstuff.Tpo" "$(DEPDIR)/libw32_a-pathstuff.Po"; else rm -f "$(DEPDIR)/libw32_a-pathstuff.Tpo"; exit 1; fi
+	source='pathstuff.c' object='libw32_a-pathstuff.o' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-pathstuff.o `test -f 'pathstuff.c' || echo '$(srcdir)/'`pathstuff.c
 
 libw32_a-pathstuff.obj: pathstuff.c
-	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-pathstuff.obj -MD -MP -MF "$(DEPDIR)/libw32_a-pathstuff.Tpo" -c -o libw32_a-pathstuff.obj `if test -f 'pathstuff.c'; then $(CYGPATH_W) 'pathstuff.c'; else $(CYGPATH_W) '$(srcdir)/pathstuff.c'; fi`; \
-	then mv -f "$(DEPDIR)/libw32_a-pathstuff.Tpo" "$(DEPDIR)/libw32_a-pathstuff.Po"; else rm -f "$(DEPDIR)/libw32_a-pathstuff.Tpo"; exit 1; fi
-#	source='pathstuff.c' object='libw32_a-pathstuff.obj' libtool=no \
-#	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
-#	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-pathstuff.obj `if test -f 'pathstuff.c'; then $(CYGPATH_W) 'pathstuff.c'; else $(CYGPATH_W) '$(srcdir)/pathstuff.c'; fi`
+#	if $(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -MT libw32_a-pathstuff.obj -MD -MP -MF "$(DEPDIR)/libw32_a-pathstuff.Tpo" -c -o libw32_a-pathstuff.obj `if test -f 'pathstuff.c'; then $(CYGPATH_W) 'pathstuff.c'; else $(CYGPATH_W) '$(srcdir)/pathstuff.c'; fi`; \
+#	then mv -f "$(DEPDIR)/libw32_a-pathstuff.Tpo" "$(DEPDIR)/libw32_a-pathstuff.Po"; else rm -f "$(DEPDIR)/libw32_a-pathstuff.Tpo"; exit 1; fi
+	source='pathstuff.c' object='libw32_a-pathstuff.obj' libtool=no \
+	DEPDIR=$(DEPDIR) $(CCDEPMODE) $(depcomp) \
+	$(CC) $(DEFS) $(DEFAULT_INCLUDES) $(INCLUDES) $(libw32_a_CPPFLAGS) $(CPPFLAGS) $(AM_CFLAGS) $(CFLAGS) -c -o libw32_a-pathstuff.obj `if test -f 'pathstuff.c'; then $(CYGPATH_W) 'pathstuff.c'; else $(CYGPATH_W) '$(srcdir)/pathstuff.c'; fi`
 uninstall-info-am:
 
 ID: $(HEADERS) $(SOURCES) $(LISP) $(TAGS_FILES)

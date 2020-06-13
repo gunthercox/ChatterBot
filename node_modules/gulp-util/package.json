@@ -1,0 +1,44 @@
+{
+  "name": "gulp-util",
+  "description": "Utility functions for gulp plugins",
+  "version": "2.2.20",
+  "homepage": "http://github.com/wearefractal/gulp-util",
+  "repository": "git://github.com/wearefractal/gulp-util.git",
+  "author": "Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
+  "main": "./index.js",
+  "dependencies": {
+    "chalk": "^0.5.0",
+    "dateformat": "^1.0.7-1.2.3",
+    "lodash._reinterpolate": "^2.4.1",
+    "lodash.template": "^2.4.1",
+    "minimist": "^0.2.0",
+    "multipipe": "^0.1.0",
+    "through2": "^0.5.0",
+    "vinyl": "^0.2.1"
+  },
+  "devDependencies": {
+    "mocha": "^1.17.0",
+    "should": "^4.0.0",
+    "mocha-lcov-reporter": "^0.0.1",
+    "coveralls": "^2.7.0",
+    "istanbul": "^0.2.3",
+    "rimraf": "^2.2.5",
+    "jshint": "^2.4.1",
+    "buffer-equal": "~0.0.1",
+    "lodash.templatesettings": "^2.4.1",
+    "event-stream": "^3.1.0"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec && jshint",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+  },
+  "engines": {
+    "node": ">= 0.9"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/wearefractal/gulp-util/raw/master/LICENSE"
+    }
+  ]
+}

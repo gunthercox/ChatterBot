@@ -1,0 +1,43 @@
+{
+  "name": "user-home",
+  "version": "2.0.0",
+  "description": "Get the path to the user home directory",
+  "license": "MIT",
+  "repository": "sindresorhus/user-home",
+  "author": {
+    "name": "Sindre Sorhus",
+    "email": "sindresorhus@gmail.com",
+    "url": "sindresorhus.com"
+  },
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "node test.js"
+  },
+  "files": [
+    "index.js"
+  ],
+  "keywords": [
+    "user",
+    "home",
+    "homedir",
+    "os-homedir",
+    "dir",
+    "directory",
+    "folder",
+    "path",
+    "env",
+    "vars",
+    "environment",
+    "variables",
+    "userprofile"
+  ],
+  "dependencies": {
+    "os-homedir": "^1.0.0"
+  },
+  "devDependencies": {
+    "ava": "0.0.4",
+    "path-exists": "^1.0.0"
+  }
+}

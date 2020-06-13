@@ -1,0 +1,42 @@
+{
+  "name": "matchdep",
+  "description": "Use micromatch to filter npm module dependencies by name.",
+  "version": "2.0.0",
+  "homepage": "https://github.com/tkellen/js-matchdep",
+  "author": {
+    "name": "Tyler Kellen",
+    "url": "http://goingslowly.com/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/tkellen/js-matchdep.git"
+  },
+  "bugs": {
+    "url": "https://github.com/tkellen/js-matchdep/issues"
+  },
+  "license": "MIT",
+  "main": "lib/matchdep",
+  "engines": {
+    "node": ">= 0.10.0"
+  },
+  "scripts": {
+    "test": "grunt"
+  },
+  "dependencies": {
+    "findup-sync": "^2.0.0",
+    "micromatch": "^3.0.4",
+    "resolve": "^1.4.0",
+    "stack-trace": "0.0.10"
+  },
+  "devDependencies": {
+    "grunt": "^1.0.1",
+    "grunt-contrib-jshint": "^1.1.0",
+    "grunt-contrib-nodeunit": "^1.0.0"
+  },
+  "keywords": [
+    "package.json",
+    "dependencies",
+    "devDependencies",
+    "peerDependencies"
+  ]
+}

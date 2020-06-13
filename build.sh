@@ -20,13 +20,13 @@
 
 # See Makefile.in for comments describing these variables.
 
-srcdir='../make-3.81-src'
+srcdir='.'
 CC='gcc'
-CFLAGS=' -Wall -O3 -fms-extensions -mms-bitfields -fno-exceptions -fomit-frame-pointer -march=i386 -ffast-math  '
-CPPFLAGS='       -ID:/Progra~1/GnuWin32/include    '
-LDFLAGS=' -Wl,-s -Wl,--force-exe-suffix -Wl,--enable-auto-import -Wl,--enable-runtime-pseudo-reloc -Wl,--allow-multiple-definition -Wl,--enable-stdcall-fixup -LD:/Progra~1/GnuWin32/lib   '
+CFLAGS='-g -O2'
+CPPFLAGS=''
+LDFLAGS=''
 ALLOCA=''
-LOADLIBES=' -Wl,-s  -LD:/Progra~1/GnuWin32/lib  -lintl -lwsock32 -lole32 -luuid -lmsvcp60   -lintl'
+LOADLIBES=' '
 eval extras=\' getloadavg$U.o\'
 REMOTE='stub'
 GLOBLIB='glob/libglob.a'
@@ -35,9 +35,9 @@ OBJEXT='o'
 EXEEXT='.exe'
 
 # Common prefix for machine-independent installed files.
-prefix='c:/progra~1/Make'
+prefix='/usr/local'
 # Common prefix for machine-dependent installed files.
-exec_prefix=`eval echo c:/progra~1/Make`
+exec_prefix=`eval echo ${prefix}`
 # Directory to find libraries in for `-lXXX'.
 libdir=${exec_prefix}/lib
 # Directory to search by default for included makefiles.

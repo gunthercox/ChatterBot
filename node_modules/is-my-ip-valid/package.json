@@ -1,0 +1,13 @@
+{
+  "name": "is-my-ip-valid",
+  "version": "1.0.0",
+  "license": "MIT",
+  "repository": "LinusU/is-my-ip-valid",
+  "scripts": {
+    "test": "standard && node test"
+  },
+  "devDependencies": {
+    "safe-regex": "^1.1.0",
+    "standard": "^10.0.3"
+  }
+}

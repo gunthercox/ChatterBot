@@ -1,0 +1,48 @@
+{
+  "name": "portscanner",
+  "description": "Asynchronous port scanner for Node.js",
+  "scripts": {
+    "test": "ava",
+    "lint": "standard"
+  },
+  "keywords": [
+    "portscanner",
+    "port",
+    "scanner",
+    "checker",
+    "status"
+  ],
+  "version": "2.1.1",
+  "preferGlobal": false,
+  "homepage": "https://github.com/baalexander/node-portscanner",
+  "author": [
+    "Brandon Alexander <baalexander@gmail.com> (https://github.com/baalexander)",
+    "Sean Massa <endangeredmassa@gmail.com> (http://massalabs.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/baalexander/node-portscanner.git"
+  },
+  "bugs": {
+    "url": "https://github.com/baalexander/node-portscanner/issues"
+  },
+  "directories": {
+    "lib": "./lib"
+  },
+  "main": "./lib/portscanner.js",
+  "dependencies": {
+    "async": "1.5.2",
+    "is-number-like": "^1.0.3"
+  },
+  "devDependencies": {
+    "ava": "^0.4.2",
+    "eslint": "^3.10.2",
+    "eslint-config-standard": "^6.2.1",
+    "standard": "^8.5.0"
+  },
+  "engines": {
+    "node": ">=0.4",
+    "npm": ">=1.0.0"
+  },
+  "license": "MIT"
+}

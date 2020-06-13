@@ -1,0 +1,68 @@
+{
+  "name": "vinyl-fs",
+  "version": "3.0.3",
+  "description": "Vinyl adapter for the file system.",
+  "author": "Gulp Team <team@gulpjs.com> (http://gulpjs.com/)",
+  "contributors": [
+    "Eric Schoffstall <yo@contra.io>",
+    "Blaine Bublitz <blaine.bublitz@gmail.com>"
+  ],
+  "repository": "gulpjs/vinyl-fs",
+  "license": "MIT",
+  "engines": {
+    "node": ">= 0.10"
+  },
+  "main": "index.js",
+  "files": [
+    "LICENSE",
+    "index.js",
+    "lib"
+  ],
+  "scripts": {
+    "lint": "eslint . && jscs index.js lib/ test/",
+    "pretest": "npm run lint",
+    "test": "mocha --async-only",
+    "cover": "istanbul cover _mocha --report lcovonly",
+    "coveralls": "npm run cover && istanbul-coveralls"
+  },
+  "dependencies": {
+    "fs-mkdirp-stream": "^1.0.0",
+    "glob-stream": "^6.1.0",
+    "graceful-fs": "^4.0.0",
+    "is-valid-glob": "^1.0.0",
+    "lazystream": "^1.0.0",
+    "lead": "^1.0.0",
+    "object.assign": "^4.0.4",
+    "pumpify": "^1.3.5",
+    "readable-stream": "^2.3.3",
+    "remove-bom-buffer": "^3.0.0",
+    "remove-bom-stream": "^1.2.0",
+    "resolve-options": "^1.1.0",
+    "through2": "^2.0.0",
+    "to-through": "^2.0.0",
+    "value-or-function": "^3.0.0",
+    "vinyl": "^2.0.0",
+    "vinyl-sourcemap": "^1.1.0"
+  },
+  "devDependencies": {
+    "eslint": "^1.10.3",
+    "eslint-config-gulp": "^2.0.0",
+    "expect": "^1.19.0",
+    "istanbul": "^0.4.3",
+    "istanbul-coveralls": "^1.0.3",
+    "jscs": "^2.4.0",
+    "jscs-preset-gulp": "^1.0.0",
+    "mississippi": "^1.2.0",
+    "mocha": "^3.5.0",
+    "rimraf": "^2.6.1"
+  },
+  "keywords": [
+    "gulp",
+    "vinyl-adapter",
+    "vinyl",
+    "file",
+    "file system",
+    "fs",
+    "streams"
+  ]
+}

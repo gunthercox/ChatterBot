@@ -1,0 +1,33 @@
+{
+  "name": "is-my-json-valid",
+  "version": "2.20.0",
+  "license": "MIT",
+  "repository": "mafintosh/is-my-json-valid",
+  "files": [
+    "formats.js",
+    "index.d.ts",
+    "index.js",
+    "require.js"
+  ],
+  "scripts": {
+    "test": "tape test/*.js && tsc"
+  },
+  "dependencies": {
+    "generate-function": "^2.0.0",
+    "generate-object-property": "^1.1.0",
+    "is-my-ip-valid": "^1.0.0",
+    "jsonpointer": "^4.0.0",
+    "xtend": "^4.0.0"
+  },
+  "devDependencies": {
+    "safe-regex": "^1.1.0",
+    "tape": "^2.13.4",
+    "typescript": "^3.0.1"
+  },
+  "keywords": [
+    "json",
+    "schema",
+    "orderly",
+    "jsonschema"
+  ]
+}

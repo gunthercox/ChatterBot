@@ -1,0 +1,72 @@
+{
+  "name": "to-absolute-glob",
+  "description": "Make a glob pattern absolute, ensuring that negative globs and patterns with trailing slashes are correctly handled.",
+  "version": "2.0.2",
+  "homepage": "https://github.com/jonschlinkert/to-absolute-glob",
+  "author": "Jon Schlinkert (https://github.com/jonschlinkert)",
+  "contributors": [
+    "Blaine Bublitz <blaine.bublitz@gmail.com> (https://twitter.com/BlaineBublitz)",
+    "Brian Woodward <brian.woodward@gmail.com> (https://github.com/doowb)",
+    "Erik Kemperman (https://github.com/erikkemperman)",
+    "Jon Schlinkert <jon.schlinkert@sellside.com> (http://twitter.com/jonschlinkert)"
+  ],
+  "repository": "jonschlinkert/to-absolute-glob",
+  "bugs": {
+    "url": "https://github.com/jonschlinkert/to-absolute-glob/issues"
+  },
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "main": "index.js",
+  "engines": {
+    "node": ">=0.10.0"
+  },
+  "scripts": {
+    "test": "mocha"
+  },
+  "dependencies": {
+    "is-absolute": "^1.0.0",
+    "is-negated-glob": "^1.0.0"
+  },
+  "devDependencies": {
+    "gulp-format-md": "^0.1.11",
+    "mocha": "^3.0.2"
+  },
+  "keywords": [
+    "absolute",
+    "file",
+    "filepath",
+    "glob",
+    "negate",
+    "negative",
+    "path",
+    "pattern",
+    "resolve",
+    "to"
+  ],
+  "verb": {
+    "toc": false,
+    "layout": "default",
+    "tasks": [
+      "readme"
+    ],
+    "plugins": [
+      "gulp-format-md"
+    ],
+    "lint": {
+      "reflinks": true
+    },
+    "related": {
+      "list": [
+        "has-glob",
+        "is-glob",
+        "is-valid-glob"
+      ]
+    },
+    "reflinks": [
+      "verb",
+      "verb-generate-readme"
+    ]
+  }
+}

@@ -20,7 +20,7 @@
 
 /* Define to 1 if translation of program messages to the user's native
    language is requested. */
-#define ENABLE_NLS 1
+/* #undef ENABLE_NLS */
 
 /* Use high resolution file timestamps if nonzero. */
 #define FILE_TIMESTAMP_HI_RES 0
@@ -46,14 +46,14 @@
 /* #undef HAVE_BSD_SIGNAL */
 
 /* Use case insensitive file names */
-#define HAVE_CASE_INSENSITIVE_FS 1
+/* #undef HAVE_CASE_INSENSITIVE_FS */
 
 /* Define if you have the clock_gettime function. */
 /* #undef HAVE_CLOCK_GETTIME */
 
 /* Define if the GNU dcgettext() function is already present or preinstalled.
    */
-#define HAVE_DCGETTEXT 1
+/* #undef HAVE_DCGETTEXT */
 
 /* Define to 1 if you have the declaration of `sys_siglist', and to 0 if you
    don't. */
@@ -108,7 +108,7 @@
 /* #undef HAVE_GETRLIMIT */
 
 /* Define if the GNU gettext() function is already present or preinstalled. */
-#define HAVE_GETTEXT 1
+/* #undef HAVE_GETTEXT */
 
 /* Define if you have a standard gettimeofday function */
 #define HAVE_GETTIMEOFDAY 1
@@ -303,7 +303,7 @@
 /* #undef HAVE_WORKING_VFORK */
 
 /* Build host information. */
-#define MAKE_HOST "i386-pc-mingw32"
+#define MAKE_HOST "i686-pc-mingw32"
 
 /* Define this to enable job server support in GNU make. */
 /* #undef MAKE_JOBSERVER */
@@ -403,10 +403,10 @@
 #endif
 
 /* Number of bits in a file offset, on hosts where this is settable. */
-#define _FILE_OFFSET_BITS 64
+/* #undef _FILE_OFFSET_BITS */
 
 /* Define for large files, on AIX-style hosts. */
-#define _LARGE_FILES 1
+/* #undef _LARGE_FILES */
 
 /* Define to 1 if on MINIX. */
 /* #undef _MINIX */

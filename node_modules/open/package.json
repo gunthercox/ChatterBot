@@ -1,0 +1,31 @@
+{
+  "name": "open",
+  "version": "0.0.5",
+  "description": "open a file or url in the user's preferred application",
+  "keywords": ["start", "open", "browser", "editor", "default"],
+  "homepage": "https://github.com/jjrdn/node-open",
+  "author": "J Jordan <jjrdn@styosis.com>",
+  "license": "MIT",
+  "contributors": [
+    "Victor Costan <victor@costan.us> (http://www.costan.us)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/pwnall/node-open.git"
+  },
+  "bugs": {
+    "url": "https://github.com/pwnall/node-open/issues"
+  },
+  "engines": {
+    "node": ">= 0.6.0"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "mocha": "*"
+  },
+  "optionalDependencies": {},
+  "main": "lib/open.js",
+  "scripts": {
+    "test": "node_modules/mocha/bin/mocha"
+  }
+}

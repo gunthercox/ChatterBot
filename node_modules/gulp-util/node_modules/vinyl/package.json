@@ -1,0 +1,37 @@
+{
+  "name": "vinyl",
+  "description": "A virtual file format",
+  "version": "0.2.3",
+  "homepage": "http://github.com/wearefractal/vinyl",
+  "repository": "git://github.com/wearefractal/vinyl.git",
+  "author": "Fractal <contact@wearefractal.com> (http://wearefractal.com/)",
+  "main": "./index.js",
+  "dependencies": {
+    "clone-stats": "~0.0.1"
+  },
+  "devDependencies": {
+    "mocha": "~1.17.0",
+    "should": "~2.1.1",
+    "mocha-lcov-reporter": "0.0.1",
+    "coveralls": "~2.6.1",
+    "istanbul": "~0.2.3",
+    "rimraf": "~2.2.5",
+    "jshint": "~2.4.1",
+    "buffer-equal": "0.0.0",
+    "lodash.templatesettings": "~2.4.1",
+    "event-stream": "~3.1.0"
+  },
+  "scripts": {
+    "test": "mocha --reporter spec && jshint",
+    "coveralls": "istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | coveralls && rm -rf ./coverage"
+  },
+  "engines": {
+    "node": ">= 0.9"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "http://github.com/wearefractal/vinyl/raw/master/LICENSE"
+    }
+  ]
+}

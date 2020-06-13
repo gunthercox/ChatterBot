@@ -1,0 +1,29 @@
+{
+  "name": "just-debounce",
+  "version": "1.0.0",
+  "description": "a simple debounce with no dependencies or crazy defaults",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test.js && npm run lint",
+    "lint": "eslint ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/hayes/just-debounce.git"
+  },
+  "keywords": [
+    "debounce"
+  ],
+  "author": "Michael Hayes",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/hayes/just-debounce/issues"
+  },
+  "homepage": "https://github.com/hayes/just-debounce",
+  "devDependencies": {
+    "eslint": "^0.22.1",
+    "eslint-config-standard": "^2.0.0",
+    "eslint-plugin-react": "^2.4.0",
+    "tape": "^4.0.0"
+  }
+}

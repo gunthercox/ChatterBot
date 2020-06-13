@@ -1,0 +1,16 @@
+{
+  "name": "openurl",
+  "version": "1.1.1",
+  "author": "Axel Rauschmayer <axe@rauschma.de>",
+  "description": "Open a URL via the operating system (http: in default browser, mailto: in mail client etc.",
+  "main": "./openurl.js",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rauschma/openurl"
+  },
+  "keywords": [
+    "desktop",
+    "browser"
+  ],
+  "license": "MIT"
+}

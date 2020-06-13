@@ -1,13 +1,44 @@
 {
-  "name": "chatterbot",
-  "version": "1.0.1",
+  "name": "lilly",
+  "version": "2.0.0",
   "description": "a a.i. chat bot built to maintin customers and my appointments.",
   "main": "ye",
-  "repository": "yes",
+  "repository": {
+    "type": "git",
+    "url": "yes"
+  },
   "author": "tomasm.nelson@gmail.com",
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "babel": "^6.23.0"
-  }
+    "babel": "^6.23.0",
+    "browser-sync": "^2.26.7",
+    "chai": "^4.2.0",
+    "chai-immutable": "^2.1.0",
+    "chatbot": "^1.2.3",
+    "gulp": "^4.0.2",
+    "gulp-webserver": "^0.9.1",
+    "immutable": "^4.0.0-rc.12",
+    "react-dom": "^16.13.1",
+    "sass-lint": "^1.13.1",
+    "write-file-webpack-plugin": "^4.5.1"
+  },
+  "directories": {
+    "doc": "docs",
+    "example": "examples",
+    "test": "tests"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "it"
+  },
+  "keywords": [
+    "business",
+    "host",
+    "chatbot",
+    "web",
+    "support",
+    "bot",
+    "etc"
+  ]
 }

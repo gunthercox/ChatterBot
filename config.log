@@ -32,19 +32,24 @@ PATH: /mingw64/bin
 PATH: /usr/local/bin
 PATH: /usr/bin
 PATH: /bin
+PATH: /c/Users/Tmas/Miniconda3/condabin
 PATH: /mingw64/bin
 PATH: /usr/bin
 PATH: /c/Users/Tmas/bin
+PATH: .
+PATH: /c/MinGW/bin"
 PATH: /c/Program Files (x86)/Common Files/Oracle/Java/javapath
+PATH: /cmd
+PATH: /c/WINDOWS/System32/WindowsPowerShell/v1.0
+PATH: /c/Program Files/nodejs
 PATH: /c/WINDOWS/system32
 PATH: /c/WINDOWS
 PATH: /c/WINDOWS/System32/Wbem
-PATH: /c/WINDOWS/System32/WindowsPowerShell/v1.0
 PATH: /c/Program Files (x86)/ATI Technologies/ATI.ACE/Core-Static
-PATH: /cmd
 PATH: /c/Program Files (x86)/Yarn/bin
-PATH: /c/Program Files/nodejs
 PATH: /c/WINDOWS/System32/OpenSSH
+PATH: .
+PATH: /c/Program Files (x86)/GnuWin32"
 PATH: /c/Users/Tmas/AppData/Local/Programs/Python/Python38-32/Scripts
 PATH: /c/Users/Tmas/AppData/Local/Programs/Python/Python38-32
 PATH: /c/Users/Tmas/Miniconda3
@@ -76,7 +81,18 @@ configure:1494: result: yes
 configure:1559: checking for gawk
 configure:1575: found /usr/bin/gawk
 configure:1585: result: gawk
-configure:1595: checking whether C:\Users\Tmas\Downloads\make-3.81-src\src\make\3.81\make-3.81 sets $(MAKE)
+configure:1595: checking whether make sets $(MAKE)
+configure:1619: result: no
+configure:1831: checking for gcc
+configure:1860: result: no
+configure:1911: checking for cc
+configure:1940: result: no
+configure:1953: checking for cc
+configure:1999: result: no
+configure:2052: checking for cl
+configure:2081: result: no
+configure:2095: error: no acceptable C compiler found in $PATH
+See `config.log' for more details.
 
 ## ---------------- ##
 ## Cache variables. ##
@@ -100,29 +116,30 @@ ac_cv_env_target_alias_set=
 ac_cv_env_target_alias_value=
 ac_cv_path_install='/usr/bin/install -c'
 ac_cv_prog_AWK=gawk
+ac_cv_prog_make_make_set=no
 
 ## ----------------- ##
 ## Output variables. ##
 ## ----------------- ##
 
-ACLOCAL=''
+ACLOCAL='${SHELL} /c/Users/Tmas/Documents/GitHub/ChatterBot/config/missing --run aclocal-1.9'
 ALLOCA=''
 AMDEPBACKSLASH=''
 AMDEP_FALSE=''
 AMDEP_TRUE=''
-AMTAR=''
+AMTAR='${SHELL} /c/Users/Tmas/Documents/GitHub/ChatterBot/config/missing --run tar'
 ANSI2KNR=''
 AR=''
-AUTOCONF=''
-AUTOHEADER=''
-AUTOMAKE=''
+AUTOCONF='${SHELL} /c/Users/Tmas/Documents/GitHub/ChatterBot/config/missing --run autoconf'
+AUTOHEADER='${SHELL} /c/Users/Tmas/Documents/GitHub/ChatterBot/config/missing --run autoheader'
+AUTOMAKE='${SHELL} /c/Users/Tmas/Documents/GitHub/ChatterBot/config/missing --run automake-1.9'
 AWK='gawk'
 CC=''
 CCDEPMODE=''
 CFLAGS=''
 CPP=''
 CPPFLAGS=''
-CYGPATH_W=''
+CYGPATH_W='cygpath -w'
 DEFS=''
 DEPDIR=''
 ECHO_C=''
@@ -137,7 +154,7 @@ GMSGFMT=''
 INSTALL_DATA='${INSTALL} -m 644'
 INSTALL_PROGRAM='${INSTALL}'
 INSTALL_SCRIPT='${INSTALL}'
-INSTALL_STRIP_PROGRAM=''
+INSTALL_STRIP_PROGRAM='${SHELL} $(install_sh) -c -s'
 INTLLIBS=''
 KMEM_GROUP=''
 LDFLAGS=''
@@ -148,14 +165,14 @@ LIBS=''
 LTLIBICONV=''
 LTLIBINTL=''
 LTLIBOBJS=''
-MAKEINFO=''
+MAKEINFO='${SHELL} /c/Users/Tmas/Documents/GitHub/ChatterBot/config/missing --run makeinfo'
 MAKE_HOST=''
 MKINSTALLDIRS=''
 MSGFMT=''
 MSGMERGE=''
 NEED_SETGID=''
 OBJEXT=''
-PACKAGE=''
+PACKAGE='make'
 PACKAGE_BUGREPORT='bug-make@gnu.org'
 PACKAGE_NAME='GNU make'
 PACKAGE_STRING='GNU make 3.81'
@@ -166,7 +183,7 @@ PERL=''
 POSUB=''
 RANLIB=''
 REMOTE=''
-SET_MAKE=''
+SET_MAKE='MAKE=make'
 SHELL='/bin/sh'
 STRIP=''
 U=''
@@ -175,7 +192,7 @@ USE_CUSTOMS_TRUE=''
 USE_LOCAL_GLOB_FALSE=''
 USE_LOCAL_GLOB_TRUE=''
 USE_NLS=''
-VERSION=''
+VERSION='3.81'
 WINDOWSENV_FALSE=''
 WINDOWSENV_TRUE=''
 XGETTEXT=''
@@ -185,10 +202,10 @@ ac_ct_STRIP=''
 am__fastdepCC_FALSE=''
 am__fastdepCC_TRUE=''
 am__include=''
-am__leading_dot=''
+am__leading_dot='.'
 am__quote=''
-am__tar=''
-am__untar=''
+am__tar='${AMTAR} chof - "$$tardir"'
+am__untar='${AMTAR} xf -'
 bindir='${exec_prefix}/bin'
 build=''
 build_alias=''
@@ -204,7 +221,7 @@ host_os=''
 host_vendor=''
 includedir='${prefix}/include'
 infodir='${prefix}/info'
-install_sh=''
+install_sh='/c/Users/Tmas/Documents/GitHub/ChatterBot/config/install-sh'
 libdir='${exec_prefix}/lib'
 libexecdir='${exec_prefix}/libexec'
 localstatedir='${prefix}/var'
@@ -228,10 +245,12 @@ MAINT_MAKEFILE=''
 ## confdefs.h. ##
 ## ----------- ##
 
+#define PACKAGE "make"
 #define PACKAGE_BUGREPORT "bug-make@gnu.org"
 #define PACKAGE_NAME "GNU make"
 #define PACKAGE_STRING "GNU make 3.81"
 #define PACKAGE_TARNAME "make"
 #define PACKAGE_VERSION "3.81"
+#define VERSION "3.81"
 
 configure: exit 1

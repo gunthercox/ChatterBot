@@ -16,19 +16,19 @@ VERSION = 3.81
 SHELL = /bin/sh
 
 
-srcdir = ../../make-3.81-src/po
-top_srcdir = ../../make-3.81-src
-VPATH = ../../make-3.81-src/po
+srcdir = .
+top_srcdir = ..
 
-prefix = c:/progra~1/Make
-exec_prefix = c:/progra~1/Make
+
+prefix = /usr/local
+exec_prefix = ${prefix}
 datadir = ${prefix}/share
 localedir = $(datadir)/locale
 gettextsrcdir = $(datadir)/gettext/po
 
-INSTALL = /bin/install.exe -cp
-INSTALL_DATA = /bin/install.exe -cp
-MKINSTALLDIRS = $(top_builddir)/../make-3.81-src/config/mkinstalldirs
+INSTALL = /bin/install -c
+INSTALL_DATA = ${INSTALL} -m 644
+MKINSTALLDIRS = $(top_builddir)/config/mkinstalldirs
 mkinstalldirs = $(SHELL) $(MKINSTALLDIRS)
 
 GMSGFMT = :
@@ -40,8 +40,8 @@ MSGINIT = msginit
 MSGCONV = msgconv
 MSGFILTER = msgfilter
 
-POFILES =  $(srcdir)/be.po $(srcdir)/da.po $(srcdir)/de.po $(srcdir)/es.po $(srcdir)/fi.po $(srcdir)/fr.po $(srcdir)/ga.po $(srcdir)/gl.po $(srcdir)/he.po $(srcdir)/hr.po $(srcdir)/id.po $(srcdir)/ja.po $(srcdir)/ko.po $(srcdir)/nl.po $(srcdir)/pl.po $(srcdir)/pt_BR.po $(srcdir)/ru.po $(srcdir)/rw.po $(srcdir)/sv.po $(srcdir)/tr.po $(srcdir)/uk.po $(srcdir)/vi.po $(srcdir)/zh_CN.po
-GMOFILES =  $(srcdir)/be.gmo $(srcdir)/da.gmo $(srcdir)/de.gmo $(srcdir)/es.gmo $(srcdir)/fi.gmo $(srcdir)/fr.gmo $(srcdir)/ga.gmo $(srcdir)/gl.gmo $(srcdir)/he.gmo $(srcdir)/hr.gmo $(srcdir)/id.gmo $(srcdir)/ja.gmo $(srcdir)/ko.gmo $(srcdir)/nl.gmo $(srcdir)/pl.gmo $(srcdir)/pt_BR.gmo $(srcdir)/ru.gmo $(srcdir)/rw.gmo $(srcdir)/sv.gmo $(srcdir)/tr.gmo $(srcdir)/uk.gmo $(srcdir)/vi.gmo $(srcdir)/zh_CN.gmo
+POFILES =  be.po da.po de.po es.po fi.po fr.po ga.po gl.po he.po hr.po id.po ja.po ko.po nl.po pl.po pt_BR.po ru.po rw.po sv.po tr.po uk.po vi.po zh_CN.po
+GMOFILES =  be.gmo da.gmo de.gmo es.gmo fi.gmo fr.gmo ga.gmo gl.gmo he.gmo hr.gmo id.gmo ja.gmo ko.gmo nl.gmo pl.gmo pt_BR.gmo ru.gmo rw.gmo sv.gmo tr.gmo uk.gmo vi.gmo zh_CN.gmo
 UPDATEPOFILES =  be.po-update da.po-update de.po-update es.po-update fi.po-update fr.po-update ga.po-update gl.po-update he.po-update hr.po-update id.po-update ja.po-update ko.po-update nl.po-update pl.po-update pt_BR.po-update ru.po-update rw.po-update sv.po-update tr.po-update uk.po-update vi.po-update zh_CN.po-update
 DUMMYPOFILES =  be.nop da.nop de.nop es.nop fi.nop fr.nop ga.nop gl.nop he.nop hr.nop id.nop ja.nop ko.nop nl.nop pl.nop pt_BR.nop ru.nop rw.nop sv.nop tr.nop uk.nop vi.nop zh_CN.nop
 DISTFILES.common = Makefile.in.in remove-potcdate.sin \
@@ -51,30 +51,30 @@ $(POFILES) $(GMOFILES) \
 $(DISTFILES.extra1) $(DISTFILES.extra2) $(DISTFILES.extra3)
 
 POTFILES = \
-     ../../make-3.81-src/ar.c \
-     ../../make-3.81-src/arscan.c \
-     ../../make-3.81-src/commands.c \
-     ../../make-3.81-src/dir.c \
-     ../../make-3.81-src/expand.c \
-     ../../make-3.81-src/file.c \
-     ../../make-3.81-src/function.c \
-     ../../make-3.81-src/getopt.c \
-     ../../make-3.81-src/hash.c \
-     ../../make-3.81-src/implicit.c \
-     ../../make-3.81-src/job.c \
-     ../../make-3.81-src/main.c \
-     ../../make-3.81-src/misc.c \
-     ../../make-3.81-src/read.c \
-     ../../make-3.81-src/remake.c \
-     ../../make-3.81-src/remote-cstms.c \
-     ../../make-3.81-src/rule.c \
-     ../../make-3.81-src/signame.c \
-     ../../make-3.81-src/strcache.c \
-     ../../make-3.81-src/variable.c \
-     ../../make-3.81-src/variable.h \
-     ../../make-3.81-src/vmsfunctions.c \
-     ../../make-3.81-src/vmsjobs.c \
-     ../../make-3.81-src/vpath.c
+     ../ar.c \
+     ../arscan.c \
+     ../commands.c \
+     ../dir.c \
+     ../expand.c \
+     ../file.c \
+     ../function.c \
+     ../getopt.c \
+     ../hash.c \
+     ../implicit.c \
+     ../job.c \
+     ../main.c \
+     ../misc.c \
+     ../read.c \
+     ../remake.c \
+     ../remote-cstms.c \
+     ../rule.c \
+     ../signame.c \
+     ../strcache.c \
+     ../variable.c \
+     ../variable.h \
+     ../vmsfunctions.c \
+     ../vmsjobs.c \
+     ../vpath.c
 
 CATALOGS =  be.gmo da.gmo de.gmo es.gmo fi.gmo fr.gmo ga.gmo gl.gmo he.gmo hr.gmo id.gmo ja.gmo ko.gmo nl.gmo pl.gmo pt_BR.gmo ru.gmo rw.gmo sv.gmo tr.gmo uk.gmo vi.gmo zh_CN.gmo
 
@@ -156,7 +156,7 @@ EXTRA_LOCALE_CATEGORIES =
 	mv t-$@ $@
 
 
-all: all-yes
+all: all-no
 
 all-yes: stamp-po
 all-no:
@@ -223,7 +223,7 @@ $(POFILES): $(srcdir)/$(DOMAIN).pot
 
 install: install-exec install-data
 install-exec:
-install-data: install-data-yes
+install-data: install-data-no
 	if test "$(PACKAGE)" = "gettext-tools"; then \
 	  $(mkinstalldirs) $(DESTDIR)$(gettextsrcdir); \
 	  for file in $(DISTFILES.common) Makevars.template; do \
@@ -282,7 +282,7 @@ install-strip: install
 
 installdirs: installdirs-exec installdirs-data
 installdirs-exec:
-installdirs-data: installdirs-data-yes
+installdirs-data: installdirs-data-no
 	if test "$(PACKAGE)" = "gettext-tools"; then \
 	  $(mkinstalldirs) $(DESTDIR)$(gettextsrcdir); \
 	else \
@@ -327,7 +327,7 @@ installcheck:
 
 uninstall: uninstall-exec uninstall-data
 uninstall-exec:
-uninstall-data: uninstall-data-yes
+uninstall-data: uninstall-data-no
 	if test "$(PACKAGE)" = "gettext-tools"; then \
 	  for file in $(DISTFILES.common) Makevars.template; do \
 	    rm -f $(DESTDIR)$(gettextsrcdir)/$$file; \

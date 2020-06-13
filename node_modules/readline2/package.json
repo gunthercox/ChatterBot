@@ -1,0 +1,31 @@
+{
+  "name": "readline2",
+  "version": "1.0.1",
+  "description": "Readline Façade fixing bugs and issues found in releases 0.8 and 0.10",
+  "scripts": {
+    "test": "mocha -R spec"
+  },
+  "repository": "SBoudrias/readline2",
+  "keywords": [
+    "cli",
+    "terminal",
+    "readline",
+    "tty",
+    "ansi"
+  ],
+  "author": "Simon Boudrias <admin@simonboudrias.com>",
+  "license": "MIT",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "code-point-at": "^1.0.0",
+    "is-fullwidth-code-point": "^1.0.0",
+    "mute-stream": "0.0.5"
+  },
+  "devDependencies": {
+    "chalk": "^1.1.0",
+    "mocha": "^2.1.0",
+    "sinon": "^1.7.3"
+  }
+}

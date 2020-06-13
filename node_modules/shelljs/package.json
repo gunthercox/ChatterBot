@@ -1,0 +1,40 @@
+{
+  "name": "shelljs",
+  "version": "0.6.1",
+  "author": "Artur Adib <arturadib@gmail.com>",
+  "description": "Portable Unix shell commands for Node.js",
+  "keywords": [
+    "unix",
+    "shell",
+    "makefile",
+    "make",
+    "jake",
+    "synchronous"
+  ],
+  "contributors": [
+    "Ari Porad <ari@ariporad.com> (http://ariporad.com/)",
+    "Nate Fischer <ntfschr@gmail.com>"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/shelljs/shelljs.git"
+  },
+  "license": "BSD-3-Clause",
+  "homepage": "http://github.com/shelljs/shelljs",
+  "main": "./shell.js",
+  "scripts": {
+    "test": "node scripts/run-tests"
+  },
+  "bin": {
+    "shjs": "./bin/shjs"
+  },
+  "dependencies": {},
+  "devDependencies": {
+    "coffee-script": "^1.10.0",
+    "jshint": "~2.1.11"
+  },
+  "optionalDependencies": {},
+  "engines": {
+    "node": ">=0.10.0"
+  }
+}

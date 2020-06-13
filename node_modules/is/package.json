@@ -1,0 +1,69 @@
+{
+  "name": "is",
+  "version": "3.3.0",
+  "main": "index.js",
+  "scripts": {
+    "prepublish": "safe-publish-latest",
+    "pretest": "npm run lint",
+    "test": "npm run --silent tests-only",
+    "tests-only": "node test/index.js",
+    "coverage": "covert test/index.js",
+    "coverage-quiet": "covert test/index.js --quiet",
+    "lint": "npm run jscs && npm run eslint",
+    "jscs": "jscs *.js */*.js",
+    "eslint": "eslint ."
+  },
+  "author": {
+    "name": "Enrico Marino",
+    "url": "http://onirame.com"
+  },
+  "description": "the definitive JavaScript type testing library",
+  "homepage": "https://github.com/enricomarino/is",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/enricomarino/is.git"
+  },
+  "keywords": [
+    "util",
+    "type",
+    "test"
+  ],
+  "contributors": [
+    {
+      "name": "Jordan Harband",
+      "url": "https://github.com/ljharb"
+    }
+  ],
+  "dependencies": {},
+  "devDependencies": {
+    "@ljharb/eslint-config": "^13.0.0",
+    "covert": "^1.1.0",
+    "eslint": "^5.10.0",
+    "foreach": "^2.0.5",
+    "jscs": "^3.0.7",
+    "make-generator-function": "^1.1.0",
+    "safe-publish-latest": "^1.1.2",
+    "tape": "^4.9.1"
+  },
+  "testling": {
+    "files": "test/index.js",
+    "browsers": [
+      "iexplore/6.0..latest",
+      "firefox/3.0",
+      "firefox/15.0..latest",
+      "firefox/nightly",
+      "chrome/4.0",
+      "chrome/22.0..latest",
+      "chrome/canary",
+      "opera/10.0..latest",
+      "opera/next",
+      "safari/5.0.5..latest",
+      "ipad/6.0..latest",
+      "iphone/6.0..latest"
+    ]
+  },
+  "engines": {
+    "node": "*"
+  }
+}
