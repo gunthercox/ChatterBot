@@ -11,5 +11,5 @@ sphinx>=3.0,<3.1
 sphinx_rtd_theme
 pyyaml>=5.3,<5.4
 git+git://github.com/gunthercox/chatterbot-corpus@master#egg=chatterbot_corpus
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.2.5/en_core_web_sm-2.2.5.tar.gz#egg=en_core_web_sm
-https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.2.5/de_core_news_sm-2.2.5.tar.gz#egg=de_core_news_sm
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.2.5.tar.gz#egg=en_core_web_sm
+https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.3.0/de_core_news_sm-2.2.5.tar.gz#egg=de_core_news_sm
