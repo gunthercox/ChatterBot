@@ -2,7 +2,10 @@ import os
 import io
 import glob
 import yaml
-from chatterbot_corpus.corpus import DATA_DIRECTORY
+try:
+    from chatterbot_corpus.corpus import DATA_DIRECTORY
+except (ImportError, ModuleNotFoundError):
+    DATA_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
 CORPUS_EXTENSION = 'yml'
