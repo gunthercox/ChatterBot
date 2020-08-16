@@ -69,7 +69,7 @@ setup(
     include_package_data=True,
     install_requires=REQUIREMENTS,
     dependency_links=DEPENDENCIES,
-    python_requires='>=3.4, <4',
+    python_requires='>=3.4, <=3.8',
     license='BSD',
     zip_safe=True,
     platforms=['any'],
@@ -90,6 +90,7 @@ setup(
         'Programming Language :: Python :: 3.5',
         'Programming Language :: Python :: 3.6',
         'Programming Language :: Python :: 3.7',
+        'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3 :: Only',
     ],
     test_suite='tests'
