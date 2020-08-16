@@ -3,6 +3,7 @@ cache: pip
 
 python:
   - '3.6'
+  - '3.8'
 
 os:
   - linux
