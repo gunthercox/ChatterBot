@@ -55,7 +55,8 @@ class MathematicalEvaluation(LogicAdapter):
         response = Statement(text=expression)
 
         try:
-            response.text += ' = ' + str(
+            response.text = '{} = {}'.format(
+                response.text,
                 mathparse.parse(expression, language=self.language.ISO_639.upper())
             )
 

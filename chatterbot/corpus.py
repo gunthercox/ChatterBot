@@ -24,8 +24,9 @@ def get_file_path(dotted_path, extension='json'):
 
     corpus_path = os.path.join(*parts)
 
-    if os.path.exists(corpus_path + '.{}'.format(extension)):
-        corpus_path += '.{}'.format(extension)
+    path_with_extension = '{}.{}'.format(corpus_path, extension)
+    if os.path.exists(path_with_extension):
+        corpus_path = path_with_extension
 
     return corpus_path
 
