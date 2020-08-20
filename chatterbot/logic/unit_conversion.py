@@ -1,5 +1,6 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
+from chatterbot.exceptions import OptionalDependencyImportError
 from chatterbot import languages
 from chatterbot import parsing
 from mathparse import mathparse
@@ -22,7 +23,15 @@ class UnitConversion(LogicAdapter):
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
-        from pint import UnitRegistry
+        try:
+            from pint import UnitRegistry
+        except ImportError:
+            message = (
+                'Unable to import "pint".\n'
+                'Please install "pint" before using the UnitConversion logic adapter:\n'
+                'pip3 install pint'
+            )
+            raise OptionalDependencyImportError(message)
 
         self.language = kwargs.get('language', languages.ENG)
         self.cache = {}
@@ -82,7 +91,7 @@ class UnitConversion(LogicAdapter):
 
     def get_valid_units(self, from_unit, target_unit):
         """
-        Returns the firt match `pint.unit.Unit` object for from_unit and
+        Returns the first match `pint.unit.Unit` object for from_unit and
         target_unit strings from a possible variation of metric unit names
         supported by pint library.
 

@@ -2,6 +2,7 @@
 This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
+from chatterbot.exceptions import OptionalDependencyImportError
 from difflib import SequenceMatcher
 
 
@@ -63,7 +64,15 @@ class SpacySimilarity(Comparator):
 
     def __init__(self, language):
         super().__init__(language)
-        import spacy
+        try:
+            import spacy
+        except ImportError:
+            message = (
+                'Unable to import "spacy".\n'
+                'Please install "spacy" before using the SpacySimilarity comparator:\n'
+                'pip3 install "spacy>=2.1,<2.2"'
+            )
+            raise OptionalDependencyImportError(message)
 
         self.nlp = spacy.load(self.language.ISO_639_1)
 
@@ -108,7 +117,15 @@ class JaccardSimilarity(Comparator):
 
     def __init__(self, language):
         super().__init__(language)
-        import spacy
+        try:
+            import spacy
+        except ImportError:
+            message = (
+                'Unable to import "spacy".\n'
+                'Please install "spacy" before using the JaccardSimilarity comparator:\n'
+                'pip3 install "spacy>=2.1,<2.2"'
+            )
+            raise OptionalDependencyImportError(message)
 
         self.nlp = spacy.load(self.language.ISO_639_1)
 

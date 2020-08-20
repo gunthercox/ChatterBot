@@ -1,11 +1,18 @@
 import os
 import io
 import glob
-import yaml
+from pathlib import Path
+from chatterbot.exceptions import OptionalDependencyImportError
+
 try:
     from chatterbot_corpus.corpus import DATA_DIRECTORY
 except (ImportError, ModuleNotFoundError):
-    DATA_DIRECTORY = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+    # Default to the home directory of the current user
+    DATA_DIRECTORY = os.path.join(
+        Path.home(),
+        'chatterbot_corpus',
+        'data'
+    )
 
 
 CORPUS_EXTENSION = 'yml'
@@ -38,6 +45,16 @@ def read_corpus(file_name):
     """
     Read and return the data from a corpus json file.
     """
+    try:
+        import yaml
+    except ImportError:
+        message = (
+            'Unable to import "yaml".\n'
+            'Please install "pyyaml" to enable chatterbot corpus functionality:\n'
+            'pip3 install pyyaml'
+        )
+        raise OptionalDependencyImportError(message)
+
     with io.open(file_name, encoding='utf-8') as data_file:
         return yaml.safe_load(data_file)
 
