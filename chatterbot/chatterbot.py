@@ -200,7 +200,8 @@ class ChatBot(object):
             text=result.text,
             in_response_to=input_statement.text,
             conversation=input_statement.conversation,
-            persona='bot:' + self.name
+            persona='bot:' + self.name,
+            tags=result.tags
         )
 
         response.confidence = result.confidence
