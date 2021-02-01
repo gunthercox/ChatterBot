@@ -1,4 +1,4 @@
-{% load staticfiles %}
+{% load static %}
 <!doctype html>
 <html>
   <head>
@@ -27,6 +27,7 @@
 
             <div class="input-group input-group-lg mt-1">
               <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
+              {% csrf_token %}
               <span class="input-group-btn">
                 <button class="btn btn-primary js-say">Submit</button>
               </span>
@@ -44,18 +45,12 @@
     <script src="{% static 'js/bootstrap.js' %}"></script>
     <script>
       var chatterbotUrl = '{% url "chatterbot" %}';
-      var csrftoken = Cookies.get('csrftoken');
-
-      function csrfSafeMethod(method) {
-        // these HTTP methods do not require CSRF protection
-        return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
-      }
+      
+      const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 
       $.ajaxSetup({
         beforeSend: function(xhr, settings) {
-          if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
-            xhr.setRequestHeader("X-CSRFToken", csrftoken);
-          }
+          xhr.setRequestHeader("X-CSRFToken", csrftoken);
         }
       });
 
