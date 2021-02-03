@@ -117,6 +117,59 @@ class ListTrainer(Trainer):
         self.chatbot.storage.create_many(statements_to_create)
 
 
+class QuestionAnswerTrainer(Trainer):
+    """
+    Allows a chat bot to be trained using a list of strings
+    where the list represents questions and answers.
+    """
+
+    def train(self, qa_list):
+        """
+        Train the chat bot based on the provided list of Questions and 
+        Answers. The question should come before the answer
+        """
+
+        statements_to_create = []
+
+
+        i = 1 # Skip question and start with answer
+        while i < len(qa_list):
+
+            if self.show_training_progress:
+                utils.print_progress_bar(
+                    'Q/A Trainer',
+                    i + 1, len(qa_list)
+                )
+
+            question_search_text = self.chatbot.storage.tagger.get_text_index_string(qa_list[i-1])
+
+            question = self.get_preprocessed_statement(
+                    Statement(
+                        text=qa_list[i-1],
+                        search_text=question_search_text,
+                        in_response_to=None,
+                        search_in_response_to=None,
+                        conversation='training'
+                    )
+                )
+
+            answer_search_text = self.chatbot.storage.tagger.get_text_index_string(qa_list[i])
+
+            answer = self.get_preprocessed_statement(
+                Statement(
+                    text=qa_list[i],
+                    search_text=None,
+                    in_response_to=question.text,
+                    search_in_response_to=question_search_text,
+                    conversation='training'
+                )
+            )
+
+            statements_to_create.append(answer)
+            i += 2
+
+        self.chatbot.storage.create_many(statements_to_create)
+
 class ChatterBotCorpusTrainer(Trainer):
     """
     Allows the chat bot to be trained using data from the
