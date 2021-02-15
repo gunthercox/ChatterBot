@@ -2,6 +2,21 @@
 Statement pre-processors.
 """
 
+from nltk import RegexpTokenizer
+
+
+def remove_punctuation(statement):
+    """
+    Remove any punctuation from the statement text
+    """    
+    # Make tokenizer
+    tokenizer = RegexpTokenizer(r"\w+")
+
+    #make a list of words without punctuation
+    statement.text = " ".join(tokenizer.tokenize(statement.text))
+
+    return statement
+
 
 def clean_whitespace(statement):
     """
