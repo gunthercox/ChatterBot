@@ -49,6 +49,7 @@ while True:
             print('please input the correct one')
             correct_response = Statement(text=input())
             bot.learn_response(correct_response, input_statement)
+            print("Learnt")
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
