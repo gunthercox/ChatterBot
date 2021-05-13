@@ -42,14 +42,13 @@ while True:
         )
 
         print('\n Is "{}" a coherent response to "{}"? \n'.format(
-            response.text,
+            response[0].text,
             input_statement.text
         ))
         if get_feedback() is False:
             print('please input the correct one')
             correct_response = Statement(text=input())
             bot.learn_response(correct_response, input_statement)
-            print('Responses added to bot!')
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
