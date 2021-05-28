@@ -6,7 +6,7 @@ from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
 from chatterbot.tagging import PosLemmaTagger
 from chatterbot import utils
-
+import tqdm
 
 class Trainer(object):
     """
@@ -89,13 +89,11 @@ class ListTrainer(Trainer):
         previous_statement_search_text = ''
 
         statements_to_create = []
-
-        for conversation_count, text in enumerate(conversation):
+        prog = tqdm.tqdm(enumerate(conversation))
+        for conversation_count, text in prog:
             if self.show_training_progress:
-                utils.print_progress_bar(
-                    'List Trainer',
-                    conversation_count + 1, len(conversation)
-                )
+                prog.set_description_str("{} {} {}".format('List Trainer',
+                    conversation_count + 1, len(conversation)))
 
             statement_search_text = self.chatbot.storage.tagger.get_text_index_string(text)
 
@@ -137,14 +135,13 @@ class ChatterBotCorpusTrainer(Trainer):
             statements_to_create = []
 
             # Train the chat bot with each statement and response pair
-            for conversation_count, conversation in enumerate(corpus):
+            prog = tqdm.tqdm(enumerate(corpus))
+            for conversation_count, conversation in prog:
 
                 if self.show_training_progress:
-                    utils.print_progress_bar(
-                        'Training ' + str(os.path.basename(file_path)),
+                    prog.set_description_str("{} {} {}".format('Training ' + str(os.path.basename(file_path)),
                         conversation_count + 1,
-                        len(corpus)
-                    )
+                        len(corpus)))
 
                 previous_statement_text = None
                 previous_statement_search_text = ''
