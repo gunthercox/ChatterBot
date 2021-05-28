@@ -92,8 +92,8 @@ class ListTrainer(Trainer):
         prog = tqdm.tqdm(enumerate(conversation))
         for conversation_count, text in prog:
             if self.show_training_progress:
-                prog.set_description_str("{} {} {}".format('List Trainer',
-                    conversation_count + 1, len(conversation)))
+                prog.set_description_str("{} {} {} {:.3}%".format('List Trainer',
+                    conversation_count + 1, len(conversation), (conversation_count + 1) * 100.0 / len(conversation)))
 
             statement_search_text = self.chatbot.storage.tagger.get_text_index_string(text)
 
@@ -139,9 +139,9 @@ class ChatterBotCorpusTrainer(Trainer):
             for conversation_count, conversation in prog:
 
                 if self.show_training_progress:
-                    prog.set_description_str("{} {} {}".format('Training ' + str(os.path.basename(file_path)),
+                    prog.set_description_str("{} {} {} {:.3}%".format('Training ' + str(os.path.basename(file_path)),
                         conversation_count + 1,
-                        len(corpus)))
+                        len(corpus)), (conversation_count + 1) * 100.0 / len(corpus))
 
                 previous_statement_text = None
                 previous_statement_search_text = ''
