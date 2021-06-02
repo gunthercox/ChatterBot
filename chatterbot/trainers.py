@@ -141,7 +141,7 @@ class ChatterBotCorpusTrainer(Trainer):
                 if self.show_training_progress:
                     prog.set_description_str("{} {} {} {:.3}%".format('Training ' + str(os.path.basename(file_path)),
                         conversation_count + 1,
-                        len(corpus)), (conversation_count + 1) * 100.0 / len(corpus))
+                        len(corpus), (conversation_count + 1) * 100.0 / len(corpus)))
 
                 previous_statement_text = None
                 previous_statement_search_text = ''
