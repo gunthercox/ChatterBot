@@ -292,18 +292,18 @@ class ChatBotTests(ChatterBotTestCase):
         string when filtering using the search_text parameter.
         """
         self.chatbot.storage.create_many([
-            Statement('Example A for search.'),
+            Statement('Example 1 for search.'),
             Statement('Another example.'),
-            Statement('Example B for search.'),
+            Statement('Example 2 for search.'),
             Statement(text='Another statement.'),
         ])
 
         results = list(self.chatbot.storage.filter(
             search_text_contains=self.chatbot.storage.tagger.get_text_index_string(
-                'Example A for search.'
+                'Example 1 for search.'
             )
         ))
 
         self.assertEqual(len(results), 2, msg=[r.text for r in results])
-        self.assertEqual('Example A for search.', results[0].text)
-        self.assertEqual('Example B for search.', results[1].text)
+        self.assertEqual('Example 1 for search.', results[0].text)
+        self.assertEqual('Example 2 for search.', results[1].text)
