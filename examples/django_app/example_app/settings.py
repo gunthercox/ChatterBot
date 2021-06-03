@@ -47,6 +47,12 @@ MIDDLEWARE_CLASSES = (
     'django.middleware.security.SecurityMiddleware',
 )
 
+SILENCED_SYSTEM_CHECKS = [
+    'admin.E408',
+    'admin.E409',
+    'admin.E410'
+]
+
 ROOT_URLCONF = 'example_app.urls'
 
 TEMPLATES = [
