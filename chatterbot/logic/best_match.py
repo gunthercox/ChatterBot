@@ -1,5 +1,6 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot import filters
+import random
 
 
 class BestMatch(LogicAdapter):
@@ -35,6 +36,14 @@ class BestMatch(LogicAdapter):
             # Stop searching if a match that is close enough is found
             if result.confidence >= self.maximum_similarity_threshold:
                 break
+
+            # If closest_match and the next result have equal cofidence, then choose either randomly.
+            if result.confidence == closest_match.confidence:
+                closest_match = random.choice([result, closest_match])
+
+            # If our new result is better than our previous closest_match, choose closest_match instead.
+            elif result.confidence > closest_match.confidence:
+                closest_match = result
 
         self.chatbot.logger.info('Using "{}" as a close match to "{}" with a confidence of {}'.format(
             closest_match.text, input_statement.text, closest_match.confidence
