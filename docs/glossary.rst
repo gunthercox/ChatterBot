@@ -5,7 +5,7 @@ Glossary
 .. glossary::
 
    adapters
-      A pluggable class that allows a ChatBot instance to execute some kind of functionality.
+      A base class that allows a ChatBot instance to execute some kind of functionality.
 
    logic adapter
       An adapter class that allows a ChatBot instance to select a response to 

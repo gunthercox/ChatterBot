@@ -2,7 +2,7 @@
 Contributing to ChatterBot
 ==========================
 
-There are numerous ways to contriubte to ChatterBot. All of which are highly encouraged.
+There are numerous ways to contribute to ChatterBot. All of which are highly encouraged.
 
 - Contributing bug reports and feature requests
 
