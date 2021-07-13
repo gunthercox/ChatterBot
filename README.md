@@ -32,13 +32,13 @@ An untrained instance of ChatterBot starts off with no knowledge of how to commu
 
 This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBot) by running:
 
-```
+```sh
 pip install chatterbot
 ```
 
 ## Basic Usage
 
-```
+```py
 from chatterbot import ChatBot
 from chatterbot.trainers import ChatterBotCorpusTrainer
 
@@ -63,7 +63,7 @@ in other languages would be greatly appreciated. Take a look at the data files
 in the [chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus)
 package if you are interested in contributing.
 
-```
+```py
 from chatterbot.trainers import ChatterBotCorpusTrainer
 
 # Create a new trainer for the chatbot
@@ -88,7 +88,7 @@ for ChatterBot on Read the Docs.
 
 To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
 
-```
+```sh
 sphinx-build -b html docs/ build/
 ```
 
