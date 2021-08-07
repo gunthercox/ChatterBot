@@ -2,11 +2,13 @@
 Quick Start Guide
 =================
 
-The first thing you'll need to do to get started is install ChatterBot.
+The first thing you'll need to do to get started is install ChatterBot,
+and the the associated text corpus package.
 
 .. code-block:: bash
 
    pip install chatterbot
+   pip install chatterbot-corpus
 
 See :ref:`Installation` for options for alternative installation methods.
 

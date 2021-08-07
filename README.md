@@ -36,6 +36,14 @@ This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBo
 pip install chatterbot
 ```
 
+Chatterbot engine also requires corpus of text to use as training data.
+The [chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus) package, which can be installed from PyPi in the same fashion,
+fulfills this role for several languages.
+
+```
+pip install chatterbot-corpus
+```
+
 ## Basic Usage
 
 ```
@@ -50,34 +58,24 @@ trainer = ChatterBotCorpusTrainer(chatbot)
 # Train the chatbot based on the english corpus
 trainer.train("chatterbot.corpus.english")
 
+# Train based on english greetings corpus
+trainer.train("chatterbot.corpus.english.greetings")
+
+# Train based on the english conversations corpus
+trainer.train("chatterbot.corpus.english.conversations")
+
 # Get a response to an input statement
 chatbot.get_response("Hello, how are you today?")
 ```
 
 # Training data
 
-ChatterBot comes with a data utility module that can be used to train chat bots.
+ChatterBot corpus data utility module that can be used to train chat bots.
 At the moment there is training data for over a dozen languages in this module.
 Contributions of additional training data or training data
 in other languages would be greatly appreciated. Take a look at the data files
 in the [chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus)
 package if you are interested in contributing.
-
-```
-from chatterbot.trainers import ChatterBotCorpusTrainer
-
-# Create a new trainer for the chatbot
-trainer = ChatterBotCorpusTrainer(chatbot)
-
-# Train based on the english corpus
-trainer.train("chatterbot.corpus.english")
-
-# Train based on english greetings corpus
-trainer.train("chatterbot.corpus.english.greetings")
-
-# Train based on the english conversations corpus
-trainer.train("chatterbot.corpus.english.conversations")
-```
 
 **Corpus contributions are welcome! Please make a pull request.**
 
