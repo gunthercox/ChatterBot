@@ -74,7 +74,10 @@ class SpacySimilarity(Comparator):
             )
             raise OptionalDependencyImportError(message)
 
-        self.nlp = spacy.load(self.language.ISO_639_1)
+        if 'SPACY_MODEL' in self.language:
+            self.nlp = spacy.load(self.language.SPACY_MODEL)
+        else:
+            self.nlp = spacy.load(self.language.ISO_639_1.lower())
 
     def compare(self, statement_a, statement_b):
         """
@@ -127,7 +130,10 @@ class JaccardSimilarity(Comparator):
             )
             raise OptionalDependencyImportError(message)
 
-        self.nlp = spacy.load(self.language.ISO_639_1)
+        if 'SPACY_MODEL' in self.language:
+            self.nlp = spacy.load(self.language.SPACY_MODEL)
+        else:
+            self.nlp = spacy.load(self.language.ISO_639_1.lower())
 
     def compare(self, statement_a, statement_b):
         """
