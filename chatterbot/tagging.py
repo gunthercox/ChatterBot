@@ -23,7 +23,7 @@ class PosLemmaTagger(object):
 
         self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
 
-        if 'SPACY_MODEL' in self.language:
+        if hasattr(language, 'SPACY_MODEL'):
             self.nlp = spacy.load(self.language.SPACY_MODEL)
         else:
             self.nlp = spacy.load(self.language.ISO_639_1.lower())
