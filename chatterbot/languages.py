@@ -1,6 +1,3 @@
-from chatterbot.comparisons import SpacySimilarity
-
-
 class AAR:
     ISO_639_1 = ''
     ISO_639 = 'aar'
