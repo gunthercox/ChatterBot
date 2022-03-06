@@ -35,7 +35,15 @@ This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBo
 ```
 pip install chatterbot
 ```
-
+Extra information on OSX, If you encounter the following build error during installation:
+```
+error: $MACOSX_DEPLOYMENT_TARGET mismatch: now "10.9" but "11" during configure
+```
+You can run :
+```
+MacBook-Pro ~ % MACOSX_DEPLOYMENT_TARGET=11 pip3 install chatterbot
+```
+to set the corresponding environment variable.
 ## Basic Usage
 
 ```
