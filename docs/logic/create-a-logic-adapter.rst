@@ -116,8 +116,9 @@ For this example we will use a fictitious API endpoint that returns the current 
        temperature = data.get('temperature', 'unavailable')
 
        response_statement = Statement(text='The current temperature is {}'.format(temperature))
+       response_statement.confidence = confidence
 
-       return confidence, response_statement
+       return response_statement
 
 Providing extra arguments
 =========================
