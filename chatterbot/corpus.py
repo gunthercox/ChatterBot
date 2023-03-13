@@ -56,7 +56,7 @@ def read_corpus(file_name):
         raise OptionalDependencyImportError(message)
 
     with io.open(file_name, encoding='utf-8') as data_file:
-        return yaml.safe_load(data_file)
+        return yaml.safe_load(data_file, Loader=yaml.FullLoader)
 
 
 def list_corpus_files(dotted_path):
