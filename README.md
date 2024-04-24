@@ -1,5 +1,10 @@
 ![ChatterBot: Machine learning in Python](https://i.imgur.com/b3SCmGT.png)
-
+<h4 align="center">
+    <p>
+        <a href="https://github.com/WThirteen/ChatterBot/edit/master/README_zh.md">中文</a> |
+        <a href="https://github.com/WThirteen/ChatterBot/edit/master/README.md">English</a>
+    <p>
+</h4>
 # ChatterBot
 
 ChatterBot is a machine-learning based conversational dialog engine build in
