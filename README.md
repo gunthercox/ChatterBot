@@ -59,11 +59,6 @@ trainer.train("chatterbot.corpus.english")
 chatbot.get_response("Hello, how are you today?")
 ```
 
-### Simple example
-* Use test.py for simple testing
-```
-python test.py
-```
 # Training data
 
 ChatterBot comes with a data utility module that can be used to train chat bots.
