@@ -56,6 +56,11 @@ trainer.train("chatterbot.corpus.english")
 # Get a response to an input statement
 chatbot.get_response("Hello, how are you today?")
 ```
+### 简单样例
+* 使用test.py来进行简单测试
+```
+python test.py
+```
 
 # 训练数据
 
