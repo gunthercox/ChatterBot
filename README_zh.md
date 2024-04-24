@@ -1,11 +1,15 @@
 ![ChatterBot: Machine learning in Python](https://i.imgur.com/b3SCmGT.png)
+<h4 align="center">
+    <p>
+        <a href="https://github.com/WThirteen/ChatterBot/edit/master/README_zh.md">中文</a> |
+        <a href="https://github.com/WThirteen/ChatterBot/edit/master/README.md">English</a>
+    <p>
+</h4>
 
 # ChatterBot
 
-ChatterBot is a machine-learning based conversational dialog engine build in
-Python which makes it possible to generate responses based on collections of
-known conversations. The language independent design of ChatterBot allows it
-to be trained to speak any language.
+ChatterBot 是一个基于机器学习的对话对话引擎内置Python，可以基于已知对话。  
+ChatterBot 的语言独立设计允许它接受任何语言的培训。
 
 [![Package Version](https://img.shields.io/pypi/v/chatterbot.svg)](https://pypi.python.org/pypi/chatterbot/)
 [![Python 3.6](https://img.shields.io/badge/python-3.6-blue.svg)](https://www.python.org/downloads/release/python-360/)
@@ -17,26 +21,25 @@ to be trained to speak any language.
 [![Code Climate](https://codeclimate.com/github/gunthercox/ChatterBot/badges/gpa.svg)](https://codeclimate.com/github/gunthercox/ChatterBot)
 [![Join the chat at https://gitter.im/chatterbot/Lobby](https://badges.gitter.im/chatterbot/Lobby.svg)](https://gitter.im/chatterbot/Lobby?utm_source=badge&utm_medium=badge&utm_content=badge)
 
-An example of typical input would be something like this:
+典型输入的示例如下：  
 
 > **user:** Good morning! How are you doing?  
 > **bot:**  I am doing very well, thank you for asking.  
 > **user:** You're welcome.  
 > **bot:** Do you like hats?  
 
-## How it works
+## 运作方式
 
-An untrained instance of ChatterBot starts off with no knowledge of how to communicate. Each time a user enters a statement, the library saves the text that they entered and the text that the statement was in response to. As ChatterBot receives more input the number of responses that it can reply and the accuracy of each response in relation to the input statement increase. The program selects the closest matching response by searching for the closest matching known statement that matches the input, it then returns the most likely response to that statement based on how frequently each response is issued by the people the bot communicates with.
+未经训练的 ChatterBot 实例开始时不知道如何沟通。每次用户输入语句时，库都会保存他们输入的文本以及语句响应的文本。随着 ChatterBot 接收到的输入越多，它可以回复的响应数量以及每个响应与输入语句相关的准确性也会增加。该程序通过搜索与输入匹配的最接近的匹配已知语句来选择最接近的匹配响应，然后根据机器人与之通信的人员发出每个响应的频率返回对该语句的最可能的响应。
 
-## Installation
+## 安装
 
-This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBot) by running:
-
+这个包可以从 [PyPi](https://pypi.python.org/pypi/ChatterBot) 通过运行：
 ```
 pip install chatterbot
 ```
 
-## Basic Usage
+## 基本用法
 
 ```
 from chatterbot import ChatBot
@@ -54,14 +57,14 @@ trainer.train("chatterbot.corpus.english")
 chatbot.get_response("Hello, how are you today?")
 ```
 
-# Training data
+# 训练数据
 
-ChatterBot comes with a data utility module that can be used to train chat bots.
-At the moment there is training data for over a dozen languages in this module.
-Contributions of additional training data or training data
-in other languages would be greatly appreciated. Take a look at the data files
-in the [chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus)
-package if you are interested in contributing.
+ChatterBot 带有一个数据实用程序模块，可用于训练聊天机器人。
+目前，该模块中有十几种语言的训练数据。
+贡献额外的训练数据或训练数据
+在其他语言中将不胜感激。查看数据文件
+在 [chatterbot-corpus](https://github.com/gunthercox/chatterbot-corpus) 中
+如果您有兴趣做出贡献，请打包。
 
 ```
 from chatterbot.trainers import ChatterBotCorpusTrainer
@@ -79,29 +82,29 @@ trainer.train("chatterbot.corpus.english.greetings")
 trainer.train("chatterbot.corpus.english.conversations")
 ```
 
-**Corpus contributions are welcome! Please make a pull request.**
+** 欢迎语料库投稿！请提出拉取请求。**
 
-# [Documentation](https://chatterbot.readthedocs.io/)
+# [文档](https://chatterbot.readthedocs.io/)
 
-View the [documentation](https://chatterbot.readthedocs.io/)
-for ChatterBot on Read the Docs.
+查看 [文档](https://chatterbot.readthedocs.io/)
+对于 ChatterBot，请阅读文档。
 
-To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
+要使用 [Sphinx](http://www.sphinx-doc.org/) 自行构建文档，请运行：
 
 ```
 sphinx-build -b html docs/ build/
 ```
 
-# Examples
+# 示例
 
-For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
-directory in this project's git repository.
+有关示例，请参阅 [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
+目录。
 
-There is also an example [Django project using ChatterBot](https://github.com/gunthercox/ChatterBot/tree/master/examples), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
+还有一个示例 [使用 ChatterBot 的 Django 项目](https://github.com/gunthercox/ChatterBot/tree/master/examples)，以及一个示例 [使用 ChatterBot 的 Flask 项目](https://github.com/chamkank/flask-chatterbot)。
 
-# History
+# 历史
 
-See release notes for changes https://github.com/gunthercox/ChatterBot/releases
+有关更改 https://github.com/gunthercox/ChatterBot/releases，请参阅发行说明
 
 # Development pattern for contributors
 
@@ -114,6 +117,17 @@ See release notes for changes https://github.com/gunthercox/ChatterBot/releases
 5. Use the projects [built-in automated testing](https://chatterbot.readthedocs.io/en/latest/testing.html).
    to help make sure that your contribution is free from errors.
 
-# License
+# 贡献者开发模式
 
-ChatterBot is licensed under the [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause).
+1. [创建分叉](https://help.github.com/articles/fork-a-repo/) 的
+   GitHub 上的 [主 ChatterBot 存储库](https://github.com/gunthercox/ChatterBot)。
+2. 在名为“master”的分支中进行更改，例如 create
+   一个新分支“my-pull-request”。
+3. [创建拉取请求](https://help.github.com/articles/creating-a-pull-request/)。
+4. 请遵循 [PEP-8 的 Python 样式指南](https://www.python.org/dev/peps/pep-0008/)。
+5. 使用项目[内置自动化测试](https://chatterbot.readthedocs.io/en/latest/testing.html)。
+   以帮助确保您的贡献没有错误。
+   
+# 许可证
+
+ChatterBot 根据 [BSD 3 条款许可证](https://opensource.org/licenses/BSD-3-Clause) 获得许可。
