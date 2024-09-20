@@ -25,7 +25,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_in_response_to_provided(self):
         """
         Test that the process of looking up the previous response
-        in the conversation is ignored if a previous response is provided.
+        in the conversation is ignored, if a previous response is provided.
         """
         self.chatbot.get_response(
             text='Hello',
@@ -57,7 +57,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
     def test_one_statement_known_no_response(self):
         """
         Test the case where a single statement is known, but
-        it is not in response to any other statement.
+        it is not the response in any other statement.
         """
         self.chatbot.storage.create(text='Hello', in_response_to=None)
 
