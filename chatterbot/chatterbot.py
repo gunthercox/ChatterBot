@@ -105,7 +105,7 @@ class ChatBot(object):
         for preprocessor in self.preprocessors:
             input_statement = preprocessor(input_statement)
 
-        # Make sure the input statement has its search text saved
+        # Make sure the input statement has saved the search text 
 
         if not input_statement.search_text:
             input_statement.search_text = self.storage.tagger.get_text_index_string(input_statement.text)
@@ -246,7 +246,7 @@ class ChatBot(object):
             order_by=['id']
         ))
 
-        # Get the most recent statement in the conversation if one exists
+        # Get the most recent statement in the conversation if any exists
         latest_statement = conversation_statements[-1] if conversation_statements else None
 
         if latest_statement:
