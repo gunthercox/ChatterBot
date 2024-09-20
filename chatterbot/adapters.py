@@ -10,7 +10,7 @@ class Adapter(object):
 
     class AdapterMethodNotImplementedError(NotImplementedError):
         """
-        An exception to be raised when an adapter method has not been implemented.
+        An exception will be raised when an adapter method has not been implemented.
         Typically this indicates that the developer is expected to implement the
         method in a subclass.
         """
@@ -23,7 +23,7 @@ class Adapter(object):
 
     class InvalidAdapterTypeException(Exception):
         """
-        An exception to be raised when an adapter
+        An exception will be raised when an adapter
         of an unexpected class type is received.
         """
         pass
