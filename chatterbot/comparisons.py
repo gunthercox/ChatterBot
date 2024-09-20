@@ -33,7 +33,7 @@ class LevenshteinDistance(Comparator):
         """
         Compare the two input statements.
 
-        :return: The percent of similarity between the text of the statements.
+        :return: The percentage of similarity between the text of the statements.
         :rtype: float
         """
 
@@ -51,7 +51,7 @@ class LevenshteinDistance(Comparator):
             statement_b_text
         )
 
-        # Calculate a decimal percent of the similarity
+        # Calculate the decimal percent of the similarity
         percent = round(similarity.ratio(), 2)
 
         return percent
@@ -80,7 +80,7 @@ class SpacySimilarity(Comparator):
         """
         Compare the two input statements.
 
-        :return: The percent of similarity between the closest synset distance.
+        :return: The percentage of similarity between the closest synset distance.
         :rtype: float
         """
         document_a = self.nlp(statement_a.text)
