@@ -1,6 +1,6 @@
 """
 These tests are designed to test execution time for
-various chat bot configurations to help prevent
+various chat bot configurations to prevent
 performance based regressions when changes are made.
 """
 
@@ -166,7 +166,7 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
 
     def test_spacy_similarity_comparisons(self):
         """
-        Test the spacy similarity comparison algorithm.
+        Test the spacy similarity comparisons algorithm.
         """
         self.chatbot.logic_adapters[0] = BestMatch(
             self.chatbot,
@@ -181,7 +181,7 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
 
     def test_get_response_after_chatterbot_corpus_training(self):
         """
-        Test response time after training with the ChatterBot corpus.
+        Test the response time after training the ChatterBot corpus.
         """
         trainer = get_chatterbot_corpus_trainer(self.chatbot)
         trainer.train('chatterbot.corpus')
@@ -191,7 +191,7 @@ class MongoBenchmarkingTests(BenchmarkingMixin, ChatBotMongoTestCase):
     @skip('Test marked as skipped due to execution time.')
     def test_get_response_after_ubuntu_corpus_training(self):
         """
-        Test response time after training with the Ubuntu corpus.
+        Test the response time after training the Ubuntu corpus.
         """
         trainer = get_ubuntu_corpus_trainer(self.chatbot)
         trainer.train()
