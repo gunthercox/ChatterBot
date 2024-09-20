@@ -26,7 +26,7 @@ class ChatBotTestCase(TestCase):
         return {
             # Run the test database in-memory
             'database_uri': None,
-            # Don't execute initialization processes such as downloading required data
+            # Don't execute initialization process, such as downloading required data
             'initialize': False
         }
 
