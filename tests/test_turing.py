@@ -18,21 +18,21 @@ class TuringTests(TestCase):
     @expectedFailure
     def test_repeat_information(self):
         """
-        Test if we can detect any repeat responses from the agent.
+        Test if we can detect any repeated responses from the agent.
         """
         self.fail('Condition not met.')
 
     @expectedFailure
     def test_repeat_input(self):
         """
-        Test what the responses are like if we keep giving the same input.
+        Test what the responses are like, if we keep giving the same input.
         """
         self.fail('Condition not met.')
 
     @expectedFailure
     def test_contradicting_responses(self):
         """
-        Test if we can get the agent to contradict themselves.
+        Test if we can get the agent to contradict itself.
         """
         self.fail('Condition not met.')
 
@@ -42,8 +42,8 @@ class TuringTests(TestCase):
         The math questions inherently suggest that the agent
         should get some math problems wrong in order to seem
         more human. My view on this is that it is more useful
-        to have a bot that is good at math, which could just
-        as easily be a human.
+        to have a bot which is good at math and it could solve
+        it like a normal human being.
         """
         self.fail('Condition not met.')
 
