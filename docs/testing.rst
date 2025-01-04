@@ -9,8 +9,7 @@ that is gold-plated with unnecessary features; or that looks like junk."* – Da
 ChatterBot tests
 ----------------
 
-ChatterBot's built in tests can be run using nose.
-See the `nose documentation`_ for more information.
+ChatterBot's built in tests can be run using ``nose``.
 
 .. sourcecode:: sh
 
