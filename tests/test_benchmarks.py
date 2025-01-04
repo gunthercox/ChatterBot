@@ -17,7 +17,7 @@ WORDBANK = (
     'the', 'mellifluous', 'sound', 'of', 'a', 'spring', 'evening',
     'breaks', 'the', 'heart', 'string', 'by', 'calling', 'out', 'to',
     'David', 'who', 'looks', 'on', 'at', 'the', 'world', 'blankly',
-    'who', 'could', 'tell', 'that', 'there', 'is', 'no', 'instrament',
+    'who', 'could', 'tell', 'that', 'there', 'is', 'no', 'instrument',
     'softly', 'strumming', 'toward', 'the', 'melody', 'called', 'silence',
 )
 
