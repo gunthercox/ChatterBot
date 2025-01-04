@@ -4,7 +4,6 @@ dist
 venv
 .env
 .out
-.tox
 .coverage
 *.pyc
 *.swp
