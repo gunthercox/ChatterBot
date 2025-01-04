@@ -1,3 +1,4 @@
+importlib_metadata<5  # Pinned for flake8 support
 flake8
 nltk>=3.2,<4.0
 nose
