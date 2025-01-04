@@ -31,10 +31,10 @@ jobs:
       run: |
         python -m pip install --upgrade pip
         python -m pip install flake8 nose
-        python -m spacy link en_core_web_sm en
-        python -m spacy link de_core_news_sm de
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f dev-requirements.txt ]; then pip install -r dev-requirements.txt; fi
+        python -m spacy link en_core_web_sm en
+        python -m spacy link de_core_news_sm de
     - name: Lint with flake8
       run: |
         # stop the build if there are Python syntax errors or undefined names
