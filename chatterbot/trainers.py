@@ -21,7 +21,8 @@ class Trainer(object):
     def __init__(self, chatbot, **kwargs):
         self.chatbot = chatbot
 
-        environment_default = os.getenv('CHATTERBOT_SHOW_TRAINING_PROGRESS', True)
+        environment_default = bool(int(os.environ.get('CHATTERBOT_SHOW_TRAINING_PROGRESS', True)))
+
         self.show_training_progress = kwargs.get(
             'show_training_progress',
             environment_default
