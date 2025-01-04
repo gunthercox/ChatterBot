@@ -30,7 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 nose
+        python -m pip install flake8 nose coverage
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f dev-requirements.txt ]; then pip install -r dev-requirements.txt; fi
         python -m spacy link en_core_web_sm en
@@ -44,9 +44,20 @@ jobs:
     - name: Test documentation build
       run: |
         sphinx-build -nW -b html ./docs/ /tmp/build/
+    - name: Start MongoDB
+      uses: supercharge/mongodb-github-action@1.11.0
+      with:
+        mongodb-version: '8.0'
     - name: Run tests
       run: |
         nosetests
     # https://github.com/marketplace/actions/coveralls-github-action
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.3.4
+    - name: Generate code coverage
+      uses: paambaati/codeclimate-action@v9.0.0
+      env:
+        CC_TEST_REPORTER_ID: 3ec30a156224df0f59620967241d9659086e918fd824f4f69b8ce7b55b5a590f
+      with:
+        coverageCommand: coverage
+        debug: true
