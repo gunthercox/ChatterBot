@@ -8,6 +8,8 @@ on:
     branches: [ "master" ]
   pull_request:
     branches: [ "*" ]
+env:
+  CHATTERBOT_SHOW_TRAINING_PROGRESS: '0'
 
 jobs:
   build:
@@ -28,7 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        python -m pip install flake8 pytest
+        python -m pip install flake8 nose
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f dev-requirements.txt ]; then pip install -r dev-requirements.txt; fi
     - name: Lint with flake8
@@ -37,6 +39,12 @@ jobs:
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
         # exit-zero treats all errors as warnings. The GitHub editor is 127 chars wide
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
-    - name: Test with pytest
+    - name: Test documentation build
       run: |
-        pytest
+        sphinx-build -nW -b html ./docs/ /tmp/build/
+    - name: Run tests
+      run: |
+        nosetests
+    # https://github.com/marketplace/actions/coveralls-github-action
+    - name: Coveralls GitHub Action
+      uses: coverallsapp/github-action@v2.3.4
