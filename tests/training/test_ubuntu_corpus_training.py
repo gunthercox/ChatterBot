@@ -176,7 +176,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         results = list(self.chatbot.storage.filter(text='Is anyone there?'))
 
         self.assertEqual(len(results), 2)
-        self.assertEqual(results[0].search_text, 'VERB:anyone NOUN:there')
+        self.assertEqual(results[0].search_text, 'AUX:anyone PRON:there')
 
     def test_train_sets_search_in_response_to(self):
         """
@@ -190,7 +190,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         results = list(self.chatbot.storage.filter(in_response_to='Is anyone there?'))
 
         self.assertEqual(len(results), 2)
-        self.assertEqual(results[0].search_in_response_to, 'VERB:anyone NOUN:there')
+        self.assertEqual(results[0].search_in_response_to, 'AUX:anyone PRON:there')
 
     def test_is_extracted(self):
         """

@@ -50,7 +50,7 @@ jobs:
         mongodb-version: '8.0'
     - name: Run tests
       run: |
-        nosetests -vv
+        nosetests -v
     - name: Run tests for Django example app
       run: |
         python setup.py develop
