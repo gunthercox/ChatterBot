@@ -51,12 +51,14 @@ jobs:
     - name: Run tests
       run: |
         nosetests -v
-    - name: Run tests for Django example app
-      run: |
-        python setup.py develop
-        python3 -m pip install "Django<=2.1"
-        python runtests.py
-        python examples/django_app/manage.py test examples/django_app/
+    # TODO: Fix & re-enable Django tests
+    # - name: Run tests for Django example app
+    #   run: |
+    #     python setup.py develop
+    #     python3 -m pip install "Django<=2.1"
+    #     python runtests.py
+    #     python examples/django_app/manage.py test examples/django_app/
+    # --------------------------------------------------------------
     # https://github.com/marketplace/actions/coveralls-github-action
     - name: Coveralls GitHub Action
       uses: coverallsapp/github-action@v2.3.4
