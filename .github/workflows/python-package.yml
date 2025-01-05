@@ -59,13 +59,14 @@ jobs:
     #     python runtests.py
     #     python examples/django_app/manage.py test examples/django_app/
     # --------------------------------------------------------------
+    # TODO: Fix & re-enable later
     # https://github.com/marketplace/actions/coveralls-github-action
-    - name: Coveralls GitHub Action
-      uses: coverallsapp/github-action@v2.3.4
-    - name: Generate code coverage
-      uses: paambaati/codeclimate-action@v9.0.0
-      env:
-        CC_TEST_REPORTER_ID: 3ec30a156224df0f59620967241d9659086e918fd824f4f69b8ce7b55b5a590f
-      with:
-        coverageCommand: coverage
-        debug: true
+    # - name: Coveralls GitHub Action
+    #   uses: coverallsapp/github-action@v2.3.4
+    # - name: Generate code coverage
+    #   uses: paambaati/codeclimate-action@v9.0.0
+    #   env:
+    #     CC_TEST_REPORTER_ID: 3ec30a156224df0f59620967241d9659086e918fd824f4f69b8ce7b55b5a590f
+    #   with:
+    #     coverageCommand: coverage
+    #     debug: true
