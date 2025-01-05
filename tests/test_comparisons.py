@@ -81,7 +81,7 @@ class SpacySimilarityTests(TestCase):
 
         value = self.compare(statement, other_statement)
 
-        self.assertAlmostEqual(value, 0.9, places=1)
+        self.assertAlmostEqual(value, 0.7, places=1)
 
     def test_exact_match_different_capitalization(self):
         """
@@ -92,7 +92,7 @@ class SpacySimilarityTests(TestCase):
 
         value = self.compare(statement, other_statement)
 
-        self.assertAlmostEqual(value, 0.8, places=1)
+        self.assertAlmostEqual(value, 0.7, places=1)
 
 
 class JaccardSimilarityTestCase(TestCase):

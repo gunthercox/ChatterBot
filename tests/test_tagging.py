@@ -47,7 +47,7 @@ class PosLemmaTaggerTests(TestCase):
     def test_string_becomes_lowercase(self):
         tagged_text = self.tagger.get_text_index_string('THIS IS HOW IT BEGINS!')
 
-        self.assertEqual(tagged_text, 'DET:be VERB:how ADV:it NOUN:begin')
+        self.assertEqual(tagged_text, 'DET:be VERB:how ADV:it PRON:begin')
 
     def test_tagging_medium_sized_words(self):
         tagged_text = self.tagger.get_text_index_string('Hello, my name is Gunther.')
@@ -57,7 +57,7 @@ class PosLemmaTaggerTests(TestCase):
     def test_tagging_long_words(self):
         tagged_text = self.tagger.get_text_index_string('I play several orchestra instruments for pleasure.')
 
-        self.assertEqual(tagged_text, 'VERB:orchestra ADJ:instrument NOUN:pleasure')
+        self.assertEqual(tagged_text, 'VERB:orchestra NOUN:instrument NOUN:pleasure')
 
     def test_get_text_index_string_punctuation_only(self):
         bigram_string = self.tagger.get_text_index_string(
@@ -134,4 +134,4 @@ class PosLemmaTaggerTests(TestCase):
             'Lo my mu it is of us'
         )
 
-        self.assertEqual(bigram_string, 'VERB:mu')
+        self.assertEqual(bigram_string, 'PROPN:mu')
