@@ -167,3 +167,36 @@
 #mc_embed_signup #mc-embedded-subscribe-form input.mce_inline_error {
     border: 2px solid #e85c41;
 }
+
+.banner {
+    margin: 0px -20px;
+}
+
+#searchbox {
+    margin-bottom: 15px;
+}
+
+div.sphinxsidebar input[name="q"] {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+div.sphinxsidebar input[type="submit"] {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+
+.help-footer {
+    border-top: 15px #320023 solid;
+}
+
+.help-footer h1, .help-footer h2 {
+    color: gray!important;
+    background-color: transparent!important;
+}
+
+.help-footer a {
+    color: #2980B9;
+    text-decoration: none;
+}

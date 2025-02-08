@@ -1,4 +1,8 @@
-.. image:: ../graphics/banner.png
+.. container:: banner
+
+   .. image:: ../graphics/banner.png
+      :alt: ChatterBot Banner
+      :align: center
 
 About ChatterBot
 ================
