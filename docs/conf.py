@@ -86,7 +86,8 @@ html_theme = 'classic'
 
 # Theme options are theme-specific and customize the look and feel of a theme
 # further. For a list of options available for each theme, see the
-# documentation.
+# documentation:
+# https://www.sphinx-doc.org/en/master/usage/theming.html
 html_theme_options = {
     'externalrefs': True,
     'sidebarbgcolor': '#300a24',
@@ -96,6 +97,7 @@ html_theme_options = {
     'headtextcolor': '#e8ffca',
     'headlinkcolor': '#e8ffca',
     'sidebarwidth': '300px',
+    # 'collapsiblesidebar': True,
 }
 
 root_doc = 'index'
