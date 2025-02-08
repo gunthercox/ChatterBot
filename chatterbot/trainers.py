@@ -52,7 +52,7 @@ class Trainer(object):
         def __init__(self, message=None):
             default = (
                 'A training class must be specified before calling train(). '
-                'See http://chatterbot.readthedocs.io/en/stable/training.html'
+                'See https://docs.chatterbot.us/training.html'
             )
             super().__init__(message or default)
 

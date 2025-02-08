@@ -49,7 +49,7 @@ setup(
     url=URL,
     download_url='{}/tarball/{}'.format(URL, VERSION),
     project_urls={
-        'Documentation': 'https://chatterbot.readthedocs.io',
+        'Documentation': 'https://docs.chatterbot.us',
     },
     description='ChatterBot is a machine learning, conversational dialog engine.',
     long_description=LONG_DESCRIPTION,
