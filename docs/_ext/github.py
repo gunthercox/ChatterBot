@@ -5,6 +5,7 @@ Add GitHub repository details to the Sphinx context.
 GITHUB_USER = 'gunthercox'
 GITHUB_REPO = 'ChatterBot'
 
+
 def setup_github_func(app, pagename, templatename, context, doctree):
     """
     Return the url to the specified page on GitHub.

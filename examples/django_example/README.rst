@@ -22,7 +22,7 @@ python manage.py migrate
 
 Start the Django app by running the following:
 
-```
+```bash
 python manage.py runserver 0.0.0.0:8000
 ```
 
