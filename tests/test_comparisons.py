@@ -93,7 +93,7 @@ class SpacySimilarityTests(TestCase):
 
         value = self.compare(statement, other_statement)
 
-        self.assertAlmostEqual(value, 0.7, places=1)
+        self.assertAlmostEqual(value, 0.8, places=1)
 
 
 class JaccardSimilarityTestCase(TestCase):

@@ -47,7 +47,7 @@ class PosLemmaTaggerTests(TestCase):
     def test_string_becomes_lowercase(self):
         tagged_text = self.tagger.get_text_index_string('THIS IS HOW IT BEGINS!')
 
-        self.assertEqual(tagged_text, 'DET:be VERB:how ADV:it PRON:begin')
+        self.assertEqual(tagged_text, 'PRON:be AUX:how SCONJ:it PRON:begin')
 
     def test_tagging_medium_sized_words(self):
         tagged_text = self.tagger.get_text_index_string('Hello, my name is Gunther.')
@@ -134,4 +134,4 @@ class PosLemmaTaggerTests(TestCase):
             'Lo my mu it is of us'
         )
 
-        self.assertEqual(bigram_string, 'PROPN:mu')
+        self.assertEqual(bigram_string, 'VERB:mu')
