@@ -22,7 +22,7 @@ In this method, the unique identifiers for each chat session are being stored in
 session objects. This allows different users who interact with the bot through different
 web browsers to have separate conversations with the chat bot.
 
-.. literalinclude:: ../examples/django_app/example_app/views.py
+.. literalinclude:: ../examples/django_example/django_example/views.py
    :language: python
    :pyobject: ChatterBotApiView.post
    :dedent: 4
