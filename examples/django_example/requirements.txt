@@ -1,0 +1,2 @@
+django>=4.2,<4.3
+chatterbot>=1.2,<2.0
