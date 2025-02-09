@@ -1,0 +1,5 @@
+# importlib_metadata<5  # Pinned for flake8 support
+flake8
+coverage
+nose
+sphinx>=5.3,<8.2
