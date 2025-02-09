@@ -61,6 +61,24 @@ class LevenshteinDistance(Comparator):
 class SpacySimilarity(Comparator):
     """
     Calculate the similarity of two statements using Spacy models.
+
+    NOTE:
+        You will also need to download a ``spacy`` model to use for tagging. Internally these are used to determine parts of speech for words.
+
+        The easiest way to do this is to use the ``spacy download`` command directly:
+
+        .. code-block:: python
+
+           python -m spacy download en_core_web_sm
+           python -m spacy download de_core_news_sm
+
+        Alternatively, the ``spacy`` models can be installed as Python packages. The following lines could be included in a ``requirements.txt`` file if you needed to pin specific versions:
+
+        .. code-block:: text
+
+           https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz#egg=en_core_web_sm
+           https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.3.0/de_core_news_sm-2.3.0.tar.gz#egg=de_core_news_sm
+
     """
 
     def __init__(self, language):

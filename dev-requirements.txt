@@ -1,14 +1,6 @@
-importlib_metadata<5  # Pinned for flake8 support
-flake8
-nltk>=3.2,<4.0
-nose
+nltk>=3.9,<4.0
 pint>=0.8.1
-pymongo>=3.3,<4.0
-twine
-twython
-spacy>=2.3,<3.0
-sphinx>=5.3,<8.2
-pyyaml>=5.3,<5.4
+pymongo>=4.11,<4.12
+spacy>=3.8,<3.9
+pyyaml>=6.0,<7.0
 git+https://github.com/gunthercox/chatterbot-corpus.git@master
-https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-2.3.0/en_core_web_sm-2.3.0.tar.gz#egg=en_core_web_sm
-https://github.com/explosion/spacy-models/releases/download/de_core_news_sm-2.3.0/de_core_news_sm-2.3.0.tar.gz#egg=de_core_news_sm
