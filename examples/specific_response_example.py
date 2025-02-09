@@ -12,7 +12,7 @@ bot = ChatBot(
         {
             'import_path': 'chatterbot.logic.SpecificResponseAdapter',
             'input_text': 'Help me!',
-            'output_text': 'Ok, here is a link: http://chatterbot.rtfd.org'
+            'output_text': 'Ok, here is a link: https://docs.chatterbot.us'
         }
     ]
 )

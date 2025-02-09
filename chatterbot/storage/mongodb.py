@@ -54,7 +54,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         return statement
 
     def count(self):
-        return self.statements.count()
+        return self.statements.count_documents({})
 
     def mongo_to_object(self, statement_data):
         """
@@ -138,7 +138,7 @@ class MongoDatabaseAdapter(StorageAdapter):
             for order in order_by:
                 mongo_ordering.append((order, pymongo.ASCENDING))
 
-        total_statements = self.statements.find(kwargs).count()
+        total_statements = self.statements.count_documents(kwargs)
 
         for start_index in range(0, total_statements, page_size):
             if mongo_ordering:
