@@ -51,7 +51,7 @@ def read_corpus(file_name):
         message = (
             'Unable to import "yaml".\n'
             'Please install "pyyaml" to enable chatterbot corpus functionality:\n'
-            'pip3 install pyyaml'
+            'pip install pyyaml'
         )
         raise OptionalDependencyImportError(message)
 

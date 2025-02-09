@@ -2,6 +2,7 @@
 This module contains various text-comparison algorithms
 designed to compare one statement to another.
 """
+from chatterbot import constants
 from chatterbot.exceptions import OptionalDependencyImportError
 from difflib import SequenceMatcher
 
@@ -70,11 +71,18 @@ class SpacySimilarity(Comparator):
             message = (
                 'Unable to import "spacy".\n'
                 'Please install "spacy" before using the SpacySimilarity comparator:\n'
-                'pip3 install "spacy>=2.1,<2.2"'
+                'pip install spacy'
             )
             raise OptionalDependencyImportError(message)
 
-        self.nlp = spacy.load(self.language.ISO_639_1)
+        try:
+            model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[self.language]
+        except KeyError as e:
+            raise KeyError(
+                f'Spacy model is not available for language {self.language}'
+            ) from e
+
+        self.nlp = spacy.load(model)
 
     def compare(self, statement_a, statement_b):
         """
@@ -123,11 +131,18 @@ class JaccardSimilarity(Comparator):
             message = (
                 'Unable to import "spacy".\n'
                 'Please install "spacy" before using the JaccardSimilarity comparator:\n'
-                'pip3 install "spacy>=2.1,<2.2"'
+                'pip install spacy'
             )
             raise OptionalDependencyImportError(message)
 
-        self.nlp = spacy.load(self.language.ISO_639_1)
+        try:
+            model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[self.language]
+        except KeyError as e:
+            raise KeyError(
+                f'Spacy model is not available for language {self.language}'
+            ) from e
+
+        self.nlp = spacy.load(model)
 
     def compare(self, statement_a, statement_b):
         """
@@ -138,10 +153,10 @@ class JaccardSimilarity(Comparator):
         document_a = self.nlp(statement_a.text.lower())
         document_b = self.nlp(statement_b.text.lower())
 
-        statement_a_lemmas = set([
+        statement_a_lemmas = frozenset([
             token.lemma_ for token in document_a if not token.is_stop
         ])
-        statement_b_lemmas = set([
+        statement_b_lemmas = frozenset([
             token.lemma_ for token in document_b if not token.is_stop
         ])
 

@@ -1,5 +1,5 @@
 import string
-from chatterbot import languages
+from chatterbot import languages, constants
 
 
 class LowercaseTagger(object):
@@ -23,7 +23,14 @@ class PosLemmaTagger(object):
 
         self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
 
-        self.nlp = spacy.load(self.language.ISO_639_1.lower())
+        try:
+            model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[self.language]
+        except KeyError as e:
+            raise KeyError(
+                f'Spacy model is not available for language {self.language}'
+            ) from e
+
+        self.nlp = spacy.load(model)
 
     def get_text_index_string(self, text):
         """

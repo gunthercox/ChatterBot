@@ -19,7 +19,7 @@ class SQLStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        from sqlalchemy import create_engine
+        from sqlalchemy import create_engine, inspect
         from sqlalchemy.orm import sessionmaker
 
         self.database_uri = kwargs.get('database_uri', False)
@@ -32,7 +32,7 @@ class SQLStorageAdapter(StorageAdapter):
         if not self.database_uri:
             self.database_uri = 'sqlite:///db.sqlite3'
 
-        self.engine = create_engine(self.database_uri, convert_unicode=True)
+        self.engine = create_engine(self.database_uri)
 
         if self.database_uri.startswith('sqlite://'):
             from sqlalchemy.engine import Engine
@@ -43,8 +43,32 @@ class SQLStorageAdapter(StorageAdapter):
                 dbapi_connection.execute('PRAGMA journal_mode=WAL')
                 dbapi_connection.execute('PRAGMA synchronous=NORMAL')
 
-        if not self.engine.dialect.has_table(self.engine, 'Statement'):
+        if not inspect(self.engine).has_table(self.engine, 'statement'):
             self.create_database()
+
+        # Check if the expected index exists on the text field of the statement table
+        if not inspect(self.engine).has_index('statement', 'ix_statement_search_text'):
+            from sqlalchemy import Index
+            from chatterbot.ext.sqlalchemy_app.models import Statement
+
+            search_text_index = Index(
+                'ix_statement_search_text',
+                Statement.search_text
+            )
+
+            search_text_index.create(bind=self.engine)
+
+        # Check if the expected index exists on the in_response_to field of the statement table
+        if not inspect(self.engine).has_index('statement', 'ix_statement_search_in_response_to'):
+            from sqlalchemy import Index
+            from chatterbot.ext.sqlalchemy_app.models import Statement
+
+            search_in_response_to_index = Index(
+                'ix_statement_search_in_response_to',
+                Statement.search_in_response_to
+            )
+
+            search_in_response_to_index.create(bind=self.engine)
 
         self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
 
