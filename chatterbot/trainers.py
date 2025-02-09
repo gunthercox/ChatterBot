@@ -179,6 +179,9 @@ class ChatterBotCorpusTrainer(Trainer):
 class UbuntuCorpusTrainer(Trainer):
     """
     Allow chatbots to be trained with the data from the Ubuntu Dialog Corpus.
+
+    For more information about the Ubuntu Dialog Corpus visit:
+    https://dataset.cs.mcgill.ca/ubuntu-corpus-1.0/
     """
 
     def __init__(self, chatbot, **kwargs):
@@ -305,7 +308,10 @@ class UbuntuCorpusTrainer(Trainer):
 
         return True
 
-    def train(self):
+    def train(self, limit=None):
+        """
+        limit: int If defined, the number of files to read from the data set.
+        """
         import tqdm
 
         tagger = PosLemmaTagger(language=self.chatbot.storage.tagger.language)
@@ -328,6 +334,10 @@ class UbuntuCorpusTrainer(Trainer):
                 yield items[start_index:end_index]
 
         file_list = glob.glob(extracted_corpus_path)
+
+        # Limit the number of files used if a limit is defined
+        if limit is not None:
+            file_list = file_list[:limit]
 
         file_groups = tuple(chunks(file_list, 5000))
 

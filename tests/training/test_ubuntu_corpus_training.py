@@ -57,7 +57,8 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Ubuntu corpus file in memory for testing.
         """
         file_path = os.path.join(self.trainer.data_directory, 'ubuntu_dialogs.tgz')
-        tar = tarfile.TarFile(file_path, 'w')
+        os.makedirs(self.trainer.data_directory, exist_ok=True)
+        tar = tarfile.TarFile(file_path, 'w+')
 
         tsv1 = BytesIO(data[0])
         tsv2 = BytesIO(data[1])
@@ -121,6 +122,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         import requests
 
         file_path = os.path.join(self.trainer.data_directory, 'download.tgz')
+        os.makedirs(self.trainer.data_directory, exist_ok=True)
         open(file_path, 'a').close()
 
         requests.get = Mock(side_effect=self._mock_get_response)
@@ -158,7 +160,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         self._create_test_corpus(self._get_data())
 
-        self.trainer.train()
+        self.trainer.train(limit=50)
         self._destroy_test_corpus()
 
         response = self.chatbot.get_response('Is anyone there?')
@@ -170,7 +172,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         self._create_test_corpus(self._get_data())
 
-        self.trainer.train()
+        self.trainer.train(limit=50)
         self._destroy_test_corpus()
 
         results = list(self.chatbot.storage.filter(text='Is anyone there?'))
@@ -184,7 +186,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         self._create_test_corpus(self._get_data())
 
-        self.trainer.train()
+        self.trainer.train(limit=50)
         self._destroy_test_corpus()
 
         results = list(self.chatbot.storage.filter(in_response_to='Is anyone there?'))
