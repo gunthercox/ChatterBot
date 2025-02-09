@@ -2,6 +2,7 @@ import os
 import sys
 import csv
 import time
+import glob
 from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
 from chatterbot.tagging import PosLemmaTagger
@@ -198,10 +199,6 @@ class UbuntuCorpusTrainer(Trainer):
             self.data_directory, 'ubuntu_dialogs'
         )
 
-        # Create the data directory if it does not already exist
-        if not os.path.exists(self.data_directory):
-            os.makedirs(self.data_directory)
-
     def is_downloaded(self, file_path):
         """
         Check if the data file is already downloaded.
@@ -229,6 +226,10 @@ class UbuntuCorpusTrainer(Trainer):
         Based on: http://stackoverflow.com/a/15645088/1547223
         """
         import requests
+
+        # Create the data directory if it does not already exist
+        if not os.path.exists(self.data_directory):
+            os.makedirs(self.data_directory)
 
         file_name = url.split('/')[-1]
         file_path = os.path.join(self.data_directory, file_name)
@@ -306,7 +307,7 @@ class UbuntuCorpusTrainer(Trainer):
         return True
 
     def train(self):
-        import glob
+        import tqdm
 
         tagger = PosLemmaTagger(language=self.chatbot.storage.tagger.language)
 
@@ -329,15 +330,15 @@ class UbuntuCorpusTrainer(Trainer):
 
         file_list = glob.glob(extracted_corpus_path)
 
-        file_groups = tuple(chunks(file_list, 10000))
+        file_groups = tuple(chunks(file_list, 5000))
 
         start_time = time.time()
 
-        for tsv_files in file_groups:
+        for batch_number, tsv_files in enumerate(file_groups):
 
             statements_from_file = []
 
-            for tsv_file in tsv_files:
+            for tsv_file in tqdm.tqdm(tsv_files, desc=f'Training with batch {batch_number} of {len(file_groups)}'):
                 with open(tsv_file, 'r', encoding='utf-8') as tsv:
                     reader = csv.reader(tsv, delimiter='\t')
 

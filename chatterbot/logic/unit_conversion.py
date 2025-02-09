@@ -29,7 +29,7 @@ class UnitConversion(LogicAdapter):
             message = (
                 'Unable to import "pint".\n'
                 'Please install "pint" before using the UnitConversion logic adapter:\n'
-                'pip3 install pint'
+                'pip install pint'
             )
             raise OptionalDependencyImportError(message)
 

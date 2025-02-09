@@ -25,7 +25,7 @@ class TimeLogicAdapter(LogicAdapter):
             message = (
                 'Unable to import "nltk".\n'
                 'Please install "nltk" before using the TimeLogicAdapter:\n'
-                'pip3 install nltk'
+                'pip install nltk'
             )
             raise OptionalDependencyImportError(message)
 
