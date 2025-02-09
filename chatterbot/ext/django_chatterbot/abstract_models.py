@@ -92,6 +92,15 @@ class AbstractBaseStatement(models.Model, StatementMixin):
 
     class Meta:
         abstract = True
+        indexes = [
+            models.Index(
+                fields=['search_text'],
+                name='idx_cb_search_text'
+            ),
+            models.Index(
+                fields=['search_in_response_to'], name='idx_cb_search_in_response_to'
+            ),
+        ]
 
     def __str__(self):
         if len(self.text.strip()) > 60:

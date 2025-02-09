@@ -47,24 +47,24 @@ class SQLStorageAdapter(StorageAdapter):
             self.create_database()
 
         # Check if the expected index exists on the text field of the statement table
-        if not inspect(self.engine).has_index('statement', 'ix_statement_search_text'):
+        if not inspect(self.engine).has_index('statement', 'idx_cb_search_text'):
             from sqlalchemy import Index
             from chatterbot.ext.sqlalchemy_app.models import Statement
 
             search_text_index = Index(
-                'ix_statement_search_text',
+                'idx_cb_search_text',
                 Statement.search_text
             )
 
             search_text_index.create(bind=self.engine)
 
         # Check if the expected index exists on the in_response_to field of the statement table
-        if not inspect(self.engine).has_index('statement', 'ix_statement_search_in_response_to'):
+        if not inspect(self.engine).has_index('statement', 'idx_cb_search_in_response_to'):
             from sqlalchemy import Index
             from chatterbot.ext.sqlalchemy_app.models import Statement
 
             search_in_response_to_index = Index(
-                'ix_statement_search_in_response_to',
+                'idx_cb_search_in_response_to',
                 Statement.search_in_response_to
             )
 
