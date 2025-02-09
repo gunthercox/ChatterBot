@@ -58,7 +58,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         """
         file_path = os.path.join(self.trainer.data_directory, 'ubuntu_dialogs.tgz')
         os.makedirs(self.trainer.data_directory, exist_ok=True)
-        tar = tarfile.TarFile(file_path, 'w+')
+        tar = tarfile.TarFile(file_path, 'a')
 
         tsv1 = BytesIO(data[0])
         tsv2 = BytesIO(data[1])
