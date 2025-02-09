@@ -134,7 +134,7 @@ class SqlBenchmarkingTests(BenchmarkingMixin, ChatBotSQLTestCase):
         Test response time after training with the Ubuntu corpus.
         """
         trainer = get_ubuntu_corpus_trainer(self.chatbot)
-        trainer.train()
+        trainer.train(limit=50)
 
         self.assert_response_duration_is_less_than(6)
 

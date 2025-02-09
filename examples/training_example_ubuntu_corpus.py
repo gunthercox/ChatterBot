@@ -14,7 +14,7 @@ chatbot = ChatBot('Example Bot')
 trainer = UbuntuCorpusTrainer(chatbot)
 
 # Start by training our bot with the Ubuntu corpus data
-trainer.train()
+trainer.train(limit=100)
 
 # Now let's get a response to a greeting
 response = chatbot.get_response('How are you doing today?')
