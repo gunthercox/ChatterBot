@@ -20,7 +20,7 @@ For example, the following command will run all tests in the test-module `tests/
 
 .. sourcecode:: sh
 
-   nosetests tests/logic_adapter_tests
+   nosetests tests.logic.test_best_match
 
 Django integration tests
 ------------------------
