@@ -15,7 +15,6 @@ packages=[
 
 [project]
 name = "ChatterBot"
-version = "1.2.0"
 requires-python = "~=3.9"
 urls = { Documentation = "https://docs.chatterbot.us", Repository = "https://github.com/gunthercox/ChatterBot"}
 description = "ChatterBot is a machine learning, conversational dialog engine"
@@ -24,6 +23,7 @@ authors = [
 ]
 license = { file = "LICENSE", name = "BSD-3-Clause" }
 readme = "README.md"
+dynamic = ["version"]
 keywords = [
     "ChatterBot",
     "chatbot",

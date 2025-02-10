@@ -1,18 +1,10 @@
-import configparser
 import sys
-import os
 
 
 def get_chatterbot_version():
-    config = configparser.ConfigParser()
+    from chatterbot import __version__
 
-    current_directory = os.path.dirname(os.path.abspath(__file__))
-    parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
-    config_file_path = os.path.join(parent_directory, 'pyproject.toml')
-
-    config.read(config_file_path)
-
-    return config['project']['version']
+    return __version__
 
 
 if __name__ == '__main__':

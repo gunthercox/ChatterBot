@@ -1,23 +1,19 @@
 import os
 import sys
-import configparser
 from pathlib import Path
 from datetime import datetime
 
 
-config = configparser.ConfigParser()
-
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
-config_file_path = os.path.join(parent_directory, 'pyproject.toml')
-
-config.read(config_file_path)
 
 # Insert the project root dir as the first element in the PYTHONPATH.
 # This lets us ensure that the source package is imported, and used to generate the documentation.
 sys.path.insert(0, parent_directory)
 
 sys.path.append(str(Path('_ext').resolve()))
+
+from chatterbot import __version__ as chatterbot_version
 
 # Sphinx extension modules
 extensions = [
@@ -47,17 +43,17 @@ master_doc = 'index'
 
 # General information about the project
 project = 'ChatterBot'
-author = config['project']['author']
+author = 'Gunther Cox'
 copyright = '{}, {}'.format(
     datetime.now().year,
     author
 )
 
 # The full version, including alpha/beta/rc tags
-release = config['project']['version']
+release = chatterbot_version
 
 # The short X.Y version
-version = config['project']['version'].rsplit('.', 1)[0]
+version = chatterbot_version.rsplit('.', 1)[0]
 
 language = 'en'
 
