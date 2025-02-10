@@ -79,5 +79,5 @@ dev = [
     "pymongo>=4.11,<4.12",
     "spacy>=3.8,<3.9",
     "pyyaml>=6.0,<7.0",
-    "chatterbot-corpus"
+    "chatterbot-corpus>1.2.0"
 ]
