@@ -1,5 +1,0 @@
-mathparse>=0.1,<0.2
-python-dateutil>=2.9,<2.10
-sqlalchemy>=2.0,<2.1
-pytz
-tqdm

@@ -1,8 +1,0 @@
-include LICENSE
-include README.md
-include requirements.txt
-include setup.cfg
-
-global-exclude __pycache__
-global-exclude *.py[co]
-global-exclude .*

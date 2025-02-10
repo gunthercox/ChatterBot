@@ -1,5 +1,4 @@
-from pytz import UTC
-from datetime import datetime
+from datetime import datetime, timezone
 from dateutil import parser as date_parser
 
 
@@ -98,7 +97,7 @@ class Statement(StatementMixin):
 
         # Set timezone to UTC if no timezone was provided
         if not self.created_at.tzinfo:
-            self.created_at = self.created_at.replace(tzinfo=UTC)
+            self.created_at = self.created_at.replace(tzinfo=timezone.utc)
 
         # This is the confidence with which the chat bot believes
         # this is an accurate response. This value is set when the

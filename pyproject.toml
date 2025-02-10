@@ -1,0 +1,83 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools]
+packages=[
+    "chatterbot",
+    "chatterbot.storage",
+    "chatterbot.logic",
+    "chatterbot.ext",
+    "chatterbot.ext.sqlalchemy_app",
+    "chatterbot.ext.django_chatterbot",
+    "chatterbot.ext.django_chatterbot.migrations",
+]
+
+[project]
+name = "ChatterBot"
+version = "1.2.0"
+requires-python = "~=3.9"
+urls = { Documentation = "https://docs.chatterbot.us", Repository = "https://github.com/gunthercox/ChatterBot"}
+description = "ChatterBot is a machine learning, conversational dialog engine"
+authors = [
+  {name = "Gunther Cox"},
+]
+license = { file = "LICENSE", name = "BSD-3-Clause" }
+readme = "README.md"
+keywords = [
+    "ChatterBot",
+    "chatbot",
+    "chat",
+    "bot",
+    "natural language processing",
+    "nlp",
+    "artificial intelligence",
+    "ai"
+]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: BSD License",
+    "Operating System :: OS Independent",
+    "Environment :: Console",
+    "Environment :: Web Environment",
+    "Topic :: Internet",
+    "Topic :: Software Development :: Libraries",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+    "Topic :: Scientific/Engineering :: Human Machine Interfaces",
+    "Topic :: Communications :: Chat",
+    "Topic :: Communications :: Chat :: Chatbots",
+    "Topic :: Communications :: Chat :: Conversational",
+    "Topic :: Text Processing",
+    "Topic :: Text Processing :: Filters",
+    "Topic :: Text Processing :: General",
+    "Topic :: Text Processing :: Indexing",
+    "Topic :: Text Processing :: Linguistic",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.9",
+    "Programming Language :: Python :: 3 :: Only",
+]
+dependencies = [
+    "mathparse>=0.1,<0.2",
+    "python-dateutil>=2.9,<2.10",
+    "sqlalchemy>=2.0,<2.1",
+    "tqdm",
+]
+
+[project.optional-dependencies]
+test = [
+    "flake8",
+    "coverage",
+    "nose",
+    "sphinx>=5.3,<8.2"
+]
+dev = [
+    "nltk>=3.9,<4.0",
+    "pint>=0.8.1",
+    "pymongo>=4.11,<4.12",
+    "spacy>=3.8,<3.9",
+    "pyyaml>=6.0,<7.0",
+    "chatterbot-corpus"
+]

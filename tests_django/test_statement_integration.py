@@ -1,3 +1,4 @@
+from datetime import datetime, timezone
 from django.test import TestCase
 from chatterbot.conversation import Statement as StatementObject
 from chatterbot.ext.django_chatterbot.models import Statement as StatementModel
@@ -12,10 +13,7 @@ class StatementIntegrationTestCase(TestCase):
     def setUp(self):
         super().setUp()
 
-        from datetime import datetime
-        from pytz import UTC
-
-        now = datetime(2020, 2, 15, 3, 14, 10, 0, UTC)
+        now = datetime(2020, 2, 15, 3, 14, 10, 0, timezone.utc)
 
         self.object = StatementObject(text='_', created_at=now)
         self.model = StatementModel(text='_', created_at=now)
