@@ -30,9 +30,7 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
-        if [ -f test-requirements.txt ]; then pip install -r test-requirements.txt; fi
-        if [ -f dev-requirements.txt ]; then pip install -r dev-requirements.txt; fi
+        pip install .[test,dev]
         python -m spacy download en_core_web_sm
         python -m spacy download de_core_news_sm
     - name: Lint with flake8

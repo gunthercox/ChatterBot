@@ -45,4 +45,4 @@ Here is an example:
    :language: python
 
 .. _chatterbot_corpus/data: https://github.com/gunthercox/chatterbot-corpus/tree/master/chatterbot_corpus/data
-.. _ChatterBot Corpus Documentation: http://chatterbot-corpus.readthedocs.io/
+.. _ChatterBot Corpus Documentation: https://docs.chatterbot-corpus.readthedocs.io/

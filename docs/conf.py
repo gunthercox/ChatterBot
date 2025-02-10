@@ -9,7 +9,7 @@ config = configparser.ConfigParser()
 
 current_directory = os.path.dirname(os.path.abspath(__file__))
 parent_directory = os.path.abspath(os.path.join(current_directory, os.pardir))
-config_file_path = os.path.join(parent_directory, 'setup.cfg')
+config_file_path = os.path.join(parent_directory, 'pyproject.toml')
 
 config.read(config_file_path)
 
@@ -47,17 +47,17 @@ master_doc = 'index'
 
 # General information about the project
 project = 'ChatterBot'
-author = config['chatterbot']['author']
+author = config['project']['author']
 copyright = '{}, {}'.format(
     datetime.now().year,
     author
 )
 
 # The full version, including alpha/beta/rc tags
-release = config['chatterbot']['version']
+release = config['project']['version']
 
 # The short X.Y version
-version = config['chatterbot']['version'].rsplit('.', 1)[0]
+version = config['project']['version'].rsplit('.', 1)[0]
 
 language = 'en'
 
