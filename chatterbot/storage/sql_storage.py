@@ -230,7 +230,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         session.add(statement)
 
-        session.flush()
+        session.commit()
 
         session.refresh(statement)
 
