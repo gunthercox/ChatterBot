@@ -19,7 +19,9 @@ class SQLStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-        from sqlalchemy import create_engine, inspect
+        from sqlalchemy import create_engine, inspect, event
+        from sqlalchemy import Index
+        from sqlalchemy.engine import Engine
         from sqlalchemy.orm import sessionmaker
 
         self.database_uri = kwargs.get('database_uri', False)
@@ -35,8 +37,6 @@ class SQLStorageAdapter(StorageAdapter):
         self.engine = create_engine(self.database_uri)
 
         if self.database_uri.startswith('sqlite://'):
-            from sqlalchemy.engine import Engine
-            from sqlalchemy import event
 
             @event.listens_for(Engine, 'connect')
             def set_sqlite_pragma(dbapi_connection, connection_record):
@@ -48,7 +48,6 @@ class SQLStorageAdapter(StorageAdapter):
 
         # Check if the expected index exists on the text field of the statement table
         if not inspect(self.engine).has_index('statement', 'idx_cb_search_text'):
-            from sqlalchemy import Index
             from chatterbot.ext.sqlalchemy_app.models import Statement
 
             search_text_index = Index(
@@ -60,7 +59,6 @@ class SQLStorageAdapter(StorageAdapter):
 
         # Check if the expected index exists on the in_response_to field of the statement table
         if not inspect(self.engine).has_index('statement', 'idx_cb_search_in_response_to'):
-            from sqlalchemy import Index
             from chatterbot.ext.sqlalchemy_app.models import Statement
 
             search_in_response_to_index = Index(

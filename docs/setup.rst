@@ -19,7 +19,7 @@ To install ChatterBot from PyPi using pip run the following command in your term
 Optional dependencies
 ---------------------
 
-ChatterBot offers two collections of optional dependencies: ``dev`` and ``test``. Neither of these are required for all ChatterBot use cases, but both provide full support for additional features. The ``dev`` collection includes dependencies such as ``nltk``, and ``spacy``. Separately the ``test`` collection includes dependencies such as ``flake8``, and ``coverage``. The specifics of each collection of optional dependencies can be reviewed via the project's ``pyproject.yml`` file. To install these optional dependencies, you can use the following commands.
+ChatterBot offers two collections of optional dependencies: ``dev`` and ``test``. Neither of these are required for all ChatterBot use cases, but both provide full support for additional features. The ``dev`` collection includes dependencies such as ``nltk``, and ``spacy``. Separately the ``test`` collection includes dependencies such as ``flake8``, and ``coverage``. The specifics of each collection of optional dependencies can be reviewed via the project's `pyproject.yml`_ file. To install these optional dependencies, you can use the following commands.
 
 .. code-block:: bash
 
@@ -90,3 +90,4 @@ Upgrading ChatterBot to the latest version
 .. _git: https://git-scm.com/book/en/v2/Getting-Started-Installing-Git
 .. _pip: https://pip.pypa.io/en/stable/installing/
 .. _PyPi: https://pypi.python.org/pypi
+.. _pyproject.yml: https://github.com/gunthercox/ChatterBot/blob/master/pyproject.toml

@@ -6,13 +6,6 @@ ChatterBot has direct support for integration with Django's ORM.
 It is relatively easy to use ChatterBot within your Django application
 to create conversational pages and endpoints.
 
-.. toctree::
-   :maxdepth: 2
-
-   settings
-   views
-   wsgi
-
 Install packages
 ================
 
@@ -57,6 +50,17 @@ you will need to install a **Django storage backend** such as `Django MongoDB En
 
 The reason this is required is because Django's storage backends are different
 and completely separate from ChatterBot's storage adapters.
+
+Development
+===========
+
+.. toctree::
+   :maxdepth: 2
+
+   settings
+   views
+   wsgi
+   tutorial/index
 
 .. _Django documentation: https://docs.djangoproject.com/en/dev/intro/install/
 .. _Django MongoDB Engine: https://django-mongodb-engine.readthedocs.io/
