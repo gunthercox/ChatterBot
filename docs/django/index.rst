@@ -51,8 +51,8 @@ you will need to install a **Django storage backend** such as `Django MongoDB En
 The reason this is required is because Django's storage backends are different
 and completely separate from ChatterBot's storage adapters.
 
-Development
-===========
+Django App Development
+======================
 
 .. toctree::
    :maxdepth: 2
