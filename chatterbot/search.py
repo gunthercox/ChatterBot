@@ -46,7 +46,7 @@ class IndexedTextSearch:
         input_search_text = input_statement.search_text
 
         if not input_statement.search_text:
-            self.chatbot.logger.warn(
+            self.chatbot.logger.warning(
                 'No value for search_text was available on the provided input'
             )
 

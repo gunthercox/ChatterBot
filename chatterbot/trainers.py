@@ -3,10 +3,9 @@ import sys
 import csv
 import time
 import glob
+from tqdm import tqdm
 from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
-from chatterbot.tagging import PosLemmaTagger
-from chatterbot import utils
 
 
 class Trainer(object):
@@ -93,21 +92,15 @@ class ListTrainer(Trainer):
         statements_to_create = []
 
         # Run the pipeline in bulk to improve performance
-        _search_texts = self.chatbot.storage.tagger.get_text_index_string(conversation)
+        documents = self.chatbot.storage.tagger.as_nlp_pipeline(conversation)
 
-        for conversation_index, text in enumerate(conversation):
-            if self.show_training_progress:
-                # TODO: use tqdm
-                utils.print_progress_bar(
-                    'List Trainer',
-                    conversation_index + 1, len(conversation)
-                )
-
-            statement_search_text = _search_texts[conversation_index]
+        # for text in enumerate(conversation):
+        for document in tqdm.tqdm(documents, desc='List Trainer', disable=not self.show_training_progress):
+            statement_search_text = document._.search_index
 
             statement = self.get_preprocessed_statement(
                 Statement(
-                    text=text,
+                    text=document.text,
                     search_text=statement_search_text,
                     in_response_to=previous_statement_text,
                     search_in_response_to=previous_statement_search_text,
@@ -138,31 +131,27 @@ class ChatterBotCorpusTrainer(Trainer):
         for corpus_path in corpus_paths:
             data_file_paths.extend(list_corpus_files(corpus_path))
 
-        for corpus, categories, file_path in load_corpus(*data_file_paths):
-
+        for corpus, categories, _file_path in tqdm.tqdm(
+            load_corpus(*data_file_paths),
+            desc='ChatterBot Corpus Trainer',
+            disable=not self.show_training_progress
+        ):
             statements_to_create = []
 
             # Train the chat bot with each statement and response pair
-            for conversation_index, conversation in enumerate(corpus):
+            for conversation in corpus:
 
                 # Run the pipeline in bulk to improve performance
-                _search_texts = self.chatbot.storage.tagger.get_text_index_string(conversation)
-
-                if self.show_training_progress:
-                    utils.print_progress_bar(
-                        'Training ' + str(os.path.basename(file_path)),
-                        conversation_index + 1,
-                        len(corpus)
-                    )
+                documents = self.chatbot.storage.tagger.as_nlp_pipeline(conversation)
 
                 previous_statement_text = None
                 previous_statement_search_text = ''
 
-                for text_index, text in enumerate(conversation):
-                    statement_search_text = _search_texts[text_index]
+                for document in documents:
+                    statement_search_text = document._.search_index
 
                     statement = Statement(
-                        text=text,
+                        text=document.text,
                         search_text=statement_search_text,
                         in_response_to=previous_statement_text,
                         search_in_response_to=previous_statement_search_text,
@@ -318,10 +307,6 @@ class UbuntuCorpusTrainer(Trainer):
         """
         limit: int If defined, the number of files to read from the data set.
         """
-        import tqdm
-
-        tagger = PosLemmaTagger(language=self.chatbot.storage.tagger.language)
-
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
 
@@ -360,34 +345,37 @@ class UbuntuCorpusTrainer(Trainer):
                     previous_statement_text = None
                     previous_statement_search_text = ''
 
-                    _search_texts = self.chatbot.storage.tagger.get_text_index_string([
-                        row[3] if len(row) > 0 else '' for row in reader
+                    documents = self.chatbot.storage.tagger.as_nlp_pipeline([
+                        (
+                            row[3],
+                            {
+                                'persona': row[1],
+                                'created_at': row[0],
+                            }
+                         ) for row in reader if len(row) > 0
                     ])
 
-                    tsv.seek(0)
+                    for document, context in documents:
 
-                    for index, row in enumerate(reader):
-                        if len(row) > 0:
+                        statement_search_text = document._.search_index
 
-                            statement_search_text = _search_texts[index]
+                        statement = Statement(
+                            text=document.text,
+                            in_response_to=previous_statement_text,
+                            conversation='training',
+                            created_at=date_parser.parse(context['created_at']),
+                            persona=context['persona'],
+                            search_text=statement_search_text,
+                            search_in_response_to=previous_statement_search_text
+                        )
 
-                            statement = Statement(
-                                text=row[3],
-                                in_response_to=previous_statement_text,
-                                conversation='training',
-                                created_at=date_parser.parse(row[0]),
-                                persona=row[1],
-                                search_text=statement_search_text,
-                                search_in_response_to=previous_statement_search_text
-                            )
+                        for preprocessor in self.chatbot.preprocessors:
+                            statement = preprocessor(statement)
 
-                            for preprocessor in self.chatbot.preprocessors:
-                                statement = preprocessor(statement)
+                        previous_statement_text = statement.text
+                        previous_statement_search_text = statement_search_text
 
-                            previous_statement_text = statement.text
-                            previous_statement_search_text = statement_search_text
-
-                            statements_from_file.append(statement)
+                        statements_from_file.append(statement)
 
             self.chatbot.storage.create_many(statements_from_file)
 

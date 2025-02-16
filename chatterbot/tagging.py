@@ -7,10 +7,32 @@ class LowercaseTagger(object):
     """
 
     def __init__(self, language=None):
+        import spacy
+        from chatterbot.components import chatterbot_lowercase_indexer  # noqa
+
         self.language = language or languages.ENG
 
+        # Create a new empty spacy nlp object
+        self.nlp = spacy.blank(self.language.ISO_639_1)
+
+        self.nlp.add_pipe(
+            'chatterbot_lowercase_indexer', name='chatterbot_lowercase_indexer', last=True
+        )
+
     def get_text_index_string(self, text):
-        return text.lower()
+        if isinstance(text, list):
+            documents = self.nlp.pipe(text)
+            return [document._.search_index for document in documents]
+        else:
+            document = self.nlp(text)
+            return document._.search_index
+
+    def as_nlp_pipeline(self, texts):
+
+        process_as_tuples = texts and isinstance(texts[0], tuple)
+
+        documents = self.nlp.pipe(texts, as_tuples=process_as_tuples)
+        return documents
 
 
 class PosLemmaTagger(object):
@@ -41,7 +63,19 @@ class PosLemmaTagger(object):
         """
         if isinstance(text, list):
             documents = self.nlp.pipe(text)
-            return [document._.bigram_index for document in documents]
+            return [document._.search_index for document in documents]
         else:
             document = self.nlp(text)
-            return document._.bigram_index
+            return document._.search_index
+
+    def as_nlp_pipeline(self, texts):
+        """
+        Accepts a single string or a list of strings, or a list of tuples
+        where the first element is the text and the second element is a
+        dictionary of context to return alongside the generated document.
+        """
+
+        process_as_tuples = texts and isinstance(texts[0], tuple)
+
+        documents = self.nlp.pipe(texts, as_tuples=process_as_tuples)
+        return documents
