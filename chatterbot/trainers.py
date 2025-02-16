@@ -95,7 +95,7 @@ class ListTrainer(Trainer):
         documents = self.chatbot.storage.tagger.as_nlp_pipeline(conversation)
 
         # for text in enumerate(conversation):
-        for document in tqdm.tqdm(documents, desc='List Trainer', disable=not self.show_training_progress):
+        for document in tqdm(documents, desc='List Trainer', disable=not self.show_training_progress):
             statement_search_text = document._.search_index
 
             statement = self.get_preprocessed_statement(
@@ -131,7 +131,7 @@ class ChatterBotCorpusTrainer(Trainer):
         for corpus_path in corpus_paths:
             data_file_paths.extend(list_corpus_files(corpus_path))
 
-        for corpus, categories, _file_path in tqdm.tqdm(
+        for corpus, categories, _file_path in tqdm(
             load_corpus(*data_file_paths),
             desc='ChatterBot Corpus Trainer',
             disable=not self.show_training_progress
