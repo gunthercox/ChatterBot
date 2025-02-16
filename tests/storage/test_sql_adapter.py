@@ -395,9 +395,10 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
         self.assertEqual(results[1].search_text, 'b')
 
     def test_create_many_search_in_response_to(self):
+        # `search_text` must be present or `search_in_response_to` will be generated based on the `in_response_to` field
         self.adapter.create_many([
-            Statement(text='A', search_in_response_to='a'),
-            Statement(text='B', search_in_response_to='b')
+            Statement(text='A', search_text='1', search_in_response_to='a'),
+            Statement(text='B', search_text='2', search_in_response_to='b')
         ])
 
         results = list(self.adapter.filter())
