@@ -30,8 +30,8 @@ class PosLemmaTagger(object):
                 f'Spacy model is not available for language {self.language}'
             ) from e
 
-        # Load the spacy model, only the 'tagger'-related pipeline is needed for POS tagging
-        self.nlp = spacy.load(model)
+        # Disable the Named Entity Recognition (NER) component because it is not necessary
+        self.nlp = spacy.load(model, exclude=['ner'])
 
     def _get_bigram_pairs(self, document):
         tokens = [
