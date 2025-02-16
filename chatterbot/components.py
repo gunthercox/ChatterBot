@@ -16,8 +16,8 @@ def chatterbot_bigram_indexer(document):
     Generate the text string for a bigram-based search index.
     """
 
-    if not Doc.has_extension('bigram_index'):
-        Doc.set_extension('bigram_index', default='')
+    if not Doc.has_extension('search_index'):
+        Doc.set_extension('search_index', default='')
 
     tokens = [
         token for token in document if not (token.is_punct or token.is_stop)
@@ -47,6 +47,21 @@ def chatterbot_bigram_indexer(document):
         bigram_pairs = [text]
 
     # Assign a custom attribute at the Doc level
-    document._.bigram_index = ' '.join(bigram_pairs)
+    document._.search_index = ' '.join(bigram_pairs)
+
+    return document
+
+
+@Language.component('chatterbot_lowercase_indexer')
+def chatterbot_lowercase_indexer(document):
+    """
+    Generate the a lowercase text string for search index.
+    """
+
+    if not Doc.has_extension('search_index'):
+        Doc.set_extension('search_index', default='')
+
+    # Assign a custom attribute at the Doc level
+    document._.search_index = document.text.lower()
 
     return document

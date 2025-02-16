@@ -135,3 +135,16 @@ class PosLemmaTaggerTests(TestCase):
         )
 
         self.assertEqual(bigram_string, 'VERB:mu')
+
+
+class LowercaseTaggerTests(TestCase):
+
+    def setUp(self):
+        self.tagger = tagging.LowercaseTagger()
+
+    def test_lowercase_tagger(self):
+        tagged_text = self.tagger.get_text_index_string(
+            'Hello, how are you doing on this AWESOME day?'
+        )
+
+        self.assertEqual(tagged_text, 'hello, how are you doing on this awesome day?')

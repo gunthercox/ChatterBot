@@ -107,6 +107,8 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
 
     :returns: void
     :rtype: void
+
+    DEPRECTTED: use `tqdm` instead
     """
     import sys
 
