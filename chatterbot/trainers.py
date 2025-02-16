@@ -338,7 +338,7 @@ class UbuntuCorpusTrainer(Trainer):
 
             statements_from_file = []
 
-            for tsv_file in tqdm.tqdm(tsv_files, desc=f'Training with batch {batch_number} of {len(file_groups)}'):
+            for tsv_file in tqdm(tsv_files, desc=f'Training with batch {batch_number} of {len(file_groups)}'):
                 with open(tsv_file, 'r', encoding='utf-8') as tsv:
                     reader = csv.reader(tsv, delimiter='\t')
 

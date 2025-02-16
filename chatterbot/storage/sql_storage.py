@@ -250,18 +250,26 @@ class SQLStorageAdapter(StorageAdapter):
         create_statements = []
         create_tags = {}
 
+        # Check if any statements already have a search text
+        have_search_text = any(statement.search_text for statement in statements)
+
+        # Generate search text values in bulk
+        if not have_search_text:
+            search_text_documents = self.tagger.as_nlp_pipeline([statement.text for statement in statements])
+            response_search_text_documents = self.tagger.as_nlp_pipeline([statement.in_response_to or '' for statement in statements])
+
+            for statement, search_text_document, response_search_text_document in zip(
+                statements, search_text_documents, response_search_text_documents
+            ):
+                statement.search_text = search_text_document._.search_index
+                statement.search_in_response_to = response_search_text_document._.search_index
+
         for statement in statements:
 
             statement_data = statement.serialize()
             tag_data = statement_data.pop('tags', [])
 
             statement_model_object = Statement(**statement_data)
-
-            if not statement.search_text:
-                statement_model_object.search_text = self.tagger.get_text_index_string(statement.text)
-
-            if not statement.search_in_response_to and statement.in_response_to:
-                statement_model_object.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
 
             new_tags = set(tag_data) - set(create_tags.keys())
 
