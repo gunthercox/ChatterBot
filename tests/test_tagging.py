@@ -120,7 +120,7 @@ class PosLemmaTaggerTests(TestCase):
             'Hello Dr. Salazar. How are you today?'
         )
 
-        self.assertEqual(bigram_string, 'INTJ:salazar PROPN:today')
+        self.assertEqual(bigram_string, 'INTJ:dr. PROPN:salazar PROPN:today')
 
     def test_get_text_index_string_single_character_words(self):
         bigram_string = self.tagger.get_text_index_string(

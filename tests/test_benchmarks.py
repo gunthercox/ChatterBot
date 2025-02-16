@@ -4,6 +4,7 @@ various chat bot configurations to help prevent
 performance based regressions when changes are made.
 """
 
+import logging
 from unittest import skip
 from warnings import warn
 from random import choice
@@ -11,6 +12,9 @@ from tests.base_case import ChatBotSQLTestCase, ChatBotMongoTestCase
 from chatterbot.trainers import ListTrainer, ChatterBotCorpusTrainer, UbuntuCorpusTrainer
 from chatterbot.logic import BestMatch
 from chatterbot import comparisons, response_selection, utils
+
+
+logging.getLogger('pymongo').setLevel(logging.WARNING)
 
 
 WORDBANK = (
