@@ -8,6 +8,9 @@ from difflib import SequenceMatcher
 
 
 class Comparator:
+    """
+    Base class establishing the interface that all comparators should implement.
+    """
 
     def __init__(self, language):
 
@@ -17,6 +20,12 @@ class Comparator:
         return self.compare(statement_a, statement_b)
 
     def compare(self, statement_a, statement_b):
+        """
+        Implemented in subclasses: compare statement_a to statement_b.
+
+        :return: The percent of similarity between the statements based on the implemented algorithm.
+        :rtype: float
+        """
         return 0
 
 
@@ -100,7 +109,8 @@ class SpacySimilarity(Comparator):
                 f'Spacy model is not available for language {self.language}'
             ) from e
 
-        self.nlp = spacy.load(model)
+        # Disable the Named Entity Recognition (NER) component because it is not necessary
+        self.nlp = spacy.load(model, exclude=['ner'])
 
     def compare(self, statement_a, statement_b):
         """
@@ -160,7 +170,8 @@ class JaccardSimilarity(Comparator):
                 f'Spacy model is not available for language {self.language}'
             ) from e
 
-        self.nlp = spacy.load(model)
+        # Disable the Named Entity Recognition (NER) component because it is not necessary
+        self.nlp = spacy.load(model, exclude=['ner'])
 
     def compare(self, statement_a, statement_b):
         """
