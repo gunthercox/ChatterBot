@@ -108,7 +108,8 @@ class ChatBot(object):
         # Make sure the input statement has its search text saved
 
         if not input_statement.search_text:
-            input_statement.search_text = self.storage.tagger.get_text_index_string(input_statement.text)
+            _search_text = self.storage.tagger.get_text_index_string(input_statement.text)
+            input_statement.search_text = _search_text
 
         if not input_statement.search_in_response_to and input_statement.in_response_to:
             input_statement.search_in_response_to = self.storage.tagger.get_text_index_string(input_statement.in_response_to)

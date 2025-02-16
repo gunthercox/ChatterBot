@@ -30,44 +30,47 @@ class PosLemmaTagger(object):
                 f'Spacy model is not available for language {self.language}'
             ) from e
 
+        # Load the spacy model, only the 'tagger'-related pipeline is needed for POS tagging
         self.nlp = spacy.load(model)
+
+    def _get_bigram_pairs(self, document):
+        tokens = [
+            token for token in document if not (token.is_punct or token.is_stop)
+        ]
+
+        # Fall back to including stop words if needed
+        if not tokens or len(tokens) == 1:
+            tokens = [
+                token for token in document if not (token.is_punct)
+            ]
+
+        bigram_pairs = [
+            f"{tokens[i - 1].pos_}:{tokens[i].lemma_.lower()}"
+            for i in range(1, len(tokens))
+        ]
+
+        if not bigram_pairs:
+
+            text_without_punctuation = document.text.translate(
+                self.punctuation_table
+            )
+            if len(text_without_punctuation) >= 1:
+                text = text_without_punctuation.lower()
+            else:
+                text = document.text.lower()
+
+            bigram_pairs = [text]
+
+        return bigram_pairs
 
     def get_text_index_string(self, text):
         """
         Return a string of text containing part-of-speech, lemma pairs.
         """
-        bigram_pairs = []
-
-        if len(text) <= 2:
-            text_without_punctuation = text.translate(self.punctuation_table)
-            if len(text_without_punctuation) >= 1:
-                text = text_without_punctuation
-
-        document = self.nlp(text)
-
-        if len(text) <= 2:
-            bigram_pairs = [
-                token.lemma_.lower() for token in document
-            ]
+        if isinstance(text, list):
+            documents = self.nlp.pipe(text)
+            return [' '.join(self._get_bigram_pairs(document)) for document in documents]
         else:
-            tokens = [
-                token for token in document if token.is_alpha and not token.is_stop
-            ]
-
-            if len(tokens) < 2:
-                tokens = [
-                    token for token in document if token.is_alpha
-                ]
-
-            for index in range(1, len(tokens)):
-                bigram_pairs.append('{}:{}'.format(
-                    tokens[index - 1].pos_,
-                    tokens[index].lemma_.lower()
-                ))
-
-        if not bigram_pairs:
-            bigram_pairs = [
-                token.lemma_.lower() for token in document
-            ]
-
-        return ' '.join(bigram_pairs)
+            document = self.nlp(text)
+            bigram_pairs = self._get_bigram_pairs(document)
+            return ' '.join(bigram_pairs)

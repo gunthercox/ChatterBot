@@ -92,14 +92,18 @@ class ListTrainer(Trainer):
 
         statements_to_create = []
 
-        for conversation_count, text in enumerate(conversation):
+        # Run the pipeline in bulk to improve performance
+        _search_texts = self.chatbot.storage.tagger.get_text_index_string(conversation)
+
+        for conversation_index, text in enumerate(conversation):
             if self.show_training_progress:
+                # TODO: use tqdm
                 utils.print_progress_bar(
                     'List Trainer',
-                    conversation_count + 1, len(conversation)
+                    conversation_index + 1, len(conversation)
                 )
 
-            statement_search_text = self.chatbot.storage.tagger.get_text_index_string(text)
+            statement_search_text = _search_texts[conversation_index]
 
             statement = self.get_preprocessed_statement(
                 Statement(
@@ -139,21 +143,23 @@ class ChatterBotCorpusTrainer(Trainer):
             statements_to_create = []
 
             # Train the chat bot with each statement and response pair
-            for conversation_count, conversation in enumerate(corpus):
+            for conversation_index, conversation in enumerate(corpus):
+
+                # Run the pipeline in bulk to improve performance
+                _search_texts = self.chatbot.storage.tagger.get_text_index_string(conversation)
 
                 if self.show_training_progress:
                     utils.print_progress_bar(
                         'Training ' + str(os.path.basename(file_path)),
-                        conversation_count + 1,
+                        conversation_index + 1,
                         len(corpus)
                     )
 
                 previous_statement_text = None
                 previous_statement_search_text = ''
 
-                for text in conversation:
-
-                    statement_search_text = self.chatbot.storage.tagger.get_text_index_string(text)
+                for text_index, text in enumerate(conversation):
+                    statement_search_text = _search_texts[text_index]
 
                     statement = Statement(
                         text=text,
@@ -354,24 +360,32 @@ class UbuntuCorpusTrainer(Trainer):
                     previous_statement_text = None
                     previous_statement_search_text = ''
 
-                    for row in reader:
+                    _search_texts = self.chatbot.storage.tagger.get_text_index_string([
+                        row[3] if len(row) > 0 else '' for row in reader
+                    ])
+
+                    tsv.seek(0)
+
+                    for index, row in enumerate(reader):
                         if len(row) > 0:
+
+                            statement_search_text = _search_texts[index]
+
                             statement = Statement(
                                 text=row[3],
                                 in_response_to=previous_statement_text,
                                 conversation='training',
                                 created_at=date_parser.parse(row[0]),
-                                persona=row[1]
+                                persona=row[1],
+                                search_text=statement_search_text,
+                                search_in_response_to=previous_statement_search_text
                             )
 
                             for preprocessor in self.chatbot.preprocessors:
                                 statement = preprocessor(statement)
 
-                            statement.search_text = tagger.get_text_index_string(statement.text)
-                            statement.search_in_response_to = previous_statement_search_text
-
                             previous_statement_text = statement.text
-                            previous_statement_search_text = statement.search_text
+                            previous_statement_search_text = statement_search_text
 
                             statements_from_file.append(statement)
 
