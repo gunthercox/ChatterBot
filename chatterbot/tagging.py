@@ -1,4 +1,3 @@
-import string
 from chatterbot import languages, constants
 
 
@@ -18,10 +17,9 @@ class PosLemmaTagger(object):
 
     def __init__(self, language=None):
         import spacy
+        from chatterbot.components import chatterbot_bigram_indexer  # noqa
 
         self.language = language or languages.ENG
-
-        self.punctuation_table = str.maketrans(dict.fromkeys(string.punctuation))
 
         try:
             model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[self.language]
@@ -33,35 +31,9 @@ class PosLemmaTagger(object):
         # Disable the Named Entity Recognition (NER) component because it is not necessary
         self.nlp = spacy.load(model, exclude=['ner'])
 
-    def _get_bigram_pairs(self, document):
-        tokens = [
-            token for token in document if not (token.is_punct or token.is_stop)
-        ]
-
-        # Fall back to including stop words if needed
-        if not tokens or len(tokens) == 1:
-            tokens = [
-                token for token in document if not (token.is_punct)
-            ]
-
-        bigram_pairs = [
-            f"{tokens[i - 1].pos_}:{tokens[i].lemma_.lower()}"
-            for i in range(1, len(tokens))
-        ]
-
-        if not bigram_pairs:
-
-            text_without_punctuation = document.text.translate(
-                self.punctuation_table
-            )
-            if len(text_without_punctuation) >= 1:
-                text = text_without_punctuation.lower()
-            else:
-                text = document.text.lower()
-
-            bigram_pairs = [text]
-
-        return bigram_pairs
+        self.nlp.add_pipe(
+            'chatterbot_bigram_indexer', name='chatterbot_bigram_indexer', last=True
+        )
 
     def get_text_index_string(self, text):
         """
@@ -69,8 +41,7 @@ class PosLemmaTagger(object):
         """
         if isinstance(text, list):
             documents = self.nlp.pipe(text)
-            return [' '.join(self._get_bigram_pairs(document)) for document in documents]
+            return [document._.bigram_index for document in documents]
         else:
             document = self.nlp(text)
-            bigram_pairs = self._get_bigram_pairs(document)
-            return ' '.join(bigram_pairs)
+            return document._.bigram_index
