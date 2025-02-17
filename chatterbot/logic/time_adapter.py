@@ -1,7 +1,8 @@
 from datetime import datetime
+from chatterbot import constants, languages
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
-from chatterbot.exceptions import OptionalDependencyImportError
+import spacy
 
 
 class TimeLogicAdapter(LogicAdapter):
@@ -10,91 +11,61 @@ class TimeLogicAdapter(LogicAdapter):
 
     :kwargs:
         * *positive* (``list``) --
-          The time-related questions used to identify time questions.
+          The time-related questions used to identify time questions about the current time.
           Defaults to a list of English sentences.
-        * *negative* (``list``) --
-          The non-time-related questions used to identify time questions.
-          Defaults to a list of English sentences.
+        * *language* (``str``) --
+          The language for the spacy model. Defaults to English.
     """
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
+
+        # TODO / FUTURE: Switch `positive` to `patterns` for more accurate naming
+        phrases = kwargs.get('positive', [
+            'What time is it?',
+            'Hey, what time is it?',
+            'Do you have the time?',
+            'Do you know the time?',
+            'Do you know what time it is?',
+            'What is the time?',
+            'What time is it now?',
+            'Can you tell me the time?',
+            'Could you tell me the time?',
+            'What is the current time?',
+        ])
+
+        language = kwargs.get('language', languages.ENG)
+
         try:
-            from nltk import NaiveBayesClassifier
-        except ImportError:
-            message = (
-                'Unable to import "nltk".\n'
-                'Please install "nltk" before using the TimeLogicAdapter:\n'
-                'pip install nltk'
-            )
-            raise OptionalDependencyImportError(message)
+            model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[language]
+        except KeyError as e:
+            raise KeyError(
+                f'Spacy model is not available for language {language}'
+            ) from e
 
-        self.positive = kwargs.get('positive', [
-            'what time is it',
-            'hey what time is it',
-            'do you have the time',
-            'do you know the time',
-            'do you know what time it is',
-            'what is the time'
-        ])
+        self.nlp = spacy.load(model)
 
-        self.negative = kwargs.get('negative', [
-            'it is time to go to sleep',
-            'what is your favorite color',
-            'i had a great time',
-            'thyme is my favorite herb',
-            'do you have time to look at my essay',
-            'how do you have the time to do all this'
-            'what is it'
-        ])
+        # Set up rules for spacy's rule-based matching
+        # https://spacy.io/usage/rule-based-matching
 
-        labeled_data = (
-            [
-                (name, 0) for name in self.negative
-            ] + [
-                (name, 1) for name in self.positive
-            ]
-        )
+        self.matcher = spacy.matcher.PhraseMatcher(self.nlp.vocab)
 
-        train_set = [
-            (self.time_question_features(text), n) for (text, n) in labeled_data
-        ]
+        patterns = [self.nlp.make_doc(text) for text in phrases]
 
-        self.classifier = NaiveBayesClassifier.train(train_set)
-
-    def time_question_features(self, text):
-        """
-        Provide an analysis of significant features in the string.
-        """
-        features = {}
-
-        # A list of all words from the known sentences
-        all_words = " ".join(self.positive + self.negative).split()
-
-        # A list of the first word in each of the known sentence
-        all_first_words = []
-        for sentence in self.positive + self.negative:
-            all_first_words.append(
-                sentence.split(' ', 1)[0]
-            )
-
-        for word in text.split():
-            features['first_word({})'.format(word)] = (word in all_first_words)
-
-        for word in text.split():
-            features['contains({})'.format(word)] = (word in all_words)
-
-        for letter in 'abcdefghijklmnopqrstuvwxyz':
-            features['count({})'.format(letter)] = text.lower().count(letter)
-            features['has({})'.format(letter)] = (letter in text.lower())
-
-        return features
+        # Add the patterns to the matcher
+        self.matcher.add('TimeQuestionList', patterns)
 
     def process(self, statement, additional_response_selection_parameters=None):
         now = datetime.now()
 
-        time_features = self.time_question_features(statement.text.lower())
-        confidence = self.classifier.classify(time_features)
+        # Check if the input statement contains a time-related question
+        doc = self.nlp(statement.text)
+
+        matches = self.matcher(doc)
+
+        self.chatbot.logger.info('TimeLogicAdapter detected {} matches'.format(len(matches)))
+
+        confidence = 1 if matches else 0
         response = Statement(text='The current time is ' + now.strftime('%I:%M %p'))
 
         response.confidence = confidence
