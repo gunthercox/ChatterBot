@@ -21,7 +21,7 @@ class IndexedTextSearch:
         )
 
         self.compare_statements = statement_comparison_function(
-            language=self.chatbot.storage.tagger.language
+            language=self.chatbot.tagger.language
         )
 
         self.search_page_size = kwargs.get(
@@ -50,7 +50,7 @@ class IndexedTextSearch:
                 'No value for search_text was available on the provided input'
             )
 
-            input_search_text = self.chatbot.storage.tagger.get_text_index_string(
+            input_search_text = self.chatbot.tagger.get_text_index_string(
                 input_statement.text
             )
 
@@ -107,7 +107,7 @@ class TextSearch:
         )
 
         self.compare_statements = statement_comparison_function(
-            language=self.chatbot.storage.tagger.language
+            language=self.chatbot.tagger.language
         )
 
         self.search_page_size = kwargs.get(

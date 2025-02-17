@@ -15,7 +15,7 @@ class TrainingTests(ChatBotTestCase):
             self.trainer.train()
 
     def test_generate_export_data(self):
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='Hello, how are you?'),
             Statement(text='I am good.', in_response_to='Hello, how are you?')
         ])

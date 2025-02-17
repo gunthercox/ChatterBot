@@ -22,7 +22,8 @@ class MongoAdapterTestCase(TestCase):
             client.server_info()
 
             cls.adapter = MongoDatabaseAdapter(
-                database_uri='mongodb://localhost:27017/chatterbot_test_database'
+                database_uri='mongodb://localhost:27017/chatterbot_test_database',
+                raise_on_missing_search_text=False
             )
 
             cls.has_mongo_connection = True

@@ -10,7 +10,7 @@ class SQLStorageAdapterTestCase(TestCase):
         """
         Instantiate the adapter before any tests in the test case run.
         """
-        cls.adapter = SQLStorageAdapter(database_uri=None)
+        cls.adapter = SQLStorageAdapter(database_uri=None, raise_on_missing_search_text=False)
 
     def tearDown(self):
         """

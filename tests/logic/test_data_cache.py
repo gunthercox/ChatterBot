@@ -48,5 +48,5 @@ class DataCachingTests(ChatBotTestCase):
             conversation='test'
         ))
 
-        self.assertEqual(len(results), 1)
+        self.assertEqual(len(results), 1, msg=f'Results: {[result.serialize() for result in results]}')
         self.assertIn('pos_tags:NN', results[0].get_tags())

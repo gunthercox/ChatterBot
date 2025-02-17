@@ -93,7 +93,7 @@ class ListTrainer(Trainer):
         statements_to_create = []
 
         # Run the pipeline in bulk to improve performance
-        documents = self.chatbot.storage.tagger.as_nlp_pipeline(conversation)
+        documents = self.chatbot.tagger.as_nlp_pipeline(conversation)
 
         # for text in enumerate(conversation):
         for document in tqdm(documents, desc='List Trainer', disable=not self.show_training_progress):
@@ -143,7 +143,7 @@ class ChatterBotCorpusTrainer(Trainer):
             for conversation in corpus:
 
                 # Run the pipeline in bulk to improve performance
-                documents = self.chatbot.storage.tagger.as_nlp_pipeline(conversation)
+                documents = self.chatbot.tagger.as_nlp_pipeline(conversation)
 
                 previous_statement_text = None
                 previous_statement_search_text = ''
@@ -344,7 +344,7 @@ class UbuntuCorpusTrainer(Trainer):
                     previous_statement_text = None
                     previous_statement_search_text = ''
 
-                    documents = self.chatbot.storage.tagger.as_nlp_pipeline([
+                    documents = self.chatbot.tagger.as_nlp_pipeline([
                         (
                             row[3],
                             {

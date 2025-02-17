@@ -34,7 +34,7 @@ class SearchTestCase(ChatBotTestCase):
         """
         It should be possible to pass additional parameters in to use for searching.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='A', conversation='test_1'),
             Statement(text='A', conversation='test_2')
         ])
@@ -69,7 +69,7 @@ class IndexedTextSearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         test statements is only required because the logic adapter will
         filter out any statements that are not in response to a known statement.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='This is a lovely bog.', in_response_to='This is a lovely bog.'),
             Statement(text='This is a beautiful swamp.', in_response_to='This is a beautiful swamp.'),
             Statement(text='It smells like a swamp.', in_response_to='It smells like a swamp.')
@@ -83,7 +83,7 @@ class IndexedTextSearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         self.assertGreater(results[0].confidence, 0)
 
     def test_different_punctuation(self):
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='Who are you?'),
             Statement(text='Are you good?'),
             Statement(text='You are good')
@@ -116,7 +116,7 @@ class IndexedTextSearchComparisonFunctionLevenshteinDistanceComparisonTests(Chat
         test statements is only required because the search process will
         filter out any statements that are not in response to something.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='What is the meaning of life?', in_response_to='...'),
             Statement(text='I am Iron Man.', in_response_to='...'),
             Statement(text='What... is your quest?', in_response_to='...'),
@@ -132,7 +132,7 @@ class IndexedTextSearchComparisonFunctionLevenshteinDistanceComparisonTests(Chat
         self.assertEqual(results[0].text, 'What... is your quest?')
 
     def test_confidence_exact_match(self):
-        self.chatbot.storage.create(text='What is your quest?', in_response_to='What is your quest?')
+        self._create_with_search_text(text='What is your quest?', in_response_to='What is your quest?')
 
         statement = Statement(text='What is your quest?')
         results = list(self.search_algorithm.search(statement))
@@ -187,7 +187,7 @@ class TextSearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         test statements is only required because the logic adapter will
         filter out any statements that are not in response to a known statement.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='This is a lovely bog.', in_response_to='This is a lovely bog.'),
             Statement(text='This is a beautiful swamp.', in_response_to='This is a beautiful swamp.'),
             Statement(text='It smells like a swamp.', in_response_to='It smells like a swamp.')
@@ -201,7 +201,7 @@ class TextSearchComparisonFunctionSpacySimilarityTests(ChatBotTestCase):
         self.assertGreater(results[-1].confidence, 0)
 
     def test_different_punctuation(self):
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='Who are you?'),
             Statement(text='Are you good?'),
             Statement(text='You are good')
@@ -234,7 +234,7 @@ class TextSearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTest
         test statements is only required because the search process will
         filter out any statements that are not in response to something.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement(text='What is the meaning of life?', in_response_to='...'),
             Statement(text='I am Iron Man.', in_response_to='...'),
             Statement(text='What... is your quest?', in_response_to='...'),
@@ -250,7 +250,7 @@ class TextSearchComparisonFunctionLevenshteinDistanceComparisonTests(ChatBotTest
         self.assertEqual(results[-1].text, 'What... is your quest?', msg=results[-1].confidence)
 
     def test_confidence_exact_match(self):
-        self.chatbot.storage.create(text='What is your quest?', in_response_to='What is your quest?')
+        self._create_with_search_text(text='What is your quest?', in_response_to='What is your quest?')
 
         statement = Statement(text='What is your quest?')
         results = list(self.search_algorithm.search(statement))

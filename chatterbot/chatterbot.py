@@ -2,7 +2,10 @@ import logging
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import TextSearch, IndexedTextSearch
+from chatterbot.tagging import PosLemmaTagger
+from chatterbot import languages
 from chatterbot import utils
+import spacy
 
 
 class ChatBot(object):
@@ -27,6 +30,12 @@ class ChatBot(object):
 
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
 
+        Tagger = kwargs.get('tagger', PosLemmaTagger)
+
+        self.tagger = Tagger(language=kwargs.get(
+            'tagger_language', languages.ENG
+        ))
+
         primary_search_algorithm = IndexedTextSearch(self, **kwargs)
         text_search_algorithm = TextSearch(self, **kwargs)
 
@@ -50,6 +59,9 @@ class ChatBot(object):
 
         for preprocessor in preprocessors:
             self.preprocessors.append(utils.import_module(preprocessor))
+
+        # NOTE: 'xx' is the language code for a multi-language model
+        self.nlp = spacy.blank(self.tagger.language.ISO_639_1)
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
@@ -108,11 +120,11 @@ class ChatBot(object):
         # Make sure the input statement has its search text saved
 
         if not input_statement.search_text:
-            _search_text = self.storage.tagger.get_text_index_string(input_statement.text)
+            _search_text = self.tagger.get_text_index_string(input_statement.text)
             input_statement.search_text = _search_text
 
         if not input_statement.search_in_response_to and input_statement.in_response_to:
-            input_statement.search_in_response_to = self.storage.tagger.get_text_index_string(input_statement.in_response_to)
+            input_statement.search_in_response_to = self.tagger.get_text_index_string(input_statement.in_response_to)
 
         response = self.generate_response(input_statement, additional_response_selection_parameters)
 
@@ -246,6 +258,16 @@ class ChatBot(object):
             conversation=conversation,
             order_by=['id']
         ))
+
+        # Get the second to last item in the list
+        '''
+        try:
+            latest_statement = conversation_statements[-2]
+        except IndexError:
+            pass
+        else:
+            return latest_statement
+        '''
 
         # Get the most recent statement in the conversation if one exists
         latest_statement = conversation_statements[-1] if len(conversation_statements) else None

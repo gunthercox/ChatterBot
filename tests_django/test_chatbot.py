@@ -124,7 +124,7 @@ class ChatBotTests(ChatterBotTestCase):
         self.assertEqual(response.conversation, 'test')
 
     def test_get_response_additional_response_selection_parameters(self):
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement('A', conversation='test_1'),
             Statement('B', conversation='test_1', in_response_to='A'),
             Statement('A', conversation='test_2'),
@@ -270,7 +270,7 @@ class ChatBotTests(ChatterBotTestCase):
         ChatterBot should return close matches to an input
         string when filtering using the search_text parameter.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement('Example A for search.'),
             Statement('Another example.'),
             Statement('Example B for search.'),
@@ -278,7 +278,7 @@ class ChatBotTests(ChatterBotTestCase):
         ])
 
         results = list(self.chatbot.storage.filter(
-            search_text=self.chatbot.storage.tagger.get_text_index_string(
+            search_text=self.chatbot.tagger.get_text_index_string(
                 'Example A for search.'
             )
         ))
@@ -291,7 +291,7 @@ class ChatBotTests(ChatterBotTestCase):
         ChatterBot should return close matches to an input
         string when filtering using the search_text parameter.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement('Example A for search.'),
             Statement('Another example.'),
             Statement('Example B for search.'),
@@ -299,7 +299,7 @@ class ChatBotTests(ChatterBotTestCase):
         ])
 
         results = list(self.chatbot.storage.filter(
-            search_text_contains=self.chatbot.storage.tagger.get_text_index_string(
+            search_text_contains=self.chatbot.tagger.get_text_index_string(
                 'Example A for search.'
             )
         ))

@@ -159,13 +159,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         if 'tags' in kwargs:
             kwargs['tags'] = list(set(kwargs['tags']))
 
-        if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.tagger.get_text_index_string(kwargs['text'])
-
-        if 'search_in_response_to' not in kwargs:
-            if kwargs.get('in_response_to'):
-                kwargs['search_in_response_to'] = self.tagger.get_text_index_string(kwargs['in_response_to'])
-
         inserted = self.statements.insert_one(kwargs)
 
         kwargs['id'] = inserted.inserted_id
@@ -177,20 +170,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         Creates multiple statement entries.
         """
         create_statements = []
-
-        # Check if any statements already have a search text
-        have_search_text = any(statement.search_text for statement in statements)
-
-        # Generate search text values in bulk
-        if not have_search_text:
-            search_text_documents = self.tagger.as_nlp_pipeline([statement.text for statement in statements])
-            response_search_text_documents = self.tagger.as_nlp_pipeline([statement.in_response_to or '' for statement in statements])
-
-            for statement, search_text_document, response_search_text_document in zip(
-                statements, search_text_documents, response_search_text_documents
-            ):
-                statement.search_text = search_text_document._.search_index
-                statement.search_in_response_to = response_search_text_document._.search_index
 
         for statement in statements:
             statement_data = statement.serialize()
@@ -205,11 +184,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         data = statement.serialize()
         data.pop('id', None)
         data.pop('tags', None)
-
-        data['search_text'] = self.tagger.get_text_index_string(data['text'])
-
-        if data.get('in_response_to'):
-            data['search_in_response_to'] = self.tagger.get_text_index_string(data['in_response_to'])
 
         update_data = {
             '$set': data
