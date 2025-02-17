@@ -3,6 +3,8 @@ import sys
 import csv
 import time
 import glob
+import json
+import tarfile
 from tqdm import tqdm
 from dateutil import parser as date_parser
 from chatterbot.conversation import Statement
@@ -69,7 +71,6 @@ class Trainer(object):
         Create a file from the database that can be used to
         train other chat bots.
         """
-        import json
         export = {'conversations': self._generate_export_data()}
         with open(file_path, 'w+', encoding='utf8') as jsonfile:
             json.dump(export, jsonfile, ensure_ascii=False)
@@ -265,8 +266,6 @@ class UbuntuCorpusTrainer(Trainer):
         """
         Extract a tar file at the specified file path.
         """
-        import tarfile
-
         print('Extracting {}'.format(file_path))
 
         if not os.path.exists(self.extracted_data_directory):

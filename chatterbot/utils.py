@@ -1,6 +1,9 @@
 """
 ChatterBot utility functions
 """
+import importlib
+import time
+import sys
 
 
 def import_module(dotted_path):
@@ -8,8 +11,6 @@ def import_module(dotted_path):
     Imports the specified module based on the
     dot notated import path for the module.
     """
-    import importlib
-
     module_parts = dotted_path.split('.')
     module_path = '.'.join(module_parts[:-1])
     module = importlib.import_module(module_path)
@@ -81,8 +82,6 @@ def get_response_time(chatbot, statement='Hello'):
     :returns: The response time in seconds.
     :rtype: float
     """
-    import time
-
     start_time = time.time()
 
     chatbot.get_response(statement)
@@ -110,8 +109,6 @@ def print_progress_bar(description, iteration_counter, total_items, progress_bar
 
     DEPRECTTED: use `tqdm` instead
     """
-    import sys
-
     percent = float(iteration_counter) / total_items
     hashes = '#' * int(round(percent * progress_bar_length))
     spaces = ' ' * (progress_bar_length - len(hashes))
