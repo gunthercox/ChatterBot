@@ -5,14 +5,18 @@ from chatterbot import ChatBot
 # import logging
 # logging.basicConfig(level=logging.INFO)
 
+# NOTE: The order of logic adapters is important
+# because the first logic adapter takes precedence
+# if a good response cannot be determined.
+
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Terminal',
     storage_adapter='chatterbot.storage.SQLStorageAdapter',
     logic_adapters=[
-        'chatterbot.logic.MathematicalEvaluation',
+        'chatterbot.logic.BestMatch',
         'chatterbot.logic.TimeLogicAdapter',
-        'chatterbot.logic.BestMatch'
+        'chatterbot.logic.MathematicalEvaluation'
     ],
     database_uri='sqlite:///database.sqlite3'
 )
