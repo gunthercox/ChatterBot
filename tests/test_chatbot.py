@@ -139,9 +139,9 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(second_response.confidence, 0)
         self.assertEqual(second_response.in_response_to, 'How are you?')
 
-        # Make sure that the second response was saved to the database
+        # Make sure that the previous response was saved to the database
         self.assertIsLength(results, 1)
-        self.assertEqual(results[0].in_response_to, 'Hi')
+        self.assertEqual(results[0].in_response_to, 'Hello')
 
     def test_statement_added_to_conversation(self):
         """
@@ -274,7 +274,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         response = self.chatbot.get_latest_response('test')
 
-        self.assertEqual(response.text, 'A')
+        self.assertEqual(response.text, 'B')
 
     def test_get_latest_response_from_two_responses(self):
         self.chatbot.storage.create(text='A', conversation='test')
@@ -283,7 +283,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         response = self.chatbot.get_latest_response('test')
 
-        self.assertEqual(response.text, 'B')
+        self.assertEqual(response.text, 'C')
 
     def test_get_latest_response_from_three_responses(self):
         self.chatbot.storage.create(text='A', conversation='test')
@@ -293,7 +293,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         response = self.chatbot.get_latest_response('test')
 
-        self.assertEqual(response.text, 'C')
+        self.assertEqual(response.text, 'D')
 
     def test_search_text_results_after_training(self):
         """
