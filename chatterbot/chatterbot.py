@@ -248,29 +248,9 @@ class ChatBot(object):
         ))
 
         # Get the most recent statement in the conversation if one exists
-        latest_statement = conversation_statements[-1] if conversation_statements else None
+        latest_statement = conversation_statements[-1] if len(conversation_statements) else None
 
-        if latest_statement:
-            if latest_statement.in_response_to:
-
-                response_statements = list(self.storage.filter(
-                    conversation=conversation,
-                    text=latest_statement.in_response_to,
-                    order_by=['id']
-                ))
-
-                if response_statements:
-                    return response_statements[-1]
-                else:
-                    return StatementObject(
-                        text=latest_statement.in_response_to,
-                        conversation=conversation
-                    )
-            else:
-                # The case that the latest statement is not in response to another statement
-                return latest_statement
-
-        return None
+        return latest_statement
 
     class ChatBotException(Exception):
         pass
