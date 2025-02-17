@@ -1,3 +1,7 @@
+import sys
+import inspect
+
+
 class AAR:
     ISO_639_1 = ''
     ISO_639 = 'aar'
@@ -2411,7 +2415,4 @@ class ZZA:
 
 
 def get_language_classes():
-    import sys
-    import inspect
-
     return inspect.getmembers(sys.modules[__name__], inspect.isclass)

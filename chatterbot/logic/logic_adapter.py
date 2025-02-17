@@ -1,3 +1,5 @@
+from random import choice
+
 from chatterbot.adapters import Adapter
 from chatterbot.storage import StorageAdapter
 from chatterbot.search import IndexedTextSearch
@@ -105,8 +107,6 @@ class LogicAdapter(Adapter):
         This method is called when a logic adapter is unable to generate any
         other meaningful response.
         """
-        from random import choice
-
         if self.default_responses:
             response = choice(self.default_responses)
         else:

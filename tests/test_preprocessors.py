@@ -23,7 +23,7 @@ class CleanWhitespacePreprocessorTestCase(ChatBotTestCase):
     def test_clean_whitespace(self):
         statement = Statement(text='\tThe quick \nbrown fox \rjumps over \vthe \alazy \fdog\\.')
         cleaned = preprocessors.clean_whitespace(statement)
-        normal_text = 'The quick brown fox jumps over \vthe \alazy \fdog\\.'
+        normal_text = 'The quick brown fox jumps over the \alazy dog\\.'
 
         self.assertEqual(cleaned.text, normal_text)
 

@@ -1,4 +1,5 @@
 import re
+from random import randint
 from chatterbot.storage import StorageAdapter
 
 
@@ -244,8 +245,6 @@ class MongoDatabaseAdapter(StorageAdapter):
         """
         Returns a random statement from the database
         """
-        from random import randint
-
         count = self.count()
 
         if count < 1:

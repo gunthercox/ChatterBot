@@ -1,3 +1,4 @@
+import random
 from chatterbot.storage import StorageAdapter
 
 
@@ -351,8 +352,6 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Returns a random statement from the database.
         """
-        import random
-
         Statement = self.get_model('statement')
 
         session = self.Session()
