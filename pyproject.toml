@@ -63,6 +63,7 @@ dependencies = [
     "mathparse>=0.1,<0.2",
     "python-dateutil>=2.9,<2.10",
     "sqlalchemy>=2.0,<2.1",
+    "spacy>=3.8,<3.9",
     "tqdm",
 ]
 
@@ -74,10 +75,8 @@ test = [
     "sphinx>=5.3,<8.2"
 ]
 dev = [
-    "nltk>=3.9,<4.0",
     "pint>=0.8.1",
     "pymongo>=4.11,<4.12",
-    "spacy>=3.8,<3.9",
     "pyyaml>=6.0,<7.0",
     "chatterbot-corpus>=1.2.2"
 ]
