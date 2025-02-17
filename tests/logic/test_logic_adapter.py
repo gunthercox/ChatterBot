@@ -45,7 +45,7 @@ class LogicAdapterTestCase(ChatBotTestCase):
         self.assertEqual(response.text, 'The default')
 
     def test_get_default_response_from_database(self):
-        self.chatbot.storage.create(text='The default')
+        self._create_with_search_text(text='The default')
 
         response = self.adapter.get_default_response(Statement(text='...'))
 

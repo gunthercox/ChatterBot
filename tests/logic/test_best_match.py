@@ -27,7 +27,7 @@ class BestMatchTestCase(ChatBotTestCase):
         The input should be returned as the closest match if there
         are no other results to return.
         """
-        self.chatbot.storage.create(text='Random')
+        self._create_with_search_text(text='Random')
 
         statement = Statement(text='What is your quest?')
         response = self.adapter.process(statement)
@@ -58,7 +58,7 @@ class BestMatchTestCase(ChatBotTestCase):
         """
         A response to the input should be returned if a response is known.
         """
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='To eat pasta.',
             in_response_to='What is your quest?'
         )
@@ -73,11 +73,11 @@ class BestMatchTestCase(ChatBotTestCase):
         """
         The response to the input should be returned if a response is known.
         """
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='To eat pasta.',
             in_response_to='What is your quest?'
         )
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='What is your quest?'
         )
 
@@ -92,14 +92,14 @@ class BestMatchTestCase(ChatBotTestCase):
         Test that the logic adapter cannot return a response containing
         any of the listed words for exclusion.
         """
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='I like to count.'
         )
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='Counting is dumb.',
             in_response_to='I like to count.'
         )
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='Counting is fun!',
             in_response_to='I like to count.'
         )
@@ -144,17 +144,17 @@ class BestMatchTestCase(ChatBotTestCase):
             search_algorithm_name='text_search'
         )
 
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='I am hungry.'
         )
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='Okay, what would you like to eat?',
             in_response_to='I am hungry.'
         )
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='Can you help me?'
         )
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='Sure, what seems to be the problem?',
             in_response_to='Can you help me?'
         )

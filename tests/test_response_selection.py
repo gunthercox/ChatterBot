@@ -19,7 +19,7 @@ class ResponseSelectionTests(ChatBotSQLTestCase):
         ]
 
         for statement in statement_list:
-            self.chatbot.storage.create(
+            self._create_with_search_text(
                 text=statement.text,
                 in_response_to=statement.in_response_to
             )

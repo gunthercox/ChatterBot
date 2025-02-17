@@ -20,9 +20,16 @@ label_b_statements = [
     Statement(text='I like animals.', tags=['label_b'])
 ]
 
-chatbot.storage.create_many(
-    label_a_statements + label_b_statements
-)
+all_statements = [
+    *label_a_statements,
+    *label_b_statements
+]
+
+# Populate search text since we're adding statements directly to the database
+for statement in all_statements:
+    statement.search_text = chatbot.tagger.get_text_index_string(statement.text)
+
+chatbot.storage.create_many(all_statements)
 
 # Return a response from "label_a_statements"
 response_from_label_a = chatbot.get_response(

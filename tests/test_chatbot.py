@@ -59,7 +59,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         Test the case where a single statement is known, but
         it is not in response to any other statement.
         """
-        self.chatbot.storage.create(text='Hello', in_response_to=None)
+        self._create_with_search_text(text='Hello', in_response_to=None)
 
         response = self.chatbot.get_response('Hi')
 
@@ -71,7 +71,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         Test the case that one response is known and there is a response
         entry for it in the database.
         """
-        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+        self._create_with_search_text(text='Hello', in_response_to='Hi')
 
         response = self.chatbot.get_response('Hi')
 
@@ -83,8 +83,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         Test the case that one response is known and there is a response
         entry for it in the database.
         """
-        self.chatbot.storage.create(text='Hi', in_response_to=None)
-        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+        self._create_with_search_text(text='Hi', in_response_to=None)
+        self._create_with_search_text(text='Hello', in_response_to='Hi')
 
         response = self.chatbot.get_response('Hi')
 
@@ -92,9 +92,9 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.text, 'Hello')
 
     def test_three_statements_two_responses_known(self):
-        self.chatbot.storage.create(text='Hi', in_response_to=None)
-        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
-        self.chatbot.storage.create(text='How are you?', in_response_to='Hello')
+        self._create_with_search_text(text='Hi', in_response_to=None)
+        self._create_with_search_text(text='Hello', in_response_to='Hi')
+        self._create_with_search_text(text='How are you?', in_response_to='Hello')
 
         first_response = self.chatbot.get_response('Hi')
         second_response = self.chatbot.get_response('How are you?')
@@ -104,10 +104,10 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(second_response.confidence, 0)
 
     def test_four_statements_three_responses_known(self):
-        self.chatbot.storage.create(text='Hi', in_response_to=None)
-        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
-        self.chatbot.storage.create(text='How are you?', in_response_to='Hello')
-        self.chatbot.storage.create(text='I am well.', in_response_to='How are you?')
+        self._create_with_search_text(text='Hi', in_response_to=None)
+        self._create_with_search_text(text='Hello', in_response_to='Hi')
+        self._create_with_search_text(text='How are you?', in_response_to='Hello')
+        self._create_with_search_text(text='I am well.', in_response_to='How are you?')
 
         first_response = self.chatbot.get_response('Hi')
         second_response = self.chatbot.get_response('How are you?')
@@ -118,8 +118,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(second_response.text, 'I am well.')
 
     def test_second_response_unknown(self):
-        self.chatbot.storage.create(text='Hi', in_response_to=None)
-        self.chatbot.storage.create(text='Hello', in_response_to='Hi')
+        self._create_with_search_text(text='Hi', in_response_to=None)
+        self._create_with_search_text(text='Hello', in_response_to='Hi')
 
         first_response = self.chatbot.get_response(
             text='Hi',
@@ -154,7 +154,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.conversation, 'test')
 
     def test_get_response_additional_response_selection_parameters(self):
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement('A', conversation='test_1'),
             Statement('B', conversation='test_1', in_response_to='A'),
             Statement('A', conversation='test_2'),
@@ -269,27 +269,27 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIsNone(response)
 
     def test_get_latest_response_from_one_responses(self):
-        self.chatbot.storage.create(text='A', conversation='test')
-        self.chatbot.storage.create(text='B', conversation='test', in_response_to='A')
+        self._create_with_search_text(text='A', conversation='test')
+        self._create_with_search_text(text='B', conversation='test', in_response_to='A')
 
         response = self.chatbot.get_latest_response('test')
 
         self.assertEqual(response.text, 'B')
 
     def test_get_latest_response_from_two_responses(self):
-        self.chatbot.storage.create(text='A', conversation='test')
-        self.chatbot.storage.create(text='B', conversation='test', in_response_to='A')
-        self.chatbot.storage.create(text='C', conversation='test', in_response_to='B')
+        self._create_with_search_text(text='A', conversation='test')
+        self._create_with_search_text(text='B', conversation='test', in_response_to='A')
+        self._create_with_search_text(text='C', conversation='test', in_response_to='B')
 
         response = self.chatbot.get_latest_response('test')
 
         self.assertEqual(response.text, 'C')
 
     def test_get_latest_response_from_three_responses(self):
-        self.chatbot.storage.create(text='A', conversation='test')
-        self.chatbot.storage.create(text='B', conversation='test', in_response_to='A')
-        self.chatbot.storage.create(text='C', conversation='test', in_response_to='B')
-        self.chatbot.storage.create(text='D', conversation='test', in_response_to='C')
+        self._create_with_search_text(text='A', conversation='test')
+        self._create_with_search_text(text='B', conversation='test', in_response_to='A')
+        self._create_with_search_text(text='C', conversation='test', in_response_to='B')
+        self._create_with_search_text(text='D', conversation='test', in_response_to='C')
 
         response = self.chatbot.get_latest_response('test')
 
@@ -300,7 +300,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         ChatterBot should return close matches to an input
         string when filtering using the search_text parameter.
         """
-        self.chatbot.storage.create_many([
+        self._create_many_with_search_text([
             Statement('Example A for search.'),
             Statement('Another example.'),
             Statement('Example B for search.'),
@@ -308,7 +308,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         ])
 
         results = list(self.chatbot.storage.filter(
-            search_text=self.chatbot.storage.tagger.get_text_index_string(
+            search_text=self.chatbot.tagger.get_text_index_string(
                 'Example A for search.'
             )
         ))

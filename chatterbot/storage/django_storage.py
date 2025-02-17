@@ -99,13 +99,6 @@ class DjangoStorageAdapter(StorageAdapter):
 
         tags = kwargs.pop('tags', [])
 
-        if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.tagger.get_text_index_string(kwargs['text'])
-
-        if 'search_in_response_to' not in kwargs:
-            if kwargs.get('in_response_to'):
-                kwargs['search_in_response_to'] = self.tagger.get_text_index_string(kwargs['in_response_to'])
-
         statement = Statement(**kwargs)
 
         statement.save()
@@ -128,20 +121,6 @@ class DjangoStorageAdapter(StorageAdapter):
         Tag = self.get_model('tag')
 
         tag_cache = {}
-
-        # Check if any statements already have a search text
-        have_search_text = any(statement.search_text for statement in statements)
-
-        # Generate search text values in bulk
-        if not have_search_text:
-            search_text_documents = self.tagger.as_nlp_pipeline([statement.text for statement in statements])
-            response_search_text_documents = self.tagger.as_nlp_pipeline([statement.in_response_to or '' for statement in statements])
-
-            for statement, search_text_document, response_search_text_document in zip(
-                statements, search_text_documents, response_search_text_documents
-            ):
-                statement.search_text = search_text_document._.search_index
-                statement.search_in_response_to = response_search_text_document._.search_index
 
         for statement in statements:
 
@@ -176,10 +155,10 @@ class DjangoStorageAdapter(StorageAdapter):
         else:
             statement = Statement.objects.create(
                 text=statement.text,
-                search_text=self.tagger.get_text_index_string(statement.text),
+                search_text=statement.search_text,
                 conversation=statement.conversation,
                 in_response_to=statement.in_response_to,
-                search_in_response_to=self.tagger.get_text_index_string(statement.in_response_to),
+                search_in_response_to=statement.search_in_response_to,
                 created_at=statement.created_at
             )
 

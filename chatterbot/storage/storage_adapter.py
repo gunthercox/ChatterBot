@@ -1,6 +1,4 @@
 import logging
-from chatterbot import languages
-from chatterbot.tagging import PosLemmaTagger
 
 
 class StorageAdapter(object):
@@ -17,11 +15,9 @@ class StorageAdapter(object):
         """
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
-        Tagger = kwargs.get('tagger', PosLemmaTagger)
-
-        self.tagger = Tagger(language=kwargs.get(
-            'tagger_language', languages.ENG
-        ))
+        self.raise_on_missing_search_text = kwargs.get(
+            'raise_on_missing_search_text', True
+        )
 
     def get_model(self, model_name):
         """

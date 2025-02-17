@@ -114,8 +114,8 @@ class SQLStorageAdapter(StorageAdapter):
         record = query.first()
 
         session.delete(record)
-
-        self._session_finish(session)
+        session.commit()
+        session.close()
 
     def filter(self, **kwargs):
         """
@@ -196,7 +196,15 @@ class SQLStorageAdapter(StorageAdapter):
 
         session.close()
 
-    def create(self, **kwargs):
+    def create(
+        self,
+        text,
+        in_response_to=None,
+        tags=None,
+        search_text=None,
+        search_in_response_to=None,
+        **kwargs
+    ):
         """
         Creates a new statement matching the keyword arguments specified.
         Returns the created statement.
@@ -206,19 +214,25 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
-        tags = set(kwargs.pop('tags', []))
+        if search_text is None:
+            if self.raise_on_missing_search_text:
+                raise Exception('generate a search_text value')
 
-        if 'search_text' not in kwargs:
-            kwargs['search_text'] = self.tagger.get_text_index_string(kwargs['text'])
+        if search_in_response_to is None and in_response_to is not None:
+            if self.raise_on_missing_search_text:
+                raise Exception('generate a search_in_response_to value')
 
-        if 'search_in_response_to' not in kwargs:
-            in_response_to = kwargs.get('in_response_to')
-            if in_response_to:
-                kwargs['search_in_response_to'] = self.tagger.get_text_index_string(in_response_to)
+        statement = Statement(
+            text=text,
+            in_response_to=in_response_to,
+            search_text=search_text,
+            search_in_response_to=search_in_response_to,
+            **kwargs
+        )
 
-        statement = Statement(**kwargs)
-
-        for tag_name in tags:
+        tags = frozenset(tags) if tags else frozenset()
+        for tag_name in frozenset(tags):
+            # TODO: Query existing tags in bulk
             tag = session.query(Tag).filter_by(name=tag_name).first()
 
             if not tag:
@@ -235,7 +249,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         statement_object = self.model_to_object(statement)
 
-        self._session_finish(session)
+        session.close()
 
         return statement_object
 
@@ -256,14 +270,8 @@ class SQLStorageAdapter(StorageAdapter):
 
         # Generate search text values in bulk
         if not have_search_text:
-            search_text_documents = self.tagger.as_nlp_pipeline([statement.text for statement in statements])
-            response_search_text_documents = self.tagger.as_nlp_pipeline([statement.in_response_to or '' for statement in statements])
-
-            for statement, search_text_document, response_search_text_document in zip(
-                statements, search_text_documents, response_search_text_documents
-            ):
-                statement.search_text = search_text_document._.search_index
-                statement.search_in_response_to = response_search_text_document._.search_index
+            if self.raise_on_missing_search_text:
+                raise Exception('generate bulk_search_text values')
 
         for statement in statements:
 
@@ -305,48 +313,50 @@ class SQLStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
         Tag = self.get_model('tag')
 
-        if statement is not None:
-            session = self.Session()
-            record = None
+        session = self.Session()
+        record = None
 
-            if hasattr(statement, 'id') and statement.id is not None:
-                record = session.query(Statement).get(statement.id)
-            else:
-                record = session.query(Statement).filter(
-                    Statement.text == statement.text,
-                    Statement.conversation == statement.conversation,
-                ).first()
+        if hasattr(statement, 'id') and statement.id is not None:
+            record = session.query(Statement).get(statement.id)
+        else:
+            record = session.query(Statement).filter(
+                Statement.text == statement.text,
+                Statement.conversation == statement.conversation,
+            ).first()
 
-                # Create a new statement entry if one does not already exist
-                if not record:
-                    record = Statement(
-                        text=statement.text,
-                        conversation=statement.conversation,
-                        persona=statement.persona
-                    )
+            # Create a new statement entry if one does not already exist
+            if not record:
+                record = Statement(
+                    text=statement.text,
+                    conversation=statement.conversation,
+                    persona=statement.persona
+                )
 
-            # Update the response value
-            record.in_response_to = statement.in_response_to
+        # Update the response value
+        record.in_response_to = statement.in_response_to
 
-            record.created_at = statement.created_at
+        record.created_at = statement.created_at
 
-            record.search_text = self.tagger.get_text_index_string(statement.text)
+        if not statement.search_text:
+            if self.raise_on_missing_search_text:
+                raise Exception('update issued without search_text value')
 
-            if statement.in_response_to:
-                record.search_in_response_to = self.tagger.get_text_index_string(statement.in_response_to)
+        if statement.in_response_to and not statement.search_in_response_to:
+            if self.raise_on_missing_search_text:
+                raise Exception('update issued without search_in_response_to value')
 
-            for tag_name in statement.get_tags():
-                tag = session.query(Tag).filter_by(name=tag_name).first()
+        for tag_name in statement.get_tags():
+            tag = session.query(Tag).filter_by(name=tag_name).first()
 
-                if not tag:
-                    # Create the record
-                    tag = Tag(name=tag_name)
+            if not tag:
+                # Create the record
+                tag = Tag(name=tag_name)
 
-                record.tags.append(tag)
+            record.tags.append(tag)
 
-            session.add(record)
-
-            self._session_finish(session)
+        session.add(record)
+        session.commit()
+        session.close()
 
     def get_random(self):
         """
@@ -388,13 +398,3 @@ class SQLStorageAdapter(StorageAdapter):
         """
         from chatterbot.ext.sqlalchemy_app.models import Base
         Base.metadata.create_all(self.engine)
-
-    def _session_finish(self, session, statement_text=None):
-        from sqlalchemy.exc import InvalidRequestError
-        try:
-            session.commit()
-        except InvalidRequestError:
-            # Log the statement text and the exception
-            self.logger.exception(statement_text)
-        finally:
-            session.close()
