@@ -35,7 +35,7 @@ can be run with:
 Django example app tests
 ------------------------
 
-Tests for the example Django app can be run with the following command from within the `examples/django_app` directory.
+Tests for the example Django app can be run with the following command from within the `examples/django_example` directory.
 
 .. sourcecode:: sh
 

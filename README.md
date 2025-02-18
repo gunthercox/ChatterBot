@@ -83,18 +83,10 @@ trainer.train("chatterbot.corpus.english.conversations")
 View the [documentation](https://docs.chatterbot.us)
 for ChatterBot on Read the Docs.
 
-To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
-
-```bash
-sphinx-build -b html docs/ build/
-```
-
 # Examples
 
-For examples, see the [examples](https://github.com/gunthercox/ChatterBot/tree/master/examples)
-directory in this project's git repository.
-
-There is also an example [Django project using ChatterBot](https://github.com/gunthercox/ChatterBot/tree/master/examples), as well as an example [Flask project using ChatterBot](https://github.com/chamkank/flask-chatterbot).
+For examples, see the [examples](https://docs.chatterbot.us/examples/)
+section of the documentation.
 
 # History
 
@@ -110,6 +102,12 @@ See release notes for changes https://github.com/gunthercox/ChatterBot/releases
 4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
 5. Use the projects [built-in automated testing](https://docs.chatterbot.us/testing.html).
    to help make sure that your contribution is free from errors.
+
+To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
+
+```bash
+sphinx-build -b dirhtml docs/ build/
+```
 
 # License
 

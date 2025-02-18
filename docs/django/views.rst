@@ -24,4 +24,4 @@ The endpoint expects a JSON request in the following format:
 .. note::
 
    Looking for the full example? Check it out on GitHub:
-   https://github.com/gunthercox/ChatterBot/tree/master/examples/django_app
+   https://github.com/gunthercox/ChatterBot/tree/master/examples/django_example

@@ -110,7 +110,6 @@ This concludes part 1 of this mini Django tutorial. Now you know:
 
 In the next part of this tutorial, we will be covering concepts including views, models, and templates.
 
-`Continue to Part 2`_.
+:ref:`Continue to Part 2 <Django Tutorial (Part 2)>`.
 
 .. _latest stable version of Django: https://www.djangoproject.com/download/
-.. _Continue to Part 2: part-2.html

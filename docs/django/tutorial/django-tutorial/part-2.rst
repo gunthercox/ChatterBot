@@ -2,7 +2,7 @@
 Django Tutorial (Part 2)
 ========================
 
-In the `previous part <index.html>`_ of this tutorial we set up our Django app. Now we're going to create a new model, and a view. If this is your first time working with these, Django's models are classes that represent database tables, and Django's views are functions that handle HTTP requests and return  HTTP responses.
+In the :ref:`previous part <Django Tutorial (Part 1)>` of this tutorial we set up our Django app. Now we're going to create a new model, and a view. If this is your first time working with these, Django's models are classes that represent database tables, and Django's views are functions that handle HTTP requests and return  HTTP responses.
 
 1. Creating a New Model
 =======================
@@ -151,4 +151,4 @@ This concludes part 2 of this mini Django tutorial. Now you know:
 
 If you still want to learn more, `Django's official documentation <https://docs.djangoproject.com/en/4.2/contents/>`_ is a great place to start. 
 
-`Up next <../django-rest-framework-tutorial/index.html>`_ in this series we'll be building off of the project we've begun to learn about how to add Django REST Framework to an existing Django project.
+:ref:`Up next <Django REST Framework Tutorial>` in this series we'll be building off of the project we've begun to learn about how to add Django REST Framework to an existing Django project.

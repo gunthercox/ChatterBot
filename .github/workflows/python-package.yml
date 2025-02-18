@@ -41,7 +41,7 @@ jobs:
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics
     - name: Test documentation build
       run: |
-        sphinx-build -nW -b html ./docs/ /tmp/build/
+        sphinx-build -nW -b dirhtml ./docs/ /tmp/build/
     - name: Start MongoDB
       uses: supercharge/mongodb-github-action@1.11.0
       with:
@@ -55,7 +55,7 @@ jobs:
     #     python setup.py develop
     #     python3 -m pip install "Django<=2.1"
     #     python runtests.py
-    #     python examples/django_app/manage.py test examples/django_app/
+    #     python examples/django_example/manage.py test examples/django_example/
     # --------------------------------------------------------------
     # TODO: Fix & re-enable later
     # https://github.com/marketplace/actions/coveralls-github-action

@@ -8,6 +8,8 @@ The following examples are available to help you get started with ChatterBot.
    Before you run any example, you will need to install ChatterBot on your system.
    See the :ref:`Setup guide <Installation>` for instructions.
 
+All of these examples and more are available in the `examples <https://github.com/gunthercox/ChatterBot/tree/master/examples>`_ directory of the ChatterBot repository on GitHub. 
+
 Simple Example
 ==============
 
@@ -72,7 +74,6 @@ you can set `read_only=True` as a parameter when initializing the bot.
 More Examples
 =============
 
-Even more examples can be found in the ``examples`` directory on GitHub:
-https://github.com/gunthercox/ChatterBot/tree/master/examples 
+There is also an example [Django project using ChatterBot](https://github.com/gunthercox/ChatterBot/tree/master/examples), as well as a separately maintained example `Flask project using ChatterBot <https://github.com/chamkank/flask-chatterbot>`_.
 
 .. _install MongoDB: https://docs.mongodb.com/manual/installation/

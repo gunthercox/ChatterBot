@@ -24,7 +24,7 @@ You can do this any way you want, HTTP requests, web sockets, etc.
 
 There are a number of existing examples that show how to do this.
 
-1. An example using Django: https://github.com/gunthercox/ChatterBot/tree/master/examples/django_app
+1. An example using Django: https://github.com/gunthercox/ChatterBot/tree/master/examples/django_example
 2. An example using Flask: https://github.com/chamkank/flask-chatterbot/blob/master/app.py
 
 Additional details and recommendations for configuring Django can be found

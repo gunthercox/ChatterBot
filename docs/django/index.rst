@@ -60,6 +60,15 @@ Django App Development
    settings
    views
    wsgi
+
+General Django Tutorials
+========================
+
+These are general tutorials related to Django and are not specific to ChatterBot. The goal of these tutorials is to help provide a foundation of knowledge around building Django applications and APIs.
+
+.. toctree::
+   :maxdepth: 4
+
    tutorial/index
 
 .. _Django documentation: https://docs.djangoproject.com/en/dev/intro/install/
