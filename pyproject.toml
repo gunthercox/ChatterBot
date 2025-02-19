@@ -13,6 +13,9 @@ packages=[
     "chatterbot.ext.django_chatterbot.migrations",
 ]
 
+[tool.setuptools.dynamic]
+version = {attr = "chatterbot.__version__"}
+
 [project]
 name = "ChatterBot"
 requires-python = "~=3.9"
