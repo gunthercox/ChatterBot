@@ -25,6 +25,11 @@ An example of typical input would be something like this:
 
 An untrained instance of ChatterBot starts off with no knowledge of how to communicate. Each time a user enters a statement, the library saves the text that they entered and the text that the statement was in response to. As ChatterBot receives more input the number of responses that it can reply and the accuracy of each response in relation to the input statement increase. The program selects the closest matching response by searching for the closest matching known statement that matches the input, it then returns the most likely response to that statement based on how frequently each response is issued by the people the bot communicates with.
 
+# [Documentation](https://docs.chatterbot.us)
+
+View the [documentation](https://docs.chatterbot.us)
+for ChatterBot.
+
 ## Installation
 
 This package can be installed from [PyPi](https://pypi.python.org/pypi/ChatterBot) by running:
@@ -78,11 +83,6 @@ trainer.train("chatterbot.corpus.english.conversations")
 
 **Corpus contributions are welcome! Please make a pull request.**
 
-# [Documentation](https://docs.chatterbot.us)
-
-View the [documentation](https://docs.chatterbot.us)
-for ChatterBot on Read the Docs.
-
 # Examples
 
 For examples, see the [examples](https://docs.chatterbot.us/examples/)
@@ -102,12 +102,6 @@ See release notes for changes https://github.com/gunthercox/ChatterBot/releases
 4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
 5. Use the projects [built-in automated testing](https://docs.chatterbot.us/testing.html).
    to help make sure that your contribution is free from errors.
-
-To build the documentation yourself using [Sphinx](http://www.sphinx-doc.org/), run:
-
-```bash
-sphinx-build -b dirhtml docs/ build/
-```
 
 # License
 

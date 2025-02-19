@@ -24,12 +24,11 @@ To contribute to ChatterBot's development, you simply need:
 
 - pip
 
-- A few python packages: 
+- A few python packages. You can install them from this projects ``pyproject.yml`` file by running:
 
 .. code-block:: bash
 
-   pip install requirements.txt
-   pip install dev-requirements.txt
+   pip .[dev,test]
 
 - A text editor
 
@@ -58,16 +57,21 @@ Contributing Documentation
 
 ChatterBot's documentation is written in reStructuredText and is
 compiled by Sphinx. The reStructuredText source of the documentation
-is located in ``docs/``.
+is located in the ``docs/`` directory.
 
 To build the documentation yourself, run:
 
 .. code-block:: bash
 
-     sphinx-build ./docs/ ./build/
+     sphinx-build -nW -b dirhtml docs/ build/
 
-You can then open the index.html file that will be created in the build directory.
+A useful way to view the documentation is to use the Python built-in HTTP server. You can do this by running:
 
+.. code-block:: bash
+
+    python -m http.server
+
+Then navigate to ``http://localhost:8000/`` in your web browser.
 
 Contributing Code
 =================

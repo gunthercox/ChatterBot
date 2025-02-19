@@ -55,3 +55,16 @@ Running tests
 -------------
 
 You can run ChatterBot's main test suite using the command: ``nosetests``.
+
+
+Testing documentation builds
+----------------------------
+
+The HTML documentation for ChatterBot can be compiled using using `Sphinx`_. To build it run the following command from the root directory of the project:
+
+.. sourcecode:: sh
+
+   sphinx-build -nW -b dirhtml docs/ build/
+
+
+.. _Sphinx: http://www.sphinx-doc.org/

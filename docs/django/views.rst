@@ -2,6 +2,11 @@
 ChatterBot Django Views
 =======================
 
+.. note::
+
+   Looking for the full example app? Check it out on GitHub:
+   https://github.com/gunthercox/ChatterBot/tree/master/examples/django_example
+
 Example API Views
 =================
 
@@ -19,9 +24,3 @@ The endpoint expects a JSON request in the following format:
 .. literalinclude:: ../../examples/django_example/django_example/views.py
    :language: python
    :pyobject: ChatterBotApiView
-
-
-.. note::
-
-   Looking for the full example? Check it out on GitHub:
-   https://github.com/gunthercox/ChatterBot/tree/master/examples/django_example

@@ -81,7 +81,7 @@ class SpacySimilarity(Comparator):
            python -m spacy download en_core_web_sm
            python -m spacy download de_core_news_sm
 
-        Alternatively, the ``spacy`` models can be installed as Python packages. The following lines could be included in a ``requirements.txt`` file if you needed to pin specific versions:
+        Alternatively, the ``spacy`` models can be installed as Python packages. The following lines could be included in a ``requirements.txt`` or ``pyproject.yml`` file if you needed to pin specific versions:
 
         .. code-block:: text
 

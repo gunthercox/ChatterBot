@@ -141,10 +141,10 @@ html_css_files = [
 # html_additional_pages = {}
 
 # If false, no module index is generated.
-# html_domain_indices = True
+html_domain_indices = True
 
 # If false, no index is generated.
-# html_use_index = True
+html_use_index = True
 
 # Split the index into individual pages for each letter.
 html_split_index = True
@@ -161,7 +161,7 @@ html_search_language = 'en'
 # Output file base name for HTML help builder
 htmlhelp_basename = 'ChatterBotdoc'
 
-# Read the docs theme modifications
+# Theme modifications
 
 html_context = {
     'extra_css_files': [

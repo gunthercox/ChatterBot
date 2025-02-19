@@ -23,6 +23,9 @@ This example program shows how to create a simple terminal client
 that allows you to communicate with your chat bot by typing into
 your terminal.
 
+.. image:: _static/terminal-example.gif
+   :alt: ChatterBot terminal example running in Python console
+
 .. literalinclude:: ../examples/terminal_example.py
    :language: python
 
@@ -71,9 +74,10 @@ you can set `read_only=True` as a parameter when initializing the bot.
 
    chatbot = ChatBot("Johnny Five", read_only=True)
 
-More Examples
-=============
+Django and Flask
+================
 
-There is also an example [Django project using ChatterBot](https://github.com/gunthercox/ChatterBot/tree/master/examples), as well as a separately maintained example `Flask project using ChatterBot <https://github.com/chamkank/flask-chatterbot>`_.
+1. Django: A number of :ref:`example views are documented <ChatterBot Django Views>`, as well as full example Django app.
+2. Flask: There is a separately maintained example `Flask project using ChatterBot <https://github.com/chamkank/flask-chatterbot>`_.
 
 .. _install MongoDB: https://docs.mongodb.com/manual/installation/
