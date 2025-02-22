@@ -11,8 +11,6 @@ class DummyMutatorLogicAdapter(LogicAdapter):
 
     def process(self, statement, additional_response_selection_parameters=None):
         statement.add_tags('pos_tags:NN')
-
-        self.chatbot.storage.update(statement)
         statement.confidence = 1
         return statement
 

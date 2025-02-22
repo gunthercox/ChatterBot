@@ -16,7 +16,7 @@ class BestMatchTestCase(ChatBotTestCase):
         """
         If there is no data to return, an exception should be raised.
         """
-        statement = Statement(text='What is your quest?')
+        statement = self._add_search_text(text='What is your quest?')
         response = self.adapter.process(statement)
 
         self.assertEqual(response.text, 'What is your quest?')
@@ -29,7 +29,7 @@ class BestMatchTestCase(ChatBotTestCase):
         """
         self._create_with_search_text(text='Random')
 
-        statement = Statement(text='What is your quest?')
+        statement = self._add_search_text(text='What is your quest?')
         response = self.adapter.process(statement)
 
         self.assertEqual(response.text, 'Random')
@@ -49,7 +49,7 @@ class BestMatchTestCase(ChatBotTestCase):
             return_value=Statement(text='Random')
         )
 
-        match = self.adapter.process(Statement(text='Blah'))
+        match = self.adapter.process(self._add_search_text(text='Blah'))
 
         self.assertEqual(match.confidence, 0)
         self.assertEqual(match.text, 'Random')
@@ -63,11 +63,11 @@ class BestMatchTestCase(ChatBotTestCase):
             in_response_to='What is your quest?'
         )
 
-        statement = Statement(text='What is your quest?')
+        statement = self._add_search_text(text='What is your quest?')
         response = self.adapter.process(statement)
 
         self.assertEqual(response.text, 'To eat pasta.')
-        self.assertEqual(response.confidence, 0)
+        self.assertEqual(response.confidence, 1)
 
     def test_match_with_response(self):
         """
@@ -81,7 +81,7 @@ class BestMatchTestCase(ChatBotTestCase):
             text='What is your quest?'
         )
 
-        statement = Statement(text='What is your quest?')
+        statement = self._add_search_text(text='What is your quest?')
         response = self.adapter.process(statement)
 
         self.assertEqual(response.text, 'To eat pasta.')
@@ -106,7 +106,8 @@ class BestMatchTestCase(ChatBotTestCase):
 
         self.adapter.excluded_words = ['dumb']
 
-        response = self.adapter.process(Statement(text='I like to count.'))
+        input_statement = self._add_search_text(text='I like to count.')
+        response = self.adapter.process(input_statement)
 
         self.assertEqual(response.confidence, 1)
         self.assertEqual(response.text, 'Counting is fun!')
@@ -115,7 +116,7 @@ class BestMatchTestCase(ChatBotTestCase):
         """
         Test the case that a high confidence response is not known.
         """
-        statement = Statement(text='Is this a tomato?')
+        statement = self._add_search_text(text='Is this a tomato?')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 0)
@@ -129,7 +130,7 @@ class BestMatchTestCase(ChatBotTestCase):
             Statement(text='No')
         ]
 
-        statement = Statement(text='Is this a tomato?')
+        statement = self._add_search_text(text='Is this a tomato?')
         match = self.adapter.process(statement)
 
         self.assertEqual(match.confidence, 0)
