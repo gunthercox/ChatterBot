@@ -1,11 +1,29 @@
 from unittest import TestCase, SkipTest
 from chatterbot import ChatBot
+from chatterbot.conversation import Statement
 
 
 class ChatBotTestCase(TestCase):
 
     def setUp(self):
         self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
+
+    def _add_search_text(self, **kwargs):
+        """
+        Return the search text for a statement.
+        """
+
+        if 'text' in kwargs:
+            kwargs['search_text'] = self.chatbot.tagger.get_text_index_string(
+                kwargs['text']
+            )
+
+        if 'in_response_to' in kwargs:
+            kwargs['search_in_response_to'] = self.chatbot.tagger.get_text_index_string(
+                kwargs['in_response_to']
+            )
+
+        return Statement(**kwargs)
 
     def _create_with_search_text(self, text, in_response_to=None, **kwargs):
         """
@@ -57,9 +75,8 @@ class ChatBotTestCase(TestCase):
         Assert that an iterable has the given length.
         """
         if len(item) != length:
-            raise AssertionError(
-                'Length {} is not equal to {}'.format(len(item), length)
-            )
+            message = 'Length {} is not equal to {}'.format(len(item), length)
+            self.failureException(message)
 
     def get_kwargs(self):
         return {
