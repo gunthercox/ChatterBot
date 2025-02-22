@@ -82,6 +82,7 @@ class MongoDatabaseAdapter(StorageAdapter):
         exclude_text_words = kwargs.pop('exclude_text_words', [])
         persona_not_startswith = kwargs.pop('persona_not_startswith', None)
         search_text_contains = kwargs.pop('search_text_contains', None)
+        search_in_response_to_contains = kwargs.pop('search_in_response_to_contains', None)
 
         if tags:
             kwargs['tags'] = {
@@ -126,6 +127,12 @@ class MongoDatabaseAdapter(StorageAdapter):
                 '{}'.format(re.escape(word)) for word in search_text_contains.split(' ')
             ])
             kwargs['search_text'] = re.compile(or_regex)
+
+        if search_in_response_to_contains:
+            or_regex = '|'.join([
+                '{}'.format(re.escape(word)) for word in search_in_response_to_contains.split(' ')
+            ])
+            kwargs['search_in_response_to'] = re.compile(or_regex)
 
         mongo_ordering = []
 
