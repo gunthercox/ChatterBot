@@ -85,6 +85,7 @@ In your web browser, go to ``http://localhost:8000/``. You should see a "Welcome
 Open the file ``tutorial/settings.py`` in your text editor and add the ``chapters`` app to the ``INSTALLED_APPS`` list. When done it should look like this:
 
 .. code-block:: python
+   :caption: tutorial/settings.py
 
    INSTALLED_APPS = [
       'django.contrib.admin',

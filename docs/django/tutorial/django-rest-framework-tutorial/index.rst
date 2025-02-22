@@ -25,6 +25,7 @@ Begin by installing Django REST Framework with the following command:
 Next, add ``rest_framework`` to your ``INSTALLED_APPS`` in the ``settings.py`` file of your Django project.
 
 .. code-block:: python
+   :caption: tutorial/settings.py
 
    INSTALLED_APPS = (
        # ...
@@ -34,6 +35,7 @@ Next, add ``rest_framework`` to your ``INSTALLED_APPS`` in the ``settings.py`` f
 Finish configuring Django REST Framework for your project by adding the following lines to your ``settings.py`` file.
 
 .. code-block:: python
+   :caption: tutorial/settings.py
 
    REST_FRAMEWORK = {
        'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -53,6 +55,7 @@ Finish configuring Django REST Framework for your project by adding the followin
 A serializer is a class that defines the fields that get converted to JSON. Create a new file called ``serializers.py`` in the ``chapters`` directory.
 
 .. code-block:: python
+   :caption: chapters/serializers.py
 
    from rest_framework import serializers
    from chapters.models import Chapter
@@ -73,6 +76,7 @@ A serializer is a class that defines the fields that get converted to JSON. Crea
 A viewset is a class that provides the actions that can be performed on a resource. Create a new file called ``viewsets.py`` in the ``chapters`` directory.
 
 .. code-block:: python
+   :caption: chapters/viewsets.py
 
    from rest_framework import viewsets
    from chapters.models import Chapter
@@ -90,6 +94,7 @@ A viewset is a class that provides the actions that can be performed on a resour
 A router is a class that automatically determines the URL conf for a set of views. You can add your router to your project's existing ``urls.py`` file.
 
 .. code-block:: python
+   :caption: tutorial/urls.py
 
    from django.urls import include
    from rest_framework.routers import DefaultRouter
@@ -109,6 +114,7 @@ A router is a class that automatically determines the URL conf for a set of view
 To test your API, open a web browser and navigate to ``http://localhost:8000/api/chapters/``. You should see a JSON response with the chapters in your database.
 
 .. code-block:: JSON
+    :caption: localhost:8000/api/chapters/
 
     {
         "count": 1,

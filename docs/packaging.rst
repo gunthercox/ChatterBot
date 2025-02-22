@@ -8,7 +8,7 @@ main ChatterBot repository on GitHub.
 
 Common reasons that code can't be contributed include:
 
-- Licencing: It may not be possible to contribute code to ChatterBot due to a licencing restriction or a copyright.
+- Licensing: It may not be possible to contribute code to ChatterBot due to a licensing restriction or a copyright.
 - Demand: There needs to be a general demand from the open source community for a particular feature so that there are developers who will want to fix and improve the feature if it requires maintenance.
 
 In addition, all code should be well documented and thoroughly tested.

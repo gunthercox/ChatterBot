@@ -22,5 +22,6 @@ The endpoint expects a JSON request in the following format:
 
 
 .. literalinclude:: ../../examples/django_example/django_example/views.py
+   :caption: examples/django_example/django_example/views.py
    :language: python
    :pyobject: ChatterBotApiView

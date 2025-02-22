@@ -15,6 +15,7 @@ Please pull gently.
 
 .. toctree::
     :maxdepth: 2
+    :caption: Contents:
 
     contributing
     releases

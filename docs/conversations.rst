@@ -23,6 +23,7 @@ session objects. This allows different users who interact with the bot through d
 web browsers to have separate conversations with the chat bot.
 
 .. literalinclude:: ../examples/django_example/django_example/views.py
+   :caption: examples/django_example/django_example/views.py
    :language: python
    :pyobject: ChatterBotApiView.post
    :dedent: 4

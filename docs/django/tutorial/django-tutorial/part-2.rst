@@ -10,6 +10,7 @@ In the :ref:`previous part <Django Tutorial (Part 1)>` of this tutorial we set u
 In the ``chapters`` directory, open the file ``models.py``. This file is where you define your models. Add the following code to the file:
 
 .. code-block:: python
+    :caption: chapters/models.py
 
     from django.db import models
 
@@ -68,6 +69,7 @@ In Django, views let you define what content gets returned in response to a requ
 Start by creating a new file and folder in the ``chapters`` directory: ``templates/chapter.html``. Add the following code to the file:
 
 .. code-block:: html
+    :caption: chapters/templates/chapter.html
 
     <!DOCTYPE html>
     <html>
@@ -83,6 +85,7 @@ Start by creating a new file and folder in the ``chapters`` directory: ``templat
 In the ``chapters`` directory, open the file ``chapters/views.py``. This file is where you define your views. Add the following code to the file:
 
 .. code-block:: python
+    :caption: chapters/views.py
 
     from django.views.generic import TemplateView
     from django.http import HttpResponse
@@ -106,6 +109,7 @@ In the ``chapters`` directory, open the file ``chapters/views.py``. This file is
 Finally, open the file ``tutorial/urls.py``. This file is where you define the URLs for your views. Ensure the following import for ``ChapterView`` is at the top of the file, and that the ``path`` for the view is included in the ``urlpatterns`` list:
 
 .. code-block:: python
+    :caption: tutorial/urls.py
 
     from django.urls import path
     from chapters.views import ChapterView

@@ -18,6 +18,7 @@ A few things to note:
 - The ``status`` module from Django REST framework is used to check the status codes of the responses. Although not necessary, it helps keep tests more readable.
 
 .. code-block:: python
+    :caption: chapters/tests.py
 
     from django.urls import reverse
     from rest_framework import status

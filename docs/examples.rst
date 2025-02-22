@@ -14,6 +14,7 @@ Simple Example
 ==============
 
 .. literalinclude:: ../examples/basic_example.py
+   :caption: examples/basic_example.py
    :language: python
 
 Terminal Example
@@ -27,6 +28,7 @@ your terminal.
    :alt: ChatterBot terminal example running in Python console
 
 .. literalinclude:: ../examples/terminal_example.py
+   :caption: examples/terminal_example.py
    :language: python
 
 Using MongoDB
@@ -43,6 +45,7 @@ the `storage_adapter` parameter.
    storage_adapter="chatterbot.storage.MongoDatabaseAdapter"
 
 .. literalinclude:: ../examples/terminal_mongo_example.py
+   :caption: examples/terminal_mongo_example.py
    :language: python
 
 Time and Mathematics Example
@@ -53,6 +56,7 @@ allow it to process and evaluate mathematical and time-based
 inputs.
 
 .. literalinclude:: ../examples/math_and_time.py
+   :caption: examples/math_and_time.py
    :language: python
 
 Using SQL Adapter
@@ -61,6 +65,7 @@ Using SQL Adapter
 ChatterBot data can be saved and retrieved from SQL databases.
 
 .. literalinclude:: ../examples/memory_sql_example.py
+   :caption: examples/memory_sql_example.py
    :language: python
 
 Read only mode

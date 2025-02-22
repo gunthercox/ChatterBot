@@ -22,6 +22,7 @@ To install ``django-filter``, run the following command:
 Add ``django_filters`` to your ``INSTALLED_APPS`` in the ``settings.py`` file of your Django project.
 
 .. code-block:: python
+   :caption: tutorial/settings.py
 
    INSTALLED_APPS = (
        # ...
@@ -31,6 +32,7 @@ Add ``django_filters`` to your ``INSTALLED_APPS`` in the ``settings.py`` file of
 Also add the following lines to the ``REST_FRAMEWORK`` setting in the same file:
 
 .. code-block:: python
+   :caption: tutorial/settings.py
 
    REST_FRAMEWORK = {
        'DEFAULT_FILTER_BACKENDS': (
@@ -46,6 +48,7 @@ Also add the following lines to the ``REST_FRAMEWORK`` setting in the same file:
 Define a new ``filterset_fields`` variable at the class level of the viewset you created in the previous tutorial:
 
 .. code-block:: python
+    :caption: tutorial/viewsets.py
 
     # ...
 
