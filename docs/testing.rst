@@ -11,6 +11,8 @@ ChatterBot tests
 
 ChatterBot's built in tests can be run using ``nose``.
 
+Be sure to invoke this command from the root of the project directory.
+
 .. sourcecode:: sh
 
    nosetests
@@ -21,6 +23,20 @@ For example, the following command will run all tests in the test-module `tests/
 .. sourcecode:: sh
 
    nosetests tests.logic.test_best_match
+
+To run a specific test in a test class you can specify the test method name using the following pattern:
+
+.. sourcecode:: sh
+
+   nosetests tests.logic.test_best_match:BestMatchTestCase.test_response_selection
+
+Tests can also be run in "fail fast" mode, in which case they will run until the first test failure is encountered.
+
+.. sourcecode:: sh
+
+   nosetests -s tests
+
+For more information on the `nose` test runner, see the `nose documentation`_.
 
 Django integration tests
 ------------------------
@@ -68,3 +84,4 @@ The HTML documentation for ChatterBot can be compiled using using `Sphinx`_. To 
 
 
 .. _Sphinx: http://www.sphinx-doc.org/
+.. _nose documentation: https://nose.readthedocs.io/en/latest/usage.html

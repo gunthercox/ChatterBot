@@ -16,3 +16,5 @@ jobs:
     steps:
     - id: deployment
       uses: sphinx-notes/pages@v3
+      with:
+        sphinx_build_options: '-b dirhtml'
