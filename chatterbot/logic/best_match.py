@@ -39,7 +39,7 @@ class BestMatch(LogicAdapter):
             if result.confidence >= self.maximum_similarity_threshold:
                 break
 
-        self.chatbot.logger.info('Selecting "{}" as a close response to "{}" with a confidence of {}'.format(
+        self.chatbot.logger.info('Selecting "{}" as a response to "{}" with a confidence of {}'.format(
             closest_match.in_response_to, input_statement.text, closest_match.confidence
         ))
 
@@ -55,6 +55,7 @@ class BestMatch(LogicAdapter):
 
         response_selection_parameters = {
             'search_text': closest_match.search_text,
+            'persona_not_startswith': 'bot:',
             'exclude_text': recent_repeated_responses,
             'exclude_text_words': self.excluded_words
         }
@@ -63,6 +64,7 @@ class BestMatch(LogicAdapter):
             'search_in_response_to': self.chatbot.tagger.get_text_index_string(
                 input_statement.text
             ),
+            'persona_not_startswith': 'bot:',
             'exclude_text': recent_repeated_responses,
             'exclude_text_words': self.excluded_words
         }
@@ -75,7 +77,8 @@ class BestMatch(LogicAdapter):
                 additional_response_selection_parameters
             )
 
-        # Get all statements that are in response to the closest match
+
+        # Get all statements with text similar to the closest match
         response_list = list(self.chatbot.storage.filter(**response_selection_parameters))
 
         if response_list:
