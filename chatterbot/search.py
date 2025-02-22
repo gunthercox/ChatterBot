@@ -69,7 +69,7 @@ class IndexedTextSearch:
                 statement.confidence = confidence
 
                 self.chatbot.logger.info('Similar text found: {} {}'.format(
-                    statement.text, confidence
+                    statement.in_response_to, confidence
                 ))
 
                 yield statement
