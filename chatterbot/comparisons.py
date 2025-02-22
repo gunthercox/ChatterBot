@@ -19,14 +19,21 @@ class Comparator:
     def __call__(self, statement_a, statement_b):
         return self.compare(statement_a, statement_b)
 
-    def compare(self, statement_a, statement_b):
+    def compare_text(self, text_a, text_b):
         """
-        Implemented in subclasses: compare statement_a to statement_b.
+        Implemented in subclasses: compare text_a to text_b.
 
         :return: The percent of similarity between the statements based on the implemented algorithm.
         :rtype: float
         """
         return 0
+
+    def compare(self, statement_a, statement_b):
+        """
+        :return: The percent of similarity between the statements based on the implemented algorithm.
+        :rtype: float
+        """
+        return self.compare_text(statement_a.text, statement_b.text)
 
 
 class LevenshteinDistance(Comparator):
@@ -39,21 +46,21 @@ class LevenshteinDistance(Comparator):
     based on the Levenshtein distance algorithm.
     """
 
-    def compare(self, statement_a, statement_b):
+    def compare_text(self, text_a, text_b):
         """
-        Compare the two input statements.
+        Compare the two pieces of text.
 
         :return: The percent of similarity between the text of the statements.
         :rtype: float
         """
 
-        # Return 0 if either statement has a falsy text value
-        if not statement_a.text or not statement_b.text:
+        # Return 0 if either statement has a None text value
+        if text_a is None or text_b is None:
             return 0
 
         # Get the lowercase version of both strings
-        statement_a_text = str(statement_a.text.lower())
-        statement_b_text = str(statement_b.text.lower())
+        statement_a_text = str(text_a.lower())
+        statement_b_text = str(text_b.lower())
 
         similarity = SequenceMatcher(
             None,
@@ -103,15 +110,20 @@ class SpacySimilarity(Comparator):
         # Disable the Named Entity Recognition (NER) component because it is not necessary
         self.nlp = spacy.load(model, exclude=['ner'])
 
-    def compare(self, statement_a, statement_b):
+    def compare_text(self, text_a, text_b):
         """
-        Compare the two input statements.
+        Compare the similarity of two strings.
 
         :return: The percent of similarity between the closest synset distance.
         :rtype: float
         """
-        document_a = self.nlp(statement_a.text)
-        document_b = self.nlp(statement_b.text)
+
+        # Return 0 if either statement has a None text value
+        if text_a is None or text_b is None:
+            return 0
+
+        document_a = self.nlp(text_a)
+        document_b = self.nlp(text_b)
 
         return document_a.similarity(document_b)
 
@@ -155,14 +167,19 @@ class JaccardSimilarity(Comparator):
         # Disable the Named Entity Recognition (NER) component because it is not necessary
         self.nlp = spacy.load(model, exclude=['ner'])
 
-    def compare(self, statement_a, statement_b):
+    def compare_text(self, text_a, text_b):
         """
         Return the calculated similarity of two
         statements based on the Jaccard index.
         """
+
+        # Return 0 if either statement has a None text value
+        if text_a is None or text_b is None:
+            return 0
+
         # Make both strings lowercase
-        document_a = self.nlp(statement_a.text.lower())
-        document_b = self.nlp(statement_b.text.lower())
+        document_a = self.nlp(text_a.lower())
+        document_b = self.nlp(text_b.lower())
 
         statement_a_lemmas = frozenset([
             token.lemma_ for token in document_a if not token.is_stop

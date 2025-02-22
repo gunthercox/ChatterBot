@@ -37,7 +37,7 @@ def get_most_frequent_response(input_statement, response_list, storage=None):
             matching_response = statement
             occurrence_count = count
 
-    # Choose the most commonly occuring matching response
+    # Choose the most commonly occurring matching response
     return matching_response
 
 
