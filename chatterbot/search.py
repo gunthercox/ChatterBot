@@ -43,19 +43,8 @@ class IndexedTextSearch:
         """
         self.chatbot.logger.info('Beginning search for close text match')
 
-        input_search_text = input_statement.search_text
-
-        if not input_statement.search_text:
-            self.chatbot.logger.warning(
-                'No value for search_text was available on the provided input'
-            )
-
-            input_search_text = self.chatbot.tagger.get_text_index_string(
-                input_statement.text
-            )
-
         search_parameters = {
-            'search_text_contains': input_search_text,
+            'search_in_response_to_contains': input_statement.search_text,
             'persona_not_startswith': 'bot:',
             'page_size': self.search_page_size
         }
@@ -71,7 +60,9 @@ class IndexedTextSearch:
 
         # Find the closest matching known statement
         for statement in statement_list:
-            confidence = self.compare_statements(input_statement, statement)
+            confidence = self.compare_statements.compare_text(
+                input_statement.text, statement.in_response_to
+            )
 
             if confidence > best_confidence_so_far:
                 best_confidence_so_far = confidence
@@ -145,7 +136,9 @@ class TextSearch:
 
         # Find the closest matching known statement
         for statement in statement_list:
-            confidence = self.compare_statements(input_statement, statement)
+            confidence = self.compare_statements.compare_text(
+                input_statement.text, statement.in_response_to
+            )
 
             if confidence > best_confidence_so_far:
                 best_confidence_so_far = confidence
