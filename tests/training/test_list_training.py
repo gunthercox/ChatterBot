@@ -289,9 +289,8 @@ class ChatterBotResponseTests(ChatBotTestCase):
 
     def test_match_has_no_response(self):
         """
-        Make sure that the if the last line in a file
-        matches the input text then a index error does
-        not occur.
+        Make sure that the if the last line in a file matches
+        the input text then a index error does not occur.
         """
         input_text = "Siri is my cat"
         response = self.chatbot.get_response(input_text)

@@ -76,7 +76,7 @@ class ChatBotTestCase(TestCase):
         """
         if len(item) != length:
             message = 'Length {} is not equal to {}'.format(len(item), length)
-            self.failureException(message)
+            raise self.failureException(message)
 
     def get_kwargs(self):
         return {

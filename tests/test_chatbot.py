@@ -39,7 +39,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
     def test_no_statements_known(self):
         """
-        If there is no statements in the database, then the
+        If there are no statements in the database, then the
         user's input is the only thing that can be returned.
         """
         statement_text = 'How are you?'
@@ -49,10 +49,10 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.text, statement_text)
         self.assertEqual(response.confidence, 0)
 
-        # Make sure that the input and output were saved
-        self.assertIsLength(results, 2)
+        # Make sure that only the input was saved because
+        # we know the output will likely be incorrect
+        self.assertIsLength(results, 1)
         self.assertEqual(results[0].text, statement_text)
-        self.assertEqual(results[1].text, statement_text)
 
     def test_one_statement_known_no_response(self):
         """
@@ -75,7 +75,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         response = self.chatbot.get_response('Hi')
 
-        self.assertEqual(response.confidence, 0)
+        self.assertEqual(response.confidence, 1)
         self.assertEqual(response.text, 'Hello')
 
     def test_two_statements_one_response_known(self):
@@ -101,7 +101,8 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         self.assertEqual(first_response.confidence, 1)
         self.assertEqual(first_response.text, 'Hello')
-        self.assertEqual(second_response.confidence, 0)
+        self.assertEqual(second_response.confidence, 1)
+        self.assertEqual(second_response.text, 'Hi')
 
     def test_four_statements_three_responses_known(self):
         self._create_with_search_text(text='Hi', in_response_to=None)
@@ -141,7 +142,7 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         # Make sure that the previous response was saved to the database
         self.assertIsLength(results, 1)
-        self.assertEqual(results[0].in_response_to, 'Hello')
+        self.assertEqual(results[0].in_response_to, 'Hi')
 
     def test_statement_added_to_conversation(self):
         """
@@ -217,18 +218,16 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
 
         results = list(self.chatbot.storage.filter(text='Hello'))
 
-        self.assertIsLength(results, 2)
+        self.assertIsLength(results, 1)
         self.assertIn('test', results[0].get_tags())
-        self.assertEqual(results[1].get_tags(), [])
 
     def test_get_response_with_text_and_kwargs(self):
         self.chatbot.get_response('Hello', conversation='greetings')
 
         results = list(self.chatbot.storage.filter(text='Hello'))
 
-        self.assertIsLength(results, 2)
+        self.assertIsLength(results, 1)
         self.assertEqual(results[0].conversation, 'greetings')
-        self.assertEqual(results[1].conversation, 'greetings')
 
     def test_get_response_missing_text(self):
         with self.assertRaises(self.chatbot.ChatBotException):
