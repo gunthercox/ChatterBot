@@ -222,6 +222,16 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertIsLength(results, 2)
         self.assertIn('test', results[0].get_tags())
 
+    def test_response_preserves_tags(self):
+        """
+        The response returned from the chatbot should preserve tags
+        from the statement that was used to generated the response.
+        """
+        self._create_with_search_text(text='Hello', tags=['test'])
+        response = self.chatbot.get_response('Hello')
+
+        self.assertEqual(response.get_tags(), ['test'])
+
     def test_get_response_with_text_and_kwargs(self):
         self.chatbot.get_response('Hello', conversation='greetings')
 

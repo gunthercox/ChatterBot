@@ -232,6 +232,8 @@ class ChatBot(object):
             persona='bot:' + self.name
         )
 
+        response.add_tags(*result.get_tags())
+
         response.confidence = result.confidence
 
         return response
