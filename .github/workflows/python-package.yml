@@ -3,6 +3,12 @@
 
 name: Python package
 
+permissions:
+  contents: read
+  metadata: read
+  pull-requests: write
+  checks: write
+
 on:
   push:
     branches: [ "master" ]
