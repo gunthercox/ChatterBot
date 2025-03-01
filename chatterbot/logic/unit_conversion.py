@@ -158,7 +158,8 @@ class UnitConversion(LogicAdapter):
                     response = func(p)
                     if response.confidence == 1.0:
                         break
-        except Exception:
+        except Exception as e:
+            self.chatbot.logger.warning('Error during UnitConversion: {}'.format(str(e)))
             response.confidence = 0.0
-        finally:
-            return response
+
+        return response
