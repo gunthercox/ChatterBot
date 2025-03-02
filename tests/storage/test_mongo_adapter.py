@@ -67,7 +67,7 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         Test that None is returned by the find method
         when a matching statement is not found.
         """
-        results = list(self.adapter.filter(text='Non-existant'))
+        results = list(self.adapter.filter(text='Non-existent'))
         self.assertEqual(len(results), 0)
 
     def test_filter_text_statement_found(self):
