@@ -77,7 +77,15 @@ test = [
 ]
 dev = [
     "pint>=0.8.1",
-    "pymongo>=4.11,<4.12",
     "pyyaml>=6.0,<7.0",
-    "chatterbot-corpus>=1.2.2"
+    "chatterbot-corpus>=1.2.2",
+]
+redis = [
+    "redis[hiredis]",
+    "langchain-redis",
+    "langchain-huggingface",
+    "sentence-transformers",
+]
+mongodb = [
+    "pymongo>=4.11,<4.12",
 ]
