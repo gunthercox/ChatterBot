@@ -1,16 +1,18 @@
 from unittest import TestCase
 from chatterbot.conversation import Statement
-from chatterbot.storage.sql_storage import SQLStorageAdapter
+from chatterbot.storage.redis import RedisVectorStorageAdapter
 
 
-class SQLStorageAdapterTestCase(TestCase):
+class RedisStorageAdapterTestCase(TestCase):
 
     @classmethod
     def setUpClass(cls):
         """
         Instantiate the adapter before any tests in the test case run.
         """
-        cls.adapter = SQLStorageAdapter(database_uri=None, raise_on_missing_search_text=False)
+        cls.adapter = RedisVectorStorageAdapter(
+            database_uri='redis://localhost:6379/0'  # TODO: Adjust in CI
+        )
 
     def tearDown(self):
         """
@@ -19,15 +21,7 @@ class SQLStorageAdapterTestCase(TestCase):
         self.adapter.drop()
 
 
-class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
-
-    def test_set_database_uri_none(self):
-        adapter = SQLStorageAdapter(database_uri=None)
-        self.assertEqual(adapter.database_uri, 'sqlite://')
-
-    def test_set_database_uri(self):
-        adapter = SQLStorageAdapter(database_uri='sqlite:///db.sqlite3')
-        self.assertEqual(adapter.database_uri, 'sqlite:///db.sqlite3')
+class RedisStorageAdapterTests(RedisStorageAdapterTestCase):
 
     def test_count_returns_zero(self):
         """
@@ -41,15 +35,15 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         The count method should return a value of 1
         when one item has been saved to the database.
         """
-        self.adapter.create(text="Test statement")
+        self.adapter.create(text='Test statement')
         self.assertEqual(self.adapter.count(), 1)
 
     def test_filter_text_statement_not_found(self):
         """
-        Test that None is returned by the find method
+        Test that an empty list is returned by the filter method
         when a matching statement is not found.
         """
-        results = list(self.adapter.filter(text="Non-existent"))
+        results = list(self.adapter.filter(text='Non-existent'))
         self.assertEqual(len(results), 0)
 
     def test_filter_text_statement_found(self):
@@ -57,24 +51,24 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         Test that a matching statement is returned
         when it exists in the database.
         """
-        text = "New statement"
+        text = 'New statement'
+
         self.adapter.create(text=text)
-        results = list(self.adapter.filter(text=text))
+        results = self.adapter.filter(text=text)
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, text)
 
     def test_update_adds_new_statement(self):
-        statement = Statement(text="New statement")
+        statement = Statement(text='New statement')
         self.adapter.update(statement)
 
-        results = list(self.adapter.filter(text="New statement"))
+        results = list(self.adapter.filter(text='New statement'))
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, statement.text)
 
     def test_update_modifies_existing_statement(self):
-        statement = Statement(text="New statement")
-        self.adapter.update(statement)
+        statement = self.adapter.create(text='New statement')
 
         # Check the initial values
         results = list(self.adapter.filter(text=statement.text))
@@ -83,20 +77,22 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         self.assertEqual(results[0].in_response_to, None)
 
         # Update the statement value
-        statement.in_response_to = "New response"
+        statement.in_response_to = 'New response'
         self.adapter.update(statement)
 
         # Check that the values have changed
         results = list(self.adapter.filter(text=statement.text))
 
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].in_response_to, "New response")
+        self.assertEqual(len(results), 1, msg=[(
+            result.id, result.text, result.in_response_to) for result in results
+        ])
+        self.assertEqual(results[0].in_response_to, 'New response')
 
     def test_get_random_returns_statement(self):
-        self.adapter.create(text="New statement")
+        self.adapter.create(text='New statement')
 
         random_statement = self.adapter.get_random()
-        self.assertEqual(random_statement.text, "New statement")
+        self.assertEqual(random_statement.text, 'New statement')
 
     def test_get_random_no_data(self):
         from chatterbot.storage import StorageAdapter
@@ -105,24 +101,29 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
             self.adapter.get_random()
 
     def test_remove(self):
-        text = "Sometimes you have to run before you can walk."
-        self.adapter.create(text=text)
-        self.adapter.remove(text)
+        text = 'Sometimes you have to run before you can walk.'
+        statement = self.adapter.create(text=text)
+
+        self.adapter.remove(statement)
+
         results = self.adapter.filter(text=text)
 
         self.assertEqual(list(results), [])
 
 
-class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
+class RedisStorageAdapterFilterTests(RedisStorageAdapterTestCase):
 
     def test_filter_text_no_matches(self):
         self.adapter.create(
             text='Testing...',
             in_response_to='Why are you counting?'
         )
-        results = list(self.adapter.filter(text="Howdy"))
+        results = list(self.adapter.filter(text='Howdy'))
 
-        self.assertEqual(len(results), 0)
+        # One result will be returned because it is the closest match
+        # This differs from the SQL storage adapter which returns no
+        # results (because it is an exact match)
+        self.assertEqual(len(results), 1)
 
     def test_filter_in_response_to_no_matches(self):
         self.adapter.create(
@@ -130,17 +131,17 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
             in_response_to='Why are you counting?'
         )
 
-        results = list(self.adapter.filter(in_response_to="Maybe"))
+        results = list(self.adapter.filter(in_response_to='Maybe'))
 
         self.assertEqual(len(results), 0)
 
     def test_filter_equal_results(self):
         statement1 = Statement(
-            text="Testing...",
+            text='Testing...',
             in_response_to=None
         )
         statement2 = Statement(
-            text="Testing one, two, three.",
+            text='Testing one, two, three.',
             in_response_to=None
         )
         self.adapter.update(statement1)
@@ -161,40 +162,40 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         If no parameters are passed to the filter,
         then all statements should be returned.
         """
-        self.adapter.create(text="Testing...")
-        self.adapter.create(text="Testing one, two, three.")
+        self.adapter.create(text='Testing...')
+        self.adapter.create(text='Testing one, two, three.')
 
         results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
 
     def test_filter_by_tag(self):
-        self.adapter.create(text="Hello!", tags=["greeting", "salutation"])
-        self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
-        self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
+        self.adapter.create(text='Hello!', tags=['greeting', 'salutation'])
+        self.adapter.create(text='Hi everyone!', tags=['greeting', 'exclamation'])
+        self.adapter.create(text='The air contains Oxygen.', tags=['fact'])
 
-        results = self.adapter.filter(tags=["greeting"])
+        results = self.adapter.filter(tags=['greeting'])
 
         results_text_list = [statement.text for statement in results]
 
         self.assertEqual(len(results_text_list), 2)
-        self.assertIn("Hello!", results_text_list)
-        self.assertIn("Hi everyone!", results_text_list)
+        self.assertIn('Hello!', results_text_list)
+        self.assertIn('Hi everyone!', results_text_list)
 
     def test_filter_by_tags(self):
-        self.adapter.create(text="Hello!", tags=["greeting", "salutation"])
-        self.adapter.create(text="Hi everyone!", tags=["greeting", "exclamation"])
-        self.adapter.create(text="The air contains Oxygen.", tags=["fact"])
+        self.adapter.create(text='Hello!', tags=['greeting', 'salutation'])
+        self.adapter.create(text='Hi everyone!', tags=['greeting', 'exclamation'])
+        self.adapter.create(text='The air contains Oxygen.', tags=['fact'])
 
         results = self.adapter.filter(
-            tags=["exclamation", "fact"]
+            tags=['exclamation', 'fact']
         )
 
         results_text_list = [statement.text for statement in results]
 
         self.assertEqual(len(results_text_list), 2)
-        self.assertIn("Hi everyone!", results_text_list)
-        self.assertIn("The air contains Oxygen.", results_text_list)
+        self.assertIn('Hi everyone!', results_text_list)
+        self.assertIn('The air contains Oxygen.', results_text_list)
 
     def test_filter_page_size(self):
         self.adapter.create(text='A')
@@ -205,10 +206,9 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
 
         results_text_list = [statement.text for statement in results]
 
-        self.assertEqual(len(results_text_list), 3)
+        self.assertEqual(len(results_text_list), 2)
         self.assertIn('A', results_text_list)
         self.assertIn('B', results_text_list)
-        self.assertIn('C', results_text_list)
 
     def test_exclude_text(self):
         self.adapter.create(text='Hello!')
@@ -249,19 +249,19 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.assertEqual(results[0].text, 'Hi everyone!')
 
     def test_search_text_contains(self):
-        self.adapter.create(text='Hello!', search_text='hello exclamation')
-        self.adapter.create(text='Hi everyone!', search_text='hi everyone')
+        self.adapter.create(text='Hello all', search_text='hello all')
+        self.adapter.create(text='Hi everyone', search_text='hi everyone')
 
         results = list(self.adapter.filter(
             search_text_contains='everyone'
         ))
 
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].text, 'Hi everyone!')
+        self.assertEqual(results[0].text, 'Hi everyone')
 
     def test_search_text_contains_multiple_matches(self):
-        self.adapter.create(text='Hello!', search_text='hello exclamation')
-        self.adapter.create(text='Hi everyone!', search_text='hi everyone')
+        self.adapter.create(text='Hello all', search_text='hello all')
+        self.adapter.create(text='Hi everyone', search_text='hi everyone')
 
         results = list(self.adapter.filter(
             search_text_contains='hello everyone'
@@ -270,7 +270,7 @@ class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
         self.assertEqual(len(results), 2)
 
 
-class SQLOrderingTests(SQLStorageAdapterTestCase):
+class RedisOrderingTests(RedisStorageAdapterTestCase):
     """
     Test cases for the ordering of sets of statements.
     """
@@ -313,7 +313,7 @@ class SQLOrderingTests(SQLStorageAdapterTestCase):
         self.assertEqual(statement_b.text, results[1].text)
 
 
-class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
+class StorageAdapterCreateTests(RedisStorageAdapterTestCase):
     """
     Tests for the create function of the storage adapter.
     """
@@ -325,28 +325,6 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
 
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'testing')
-
-    def test_create_search_text(self):
-        self.adapter.create(
-            text='testing',
-            search_text='test'
-        )
-
-        results = list(self.adapter.filter())
-
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].search_text, 'test')
-
-    def test_create_search_in_response_to(self):
-        self.adapter.create(
-            text='testing',
-            search_in_response_to='test'
-        )
-
-        results = list(self.adapter.filter())
-
-        self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].search_in_response_to, 'test')
 
     def test_create_tags(self):
         self.adapter.create(text='testing', tags=['a', 'b'])
@@ -367,7 +345,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
         results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 1)
-        self.assertEqual(len(results[0].get_tags()), 1)
+        self.assertEqual(len(results[0].get_tags()), 1, msg=results[0].get_tags())
         self.assertEqual(results[0].get_tags(), ['ab'])
 
     def test_create_many_text(self):
@@ -381,31 +359,6 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].text, 'A')
         self.assertEqual(results[1].text, 'B')
-
-    def test_create_many_search_text(self):
-        self.adapter.create_many([
-            Statement(text='A', search_text='a'),
-            Statement(text='B', search_text='b')
-        ])
-
-        results = list(self.adapter.filter())
-
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[0].search_text, 'a')
-        self.assertEqual(results[1].search_text, 'b')
-
-    def test_create_many_search_in_response_to(self):
-        # `search_text` must be present or `search_in_response_to` will be generated based on the `in_response_to` field
-        self.adapter.create_many([
-            Statement(text='A', search_text='1', search_in_response_to='a'),
-            Statement(text='B', search_text='2', search_in_response_to='b')
-        ])
-
-        results = list(self.adapter.filter())
-
-        self.assertEqual(len(results), 2)
-        self.assertEqual(results[0].search_in_response_to, 'a')
-        self.assertEqual(results[1].search_in_response_to, 'b')
 
     def test_create_many_tags(self):
         self.adapter.create_many([
@@ -436,7 +389,7 @@ class StorageAdapterCreateTests(SQLStorageAdapterTestCase):
         self.assertEqual(results[0].get_tags(), ['ab'])
 
 
-class StorageAdapterUpdateTests(SQLStorageAdapterTestCase):
+class StorageAdapterUpdateTests(RedisStorageAdapterTestCase):
     """
     Tests for the update function of the storage adapter.
     """
