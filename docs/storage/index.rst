@@ -5,12 +5,6 @@ Storage Adapters
 Storage adapters provide an interface that allows ChatterBot
 to connect to different storage technologies.
 
-.. toctree::
-   :maxdepth: 1
-
-   text-search
-   create-a-storage-adapter
-
 The storage adapter that your bot uses can be specified by setting
 the ``storage_adapter`` parameter to the import path of the
 storage adapter you want to use. 
@@ -32,6 +26,65 @@ Each storage adapter inherits the following attributes and methods.
    :members:
 
 
+Redis Vector Storage Adapter
+============================
+
+The Redis Vector Storage Adapter allows a ChatterBot instance
+to store and retrieve text and metadata using a Redis database.
+This adapter supports the use of vectors when filtering queries
+to search for similar text.
+
+..
+   TODO:
+     * Include diagram of vectors
+     * Talk about how vectors differ from text search
+
+**Redis Setup**
+
+Before you use the ``RedisVectorStorageAdapter`` you will need to install
+the dependencies required for `Redis`_ and generating vectors.
+This can be done using the ``chatterbot[redis]`` extra when
+installing ChatterBot. For example:
+
+.. code-block:: bash
+
+   pip install chatterbot[redis]
+
+You will also need to have a Redis server running, with the additional
+modules installed that enable searching using vectors. And easy way to
+run one locally is to use Docker:
+
+.. code-block:: yaml
+
+   version: "3.8"
+
+   services:
+     redis:
+       # Use the latest version of the redis-stack image
+       image: redis/redis-stack-server:latest
+       # Expose the default Redis port
+       ports:
+         - "6379:6379"
+       # Persist the Redis data
+       volumes:
+         - ./.database/redis/:/data
+
+To start the Redis container, run:
+
+.. code-block:: bash
+
+   docker-compose up -d
+
+.. note::
+
+   For more information on Docker and ``docker-compose``, see the `Docker Compose documentation`_.
+
+**Class Attributes**
+
+.. autoclass:: chatterbot.storage.RedisVectorStorageAdapter
+   :members:
+
+
 SQL Storage Adapter
 ===================
 
@@ -41,12 +94,40 @@ SQL Storage Adapter
 MongoDB Storage Adapter
 =======================
 
+Before you can use this storage adapter you will need to install `pymongo`_. An easy way to install it is to use the ``chatterbot[mongodb]`` extra when installing ChatterBot. For example:
+
+.. code-block:: bash
+
+   pip install chatterbot[mongodb]
+
+You'll also need to have a MongoDB server running. An easy way to run one locally is to use Docker:
+
+.. code-block:: yaml
+
+   version: "3.8"
+
+   services:
+     mongo:
+       # Use the latest stable version of the mongo image
+       image: mongo:8.0
+       # Expose the default MongoDB port
+       ports:
+         - "27017:27017"
+       # Persist the MongoDB data
+       volumes:
+         - ./.database/mongodb/db:/data/db
+
+To start the Redis container, run:
+
+.. code-block:: bash
+
+   docker-compose up -d
+
 .. note::
 
-   Before you can use this storage adapter you will need to install
-   `pymongo`_. Consider adding ``pymongo`` to your project's
-   ``requirements.txt`` file so you can keep track of your dependencies
-   and their versions.
+   For more information on Docker and ``docker-compose``, see the `Docker Compose documentation`_.
+
+**Class Attributes**
 
 .. autoclass:: chatterbot.storage.MongoDatabaseAdapter
    :members:
@@ -70,5 +151,16 @@ each of the databases that ChatterBot comes with support for.
   `Alembic`_ is the recommended solution for generating them.
 * MongoDB: No migrations are provided.
 
+Further Reading
+===============
+
+.. toctree::
+   :maxdepth: 1
+
+   text-search
+   create-a-storage-adapter
+
 .. _Alembic: https://alembic.sqlalchemy.org
 .. _pymongo: https://pypi.org/project/pymongo/
+.. _Redis: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
+.. _Docker Compose documentation: https://docs.docker.com/compose/

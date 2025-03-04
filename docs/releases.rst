@@ -33,7 +33,7 @@ The following procedure is used to finalize a new version of ChatterBot.
 
 .. code-block:: bash
 
-   python setup.py sdist bdist_wheel
+   python -m build
 
 4. The Python package files are uploaded to PyPi.
 
