@@ -11,6 +11,7 @@ REDIS_ESCAPE_CHARACTERS = {
     '|': '\\|',
     '%': '\\%',
     '!': '\\!',
+    '-': '\\-',
 }
 
 REDIS_TRANSLATION_TABLE = str.maketrans(REDIS_ESCAPE_CHARACTERS)
@@ -48,7 +49,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        from langchain_redis import RedisVectorStore, RedisConfig
+        from chatterbot.vectorstores import RedisVectorStore
+        from langchain_redis import RedisConfig  # RedisVectorStore
         from langchain_huggingface import HuggingFaceEmbeddings
 
         self.database_uri = kwargs.get('database_uri', 'redis://localhost:6379/0')
@@ -56,13 +58,14 @@ class RedisVectorStorageAdapter(StorageAdapter):
         config = RedisConfig(
             index_name='chatterbot',
             redis_url=self.database_uri,
+            content_field='in_response_to',
             metadata_schema=[
                 {
                     'name': 'conversation',
                     'type': self.RedisMetaDataType.TAG,
                 },
                 {
-                    'name': 'in_response_to',
+                    'name': 'text',
                     'type': self.RedisMetaDataType.TEXT,
                 },
                 {
@@ -81,7 +84,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
             ],
         )
 
-        # from_existing_index?
+        # TODO should this call from_existing_index if connecting to
+        # a redis instance that already contains data?
 
         self.logger.info('Loading HuggingFace embeddings')
 
@@ -105,19 +109,23 @@ class RedisVectorStorageAdapter(StorageAdapter):
         return Document
 
     def model_to_object(self, document):
+
+        in_response_to = document.page_content
+
+        # If the value is an empty string, set it to None
+        # to match the expected type (the vector store does
+        # not use null values)
+        if in_response_to == '':
+            in_response_to = None
+
         values = {
-            'text': document.page_content,
+            'in_response_to': in_response_to,
         }
 
         if document.id:
             values['id'] = document.id
 
         values.update(document.metadata)
-
-        # If the value is an empty string, set it to None
-        # Metadata values are stored as strings and cannot be null
-        if values['in_response_to'] == '':
-            values['in_response_to'] = None
 
         tags = values['tags']
         values['tags'] = list(set(tags.split('|') if tags else []))
@@ -168,7 +176,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             - exclude_text
             - exclude_text_words
             - persona_not_startswith
-            - search_text_contains
+            - search_in_response_to_contains
             - order_by
         """
         from redisvl.query.filter import Tag, Text
@@ -227,34 +235,36 @@ class RedisVectorStorageAdapter(StorageAdapter):
             else:
                 filter_condition = query
 
-        if 'search_text_contains' in kwargs:
-            # TODO: Maybe the usage here is a bit different
-            # since `text` is already doing a similarity search
-            # ^ Maybe swap them, so search text is the main search
-            # and text is an == search?
-            # TODO: The `search_text` value also won't be generated during training
-            _query = _escape_redis_special_characters(kwargs['search_text_contains'])
+        if 'text' in kwargs:
+            _query = _escape_redis_special_characters(kwargs['text'])
             query = Text('text') % '|'.join([f'%%{_q}%%' for _q in _query.split()])
             if filter_condition:
                 filter_condition &= query
             else:
                 filter_condition = query
 
-        text = kwargs.get('text', '')
-
         ordering = kwargs.get('order_by', None)
 
         if ordering:
             ordering = ','.join(ordering)
 
-        # similarity_search_with_score
-        documents = self.vector_store.similarity_search(
-            text,
-            k=page_size,  # The number of results to return
-            return_all=True,  # Include the full document with IDs
-            filter=filter_condition,
-            sort_by=ordering
-        )
+        if 'search_in_response_to_contains' in kwargs:
+            _search_text = kwargs.get('search_in_response_to_contains', '')
+
+            # TODO similarity_search_with_score
+            documents = self.vector_store.similarity_search(
+                _search_text,
+                k=page_size,  # The number of results to return
+                return_all=True,  # Include the full document with IDs
+                filter=filter_condition,
+                sort_by=ordering
+            )
+        else:
+            documents = self.vector_store.query_search(
+                k=page_size,
+                filter=filter_condition,
+                sort_by=ordering
+            )
 
         return [self.model_to_object(document) for document in documents]
 
@@ -274,8 +284,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
         _default_date = datetime.now()
 
         metadata = {
+            'text': text,
             'category': kwargs.get('category', ''),
-            'in_response_to': in_response_to or '',
             # NOTE: `created_at` must have a valid numeric value or results will
             # not be returned for similarity_search for some reason
             'created_at': kwargs.get('created_at') or int(_default_date.strftime('%y%m%d')),
@@ -284,10 +294,11 @@ class RedisVectorStorageAdapter(StorageAdapter):
             'persona': kwargs.get('persona', ''),
         }
 
-        ids = self.vector_store.add_texts([text], [metadata])
+        ids = self.vector_store.add_texts([in_response_to or ''], [metadata])
 
         metadata['created_at'] = _default_date
         metadata['tags'] = tags or []
+        metadata.pop('text')
         statement = StatementObject(
             id=ids[0],
             text=text,
@@ -302,10 +313,10 @@ class RedisVectorStorageAdapter(StorageAdapter):
         Document = self.get_statement_model()
         documents = [
             Document(
-                page_content=statement.text,
+                page_content=statement.in_response_to or '',
                 metadata={
+                    'text': statement.text,
                     'conversation': statement.conversation or '',
-                    'in_response_to': statement.in_response_to or '',
                     'created_at': int(statement.created_at.strftime('%y%m%d')),
                     'persona': statement.persona or '',
                     'tags': '|'.join(statement.tags) if statement.tags else '',
@@ -323,8 +334,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
         Creates an entry if one does not exist.
         """
         metadata = {
+            'text': statement.text,
             'conversation': statement.conversation or '',
-            'in_response_to': statement.in_response_to or '',
             'created_at': int(statement.created_at.strftime('%y%m%d')),
             'persona': statement.persona or '',
             'tags': '|'.join(statement.tags) if statement.tags else '',
@@ -332,12 +343,14 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
         Document = self.get_statement_model()
         document = Document(
-            page_content=statement.text,
+            page_content=statement.in_response_to or '',
             metadata=metadata,
         )
 
         if statement.id:
-            self.vector_store.add_texts([statement.text], [metadata], keys=[statement.id.split(':')[1]])
+            self.vector_store.add_texts(
+                [document.page_content], [metadata], keys=[statement.id.split(':')[1]]
+            )
         else:
             self.vector_store.add_documents([document])
 
