@@ -3,19 +3,30 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement as StatementObject
 
 
+# TODO: This list may not be exhaustive.
+# Is there a full list of characters reserved by redis?
+REDIS_ESCAPE_CHARACTERS = {
+    '\\': '\\\\',
+    ':': '\\:',
+    '|': '\\|',
+    '%': '\\%',
+    '!': '\\!',
+}
+
+REDIS_TRANSLATION_TABLE = str.maketrans(REDIS_ESCAPE_CHARACTERS)
+
 def _escape_redis_special_characters(text):
     """
     Escape special characters in a string that are used in redis queries.
     """
-    # https://stackoverflow.com/questions/65718424/redis-escape-special-character
-    # TODO
-    return text.replace(':', '\\:')
+    return text.translate(REDIS_TRANSLATION_TABLE)
 
 
 class RedisVectorStorageAdapter(StorageAdapter):
     """
-    .. note:: BETA feature: this storage adapter is new and experimental.
-              Its functionality and default parameters might change in the future.
+    .. warning:: BETA feature (Released March, 2025): this storage adapter is new
+        and experimental. Its functionality and default parameters might change
+        in the future and its behavior has not yet been finalized.
 
     The RedisVectorStorageAdapter allows ChatterBot to store conversation
     data in a redis instance.
@@ -119,6 +130,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
         """
 
         '''
+        TODO
         faiss_vector_store = FAISS(
             embedding_function=embedding_function,
             index=IndexFlatL2(embedding_size),
@@ -208,7 +220,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 filter_condition = query
 
         if 'persona_not_startswith' in kwargs:
-            _query = kwargs['persona_not_startswith'].replace(':', '\\:')
+            _query = _escape_redis_special_characters(kwargs['persona_not_startswith'])
             query = Text('persona') % f'-(%%{_query}%%)'
             if filter_condition:
                 filter_condition &= query
@@ -221,7 +233,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             # ^ Maybe swap them, so search text is the main search
             # and text is an == search?
             # TODO: The `search_text` value also won't be generated during training
-            _query = kwargs["search_text_contains"].replace('!', '\\!')  # TODO: Escape special characters
+            _query = _escape_redis_special_characters(kwargs['search_text_contains'])
             query = Text('text') % '|'.join([f'%%{_q}%%' for _q in _query.split()])
             if filter_condition:
                 filter_condition &= query

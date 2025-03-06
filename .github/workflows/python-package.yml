@@ -17,14 +17,18 @@ env:
   CHATTERBOT_SHOW_TRAINING_PROGRESS: '0'
 
 jobs:
-  build:
 
+  build:
     runs-on: ubuntu-20.04 # ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9"]
-
+    services:
+      redis:
+        image: redis/redis-stack-server:latest
+        ports:
+          - 6379:6379
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
