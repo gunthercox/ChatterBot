@@ -3,7 +3,7 @@ Conversations
 =============
 
 ChatterBot supports the ability to have multiple concurrent conversations.
-A conversations is where the chat bot interacts with a person, and supporting
+A conversations is where the :term:`chat bot` interacts with a person, and supporting
 multiple concurrent conversations means that the chat bot can have multiple
 different conversations with different people at the same time.
 
