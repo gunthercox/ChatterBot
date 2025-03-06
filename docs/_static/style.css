@@ -2,6 +2,10 @@
     background-color: #300a24;
 }
 
+div.sphinxsidebar {
+    overflow: hidden;
+}
+
 #mc_embed_signup {
     background: transparent;
     font: 14px Helvetica,Arial,sans-serif;

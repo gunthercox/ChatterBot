@@ -7,7 +7,7 @@ Logic adapters determine the logic for how ChatterBot selects a response to a gi
 .. toctree::
    :maxdepth: 1
 
-   response_selection
+   response-selection
    create-a-logic-adapter
 
 The logic adapter that your bot uses can be specified by setting the ``logic_adapters`` parameter
