@@ -120,10 +120,8 @@ class RedisStorageAdapterFilterTests(RedisStorageAdapterTestCase):
         )
         results = list(self.adapter.filter(text='Howdy'))
 
-        # One result will be returned because it is the closest match
-        # This differs from the SQL storage adapter which returns no
-        # results (because it is an exact match)
-        self.assertEqual(len(results), 1)
+        # No results will be returned because the text not an close enough match
+        self.assertEqual(len(results), 0)
 
     def test_filter_in_response_to_no_matches(self):
         self.adapter.create(
@@ -248,23 +246,25 @@ class RedisStorageAdapterFilterTests(RedisStorageAdapterTestCase):
         self.assertEqual(len(results), 1)
         self.assertEqual(results[0].text, 'Hi everyone!')
 
-    def test_search_text_contains(self):
-        self.adapter.create(text='Hello all', search_text='hello all')
-        self.adapter.create(text='Hi everyone', search_text='hi everyone')
+    def test_search_in_response_to_contains(self):
+        self.adapter.create(text='A', in_response_to='hello all')
+        self.adapter.create(text='B', in_response_to='hi everyone')
 
         results = list(self.adapter.filter(
-            search_text_contains='everyone'
+            search_in_response_to_contains='everyone',
+            page_size=1
         ))
 
         self.assertEqual(len(results), 1)
-        self.assertEqual(results[0].text, 'Hi everyone')
+        self.assertEqual(results[0].text, 'B')
+        self.assertEqual(results[0].in_response_to, 'hi everyone')
 
-    def test_search_text_contains_multiple_matches(self):
-        self.adapter.create(text='Hello all', search_text='hello all')
-        self.adapter.create(text='Hi everyone', search_text='hi everyone')
+    def test_search_in_response_to_contains_multiple_matches(self):
+        self.adapter.create(text='A', in_response_to='hello all')
+        self.adapter.create(text='B', in_response_to='hi everyone')
 
         results = list(self.adapter.filter(
-            search_text_contains='hello everyone'
+            search_in_response_to_contains='hello everyone'
         ))
 
         self.assertEqual(len(results), 2)
