@@ -7,6 +7,9 @@ Glossary
    adapters
       A base class that allows a ChatBot instance to execute some kind of functionality.
 
+   chat bot
+      Computer software that can converse conversation with human users or other chat bots [1]_.
+
    logic adapter
       An adapter class that allows a ChatBot instance to select a response to 
 
@@ -17,7 +20,7 @@ Glossary
       In linguistics, a corpus (plural corpora) or text corpus is a large
       and structured set of texts. They are used to do statistical analysis
       and hypothesis testing, checking occurrences or validating linguistic
-      rules within a specific language territory [1]_.
+      rules within a specific language territory [2]_.
 
    preprocessors
       A member of a list of functions that can be used to modify text
@@ -45,4 +48,15 @@ Glossary
    untrained instance
       An untrained instance of the chat bot has an empty database.
 
-.. [1] https://en.wikipedia.org/wiki/Text_corpus
+   vector
+      A mathematical representation of text that can be used to calculate
+      the similarity between two pieces of text based on the distance
+      between their vectors.
+
+   vector database
+      Any database capable of storing vectors.
+
+----
+
+.. [1] https://en.wikipedia.org/wiki/Chatbot
+.. [2] https://en.wikipedia.org/wiki/Text_corpus

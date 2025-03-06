@@ -6,6 +6,13 @@ div.sphinxsidebar {
     overflow: hidden;
 }
 
+table caption span.caption-text {
+    color: #efefef;
+    background-color: #1c4e63;
+    width: 100%;
+    display: block;
+}
+
 #mc_embed_signup {
     background: transparent;
     font: 14px Helvetica,Arial,sans-serif;

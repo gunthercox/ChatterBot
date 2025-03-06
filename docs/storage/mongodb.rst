@@ -29,11 +29,11 @@ To start the MongoDB container, run:
 
 .. code-block:: bash
 
-   docker-compose up -d
+   docker compose up -d
 
 .. note::
 
-   For more information on Docker and ``docker-compose``, see the `Docker Compose documentation`_.
+   For more information on Docker and ``docker compose``, see the `Docker Compose documentation`_.
 
 MongoDB Adapter Class Attributes
 --------------------------------

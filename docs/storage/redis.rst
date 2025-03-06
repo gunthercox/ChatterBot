@@ -1,10 +1,13 @@
 Redis Vector Storage Adapter
 ============================
 
-The Redis Vector Storage Adapter allows a ChatterBot instance
-to store and retrieve text and metadata using a Redis database.
-This adapter supports the use of vectors when filtering queries
-to search for similar text.
+.. note::
+
+   **(March, 2025)**:
+   The ``RedisVectorStorageAdapter`` is a new and experimental feature introduced as a "beta" feature. Its functionality is subject to change in future releases.
+
+The Redis Vector Storage Adapter allows a ChatterBot instance to store and retrieve text and metadata using a Redis instance configured as a :term:`vector database`.
+This adapter supports the use of vectors when filtering queries to search for similar text.
 
 Vectors are a mathematical representation of text that can be used
 to calculate the similarity between two pieces of text based on
@@ -27,11 +30,6 @@ For example, consider the following words:
             (Writing)
 
 The acts of "speaking" and "writing" are both forms of communication, so they are included in the same cluster, but they are somewhat opposite to each other. Both "poetry" and "rhyming" closely related, and in some cases might possibly be used as synonyms within the context of either types of speech or types of writing.
-
-..
-   TODO:
-     * Links to good resources on vectors
-     * Talk about how vectors differ from text search
 
 Redis Setup
 -----------
@@ -69,16 +67,52 @@ To start the Redis container, run:
 
 .. code-block:: bash
 
-   docker-compose up -d
+   docker compose up -d
 
-.. note::
+Likewise, you can run ``docker compose ps`` to review the status of your container, and ``docker compose down`` to stop it. For more information on Docker and ``docker compose``, see the `Docker Compose documentation`_.
 
-   For more information on Docker and ``docker-compose``, see the `Docker Compose documentation`_.
+Redis Configuration
+-------------------
 
-**Class Attributes**
+To use the ``RedisVectorStorageAdapter`` you will need to provide the following argument when configuring your ChatterBot instance:
+
+.. code-block:: python
+
+   from chatterbot import ChatBot
+
+   chatbot = ChatBot(
+         'Redis Bot',
+         storage_adapter='chatterbot.storage.RedisVectorStorageAdapter,
+         # Optional: Override the default Redis URI
+         # database_uri='redis://localhost:6379/0'
+   )
+
+Class Attributes
+----------------
 
 .. autoclass:: chatterbot.storage.RedisVectorStorageAdapter
    :members:
+
+More on Vector Databases
+------------------------
+
+For those looking to learn more about vector databases, the following resources can be good starting points:
+
+.. list-table:: Vector Database Learning Resources
+   :widths: 50 50
+   :header-rows: 1
+
+   * - Article
+     - Link
+   * - What is a vector database?
+     - https://www.mongodb.com/resources/basics/databases/vector-databases
+   * - Why use a vector database?
+     - https://stackoverflow.blog/2023/09/20/do-you-need-a-specialized-vector-database-to-implement-vector-search-well/
+   * - How to choose a vector database?
+     - https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/vector-search-ai
+   * - Redis as a vector database
+     - https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/vectors/
+
 
 .. _Redis: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
 .. _Docker Compose documentation: https://docs.docker.com/compose/
