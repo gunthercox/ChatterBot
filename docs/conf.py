@@ -26,6 +26,7 @@ extensions = [
     'sphinx.ext.todo',
     'sphinx.ext.viewcode',
     'github',
+    'canonical',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -99,6 +100,8 @@ html_theme_options = {
 root_doc = 'index'
 
 html_show_sourcelink = True
+
+html_baseurl = 'https://docs.chatterbot.us'
 
 # A shorter title for the navigation bar. Default is the same as html_title.
 # html_short_title = None

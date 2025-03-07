@@ -5,6 +5,8 @@
 crossorigin="anonymous"></script>
 ' %}
 
+{% set pageurl = canonical_url() %}
+
 {%- block relbaritems %}
     <li class="right"><a href="{{github_page_link()}}">Edit on GitHub</a> |</li>
 {% endblock %}
