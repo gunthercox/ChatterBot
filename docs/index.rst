@@ -1,3 +1,7 @@
+.. meta::
+   :description: ChatterBot documentation: ChatterBot is a machine learning, conversational dialog engine designed to support multiple languages.
+   :keywords: ChatterBot, chatbot, chat, bot, natural language processing, nlp, artificial intelligence, ai
+
 .. container:: banner
 
    .. image:: ../graphics/banner.png
@@ -26,14 +30,14 @@ An example of typical input would be something like this:
 Originally, ChatterBot was created as a part of the codebase for the humanoid robot `Salvius`_. As the project grew, the :code:`chatterbot` library was released as a separate open-source project.
 
 Language Independence
-=====================
+---------------------
 
 The language independent design of ChatterBot allows it to be trained to speak any language.
 Additionally, the machine-learning nature of ChatterBot allows an agent instance to improve
 it's own knowledge of possible responses as it interacts with humans and other sources of informative data.
 
 How ChatterBot Works
-====================
+--------------------
 
 ChatterBot is a Python library designed to make it easy to create software that can engage in conversation.
 
@@ -49,13 +53,13 @@ to that statement.
 ..  _process_flow_diagram:
 
 Process flow diagram
-====================
+--------------------
 
 .. image:: _static/chatterbot-process-flow.svg
    :alt: ChatterBot process flow diagram
 
 Contents:
-=========
+---------
 
 .. toctree::
    :maxdepth: 4
@@ -81,13 +85,13 @@ Contents:
    glossary
 
 Report an Issue
-===============
+---------------
 
 Please direct all bug reports and feature requests to the project's issue
 tracker on `GitHub`_.
 
 Indices and tables
-==================
+------------------
 
 * :ref:`genindex`
 * :ref:`modindex`

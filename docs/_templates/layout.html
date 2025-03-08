@@ -1,11 +1,16 @@
 {% extends '!layout.html' %}
 {# https://github.com/sphinx-doc/sphinx/blob/master/sphinx/themes/basic/layout.html #}
 
-{% set metatags = '<meta name="google-site-verification" content="uM9aB6XUTqBdf9f_THPuD1p8GplQU7kYLPAsrl1cORs" /><meta name="google-adsense-account" content="ca-pub-3019790405701706"><script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3019790405701706"
-crossorigin="anonymous"></script>
-' %}
-
 {% set pageurl = canonical_url() %}
+
+{%- block htmltitle %}
+    <meta name="google-site-verification" content="uM9aB6XUTqBdf9f_THPuD1p8GplQU7kYLPAsrl1cORs" />
+    <meta name="google-adsense-account" content="ca-pub-3019790405701706">
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3019790405701706"
+    crossorigin="anonymous"></script>
+
+{{ super() }}
+{%- endblock %}
 
 {%- block relbaritems %}
     <li class="right"><a href="{{github_page_link()}}">Edit on GitHub</a> |</li>

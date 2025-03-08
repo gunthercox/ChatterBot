@@ -13,8 +13,12 @@ def setup_canonical_func(app, pagename, templatename, context, doctree):
     conf = app.config
 
     def canonical_func():
-        dir_name = pagename.replace('/index', '')
-        return f'{conf.html_baseurl}/{dir_name}/'
+        # Special case for the root index page
+        if pagename == 'index':
+            return conf.html_baseurl
+
+        dir_name = pagename.replace('/index', '/')
+        return f'{conf.html_baseurl}{dir_name}'
 
     # Add it to the page's context
     context['canonical_url'] = canonical_func

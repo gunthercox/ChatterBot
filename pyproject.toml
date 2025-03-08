@@ -73,7 +73,8 @@ test = [
     "flake8",
     "coverage",
     "nose",
-    "sphinx>=5.3,<8.2"
+    "sphinx>=5.3,<8.2",
+    "sphinx-sitemap>=2.6.0",
 ]
 dev = [
     "pint>=0.8.1",

@@ -27,7 +27,12 @@ extensions = [
     'sphinx.ext.viewcode',
     'github',
     'canonical',
+    'sphinx_sitemap',
 ]
+
+# Sphinx Sitemap Plugin Configuration
+
+sitemap_url_scheme = '{link}'
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -101,7 +106,7 @@ root_doc = 'index'
 
 html_show_sourcelink = True
 
-html_baseurl = 'https://docs.chatterbot.us'
+html_baseurl = 'https://docs.chatterbot.us/'
 
 # A shorter title for the navigation bar. Default is the same as html_title.
 # html_short_title = None
