@@ -17,4 +17,5 @@ jobs:
     - id: deployment
       uses: sphinx-notes/pages@v3
       with:
+        pyproject_extras: 'test'
         sphinx_build_options: '-b dirhtml'
