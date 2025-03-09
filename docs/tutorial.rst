@@ -29,19 +29,21 @@ See :ref:`Installation` for alternative installation options.
 Creating your first chat bot
 ============================
 
-Create a new file named `chatbot.py`.
-Then open `chatbot.py` in your editor of choice.
+Create a new file named ``chatbot.py``.
+Then open ``chatbot.py`` in your editor of choice.
 
 Before we do anything else, ChatterBot needs to be imported.
 The import for ChatterBot should look like the following line.
 
 .. code-block:: python
+   :caption: chatbot.py
 
    from chatterbot import ChatBot
 
 Create a new instance of the ``ChatBot`` class.
 
 .. code-block:: python
+   :caption: chatbot.py
 
    bot = ChatBot('Norman')
 
@@ -63,6 +65,7 @@ that the chat bot will use. For this example we will call the database
 already exist.
 
 .. code-block:: python
+   :caption: chatbot.py
 
    bot = ChatBot(
        'Norman',
@@ -90,6 +93,7 @@ The MathematicalEvaluation adapter solves math problems that use basic
 operations.
 
 .. code-block:: python
+   :caption: chatbot.py
 
    bot = ChatBot(
        'Norman',
@@ -109,6 +113,7 @@ By breaking out of the loop when specific exceptions are triggered,
 we can exit the loop and stop the program when a user enters `ctrl+c`.
 
 .. code-block:: python
+   :caption: chatbot.py
 
    while True:
        try:
@@ -125,6 +130,7 @@ At this point your chat bot, Norman will learn to communicate as you talk to him
 You can speed up this process by training him with examples of existing conversations.
 
 .. code-block:: python
+   :caption: chatbot.py
 
    from chatterbot.trainers import ListTrainer
 
@@ -143,12 +149,18 @@ to particular input statements. You can also run the train command on a number
 of different example dialogs to increase the breadth of inputs that your chat
 bot can respond to.
 
----- 
+Conclusion and Next Steps
+--------------------------
 
 This concludes this ChatterBot tutorial. Please see other sections of the
 documentation for more details and examples.
 
-Up next: :doc:`./examples`
+For more examples of using ChatterBot, see the :doc:`./examples` section. Additional tutorials that cover topic beyond the scope of this one can be found in the :doc:`./tutorials/index` section:
+
+.. toctree::
+   :maxdepth: 2
+
+   tutorials/index
 
 .. _Gitter: https://gitter.im/chatterbot/Lobby
 .. _SQLite: https://www.sqlite.org/
