@@ -15,7 +15,6 @@ To get started we'll need to set up a chat bot using the :ref:`Specific Response
     :caption: tutorial.py
 
     from chatterbot import ChatBot
-    from chatterbot.logic import SpecificResponseAdapter
 
     chatbot = ChatBot(
         'Example Bot',
@@ -47,7 +46,6 @@ Matching an exact string is not always practical, in some cases for example it m
     :caption: tutorial.py
 
     from chatterbot import ChatBot
-    from chatterbot.logic import SpecificResponseAdapter
     from spacy.matcher import Matcher
 
     # Pattern to match phrases close to "check if the website is up"
@@ -92,7 +90,6 @@ In some cases, it may be necessary to call a function in response to a match. Th
     :caption: tutorial.py
 
     from chatterbot import ChatBot
-    from chatterbot.logic import SpecificResponseAdapter
     from spacy.matcher import Matcher
 
     def check_website_status():
