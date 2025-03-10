@@ -5,6 +5,7 @@ venv
 .env
 .out
 .coverage
+.python-version
 *.pyc
 *.swp
 *.egg-info
