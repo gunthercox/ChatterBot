@@ -19,7 +19,8 @@ version = {attr = "chatterbot.__version__"}
 [project]
 name = "ChatterBot"
 requires-python = "~=3.9"
-urls = { Documentation = "https://docs.chatterbot.us", Repository = "https://github.com/gunthercox/ChatterBot"}
+urls = { Documentation = "https://docs.chatterbot.us", Repository = "https://github.com/gunthercox/ChatterBot", Changelog = "https://github.com/gunthercox/ChatterBot/releases"
+}
 description = "ChatterBot is a machine learning, conversational dialog engine"
 authors = [
   {name = "Gunther Cox"},
