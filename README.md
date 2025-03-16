@@ -99,7 +99,7 @@ See release notes for changes https://github.com/gunthercox/ChatterBot/releases
    a new branch `my-pull-request`.
 3. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/).
 4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
-5. Use the projects [built-in automated testing](https://docs.chatterbot.us/testing.html).
+5. Use the projects [built-in automated testing](https://docs.chatterbot.us/testing/).
    to help make sure that your contribution is free from errors.
 
 # License
