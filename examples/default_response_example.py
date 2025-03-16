@@ -23,7 +23,7 @@ trainer.train([
     'I want to create a chat bot',
     'Have you read the documentation?',
     'No, I have not',
-    'This should help get you started: https://docs.chatterbot.us/quickstart.html'
+    'This should help get you started: https://docs.chatterbot.us/quickstart/'
 ])
 
 # Get a response for some unexpected input
