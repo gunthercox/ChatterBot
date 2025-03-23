@@ -16,3 +16,6 @@ venv
 # Database files
 .database
 *.sqlite3
+
+# IDE files
+.vscode

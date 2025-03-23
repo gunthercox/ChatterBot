@@ -148,9 +148,9 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         self.trainer.extract(file_object_path)
 
         self._destroy_test_corpus()
-        corpus_path = os.path.join(self.trainer.extracted_data_directory, 'dialogs', '3')
+        corpus_path = os.path.join(self.trainer.data_path, 'dialogs', '3')
 
-        self.assertTrue(os.path.exists(self.trainer.extracted_data_directory))
+        self.assertTrue(os.path.exists(self.trainer.data_path))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '1.tsv')))
         self.assertTrue(os.path.exists(os.path.join(corpus_path, '2.tsv')))
 
@@ -201,7 +201,7 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         file_object_path = self._create_test_corpus(self._get_data())
         self.trainer.extract(file_object_path)
 
-        extracted = self.trainer.is_extracted(self.trainer.extracted_data_directory)
+        extracted = self.trainer.is_extracted(self.trainer.data_path)
         self._destroy_test_corpus()
 
         self.assertTrue(extracted)
@@ -211,6 +211,6 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         Test that a check can be done for if the corpus has aleady been extracted.
         """
         self._remove_data()
-        extracted = self.trainer.is_extracted(self.trainer.extracted_data_directory)
+        extracted = self.trainer.is_extracted(self.trainer.data_path)
 
         self.assertFalse(extracted)

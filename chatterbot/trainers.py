@@ -1,7 +1,6 @@
 import os
 import sys
 import csv
-import time
 import glob
 import json
 import tarfile
@@ -25,7 +24,7 @@ class Trainer(object):
 
         environment_default = bool(int(os.environ.get('CHATTERBOT_SHOW_TRAINING_PROGRESS', True)))
 
-        self.show_training_progress = kwargs.get(
+        self.disable_progress = not kwargs.get(
             'show_training_progress',
             environment_default
         )
@@ -54,7 +53,7 @@ class Trainer(object):
         def __init__(self, message=None):
             default = (
                 'A training class must be specified before calling train(). '
-                'See https://docs.chatterbot.us/training.html'
+                'See https://docs.chatterbot.us/training/'
             )
             super().__init__(message or default)
 
@@ -96,7 +95,7 @@ class ListTrainer(Trainer):
         documents = self.chatbot.tagger.as_nlp_pipeline(conversation)
 
         # for text in enumerate(conversation):
-        for document in tqdm(documents, desc='List Trainer', disable=not self.show_training_progress):
+        for document in tqdm(documents, desc='List Trainer', disable=self.disable_progress):
             statement_search_text = document._.search_index
 
             statement = self.get_preprocessed_statement(
@@ -135,7 +134,7 @@ class ChatterBotCorpusTrainer(Trainer):
         for corpus, categories, _file_path in tqdm(
             load_corpus(*data_file_paths),
             desc='ChatterBot Corpus Trainer',
-            disable=not self.show_training_progress
+            disable=self.disable_progress
         ):
             statements_to_create = []
 
@@ -172,7 +171,205 @@ class ChatterBotCorpusTrainer(Trainer):
                 self.chatbot.storage.create_many(statements_to_create)
 
 
-class UbuntuCorpusTrainer(Trainer):
+class GenericFileTrainer(Trainer):
+    """
+    Allows the chat bot to be trained using data from a CSV or JSON file,
+    or directory of those file types.
+    """
+
+    def __init__(self, chatbot, **kwargs):
+        """
+        data_path: str The path to the data file or directory.
+        field_map: dict A dictionary containing the column name to header mapping.
+        """
+        super().__init__(chatbot, **kwargs)
+
+        # File path or directory
+        self.data_path = kwargs.get('data_path')
+
+        self.file_extension = None
+
+        # NOTE: If the key is an integer, this be the
+        # column index instead of the key or header
+        DEFAULT_STATEMENT_TO_HEADER_MAPPING = {
+            'text': 'text',
+            'conversation': 'conversation',
+            'created_at': 'created_at',
+            'persona': 'persona',
+            'tags': 'tags'
+        }
+
+        self.field_map = kwargs.get(
+            'field_map',
+            DEFAULT_STATEMENT_TO_HEADER_MAPPING
+        )
+
+    def _get_file_list(self, limit):
+        """
+        Get a list of files to read from the data set.
+        """
+
+        if self.file_extension is None:
+            raise self.TrainerInitializationException(
+                'The file_extension attribute must be set before calling train().'
+            ) 
+
+        # List all csv or json files in the specified directory
+        if os.path.isdir(self.data_path):
+            glob_path = os.path.join(self.data_path, '**', f'*.{self.file_extension}')
+
+            # TODO: Use iglob instead of glob for better performance with large directories
+            data_files = glob.glob(glob_path, recursive=True)
+        else:
+            data_files = [self.data_path]
+
+        if limit is not None:
+            data_files = data_files[:limit]
+
+        return data_files
+
+    def train(self, limit=None):
+        """
+        Train a chatbot with data from the data file.
+
+        limit: int If defined, the maximum number of files to read from the data set.
+        """
+
+        if self.data_path is None:
+            raise self.TrainerInitializationException(
+                'The data_path argument must be set to the path of a file or directory.'
+            )
+
+        data_files = self._get_file_list(limit)
+
+        if not data_files:
+            self.chatbot.logger.warning(
+                'No [{}] files were detected at: {}'.format(
+                    self.file_extension,
+                    self.data_path
+                )
+            )
+
+        for data_file in tqdm(data_files, desc='Training', disable=self.disable_progress):
+
+            previous_statement_text = None
+            previous_statement_search_text = ''
+
+            file_extension = data_file.split('.')[-1].lower()
+
+            statements_to_create = []
+
+            with open(data_file, 'r', encoding='utf-8') as file:
+
+                if self.file_extension == 'json':
+                    data = json.load(file)
+                    data = data['conversation']
+                elif file_extension == 'csv':
+                    use_header = bool(isinstance(next(iter(self.field_map.values())), str))
+
+                    if use_header:
+                        data = csv.DictReader(file)
+                    else:
+                        data = csv.reader(file)
+                elif file_extension == 'tsv':
+                    use_header = bool(isinstance(next(iter(self.field_map.values())), str))
+
+                    if use_header:
+                        data = csv.DictReader(file, delimiter='\t')
+                    else:
+                        data = csv.reader(file, delimiter='\t')
+                else:
+                    self.logger.warning(f'Skipping unsupported file type: {file_extension}')
+                    continue
+
+                text_row = self.field_map['text']
+
+                documents = self.chatbot.tagger.as_nlp_pipeline([
+                    (
+                        row[text_row],
+                        {
+                            # Include any defined metadata columns
+                            key: row[value]
+                            for key, value in self.field_map.items()
+                            if key != text_row
+                        }
+                    ) for row in data if len(row) > 0
+                ])
+
+            for document, context in documents:
+                statement = Statement(
+                    text=document.text,
+                    conversation=context.get('conversation', 'training'),
+                    persona=context.get('persona', None),
+                    tags=context.get('tags', [])
+                )
+
+                if 'created_at' in context:
+                    statement.created_at = date_parser.parse(context['created_at'])
+
+                statement.search_text = document._.search_index
+                statement.search_in_response_to = previous_statement_search_text
+
+                # Use the in_response_to attribute for the previous statement if
+                # one is defined, otherwise use the last statement which was created
+                if 'in_response_to' in self.field_map.keys():
+                    statement.in_response_to = context.get(self.field_map['in_response_to'], None)
+                else:
+                    statement.in_response_to = previous_statement_text
+
+                for preprocessor in self.chatbot.preprocessors:
+                    statement = preprocessor(statement)
+
+                previous_statement_text = statement.text
+                previous_statement_search_text = statement.search_text
+
+                statements_to_create.append(statement)
+
+            self.chatbot.storage.create_many(statements_to_create)
+
+
+class CsvFileTrainer(GenericFileTrainer):
+    """
+    Allow chatbots to be trained with data from a CSV file or
+    directory of CSV files.
+
+    TSV files are also supported, as long as the file_extension
+    parameter is set to 'tsv'.
+    """
+
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
+
+        self.file_extension = kwargs.get('file_extension', 'csv')
+
+
+class JsonFileTrainer(GenericFileTrainer):
+    """
+    Allow chatbots to be trained with data from a JSON file or
+    directory of JSON files.
+    """
+
+    def __init__(self, chatbot, **kwargs):
+        super().__init__(chatbot, **kwargs)
+
+        self.file_extension = 'json'
+
+        DEFAULT_STATEMENT_TO_KEY_MAPPING = {
+            'text': 'text',
+            'conversation': 'conversation',
+            'created_at': 'created_at',
+            'in_response_to': 'in_response_to',
+            'persona': 'persona',
+            'tags': 'tags'
+        }
+
+        self.field_map = kwargs.get(
+            'field_map',
+            DEFAULT_STATEMENT_TO_KEY_MAPPING
+        )
+
+
+class UbuntuCorpusTrainer(CsvFileTrainer):
     """
     Allow chatbots to be trained with the data from the Ubuntu Dialog Corpus.
 
@@ -194,9 +391,16 @@ class UbuntuCorpusTrainer(Trainer):
             os.path.join(home_directory, 'ubuntu_data')
         )
 
-        self.extracted_data_directory = os.path.join(
+        # Directory containing extracted data
+        self.data_path = os.path.join(
             self.data_directory, 'ubuntu_dialogs'
         )
+
+        self.field_map = {
+            'text': 3,
+            'created_at': 0,
+            'persona': 1,
+        }
 
     def is_downloaded(self, file_path):
         """
@@ -222,7 +426,6 @@ class UbuntuCorpusTrainer(Trainer):
         """
         Download a file from the given url.
         Show a progress indicator for the download status.
-        Based on: http://stackoverflow.com/a/15645088/1547223
         """
         import requests
 
@@ -246,18 +449,12 @@ class UbuntuCorpusTrainer(Trainer):
                 # No content length header
                 open_file.write(response.content)
             else:
-                download = 0
-                total_length = int(total_length)
-                for data in response.iter_content(chunk_size=4096):
-                    download += len(data)
+                for data in tqdm(
+                    response.iter_content(chunk_size=4096),
+                    desc='Downloading',
+                    disable=not show_status
+                ):
                     open_file.write(data)
-                    if show_status:
-                        done = int(50 * download / total_length)
-                        sys.stdout.write('\r[%s%s]' % ('=' * done, ' ' * (50 - done)))
-                        sys.stdout.flush()
-
-            # Add a new line after the download bar
-            sys.stdout.write('\n')
 
         print('Download location: %s' % file_path)
         return file_path
@@ -268,8 +465,8 @@ class UbuntuCorpusTrainer(Trainer):
         """
         print('Extracting {}'.format(file_path))
 
-        if not os.path.exists(self.extracted_data_directory):
-            os.makedirs(self.extracted_data_directory)
+        if not os.path.exists(self.data_path):
+            os.makedirs(self.data_path)
 
         def track_progress(members):
             sys.stdout.write('.')
@@ -296,86 +493,28 @@ class UbuntuCorpusTrainer(Trainer):
 
                 tar.extractall(path, members, numeric_owner=numeric_owner)
 
-            safe_extract(tar, path=self.extracted_data_directory, members=track_progress(tar))
+            safe_extract(tar, path=self.data_path, members=track_progress(tar))
 
-        self.chatbot.logger.info('File extracted to {}'.format(self.extracted_data_directory))
+        self.chatbot.logger.info('File extracted to {}'.format(self.data_path))
 
         return True
-
-    def train(self, limit=None):
+    
+    def _get_file_list(self, limit):
         """
-        limit: int If defined, the number of files to read from the data set.
+        Get a list of files to read from the data set.
         """
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
 
         # Extract if the directory does not already exist
-        if not self.is_extracted(self.extracted_data_directory):
+        if not self.is_extracted(self.data_path):
             self.extract(corpus_download_path)
 
         extracted_corpus_path = os.path.join(
-            self.extracted_data_directory,
-            '**', '**', '*.tsv'
+            self.data_path, '**', '**', '*.tsv'
         )
 
-        def chunks(items, items_per_chunk):
-            for start_index in range(0, len(items), items_per_chunk):
-                end_index = start_index + items_per_chunk
-                yield items[start_index:end_index]
-
-        file_list = glob.glob(extracted_corpus_path)
-
-        # Limit the number of files used if a limit is defined
         if limit is not None:
-            file_list = file_list[:limit]
+            return glob.glob(extracted_corpus_path)[:limit]
 
-        file_groups = tuple(chunks(file_list, 5000))
-
-        start_time = time.time()
-
-        for batch_number, tsv_files in enumerate(file_groups):
-
-            statements_from_file = []
-
-            for tsv_file in tqdm(tsv_files, desc=f'Training with batch {batch_number} of {len(file_groups)}'):
-                with open(tsv_file, 'r', encoding='utf-8') as tsv:
-                    reader = csv.reader(tsv, delimiter='\t')
-
-                    previous_statement_text = None
-                    previous_statement_search_text = ''
-
-                    documents = self.chatbot.tagger.as_nlp_pipeline([
-                        (
-                            row[3],
-                            {
-                                'persona': row[1],
-                                'created_at': row[0],
-                            }
-                         ) for row in reader if len(row) > 0
-                    ])
-
-                    for document, context in documents:
-
-                        statement_search_text = document._.search_index
-
-                        statement = Statement(
-                            text=document.text,
-                            in_response_to=previous_statement_text,
-                            conversation='training',
-                            created_at=date_parser.parse(context['created_at']),
-                            persona=context['persona'],
-                            search_text=statement_search_text,
-                            search_in_response_to=previous_statement_search_text
-                        )
-
-                        for preprocessor in self.chatbot.preprocessors:
-                            statement = preprocessor(statement)
-
-                        previous_statement_text = statement.text
-                        previous_statement_search_text = statement_search_text
-
-                        statements_from_file.append(statement)
-
-            self.chatbot.storage.create_many(statements_from_file)
-
-        print('Training took', time.time() - start_time, 'seconds.')
+        return glob.glob(extracted_corpus_path)
