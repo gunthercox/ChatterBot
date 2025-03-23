@@ -1,0 +1,22 @@
+{
+    "conversation": [
+        {
+            "text": "Hello",
+            "in_response_to": null,
+            "persona": "user 1",
+            "conversation": "test"
+        },
+        {
+            "text": "Is anyone there?",
+            "in_response_to": "Hello",
+            "persona": "user 1",
+            "conversation": "test"
+        },
+        {
+            "text": "Yes",
+            "in_response_to": "Is anyone there?",
+            "persona": "user 2",
+            "conversation": "test"
+        }
+    ]
+}

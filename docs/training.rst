@@ -127,9 +127,22 @@ You can also specify file paths to corpus files or directories of corpus files w
    :caption: train.py
 
    trainer.train(
-       "./data/greetings_corpus/custom.corpus.json",
+       "./data/greetings_corpus/custom.corpus.yml",
        "./data/my_corpus/"
    )
+
+
+Training with CSV or TSV formatted data
+---------------------------------------
+
+.. autofunction:: chatterbot.trainers.CsvFileTrainer
+
+
+
+Training with JSON formatted data
+---------------------------------
+
+.. autofunction:: chatterbot.trainers.JsonFileTrainer
 
 
 Training with the Ubuntu dialog corpus
