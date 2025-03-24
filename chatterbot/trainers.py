@@ -81,7 +81,7 @@ class ListTrainer(Trainer):
     where the list represents a conversation.
     """
 
-    def train(self, conversation):
+    def train(self, conversation: list):
         """
         Train the chat bot based on the provided list of
         statements that represents a single conversation.
@@ -225,10 +225,11 @@ class GenericFileTrainer(Trainer):
 
         return data_files
 
-    def train(self, data_path, limit=None):
+    def train(self, data_path: str, limit=None):
         """
         Train a chatbot with data from the data file.
 
+        :param str data_path: The path to the data file or directory.
         :param int limit: The number of files to train from.
         """
 
