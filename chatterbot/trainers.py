@@ -184,9 +184,6 @@ class GenericFileTrainer(Trainer):
         """
         super().__init__(chatbot, **kwargs)
 
-        # File path or directory
-        self.data_path = kwargs.get('data_path')
-
         self.file_extension = None
 
         # NOTE: If the key is an integer, this be the
@@ -204,7 +201,7 @@ class GenericFileTrainer(Trainer):
             DEFAULT_STATEMENT_TO_HEADER_MAPPING
         )
 
-    def _get_file_list(self, limit):
+    def _get_file_list(self, data_path, limit):
         """
         Get a list of files to read from the data set.
         """
@@ -215,38 +212,38 @@ class GenericFileTrainer(Trainer):
             ) 
 
         # List all csv or json files in the specified directory
-        if os.path.isdir(self.data_path):
-            glob_path = os.path.join(self.data_path, '**', f'*.{self.file_extension}')
+        if os.path.isdir(data_path):
+            glob_path = os.path.join(data_path, '**', f'*.{self.file_extension}')
 
             # TODO: Use iglob instead of glob for better performance with large directories
             data_files = glob.glob(glob_path, recursive=True)
         else:
-            data_files = [self.data_path]
+            data_files = [data_path]
 
         if limit is not None:
             data_files = data_files[:limit]
 
         return data_files
 
-    def train(self, limit=None):
+    def train(self, data_path, limit=None):
         """
         Train a chatbot with data from the data file.
 
-        limit: int If defined, the maximum number of files to read from the data set.
+        :param int limit: The number of files to train from.
         """
 
-        if self.data_path is None:
+        if data_path is None:
             raise self.TrainerInitializationException(
                 'The data_path argument must be set to the path of a file or directory.'
             )
 
-        data_files = self._get_file_list(limit)
+        data_files = self._get_file_list(data_path, limit)
 
         if not data_files:
             self.chatbot.logger.warning(
                 'No [{}] files were detected at: {}'.format(
                     self.file_extension,
-                    self.data_path
+                    data_path
                 )
             )
 
@@ -330,11 +327,18 @@ class GenericFileTrainer(Trainer):
 
 class CsvFileTrainer(GenericFileTrainer):
     """
+    .. note::
+        Added in version 1.2.4
+
     Allow chatbots to be trained with data from a CSV file or
     directory of CSV files.
 
     TSV files are also supported, as long as the file_extension
     parameter is set to 'tsv'.
+
+    :param str file_extension: The file extension to look for when searching for files (defaults to 'csv').
+    :param str field_map: A dictionary containing the database column name to header mapping.
+                          Values can be either the header name (str) or the column index (int).
     """
 
     def __init__(self, chatbot, **kwargs):
@@ -345,8 +349,13 @@ class CsvFileTrainer(GenericFileTrainer):
 
 class JsonFileTrainer(GenericFileTrainer):
     """
+    .. note::
+        Added in version 1.2.4
+
     Allow chatbots to be trained with data from a JSON file or
     directory of JSON files.
+
+    :param str field_map: A dictionary containing the database column name to header mapping.
     """
 
     def __init__(self, chatbot, **kwargs):
@@ -371,6 +380,9 @@ class JsonFileTrainer(GenericFileTrainer):
 
 class UbuntuCorpusTrainer(CsvFileTrainer):
     """
+    .. note::
+        DEPRECATED: Please use the ``CsvFileTrainer`` for data formats similar to this one.
+
     Allow chatbots to be trained with the data from the Ubuntu Dialog Corpus.
 
     For more information about the Ubuntu Dialog Corpus visit:
@@ -499,7 +511,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
         return True
     
-    def _get_file_list(self, limit):
+    def _get_file_list(self, data_path, limit):
         """
         Get a list of files to read from the data set.
         """
@@ -507,14 +519,17 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         corpus_download_path = self.download(self.data_download_url)
 
         # Extract if the directory does not already exist
-        if not self.is_extracted(self.data_path):
+        if not self.is_extracted(data_path):
             self.extract(corpus_download_path)
 
         extracted_corpus_path = os.path.join(
-            self.data_path, '**', '**', '*.tsv'
+            data_path, '**', '**', '*.tsv'
         )
 
         if limit is not None:
             return glob.glob(extracted_corpus_path)[:limit]
 
         return glob.glob(extracted_corpus_path)
+
+    def train(self, limit=None):
+        super().train(self.data_path, limit=limit)

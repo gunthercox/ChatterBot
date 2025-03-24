@@ -13,14 +13,13 @@ class CsvFileTrainerTestCase(ChatBotTestCase):
 
         current_directory = os.path.dirname(os.path.abspath(__file__))
 
-        data_file_path = os.path.join(
+        self.data_file_path = os.path.join(
             current_directory,
             'test_data/csv_corpus/'
         )
 
         self.trainer = CsvFileTrainer(
             self.chatbot,
-            data_path=data_file_path,
             show_training_progress=False,
             field_map={
                 'created_at': 0,
@@ -34,7 +33,7 @@ class CsvFileTrainerTestCase(ChatBotTestCase):
         """
         Test that the chat bot is trained using data from the CSV files.
         """
-        self.trainer.train()
+        self.trainer.train(self.data_file_path)
 
         response = self.chatbot.get_response('Is anyone there?')
         self.assertEqual(response.text, 'Yes')
@@ -43,7 +42,7 @@ class CsvFileTrainerTestCase(ChatBotTestCase):
         """
         Test that the chat bot is trained using data from the CSV files.
         """
-        self.trainer.train()
+        self.trainer.train(self.data_file_path)
 
         results = list(self.chatbot.storage.filter(text='Is anyone there?'))
 
@@ -54,7 +53,7 @@ class CsvFileTrainerTestCase(ChatBotTestCase):
         """
         Test that the chat bot is trained using data from the CSV files.
         """
-        self.trainer.train()
+        self.trainer.train(self.data_file_path)
 
         results = list(self.chatbot.storage.filter(in_response_to='Is anyone there?'))
 

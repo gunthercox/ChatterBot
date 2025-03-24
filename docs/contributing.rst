@@ -63,7 +63,7 @@ To build the documentation yourself, run:
 
 .. code-block:: bash
 
-     sphinx-build -nW -b dirhtml docs/ build/
+    sphinx-build -nW -b dirhtml docs/ build/
 
 A useful way to view the documentation is to use the Python built-in HTTP server. You can do this by running:
 
