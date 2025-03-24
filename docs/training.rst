@@ -21,15 +21,14 @@ You can also create your own training class. This is recommended if you wish to 
 with data you have stored in a format that is not already supported by one of the pre-built
 classes listed below.
 
-Setting the training class
-==========================
-
-ChatterBot comes with training classes built in, or you can create your own
-if needed. To use a training class you call `train()` on an instance that
-has been initialized with your chat bot.
-
 Training classes
 ================
+
+ChatterBot comes with training classes built in, or you can create your own
+if needed.
+
+To use a training class you call `train()` on an instance that
+has been initialized with your chat bot as shown in the following examples.
 
 Training via list data
 ----------------------
@@ -92,7 +91,7 @@ data modules you want to use.
 .. code-block:: python
    :caption: chatbot.py
 
-    chatbot = ChatBot('Training Example')
+   chatbot = ChatBot('Training Example')
 
 .. code-block:: python
    :caption: train.py
@@ -138,11 +137,57 @@ Training with CSV or TSV formatted data
 .. autofunction:: chatterbot.trainers.CsvFileTrainer
 
 
+Example CSV data format:
+
+.. literalinclude:: ../tests/training/test_data/csv_corpus/1.csv
+   :caption: /data/training_data_1.csv
+
+.. code-block:: python
+   :caption: train.py
+
+   from chatterbot.trainers import CsvFileTrainer
+
+   trainer = CsvFileTrainer(
+       chatbot,
+       field_map={
+            'created_at': 0,
+            'persona': 1,
+            'text': 2,
+            'conversation': 3
+       }
+   )
+
+   trainer.train('./data/training_data_1.csv')
+
 
 Training with JSON formatted data
 ---------------------------------
 
 .. autofunction:: chatterbot.trainers.JsonFileTrainer
+
+
+Example JSON data format:
+
+.. literalinclude:: ../tests/training/test_data/json_corpus/1.json
+   :caption: /data/training_data_1.json
+   :language: json
+
+.. code-block:: python
+   :caption: train.py
+
+   from chatterbot.trainers import JsonFileTrainer
+
+   trainer = JsonFileTrainer(
+       chatbot,
+       field_map={
+          'persona': 'persona',
+          'text': 'text',
+          'conversation': 'conversation',
+          'in_response_to': 'in_response_to',
+       }
+   )
+
+   trainer.train('./data/training_data_1.json')
 
 
 Training with the Ubuntu dialog corpus
