@@ -34,14 +34,10 @@ ChatterBot's training module provides methods that allow you to export the
 content of your chat bot's database as a training corpus that can be used to
 train other chat bots.
 
-.. code-block:: python
-
-   chatbot = ChatBot('Export Example Bot')
-   chatbot.trainer.export_for_training('./export.yml')
-
 Here is an example:
 
 .. literalinclude:: ../examples/export_example.py
+   :caption: /examples/export_example.py
    :language: python
 
 .. _chatterbot_corpus/data: https://github.com/gunthercox/chatterbot-corpus/tree/master/chatterbot_corpus/data
