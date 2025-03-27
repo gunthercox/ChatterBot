@@ -1,6 +1,7 @@
 import os
 import sys
 import csv
+import time
 import glob
 import json
 import tarfile
@@ -215,15 +216,17 @@ class GenericFileTrainer(Trainer):
         if os.path.isdir(data_path):
             glob_path = os.path.join(data_path, '**', f'*.{self.file_extension}')
 
-            # TODO: Use iglob instead of glob for better performance with large directories
-            data_files = glob.glob(glob_path, recursive=True)
+            # Use iglob instead of glob for better performance with
+            # large directories because it returns an iterator
+            data_files = glob.iglob(glob_path, recursive=True)
+
+            for index, file_path in enumerate(data_files):
+                if limit is not None and index >= limit:
+                    break
+
+                yield file_path
         else:
-            data_files = [data_path]
-
-        if limit is not None:
-            data_files = data_files[:limit]
-
-        return data_files
+            return [data_path]
 
     def train(self, data_path: str, limit=None):
         """
@@ -240,13 +243,7 @@ class GenericFileTrainer(Trainer):
 
         data_files = self._get_file_list(data_path, limit)
 
-        if not data_files:
-            self.chatbot.logger.warning(
-                'No [{}] files were detected at: {}'.format(
-                    self.file_extension,
-                    data_path
-                )
-            )
+        files_processed = 0
 
         for data_file in tqdm(data_files, desc='Training', disable=self.disable_progress):
 
@@ -279,6 +276,8 @@ class GenericFileTrainer(Trainer):
                 else:
                     self.logger.warning(f'Skipping unsupported file type: {file_extension}')
                     continue
+
+                files_processed += 1
 
                 text_row = self.field_map['text']
 
@@ -324,6 +323,18 @@ class GenericFileTrainer(Trainer):
                 statements_to_create.append(statement)
 
             self.chatbot.storage.create_many(statements_to_create)
+
+        if files_processed:
+            self.chatbot.logger.info(
+                'Training completed. {} files were read.'.format(files_processed)
+            )
+        else:
+            self.chatbot.logger.warning(
+                'No [{}] files were detected at: {}'.format(
+                    self.file_extension,
+                    data_path
+                )
+            )
 
 
 class CsvFileTrainer(GenericFileTrainer):
@@ -382,7 +393,7 @@ class JsonFileTrainer(GenericFileTrainer):
 class UbuntuCorpusTrainer(CsvFileTrainer):
     """
     .. note::
-        DEPRECATED: Please use the ``CsvFileTrainer`` for data formats similar to this one.
+        PENDING DEPRECATION: Please use the ``CsvFileTrainer`` for data formats similar to this one.
 
     Allow chatbots to be trained with the data from the Ubuntu Dialog Corpus.
 
@@ -527,10 +538,17 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
             data_path, '**', '**', '*.tsv'
         )
 
-        if limit is not None:
-            return glob.glob(extracted_corpus_path)[:limit]
+        # Use iglob instead of glob for better performance with
+        # large directories because it returns an iterator
+        data_files = glob.iglob(extracted_corpus_path)
 
-        return glob.glob(extracted_corpus_path)
+        for index, file_path in enumerate(data_files):
+            if limit is not None and index >= limit:
+                break
+
+            yield file_path
 
     def train(self, limit=None):
+        start_time = time.time()
         super().train(self.data_path, limit=limit)
+        print('Training took', time.time() - start_time, 'seconds.')
