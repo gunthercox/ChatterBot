@@ -3,7 +3,6 @@ ChatterBot utility functions
 """
 import importlib
 import time
-import sys
 
 
 def import_module(dotted_path):

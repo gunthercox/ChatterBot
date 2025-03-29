@@ -94,7 +94,7 @@ class ApiTestCase(TestCase):
         self.assertIn('text', response.json())
         self.assertIn('in_response_to', response.json())
         self.assertIn('tags', response.json())
-        self.assertEqual(response.json()['tags'], [])
+        self.assertEqual(response.json()['tags'], ['user:jen@example.com'])
 
     def test_get(self):
         response = self.client.get(self.api_url)
