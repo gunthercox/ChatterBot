@@ -75,6 +75,7 @@ test = [
     "nose",
     "sphinx>=5.3,<8.2",
     "sphinx-sitemap>=2.6.0",
+    "huggingface_hub",
 ]
 dev = [
     "pint>=0.8.1",
