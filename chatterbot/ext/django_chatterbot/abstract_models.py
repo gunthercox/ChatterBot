@@ -32,7 +32,8 @@ class AbstractBaseTag(models.Model):
 
     name = models.SlugField(
         max_length=constants.TAG_NAME_MAX_LENGTH,
-        unique=True
+        unique=True,
+        help_text='The unique name of the tag.'
     )
 
     class Meta:
@@ -49,16 +50,19 @@ class AbstractBaseStatement(models.Model, StatementMixin):
     """
 
     text = models.CharField(
-        max_length=constants.STATEMENT_TEXT_MAX_LENGTH
+        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
+        help_text='The text of the statement.'
     )
 
     search_text = models.CharField(
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
-        blank=True
+        blank=True,
+        help_text='A modified version of the statement text optimized for searching.'
     )
 
     conversation = models.CharField(
-        max_length=constants.CONVERSATION_LABEL_MAX_LENGTH
+        max_length=constants.CONVERSATION_LABEL_MAX_LENGTH,
+        help_text='A label used to link this statement to a conversation.'
     )
 
     created_at = models.DateTimeField(
@@ -68,21 +72,25 @@ class AbstractBaseStatement(models.Model, StatementMixin):
 
     in_response_to = models.CharField(
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
-        null=True
+        null=True,
+        help_text='The text of the statement that this statement is in response to.'
     )
 
     search_in_response_to = models.CharField(
         max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
-        blank=True
+        blank=True,
+        help_text='A modified version of the in_response_to text optimized for searching.'
     )
 
     persona = models.CharField(
-        max_length=constants.PERSONA_MAX_LENGTH
+        max_length=constants.PERSONA_MAX_LENGTH,
+        help_text='A label used to link this statement to a persona.'
     )
 
     tags = models.ManyToManyField(
         TAG_MODEL,
-        related_name='statements'
+        related_name='statements',
+        help_text='The tags that are associated with this statement.'
     )
 
     # This is the confidence with which the chat bot believes
