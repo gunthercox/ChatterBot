@@ -10,20 +10,6 @@ A response to the input is then generated and returned.
 .. autoclass:: chatterbot.ChatBot
    :members:
 
-   :param name: A name is the only required parameter for the ChatBot class.
-   :type name: str
-
-   :keyword storage_adapter: The dot-notated import path to a storage adapter class.
-                             Defaults to ``"chatterbot.storage.SQLStorageAdapter"``.
-   :type storage_adapter: str
-
-   :param logic_adapters: A list of dot-notated import paths to each logic adapter the bot uses.
-                          Defaults to ``["chatterbot.logic.BestMatch"]``.
-   :type logic_adapters: list
-
-   :param logger: A ``Logger`` object.
-   :type logger: logging.Logger
-
 Example chat bot parameters
 ===========================
 
