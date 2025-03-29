@@ -400,7 +400,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
     For more information about the Ubuntu Dialog Corpus visit:
     https://dataset.cs.mcgill.ca/ubuntu-corpus-1.0/
 
-    :param str ubuntu_corpus_data_directory: The directory where the Ubuntu corpus data is located or should be downloaded to.
+    :param str ubuntu_corpus_data_directory: The directory where the Ubuntu corpus data is already located, or where it should be downloaded and extracted.
     """
 
     def __init__(self, chatbot, **kwargs):
@@ -494,12 +494,6 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         if not os.path.exists(self.data_path):
             os.makedirs(self.data_path)
 
-        def track_progress(members):
-            sys.stdout.write('.')
-            for member in members:
-                # This will be the current file being extracted
-                yield member
-
         def is_within_directory(directory, target):
 
             abs_directory = os.path.abspath(directory)
@@ -509,18 +503,18 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
             return prefix == abs_directory
 
-        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        def safe_extract(tar, path='.', members=None, *, numeric_owner=False):
 
             for member in tar.getmembers():
                 member_path = os.path.join(path, member.name)
                 if not is_within_directory(path, member_path):
-                    raise Exception("Attempted Path Traversal in Tar File")
+                    raise Exception('Attempted Path Traversal in Tar File')
 
             tar.extractall(path, members, numeric_owner=numeric_owner)
 
         try:
-            with tarfile.open(file_path) as tar:
-                safe_extract(tar, path=self.data_path, members=track_progress(tar))
+            with tarfile.open(file_path, 'r') as tar:
+                safe_extract(tar, path=self.data_path, members=tqdm(tar, disable=self.disable_progress))
         except tarfile.ReadError as e:
             raise self.TrainerInitializationException(
                 f'The provided data file is not a valid tar file: {file_path}'

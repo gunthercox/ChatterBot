@@ -47,22 +47,18 @@ Website: https://code.visualstudio.com/
 Database Clients
 ----------------
 
-Sqlectron
-+++++++++
+SQLite Viewer
++++++++++++++
 
-| Sadly this cross-platform database client is no longer being maintained
-| by it's creator. Regardless, I still use it frequently and I find its
-| interface to be highly convenient and user friendly.
-|
-| ~ Gunther Cox
+| This is a very simple SQLite viewer extension for VS Code that allows you to
+| sqlite databases.
 
-Website: https://sqlectron.github.io/
+Website: https://marketplace.visualstudio.com/items?itemName=qwtel.sqlite-viewer
 
-Nosqlclient
-+++++++++++
 
-| This is a very versatile client for Mongo DB, and other non-relational databases.
-|
-| ~ Gunther Cox
+pgAdmin
++++++++
 
-Website: https://www.nosqlclient.com/
+| pgAdmin a pretty good database client when working with PostgreSQL. 
+
+Website: https://www.pgadmin.org/
