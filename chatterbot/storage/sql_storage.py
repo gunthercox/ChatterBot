@@ -326,7 +326,7 @@ class SQLStorageAdapter(StorageAdapter):
         record = None
 
         if hasattr(statement, 'id') and statement.id is not None:
-            record = session.query(Statement).get(statement.id)
+            record = session.get(Statement, statement.id)
         else:
             record = session.query(Statement).filter(
                 Statement.text == statement.text,

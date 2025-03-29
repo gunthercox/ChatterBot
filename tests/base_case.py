@@ -101,6 +101,8 @@ class ChatBotMongoTestCase(ChatBotTestCase):
             )
             client.server_info()
 
+            client.close()
+
         except ServerSelectionTimeoutError:
             raise SkipTest('Unable to connect to Mongo DB.')
 

@@ -28,6 +28,8 @@ class MongoAdapterTestCase(TestCase):
 
             cls.has_mongo_connection = True
 
+            client.close()
+
         except ServerSelectionTimeoutError:
             pass
 
@@ -43,6 +45,9 @@ class MongoAdapterTestCase(TestCase):
         Remove the test database.
         """
         self.adapter.drop()
+
+        # Close the connection to the database
+        self.adapter.client.close()
 
 
 class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):

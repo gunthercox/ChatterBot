@@ -1,7 +1,7 @@
 from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql import func
-from sqlalchemy.ext.declarative import declared_attr, declarative_base
+from sqlalchemy.ext.declarative import declared_attr
 
 from chatterbot.conversation import StatementMixin
 from chatterbot import constants
