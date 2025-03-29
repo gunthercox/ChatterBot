@@ -54,7 +54,7 @@ jobs:
         mongodb-version: '8.0'
     - name: Run tests
       run: |
-        nosetests -v
+        python -m unittest discover
     # TODO: Fix & re-enable Django tests
     # - name: Run tests for Django example app
     #   run: |
