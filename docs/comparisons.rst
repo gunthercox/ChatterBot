@@ -49,3 +49,47 @@ is shown below.
        # ...
        statement_comparison_function=LevenshteinDistance
    )
+
+
+Taggers
+=======
+
+ChatterBot supports a number of different taggers that can be used to
+process the input text. The taggers are used to identify the parts of speech
+in the input text and can be used to improve the accuracy of the response selection.
+
+.. automodule:: chatterbot.tagging
+   :members:
+   :undoc-members:
+
+Languages
+=========
+
+ChatterBot's ``languages`` module contains helper classes for working with
+language codes and names.
+
+.. autoclass:: chatterbot.languages.ENG
+
+.. autoclass:: chatterbot.languages.FRE
+
+.. autoclass:: chatterbot.languages.GER
+
+.. autoclass:: chatterbot.languages.ITA
+
+.. autoclass:: chatterbot.languages.JPN
+
+.. autoclass:: chatterbot.languages.KOR
+
+.. autoclass:: chatterbot.languages.POR
+
+.. autoclass:: chatterbot.languages.RUS
+
+.. autoclass:: chatterbot.languages.SPA
+
+.. autoclass:: chatterbot.languages.SWE
+
+.. autoclass:: chatterbot.languages.TUR
+
+.. autoclass:: chatterbot.languages.ZHT
+
+See ``chatterbot.languages`` for the full list of languages.
