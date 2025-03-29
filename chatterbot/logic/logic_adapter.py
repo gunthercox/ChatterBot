@@ -68,18 +68,16 @@ class LogicAdapter(Adapter):
             Statement(text=default) for default in default_responses
         ]
 
-    def can_process(self, statement):
+    def can_process(self, statement) -> bool:
         """
         A preliminary check that is called to determine if a
         logic adapter can process a given statement. By default,
         this method returns true but it can be overridden in
         child classes as needed.
-
-        :rtype: bool
         """
         return True
 
-    def process(self, statement, additional_response_selection_parameters=None):
+    def process(self, statement, additional_response_selection_parameters=None) -> Statement:
         """
         Override this method and implement your logic for selecting a response to an input statement.
 
@@ -97,12 +95,10 @@ class LogicAdapter(Adapter):
         :param additional_response_selection_parameters: Parameters to be used when
             filtering results to choose a response from.
         :type additional_response_selection_parameters: dict
-
-        :rtype: Statement
         """
         raise self.AdapterMethodNotImplementedError()
 
-    def get_default_response(self, input_statement):
+    def get_default_response(self, input_statement: Statement) -> Statement:
         """
         This method is called when a logic adapter is unable to generate any
         other meaningful response.
@@ -125,7 +121,7 @@ class LogicAdapter(Adapter):
         return response
 
     @property
-    def class_name(self):
+    def class_name(self) -> str:
         """
         Return the name of the current logic adapter class.
         This is typically used for logging and debugging.

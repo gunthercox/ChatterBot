@@ -3,6 +3,7 @@ from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import TextSearch, IndexedTextSearch
 from chatterbot.tagging import PosLemmaTagger
+from chatterbot.conversation import Statement
 from chatterbot import languages
 from chatterbot import utils
 import spacy
@@ -114,13 +115,12 @@ class ChatBot(object):
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)
 
-    def get_response(self, statement=None, **kwargs):
+    def get_response(self, statement=None, **kwargs) -> Statement:
         """
         Return the bot's response based on the input.
 
         :param statement: An statement object or string.
         :returns: A response to the input.
-        :rtype: Statement
 
         :param additional_response_selection_parameters: Parameters to pass to the
             chat bot's logic adapters to control response selection.
@@ -314,7 +314,7 @@ class ChatBot(object):
         # Save the response statement
         return self.storage.create(**statement.serialize())
 
-    def get_latest_response(self, conversation):
+    def get_latest_response(self, conversation: str):
         """
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
