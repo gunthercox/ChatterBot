@@ -1,4 +1,5 @@
-from chatterbot import languages, constants
+from chatterbot import languages
+from chatterbot.utils import get_model_for_language
 import spacy
 
 
@@ -42,12 +43,7 @@ class PosLemmaTagger(object):
 
         self.language = language or languages.ENG
 
-        try:
-            model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[self.language]
-        except KeyError as e:
-            raise KeyError(
-                f'Spacy model is not available for language {self.language}'
-            ) from e
+        model = get_model_for_language(self.language)
 
         # Disable the Named Entity Recognition (NER) component because it is not necessary
         self.nlp = spacy.load(model, exclude=['ner'])

@@ -1,6 +1,49 @@
 from tests.base_case import ChatBotTestCase
+from chatterbot import ChatBot
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
+from chatterbot import languages
+
+
+class ChatBotInitializationTestCase(ChatBotTestCase):
+    """
+    Test the initialization of the ChatBot class.
+    """
+
+    def test_initialization_with_unmapped_spacy_model(self):
+        """
+        Test that the chatbot raises an exception if a corresponding spaCy model
+        does not exist for a language.
+        """
+        with self.assertRaises(KeyError) as exc:
+            chatbot = ChatBot(
+                'Test Bot',
+                tagger_language=languages.LAT
+            )
+
+            self.assertEqual(
+                str(exc.exception),
+                'A corresponding spacy model for "Latin" could not be found.'
+            )
+
+    def test_initialization_with_missing_spacy_model(self):
+        """
+        Test that the chatbot raises an exception if a spaCy model
+        has not been installed for the specified language.
+        """
+        with self.assertRaises(ChatBot.ChatBotException) as exc:
+            chatbot = ChatBot(
+                'Test Bot',
+                tagger_language=languages.NOR
+            )
+            self.assertIn(
+                'model for "Norwegian" language is missing',
+                str(exc.exception),
+            )
+            self.assertIn(
+                'spacy download nb_core_news_sm',
+                str(exc.exception),
+            )
 
 
 class ChatterBotResponseTestCase(ChatBotTestCase):
