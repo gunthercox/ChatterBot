@@ -24,7 +24,7 @@ description = "ChatterBot is a machine learning, conversational dialog engine"
 authors = [
   {name = "Gunther Cox"},
 ]
-license = { file = "LICENSE", name = "BSD-3-Clause" }
+license = "BSD-3-Clause"
 readme = "README.md"
 dynamic = ["version"]
 keywords = [
@@ -40,7 +40,6 @@ keywords = [
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: BSD License",
     "Operating System :: OS Independent",
     "Environment :: Console",
     "Environment :: Web Environment",
