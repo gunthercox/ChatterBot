@@ -55,13 +55,11 @@ jobs:
     - name: Run tests
       run: |
         python -Wonce -m unittest discover -s tests -v
-    # TODO: Fix & re-enable Django tests
-    # - name: Run tests for Django example app
-    #   run: |
-    #     python setup.py develop
-    #     python3 -m pip install "Django<=2.1"
-    #     python runtests.py
-    #     python examples/django_example/manage.py test examples/django_example/
+    - name: Run tests for Django example app
+      run: |
+        python -m pip install "django<=4.1"
+        python runtests.py
+        python examples/django_example/manage.py test examples/django_example/
     # --------------------------------------------------------------
     # TODO: Fix & re-enable later
     # https://github.com/marketplace/actions/coveralls-github-action
