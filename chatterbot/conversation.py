@@ -40,10 +40,9 @@ class StatementMixin(object):
         """
         self.tags.extend(tags)
 
-    def serialize(self):
+    def serialize(self) -> dict:
         """
         :returns: A dictionary representation of the statement object.
-        :rtype: dict
         """
         data = {}
 

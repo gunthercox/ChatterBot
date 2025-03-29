@@ -19,19 +19,17 @@ class Comparator:
     def __call__(self, statement_a, statement_b):
         return self.compare(statement_a, statement_b)
 
-    def compare_text(self, text_a, text_b):
+    def compare_text(self, text_a: str, text_b: str) -> float:
         """
         Implemented in subclasses: compare text_a to text_b.
 
         :return: The percent of similarity between the statements based on the implemented algorithm.
-        :rtype: float
         """
         return 0
 
-    def compare(self, statement_a, statement_b):
+    def compare(self, statement_a, statement_b) -> float:
         """
         :return: The percent of similarity between the statements based on the implemented algorithm.
-        :rtype: float
         """
         return self.compare_text(statement_a.text, statement_b.text)
 
@@ -46,12 +44,11 @@ class LevenshteinDistance(Comparator):
     based on the Levenshtein distance algorithm.
     """
 
-    def compare_text(self, text_a, text_b):
+    def compare_text(self, text_a: str, text_b: str) -> float:
         """
         Compare the two pieces of text.
 
         :return: The percent of similarity between the text of the statements.
-        :rtype: float
         """
 
         # Return 0 if either statement has a None text value
@@ -105,12 +102,11 @@ class SpacySimilarity(Comparator):
         # Disable the Named Entity Recognition (NER) component because it is not necessary
         self.nlp = spacy.load(model, exclude=['ner'])
 
-    def compare_text(self, text_a, text_b):
+    def compare_text(self, text_a: str, text_b: str) -> float:
         """
         Compare the similarity of two strings.
 
         :return: The percent of similarity between the closest synset distance.
-        :rtype: float
         """
 
         # Return 0 if either statement has a None text value
@@ -157,7 +153,7 @@ class JaccardSimilarity(Comparator):
         # Disable the Named Entity Recognition (NER) component because it is not necessary
         self.nlp = spacy.load(model, exclude=['ner'])
 
-    def compare_text(self, text_a, text_b):
+    def compare_text(self, text_a: str, text_b: str) -> float:
         """
         Return the calculated similarity of two
         statements based on the Jaccard index.

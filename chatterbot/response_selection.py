@@ -2,10 +2,11 @@
 Response selection methods determines which response should be used in
 the event that multiple responses are generated within a logic adapter.
 """
+from chatterbot.conversation import Statement
 import logging
 
 
-def get_most_frequent_response(input_statement, response_list, storage=None):
+def get_most_frequent_response(input_statement, response_list, storage=None) -> Statement:
     """
     :param input_statement: A statement, that closely matches an input to the chat bot.
     :type input_statement: Statement
@@ -18,7 +19,6 @@ def get_most_frequent_response(input_statement, response_list, storage=None):
     :type storage: StorageAdapter
 
     :return: The response statement with the greatest number of occurrences.
-    :rtype: Statement
     """
     matching_response = None
     occurrence_count = -1
@@ -41,7 +41,7 @@ def get_most_frequent_response(input_statement, response_list, storage=None):
     return matching_response
 
 
-def get_first_response(input_statement, response_list, storage=None):
+def get_first_response(input_statement, response_list, storage=None) -> Statement:
     """
     :param input_statement: A statement, that closely matches an input to the chat bot.
     :type input_statement: Statement
@@ -54,7 +54,6 @@ def get_first_response(input_statement, response_list, storage=None):
     :type storage: StorageAdapter
 
     :return: Return the first statement in the response list.
-    :rtype: Statement
     """
     logger = logging.getLogger(__name__)
     logger.info('Selecting first response from list of {} options.'.format(
@@ -63,7 +62,7 @@ def get_first_response(input_statement, response_list, storage=None):
     return response_list[0]
 
 
-def get_random_response(input_statement, response_list, storage=None):
+def get_random_response(input_statement, response_list, storage=None) -> Statement:
     """
     :param input_statement: A statement, that closely matches an input to the chat bot.
     :type input_statement: Statement
@@ -76,7 +75,6 @@ def get_random_response(input_statement, response_list, storage=None):
     :type storage: StorageAdapter
 
     :return: Choose a random response from the selection.
-    :rtype: Statement
     """
     from random import choice
     logger = logging.getLogger(__name__)

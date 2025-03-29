@@ -70,7 +70,7 @@ def validate_adapter_class(validate_class, adapter_class):
         )
 
 
-def get_response_time(chatbot, statement='Hello'):
+def get_response_time(chatbot, statement='Hello') -> float:
     """
     Returns the amount of time taken for a given
     chat bot to return a response.
@@ -79,7 +79,6 @@ def get_response_time(chatbot, statement='Hello'):
     :type chatbot: ChatBot
 
     :returns: The response time in seconds.
-    :rtype: float
     """
     start_time = time.time()
 
