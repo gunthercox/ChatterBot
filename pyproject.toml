@@ -80,6 +80,7 @@ dev = [
     "pint>=0.8.1",
     "pyyaml>=6.0,<7.0",
     "chatterbot-corpus>=1.2.2",
+    "ollama>=0.4.7,<1.0"
 ]
 redis = [
     "redis[hiredis]",
