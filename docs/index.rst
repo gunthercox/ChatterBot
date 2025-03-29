@@ -36,6 +36,12 @@ The language independent design of ChatterBot allows it to be trained to speak a
 Additionally, the machine-learning nature of ChatterBot allows an agent instance to improve
 it's own knowledge of possible responses as it interacts with humans and other sources of informative data.
 
+.. note::
+
+   Starting in version 1.2.0 ChatterBot has started to implement some features that are
+   language specific. This change is being made to improve the quality of responses that
+   ChatterBot can generate.
+
 How ChatterBot Works
 --------------------
 
