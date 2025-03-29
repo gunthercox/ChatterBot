@@ -89,30 +89,21 @@ def get_response_time(chatbot, statement='Hello'):
     return time.time() - start_time
 
 
-def print_progress_bar(description, iteration_counter, total_items, progress_bar_length=20):
+def get_model_for_language(language):
     """
-    Print progress bar
-    :param description: Training description
-    :type description: str
-
-    :param iteration_counter: Incremental counter
-    :type iteration_counter: int
-
-    :param total_items: total number items
-    :type total_items: int
-
-    :param progress_bar_length: Progress bar length
-    :type progress_bar_length: int
-
-    :returns: void
-    :rtype: void
-
-    DEPRECTTED: use `tqdm` instead
+    Returns the spacy model for the specified language.
     """
-    percent = float(iteration_counter) / total_items
-    hashes = '#' * int(round(percent * progress_bar_length))
-    spaces = ' ' * (progress_bar_length - len(hashes))
-    sys.stdout.write('\r{0}: [{1}] {2}%'.format(description, hashes + spaces, int(round(percent * 100))))
-    sys.stdout.flush()
-    if total_items == iteration_counter:
-        print('\r')
+    from chatterbot import constants
+
+    try:
+        model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[language]
+    except KeyError as e:
+        if hasattr(language, 'ENGLISH_NAME'):
+            language_name = language.ENGLISH_NAME
+        else:
+            language_name = language
+        raise KeyError(
+            f'A corresponding spacy model for "{language_name}" could not be found.'
+        ) from e
+
+    return model

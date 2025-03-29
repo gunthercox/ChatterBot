@@ -11,10 +11,40 @@ import spacy
 class ChatBot(object):
     """
     A conversational dialog chat bot.
+
+    :param name: A name is the only required parameter for the ChatBot class.
+    :type name: str
+
+    :keyword storage_adapter: The dot-notated import path to a storage adapter class.
+                              Defaults to ``"chatterbot.storage.SQLStorageAdapter"``.
+    :type storage_adapter: str
+
+    :param logic_adapters: A list of dot-notated import paths to each logic adapter the bot uses.
+                           Defaults to ``["chatterbot.logic.BestMatch"]``.
+    :type logic_adapters: list
+
+    :param tagger: The tagger to use for the chat bot.
+                   Defaults to :class:`~chatterbot.tagging.PosLemmaTagger`
+    :type tagger: object
+
+    :param tagger_language: The language to use for the tagger.
+                            Defaults to :class:`~chatterbot.languages.ENG`.
+    :type tagger_language: object
+
+    :param preprocessors: A list of preprocessor functions to use for the chat bot.
+    :type preprocessors: list
+
+    :param read_only: If True, the chat bot will not save any input it receives, defaults to False.
+    :type read_only: bool
+
+    :param logger: A ``Logger`` object.
+    :type logger: logging.Logger
     """
 
     def __init__(self, name, **kwargs):
         self.name = name
+
+        self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
         storage_adapter = kwargs.get('storage_adapter', 'chatterbot.storage.SQLStorageAdapter')
 
@@ -30,11 +60,29 @@ class ChatBot(object):
 
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
 
-        Tagger = kwargs.get('tagger', PosLemmaTagger)
+        tagger_language = kwargs.get('tagger_language', languages.ENG)
 
-        self.tagger = Tagger(language=kwargs.get(
-            'tagger_language', languages.ENG
-        ))
+        try:
+            Tagger = kwargs.get('tagger', PosLemmaTagger)
+
+            self.tagger = Tagger(language=tagger_language)
+        except IOError as io_error:
+            # Return a more helpful error message if possible
+            if "Can't find model" in str(io_error):
+                model_name = utils.get_model_for_language(tagger_language)
+                if hasattr(tagger_language, 'ENGLISH_NAME'):
+                    language_name = tagger_language.ENGLISH_NAME
+                else:
+                    language_name = tagger_language
+                raise self.ChatBotException(
+                    'Setup error:\n'
+                    f'The Spacy model for "{language_name}" language is missing.\n'
+                    'Please install the model using the command:\n\n'
+                    f'python -m spacy download {model_name}\n\n'
+                    'See https://spacy.io/usage/models for more information about available models.'
+                ) from io_error
+            else:
+                raise io_error
 
         primary_search_algorithm = IndexedTextSearch(self, **kwargs)
         text_search_algorithm = TextSearch(self, **kwargs)
@@ -62,8 +110,6 @@ class ChatBot(object):
 
         # NOTE: 'xx' is the language code for a multi-language model
         self.nlp = spacy.blank(self.tagger.language.ISO_639_1)
-
-        self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)

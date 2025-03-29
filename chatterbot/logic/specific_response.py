@@ -1,6 +1,7 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
-from chatterbot import constants, languages
+from chatterbot import languages
+from chatterbot.utils import get_model_for_language
 import spacy
 
 
@@ -35,12 +36,7 @@ class SpecificResponseAdapter(LogicAdapter):
         self._output_text = kwargs.get('output_text')
 
     def _initialize_nlp(self, language):
-        try:
-            model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[language]
-        except KeyError as e:
-            raise KeyError(
-                f'Spacy model is not available for language {language}'
-            ) from e
+        model = get_model_for_language(language)
 
         return spacy.load(model)
 

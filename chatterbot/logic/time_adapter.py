@@ -1,7 +1,8 @@
 from datetime import datetime
-from chatterbot import constants, languages
+from chatterbot import languages
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
+from chatterbot.utils import get_model_for_language
 import spacy
 
 
@@ -36,12 +37,7 @@ class TimeLogicAdapter(LogicAdapter):
 
         language = kwargs.get('language', languages.ENG)
 
-        try:
-            model = constants.DEFAULT_LANGUAGE_TO_SPACY_MODEL_MAP[language]
-        except KeyError as e:
-            raise KeyError(
-                f'Spacy model is not available for language {language}'
-            ) from e
+        model = get_model_for_language(language)
 
         self.nlp = spacy.load(model)
 
