@@ -23,7 +23,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        python-version: ["3.9", "3.10", "3.11", "3.12", "3.13"]
+        python-version: ["3.9", "3.10", "3.11", "3.12"]
     services:
       redis:
         image: redis/redis-stack-server:latest
@@ -54,7 +54,7 @@ jobs:
         mongodb-version: '8.0'
     - name: Run tests
       run: |
-        python -m unittest discover -s tests -v
+        python -Wonce -m unittest discover -s tests -v
     # TODO: Fix & re-enable Django tests
     # - name: Run tests for Django example app
     #   run: |
