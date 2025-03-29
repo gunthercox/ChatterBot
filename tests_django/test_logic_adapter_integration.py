@@ -11,19 +11,19 @@ class LogicIntegrationTestCase(ChatterBotTestCase):
     def setUp(self):
         super().setUp()
 
-        self.chatbot.storage.create(text='Default statement')
+        self._create_with_search_text(text='Default statement')
 
     def test_best_match(self):
         from chatterbot.logic import BestMatch
 
         adapter = BestMatch(self.chatbot)
 
-        statement1 = self.chatbot.storage.create(
+        statement1 = self._create_with_search_text(
             text='Do you like programming?',
             conversation='test'
         )
 
-        self.chatbot.storage.create(
+        self._create_with_search_text(
             text='Yes',
             in_response_to=statement1.text,
             conversation='test'

@@ -110,6 +110,9 @@ class DjangoStorageAdapter(StorageAdapter):
 
         tags = kwargs.pop('tags', [])
 
+        if 'search_in_response_to' in kwargs and kwargs['search_in_response_to'] is None:
+            kwargs['search_in_response_to'] = ''
+
         statement = Statement(**kwargs)
 
         statement.save()
@@ -169,7 +172,7 @@ class DjangoStorageAdapter(StorageAdapter):
                 search_text=statement.search_text,
                 conversation=statement.conversation,
                 in_response_to=statement.in_response_to,
-                search_in_response_to=statement.search_in_response_to,
+                search_in_response_to=statement.search_in_response_to or '',
                 created_at=statement.created_at
             )
 
