@@ -6,37 +6,35 @@ Unit Testing
 that has not undergone minimal unit testing; that does not meet the specifications and requirements;
 that is gold-plated with unnecessary features; or that looks like junk."* – Daniel Read
 
-ChatterBot tests
-----------------
+Running tests
+-------------
 
-ChatterBot's built in tests can be run using ``nose``.
-
-Be sure to invoke this command from the root of the project directory.
+You can run ChatterBot's main test suite using Python's built-in test runner. For example:
 
 .. sourcecode:: sh
 
-   nosetests
+   python -m unittest discover -s tests -v
 
-*Note* that nose also allows you to specify individual test cases to run.
-For example, the following command will run all tests in the test-module `tests/logic_adapter_tests`
+*Note* that the ``unittest`` command also allows you to specify individual test cases to run.
+For example, the following command will run all tests in the test-module `tests/logic/`
 
 .. sourcecode:: sh
 
-   nosetests tests.logic.test_best_match
+   python -m unittest discover -s tests/logic/ -v
 
 To run a specific test in a test class you can specify the test method name using the following pattern:
 
 .. sourcecode:: sh
 
-   nosetests tests.logic.test_best_match:BestMatchTestCase.test_response_selection
+   python -m unittest tests.logic.test_best_match.BestMatchTestCase.test_match_with_response
 
 Tests can also be run in "fail fast" mode, in which case they will run until the first test failure is encountered.
 
 .. sourcecode:: sh
 
-   nosetests -s tests
+   python -m unittest discover -f tests
 
-For more information on the `nose` test runner, see the `nose documentation`_.
+For more information on ``unittest`` functionality, see the `unittest documentation`_.
 
 Django integration tests
 ------------------------
@@ -67,11 +65,6 @@ performance by running the following command.
 
    python tests/benchmarks.py
 
-Running tests
--------------
-
-You can run ChatterBot's main test suite using the command: ``nosetests``.
-
 
 Testing documentation builds
 ----------------------------
@@ -84,4 +77,4 @@ The HTML documentation for ChatterBot can be compiled using using `Sphinx`_. To 
 
 
 .. _Sphinx: http://www.sphinx-doc.org/
-.. _nose documentation: https://nose.readthedocs.io/en/latest/usage.html
+.. _unittest documentation: https://docs.python.org/3/library/unittest.html#command-line-interface

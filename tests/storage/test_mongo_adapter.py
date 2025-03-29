@@ -46,9 +46,6 @@ class MongoAdapterTestCase(TestCase):
         """
         self.adapter.drop()
 
-        # Close the connection to the database
-        self.adapter.client.close()
-
 
 class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
 
