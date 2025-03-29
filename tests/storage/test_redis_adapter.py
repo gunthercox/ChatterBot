@@ -10,6 +10,11 @@ class RedisStorageAdapterTestCase(TestCase):
         """
         Instantiate the adapter before any tests in the test case run.
         """
+        from huggingface_hub import snapshot_download
+
+        # Download the model from Hugging Face before running the tests
+        snapshot_download(repo_id='sentence-transformers/all-mpnet-base-v2', repo_type='model')
+
         cls.adapter = RedisVectorStorageAdapter(
             database_uri='redis://localhost:6379/0'  # TODO: Adjust in CI
         )
