@@ -233,7 +233,7 @@ class GenericFileTrainer(Trainer):
         Train a chatbot with data from the data file.
 
         :param str data_path: The path to the data file or directory.
-        :param int limit: The number of files to train from.
+        :param int limit: The maximum number of files to train from.
         """
 
         if data_path is None:
@@ -399,16 +399,15 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
     For more information about the Ubuntu Dialog Corpus visit:
     https://dataset.cs.mcgill.ca/ubuntu-corpus-1.0/
+
+    :param str ubuntu_corpus_data_directory: The directory where the Ubuntu corpus data is located or should be downloaded to.
     """
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
         home_directory = os.path.expanduser('~')
 
-        self.data_download_url = kwargs.get(
-            'ubuntu_corpus_data_download_url',
-            'http://cs.mcgill.ca/~jpineau/datasets/ubuntu-corpus-1.0/ubuntu_dialogs.tgz'
-        )
+        self.data_download_url = None
 
         self.data_directory = kwargs.get(
             'ubuntu_corpus_data_directory',
@@ -465,7 +464,8 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
             return file_path
 
         with open(file_path, 'wb') as open_file:
-            print('Downloading %s' % url)
+            if show_status:
+                print('Downloading %s' % url)
             response = requests.get(url, stream=True)
             total_length = response.headers.get('content-length')
 
@@ -480,14 +480,16 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
                 ):
                     open_file.write(data)
 
-        print('Download location: %s' % file_path)
+        if show_status:
+            print('Download location: %s' % file_path)
         return file_path
 
     def extract(self, file_path):
         """
         Extract a tar file at the specified file path.
         """
-        print('Extracting {}'.format(file_path))
+        if not self.disable_progress:
+            print('Extracting {}'.format(file_path))
 
         if not os.path.exists(self.data_path):
             os.makedirs(self.data_path)
@@ -498,26 +500,31 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
                 # This will be the current file being extracted
                 yield member
 
-        with tarfile.open(file_path) as tar:
-            def is_within_directory(directory, target):
+        def is_within_directory(directory, target):
 
-                abs_directory = os.path.abspath(directory)
-                abs_target = os.path.abspath(target)
+            abs_directory = os.path.abspath(directory)
+            abs_target = os.path.abspath(target)
 
-                prefix = os.path.commonprefix([abs_directory, abs_target])
+            prefix = os.path.commonprefix([abs_directory, abs_target])
 
-                return prefix == abs_directory
+            return prefix == abs_directory
 
-            def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
+        def safe_extract(tar, path=".", members=None, *, numeric_owner=False):
 
-                for member in tar.getmembers():
-                    member_path = os.path.join(path, member.name)
-                    if not is_within_directory(path, member_path):
-                        raise Exception("Attempted Path Traversal in Tar File")
+            for member in tar.getmembers():
+                member_path = os.path.join(path, member.name)
+                if not is_within_directory(path, member_path):
+                    raise Exception("Attempted Path Traversal in Tar File")
 
-                tar.extractall(path, members, numeric_owner=numeric_owner)
+            tar.extractall(path, members, numeric_owner=numeric_owner)
 
-            safe_extract(tar, path=self.data_path, members=track_progress(tar))
+        try:
+            with tarfile.open(file_path) as tar:
+                safe_extract(tar, path=self.data_path, members=track_progress(tar))
+        except tarfile.ReadError as e:
+            raise self.TrainerInitializationException(
+                f'The provided data file is not a valid tar file: {file_path}'
+            ) from e
 
         self.chatbot.logger.info('File extracted to {}'.format(self.data_path))
 
@@ -527,6 +534,12 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         """
         Get a list of files to read from the data set.
         """
+
+        if self.data_download_url is None:
+            raise self.TrainerInitializationException(
+                'The data_download_url attribute must be set before calling train().'
+            )
+
         # Download and extract the Ubuntu dialog corpus if needed
         corpus_download_path = self.download(self.data_download_url)
 
@@ -548,7 +561,15 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
             yield file_path
 
-    def train(self, limit=None):
+    def train(self, data_download_url, limit=None):
+        """
+        :param str data_download_url: The URL to download the Ubuntu dialog corpus from.
+        :param int limit: The maximum number of files to train from.
+        """
+        self.data_download_url = data_download_url
+
         start_time = time.time()
         super().train(self.data_path, limit=limit)
-        print('Training took', time.time() - start_time, 'seconds.')
+
+        if not self.disable_progress:
+            print('Training took', time.time() - start_time, 'seconds.')

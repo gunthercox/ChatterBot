@@ -33,7 +33,8 @@ has been initialized with your chat bot as shown in the following examples.
 Training via list data
 ----------------------
 
-.. autofunction:: chatterbot.trainers.ListTrainer
+.. autoclass:: chatterbot.trainers.ListTrainer
+   :members: train
 
 For the training process, you will need to pass in a list of statements where the order of each statement is based
 on its placement in a given conversation.
@@ -82,7 +83,8 @@ This will establish each item in the list as a possible response to it's predece
 Training with corpus data
 -------------------------
 
-.. autofunction:: chatterbot.trainers.ChatterBotCorpusTrainer
+.. autoclass:: chatterbot.trainers.ChatterBotCorpusTrainer
+   :members: train
 
 ChatterBot comes with a corpus data and utility module that makes it easy to
 quickly train your bot to communicate. To do so, simply specify the corpus
@@ -134,7 +136,8 @@ You can also specify file paths to corpus files or directories of corpus files w
 Training with CSV or TSV formatted data
 ---------------------------------------
 
-.. autofunction:: chatterbot.trainers.CsvFileTrainer
+.. autoclass:: chatterbot.trainers.CsvFileTrainer
+   :members: train
 
 
 Example CSV data format:
@@ -163,7 +166,8 @@ Example CSV data format:
 Training with JSON formatted data
 ---------------------------------
 
-.. autofunction:: chatterbot.trainers.JsonFileTrainer
+.. autoclass:: chatterbot.trainers.JsonFileTrainer
+   :members: train
 
 
 Example JSON data format:
@@ -199,7 +203,8 @@ Training with the Ubuntu dialog corpus
    experience significantly decreased performance in the form of delayed
    training and response times from the chat bot when using this corpus.
 
-.. autofunction:: chatterbot.trainers.UbuntuCorpusTrainer
+.. autoclass:: chatterbot.trainers.UbuntuCorpusTrainer
+   :members: train
 
 This training class makes it possible to train your chat bot using the Ubuntu
 dialog corpus. Because of the file size of the Ubuntu dialog corpus, the download
