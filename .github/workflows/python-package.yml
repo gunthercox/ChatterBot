@@ -58,8 +58,8 @@ jobs:
     - name: Run tests for Django example app
       run: |
         python -m pip install "django<=4.1"
-        python runtests.py
-        python examples/django_example/manage.py test examples/django_example/
+        python -Wonce runtests.py
+        python -Wonce examples/django_example/manage.py test examples/django_example/
     # --------------------------------------------------------------
     # TODO: Fix & re-enable later
     # https://github.com/marketplace/actions/coveralls-github-action
