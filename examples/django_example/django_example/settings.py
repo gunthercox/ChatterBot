@@ -39,6 +39,9 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'chatterbot.ext.django_chatterbot',
+
+    # Our example app:
+    'django_example',
 ]
 
 # ChatterBot settings

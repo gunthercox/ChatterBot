@@ -15,7 +15,7 @@ Begin by making sure that you have installed both ``django`` and ``chatterbot``.
 
    pip install django chatterbot
 
-For more details on installing Django, see the `Django documentation`_.
+For more details on installing and using Django, see the `Django documentation`_.
 
 Installed Apps
 --------------

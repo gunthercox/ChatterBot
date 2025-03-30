@@ -1,6 +1,6 @@
-=======================
-ChatterBot Django Views
-=======================
+=============================
+ChatterBot Django Sample Code
+=============================
 
 .. note::
 
@@ -25,3 +25,16 @@ The endpoint expects a JSON request in the following format:
    :caption: examples/django_example/django_example/views.py
    :language: python
    :pyobject: ChatterBotApiView
+
+
+Example Django Management Commands
+==================================
+
+ChatterBot's Django example includes a management command that
+demonstrates a simple example of training. This can be used as
+a basis for other custom management commands used with other
+:ref:`training options <Training>`.
+
+.. literalinclude:: ../../examples/django_example/django_example/management/commands/train.py
+   :caption: examples/django_example/django_example/management/commands/train.py
+   :language: python
