@@ -6,22 +6,27 @@
     <img src="{% static 'img/chatterbot.png' %}" width="30" height="30" class="d-inline-block align-top" alt="ChatterBot">
     ChatterBot
   </a>
+  <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
 
-  <ul class="navbar-nav">
-    <li class="nav-item">
-      <a class="nav-link" href="https://docs.chatterbot.us">Documentation</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="https://github.com/gunthercox/ChatterBot">GitHub</a>
-    </li>
-  </ul>
+  <div class="collapse navbar-collapse" id="navbarNav">
+    <ul class="navbar-nav">
+      <li class="nav-item">
+        <a class="nav-link" href="https://docs.chatterbot.us">Documentation</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="https://github.com/gunthercox/ChatterBot">GitHub</a>
+      </li>
+    </ul>
 
-  <ul class="navbar-nav ml-auto">
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'chatterbot' %}">API</a>
-    </li>
-    <li class="nav-item">
-      <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
-    </li>
-  </ul>
+    <ul class="navbar-nav ml-auto">
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'chatterbot' %}">API</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" href="{% url 'admin:index' %}">Admin</a>
+      </li>
+    </ul>
+  </div>
 </nav>
