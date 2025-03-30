@@ -82,7 +82,7 @@ you can set `read_only=True` as a parameter when initializing the bot.
 Django and Flask
 ================
 
-1. Django: A number of :ref:`example views are documented <ChatterBot Django Views>`, as well as full example Django app.
+1. Django: A number of :ref:`example views are documented <Example API Views>`, as well as full example Django app.
 2. Flask: There is a separately maintained example `Flask project using ChatterBot <https://github.com/chamkank/flask-chatterbot>`_.
 
 .. _install MongoDB: https://docs.mongodb.com/manual/installation/
