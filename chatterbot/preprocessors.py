@@ -1,12 +1,13 @@
 """
 Statement pre-processors.
 """
+from chatterbot.conversation import Statement
 from unicodedata import normalize
 from re import sub as re_sub
 from html import unescape
 
 
-def clean_whitespace(statement):
+def clean_whitespace(statement: Statement) -> Statement:
     """
     Remove any consecutive whitespace characters from the statement text.
     """
@@ -24,7 +25,7 @@ def clean_whitespace(statement):
     return statement
 
 
-def unescape_html(statement):
+def unescape_html(statement: Statement) -> Statement:
     """
     Convert escaped html characters into unescaped html characters.
     For example: "&lt;b&gt;" becomes "<b>".
@@ -34,7 +35,7 @@ def unescape_html(statement):
     return statement
 
 
-def convert_to_ascii(statement):
+def convert_to_ascii(statement: Statement) -> Statement:
     """
     Converts unicode characters to ASCII character equivalents.
     For example: "på fédéral" becomes "pa federal".
