@@ -5,7 +5,7 @@ from django.conf import settings
 from chatterbot import constants
 
 
-CHATTERBOT_SETTINGS = getattr(settings, 'CHATTERBOT', {})
+CHATTERBOT = getattr(settings, 'CHATTERBOT', {})
 
 CHATTERBOT_DEFAULTS = {
     'name': 'ChatterBot',
@@ -13,5 +13,4 @@ CHATTERBOT_DEFAULTS = {
     'django_app_name': constants.DEFAULT_DJANGO_APP_NAME
 }
 
-CHATTERBOT = CHATTERBOT_DEFAULTS.copy()
-CHATTERBOT.update(CHATTERBOT_SETTINGS)
+CHATTERBOT.update(CHATTERBOT_DEFAULTS)
