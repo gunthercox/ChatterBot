@@ -32,7 +32,7 @@ class ChatterBotApiView(View):
                 ]
             }, status=400)
 
-        response = self.chatterbot.get_response(input_data)
+        response = self.chatterbot.get_response(**input_data)
 
         response_data = response.serialize()
 

@@ -3,6 +3,7 @@
 <html>
   <head>
     <title>Django ChatterBot Example</title>
+    <link rel="shortcut icon" href="{% static 'favicon.ico' %}"/>
     <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}"/>
     <link rel="stylesheet" href="{% static 'css/custom.css' %}"/>
   </head>
@@ -95,8 +96,10 @@
             $chatlog[0].scrollTop = $chatlog[0].scrollHeight;
         });
 
-        $submit.fail(function() {
-          // TODO: Handle errors
+        $submit.fail(function(jqXHR, textStatus, errorThrown) {
+            // Handle the error
+            console.error('Error:', textStatus, errorThrown);
+            alert('An error occurred while processing your request. Check console for details.');
         });
       }
 
