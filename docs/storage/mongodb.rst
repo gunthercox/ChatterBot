@@ -1,6 +1,15 @@
 MongoDB Storage Adapter
 =======================
 
+.. image:: /_static/MongoDB_Fores-Green.svg
+   :alt: MongoDB Logo
+   :align: center
+..
+   Imaged used in accordance with the MongoDB Trademark Usage Guidelines
+   https://www.mongodb.com/legal/trademark-usage-guidelines
+
+ChatterBot includes support for integration with MongoDB databases via its ``MongoDatabaseAdapter`` class.
+
 Before you can use this storage adapter you will need to install `pymongo`_. An easy way to install it is to use the ``chatterbot[mongodb]`` extra when installing ChatterBot. For example:
 
 .. code-block:: bash
@@ -11,8 +20,6 @@ You'll also need to have a MongoDB server running. An easy way to run one locall
 
 .. code-block:: yaml
    :caption: docker-compose.yml
-
-   version: "3.8"
 
    services:
      mongo:

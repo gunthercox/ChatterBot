@@ -4,9 +4,17 @@ Redis Vector Storage Adapter
 .. note::
 
    **(March, 2025)**:
-   The ``RedisVectorStorageAdapter`` is a new and experimental feature introduced as a "beta" feature. Its functionality is subject to change in future releases.
+   The ``RedisVectorStorageAdapter`` is new and experimental functionality introduced as a "beta" feature. Its functionality might not yet be fully stable and is subject to change in future releases.
 
-The Redis Vector Storage Adapter allows a ChatterBot instance to store and retrieve text and metadata using a Redis instance configured as a :term:`vector database`.
+.. image:: /_static/Redis_Logo_Red_RGB.svg
+   :alt: Redis Logo
+   :align: center
+   :width: 200
+..
+    Imaged used in accordance with the Redis Trademark Policy
+    https://redis.io/legal/trademark-policy/
+
+The ``RedisVectorStorageAdapter`` allows a ChatterBot instance to store and retrieve text and metadata using a Redis® instance configured as a :term:`vector database`.
 This adapter supports the use of vectors when filtering queries to search for similar text.
 
 Vectors are a mathematical representation of text that can be used
@@ -49,8 +57,6 @@ run one locally is to use Docker:
 
 .. code-block:: yaml
    :caption: docker-compose.yml
-
-   version: "3.8"
 
    services:
      redis:
@@ -112,6 +118,9 @@ For those looking to learn more about vector databases, the following resources 
      - https://learn.microsoft.com/en-us/azure/cosmos-db/mongodb/vcore/vector-search-ai
    * - Redis as a vector database
      - https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/vectors/
+
+
+:sub:`* Redis is a registered trademark of Redis Ltd. Any rights therein are reserved to Redis Ltd.`
 
 
 .. _Redis: https://redis.io/docs/latest/operate/oss_and_stack/install/install-redis/
