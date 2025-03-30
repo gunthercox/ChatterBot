@@ -73,7 +73,7 @@ The HTML documentation for ChatterBot can be compiled using using `Sphinx`_. To 
 
 .. sourcecode:: sh
 
-   sphinx-build -nW -b dirhtml docs/ build/
+   sphinx-build -nW -b dirhtml docs/ html/
 
 
 .. _Sphinx: http://www.sphinx-doc.org/
