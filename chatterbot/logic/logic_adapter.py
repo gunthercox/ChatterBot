@@ -4,6 +4,7 @@ from chatterbot.adapters import Adapter
 from chatterbot.storage import StorageAdapter
 from chatterbot.search import IndexedTextSearch
 from chatterbot.conversation import Statement
+from chatterbot import utils
 
 
 class LogicAdapter(Adapter):
@@ -28,7 +29,7 @@ class LogicAdapter(Adapter):
     :type response_selection_method: collections.abc.Callable
 
     :param default_response:
-          The default response returned by this logic adaper
+          The default response returned by this logic adapter
           if there is no other possible response to return.
     :type default_response: str or list or tuple
     """
@@ -49,6 +50,14 @@ class LogicAdapter(Adapter):
         self.maximum_similarity_threshold = kwargs.get(
             'maximum_similarity_threshold', 0.95
         )
+
+        if response_selection_method := kwargs.get('response_selection_method'):
+            if isinstance(response_selection_method, str):
+                # If an import path is provided, import the method
+                response_selection_method = utils.import_module(
+                    response_selection_method
+                )
+                kwargs['response_selection_method'] = response_selection_method
 
         # By default, select the first available response
         self.select_response = kwargs.get(
