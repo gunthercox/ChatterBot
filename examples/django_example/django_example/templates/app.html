@@ -11,24 +11,23 @@
 
     {% include 'nav.html' %}
 
-    <div class="container">
+    <div class="container mt-3 pt-3">
 
-      <div class="jumbotron mt-1">
-        <h1 class="jumbotron-heading text-xs-center">Django ChatterBot Example</h1>
-        <p class="lead text-xs-center">
+      <div class="jumbotron mt-3">
+        <h1 class="jumbotron-heading text-center">Django ChatterBot Example</h1>
+        <p class="lead text-center">
           This is a web app that allows you to talk to ChatterBot.
         </p>
 
         <hr class="my-2">
 
         <div class="row">
-          <div class="col-xs-6 offset-xs-3">
-            <ul class="list-group chat-log js-chat-log">
-            </ul>
+          <div class="col-lg-6 offset-lg-3">
+            <div class="list-group chat-log js-chat-log"></div>
 
-            <div class="input-group input-group-lg mt-1">
+            <div class="input-group input-group-lg mt-2">
               <input type="text" class="form-control js-text" placeholder="Type something to begin..."/>
-              <span class="input-group-btn">
+              <div class="input-group-append">
                 <button class="btn btn-primary js-say">Submit</button>
               </span>
             </div>
@@ -65,10 +64,12 @@
       var $sayButton = $('.js-say');
 
       function createRow(text) {
-        var $row = $('<li class="list-group-item"></li>');
+        var $row = $('<div class="list-group-item"></div>');
 
-        $row.text(text);
+        $row.html(text);
         $chatlog.append($row);
+
+        return $row;
       }
 
       function submitInput() {
@@ -79,6 +80,20 @@
         // Display the user's input on the web page
         createRow(inputData.text);
 
+        // Clear the input field
+        $input.val('');
+
+        // Add a loading indicator
+        var $loadingRow = createRow(
+          `
+          <div class="d-flex justify-content-center">
+            <div class="spinner-border text-success" role="status">
+              <span class="sr-only">Loading...</span>
+            </div>
+          </div>
+          `
+        );
+
         var $submit = $.ajax({
           type: 'POST',
           url: chatterbotUrl,
@@ -87,10 +102,10 @@
         });
 
         $submit.done(function(statement) {
-            createRow(statement.text);
 
-            // Clear the input field
-            $input.val('');
+            // RReplace the loading indicator with the bot's response
+            $loadingRow.html('');
+            $loadingRow.text(statement.text);
 
             // Scroll to the bottom of the chat interface
             $chatlog[0].scrollTop = $chatlog[0].scrollHeight;
@@ -98,8 +113,11 @@
 
         $submit.fail(function(jqXHR, textStatus, errorThrown) {
             // Handle the error
+
+            $loadingRow.html('An error occurred while processing your request. Check console for details.');
+            $loadingRow.addClass('list-group-item-danger');
+
             console.error('Error:', textStatus, errorThrown);
-            alert('An error occurred while processing your request. Check console for details.');
         });
       }
 
