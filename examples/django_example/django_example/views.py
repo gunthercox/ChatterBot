@@ -2,8 +2,9 @@ import json
 from django.views.generic.base import TemplateView
 from django.views.generic import View
 from django.http import JsonResponse
+from django.conf import settings
+
 from chatterbot import ChatBot
-from chatterbot.ext.django_chatterbot import settings
 
 
 class ChatterBotAppView(TemplateView):
