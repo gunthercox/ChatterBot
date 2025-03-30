@@ -12,4 +12,4 @@ class SettingsTestCase(TestCase):
     def test_name_setting(self):
         with self.settings():
             self.assertIn('name', settings.CHATTERBOT)
-            self.assertEqual('Test Django ChatterBot', settings.CHATTERBOT['name'])
+            self.assertEqual('ChatterBot', settings.CHATTERBOT['name'])
