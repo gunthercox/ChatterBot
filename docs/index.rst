@@ -81,6 +81,7 @@ Contents:
    filters
    chatterbot
    conversations
+   large-language-models
    comparisons
    utils
    corpus
