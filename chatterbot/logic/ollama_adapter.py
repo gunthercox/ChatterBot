@@ -12,6 +12,16 @@ class Ollama(LogicAdapter):
 
     .. note::
         Added in version 1.2.5
+
+    .. note::
+        As a part of the development process when choosing models it is
+        important to research and understand the models you are using.
+
+        A good example of why this is important can be found in the
+        description of the Phi-3 model from Microsoft which discusses
+        responsible AI considerations such as the limitations of the
+        model, and appropriate use cases.
+        https://huggingface.co/microsoft/Phi-3-mini-4k-instruct-gguf#responsible-ai-considerations
     """
 
     def __init__(self, chatbot, **kwargs):
