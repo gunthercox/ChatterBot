@@ -14,7 +14,8 @@ bot = ChatBot(
             'model': 'gemma3:1b',
             'host': 'http://localhost:11434'
         }
-    ]
+    ],
+    stream=True  # Enable streaming responses
 )
 
 print('Type something to begin...')
@@ -26,7 +27,9 @@ while True:
 
         bot_response = bot.get_response(user_input)
 
-        print(bot_response)
+        for part in bot_response:
+            print(part, end='', flush=True)
+        print()
 
     # Press ctrl-c or ctrl-d on the keyboard to exit
     except (KeyboardInterrupt, EOFError, SystemExit):
