@@ -210,7 +210,7 @@ class GenericFileTrainer(Trainer):
         if self.file_extension is None:
             raise self.TrainerInitializationException(
                 'The file_extension attribute must be set before calling train().'
-            ) 
+            )
 
         # List all csv or json files in the specified directory
         if os.path.isdir(data_path):
@@ -226,7 +226,7 @@ class GenericFileTrainer(Trainer):
 
                 yield file_path
         else:
-            return [data_path]
+            yield data_path
 
     def train(self, data_path: str, limit=None):
         """
@@ -254,7 +254,9 @@ class GenericFileTrainer(Trainer):
 
             statements_to_create = []
 
-            with open(data_file, 'r', encoding='utf-8') as file:
+            file_abspath = os.path.abspath(data_file)
+
+            with open(file_abspath, 'r', encoding='utf-8') as file:
 
                 if self.file_extension == 'json':
                     data = json.load(file)
@@ -281,17 +283,24 @@ class GenericFileTrainer(Trainer):
 
                 text_row = self.field_map['text']
 
-                documents = self.chatbot.tagger.as_nlp_pipeline([
-                    (
-                        row[text_row],
-                        {
-                            # Include any defined metadata columns
-                            key: row[value]
-                            for key, value in self.field_map.items()
-                            if key != text_row
-                        }
-                    ) for row in data if len(row) > 0
-                ])
+                try:
+                    documents = self.chatbot.tagger.as_nlp_pipeline([
+                        (
+                            row[text_row],
+                            {
+                                # Include any defined metadata columns
+                                key: row[value]
+                                for key, value in self.field_map.items()
+                                if key != text_row
+                            }
+                        ) for row in data if len(row) > 0
+                    ])
+                except KeyError as e:
+                    raise KeyError(
+                        f'{e}. Please check the field_map parameter used to initialize '
+                        f'the training class and remove this value if it is not needed. '
+                        f'Current mapping: {self.field_map}'
+                    )
 
             for document, context in documents:
                 statement = Statement(
