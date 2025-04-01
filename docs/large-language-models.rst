@@ -18,8 +18,8 @@ LLM integration, and to make it easy to add support for new LLMs as they
 become available.
 
 .. note::
-    * Added March, 2025
-    * Last updated: March, 2025
+    * Added April, 2025
+    * Last updated: April, 2025
 
 **Phase 1:**
 
@@ -40,8 +40,12 @@ LLM integration with specific logic adapter features via RAG or similar approach
 * ☐ Date and time :class:`~chatterbot.logic.TimeLogicAdapter`
 * ☐ Unit conversion ``UnitConversion``
 
-One of the concepts / theories here that we want to evaluate is that it is easier (and more efficient) to
-teach AI to use a calculator than it is to teach it the rules of mathematics.
+One of the concepts / theories here that we want to evaluate is, for example,
+that it may be easier (and more efficient) to teach AI to use a calculator
+than it is to teach it the rules of mathematics. Whether this is because it
+lets us use smaller LLMs that don't have a strong understanding of math, or
+because in general it allows us to offload processing of other complex tasks,
+there is likely a strong use case here.
 
 **Phase 4:**
 
@@ -66,7 +70,7 @@ ChatterBot's experimental support for using Ollama LLMs can be tested using the 
 
    services:
 
-    # NOTE: ollama AMD GPU setup
+    # NOTE: This setup is for AMD GPUs
     ollama:
         image: ollama/ollama:rocm
         ports:
