@@ -1,5 +1,3 @@
-import asyncio
-
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 
@@ -23,20 +21,18 @@ class Ollama(LogicAdapter):
         self.model = kwargs.get('model', 'gemma3:1b')  # TODO: Better default model?
         self.host = kwargs.get('host', 'http://localhost:11434')
 
-        # The async client can only be used when the ChatBot has
-        # been initialized with 1 logic adapter.
-        '''
-        if len(self.chatbot.logic_adapters) == 1:
-            self.async_mode = True
-            self.client = client = AsyncClient(
+        # TODO: Look into supporting the async client
+        self.async_mode = False
+
+        # https://github.com/ollama/ollama-python
+        if self.async_mode:
+            self.client = AsyncClient(
                 host=self.host,
             )
         else:
-        '''
-        self.async_mode = False
-        self.client = Client(
-            host=self.host,
-        )
+            self.client = Client(
+                host=self.host,
+            )
 
     def process(self, statement, additional_response_selection_parameters=None):
 
@@ -49,30 +45,23 @@ class Ollama(LogicAdapter):
             'content': statement.text
         }
 
-        # TODO Add support for streaming responses
-        '''
-        if self.async_mode:
-            async def chat():
-                async for part in await self.client.chat(
-                    model=self.model,
-                    messages=[system_message, message],
-                    stream=True
-                ):
-                    print(part['message']['content'], end='', flush=True)
+        if self.chatbot.stream:
+            for part in self.client.chat(
+                model=self.model,
+                messages=[system_message, message],
+                stream=True
+            ):
+                yield part['message']['content']
+        else:
+            response = self.client.chat(
+                model=self.model,
+                messages=[system_message, message]
+            )
 
-                print()
+            response = Statement(text=response.message.content)
 
-                asyncio.run(chat())'
-        '''
+            # Confidence will be a 1 for all responses
+            # TODO: Is there a better way to score confidence for LLM based responses?
+            response.confidence = 1
 
-        # https://github.com/ollama/ollama-python
-        response = self.client.chat(model=self.model, messages=[
-            system_message,
-            message
-        ])
-
-        response = Statement(text=response.message.content)
-
-        response.confidence = 1  # TODO: Better way to determine confidence?
-
-        return response
+            return response
