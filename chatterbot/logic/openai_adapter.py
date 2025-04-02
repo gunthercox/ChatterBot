@@ -2,9 +2,9 @@ from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 
 
-class Ollama(LogicAdapter):
+class OpenAI(LogicAdapter):
     """
-    This adapter allows the use of Ollama models for chatbot responses.
+    This adapter allows the use of the OpenAI API to generate chatbot responses.
 
     .. warning::
         This is a new and experimental adapter. It may not work as expected
@@ -26,28 +26,29 @@ class Ollama(LogicAdapter):
 
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
-        from ollama import Client, AsyncClient
+        from openai import OpenAI as OpenAIClient
+        from openai import AsyncOpenAI as AsyncOpenAIClient
 
-        self.model = kwargs.get('model', 'gemma3:1b')  # TODO: Better default model?
-        self.host = kwargs.get('host', 'http://localhost:11434')
+        self.model = kwargs.get('model', 'gpt-4o')
+        self.host = kwargs.get('host', None)
 
         # TODO: Look into supporting the async client
         self.async_mode = False
 
-        # https://github.com/ollama/ollama-python
+        # https://github.com/openai/openai-python
         if self.async_mode:
-            self.client = AsyncClient(
-                host=self.host,
+            self.client = AsyncOpenAIClient(
+                base_url=self.host,
             )
         else:
-            self.client = Client(
-                host=self.host,
+            self.client = OpenAIClient(
+                base_url=self.host,
             )
 
     def process(self, statement, additional_response_selection_parameters=None):
 
         system_message = {
-            'role': 'system',
+            'role': 'developer',
             'content': 'Please keep responses short and concise.'
         }
         message = {
@@ -56,19 +57,19 @@ class Ollama(LogicAdapter):
         }
 
         if self.chatbot.stream:
-            for part in self.client.chat(
+            for part in self.client.chat.completions.create(
                 model=self.model,
                 messages=[system_message, message],
                 stream=True
             ):
-                yield part['message']['content']
+                yield part
         else:
-            response = self.client.chat(
+            response = self.client.chat.completions.create(
                 model=self.model,
                 messages=[system_message, message]
             )
 
-            response = Statement(text=response.message.content)
+            response = Statement(text=response.output_text)
 
             # Confidence will be a 1 for all responses
             # TODO: Is there a better way to score confidence for LLM based responses?

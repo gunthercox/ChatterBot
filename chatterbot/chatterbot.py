@@ -40,10 +40,15 @@ class ChatBot(object):
 
     :param logger: A ``Logger`` object.
     :type logger: logging.Logger
+
+    :param stream: Return output as a streaming responses.
+                   (Added in version 1.2.6)
     """
 
-    def __init__(self, name, **kwargs):
+    def __init__(self, name, stream=False, **kwargs):
         self.name = name
+
+        self.stream = stream
 
         self.logger = kwargs.get('logger', logging.getLogger(__name__))
 
@@ -52,6 +57,13 @@ class ChatBot(object):
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
         ])
+
+        # Only 1 logic adapter can be used if streaming output is enabled
+        if self.stream and len(logic_adapters) > 1:
+            raise self.ChatBotException(
+                'Streaming output is not supported with multiple logic adapters. '
+                f'Current logic adapters: {logic_adapters}'
+            )
 
         # Check that each adapter is a valid subclass of it's respective parent
         utils.validate_adapter_class(storage_adapter, StorageAdapter)
@@ -185,6 +197,9 @@ class ChatBot(object):
             additional_response_selection_parameters
         )
 
+        if self.stream:
+            return response
+
         # Update any response data that needs to be changed
         if persist_values_to_response:
             for response_key in persist_values_to_response:
@@ -218,6 +233,9 @@ class ChatBot(object):
         results = []
         result = None
         max_confidence = -1
+
+        if self.stream:
+            return self.logic_adapters[0].process(input_statement, additional_response_selection_parameters)
 
         for adapter in self.logic_adapters:
             if adapter.can_process(input_statement):

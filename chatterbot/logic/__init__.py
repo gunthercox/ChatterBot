@@ -5,6 +5,7 @@ from chatterbot.logic.specific_response import SpecificResponseAdapter
 from chatterbot.logic.time_adapter import TimeLogicAdapter
 from chatterbot.logic.unit_conversion import UnitConversion
 from chatterbot.logic.ollama_adapter import Ollama
+from chatterbot.logic.openai_adapter import OpenAI
 
 __all__ = (
     'LogicAdapter',
@@ -14,4 +15,5 @@ __all__ = (
     'TimeLogicAdapter',
     'UnitConversion',
     'Ollama',
+    'OpenAI',
 )
