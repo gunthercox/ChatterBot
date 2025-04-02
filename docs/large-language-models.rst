@@ -4,7 +4,7 @@ Large Language Models
 
 .. warning::
 
-    Starting in ChatterBot 1.2.5 experimental support for large language models
+    Starting in ChatterBot 1.2.6 experimental support for large language models
     is being added. This support is not yet complete and is not yet ready for
     general use beyond experimental purposes. The API will likely change in the
     future and the functionality may not be fully implemented.
@@ -26,7 +26,7 @@ become available.
 Support for local and remote LLMs.
 
 1. ☑ Support for Ollama LLMs, which at the current time appear to be the easiest to set up and run on local hardware.
-2. ☐ Support for accessing LLMs that support the OpenAI client.
+2. ☑ Support for accessing LLMs that support the OpenAI client.
 
 **Phase 2:**
 
@@ -47,12 +47,27 @@ lets us use smaller LLMs that don't have a strong understanding of math, or
 because in general it allows us to offload processing of other complex tasks,
 there is likely a strong use case here.
 
+Both interestingly and continently, ChatterBot's existing architecture used
+for its logic adapters is already very similar to approaches used to provide
+additional tools to LLMs. The Model Context Protocol (MCP) supported by a
+`range of MCP server implementations <https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file#what-is-mcp>`_
+currently seems like a strong candidate for this.
+
+.. list-table:: Comparison of ChatterBot Architectures
+   :class: table-justified
+   :header-rows: 1
+
+   * - Classic ChatterBot (Logic Adapters)
+     - LLM with MCP
+   * - .. image:: _static/dialog-processing-flow.svg
+     - .. image:: _static/dialog-processing-flow-llm.svg
+
 **Phase 4:**
 
 * ☐ LLM integration with the ChatterBot training process
 
 The ideal outcome for this phase would be the ability to use the existing training
-pipelines to fine tune LLMs. It isn't clear yet if this will be possible to do with
+pipelines to fine-tune LLMs. It isn't clear yet if this will be possible to do with
 common hardware, but right now this is the goal. An alternative may be to use a RAG
 approach to allow the LLM to access the chat bot's database when generating responses.
 
@@ -99,7 +114,13 @@ The following commands can be used to download various Ollama models:
 * More notes on the ``ollama`` container: https://hub.docker.com/r/ollama/ollama
 * Ollama model library: https://ollama.com/library
 
-The following is an example of how to use the Ollama LLM in ChatterBot:
+The following is an example of how to use the Ollama LLM in ChatterBot. Before running
+them you will need to install the ``ollama`` client library. This can be done directly
+using pip or by using the extra option from the ChatterBot package that includes it:
+
+.. code-block:: bash
+
+    pip install chatterbot[dev]
 
 .. literalinclude:: ../examples/ollama_example.py
    :caption: examples/ollama_example.py
@@ -108,4 +129,22 @@ The following is an example of how to use the Ollama LLM in ChatterBot:
 Using the OpenAI client
 =======================
 
-(Coming soon)
+The following is an example of how to use the OpenAI client in ChatterBot. Before running
+the example you will need to install the ``openai`` client library. This can be done directly
+using pip or by using the extra option from the ChatterBot package that includes it:
+
+.. code-block:: bash
+
+    pip install chatterbot[dev] python-dotenv
+
+1. Obtain an OpenAI API key: https://platform.openai.com/settings/organization/api-keys
+2. Create a ``.env`` file to hold your API key in the parent directory from where your code is running.
+
+.. code-block:: bash
+    :caption: ../.env
+
+    OPENAI_API_KEY="API Key Here"
+
+.. literalinclude:: ../examples/openai_example.py
+   :caption: examples/openai_example.py
+   :language: python
