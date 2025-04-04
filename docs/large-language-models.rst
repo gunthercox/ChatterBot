@@ -4,7 +4,7 @@ Large Language Models
 
 .. warning::
 
-    Starting in ChatterBot 1.2.6 experimental support for large language models
+    Starting in ChatterBot 1.2.6 experimental support for :term:`large language models`
     is being added. This support is not yet complete and is not yet ready for
     general use beyond experimental purposes. The API will likely change in the
     future and the functionality may not be fully implemented.
@@ -26,7 +26,7 @@ become available.
 Support for local and remote LLMs.
 
 1. ☑ Support for Ollama LLMs, which at the current time appear to be the easiest to set up and run on local hardware.
-2. ☑ Support for accessing LLMs that support the OpenAI client.
+2. ☑ Support for accessing LLMs that use the OpenAI API.
 
 **Phase 2:**
 
@@ -34,7 +34,7 @@ Support for local and remote LLMs.
 
 **Phase 3:**
 
-LLM integration with specific logic adapter features via RAG or similar approach.
+LLM integration with specific logic adapter features via :term:`RAG` or similar approach.
 
 * ☐ Mathematical operations :class:`~chatterbot.logic.MathematicalEvaluation` via :mod:`mathparse`
 * ☐ Date and time :class:`~chatterbot.logic.TimeLogicAdapter`
@@ -47,9 +47,9 @@ lets us use smaller LLMs that don't have a strong understanding of math, or
 because in general it allows us to offload processing of other complex tasks,
 there is likely a strong use case here.
 
-Both interestingly and continently, ChatterBot's existing architecture used
+Both interestingly and conveniently, ChatterBot's existing architecture used
 for its logic adapters is already very similar to approaches used to provide
-additional tools to LLMs. The Model Context Protocol (MCP) supported by a
+additional tools to LLMs. The Model Context Protocol (:term:`MCP`) supported by a
 `range of MCP server implementations <https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file#what-is-mcp>`_
 currently seems like a strong candidate for this.
 
@@ -61,6 +61,10 @@ currently seems like a strong candidate for this.
      - LLM with MCP
    * - .. image:: _static/dialog-processing-flow.svg
      - .. image:: _static/dialog-processing-flow-llm.svg
+
+The choice to enforce one LLM per chat bot instance is currently based on the
+notion that one capable model per chat bot is likely simpler and more efficient
+than trying to reconcile the output of multiple models.
 
 **Phase 4:**
 
