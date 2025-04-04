@@ -1,5 +1,5 @@
 """
-EXPERIMENTAL:
+EXPERIMENTAL: See https://docs.chatterbot.us/large-language-models/ for more information.
 Example of using the OpenAI API with the OpenAI Python client.
 """
 from chatterbot import ChatBot
