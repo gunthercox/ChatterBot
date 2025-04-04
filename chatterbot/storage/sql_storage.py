@@ -44,7 +44,7 @@ class SQLStorageAdapter(StorageAdapter):
                 dbapi_connection.execute('PRAGMA journal_mode=WAL')
                 dbapi_connection.execute('PRAGMA synchronous=NORMAL')
 
-        if not inspect(self.engine).has_table(self.engine, 'statement'):
+        if not inspect(self.engine).has_table('statement'):
             self.create_database()
 
         # Check if the expected index exists on the text field of the statement table
