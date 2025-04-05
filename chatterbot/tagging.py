@@ -1,3 +1,4 @@
+from typing import List, Union, Tuple
 from chatterbot import languages
 from chatterbot.utils import get_model_for_language
 import spacy
@@ -20,7 +21,7 @@ class LowercaseTagger(object):
             'chatterbot_lowercase_indexer', name='chatterbot_lowercase_indexer', last=True
         )
 
-    def get_text_index_string(self, text):
+    def get_text_index_string(self, text: Union[str, List[str]]):
         if isinstance(text, list):
             documents = self.nlp.pipe(text)
             return [document._.search_index for document in documents]
@@ -28,7 +29,7 @@ class LowercaseTagger(object):
             document = self.nlp(text)
             return document._.search_index
 
-    def as_nlp_pipeline(self, texts):
+    def as_nlp_pipeline(self, texts: Union[List[str], Tuple[str, dict]]):
 
         process_as_tuples = texts and isinstance(texts[0], tuple)
 
@@ -52,7 +53,7 @@ class PosLemmaTagger(object):
             'chatterbot_bigram_indexer', name='chatterbot_bigram_indexer', last=True
         )
 
-    def get_text_index_string(self, text):
+    def get_text_index_string(self, text: Union[str, List[str]]):
         """
         Return a string of text containing part-of-speech, lemma pairs.
         """
@@ -63,7 +64,7 @@ class PosLemmaTagger(object):
             document = self.nlp(text)
             return document._.search_index
 
-    def as_nlp_pipeline(self, texts):
+    def as_nlp_pipeline(self, texts: Union[List[str], Tuple[str, dict]]):
         """
         Accepts a single string or a list of strings, or a list of tuples
         where the first element is the text and the second element is a
