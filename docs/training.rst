@@ -139,6 +139,8 @@ Training with CSV or TSV formatted data
 .. autoclass:: chatterbot.trainers.CsvFileTrainer
    :members: train
 
+   .. autoattribute:: chatterbot.trainers.CsvFileTrainer.DEFAULT_STATEMENT_TO_HEADER_MAPPING
+
 
 Example CSV data format:
 
@@ -168,6 +170,8 @@ Training with JSON formatted data
 
 .. autoclass:: chatterbot.trainers.JsonFileTrainer
    :members: train
+
+   .. autoattribute:: chatterbot.trainers.JsonFileTrainer.DEFAULT_STATEMENT_TO_KEY_MAPPING
 
 
 Example JSON data format:

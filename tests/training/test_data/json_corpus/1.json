@@ -4,13 +4,19 @@
             "text": "Hello",
             "in_response_to": null,
             "persona": "user 1",
-            "conversation": "test"
+            "conversation": "test",
+            "tags": [
+                "greeting"
+            ]
         },
         {
             "text": "Is anyone there?",
             "in_response_to": "Hello",
             "persona": "user 1",
-            "conversation": "test"
+            "conversation": "test",
+            "tags": [
+                "question"
+            ]
         },
         {
             "text": "Yes",
