@@ -1,12 +1,13 @@
 import os
-import sys
 import csv
 import time
 import glob
 import json
 import tarfile
+from typing import List, Union
 from tqdm import tqdm
 from dateutil import parser as date_parser
+from chatterbot.chatterbot import ChatBot
 from chatterbot.conversation import Statement
 
 
@@ -20,7 +21,7 @@ class Trainer(object):
            the environment variable if it is set.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: ChatBot, **kwargs):
         self.chatbot = chatbot
 
         environment_default = bool(int(os.environ.get('CHATTERBOT_SHOW_TRAINING_PROGRESS', True)))
@@ -30,7 +31,7 @@ class Trainer(object):
             environment_default
         )
 
-    def get_preprocessed_statement(self, input_statement):
+    def get_preprocessed_statement(self, input_statement: Statement) -> Statement:
         """
         Preprocess the input statement.
         """
@@ -58,7 +59,7 @@ class Trainer(object):
             )
             super().__init__(message or default)
 
-    def _generate_export_data(self):
+    def _generate_export_data(self) -> list:
         result = []
         for statement in self.chatbot.storage.filter():
             if statement.in_response_to:
@@ -82,7 +83,7 @@ class ListTrainer(Trainer):
     where the list represents a conversation.
     """
 
-    def train(self, conversation: list):
+    def train(self, conversation: List[str]):
         """
         Train the chat bot based on the provided list of
         statements that represents a single conversation.
@@ -95,7 +96,6 @@ class ListTrainer(Trainer):
         # Run the pipeline in bulk to improve performance
         documents = self.chatbot.tagger.as_nlp_pipeline(conversation)
 
-        # for text in enumerate(conversation):
         for document in tqdm(documents, desc='List Trainer', disable=self.disable_progress):
             statement_search_text = document._.search_index
 
@@ -123,7 +123,7 @@ class ChatterBotCorpusTrainer(Trainer):
     ChatterBot dialog corpus.
     """
 
-    def train(self, *corpus_paths):
+    def train(self, *corpus_paths: Union[str, List[str]]):
         from chatterbot.corpus import load_corpus, list_corpus_files
 
         data_file_paths = []
@@ -178,7 +178,17 @@ class GenericFileTrainer(Trainer):
     or directory of those file types.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    # NOTE: If the value is an integer, this be the
+    # column index instead of the key or header
+    DEFAULT_STATEMENT_TO_HEADER_MAPPING = {
+        'text': 'text',
+        'conversation': 'conversation',
+        'created_at': 'created_at',
+        'persona': 'persona',
+        'tags': 'tags'
+    }
+
+    def __init__(self, chatbot: ChatBot, **kwargs):
         """
         data_path: str The path to the data file or directory.
         field_map: dict A dictionary containing the column name to header mapping.
@@ -187,22 +197,12 @@ class GenericFileTrainer(Trainer):
 
         self.file_extension = None
 
-        # NOTE: If the key is an integer, this be the
-        # column index instead of the key or header
-        DEFAULT_STATEMENT_TO_HEADER_MAPPING = {
-            'text': 'text',
-            'conversation': 'conversation',
-            'created_at': 'created_at',
-            'persona': 'persona',
-            'tags': 'tags'
-        }
-
         self.field_map = kwargs.get(
             'field_map',
-            DEFAULT_STATEMENT_TO_HEADER_MAPPING
+            self.DEFAULT_STATEMENT_TO_HEADER_MAPPING
         )
 
-    def _get_file_list(self, data_path, limit):
+    def _get_file_list(self, data_path: str, limit: Union[int, None]):
         """
         Get a list of files to read from the data set.
         """
@@ -302,6 +302,20 @@ class GenericFileTrainer(Trainer):
                         f'Current mapping: {self.field_map}'
                     )
 
+            response_to_search_index_mapping = {}
+
+            if 'in_response_to' in self.field_map.keys():
+                # Generate the search_in_response_to value for the in_response_to fields
+                response_documents = self.chatbot.tagger.as_nlp_pipeline([
+                    (
+                        row[self.field_map['in_response_to']]
+                    ) for row in data if len(row) > 0 and row[self.field_map['in_response_to']] is not None
+                ])
+
+                # (Process the response values the same way as the text values)
+                for document in response_documents:
+                    response_to_search_index_mapping[document.text] = document._.search_index
+
             for document, context in documents:
                 statement = Statement(
                     text=document.text,
@@ -314,14 +328,19 @@ class GenericFileTrainer(Trainer):
                     statement.created_at = date_parser.parse(context['created_at'])
 
                 statement.search_text = document._.search_index
-                statement.search_in_response_to = previous_statement_search_text
 
                 # Use the in_response_to attribute for the previous statement if
                 # one is defined, otherwise use the last statement which was created
                 if 'in_response_to' in self.field_map.keys():
                     statement.in_response_to = context.get(self.field_map['in_response_to'], None)
+                    statement.search_in_response_to = response_to_search_index_mapping.get(
+                        context.get(self.field_map['in_response_to'], None), ''
+                    )
                 else:
+                    # List-type data such as CSVs with no response specified can use
+                    # the previous statement as the in_response_to value
                     statement.in_response_to = previous_statement_text
+                    statement.search_in_response_to = previous_statement_search_text
 
                 for preprocessor in self.chatbot.preprocessors:
                     statement = preprocessor(statement)
@@ -345,7 +364,6 @@ class GenericFileTrainer(Trainer):
                 )
             )
 
-
 class CsvFileTrainer(GenericFileTrainer):
     """
     .. note::
@@ -358,11 +376,11 @@ class CsvFileTrainer(GenericFileTrainer):
     parameter is set to 'tsv'.
 
     :param str file_extension: The file extension to look for when searching for files (defaults to 'csv').
-    :param str field_map: A dictionary containing the database column name to header mapping.
+    :param dict field_map: A dictionary containing the database column name to header mapping.
                           Values can be either the header name (str) or the column index (int).
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: ChatBot, **kwargs):
         super().__init__(chatbot, **kwargs)
 
         self.file_extension = kwargs.get('file_extension', 'csv')
@@ -376,26 +394,26 @@ class JsonFileTrainer(GenericFileTrainer):
     Allow chatbots to be trained with data from a JSON file or
     directory of JSON files.
 
-    :param str field_map: A dictionary containing the database column name to header mapping.
+    :param dict field_map: A dictionary containing the database column name to header mapping.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    DEFAULT_STATEMENT_TO_KEY_MAPPING = {
+        'text': 'text',
+        'conversation': 'conversation',
+        'created_at': 'created_at',
+        'in_response_to': 'in_response_to',
+        'persona': 'persona',
+        'tags': 'tags'
+    }
+
+    def __init__(self, chatbot: ChatBot, **kwargs):
         super().__init__(chatbot, **kwargs)
 
         self.file_extension = 'json'
 
-        DEFAULT_STATEMENT_TO_KEY_MAPPING = {
-            'text': 'text',
-            'conversation': 'conversation',
-            'created_at': 'created_at',
-            'in_response_to': 'in_response_to',
-            'persona': 'persona',
-            'tags': 'tags'
-        }
-
         self.field_map = kwargs.get(
             'field_map',
-            DEFAULT_STATEMENT_TO_KEY_MAPPING
+            self.DEFAULT_STATEMENT_TO_KEY_MAPPING
         )
 
 
@@ -412,7 +430,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
     :param str ubuntu_corpus_data_directory: The directory where the Ubuntu corpus data is already located, or where it should be downloaded and extracted.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: ChatBot, **kwargs):
         super().__init__(chatbot, **kwargs)
         home_directory = os.path.expanduser('~')
 
@@ -434,7 +452,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
             'persona': 1,
         }
 
-    def is_downloaded(self, file_path):
+    def is_downloaded(self, file_path: str):
         """
         Check if the data file is already downloaded.
         """
@@ -444,7 +462,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
         return False
 
-    def is_extracted(self, file_path):
+    def is_extracted(self, file_path: str):
         """
         Check if the data file is already extracted.
         """
@@ -454,7 +472,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
             return True
         return False
 
-    def download(self, url, show_status=True):
+    def download(self, url: str, show_status=True):
         """
         Download a file from the given url.
         Show a progress indicator for the download status.
@@ -493,7 +511,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
             print('Download location: %s' % file_path)
         return file_path
 
-    def extract(self, file_path):
+    def extract(self, file_path: str):
         """
         Extract a tar file at the specified file path.
         """
@@ -533,7 +551,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
         return True
     
-    def _get_file_list(self, data_path, limit):
+    def _get_file_list(self, data_path: str, limit: Union[int, None]):
         """
         Get a list of files to read from the data set.
         """
@@ -564,7 +582,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
             yield file_path
 
-    def train(self, data_download_url, limit=None):
+    def train(self, data_download_url: str, limit: Union[int, None] = None):
         """
         :param str data_download_url: The URL to download the Ubuntu dialog corpus from.
         :param int limit: The maximum number of files to train from.
