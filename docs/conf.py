@@ -220,5 +220,6 @@ epub_exclude_files = ['search.html']
 
 # Configuration for intersphinx
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/3', None)
+    'python': ('https://docs.python.org/3', None),
+    'mathparse': ('https://mathparse.chatterbot.us/', None),
 }

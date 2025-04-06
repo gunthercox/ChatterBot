@@ -13,6 +13,10 @@ Glossary
    logic adapter
       An adapter class that allows a ChatBot instance to select a response to 
 
+   RAG
+      Retrieval-Augmented Generation. A method of by which a large language model
+      can retrieve information from a database or other source of information.
+
    storage adapter
       A class that allows a chat bot to store information somewhere, such as a database.
 
@@ -21,6 +25,15 @@ Glossary
       and structured set of texts. They are used to do statistical analysis
       and hypothesis testing, checking occurrences or validating linguistic
       rules within a specific language territory [2]_.
+
+   large language models
+      A type of artificial intelligence model that can generate generate
+      human-like text, often trained on a significantly large corpus of
+      text data.
+
+   MCP
+      Model Context Protocol. A protocol for providing context data to a large
+      language model to enable or improve its ability to perform various tasks.
 
    preprocessors
       A member of a list of functions that can be used to modify text
