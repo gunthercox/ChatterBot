@@ -4,7 +4,7 @@ Large Language Models
 
 .. warning::
 
-    Starting in ChatterBot 1.2.6 experimental support for :term:`large language models`
+    Starting in ChatterBot 1.2.7 experimental support for :term:`large language models`
     is being added. This support is not yet complete and is not yet ready for
     general use beyond experimental purposes. The API will likely change in the
     future and the functionality may not be fully implemented.

@@ -42,7 +42,7 @@ class ChatBot(object):
     :type logger: logging.Logger
 
     :param stream: Return output as a streaming responses.
-                   (Added in version 1.2.6)
+                   (Added in version 1.2.7)
     """
 
     def __init__(self, name, stream=False, **kwargs):

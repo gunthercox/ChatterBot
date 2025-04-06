@@ -11,7 +11,7 @@ class OpenAI(LogicAdapter):
         and its functionality may change in future releases.
 
     .. note::
-        Added in version 1.2.6
+        Added in version 1.2.7
 
     .. note::
         As a part of the development process when choosing models it is
