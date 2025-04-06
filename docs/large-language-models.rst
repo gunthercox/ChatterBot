@@ -18,8 +18,8 @@ LLM integration, and to make it easy to add support for new LLMs as they
 become available.
 
 .. note::
-    * Added April, 2025
-    * Last updated: April, 2025
+    * Added April 1st, 2025
+    * Last updated: April 6th, 2025
 
 **Phase 1:**
 

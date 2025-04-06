@@ -1,11 +1,12 @@
 """
 ChatterBot utility functions
 """
+from typing import Union
 import importlib
 import time
 
 
-def import_module(dotted_path):
+def import_module(dotted_path: str):
     """
     Imports the specified module based on the
     dot notated import path for the module.
@@ -17,7 +18,7 @@ def import_module(dotted_path):
     return getattr(module, module_parts[-1])
 
 
-def initialize_class(data, *args, **kwargs):
+def initialize_class(data: Union[dict, str], *args, **kwargs):
     """
     :param data: A string or dictionary containing a import_path attribute.
     """

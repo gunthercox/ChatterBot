@@ -10,13 +10,11 @@ load_dotenv('../.env')
 
 # Create a new instance of a ChatBot
 bot = ChatBot(
-    'Ollama Example Bot',
-    logic_adapters=[
-        {
-            'import_path': 'chatterbot.logic.OpenAI',
-            'model': 'gpt-4o',
-        }
-    ],
+    'OpenAI Example Bot',
+    model={
+        'client': 'chatterbot.llm.OpenAI',
+        'model': 'gpt-4o-mini',
+    },
     stream=True  # Enable streaming responses
 )
 

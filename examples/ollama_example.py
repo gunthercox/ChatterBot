@@ -8,13 +8,11 @@ from chatterbot import ChatBot
 # Create a new instance of a ChatBot
 bot = ChatBot(
     'Ollama Example Bot',
-    logic_adapters=[
-        {
-            'import_path': 'chatterbot.logic.Ollama',
-            'model': 'gemma3:1b',
-            'host': 'http://localhost:11434'
-        }
-    ],
+    model={
+        'client': 'chatterbot.llm.Ollama',
+        'model': 'gemma3:1b',
+        'host': 'http://localhost:11434'
+    },
     stream=True  # Enable streaming responses
 )
 

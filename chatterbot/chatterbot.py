@@ -41,7 +41,12 @@ class ChatBot(object):
     :param logger: A ``Logger`` object.
     :type logger: logging.Logger
 
-    :param stream: Return output as a streaming responses.
+    :param model: A definition used to load a large language model.
+                  Defaults to ``None``.
+                  (Added in version 1.2.7)
+    :type model: dict
+
+    :param stream: Return output as a streaming responses when a ``model`` is defined.
                    (Added in version 1.2.7)
     """
 
@@ -57,13 +62,6 @@ class ChatBot(object):
         logic_adapters = kwargs.get('logic_adapters', [
             'chatterbot.logic.BestMatch'
         ])
-
-        # Only 1 logic adapter can be used if streaming output is enabled
-        if self.stream and len(logic_adapters) > 1:
-            raise self.ChatBotException(
-                'Streaming output is not supported with multiple logic adapters. '
-                f'Current logic adapters: {logic_adapters}'
-            )
 
         # Check that each adapter is a valid subclass of it's respective parent
         utils.validate_adapter_class(storage_adapter, StorageAdapter)
@@ -123,6 +121,11 @@ class ChatBot(object):
 
         # NOTE: 'xx' is the language code for a multi-language model
         self.nlp = spacy.blank(self.tagger.language.ISO_639_1)
+
+        self.model = None
+        if model := kwargs.get('model'):
+            import_path = model.pop('client')
+            self.model = utils.initialize_class(import_path, self, **model)
 
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)
@@ -197,6 +200,7 @@ class ChatBot(object):
             additional_response_selection_parameters
         )
 
+        # If streaming is enabled return the response immediately
         if self.stream:
             return response
 
@@ -234,8 +238,11 @@ class ChatBot(object):
         result = None
         max_confidence = -1
 
-        if self.stream:
-            return self.logic_adapters[0].process(input_statement, additional_response_selection_parameters)
+        # If a model is provided, use it to process the input statement
+        # instead of the logic adapters
+        if self.model:
+            model_response = self.model.process(input_statement)
+            return model_response
 
         for adapter in self.logic_adapters:
             if adapter.can_process(input_statement):
