@@ -71,7 +71,6 @@ dependencies = [
 test = [
     "flake8",
     "coverage",
-    "nose",
     "sphinx>=5.3,<8.2",
     "sphinx-sitemap>=2.6.0",
     "huggingface_hub",
@@ -87,6 +86,7 @@ redis = [
     "redis[hiredis]",
     "langchain-redis",
     "langchain-huggingface",
+    "accelerate",
     "sentence-transformers",
 ]
 mongodb = [
