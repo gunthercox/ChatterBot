@@ -79,6 +79,13 @@ you can set `read_only=True` as a parameter when initializing the bot.
 
    chatbot = ChatBot("Johnny Five", read_only=True)
 
+Using Large Language Models
+===========================
+
+Support for large language models (LLMs) is in ChatterBot is still experimental
+(as of version 1.2.7). Notes and current usage example can be found in the
+:ref:`LLM Roadmap`.
+
 Django and Flask
 ================
 

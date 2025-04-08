@@ -10,9 +10,8 @@ th.head p {
     width: 50%;
 }
 
-.caption-text {
-    padding-top: 3px;
-    padding-bottom: 3px;
+div.code-block-caption {
+    padding: 4px;
 }
 
 .wy-side-nav-search {
@@ -76,4 +75,12 @@ div.sphinxsidebar input[type="submit"] {
 
 .inline-block {
     display: inline-block;
+}
+
+.admonition {
+    background-color: #1c4e63;
+    background-color: #49ff8d;
+    padding: 12px;
+    border: 1px solid;
+    border-radius: 2px;
 }

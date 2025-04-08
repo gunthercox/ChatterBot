@@ -56,6 +56,11 @@ The program selects the closest matching :term:`response` by searching for the c
 statement that matches the input, it then chooses a response from the selection of known responses
 to that statement.
 
+.. admonition:: April 2025
+
+   The dialog processing flow will be slightly different when using
+   large language models (LLMs). See the :ref:`LLM Roadmap` for more details.
+
 ..  _process_flow_diagram:
 
 Process flow diagram
@@ -70,6 +75,7 @@ Contents:
 .. toctree::
    :maxdepth: 4
 
+   About <self>
    setup
    quickstart
    tutorial
@@ -78,10 +84,10 @@ Contents:
    preprocessors
    logic/index
    storage/index
+   large-language-models
    filters
    chatterbot
    conversations
-   large-language-models
    comparisons
    utils
    corpus
