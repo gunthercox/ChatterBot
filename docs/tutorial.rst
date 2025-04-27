@@ -155,12 +155,8 @@ Conclusion and Next Steps
 This concludes this ChatterBot tutorial. Please see other sections of the
 documentation for more details and examples.
 
-For more examples of using ChatterBot, see the :doc:`./examples` section. Additional tutorials that cover topic beyond the scope of this one can be found in the :doc:`./tutorials/index` section:
+For more examples of using ChatterBot, see the :doc:`./examples` section. Additional tutorials and other articles that cover topic beyond the scope of this one can be found at the ChatterBot homepage: https://chatterbot.us/
 
-.. toctree::
-   :maxdepth: 2
-
-   tutorials/index
 
 .. _Gitter: https://gitter.im/chatterbot/Lobby
 .. _SQLite: https://www.sqlite.org/
