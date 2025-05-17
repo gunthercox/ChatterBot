@@ -86,7 +86,7 @@ class LogicAdapter(Adapter):
         """
         return True
 
-    def process(self, statement, additional_response_selection_parameters=None) -> Statement:
+    def process(self, statement: Statement, additional_response_selection_parameters: dict = None) -> Statement:
         """
         Override this method and implement your logic for selecting a response to an input statement.
 
@@ -99,11 +99,9 @@ class LogicAdapter(Adapter):
         lowest confidence level and 1 is the highest.
 
         :param statement: An input statement to be processed by the logic adapter.
-        :type statement: Statement
 
         :param additional_response_selection_parameters: Parameters to be used when
             filtering results to choose a response from.
-        :type additional_response_selection_parameters: dict
         """
         raise self.AdapterMethodNotImplementedError()
 

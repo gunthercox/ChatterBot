@@ -24,7 +24,7 @@ class DjangoStorageAdapter(StorageAdapter):
         from django.apps import apps
         return apps.get_model(self.django_app_name, 'Tag')
 
-    def count(self):
+    def count(self) -> int:
         Statement = self.get_model('statement')
         return Statement.objects.count()
 

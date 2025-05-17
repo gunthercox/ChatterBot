@@ -117,7 +117,7 @@ class AbstractBaseStatement(models.Model, StatementMixin):
             return self.text
         return '<empty>'
 
-    def get_tags(self):
+    def get_tags(self) -> list[str]:
         """
         Return the list of tags for this statement.
         (Overrides the method from StatementMixin)

@@ -1,4 +1,5 @@
 from chatterbot.logic import LogicAdapter
+from chatterbot.conversation import Statement
 from chatterbot import filters
 
 
@@ -22,7 +23,7 @@ class BestMatch(LogicAdapter):
 
         self.excluded_words = kwargs.get('excluded_words')
 
-    def process(self, input_statement, additional_response_selection_parameters=None):
+    def process(self, input_statement: Statement, additional_response_selection_parameters=None) -> Statement:
 
         # Get all statements that have a response text similar to the input statement
         search_results = self.search_algorithm.search(input_statement)

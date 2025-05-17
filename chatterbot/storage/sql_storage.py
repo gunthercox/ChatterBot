@@ -90,7 +90,7 @@ class SQLStorageAdapter(StorageAdapter):
 
         return StatementObject(**statement.serialize())
 
-    def count(self):
+    def count(self) -> int:
         """
         Return the number of entries in the database.
         """

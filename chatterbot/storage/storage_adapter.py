@@ -54,7 +54,7 @@ class StorageAdapter(object):
 
         return Statement
 
-    def count(self):
+    def count(self) -> int:
         """
         Return the number of entries in the database.
         """

@@ -50,7 +50,7 @@ ChatterBot is a Python library designed to make it easy to create software that 
 An :term:`untrained instance` of ChatterBot starts off with no knowledge of how to communicate.
 Each time a user enters a :term:`statement`, the library saves the text that they entered and the text
 that the statement was in response to. As ChatterBot receives more input the number of responses
-that it can reply and the accuracy of each response in relation to the input statement increase.
+that it can reply to, and the accuracy of each response in relation to the input statement increases.
 
 The program selects the closest matching :term:`response` by searching for the closest matching known
 statement that matches the input, it then chooses a response from the selection of known responses

@@ -54,7 +54,7 @@ class MongoDatabaseAdapter(StorageAdapter):
 
         return statement
 
-    def count(self):
+    def count(self) -> int:
         return self.statements.count_documents({})
 
     def mongo_to_object(self, statement_data):

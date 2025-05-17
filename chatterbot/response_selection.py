@@ -6,13 +6,11 @@ from chatterbot.conversation import Statement
 import logging
 
 
-def get_most_frequent_response(input_statement, response_list, storage=None) -> Statement:
+def get_most_frequent_response(input_statement: Statement, response_list: list[Statement], storage=None) -> Statement:
     """
     :param input_statement: A statement, that closely matches an input to the chat bot.
-    :type input_statement: Statement
 
     :param response_list: A list of statement options to choose a response from.
-    :type response_list: list
 
     :param storage: An instance of a storage adapter to allow the response selection
                     method to access other statements if needed.
@@ -41,13 +39,11 @@ def get_most_frequent_response(input_statement, response_list, storage=None) -> 
     return matching_response
 
 
-def get_first_response(input_statement, response_list, storage=None) -> Statement:
+def get_first_response(input_statement: Statement, response_list: list[Statement], storage=None) -> Statement:
     """
     :param input_statement: A statement, that closely matches an input to the chat bot.
-    :type input_statement: Statement
 
     :param response_list: A list of statement options to choose a response from.
-    :type response_list: list
 
     :param storage: An instance of a storage adapter to allow the response selection
                     method to access other statements if needed.
@@ -62,7 +58,7 @@ def get_first_response(input_statement, response_list, storage=None) -> Statemen
     return response_list[0]
 
 
-def get_random_response(input_statement, response_list, storage=None) -> Statement:
+def get_random_response(input_statement: Statement, response_list: list[Statement], storage=None) -> Statement:
     """
     :param input_statement: A statement, that closely matches an input to the chat bot.
     :type input_statement: Statement

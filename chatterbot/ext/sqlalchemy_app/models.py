@@ -13,7 +13,7 @@ class ModelBase(object):
     """
 
     @declared_attr
-    def __tablename__(cls):
+    def __tablename__(cls) -> str:
         """
         Return the lowercase class name as the name of the table.
         """
@@ -99,7 +99,7 @@ class Statement(Base, StatementMixin):
         server_default=''
     )
 
-    def get_tags(self):
+    def get_tags(self) -> list[str]:
         """
         Return a list of tags for this statement.
         """

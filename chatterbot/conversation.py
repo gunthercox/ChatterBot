@@ -22,13 +22,13 @@ class StatementMixin(object):
 
     extra_statement_field_names = []
 
-    def get_statement_field_names(self):
+    def get_statement_field_names(self) -> list[str]:
         """
         Return the list of field names for the statement.
         """
         return self.statement_field_names + self.extra_statement_field_names
 
-    def get_tags(self):
+    def get_tags(self) -> list[str]:
         """
         Return the list of tags for this statement.
         """
@@ -79,7 +79,7 @@ class Statement(StatementMixin):
         'storage',
     )
 
-    def __init__(self, text, in_response_to=None, **kwargs):
+    def __init__(self, text: str, in_response_to=None, **kwargs):
 
         self.id = kwargs.get('id')
         self.text = str(text)

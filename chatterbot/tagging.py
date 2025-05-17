@@ -53,7 +53,7 @@ class PosLemmaTagger(object):
             'chatterbot_bigram_indexer', name='chatterbot_bigram_indexer', last=True
         )
 
-    def get_text_index_string(self, text: Union[str, List[str]]):
+    def get_text_index_string(self, text: Union[str, List[str]]) -> str:
         """
         Return a string of text containing part-of-speech, lemma pairs.
         """

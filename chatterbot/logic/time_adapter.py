@@ -51,7 +51,7 @@ class TimeLogicAdapter(LogicAdapter):
         # Add the patterns to the matcher
         self.matcher.add('TimeQuestionList', patterns)
 
-    def process(self, statement, additional_response_selection_parameters=None):
+    def process(self, statement: Statement, additional_response_selection_parameters: dict = None) -> Statement:
         now = datetime.now()
 
         # Check if the input statement contains a time-related question

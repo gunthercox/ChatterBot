@@ -1,4 +1,5 @@
 import logging
+from typing import Union
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import TextSearch, IndexedTextSearch
@@ -130,7 +131,7 @@ class ChatBot(object):
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)
 
-    def get_response(self, statement=None, **kwargs) -> Statement:
+    def get_response(self, statement: Union[Statement, str, dict] = None, **kwargs) -> Statement:
         """
         Return the bot's response based on the input.
 

@@ -40,7 +40,7 @@ class SpecificResponseAdapter(LogicAdapter):
 
         return spacy.load(model)
 
-    def can_process(self, statement):
+    def can_process(self, statement) -> bool:
         if self.matcher:
             doc = self.nlp(statement.text)
             matches = self.matcher(doc)
@@ -52,7 +52,7 @@ class SpecificResponseAdapter(LogicAdapter):
 
         return False
 
-    def process(self, statement, additional_response_selection_parameters=None):
+    def process(self, statement: Statement, additional_response_selection_parameters: dict = None) -> Statement:
 
         if callable(self._output_text):
             response_statement = Statement(text=self._output_text())

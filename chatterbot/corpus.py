@@ -18,7 +18,7 @@ except (ImportError, ModuleNotFoundError):
 CORPUS_EXTENSION = 'yml'
 
 
-def get_file_path(dotted_path, extension='json'):
+def get_file_path(dotted_path, extension='json') -> str:
     """
     Reads a dotted file path and returns the file path.
     """
@@ -41,7 +41,7 @@ def get_file_path(dotted_path, extension='json'):
     return corpus_path
 
 
-def read_corpus(file_name):
+def read_corpus(file_name) -> dict:
     """
     Read and return the data from a corpus json file.
     """
@@ -59,7 +59,7 @@ def read_corpus(file_name):
         return yaml.safe_load(data_file)
 
 
-def list_corpus_files(dotted_path):
+def list_corpus_files(dotted_path) -> list[str]:
     """
     Return a list of file paths to each data file in the specified corpus.
     """
