@@ -39,13 +39,11 @@ class AbstractBaseStatement(models.Model, StatementMixin):
     using the attributes that exist on the default models.
     """
 
-    text = models.CharField(
-        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
+    text = models.TextField(
         help_text='The text of the statement.'
     )
 
-    search_text = models.CharField(
-        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
+    search_text = models.TextField(
         blank=True,
         help_text='A modified version of the statement text optimized for searching.'
     )
@@ -60,14 +58,12 @@ class AbstractBaseStatement(models.Model, StatementMixin):
         help_text='The date and time that the statement was created at.'
     )
 
-    in_response_to = models.CharField(
-        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
+    in_response_to = models.TextField(
         null=True,
         help_text='The text of the statement that this statement is in response to.'
     )
 
-    search_in_response_to = models.CharField(
-        max_length=constants.STATEMENT_TEXT_MAX_LENGTH,
+    search_in_response_to = models.TextField(
         blank=True,
         help_text='A modified version of the in_response_to text optimized for searching.'
     )
