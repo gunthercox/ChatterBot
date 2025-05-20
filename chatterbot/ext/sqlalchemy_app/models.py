@@ -1,4 +1,4 @@
-from sqlalchemy import Table, Column, Integer, String, DateTime, ForeignKey
+from sqlalchemy import Table, Column, Integer, String, Text, DateTime, ForeignKey
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy.sql import func
 from sqlalchemy.ext.declarative import declared_attr
@@ -55,12 +55,10 @@ class Statement(Base, StatementMixin):
 
     confidence = 0
 
-    text = Column(
-        String(constants.STATEMENT_TEXT_MAX_LENGTH)
-    )
+    text = Column(Text)
 
     search_text = Column(
-        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        Text,
         nullable=False,
         server_default=''
     )
@@ -83,12 +81,12 @@ class Statement(Base, StatementMixin):
     )
 
     in_response_to = Column(
-        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        Text,
         nullable=True
     )
 
     search_in_response_to = Column(
-        String(constants.STATEMENT_TEXT_MAX_LENGTH),
+        Text,
         nullable=False,
         server_default=''
     )
