@@ -83,11 +83,11 @@ dev = [
     "openai"
 ]
 redis = [
-    "redis[hiredis]",
-    "langchain-redis",
-    "langchain-huggingface",
-    "accelerate",
-    "sentence-transformers",
+    "redis[hiredis]<5.3",
+    "langchain-redis<=0.2.0",
+    "langchain-huggingface<=0.1.2",
+    "accelerate<=1.6.0",
+    "sentence-transformers<=4.0.2",
 ]
 mongodb = [
     "pymongo>=4.11,<4.12",
