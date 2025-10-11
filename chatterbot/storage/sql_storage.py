@@ -142,7 +142,7 @@ class SQLStorageAdapter(StorageAdapter):
         search_in_response_to_contains = kwargs.pop('search_in_response_to_contains', None)
 
         # Convert a single sting into a list if only one tag is provided
-        if type(tags) == str:
+        if isinstance(tags, str):
             tags = [tags]
 
         if len(kwargs) == 0:

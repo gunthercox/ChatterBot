@@ -224,7 +224,6 @@ class ChatBot(object):
             # Save the response generated for the input
             self.learn_response(response, previous_statement=input_statement)
 
-
         return response
 
     def generate_response(self, input_statement, additional_response_selection_parameters=None):
@@ -345,8 +344,6 @@ class ChatBot(object):
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
-        from chatterbot.conversation import Statement as StatementObject
-
         conversation_statements = list(self.storage.filter(
             conversation=conversation,
             order_by=['id']

@@ -364,6 +364,7 @@ class GenericFileTrainer(Trainer):
                 )
             )
 
+
 class CsvFileTrainer(GenericFileTrainer):
     """
     .. note::
@@ -550,7 +551,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         self.chatbot.logger.info('File extracted to {}'.format(self.data_path))
 
         return True
-    
+
     def _get_file_list(self, data_path: str, limit: Union[int, None]):
         """
         Get a list of files to read from the data set.

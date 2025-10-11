@@ -85,7 +85,7 @@ class UnitConversion(LogicAdapter):
         for unit in unit_variations:
             try:
                 return getattr(self.unit_registry, unit)
-            except Exception:
+            except AttributeError:
                 continue
         return None
 

@@ -3,13 +3,12 @@ Redis vector store.
 """
 from __future__ import annotations
 
-from typing import Any, List, Sequence
+from typing import List
 
 from langchain_core.documents import Document
 from redisvl.redis.utils import convert_bytes
 from redisvl.query import FilterQuery
 
-from langchain_core.documents import Document
 from langchain_redis.vectorstores import RedisVectorStore as LangChainRedisVectorStore
 
 
