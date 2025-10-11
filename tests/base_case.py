@@ -4,9 +4,25 @@ from chatterbot.conversation import Statement
 
 
 class ChatBotTestCase(TestCase):
+    """
+    Base test case class that provides common test utilities.
+    """
+
+    # Share a single tagger instance across all tests in a test class to avoid
+    # repeatedly loading the spaCy model (saves 1-3 seconds per test)
+    _shared_tagger = None
+
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        if cls._shared_tagger is None:
+            from chatterbot.tagging import PosLemmaTagger
+            cls._shared_tagger = PosLemmaTagger()
 
     def setUp(self):
-        self.chatbot = ChatBot('Test Bot', **self.get_kwargs())
+        kwargs = self.get_kwargs()
+        kwargs['tagger'] = self._shared_tagger
+        self.chatbot = ChatBot('Test Bot', **kwargs)
 
     def _add_search_text(self, **kwargs):
         """

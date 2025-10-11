@@ -77,7 +77,12 @@ class ChatBot(object):
         try:
             Tagger = kwargs.get('tagger', PosLemmaTagger)
 
-            self.tagger = Tagger(language=tagger_language)
+            # Allow instances to be provided for performance optimization
+            # (Example: a pre-loaded model in a tagger when unit testing)
+            if not isinstance(Tagger, type):
+                self.tagger = Tagger
+            else:
+                self.tagger = Tagger(language=tagger_language)
         except IOError as io_error:
             # Return a more helpful error message if possible
             if "Can't find model" in str(io_error):
