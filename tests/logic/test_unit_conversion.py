@@ -34,7 +34,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 78740.2
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 1e-10)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_inches_to_kilometers_variation_1(self):
@@ -43,7 +43,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 78740.2
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 1e-10)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_inches_to_kilometers_variation_2(self):
@@ -52,7 +52,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 78740.2
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 1e-10)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_inches_to_kilometers_variation_3(self):
@@ -61,7 +61,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 78740.2
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 1e-10)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_meter_to_kilometer(self):
@@ -70,7 +70,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 1000
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_meter_to_kilometer_variation(self):
@@ -79,7 +79,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 1000
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_temperature_celsius_to_fahrenheit(self):
@@ -88,7 +88,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 32
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_negative_temperature_celsius_to_fahrenheit(self):
@@ -97,7 +97,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 31.64
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_time_two_hours_to_seconds(self):
@@ -106,7 +106,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 7200
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_pattern_x_unit_to_y_unit(self):
@@ -115,7 +115,7 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 262.15
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
 
     def test_pattern_x_unit_is_how_many_y_unit(self):
@@ -124,5 +124,5 @@ class UnitConversionTests(ChatBotTestCase):
         expected_value = 2000
         response_statement = self.adapter.process(statement)
         self.assertIsNotNone(response_statement)
-        self.assertLessEqual(abs(response_statement.confidence - 1.0), 0.1)
+        self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
