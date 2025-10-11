@@ -60,7 +60,7 @@ classifiers = [
     "Programming Language :: Python :: 3 :: Only",
 ]
 dependencies = [
-    "mathparse>=0.1,<0.2",
+    "mathparse>=0.2,<0.3",
     "python-dateutil>=2.9,<2.10",
     "sqlalchemy>=2.0,<2.1",
     "spacy>=3.8,<3.9",
