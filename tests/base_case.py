@@ -122,6 +122,9 @@ class ChatBotMongoTestCase(ChatBotTestCase):
         except ServerSelectionTimeoutError:
             raise SkipTest('Unable to connect to Mongo DB.')
 
+        # Initialize the shared tagger
+        super().setUpClass()
+
     def get_kwargs(self):
         kwargs = super().get_kwargs()
         kwargs['database_uri'] = 'mongodb://localhost:27017/chatterbot_test_database'
