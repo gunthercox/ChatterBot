@@ -33,6 +33,14 @@ class MongoAdapterTestCase(TestCase):
         except ServerSelectionTimeoutError:
             pass
 
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Close the MongoDB client connection after all tests have run.
+        """
+        if cls.has_mongo_connection:
+            cls.adapter.client.close()
+
     def setUp(self):
         """
         Skip these tests if a mongo client is not running.
