@@ -146,15 +146,17 @@ class MongoDatabaseAdapter(StorageAdapter):
             for order in order_by:
                 mongo_ordering.append((order, pymongo.ASCENDING))
 
-        total_statements = self.statements.count_documents(kwargs)
+        # Build the query cursor
+        if mongo_ordering:
+            cursor = self.statements.find(kwargs).sort(mongo_ordering)
+        else:
+            cursor = self.statements.find(kwargs)
 
-        for start_index in range(0, total_statements, page_size):
-            if mongo_ordering:
-                for match in self.statements.find(kwargs).sort(mongo_ordering).skip(start_index).limit(page_size):
-                    yield self.mongo_to_object(match)
-            else:
-                for match in self.statements.find(kwargs).skip(start_index).limit(page_size):
-                    yield self.mongo_to_object(match)
+        # Use batch_size for efficient pagination without counting total documents
+        cursor = cursor.batch_size(page_size)
+
+        for match in cursor:
+            yield self.mongo_to_object(match)
 
     def create(self, **kwargs):
         """

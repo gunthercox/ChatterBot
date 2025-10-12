@@ -16,6 +16,7 @@ REDIS_ESCAPE_CHARACTERS = {
 
 REDIS_TRANSLATION_TABLE = str.maketrans(REDIS_ESCAPE_CHARACTERS)
 
+
 def _escape_redis_special_characters(text):
     """
     Escape special characters in a string that are used in redis queries.
@@ -369,7 +370,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
             if documents:
                 return self.model_to_object(documents[0])
-        
+
         raise self.EmptyDatabaseException()
 
     def drop(self):

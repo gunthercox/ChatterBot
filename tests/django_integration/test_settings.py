@@ -15,7 +15,7 @@ INSTALLED_APPS = [
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'chatterbot.ext.django_chatterbot',
-    'tests_django',
+    'tests.django_integration',
 ]
 
 CHATTERBOT = {

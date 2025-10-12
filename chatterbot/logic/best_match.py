@@ -78,7 +78,6 @@ class BestMatch(LogicAdapter):
                 additional_response_selection_parameters
             )
 
-
         # Get all statements with text similar to the closest match
         response_list = list(self.chatbot.storage.filter(**response_selection_parameters))
 

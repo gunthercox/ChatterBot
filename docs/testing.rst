@@ -15,6 +15,8 @@ You can run ChatterBot's main test suite using Python's built-in test runner. Fo
 
    python -m unittest discover -s tests -v
 
+This command will run all tests including Django integration tests (if Django is installed).
+
 *Note* that the ``unittest`` command also allows you to specify individual test cases to run.
 For example, the following command will run all tests in the test-module `tests/logic/`
 
@@ -34,22 +36,21 @@ Tests can also be run in "fail fast" mode, in which case they will run until the
 
    python -m unittest discover -f tests
 
-For more information on ``unittest`` functionality, see the `unittest documentation`_.
-
 Django integration tests
 ------------------------
 
-Tests for Django integration have been included in the `tests_django` directory and
-can be run with:
+Django integration tests are included in ``tests/django_integration/`` and will automatically run 
+when you execute the main test suite (if Django is installed). If Django is not available, 
+these tests will be gracefully skipped.
+
+To run only Django integration tests:
 
 .. sourcecode:: sh
 
-   python runtests.py
+   python -m unittest discover -s tests/django_integration/ -v
 
-Django example app tests
-------------------------
-
-Tests for the example Django app can be run with the following command from within the `examples/django_example` directory.
+The Django example app tests can be run separately with the following command from within 
+the `examples/django_example` directory:
 
 .. sourcecode:: sh
 

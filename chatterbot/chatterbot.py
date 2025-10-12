@@ -77,7 +77,12 @@ class ChatBot(object):
         try:
             Tagger = kwargs.get('tagger', PosLemmaTagger)
 
-            self.tagger = Tagger(language=tagger_language)
+            # Allow instances to be provided for performance optimization
+            # (Example: a pre-loaded model in a tagger when unit testing)
+            if not isinstance(Tagger, type):
+                self.tagger = Tagger
+            else:
+                self.tagger = Tagger(language=tagger_language)
         except IOError as io_error:
             # Return a more helpful error message if possible
             if "Can't find model" in str(io_error):
@@ -224,7 +229,6 @@ class ChatBot(object):
             # Save the response generated for the input
             self.learn_response(response, previous_statement=input_statement)
 
-
         return response
 
     def generate_response(self, input_statement, additional_response_selection_parameters=None):
@@ -345,8 +349,6 @@ class ChatBot(object):
         Returns the latest response in a conversation if it exists.
         Returns None if a matching conversation cannot be found.
         """
-        from chatterbot.conversation import Statement as StatementObject
-
         conversation_statements = list(self.storage.filter(
             conversation=conversation,
             order_by=['id']

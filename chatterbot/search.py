@@ -74,6 +74,10 @@ class IndexedTextSearch:
 
                 yield statement
 
+                if confidence >= 1.0:
+                    self.chatbot.logger.info('Exact match found, stopping search')
+                    break
+
 
 class TextSearch:
     """
@@ -149,3 +153,7 @@ class TextSearch:
                 ))
 
                 yield statement
+
+                if confidence >= 1.0:
+                    self.chatbot.logger.info('Exact match found, stopping search')
+                    break

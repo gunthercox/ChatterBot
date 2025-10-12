@@ -142,7 +142,7 @@ class SQLStorageAdapter(StorageAdapter):
         search_in_response_to_contains = kwargs.pop('search_in_response_to_contains', None)
 
         # Convert a single sting into a list if only one tag is provided
-        if type(tags) == str:
+        if isinstance(tags, str):
             tags = [tags]
 
         if len(kwargs) == 0:
@@ -240,15 +240,18 @@ class SQLStorageAdapter(StorageAdapter):
         )
 
         tags = frozenset(tags) if tags else frozenset()
-        for tag_name in frozenset(tags):
-            # TODO: Query existing tags in bulk
-            tag = session.query(Tag).filter_by(name=tag_name).first()
 
-            if not tag:
-                # Create the tag
-                tag = Tag(name=tag_name)
+        # Batch query tags
+        if tags:
+            existing_tags = session.query(Tag).filter(Tag.name.in_(tags)).all()
+            existing_tag_dict = {tag.name: tag for tag in existing_tags}
 
-            statement.tags.append(tag)
+            for tag_name in tags:
+                tag = existing_tag_dict.get(tag_name)
+                if not tag:
+                    # Create the tag if it doesn't exist
+                    tag = Tag(name=tag_name)
+                statement.tags.append(tag)
 
         session.add(statement)
 
