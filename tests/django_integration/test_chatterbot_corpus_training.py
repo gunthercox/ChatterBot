@@ -1,4 +1,4 @@
-from tests_django.base_case import ChatterBotTestCase
+from tests.django_integration.base_case import ChatterBotTestCase
 from chatterbot.trainers import ChatterBotCorpusTrainer
 
 
