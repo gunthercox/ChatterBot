@@ -11,6 +11,7 @@ import sys
 # Check if Django is available
 try:
     import django
+    from django.core.management import call_command
     DJANGO_AVAILABLE = True
 
     # Configure Django settings immediately upon import
@@ -18,6 +19,10 @@ try:
 
     try:
         django.setup()
+
+        # Run migrations to create database tables
+        call_command('migrate', '--run-syncdb', verbosity=0, interactive=False)
+
     except Exception as e:
         print(f"Warning: Django setup failed: {e}", file=sys.stderr)
         DJANGO_AVAILABLE = False
