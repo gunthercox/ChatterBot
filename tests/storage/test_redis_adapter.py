@@ -364,7 +364,6 @@ class StorageAdapterCreateTests(RedisStorageAdapterTestCase):
         results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
-        # Results may be returned in any order, so check both are present
         results_text = [r.text for r in results]
         self.assertIn('A', results_text)
         self.assertIn('B', results_text)
@@ -377,14 +376,14 @@ class StorageAdapterCreateTests(RedisStorageAdapterTestCase):
         results = list(self.adapter.filter())
 
         self.assertEqual(len(results), 2)
-        
+
         # Find which result is which (order may vary)
         result_a = next((r for r in results if r.text == 'A'), None)
         result_b = next((r for r in results if r.text == 'B'), None)
-        
+
         self.assertIsNotNone(result_a, "Statement with text 'A' not found")
         self.assertIsNotNone(result_b, "Statement with text 'B' not found")
-        
+
         self.assertIn('letter', result_a.get_tags())
         self.assertIn('first', result_a.get_tags())
         self.assertIn('letter', result_b.get_tags())
