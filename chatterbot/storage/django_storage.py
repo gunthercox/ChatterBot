@@ -6,6 +6,9 @@ class DjangoStorageAdapter(StorageAdapter):
     """
     Storage adapter that allows ChatterBot to interact with
     Django storage backends.
+
+    :param database: The Django database alias to use (default: 'default')
+    :type database: str
     """
 
     def __init__(self, **kwargs):
@@ -15,6 +18,8 @@ class DjangoStorageAdapter(StorageAdapter):
             'django_app_name',
             constants.DEFAULT_DJANGO_APP_NAME
         )
+
+        self.database = kwargs.get('database', 'default')
 
     def get_statement_model(self):
         from django.apps import apps
@@ -26,7 +31,7 @@ class DjangoStorageAdapter(StorageAdapter):
 
     def count(self) -> int:
         Statement = self.get_model('statement')
-        return Statement.objects.count()
+        return Statement.objects.using(self.database).count()
 
     def filter(self, **kwargs):
         """
@@ -53,7 +58,7 @@ class DjangoStorageAdapter(StorageAdapter):
         if tags:
             kwargs['tags__name__in'] = tags
 
-        statements = Statement.objects.filter(**kwargs)
+        statements = Statement.objects.using(self.database).filter(**kwargs)
 
         if exclude_text:
             statements = statements.exclude(
@@ -115,12 +120,12 @@ class DjangoStorageAdapter(StorageAdapter):
 
         statement = Statement(**kwargs)
 
-        statement.save()
+        statement.save(using=self.database)
 
         tags_to_add = []
 
         for _tag in tags:
-            tag, _ = Tag.objects.get_or_create(name=_tag)
+            tag, _ = Tag.objects.using(self.database).get_or_create(name=_tag)
             tags_to_add.append(tag)
 
         statement.tags.add(*tags_to_add)
@@ -143,7 +148,7 @@ class DjangoStorageAdapter(StorageAdapter):
 
             statement_model_object = Statement(**statement_data)
 
-            statement_model_object.save()
+            statement_model_object.save(using=self.database)
 
             tags_to_add = []
 
@@ -151,7 +156,7 @@ class DjangoStorageAdapter(StorageAdapter):
                 if tag_name in tag_cache:
                     tag = tag_cache[tag_name]
                 else:
-                    tag, _ = Tag.objects.get_or_create(name=tag_name)
+                    tag, _ = Tag.objects.using(self.database).get_or_create(name=tag_name)
                     tag_cache[tag_name] = tag
                 tags_to_add.append(tag)
 
@@ -165,9 +170,9 @@ class DjangoStorageAdapter(StorageAdapter):
         Tag = self.get_model('tag')
 
         if hasattr(statement, 'id'):
-            statement.save()
+            statement.save(using=self.database)
         else:
-            statement = Statement.objects.create(
+            statement = Statement.objects.using(self.database).create(
                 text=statement.text,
                 search_text=statement.search_text,
                 conversation=statement.conversation,
@@ -177,7 +182,7 @@ class DjangoStorageAdapter(StorageAdapter):
             )
 
         for _tag in statement.tags.all():
-            tag, _ = Tag.objects.get_or_create(name=_tag)
+            tag, _ = Tag.objects.using(self.database).get_or_create(name=_tag)
 
             statement.tags.add(tag)
 
@@ -189,7 +194,7 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Statement = self.get_model('statement')
 
-        statement = Statement.objects.order_by('?').first()
+        statement = Statement.objects.using(self.database).order_by('?').first()
 
         if statement is None:
             raise self.EmptyDatabaseException()
@@ -204,7 +209,7 @@ class DjangoStorageAdapter(StorageAdapter):
         """
         Statement = self.get_model('statement')
 
-        statements = Statement.objects.filter(text=statement_text)
+        statements = Statement.objects.using(self.database).filter(text=statement_text)
 
         statements.delete()
 
@@ -215,5 +220,5 @@ class DjangoStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
         Tag = self.get_model('tag')
 
-        Statement.objects.all().delete()
-        Tag.objects.all().delete()
+        Statement.objects.using(self.database).all().delete()
+        Tag.objects.using(self.database).all().delete()
