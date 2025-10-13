@@ -4,8 +4,14 @@ from tests.django_integration import test_settings
 
 
 class ChatterBotTestCase(TransactionTestCase):
+    """
+    Base test case for ChatterBot Django integration tests.
+    """
 
     def setUp(self):
+        """
+        Set up a fresh ChatBot instance and clean database for each test.
+        """
         super().setUp()
         self.chatbot = ChatBot(**test_settings.CHATTERBOT)
 
