@@ -9,10 +9,15 @@ class DjangoStorageAdapter(StorageAdapter):
 
     :param database: The Django database alias to use (default: 'default')
     :type database: str
+    :param statement_model: The Statement model to use (default: reads from CHATTERBOT_STATEMENT_MODEL setting)
+    :type statement_model: str
+    :param tag_model: The Tag model to use (default: reads from CHATTERBOT_TAG_MODEL setting)
+    :type tag_model: str
     """
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        from django.conf import settings
 
         self.django_app_name = kwargs.get(
             'django_app_name',
@@ -21,13 +26,32 @@ class DjangoStorageAdapter(StorageAdapter):
 
         self.database = kwargs.get('database', 'default')
 
+        # Support custom models via kwargs or Django settings
+        self.statement_model = kwargs.get(
+            'statement_model',
+            getattr(
+                settings,
+                'CHATTERBOT_STATEMENT_MODEL',
+                f'{self.django_app_name}.Statement'
+            )
+        )
+
+        self.tag_model = kwargs.get(
+            'tag_model',
+            getattr(
+                settings,
+                'CHATTERBOT_TAG_MODEL',
+                f'{self.django_app_name}.Tag'
+            )
+        )
+
     def get_statement_model(self):
         from django.apps import apps
-        return apps.get_model(self.django_app_name, 'Statement')
+        return apps.get_model(self.statement_model)
 
     def get_tag_model(self):
         from django.apps import apps
-        return apps.get_model(self.django_app_name, 'Tag')
+        return apps.get_model(self.tag_model)
 
     def count(self) -> int:
         Statement = self.get_model('statement')
