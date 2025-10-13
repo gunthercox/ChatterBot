@@ -3,25 +3,15 @@ from chatterbot import constants
 from django.db import models
 from django.utils import timezone
 from django.conf import settings
+from django.apps import apps
 
 
 DJANGO_APP_NAME = constants.DEFAULT_DJANGO_APP_NAME
-STATEMENT_MODEL = 'Statement'
-TAG_MODEL = 'Tag'
 
-if hasattr(settings, 'CHATTERBOT'):
-    """
-    Allow related models to be overridden in the project settings.
-    Default to the original settings if one is not defined.
-    """
-    DJANGO_APP_NAME = settings.CHATTERBOT.get(
-        'django_app_name',
-        DJANGO_APP_NAME
-    )
-    STATEMENT_MODEL = settings.CHATTERBOT.get(
-        'statement_model',
-        STATEMENT_MODEL
-    )
+# Default model paths for swappable models
+# These can be overridden via CHATTERBOT_STATEMENT_MODEL and CHATTERBOT_TAG_MODEL settings
+DEFAULT_STATEMENT_MODEL = f'{DJANGO_APP_NAME}.Statement'
+DEFAULT_TAG_MODEL = f'{DJANGO_APP_NAME}.Tag'
 
 
 class AbstractBaseTag(models.Model):
@@ -88,7 +78,9 @@ class AbstractBaseStatement(models.Model, StatementMixin):
     )
 
     tags = models.ManyToManyField(
-        TAG_MODEL,
+        settings.CHATTERBOT_TAG_MODEL if hasattr(
+            settings, 'CHATTERBOT_TAG_MODEL'
+        ) else DEFAULT_TAG_MODEL,
         related_name='statements',
         help_text='The tags that are associated with this statement.'
     )
@@ -117,17 +109,51 @@ class AbstractBaseStatement(models.Model, StatementMixin):
             return self.text
         return '<empty>'
 
+    @classmethod
+    def get_tag_model(cls):
+        """
+        Return the Tag model class, respecting the swappable setting.
+
+        This method checks:
+        1. Django settings (CHATTERBOT_TAG_MODEL) - project-wide configuration
+        2. The model referenced by the 'tags' field - handles custom models via kwargs
+        3. Falls back to DEFAULT_TAG_MODEL if introspection fails
+
+        This ensures the correct Tag model is used even when custom models
+        are specified via storage adapter kwargs rather than Django settings.
+        """
+        tag_model_path = getattr(settings, 'CHATTERBOT_TAG_MODEL', None)
+
+        if tag_model_path:
+            return apps.get_model(tag_model_path)
+
+        # If no setting, infer from the ManyToManyField relationship for
+        # cases where custom models are specified via kwargs
+        try:
+            # Get the model that this class's 'tags' field points to
+            tags_field = cls._meta.get_field('tags')
+            related_model = tags_field.related_model
+
+            # Resolve strings (lazy references)
+            if isinstance(related_model, str):
+                return apps.get_model(related_model)
+            return related_model
+        except Exception:
+            # Fallback to default if introspection fails
+            return apps.get_model(DEFAULT_TAG_MODEL)
+
     def get_tags(self) -> list[str]:
         """
         Return the list of tags for this statement.
-        (Overrides the method from StatementMixin)
         """
         return list(self.tags.values_list('name', flat=True))
 
     def add_tags(self, *tags):
         """
         Add a list of strings to the statement as tags.
-        (Overrides the method from StatementMixin)
         """
-        for _tag in tags:
-            self.tags.get_or_create(name=_tag)
+        TagModel = self.get_tag_model()
+
+        for tag_name in tags:
+            tag_obj, _created = TagModel.objects.get_or_create(name=tag_name)
+            self.tags.add(tag_obj)

@@ -58,6 +58,7 @@ Django App Development
    :maxdepth: 2
 
    settings
+   custom-models
    views
    wsgi
 
