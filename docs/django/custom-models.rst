@@ -169,7 +169,12 @@ Required Methods
 
 - ``get_tags()`` - Returns list of tag name strings
 - ``add_tags(*tags)`` - Adds tags to the statement
-- ``__str__()`` - String representation (inherited from abstract base)
+- ``__str__()`` - String representation
+
+.. note::
+   These methods are already implemented in ``AbstractBaseStatement`` and will work correctly 
+   with your custom Tag model through automatic detection. You only need to override them if 
+   you need custom behavior.
 
 Your custom Tag model **must include**:
 
@@ -204,6 +209,34 @@ This is useful when running multiple bots with different schemas:
    )
 
 The ``statement_model`` and ``tag_model`` kwargs take precedence over Django settings.
+
+Tag Model Detection
+-------------------
+
+ChatterBot automatically detects which Tag model to use through a smart fallback system:
+
+1. **Django Settings** - First checks ``CHATTERBOT_TAG_MODEL`` setting (project-wide config)
+2. **Field Introspection** - If no setting exists, introspects the Statement model's ``tags`` 
+   field to determine which Tag model it references (handles per-instance kwargs)
+3. **Default Fallback** - Falls back to ``'django_chatterbot.Tag'`` if detection fails
+
+This ensures that ``add_tags()`` always uses the correct Tag model, whether you configure
+custom models via Django settings or storage adapter kwargs.
+
+.. code-block:: python
+   :caption: Example: Field introspection in action
+
+   # When you define your Statement model like this:
+   class CustomStatement(AbstractBaseStatement):
+       tags = models.ManyToManyField('CustomTag', related_name='statements')
+       # ...
+
+   # ChatterBot's get_tag_model() will introspect the tags field
+   # and automatically detect that it should use CustomTag,
+   # even if CHATTERBOT_TAG_MODEL is not set in settings.
+
+This automatic detection is especially important when using the per-instance configuration
+approach, as it ensures consistent behavior without requiring Django settings changes.
 
 Usage Examples
 ==============
@@ -397,8 +430,13 @@ Tags Relationship Error
 If you get errors about the tags relationship:
 
 - Ensure your Statement model has a ``tags`` ManyToManyField
-- The field must reference your custom Tag model
+- The field must reference your custom Tag model (e.g., ``'CustomTag'`` or ``'myapp.CustomTag'``)
 - Use ``related_name='statements'``
+
+.. note::
+   ChatterBot automatically detects which Tag model to use by introspecting your Statement 
+   model's ``tags`` field. This means ``add_tags()`` will work correctly even when you 
+   specify custom models via storage adapter kwargs instead of Django settings.
 
 Migration Conflicts
 -------------------
@@ -412,6 +450,6 @@ If migrations conflict:
 See Also
 ========
 
-- :doc:`/django/settings` - Django settings reference
-- :doc:`/storage/django-storage-adapter` - Django storage adapter documentation
+- :doc:`settings` - Django settings reference
+- :doc:`index` - Django integration overview
 - :doc:`/training` - Training your chatbot

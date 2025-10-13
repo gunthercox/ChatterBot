@@ -24,6 +24,36 @@ Additional Django settings
 - ``django_app_name`` [default: 'django_chatterbot'] The Django app name to look up the models from.
 - ``database`` [default: 'default'] The Django database alias to use for ChatterBot data storage.
 
+Swappable Model Settings
+=========================
+
+ChatterBot supports custom Statement and Tag models similar to Django's ``AUTH_USER_MODEL`` pattern:
+
+- ``CHATTERBOT_STATEMENT_MODEL`` [default: 'django_chatterbot.Statement'] The Statement model to use.
+- ``CHATTERBOT_TAG_MODEL`` [default: 'django_chatterbot.Tag'] The Tag model to use.
+
+.. code-block:: python
+   :caption: settings.py
+
+   # Use custom models
+   CHATTERBOT_STATEMENT_MODEL = 'myapp.CustomStatement'
+   CHATTERBOT_TAG_MODEL = 'myapp.CustomTag'
+
+These settings can be overridden per ChatBot instance using the ``statement_model`` and 
+``tag_model`` kwargs on the storage adapter. See :doc:`custom-models` for details.
+
+.. code-block:: python
+   :caption: Per-instance configuration
+
+   from chatterbot import ChatBot
+
+   bot = ChatBot(
+       'My Bot',
+       storage_adapter='chatterbot.storage.DjangoStorageAdapter',
+       statement_model='myapp.CustomStatement',
+       tag_model='myapp.CustomTag'
+   )
+
 Using a Secondary Database
 ===========================
 
