@@ -113,13 +113,34 @@ class AbstractBaseStatement(models.Model, StatementMixin):
     def get_tag_model(cls):
         """
         Return the Tag model class, respecting the swappable setting.
+
+        This method checks:
+        1. Django settings (CHATTERBOT_TAG_MODEL) - project-wide configuration
+        2. The model referenced by the 'tags' field - handles custom models via kwargs
+        3. Falls back to DEFAULT_TAG_MODEL if introspection fails
+
+        This ensures the correct Tag model is used even when custom models
+        are specified via storage adapter kwargs rather than Django settings.
         """
-        tag_model_path = getattr(
-            settings,
-            'CHATTERBOT_TAG_MODEL',
-            DEFAULT_TAG_MODEL
-        )
-        return apps.get_model(tag_model_path)
+        tag_model_path = getattr(settings, 'CHATTERBOT_TAG_MODEL', None)
+
+        if tag_model_path:
+            return apps.get_model(tag_model_path)
+
+        # If no setting, infer from the ManyToManyField relationship for
+        # cases where custom models are specified via kwargs
+        try:
+            # Get the model that this class's 'tags' field points to
+            tags_field = cls._meta.get_field('tags')
+            related_model = tags_field.related_model
+
+            # Resolve strings (lazy references)
+            if isinstance(related_model, str):
+                return apps.get_model(related_model)
+            return related_model
+        except Exception:
+            # Fallback to default if introspection fails
+            return apps.get_model(DEFAULT_TAG_MODEL)
 
     def get_tags(self) -> list[str]:
         """
