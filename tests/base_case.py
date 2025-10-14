@@ -85,6 +85,7 @@ class ChatBotTestCase(TestCase):
         Remove the test database.
         """
         self.chatbot.storage.drop()
+        self.chatbot.storage.close()
 
     def assertIsLength(self, item, length):
         """
