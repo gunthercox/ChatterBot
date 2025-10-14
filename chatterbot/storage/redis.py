@@ -245,6 +245,71 @@ class RedisVectorStorageAdapter(StorageAdapter):
             else:
                 filter_condition = query
 
+        # Handle search_text parameter (used by BestMatch logic adapter)
+        # BestMatch uses search_text to find statements with matching indexed text.
+        # Since Redis doesn't store search_text as a field, we approximate this by:
+        # 1. Using the search_text value as a semantic query against in_response_to
+        # 2. This finds statements that are responses to similar inputs
+        # The effect is similar to BestMatch's Phase 2: finding alternate responses
+        if 'search_text' in kwargs:
+            _search_text = kwargs.get('search_text', '')
+
+            # Use direct index query via RedisVL
+            # Search on the vectorized content (in_response_to) to find similar response patterns
+            from redisvl.query import VectorQuery
+
+            # Get embedding for the search text
+            # Note: search_text may be indexed (e.g., "NOUN:cat VERB:run") so this
+            # approximates finding responses to semantically similar queries
+            embedding = self.vector_store.embeddings.embed_query(_search_text)
+
+            # Build return fields from metadata schema
+            return_fields = [
+                'text', 'in_response_to', 'conversation', 'persona', 'tags', 'created_at'
+            ]
+
+            # Create vector query
+            query = VectorQuery(
+                vector=embedding,
+                vector_field_name='embedding',
+                return_fields=return_fields,
+                num_results=page_size,
+                filter_expression=filter_condition
+            )
+
+            # Execute query
+            results = self.vector_store.index.query(query)
+
+            # Convert results to Document objects
+            Document = self.get_statement_model()
+            documents = []
+            for result in results:
+                # Extract metadata and content
+                in_response_to = result.get('in_response_to', '')
+
+                # Convert created_at from integer (YYMMDD) to datetime
+                created_at_int = int(result.get('created_at', 0))
+                if created_at_int:
+                    created_at = datetime.strptime(str(created_at_int), '%y%m%d')
+                else:
+                    created_at = datetime.now()
+
+                metadata = {
+                    'text': result.get('text', ''),
+                    'conversation': result.get('conversation', ''),
+                    'persona': result.get('persona', ''),
+                    'tags': result.get('tags', ''),
+                    'created_at': created_at,
+                }
+                doc = Document(
+                    page_content=in_response_to,
+                    metadata=metadata,
+                    id=result['id']
+                )
+                documents.append(doc)
+
+            return [self.model_to_object(document) for document in documents]
+
         ordering = kwargs.get('order_by', None)
 
         if ordering:
@@ -406,9 +471,24 @@ class RedisVectorStorageAdapter(StorageAdapter):
             # to ensure a duplicate entry is not created
             client = self.vector_store.index.client
             client.delete(statement.id)
-            self.vector_store.add_texts(
-                [document.page_content], [metadata], keys=[statement.id.split('::')[1]]
+
+            # Extract the key portion from the ID
+            # IDs have the format 'chatterbot::key' (:: is the standard delimiter)
+            # We need just 'key' for add_texts
+            key = statement.id.split('::')[1]
+
+            # Note: langchain-redis has an inconsistency - it uses :: for auto-generated
+            # IDs but : (single colon) when keys are explicitly provided
+            ids = self.vector_store.add_texts(
+                [document.page_content], [metadata], keys=[key]
             )
+
+            # Normalize the ID to use :: delimiter (if langchain-redis returned single colon)
+            if ids and ':' in ids[0] and '::' not in ids[0]:
+                # Replace first occurrence of single colon with double colon
+                normalized_id = ids[0].replace(':', '::', 1)
+                # Update the key in Redis to use the correct format
+                client.rename(ids[0], normalized_id)
         else:
             self.vector_store.add_documents([document])
 
