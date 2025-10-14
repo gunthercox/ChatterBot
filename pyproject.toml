@@ -85,7 +85,7 @@ dev = [
 ]
 redis = [
     "redis[hiredis]<5.3",
-    "langchain-redis<=0.2.1",
+    "langchain-redis<=0.2.5",
     "langchain-huggingface<=0.1.2",
     "accelerate<=1.6.0",
     "sentence-transformers<=4.0.2",
