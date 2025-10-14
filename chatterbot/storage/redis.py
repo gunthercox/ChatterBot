@@ -1,4 +1,5 @@
 from datetime import datetime
+import json
 import re
 from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement as StatementObject
@@ -156,7 +157,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
-        self.vector_store.delete(ids=[statement.id.split(':')[1]])
+        client = self.vector_store.index.client
+        client.delete(statement.id)
 
     def filter(self, page_size=4, **kwargs):
         """
@@ -178,6 +180,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             - search_in_response_to_contains
             - order_by
         """
+        from redisvl.query import VectorQuery
         from redisvl.query.filter import Tag, Text
 
         # https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/query_syntax/
@@ -250,14 +253,56 @@ class RedisVectorStorageAdapter(StorageAdapter):
         if 'search_in_response_to_contains' in kwargs:
             _search_text = kwargs.get('search_in_response_to_contains', '')
 
-            # TODO similarity_search_with_score
-            documents = self.vector_store.similarity_search(
-                _search_text,
-                k=page_size,  # The number of results to return
-                return_all=True,  # Include the full document with IDs
-                filter=filter_condition,
-                sort_by=ordering
+            # Get embedding for the search text
+            embedding = self.vector_store.embeddings.embed_query(_search_text)
+
+            # Build return fields from metadata schema
+            return_fields = [
+                'text', 'in_response_to', 'conversation', 'persona', 'tags', 'created_at'
+            ]
+
+            # Use direct index query via RedisVL
+            # langchain's similarity_search has issues with filters in v0.2.4
+            # and may not work properly with existing indexes
+            # TODO: Look into similarity_search_with_score implementation
+            query = VectorQuery(
+                vector=embedding,
+                vector_field_name='embedding',
+                return_fields=return_fields,
+                num_results=page_size,
+                filter_expression=filter_condition
             )
+
+            # Execute query
+            results = self.vector_store.index.query(query)
+
+            # Convert results to Document objects
+            Document = self.get_statement_model()
+            documents = []
+            for result in results:
+                # Extract metadata and content
+                in_response_to = result.get('in_response_to', '')
+
+                # Convert created_at from integer (YYMMDD) to datetime
+                created_at_int = int(result.get('created_at', 0))
+                if created_at_int:
+                    created_at = datetime.strptime(str(created_at_int), '%y%m%d')
+                else:
+                    created_at = datetime.now()
+
+                metadata = {
+                    'text': result.get('text', ''),
+                    'conversation': result.get('conversation', ''),
+                    'persona': result.get('persona', ''),
+                    'tags': result.get('tags', ''),
+                    'created_at': created_at,
+                }
+                doc = Document(
+                    page_content=in_response_to,
+                    metadata=metadata,
+                    id=result['id']
+                )
+                documents.append(doc)
         else:
             documents = self.vector_store.query_search(
                 k=page_size,
@@ -304,6 +349,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
         statement = StatementObject(
             id=ids[0],
             text=text,
+            in_response_to=in_response_to,
             **metadata
         )
         return statement
@@ -358,9 +404,10 @@ class RedisVectorStorageAdapter(StorageAdapter):
         if statement.id:
             # When updating with an existing ID, first delete the old entry
             # to ensure a duplicate entry is not created
-            self.vector_store.delete(ids=[statement.id.split(':')[1]])
+            client = self.vector_store.index.client
+            client.delete(statement.id)
             self.vector_store.add_texts(
-                [document.page_content], [metadata], keys=[statement.id.split(':')[1]]
+                [document.page_content], [metadata], keys=[statement.id.split('::')[1]]
             )
         else:
             self.vector_store.add_documents([document])
@@ -374,12 +421,31 @@ class RedisVectorStorageAdapter(StorageAdapter):
         random_key = client.randomkey()
 
         if random_key:
-            random_id = random_key.decode().split(':')[1]
+            # Get the hash data from Redis
+            data = client.hgetall(random_key)
 
-            documents = self.vector_store.get_by_ids([random_id])
+            if data and b'_metadata_json' in data:
+                # Parse the metadata
+                metadata = json.loads(data[b'_metadata_json'].decode())
 
-            if documents:
-                return self.model_to_object(documents[0])
+                # Convert created_at from integer (YYMMDD) back to datetime
+                if 'created_at' in metadata and isinstance(metadata['created_at'], int):
+                    created_at_str = str(metadata['created_at'])
+                    # Parse YYMMDD format
+                    metadata['created_at'] = datetime.strptime(created_at_str, '%y%m%d')
+
+                # Get the in_response_to from the hash
+                in_response_to = data.get(b'in_response_to', b'').decode()
+
+                # Create a Document-like object to use with model_to_object
+                Document = self.get_statement_model()
+                document = Document(
+                    page_content=in_response_to if in_response_to else '',
+                    metadata=metadata,
+                    id=random_key.decode()
+                )
+
+                return self.model_to_object(document)
 
         raise self.EmptyDatabaseException()
 
