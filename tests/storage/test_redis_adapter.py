@@ -1,8 +1,14 @@
+import sys
+import unittest
 from unittest import TestCase
 from chatterbot.conversation import Statement
 from chatterbot.storage.redis import RedisVectorStorageAdapter
 
 
+@unittest.skipIf(
+    sys.version_info < (3, 10),
+    'The Redis adapter requires Python 3.10+'
+)
 class RedisStorageAdapterTestCase(TestCase):
 
     @classmethod
