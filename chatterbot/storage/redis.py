@@ -1,27 +1,25 @@
 from datetime import datetime
+import re
 from chatterbot.storage import StorageAdapter
 from chatterbot.conversation import Statement as StatementObject
-
-
-# TODO: This list may not be exhaustive.
-# Is there a full list of characters reserved by redis?
-REDIS_ESCAPE_CHARACTERS = {
-    '\\': '\\\\',
-    ':': '\\:',
-    '|': '\\|',
-    '%': '\\%',
-    '!': '\\!',
-    '-': '\\-',
-}
-
-REDIS_TRANSLATION_TABLE = str.maketrans(REDIS_ESCAPE_CHARACTERS)
 
 
 def _escape_redis_special_characters(text):
     """
     Escape special characters in a string that are used in redis queries.
+
+    This function escapes characters that would interfere with the query syntax
+    used in the filter() method, specifically:
+    - Pipe (|) which is used as the OR operator when joining search terms
+    - Characters that could break the wildcard pattern matching
     """
-    return text.translate(REDIS_TRANSLATION_TABLE)
+    from redisvl.query.filter import TokenEscaper
+
+    # Remove space (last character) and add pipe
+    escape_pattern = TokenEscaper.DEFAULT_ESCAPED_CHARS.rstrip(' ]') + r'\|]'
+
+    escaper = TokenEscaper(escape_chars_re=re.compile(escape_pattern))
+    return escaper.escape(text)
 
 
 class RedisVectorStorageAdapter(StorageAdapter):
@@ -284,13 +282,16 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
         _default_date = datetime.now()
 
+        # Prevent duplicate tag entries in the database
+        unique_tags = list(set(tags)) if tags else []
+
         metadata = {
             'text': text,
             'category': kwargs.get('category', ''),
             # NOTE: `created_at` must have a valid numeric value or results will
             # not be returned for similarity_search for some reason
             'created_at': kwargs.get('created_at') or int(_default_date.strftime('%y%m%d')),
-            'tags': '|'.join(tags) if tags else '',
+            'tags': '|'.join(unique_tags) if unique_tags else '',
             'conversation': kwargs.get('conversation', ''),
             'persona': kwargs.get('persona', ''),
         }
@@ -298,7 +299,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
         ids = self.vector_store.add_texts([in_response_to or ''], [metadata])
 
         metadata['created_at'] = _default_date
-        metadata['tags'] = tags or []
+        metadata['tags'] = unique_tags
         metadata.pop('text')
         statement = StatementObject(
             id=ids[0],
@@ -320,7 +321,10 @@ class RedisVectorStorageAdapter(StorageAdapter):
                     'conversation': statement.conversation or '',
                     'created_at': int(statement.created_at.strftime('%y%m%d')),
                     'persona': statement.persona or '',
-                    'tags': '|'.join(statement.tags) if statement.tags else '',
+                    # Prevent duplicate tag entries in the database
+                    'tags': '|'.join(
+                        list(set(statement.tags))
+                    ) if statement.tags else '',
                 }
             ) for statement in statements
         ]
@@ -334,12 +338,15 @@ class RedisVectorStorageAdapter(StorageAdapter):
         Modifies an entry in the database.
         Creates an entry if one does not exist.
         """
+        # Prevent duplicate tag entries in the database
+        unique_tags = list(set(statement.tags)) if statement.tags else []
+
         metadata = {
             'text': statement.text,
             'conversation': statement.conversation or '',
             'created_at': int(statement.created_at.strftime('%y%m%d')),
             'persona': statement.persona or '',
-            'tags': '|'.join(statement.tags) if statement.tags else '',
+            'tags': '|'.join(unique_tags) if unique_tags else '',
         }
 
         Document = self.get_statement_model()
@@ -349,6 +356,9 @@ class RedisVectorStorageAdapter(StorageAdapter):
         )
 
         if statement.id:
+            # When updating with an existing ID, first delete the old entry
+            # to ensure a duplicate entry is not created
+            self.vector_store.delete(ids=[statement.id.split(':')[1]])
             self.vector_store.add_texts(
                 [document.page_content], [metadata], keys=[statement.id.split(':')[1]]
             )
@@ -389,3 +399,11 @@ class RedisVectorStorageAdapter(StorageAdapter):
         # we want is to delete all the keys in the index, but
         # keep the index itself)
         # self.vector_store.index.delete(drop=True)
+
+    def close(self):
+        """
+        Close the Redis client connection.
+        """
+        if hasattr(self, 'vector_store') and hasattr(self.vector_store, 'index'):
+            if hasattr(self.vector_store.index, 'client'):
+                self.vector_store.index.client.close()
