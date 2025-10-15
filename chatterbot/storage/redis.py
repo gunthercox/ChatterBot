@@ -254,10 +254,6 @@ class RedisVectorStorageAdapter(StorageAdapter):
         if 'search_text' in kwargs:
             _search_text = kwargs.get('search_text', '')
 
-            # Use direct index query via RedisVL
-            # Search on the vectorized content (in_response_to) to find similar response patterns
-            from redisvl.query import VectorQuery
-
             # Get embedding for the search text
             # Note: search_text may be indexed (e.g., "NOUN:cat VERB:run") so this
             # approximates finding responses to semantically similar queries
@@ -268,7 +264,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 'text', 'in_response_to', 'conversation', 'persona', 'tags', 'created_at'
             ]
 
-            # Create vector query
+            # Use direct index query via RedisVL
+            # Search on the vectorized content (in_response_to) to find similar response patterns
             query = VectorQuery(
                 vector=embedding,
                 vector_field_name='embedding',
@@ -472,13 +469,16 @@ class RedisVectorStorageAdapter(StorageAdapter):
             client = self.vector_store.index.client
             client.delete(statement.id)
 
-            # Extract the key portion from the ID
-            # IDs have the format 'chatterbot::key' (:: is the standard delimiter)
-            # We need just 'key' for add_texts
-            key = statement.id.split('::')[1]
-
-            # Note: langchain-redis has an inconsistency - it uses :: for auto-generated
+            # NOTE: langchain-redis has an inconsistency - it uses :: for auto-generated
             # IDs but : (single colon) when keys are explicitly provided
+            if '::' in statement.id:
+                key = statement.id.split('::', 1)[1]
+            elif ':' in statement.id:
+                key = statement.id.split(':', 1)[1]
+            else:
+                # If no delimiter found, use the entire ID as the key
+                key = statement.id
+
             ids = self.vector_store.add_texts(
                 [document.page_content], [metadata], keys=[key]
             )
