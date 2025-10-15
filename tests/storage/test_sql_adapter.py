@@ -12,6 +12,13 @@ class SQLStorageAdapterTestCase(TestCase):
         """
         cls.adapter = SQLStorageAdapter(database_uri=None, raise_on_missing_search_text=False)
 
+    @classmethod
+    def tearDownClass(cls):
+        """
+        Close the adapter connection after all tests are run.
+        """
+        cls.adapter.close()
+
     def tearDown(self):
         """
         Drop the tables in the database after each test is run.
@@ -24,10 +31,12 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
     def test_set_database_uri_none(self):
         adapter = SQLStorageAdapter(database_uri=None)
         self.assertEqual(adapter.database_uri, 'sqlite://')
+        adapter.close()
 
     def test_set_database_uri(self):
         adapter = SQLStorageAdapter(database_uri='sqlite:///db.sqlite3')
         self.assertEqual(adapter.database_uri, 'sqlite:///db.sqlite3')
+        adapter.close()
 
     def test_count_returns_zero(self):
         """

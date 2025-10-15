@@ -18,7 +18,7 @@ version = {attr = "chatterbot.__version__"}
 
 [project]
 name = "ChatterBot"
-requires-python = ">=3.9,<3.13"
+requires-python = ">=3.9,<3.14"
 urls = { Documentation = "https://docs.chatterbot.us", Repository = "https://github.com/gunthercox/ChatterBot", Changelog = "https://github.com/gunthercox/ChatterBot/releases" }
 description = "ChatterBot is a machine learning, conversational dialog engine"
 authors = [
@@ -85,7 +85,7 @@ dev = [
 ]
 redis = [
     "redis[hiredis]<5.3",
-    "langchain-redis<=0.2.0",
+    "langchain-redis<=0.2.5",
     "langchain-huggingface<=0.1.2",
     "accelerate<=1.6.0",
     "sentence-transformers<=4.0.2",

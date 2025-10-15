@@ -410,3 +410,11 @@ class SQLStorageAdapter(StorageAdapter):
         """
         from chatterbot.ext.sqlalchemy_app.models import Base
         Base.metadata.create_all(self.engine)
+
+    def close(self):
+        """
+        Close the database connection and dispose of the engine.
+        This ensures proper cleanup of resources.
+        """
+        if hasattr(self, 'engine'):
+            self.engine.dispose()

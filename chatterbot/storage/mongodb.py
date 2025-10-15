@@ -250,3 +250,10 @@ class MongoDatabaseAdapter(StorageAdapter):
         Remove the database.
         """
         self.client.drop_database(self.database.name)
+
+    def close(self):
+        """
+        Close the MongoDB client connection.
+        """
+        if hasattr(self, 'client'):
+            self.client.close()

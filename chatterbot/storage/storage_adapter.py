@@ -165,6 +165,14 @@ class StorageAdapter(object):
             'The `drop` method is not implemented by this adapter.'
         )
 
+    def close(self):
+        """
+        Close any open connections or sessions.
+        This method should be called when the storage adapter is no longer needed
+        to properly clean up resources and avoid resource warnings.
+        """
+        pass
+
     class EmptyDatabaseException(Exception):
 
         def __init__(self, message=None):
