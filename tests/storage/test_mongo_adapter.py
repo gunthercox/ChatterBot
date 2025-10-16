@@ -15,6 +15,8 @@ class MongoAdapterTestCase(TestCase):
 
         cls.has_mongo_connection = False
 
+        cls.database_uri = 'mongodb://localhost:27017/chatterbot_test_database'
+
         try:
             client = MongoClient(
                 serverSelectionTimeoutMS=0.1
@@ -22,7 +24,7 @@ class MongoAdapterTestCase(TestCase):
             client.server_info()
 
             cls.adapter = MongoDatabaseAdapter(
-                database_uri='mongodb://localhost:27017/chatterbot_test_database',
+                database_uri=cls.database_uri,
                 raise_on_missing_search_text=False
             )
 
@@ -71,6 +73,27 @@ class MongoDatabaseAdapterTestCase(MongoAdapterTestCase):
         """
         self.adapter.create(text="Test statement")
         self.assertEqual(self.adapter.count(), 1)
+
+    def test_mongodb_client_kwargs_parameter(self):
+        """
+        Test that the adapter accepts mongodb_client_kwargs parameter.
+        This enables SSL/TLS connections to services like Amazon DocumentDB.
+        """
+        adapter = MongoDatabaseAdapter(
+            database_uri=self.database_uri,
+            mongodb_client_kwargs={
+                'serverSelectionTimeoutMS': 100,
+                'connectTimeoutMS': 100
+            },
+            raise_on_missing_search_text=False
+        )
+
+        # Verify the adapter was created successfully
+        self.assertIsNotNone(adapter)
+        self.assertIsNotNone(adapter.client)
+
+        # Clean up
+        adapter.close()
 
     def test_filter_text_statement_not_found(self):
         """
