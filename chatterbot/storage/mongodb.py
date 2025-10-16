@@ -13,9 +13,21 @@ class MongoDatabaseAdapter(StorageAdapter):
                            `MongoDB connection string <https://docs.mongodb.com/manual/reference/connection-string/>`_
     :type database_uri: str
 
+    :keyword mongodb_client_kwargs: Additional keyword arguments to pass to the MongoClient constructor.
+                                    This can include SSL/TLS settings, authentication options, and other
+                                    PyMongo client configuration parameters.
+    :type mongodb_client_kwargs: dict
+
     .. code-block:: python
 
+       # Basic connection
        database_uri='mongodb://example.com:8100/'
+
+       # Connection with SSL/TLS (e.g., Amazon DocumentDB)
+       database_uri='mongodb://USER:PASSWORD@my.cluster.us-west-x.docdb.amazonaws.com:27017/?ssl=true&replicaSet=rs0',
+       mongodb_client_kwargs={
+           'tlsCAFile': 'path/to/rds-combined-ca-bundle.pem'
+       }
     """
 
     def __init__(self, **kwargs):
@@ -27,8 +39,11 @@ class MongoDatabaseAdapter(StorageAdapter):
             'database_uri', 'mongodb://localhost:27017/chatterbot-database'
         )
 
-        # Use the default host and port
-        self.client = MongoClient(self.database_uri)
+        # Extract additional MongoClient parameters
+        mongodb_client_kwargs = kwargs.get('mongodb_client_kwargs', {})
+
+        # Use the default host and port with additional client parameters
+        self.client = MongoClient(self.database_uri, **mongodb_client_kwargs)
 
         # Increase the sort buffer to 42M if possible
         try:
