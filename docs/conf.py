@@ -28,6 +28,7 @@ extensions = [
     'github',
     'canonical',
     'sphinx_sitemap',
+    'sphinxcontrib.mermaid',
 ]
 
 # Sphinx Sitemap Plugin Configuration
