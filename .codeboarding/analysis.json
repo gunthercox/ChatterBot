@@ -1,0 +1,256 @@
+{
+  "description": "The ChatterBot architecture is designed around a central `Chatbot Core Engine` that orchestrates the conversational flow. User input is first handled by `Input/Output Processors` for cleaning and parsing. The processed input is then fed to the `Chatbot Core Engine`, which delegates the task of generating a response to `Logic & Response Adapters`. These adapters interact with the `Data Storage & Training` component to retrieve conversational data and knowledge. For advanced generative capabilities, the `Chatbot Core Engine` can also interact with the `LLM Integration` component. The `Data Storage & Training` component is responsible for persisting conversational data and providing training mechanisms. This modular design allows for flexible extension and customization of the chatbot's behavior and knowledge base.",
+  "components": [
+    {
+      "name": "Chatbot Core Engine",
+      "description": "The central orchestrator, managing conversation flow, input processing, and response generation. It coordinates all other components.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.ChatBot",
+          "reference_file": "chatterbot/chatterbot.py",
+          "reference_start_line": 13,
+          "reference_end_line": 361
+        }
+      ],
+      "assigned_files": [
+        "examples/basic_example.py",
+        "examples/terminal_example.py",
+        "examples/terminal_mongo_example.py",
+        "examples/tkinter_gui.py",
+        "examples/django_example/django_example/views.py",
+        "examples/learning_feedback_example.py",
+        "chatterbot/__main__.py",
+        "chatterbot/conversation.py",
+        "chatterbot/chatterbot.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Logic & Response Adapters",
+      "description": "A collection of specialized modules that determine how the chatbot responds to specific types of input, including statement comparison and response selection logic.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.logic.logic_adapter.LogicAdapter",
+          "reference_file": "chatterbot/logic/logic_adapter.py",
+          "reference_start_line": 10,
+          "reference_end_line": 136
+        },
+        {
+          "qualified_name": "chatterbot.comparisons",
+          "reference_file": "chatterbot/comparisons.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "chatterbot.response_selection",
+          "reference_file": "chatterbot/response_selection.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "examples/specific_response_example.py",
+        "examples/math_and_time.py",
+        "examples/convert_units.py",
+        "examples/default_response_example.py",
+        "chatterbot/search.py",
+        "chatterbot/response_selection.py",
+        "chatterbot/vectorstores.py",
+        "chatterbot/filters.py",
+        "chatterbot/comparisons.py",
+        "chatterbot/logic/unit_conversion.py",
+        "chatterbot/logic/mathematical_evaluation.py",
+        "chatterbot/logic/logic_adapter.py",
+        "chatterbot/logic/best_match.py",
+        "chatterbot/logic/specific_response.py",
+        "chatterbot/logic/time_adapter.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Data Storage & Training",
+      "description": "Manages the persistence and retrieval of conversational data (statements, responses), handles the entire training lifecycle, and loads corpus data.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.storage.storage_adapter.StorageAdapter",
+          "reference_file": "chatterbot/storage/storage_adapter.py",
+          "reference_start_line": 4,
+          "reference_end_line": 179
+        },
+        {
+          "qualified_name": "chatterbot.trainers",
+          "reference_file": "chatterbot/trainers.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "chatterbot.corpus",
+          "reference_file": "chatterbot/corpus.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "examples/training_example_chatterbot_corpus.py",
+        "examples/tagged_dataset_example.py",
+        "examples/memory_sql_example.py",
+        "examples/training_example_list_data.py",
+        "examples/training_example_ubuntu_corpus.py",
+        "examples/export_example.py",
+        "examples/django_example/django_example/management/commands/train.py",
+        "chatterbot/corpus.py",
+        "chatterbot/tagging.py",
+        "chatterbot/trainers.py",
+        "chatterbot/ext/django_chatterbot/models.py",
+        "chatterbot/ext/django_chatterbot/abstract_models.py",
+        "chatterbot/ext/sqlalchemy_app/models.py",
+        "chatterbot/storage/storage_adapter.py",
+        "chatterbot/storage/mongodb.py",
+        "chatterbot/storage/redis.py",
+        "chatterbot/storage/sql_storage.py",
+        "chatterbot/storage/django_storage.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Input/Output Processors",
+      "description": "Responsible for preprocessing raw user input (e.g., cleaning whitespace, parsing dates) before it reaches the core engine, and potentially post-processing responses.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.preprocessors",
+          "reference_file": "chatterbot/chatterbot.py",
+          "reference_start_line": 118,
+          "reference_end_line": 118
+        },
+        {
+          "qualified_name": "chatterbot.parsing",
+          "reference_file": "chatterbot/parsing.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "chatterbot/parsing.py",
+        "chatterbot/preprocessors.py",
+        "chatterbot/languages.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "LLM Integration",
+      "description": "Provides an abstract interface for integrating Large Language Models, allowing ChatterBot to leverage advanced generative capabilities for responses.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.llm",
+          "reference_file": "chatterbot/llm.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "examples/openai_example.py",
+        "examples/ollama_example.py",
+        "chatterbot/llm.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "examples/__init__.py",
+        "examples/django_example/manage.py",
+        "examples/django_example/django_example/asgi.py",
+        "examples/django_example/django_example/__init__.py",
+        "examples/django_example/django_example/settings.py",
+        "examples/django_example/django_example/wsgi.py",
+        "examples/django_example/django_example/urls.py",
+        "examples/django_example/django_example/management/__init__.py",
+        "examples/django_example/django_example/management/commands/__init__.py",
+        "docs/conf.py",
+        "docs/_ext/github.py",
+        "docs/_ext/canonical.py",
+        "chatterbot/__init__.py",
+        "chatterbot/adapters.py",
+        "chatterbot/constants.py",
+        "chatterbot/utils.py",
+        "chatterbot/components.py",
+        "chatterbot/exceptions.py",
+        "chatterbot/ext/__init__.py",
+        "chatterbot/ext/django_chatterbot/__init__.py",
+        "chatterbot/ext/django_chatterbot/apps.py",
+        "chatterbot/ext/django_chatterbot/settings.py",
+        "chatterbot/ext/django_chatterbot/model_admin.py",
+        "chatterbot/ext/django_chatterbot/admin.py",
+        "chatterbot/ext/django_chatterbot/migrations/0014_remove_statement_extra_data.py",
+        "chatterbot/ext/django_chatterbot/migrations/__init__.py",
+        "chatterbot/ext/django_chatterbot/migrations/0005_statement_created_at.py",
+        "chatterbot/ext/django_chatterbot/migrations/0011_blank_extra_data.py",
+        "chatterbot/ext/django_chatterbot/migrations/0016_statement_stemmed_text.py",
+        "chatterbot/ext/django_chatterbot/migrations/0020_alter_statement_conversation_and_more.py",
+        "chatterbot/ext/django_chatterbot/migrations/0019_alter_statement_id_alter_tag_id_and_more.py",
+        "chatterbot/ext/django_chatterbot/migrations/0018_text_max_length.py",
+        "chatterbot/ext/django_chatterbot/migrations/0002_statement_extra_data.py",
+        "chatterbot/ext/django_chatterbot/migrations/0003_change_occurrence_default.py",
+        "chatterbot/ext/django_chatterbot/migrations/0001_initial.py",
+        "chatterbot/ext/django_chatterbot/migrations/0010_statement_text.py",
+        "chatterbot/ext/django_chatterbot/migrations/0004_rename_in_response_to.py",
+        "chatterbot/ext/django_chatterbot/migrations/0012_statement_created_at.py",
+        "chatterbot/ext/django_chatterbot/migrations/0009_tags.py",
+        "chatterbot/ext/django_chatterbot/migrations/0008_update_conversations.py",
+        "chatterbot/ext/django_chatterbot/migrations/0015_statement_persona.py",
+        "chatterbot/ext/django_chatterbot/migrations/0013_change_conversations.py",
+        "chatterbot/ext/django_chatterbot/migrations/0006_create_conversation.py",
+        "chatterbot/ext/django_chatterbot/migrations/0007_response_created_at.py",
+        "chatterbot/ext/django_chatterbot/migrations/0017_tags_unique.py",
+        "chatterbot/ext/sqlalchemy_app/__init__.py",
+        "chatterbot/storage/__init__.py",
+        "chatterbot/logic/__init__.py"
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "Receives Processed Input From",
+      "src_name": "Chatbot Core Engine",
+      "dst_name": "Input/Output Processors"
+    },
+    {
+      "relation": "Delegates Response Generation To",
+      "src_name": "Chatbot Core Engine",
+      "dst_name": "Logic & Response Adapters"
+    },
+    {
+      "relation": "Queries Knowledge Base From",
+      "src_name": "Logic & Response Adapters",
+      "dst_name": "Data Storage & Training"
+    },
+    {
+      "relation": "Persists Conversational Data To",
+      "src_name": "Chatbot Core Engine",
+      "dst_name": "Data Storage & Training"
+    },
+    {
+      "relation": "Sends Prompt For Generative Response To",
+      "src_name": "Chatbot Core Engine",
+      "dst_name": "LLM Integration"
+    },
+    {
+      "relation": "Provides Stored Data To",
+      "src_name": "Data Storage & Training",
+      "dst_name": "Chatbot Core Engine"
+    },
+    {
+      "relation": "Provides Knowledge Base Data To",
+      "src_name": "Data Storage & Training",
+      "dst_name": "Logic & Response Adapters"
+    },
+    {
+      "relation": "Returns Generative Response To",
+      "src_name": "LLM Integration",
+      "dst_name": "Chatbot Core Engine"
+    }
+  ]
+}
