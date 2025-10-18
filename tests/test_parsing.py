@@ -406,3 +406,181 @@ class DateTimeParsingTestCases(TestCase):
         self.assertEqual(parsed_datetime.day, 14)
         self.assertEqual(parsed_datetime.hour, 21)  # 9 PM
         self.assertEqual(parsed_datetime.minute, 0)
+
+    def test_next_month_from_january_31st(self):
+        """
+        Test 'next month' from Jan 31 handles February correctly
+        """
+        base_date = datetime(2025, 1, 31, 12, 0, 0)
+        input_text = 'next month'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # February only has 28 days in 2025, should clamp to last valid day
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 2)
+        self.assertEqual(parser[0][1].day, 28)
+
+    def test_next_3_months_crosses_year_boundary(self):
+        """
+        Test 'next 3 months' crossing year boundary
+        """
+        base_date = datetime(2025, 11, 15, 12, 0, 0)
+        input_text = 'next 3 months'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertEqual(parser[0][1].year, 2026)
+        self.assertEqual(parser[0][1].month, 2)
+        self.assertEqual(parser[0][1].day, 15)
+
+    def test_next_month_from_march_31st(self):
+        """
+        Test 'next month' from March 31 handles April correctly
+        """
+        base_date = datetime(2025, 3, 31, 12, 0, 0)
+        input_text = 'next month'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # April only has 30 days, should pick the last valid day
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 4)
+        self.assertEqual(parser[0][1].day, 30)
+
+    def test_next_month_from_may_31st(self):
+        """
+        Test 'next month' from May 31 handles June correctly
+        """
+        base_date = datetime(2025, 5, 31, 12, 0, 0)
+        input_text = 'next month'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # June only has 30 days, should pick the last valid day
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 6)
+        self.assertEqual(parser[0][1].day, 30)
+
+    def test_multiple_datetime_expressions(self):
+        """
+        Test parsing text with multiple date/time references
+        """
+        base_date = datetime(2025, 10, 18, 12, 0, 0)
+        input_text = 'Meeting today at 2pm and tomorrow at 3pm'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 2)
+        # First: today at 2pm
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 10)
+        self.assertEqual(parser[0][1].day, 18)
+        self.assertEqual(parser[0][1].hour, 14)
+        # Second: tomorrow at 3pm
+        self.assertEqual(parser[1][1].year, 2025)
+        self.assertEqual(parser[1][1].month, 10)
+        self.assertEqual(parser[1][1].day, 19)
+        self.assertEqual(parser[1][1].hour, 15)
+
+    def test_duration_from_yesterday(self):
+        """
+        Test '2 days after yesterday' using base_time
+        """
+        base_date = datetime(2025, 10, 18, 12, 0, 0)
+        input_text = '2 days after yesterday'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # Yesterday = Oct 17, + 2 days = Oct 19
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 10)
+        self.assertEqual(parser[0][1].day, 19)
+
+    def test_duration_from_tomorrow(self):
+        """
+        Test '3 days after tomorrow'
+        """
+        base_date = datetime(2025, 10, 18, 12, 0, 0)
+        input_text = '3 days after tomorrow'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # Tomorrow = Oct 19, + 3 days = Oct 22
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 10)
+        self.assertEqual(parser[0][1].day, 22)
+
+    def test_duration_from_today(self):
+        """
+        Test '5 days before today'
+        """
+        base_date = datetime(2025, 10, 18, 12, 0, 0)
+        input_text = '5 days before today'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # Today = Oct 18, - 5 days = Oct 13
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 10)
+        self.assertEqual(parser[0][1].day, 13)
+
+    def test_noon_without_convention(self):
+        """
+        Test '12:00' without AM/PM defaults to AM convention (midnight = 0)
+        """
+        base_date = datetime(2025, 10, 18, 0, 0, 0)
+        input_text = 'Meeting at 12:00'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # No convention defaults to 'am', so 12:00 becomes 0 (midnight)
+        self.assertEqual(parser[0][1].hour, 0)
+        self.assertEqual(parser[0][1].minute, 0)
+
+    def test_twelve_pm(self):
+        """
+        Test '12:00 pm' is noon (stays as 12)
+        """
+        base_date = datetime(2025, 10, 18, 0, 0, 0)
+        input_text = 'Meeting at 12:00 pm'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertEqual(parser[0][1].hour, 12)
+        self.assertEqual(parser[0][1].minute, 0)
+
+    def test_twelve_am(self):
+        """
+        Test '12:00 am' is midnight (converted to 0)
+        """
+        base_date = datetime(2025, 10, 18, 0, 0, 0)
+        input_text = 'Meeting at 12:00 am'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertEqual(parser[0][1].hour, 0)
+        self.assertEqual(parser[0][1].minute, 0)
+
+    def test_one_am(self):
+        """
+        Test '1:00 am' is 1:00
+        """
+        base_date = datetime(2025, 10, 18, 0, 0, 0)
+        input_text = 'Meeting at 1:00 am'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertEqual(parser[0][1].hour, 1)
+        self.assertEqual(parser[0][1].minute, 0)
+
+    def test_one_pm(self):
+        """
+        Test '1:00 pm' is 13:00
+        """
+        base_date = datetime(2025, 10, 18, 0, 0, 0)
+        input_text = 'Meeting at 1:00 pm'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertEqual(parser[0][1].hour, 13)
+        self.assertEqual(parser[0][1].minute, 0)

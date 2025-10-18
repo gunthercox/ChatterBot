@@ -532,7 +532,14 @@ def convert_time_to_hour_minute(hour: str, minute: str, convention: str) -> dict
     minute = int(minute)
 
     if convention.lower() == 'pm':
-        hour += 12
+        # Handle 12 PM (noon) - it stays as 12
+        # Handle 1-11 PM - add 12
+        if hour != 12:
+            hour += 12
+    else:
+        # Handle 12 AM (midnight) - convert to 0
+        if hour == 12:
+            hour = 0
 
     return {'hours': hour, 'minutes': minute}
 
@@ -608,7 +615,10 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
                 day = min(relative_date.day, calendar.monthrange(year, month)[1])
                 return datetime(year, month, day)
             else:
-                return datetime(relative_date.year, relative_date.month + ord, relative_date.day)
+                # Base the day to valid range on the target month
+                target_month = relative_date.month + ord
+                day = min(relative_date.day, calendar.monthrange(relative_date.year, target_month)[1])
+                return datetime(relative_date.year, target_month, day)
         elif time == 'end of the':
             return datetime(
                 relative_date.year,
