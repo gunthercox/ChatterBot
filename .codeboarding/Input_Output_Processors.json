@@ -11,9 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Statement",
@@ -25,9 +23,7 @@
           "reference_start_line": 62,
           "reference_end_line": 118
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Preprocessors",
@@ -51,11 +47,7 @@
           "reference_start_line": 38,
           "reference_end_line": 47
         }
-      ],
-      "assigned_files": [
-        "chatterbot/preprocessors.py"
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "LogicAdapter",
@@ -67,9 +59,7 @@
           "reference_start_line": 10,
           "reference_end_line": 136
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Parsing Utilities",
@@ -81,20 +71,12 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "chatterbot/parsing.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "chatterbot/languages.py"
-      ],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

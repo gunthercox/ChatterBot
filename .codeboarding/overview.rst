@@ -10,6 +10,7 @@ Overview
       Input_Output_Processors["Input/Output Processors"]
       LLM_Integration["LLM Integration"]
       Unclassified["Unclassified"]
+      Unclassified["Unclassified"]
       Chatbot_Core_Engine -- "Receives Processed Input From" --> Input_Output_Processors
       Chatbot_Core_Engine -- "Delegates Response Generation To" --> Logic_Response_Adapters
       Logic_Response_Adapters -- "Queries Knowledge Base From" --> Data_Storage_Training
@@ -18,6 +19,8 @@ Overview
       Data_Storage_Training -- "Provides Stored Data To" --> Chatbot_Core_Engine
       Data_Storage_Training -- "Provides Knowledge Base Data To" --> Logic_Response_Adapters
       LLM_Integration -- "Returns Generative Response To" --> Chatbot_Core_Engine
+      click Chatbot_Core_Engine href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/Chatbot_Core_Engine.html" "Details"
+      click Data_Storage_Training href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/Data_Storage_Training.html" "Details"
       click Input_Output_Processors href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/Input_Output_Processors.html" "Details"
 
 | |codeboarding-badge| |demo-badge| |contact-badge|
@@ -36,6 +39,8 @@ The ChatterBot architecture is designed around a central `Chatbot Core Engine` t
 
 Chatbot Core Engine
 ^^^^^^^^^^^^^^^^^^^
+
+:ref:`Expand <Chatbot_Core_Engine>`
 
 The central orchestrator, managing conversation flow, input processing, and response generation. It coordinates all other components.
 
@@ -56,6 +61,8 @@ A collection of specialized modules that determine how the chatbot responds to s
 
 Data Storage & Training
 ^^^^^^^^^^^^^^^^^^^^^^^
+
+:ref:`Expand <Data_Storage_Training>`
 
 Manages the persistence and retrieval of conversational data (statements, responses), handles the entire training lifecycle, and loads corpus data.
 
@@ -85,6 +92,13 @@ Provides an abstract interface for integrating Large Language Models, allowing C
 **Related Classes/Methods**:
 
 * chatterbot.llm
+
+Unclassified
+^^^^^^^^^^^^
+
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+**Related Classes/Methods**: *None*
 
 Unclassified
 ^^^^^^^^^^^^

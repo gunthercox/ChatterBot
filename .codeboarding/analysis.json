@@ -13,13 +13,6 @@
         }
       ],
       "assigned_files": [
-        "examples/basic_example.py",
-        "examples/terminal_example.py",
-        "examples/terminal_mongo_example.py",
-        "examples/tkinter_gui.py",
-        "examples/django_example/django_example/views.py",
-        "examples/learning_feedback_example.py",
-        "chatterbot/__main__.py",
         "chatterbot/conversation.py",
         "chatterbot/chatterbot.py"
       ],
@@ -49,21 +42,17 @@
         }
       ],
       "assigned_files": [
-        "examples/specific_response_example.py",
-        "examples/math_and_time.py",
-        "examples/convert_units.py",
-        "examples/default_response_example.py",
-        "chatterbot/search.py",
         "chatterbot/response_selection.py",
-        "chatterbot/vectorstores.py",
-        "chatterbot/filters.py",
         "chatterbot/comparisons.py",
         "chatterbot/logic/unit_conversion.py",
         "chatterbot/logic/mathematical_evaluation.py",
         "chatterbot/logic/logic_adapter.py",
         "chatterbot/logic/best_match.py",
         "chatterbot/logic/specific_response.py",
-        "chatterbot/logic/time_adapter.py"
+        "chatterbot/logic/time_adapter.py",
+        "chatterbot/search.py",
+        "chatterbot/tagging.py",
+        "chatterbot/filters.py"
       ],
       "can_expand": true
     },
@@ -91,95 +80,12 @@
         }
       ],
       "assigned_files": [
-        "examples/training_example_chatterbot_corpus.py",
-        "examples/tagged_dataset_example.py",
-        "examples/memory_sql_example.py",
-        "examples/training_example_list_data.py",
-        "examples/training_example_ubuntu_corpus.py",
-        "examples/export_example.py",
-        "examples/django_example/django_example/management/commands/train.py",
         "chatterbot/corpus.py",
-        "chatterbot/tagging.py",
         "chatterbot/trainers.py",
-        "chatterbot/ext/django_chatterbot/models.py",
-        "chatterbot/ext/django_chatterbot/abstract_models.py",
-        "chatterbot/ext/sqlalchemy_app/models.py",
-        "chatterbot/storage/storage_adapter.py",
-        "chatterbot/storage/mongodb.py",
-        "chatterbot/storage/redis.py",
-        "chatterbot/storage/sql_storage.py",
-        "chatterbot/storage/django_storage.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Input/Output Processors",
-      "description": "Responsible for preprocessing raw user input (e.g., cleaning whitespace, parsing dates) before it reaches the core engine, and potentially post-processing responses.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "chatterbot.preprocessors",
-          "reference_file": "chatterbot/chatterbot.py",
-          "reference_start_line": 118,
-          "reference_end_line": 118
-        },
-        {
-          "qualified_name": "chatterbot.parsing",
-          "reference_file": "chatterbot/parsing.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "chatterbot/parsing.py",
-        "chatterbot/preprocessors.py",
-        "chatterbot/languages.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "LLM Integration",
-      "description": "Provides an abstract interface for integrating Large Language Models, allowing ChatterBot to leverage advanced generative capabilities for responses.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "chatterbot.llm",
-          "reference_file": "chatterbot/llm.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "examples/openai_example.py",
-        "examples/ollama_example.py",
-        "chatterbot/llm.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Unclassified",
-      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "examples/__init__.py",
-        "examples/django_example/manage.py",
-        "examples/django_example/django_example/asgi.py",
-        "examples/django_example/django_example/__init__.py",
-        "examples/django_example/django_example/settings.py",
-        "examples/django_example/django_example/wsgi.py",
-        "examples/django_example/django_example/urls.py",
-        "examples/django_example/django_example/management/__init__.py",
-        "examples/django_example/django_example/management/commands/__init__.py",
-        "docs/conf.py",
-        "docs/_ext/github.py",
-        "docs/_ext/canonical.py",
-        "chatterbot/__init__.py",
-        "chatterbot/adapters.py",
-        "chatterbot/constants.py",
-        "chatterbot/utils.py",
-        "chatterbot/components.py",
-        "chatterbot/exceptions.py",
-        "chatterbot/ext/__init__.py",
         "chatterbot/ext/django_chatterbot/__init__.py",
         "chatterbot/ext/django_chatterbot/apps.py",
+        "chatterbot/ext/django_chatterbot/models.py",
+        "chatterbot/ext/django_chatterbot/abstract_models.py",
         "chatterbot/ext/django_chatterbot/settings.py",
         "chatterbot/ext/django_chatterbot/model_admin.py",
         "chatterbot/ext/django_chatterbot/admin.py",
@@ -205,9 +111,110 @@
         "chatterbot/ext/django_chatterbot/migrations/0007_response_created_at.py",
         "chatterbot/ext/django_chatterbot/migrations/0017_tags_unique.py",
         "chatterbot/ext/sqlalchemy_app/__init__.py",
+        "chatterbot/ext/sqlalchemy_app/models.py",
+        "chatterbot/storage/storage_adapter.py",
+        "chatterbot/storage/mongodb.py",
+        "chatterbot/storage/redis.py",
+        "chatterbot/storage/sql_storage.py",
+        "chatterbot/storage/django_storage.py",
+        "chatterbot/vectorstores.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Input/Output Processors",
+      "description": "Responsible for preprocessing raw user input (e.g., cleaning whitespace, parsing dates) before it reaches the core engine, and potentially post-processing responses.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.preprocessors",
+          "reference_file": "chatterbot/chatterbot.py",
+          "reference_start_line": 118,
+          "reference_end_line": 118
+        },
+        {
+          "qualified_name": "chatterbot.parsing",
+          "reference_file": "chatterbot/parsing.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "chatterbot/parsing.py",
+        "chatterbot/preprocessors.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "LLM Integration",
+      "description": "Provides an abstract interface for integrating Large Language Models, allowing ChatterBot to leverage advanced generative capabilities for responses.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.llm",
+          "reference_file": "chatterbot/llm.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "chatterbot/llm.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "examples/training_example_chatterbot_corpus.py",
+        "examples/__init__.py",
+        "examples/basic_example.py",
+        "examples/terminal_example.py",
+        "examples/terminal_mongo_example.py",
+        "examples/specific_response_example.py",
+        "examples/tagged_dataset_example.py",
+        "examples/memory_sql_example.py",
+        "examples/training_example_list_data.py",
+        "examples/math_and_time.py",
+        "examples/openai_example.py",
+        "examples/training_example_ubuntu_corpus.py",
+        "examples/convert_units.py",
+        "examples/ollama_example.py",
+        "examples/export_example.py",
+        "examples/default_response_example.py",
+        "examples/tkinter_gui.py",
+        "examples/learning_feedback_example.py",
+        "examples/django_example/manage.py",
+        "examples/django_example/django_example/asgi.py",
+        "examples/django_example/django_example/__init__.py",
+        "examples/django_example/django_example/settings.py",
+        "examples/django_example/django_example/views.py",
+        "examples/django_example/django_example/wsgi.py",
+        "examples/django_example/django_example/urls.py",
+        "examples/django_example/django_example/management/__init__.py",
+        "examples/django_example/django_example/management/commands/__init__.py",
+        "examples/django_example/django_example/management/commands/train.py",
+        "docs/conf.py",
+        "docs/_ext/github.py",
+        "docs/_ext/canonical.py",
+        "chatterbot/__init__.py",
+        "chatterbot/adapters.py",
+        "chatterbot/__main__.py",
+        "chatterbot/constants.py",
+        "chatterbot/utils.py",
+        "chatterbot/components.py",
+        "chatterbot/exceptions.py",
+        "chatterbot/languages.py",
+        "chatterbot/ext/__init__.py",
         "chatterbot/storage/__init__.py",
         "chatterbot/logic/__init__.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     }
   ],

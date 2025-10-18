@@ -1,0 +1,142 @@
+{
+  "description": "This graph represents the core functionality of a document processing and question-answering system. The main flow involves ingesting documents, processing them into a searchable format, and then using a language model to answer user queries based on the ingested content. Its purpose is to provide an intelligent interface for users to retrieve information from a collection of documents.",
+  "components": [
+    {
+      "name": "Document Ingestion",
+      "description": "Handles the loading and initial processing of various document types.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "langchain_community.document_loaders.pdf.PyPDFLoader",
+          "reference_file": "document_ingestion.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "langchain_community.document_loaders.csv_loader.CSVLoader",
+          "reference_file": "document_ingestion.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": false
+    },
+    {
+      "name": "Text Splitter",
+      "description": "Breaks down large documents into smaller, manageable chunks for efficient processing and embedding.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "langchain.text_splitter.RecursiveCharacterTextSplitter",
+          "reference_file": "text_processing.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "Vector Store",
+      "description": "Stores and retrieves document embeddings, enabling semantic search.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "langchain_community.vectorstores.chroma.Chroma",
+          "reference_file": "vector_db.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "Embeddings Model",
+      "description": "Generates numerical representations (embeddings) of text chunks.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "langchain_community.embeddings.ollama.OllamaEmbeddings",
+          "reference_file": "embedding_model.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": false
+    },
+    {
+      "name": "Language Model (LLM)",
+      "description": "Processes user queries and generates answers based on retrieved context.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "langchain_community.llms.ollama.Ollama",
+          "reference_file": "llm_interface.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": true
+    },
+    {
+      "name": "Retrieval Chain",
+      "description": "Orchestrates the retrieval of relevant document chunks and passes them to the LLM for answer generation.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "langchain.chains.retrieval.create_retrieval_chain",
+          "reference_file": "retrieval_chain.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [
+        "chatterbot/conversation.py",
+        "chatterbot/chatterbot.py"
+      ],
+      "can_expand": false
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "loads documents into",
+      "src_name": "Document Ingestion",
+      "dst_name": "Text Splitter"
+    },
+    {
+      "relation": "splits text for",
+      "src_name": "Text Splitter",
+      "dst_name": "Embeddings Model"
+    },
+    {
+      "relation": "generates embeddings for",
+      "src_name": "Embeddings Model",
+      "dst_name": "Vector Store"
+    },
+    {
+      "relation": "stores embeddings from",
+      "src_name": "Vector Store",
+      "dst_name": "Embeddings Model"
+    },
+    {
+      "relation": "retrieves context for",
+      "src_name": "Vector Store",
+      "dst_name": "Retrieval Chain"
+    },
+    {
+      "relation": "uses",
+      "src_name": "Retrieval Chain",
+      "dst_name": "Language Model (LLM)"
+    },
+    {
+      "relation": "answers queries using",
+      "src_name": "Language Model (LLM)",
+      "dst_name": "Retrieval Chain"
+    }
+  ]
+}
