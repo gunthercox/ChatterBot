@@ -16,7 +16,7 @@ class ChatBotInitializationTestCase(ChatBotTestCase):
         does not exist for a language.
         """
         with self.assertRaises(KeyError) as exc:
-            chatbot = ChatBot(
+            ChatBot(
                 'Test Bot',
                 tagger_language=languages.LAT
             )
@@ -32,7 +32,7 @@ class ChatBotInitializationTestCase(ChatBotTestCase):
         has not been installed for the specified language.
         """
         with self.assertRaises(ChatBot.ChatBotException) as exc:
-            chatbot = ChatBot(
+            ChatBot(
                 'Test Bot',
                 tagger_language=languages.NOR
             )
@@ -208,8 +208,9 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         response = self.chatbot.get_response(
             statement,
             additional_response_selection_parameters={
-            'conversation': 'test_2'
-        })
+                'conversation': 'test_2'
+            }
+        )
 
         self.assertEqual(response.text, 'C')
         self.assertEqual(response.conversation, 'test_3')

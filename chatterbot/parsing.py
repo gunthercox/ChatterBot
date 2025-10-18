@@ -503,7 +503,7 @@ regex = [
 ]
 
 
-def convert_string_to_number(value):
+def convert_string_to_number(value: str) -> int:
     """
     Convert strings to numbers
     """
@@ -517,7 +517,7 @@ def convert_string_to_number(value):
     return sum(num_list)
 
 
-def convert_time_to_hour_minute(hour, minute, convention):
+def convert_time_to_hour_minute(hour: str, minute: str, convention: str) -> dict:
     """
     Convert time to hour, minute
     """
@@ -532,12 +532,19 @@ def convert_time_to_hour_minute(hour, minute, convention):
     minute = int(minute)
 
     if convention.lower() == 'pm':
-        hour += 12
+        # Handle 12 PM (noon) - it stays as 12
+        # Handle 1-11 PM - add 12
+        if hour != 12:
+            hour += 12
+    else:
+        # Handle 12 AM (midnight) - convert to 0
+        if hour == 12:
+            hour = 0
 
     return {'hours': hour, 'minutes': minute}
 
 
-def date_from_quarter(base_date, ordinal, year):
+def date_from_quarter(base_date: datetime, ordinal: int, year: int) -> list[datetime]:
     """
     Extract date from quarter of a year
     """
@@ -554,7 +561,7 @@ def date_from_quarter(base_date, ordinal, year):
     ]
 
 
-def date_from_relative_day(base_date, time, dow):
+def date_from_relative_day(base_date: datetime, time: str, dow: str) -> datetime:
     """
     Converts relative day to time
     Ex: this tuesday, last tuesday
@@ -577,7 +584,7 @@ def date_from_relative_day(base_date, time, dow):
         return next_week_day(base_date, num)
 
 
-def date_from_relative_week_year(base_date, time, dow, ordinal=1):
+def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordinal: int = 1) -> datetime:
     """
     Converts relative day to time
     Eg. this tuesday, last tuesday
@@ -608,7 +615,10 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
                 day = min(relative_date.day, calendar.monthrange(year, month)[1])
                 return datetime(year, month, day)
             else:
-                return datetime(relative_date.year, relative_date.month + ord, relative_date.day)
+                # Base the day to valid range on the target month
+                target_month = relative_date.month + ord
+                day = min(relative_date.day, calendar.monthrange(relative_date.year, target_month)[1])
+                return datetime(relative_date.year, target_month, day)
         elif time == 'end of the':
             return datetime(
                 relative_date.year,
@@ -636,7 +646,7 @@ def date_from_relative_week_year(base_date, time, dow, ordinal=1):
             return datetime(relative_date.year, relative_date.month, relative_date.day, 23, 59, 59)
 
 
-def date_from_adverb(base_date, name):
+def date_from_adverb(base_date: datetime, name: str) -> datetime:
     """
     Convert Day adverbs to dates
     Tomorrow => Date
@@ -645,14 +655,14 @@ def date_from_adverb(base_date, name):
     # Reset date to start of the day
     adverb_date = datetime(base_date.year, base_date.month, base_date.day)
     if name == 'today' or name == 'tonite' or name == 'tonight':
-        return adverb_date.today().replace(hour=0, minute=0, second=0, microsecond=0)
+        return adverb_date
     elif name == 'yesterday':
         return adverb_date - timedelta(days=1)
     elif name == 'tomorrow' or name == 'tom':
         return adverb_date + timedelta(days=1)
 
 
-def date_from_duration(base_date, number_as_string, unit, duration, base_time=None):
+def date_from_duration(base_date: datetime, number_as_string: str, unit: str, duration: str, base_time: str = None) -> datetime:
     """
     Find dates from duration
     Eg: 20 days from now
@@ -682,7 +692,7 @@ def date_from_duration(base_date, number_as_string, unit, duration, base_time=No
         return base_date + timedelta(**args)
 
 
-def this_week_day(base_date, weekday):
+def this_week_day(base_date: datetime, weekday: int) -> datetime:
     """
     Finds coming weekday
     """
@@ -698,7 +708,7 @@ def this_week_day(base_date, weekday):
     return day
 
 
-def previous_week_day(base_date, weekday):
+def previous_week_day(base_date: datetime, weekday: int) -> datetime:
     """
     Finds previous weekday
     """
@@ -708,9 +718,9 @@ def previous_week_day(base_date, weekday):
     return day
 
 
-def next_week_day(base_date, weekday):
+def next_week_day(base_date: datetime, weekday: int) -> datetime:
     """
-    Finds next weekday
+    Finds the next weekday.
     """
     day_of_week = base_date.weekday()
     end_of_this_week = base_date + timedelta(days=6 - day_of_week)
@@ -720,7 +730,7 @@ def next_week_day(base_date, weekday):
     return day
 
 
-def datetime_parsing(text, base_date=datetime.now()):
+def datetime_parsing(text: str, base_date: datetime = datetime.now()) -> list[tuple[str, datetime, tuple[int, int]]]:
     """
     Extract datetime objects from a string of text.
     """
