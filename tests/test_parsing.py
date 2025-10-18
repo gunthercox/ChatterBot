@@ -387,3 +387,22 @@ class DateTimeParsingTestCases(TestCase):
         result = parsing.this_week_day(base_date, weekday)
 
         self.assertEqual(result, datetime(2016, 12, 14, 10, 10, 52, 85280))
+
+    def test_today_at_time_uses_base_date(self):
+        """
+        The string 'today at [time]' should respect the base_date parameter.
+        """
+        base_date = datetime(2018, 7, 14, 8, 52, 21)  # July 14, 2018 at 8:52:21 AM
+        input_text = 'Your dental appointment is scheduled today at 9:00pm.'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertIn('today at 9:00pm', parser[0])
+
+        parsed_datetime = parser[0][1]
+        # Should be July 14, 2018 at 9:00 PM
+        self.assertEqual(parsed_datetime.year, 2018)
+        self.assertEqual(parsed_datetime.month, 7)
+        self.assertEqual(parsed_datetime.day, 14)
+        self.assertEqual(parsed_datetime.hour, 21)  # 9 PM
+        self.assertEqual(parsed_datetime.minute, 0)
