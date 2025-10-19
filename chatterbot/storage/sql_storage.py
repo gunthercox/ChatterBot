@@ -41,8 +41,30 @@ class SQLStorageAdapter(StorageAdapter):
 
             @event.listens_for(Engine, 'connect')
             def set_sqlite_pragma(dbapi_connection, connection_record):
-                dbapi_connection.execute('PRAGMA journal_mode=WAL')
-                dbapi_connection.execute('PRAGMA synchronous=NORMAL')
+                """
+                Set SQLite PRAGMA settings.
+
+                This function is called when a new connection is created.
+                WAL mode must be set outside of a transaction because it cannot
+                change into wal mode from within a transaction.
+                """
+                cursor = dbapi_connection.cursor()
+
+                # Check current journal mode
+                cursor.execute('PRAGMA journal_mode')
+                current_mode = cursor.fetchone()[0]
+
+                # Only change if not already in WAL mode
+                if current_mode.lower() != 'wal':
+                    # Set isolation_level to None to execute outside transaction
+                    old_isolation = dbapi_connection.isolation_level
+                    dbapi_connection.isolation_level = None
+                    cursor.execute('PRAGMA journal_mode=WAL')
+                    dbapi_connection.isolation_level = old_isolation
+
+                # Set synchronous mode (can be done normally)
+                cursor.execute('PRAGMA synchronous=NORMAL')
+                cursor.close()
 
         if not inspect(self.engine).has_table('statement'):
             self.create_database()
