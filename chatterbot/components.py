@@ -29,6 +29,9 @@ def chatterbot_bigram_indexer(document):
             token for token in document if not (token.is_punct)
         ]
 
+    # Pairs consist of the part-of-speech of the first token and the
+    # lemma of the second token in the bigram. This provides a good
+    # balance of generalization and specificity for matching.
     bigram_pairs = [
         f"{tokens[i - 1].pos_}:{tokens[i].lemma_.lower()}"
         for i in range(1, len(tokens))
