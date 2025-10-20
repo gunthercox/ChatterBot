@@ -23,17 +23,37 @@ class LowercaseTagger(object):
 
     def get_text_index_string(self, text: Union[str, List[str]]):
         if isinstance(text, list):
-            documents = self.nlp.pipe(text)
+            documents = self.nlp.pipe(text, batch_size=1000, n_process=1)
             return [document._.search_index for document in documents]
         else:
             document = self.nlp(text)
             return document._.search_index
 
-    def as_nlp_pipeline(self, texts: Union[List[str], Tuple[str, dict]]):
+    def as_nlp_pipeline(
+        self,
+        texts: Union[List[str], Tuple[str, dict]],
+        batch_size: int = 1000,
+        n_process: int = 1
+    ):
+        """
+        Process texts through the spaCy NLP pipeline with optimized batching.
 
+        :param texts: Text strings or tuples of (text, context_dict)
+        :param batch_size: Number of texts per batch (default 1000)
+        :param n_process: Number of worker processes for spaCy's pipe (set >1 to use multiprocessing)
+
+        Usage:
+            documents = tagger.as_nlp_pipeline(texts)
+            documents = tagger.as_nlp_pipeline(texts, batch_size=2000, n_process=4)
+        """
         process_as_tuples = texts and isinstance(texts[0], tuple)
 
-        documents = self.nlp.pipe(texts, as_tuples=process_as_tuples)
+        documents = self.nlp.pipe(
+            texts,
+            as_tuples=process_as_tuples,
+            batch_size=batch_size,
+            n_process=n_process
+        )
         return documents
 
 
@@ -58,20 +78,37 @@ class PosLemmaTagger(object):
         Return a string of text containing part-of-speech, lemma pairs.
         """
         if isinstance(text, list):
-            documents = self.nlp.pipe(text)
+            documents = self.nlp.pipe(text, batch_size=1000, n_process=1)
             return [document._.search_index for document in documents]
         else:
             document = self.nlp(text)
             return document._.search_index
 
-    def as_nlp_pipeline(self, texts: Union[List[str], Tuple[str, dict]]):
+    def as_nlp_pipeline(
+        self,
+        texts: Union[List[str], Tuple[str, dict]],
+        batch_size: int = 1000,
+        n_process: int = 1
+    ) -> spacy.tokens.Doc:
         """
         Accepts a single string or a list of strings, or a list of tuples
         where the first element is the text and the second element is a
         dictionary of context to return alongside the generated document.
-        """
 
+        :param texts: Text strings or tuples of (text, context_dict)
+        :param batch_size: Number of texts per batch (default 1000)
+        :param n_process: Number of worker processes for spaCy's pipe (set >1 to use multiprocessing)
+
+        Usage:
+            documents = tagger.as_nlp_pipeline(texts)
+            documents = tagger.as_nlp_pipeline(texts, batch_size=2000, n_process=4)
+        """
         process_as_tuples = texts and isinstance(texts[0], tuple)
 
-        documents = self.nlp.pipe(texts, as_tuples=process_as_tuples)
+        documents = self.nlp.pipe(
+            texts,
+            as_tuples=process_as_tuples,
+            batch_size=batch_size,
+            n_process=n_process
+        )
         return documents
