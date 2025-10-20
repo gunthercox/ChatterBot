@@ -108,37 +108,57 @@ class ListTrainer(Trainer):
             for text in conversation
         ]
 
-        # Apply preprocessors BEFORE tagging to normalize text
-        preprocessed_statements = self.get_preprocessed_statements(preliminary_statements)
+        with tqdm(
+            total=len(conversation),
+            desc='Training',
+            disable=self.disable_progress,
+            unit='stmt'
+        ) as progress_bar:
+            # Apply preprocessors before tagging to normalize text
+            progress_bar.set_description('Preprocessing')
+            preprocessed_statements = self.get_preprocessed_statements(preliminary_statements)
 
-        # Extract cleaned text for batch tagging
-        cleaned_texts = [stmt.text for stmt in preprocessed_statements]
+            # Extract cleaned text for batch tagging
+            cleaned_texts = [stmt.text for stmt in preprocessed_statements]
 
-        # Run the pipeline in bulk to improve performance
-        documents = self.chatbot.tagger.as_nlp_pipeline(
-            cleaned_texts,
-            batch_size=2000,
-            n_process=1  # NOTE: Not all spacy models support multiprocessing > 1
-        )
-
-        documents_list = list(documents)
-
-        for document in tqdm(documents_list, desc='List Trainer', disable=self.disable_progress):
-            statement_search_text = document._.search_index
-
-            statement = Statement(
-                text=document.text,
-                search_text=statement_search_text,
-                in_response_to=previous_statement_text,
-                search_in_response_to=previous_statement_search_text,
-                conversation='training'
+            # Run the pipeline in bulk to improve performance
+            progress_bar.set_description('Analyzing with NLP')
+            documents = self.chatbot.tagger.as_nlp_pipeline(
+                cleaned_texts,
+                batch_size=2000,
+                n_process=1  # NOTE: Not all spaCy models support multiprocessing > 1
             )
 
-            previous_statement_text = statement.text
-            previous_statement_search_text = statement_search_text
+            # Process documents and update progress
+            progress_bar.set_description('Processing text')
+            documents_list = []
+            for doc in documents:
+                documents_list.append(doc)
+                progress_bar.update(1)
 
-            statements_to_create.append(statement)
+            # Reset for statement creation phase
+            progress_bar.reset()
+            progress_bar.set_description('Creating statements')
 
+            for document in documents_list:
+                statement_search_text = document._.search_index
+
+                statement = Statement(
+                    text=document.text,
+                    search_text=statement_search_text,
+                    in_response_to=previous_statement_text,
+                    search_in_response_to=previous_statement_search_text,
+                    conversation='training'
+                )
+
+                previous_statement_text = statement.text
+                previous_statement_search_text = statement_search_text
+
+                statements_to_create.append(statement)
+                progress_bar.update(1)
+
+        if not self.disable_progress:
+            print('Saving to database...')
         self.chatbot.storage.create_many(statements_to_create)
 
 
@@ -159,7 +179,7 @@ class ChatterBotCorpusTrainer(Trainer):
 
         for corpus, categories, _file_path in tqdm(
             load_corpus(*data_file_paths),
-            desc='ChatterBot Corpus Trainer',
+            desc='Loading corpus files',
             disable=self.disable_progress
         ):
             statements_to_create = []
@@ -178,47 +198,68 @@ class ChatterBotCorpusTrainer(Trainer):
                 for text in all_conversation_texts
             ]
 
-            # Apply preprocessors BEFORE tagging to normalize text
-            preprocessed_statements = self.get_preprocessed_statements(preliminary_statements)
+            with tqdm(
+                total=len(all_conversation_texts),
+                desc='Processing corpus',
+                disable=self.disable_progress,
+                unit='stmt'
+            ) as progress_bar:
+                # Apply preprocessors BEFORE tagging to normalize text
+                progress_bar.set_description('Preprocessing')
+                preprocessed_statements = self.get_preprocessed_statements(preliminary_statements)
 
-            # Extract cleaned text for batch tagging
-            cleaned_texts = [stmt.text for stmt in preprocessed_statements]
+                # Extract cleaned text for batch tagging
+                cleaned_texts = [stmt.text for stmt in preprocessed_statements]
 
-            # Batch-process all texts at once instead of per-conversation
-            all_documents = list(self.chatbot.tagger.as_nlp_pipeline(
-                cleaned_texts,
-                batch_size=2000,
-                n_process=1  # Set to > 1 for multiprocessing if spaCy model supports it
-            ))
+                # Batch-process all texts at once instead of per-conversation
+                progress_bar.set_description('Analyzing with NLP')
+                documents = self.chatbot.tagger.as_nlp_pipeline(
+                    cleaned_texts,
+                    batch_size=2000,
+                    n_process=1  # Set to > 1 for multiprocessing if spaCy model supports it
+                )
 
-            # Reconstruct conversation structure from batched results
-            doc_index = 0
-            for conversation_length in conversation_lengths:
-                previous_statement_text = None
-                previous_statement_search_text = ''
+                progress_bar.set_description('Processing text')
+                all_documents = []
+                for doc in documents:
+                    all_documents.append(doc)
+                    progress_bar.update(1)
 
-                for _ in range(conversation_length):
-                    document = all_documents[doc_index]
-                    doc_index += 1
+                # Reset for statement creation phase
+                progress_bar.reset()
+                progress_bar.set_description('Creating statements')
 
-                    statement_search_text = document._.search_index
+                # Reconstruct conversation structure from batched results
+                doc_index = 0
+                for conversation_length in conversation_lengths:
+                    previous_statement_text = None
+                    previous_statement_search_text = ''
 
-                    statement = Statement(
-                        text=document.text,
-                        search_text=statement_search_text,
-                        in_response_to=previous_statement_text,
-                        search_in_response_to=previous_statement_search_text,
-                        conversation='training'
-                    )
+                    for _ in range(conversation_length):
+                        document = all_documents[doc_index]
+                        doc_index += 1
 
-                    statement.add_tags(*categories)
+                        statement_search_text = document._.search_index
 
-                    previous_statement_text = statement.text
-                    previous_statement_search_text = statement_search_text
+                        statement = Statement(
+                            text=document.text,
+                            search_text=statement_search_text,
+                            in_response_to=previous_statement_text,
+                            search_in_response_to=previous_statement_search_text,
+                            conversation='training'
+                        )
 
-                    statements_to_create.append(statement)
+                        statement.add_tags(*categories)
+
+                        previous_statement_text = statement.text
+                        previous_statement_search_text = statement_search_text
+
+                        statements_to_create.append(statement)
+                        progress_bar.update(1)
 
             if statements_to_create:
+                if not self.disable_progress:
+                    print('Saving to database...')
                 self.chatbot.storage.create_many(statements_to_create)
 
 
@@ -376,11 +417,27 @@ class GenericFileTrainer(Trainer):
                     for stmt, context in zip(preprocessed_statements, contexts)
                 ]
 
+                if not self.disable_progress:
+                    print(f'Processing {len(text_values)} statements from file...')
+
                 documents = self.chatbot.tagger.as_nlp_pipeline(
                     text_values,
                     batch_size=2000,
                     n_process=1  # NOTE: Not all spaCy models support multiprocessing
                 )
+
+                # Convert generator to list with progress tracking
+                with tqdm(
+                    total=len(text_values),
+                    desc='Analyzing with NLP',
+                    disable=self.disable_progress,
+                    unit='stmt',
+                    leave=False
+                ) as progress_bar:
+                    documents_list = []
+                    for doc in documents:
+                        documents_list.append(doc)
+                        progress_bar.update(1)
 
             response_to_search_index_mapping = {}
 
@@ -395,6 +452,9 @@ class GenericFileTrainer(Trainer):
                 ]
 
                 if response_texts:
+                    if not self.disable_progress:
+                        print(f'Processing {len(response_texts)} response references...')
+
                     # Preprocess response texts before tagging
                     response_statements = [
                         Statement(text=text, conversation='training')
@@ -409,41 +469,59 @@ class GenericFileTrainer(Trainer):
                         n_process=1
                     )
 
-                    # (Process the response values the same way as the text values)
-                    for document in response_documents:
-                        response_to_search_index_mapping[document.text] = document._.search_index
+                    # Process the response values the same way as the text values
+                    with tqdm(
+                        total=len(cleaned_response_texts),
+                        desc='Analyzing responses',
+                        disable=self.disable_progress,
+                        unit='stmt',
+                        leave=False
+                    ) as progress_bar:
+                        for document in response_documents:
+                            response_to_search_index_mapping[document.text] = document._.search_index
+                            progress_bar.update(1)
 
-            for document, context in documents:
-                statement = Statement(
-                    text=document.text,
-                    conversation=context.get('conversation', 'training'),
-                    persona=context.get('persona', None),
-                    tags=context.get('tags', [])
-                )
-
-                if 'created_at' in context:
-                    statement.created_at = date_parser.parse(context['created_at'])
-
-                statement.search_text = document._.search_index
-
-                # Use the in_response_to attribute for the previous statement if
-                # one is defined, otherwise use the last statement which was created
-                if 'in_response_to' in self.field_map.keys():
-                    statement.in_response_to = context.get(self.field_map['in_response_to'], None)
-                    statement.search_in_response_to = response_to_search_index_mapping.get(
-                        context.get(self.field_map['in_response_to'], None), ''
+            with tqdm(
+                total=len(documents_list),
+                desc='Creating statements',
+                disable=self.disable_progress,
+                unit='stmt',
+                leave=False
+            ) as progress_bar:
+                for document, context in documents_list:
+                    statement = Statement(
+                        text=document.text,
+                        conversation=context.get('conversation', 'training'),
+                        persona=context.get('persona', None),
+                        tags=context.get('tags', [])
                     )
-                else:
-                    # List-type data such as CSVs with no response specified can use
-                    # the previous statement as the in_response_to value
-                    statement.in_response_to = previous_statement_text
-                    statement.search_in_response_to = previous_statement_search_text
 
-                previous_statement_text = statement.text
-                previous_statement_search_text = statement.search_text
+                    if 'created_at' in context:
+                        statement.created_at = date_parser.parse(context['created_at'])
 
-                statements_to_create.append(statement)
+                    statement.search_text = document._.search_index
 
+                    # Use the in_response_to attribute for the previous statement if
+                    # one is defined, otherwise use the last statement which was created
+                    if 'in_response_to' in self.field_map.keys():
+                        statement.in_response_to = context.get(self.field_map['in_response_to'], None)
+                        statement.search_in_response_to = response_to_search_index_mapping.get(
+                            context.get(self.field_map['in_response_to'], None), ''
+                        )
+                    else:
+                        # List-type data such as CSVs with no response specified can use
+                        # the previous statement as the in_response_to value
+                        statement.in_response_to = previous_statement_text
+                        statement.search_in_response_to = previous_statement_search_text
+
+                    previous_statement_text = statement.text
+                    previous_statement_search_text = statement.search_text
+
+                    statements_to_create.append(statement)
+                    progress_bar.update(1)
+
+            if not self.disable_progress:
+                print('Saving to database...')
             self.chatbot.storage.create_many(statements_to_create)
 
         if files_processed:
