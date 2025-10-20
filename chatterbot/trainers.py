@@ -40,6 +40,15 @@ class Trainer(object):
 
         return input_statement
 
+    def get_preprocessed_statements(self, statements: List[Statement]) -> List[Statement]:
+        """
+        Applies all preprocessors to a batch of statements.
+        """
+        for preprocessor in self.chatbot.preprocessors:
+            statements = [preprocessor(stmt) for stmt in statements]
+
+        return statements
+
     def train(self, *args, **kwargs):
         """
         This method must be overridden by a child class.
@@ -93,20 +102,36 @@ class ListTrainer(Trainer):
 
         statements_to_create = []
 
-        # Run the pipeline in bulk to improve performance
-        documents = self.chatbot.tagger.as_nlp_pipeline(conversation)
+        # Create preliminary Statement objects to apply preprocessors
+        preliminary_statements = [
+            Statement(text=text, conversation='training')
+            for text in conversation
+        ]
 
-        for document in tqdm(documents, desc='List Trainer', disable=self.disable_progress):
+        # Apply preprocessors BEFORE tagging to normalize text
+        preprocessed_statements = self.get_preprocessed_statements(preliminary_statements)
+
+        # Extract cleaned text for batch tagging
+        cleaned_texts = [stmt.text for stmt in preprocessed_statements]
+
+        # Run the pipeline in bulk to improve performance
+        documents = self.chatbot.tagger.as_nlp_pipeline(
+            cleaned_texts,
+            batch_size=2000,
+            n_process=1  # NOTE: Not all spacy models support multiprocessing > 1
+        )
+
+        documents_list = list(documents)
+
+        for document in tqdm(documents_list, desc='List Trainer', disable=self.disable_progress):
             statement_search_text = document._.search_index
 
-            statement = self.get_preprocessed_statement(
-                Statement(
-                    text=document.text,
-                    search_text=statement_search_text,
-                    in_response_to=previous_statement_text,
-                    search_in_response_to=previous_statement_search_text,
-                    conversation='training'
-                )
+            statement = Statement(
+                text=document.text,
+                search_text=statement_search_text,
+                in_response_to=previous_statement_text,
+                search_in_response_to=previous_statement_search_text,
+                conversation='training'
             )
 
             previous_statement_text = statement.text
@@ -139,16 +164,43 @@ class ChatterBotCorpusTrainer(Trainer):
         ):
             statements_to_create = []
 
-            # Train the chat bot with each statement and response pair
+            # Collect all conversation texts first for preprocessing
+            all_conversation_texts = []
+            conversation_lengths = []  # Track length of each conversation to reconstruct structure after batch processing
+
             for conversation in corpus:
+                conversation_lengths.append(len(conversation))
+                all_conversation_texts.extend(conversation)
 
-                # Run the pipeline in bulk to improve performance
-                documents = self.chatbot.tagger.as_nlp_pipeline(conversation)
+            # Create preliminary Statement objects for preprocessing
+            preliminary_statements = [
+                Statement(text=text, conversation='training')
+                for text in all_conversation_texts
+            ]
 
+            # Apply preprocessors BEFORE tagging to normalize text
+            preprocessed_statements = self.get_preprocessed_statements(preliminary_statements)
+
+            # Extract cleaned text for batch tagging
+            cleaned_texts = [stmt.text for stmt in preprocessed_statements]
+
+            # Batch-process all texts at once instead of per-conversation
+            all_documents = list(self.chatbot.tagger.as_nlp_pipeline(
+                cleaned_texts,
+                batch_size=2000,
+                n_process=1  # Set to > 1 for multiprocessing if spaCy model supports it
+            ))
+
+            # Reconstruct conversation structure from batched results
+            doc_index = 0
+            for conversation_length in conversation_lengths:
                 previous_statement_text = None
                 previous_statement_search_text = ''
 
-                for document in documents:
+                for _ in range(conversation_length):
+                    document = all_documents[doc_index]
+                    doc_index += 1
+
                     statement_search_text = document._.search_index
 
                     statement = Statement(
@@ -160,8 +212,6 @@ class ChatterBotCorpusTrainer(Trainer):
                     )
 
                     statement.add_tags(*categories)
-
-                    statement = self.get_preprocessed_statement(statement)
 
                     previous_statement_text = statement.text
                     previous_statement_search_text = statement_search_text
@@ -283,18 +333,33 @@ class GenericFileTrainer(Trainer):
 
                 text_row = self.field_map['text']
 
+                # Collect all rows first to avoid re-reading file
+                rows_list = [row for row in data if len(row) > 0]
+
+                # Create preliminary Statement objects with metadata for preprocessing
+                preliminary_statements = []
+                contexts = []  # Store contexts separately to maintain order
+
                 try:
-                    documents = self.chatbot.tagger.as_nlp_pipeline([
-                        (
-                            row[text_row],
-                            {
-                                # Include any defined metadata columns
-                                key: row[value]
-                                for key, value in self.field_map.items()
-                                if key != text_row
-                            }
-                        ) for row in data if len(row) > 0
-                    ])
+                    for row in rows_list:
+                        context = {
+                            key: row[value]
+                            for key, value in self.field_map.items()
+                            if key != text_row
+                        }
+                        contexts.append(context)
+
+                        statement = Statement(
+                            text=row[text_row],
+                            conversation=context.get('conversation', 'training'),
+                            persona=context.get('persona', None),
+                            tags=context.get('tags', [])
+                        )
+
+                        if 'created_at' in context:
+                            statement.created_at = date_parser.parse(context['created_at'])
+
+                        preliminary_statements.append(statement)
                 except KeyError as e:
                     raise KeyError(
                         f'{e}. Please check the field_map parameter used to initialize '
@@ -302,19 +367,51 @@ class GenericFileTrainer(Trainer):
                         f'Current mapping: {self.field_map}'
                     )
 
+                # Apply preprocessors prior to tagging to normalize text
+                preprocessed_statements = self.get_preprocessed_statements(preliminary_statements)
+
+                # Extract cleaned text with context for batch tagging
+                text_values = [
+                    (stmt.text, context)
+                    for stmt, context in zip(preprocessed_statements, contexts)
+                ]
+
+                documents = self.chatbot.tagger.as_nlp_pipeline(
+                    text_values,
+                    batch_size=2000,
+                    n_process=1  # NOTE: Not all spaCy models support multiprocessing
+                )
+
             response_to_search_index_mapping = {}
 
             if 'in_response_to' in self.field_map.keys():
                 # Generate the search_in_response_to value for the in_response_to fields
-                response_documents = self.chatbot.tagger.as_nlp_pipeline([
-                    (
-                        row[self.field_map['in_response_to']]
-                    ) for row in data if len(row) > 0 and row[self.field_map['in_response_to']] is not None
-                ])
+                # Process all response values in one batch
+                in_response_to_field = self.field_map['in_response_to']
+                response_texts = [
+                    row[in_response_to_field]
+                    for row in rows_list
+                    if row[in_response_to_field] is not None
+                ]
 
-                # (Process the response values the same way as the text values)
-                for document in response_documents:
-                    response_to_search_index_mapping[document.text] = document._.search_index
+                if response_texts:
+                    # Preprocess response texts before tagging
+                    response_statements = [
+                        Statement(text=text, conversation='training')
+                        for text in response_texts
+                    ]
+                    response_statements = self.get_preprocessed_statements(response_statements)
+                    cleaned_response_texts = [stmt.text for stmt in response_statements]
+
+                    response_documents = self.chatbot.tagger.as_nlp_pipeline(
+                        cleaned_response_texts,
+                        batch_size=2000,
+                        n_process=1
+                    )
+
+                    # (Process the response values the same way as the text values)
+                    for document in response_documents:
+                        response_to_search_index_mapping[document.text] = document._.search_index
 
             for document, context in documents:
                 statement = Statement(
@@ -341,9 +438,6 @@ class GenericFileTrainer(Trainer):
                     # the previous statement as the in_response_to value
                     statement.in_response_to = previous_statement_text
                     statement.search_in_response_to = previous_statement_search_text
-
-                for preprocessor in self.chatbot.preprocessors:
-                    statement = preprocessor(statement)
 
                 previous_statement_text = statement.text
                 previous_statement_search_text = statement.search_text
