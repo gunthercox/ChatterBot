@@ -20,7 +20,19 @@ class SpecificResponseAdapter(LogicAdapter):
     def __init__(self, chatbot, **kwargs):
         super().__init__(chatbot, **kwargs)
 
-        self.input_text = kwargs.get('input_text')
+        try:
+            self.input_text = kwargs['input_text']
+        except KeyError:
+            raise chatbot.ChatBotException(
+                'The SpecificResponseAdapter requires an input_text parameter.'
+            )
+
+        try:
+            self._output_text = kwargs['output_text']
+        except KeyError:
+            raise chatbot.ChatBotException(
+                'The SpecificResponseAdapter requires an output_text parameter.'
+            )
 
         self.matcher = None
 
@@ -32,8 +44,6 @@ class SpecificResponseAdapter(LogicAdapter):
             self.matcher = MatcherClass(self.nlp.vocab)
 
             self.matcher.add('SpecificResponse', [self.input_text])
-
-        self._output_text = kwargs.get('output_text')
 
     def _initialize_nlp(self, language):
         model = get_model_for_language(language)

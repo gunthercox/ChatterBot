@@ -17,6 +17,26 @@ class SpecificResponseAdapterTestCase(ChatBotTestCase):
             output_text='Your sesame seed hamburger roll is now open.'
         )
 
+    def test_initialization_with_missing_input_text(self):
+        """"
+        Test that an exception is raised if input_text is missing.
+        """
+        with self.assertRaises(self.chatbot.ChatBotException):
+            SpecificResponseAdapter(
+                self.chatbot,
+                output_text='Done!'
+            )
+
+    def test_initialization_with_missing_output_text(self):
+        """"
+        Test that an exception is raised if output_text is missing.
+        """
+        with self.assertRaises(self.chatbot.ChatBotException):
+            SpecificResponseAdapter(
+                self.chatbot,
+                input_text='Do something!'
+            )
+
     def test_exact_match(self):
         """
         Test the case that an exact match is given.
