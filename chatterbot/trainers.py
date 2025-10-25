@@ -104,6 +104,7 @@ class ListTrainer(Trainer):
         documents = list(self.chatbot.tagger.as_nlp_pipeline(
             preprocessed_texts,
             batch_size=2000,
+            # NOTE: Not all spaCy models support multi-processing
             n_process=1
         ))
 
@@ -168,6 +169,7 @@ class ChatterBotCorpusTrainer(Trainer):
             documents = list(self.chatbot.tagger.as_nlp_pipeline(
                 preprocessed_texts,
                 batch_size=2000,
+                # NOTE: Not all spaCy models support multi-processing
                 n_process=1
             ))
 
@@ -345,6 +347,7 @@ class GenericFileTrainer(Trainer):
                 documents = self.chatbot.tagger.as_nlp_pipeline(
                     text_values,
                     batch_size=2000,
+                    # NOTE: Not all spaCy models support multi-processing
                     n_process=1
                 )
 
@@ -375,6 +378,7 @@ class GenericFileTrainer(Trainer):
                     response_documents = self.chatbot.tagger.as_nlp_pipeline(
                         preprocessed_response_texts,
                         batch_size=2000,
+                        # NOTE: Not all spaCy models support multi-processing
                         n_process=1
                     )
 
