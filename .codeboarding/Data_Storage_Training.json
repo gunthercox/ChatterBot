@@ -11,41 +11,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "chatterbot/storage/storage_adapter.py",
-        "chatterbot/storage/mongodb.py",
-        "chatterbot/storage/redis.py",
-        "chatterbot/storage/sql_storage.py",
-        "chatterbot/storage/django_storage.py",
-        "chatterbot/ext/django_chatterbot/models.py",
-        "chatterbot/ext/django_chatterbot/abstract_models.py",
-        "chatterbot/ext/django_chatterbot/migrations/0014_remove_statement_extra_data.py",
-        "chatterbot/ext/django_chatterbot/migrations/__init__.py",
-        "chatterbot/ext/django_chatterbot/migrations/0005_statement_created_at.py",
-        "chatterbot/ext/django_chatterbot/migrations/0011_blank_extra_data.py",
-        "chatterbot/ext/django_chatterbot/migrations/0016_statement_stemmed_text.py",
-        "chatterbot/ext/django_chatterbot/migrations/0020_alter_statement_conversation_and_more.py",
-        "chatterbot/ext/django_chatterbot/migrations/0019_alter_statement_id_alter_tag_id_and_more.py",
-        "chatterbot/ext/django_chatterbot/migrations/0018_text_max_length.py",
-        "chatterbot/ext/django_chatterbot/migrations/0002_statement_extra_data.py",
-        "chatterbot/ext/django_chatterbot/migrations/0003_change_occurrence_default.py",
-        "chatterbot/ext/django_chatterbot/migrations/0001_initial.py",
-        "chatterbot/ext/django_chatterbot/migrations/0010_statement_text.py",
-        "chatterbot/ext/django_chatterbot/migrations/0004_rename_in_response_to.py",
-        "chatterbot/ext/django_chatterbot/migrations/0012_statement_created_at.py",
-        "chatterbot/ext/django_chatterbot/migrations/0009_tags.py",
-        "chatterbot/ext/django_chatterbot/migrations/0008_update_conversations.py",
-        "chatterbot/ext/django_chatterbot/migrations/0015_statement_persona.py",
-        "chatterbot/ext/django_chatterbot/migrations/0013_change_conversations.py",
-        "chatterbot/ext/django_chatterbot/migrations/0006_create_conversation.py",
-        "chatterbot/ext/django_chatterbot/migrations/0007_response_created_at.py",
-        "chatterbot/ext/django_chatterbot/migrations/0017_tags_unique.py",
-        "chatterbot/ext/sqlalchemy_app/__init__.py",
-        "chatterbot/ext/sqlalchemy_app/models.py",
-        "chatterbot/vectorstores.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Training Module",
@@ -57,11 +23,7 @@
           "reference_start_line": 14,
           "reference_end_line": 77
         }
-      ],
-      "assigned_files": [
-        "chatterbot/trainers.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Corpus Data Loader",
@@ -73,24 +35,12 @@
           "reference_start_line": 1,
           "reference_end_line": 10
         }
-      ],
-      "assigned_files": [
-        "chatterbot/corpus.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "chatterbot/ext/django_chatterbot/__init__.py",
-        "chatterbot/ext/django_chatterbot/apps.py",
-        "chatterbot/ext/django_chatterbot/settings.py",
-        "chatterbot/ext/django_chatterbot/model_admin.py",
-        "chatterbot/ext/django_chatterbot/admin.py"
-      ],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
