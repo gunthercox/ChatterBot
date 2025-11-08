@@ -45,6 +45,8 @@
       "assigned_files": [
         "chatterbot/search.py",
         "chatterbot/response_selection.py",
+        "chatterbot/vectorstores.py",
+        "chatterbot/filters.py",
         "chatterbot/comparisons.py",
         "chatterbot/logic/unit_conversion.py",
         "chatterbot/logic/mathematical_evaluation.py",
@@ -80,7 +82,6 @@
       ],
       "assigned_files": [
         "chatterbot/corpus.py",
-        "chatterbot/vectorstores.py",
         "chatterbot/trainers.py",
         "chatterbot/ext/django_chatterbot/models.py",
         "chatterbot/ext/django_chatterbot/abstract_models.py",
@@ -133,9 +134,7 @@
       "assigned_files": [
         "chatterbot/tagging.py",
         "chatterbot/parsing.py",
-        "chatterbot/preprocessors.py",
-        "chatterbot/filters.py",
-        "chatterbot/languages.py"
+        "chatterbot/preprocessors.py"
       ],
       "can_expand": true
     },
@@ -153,7 +152,7 @@
       "assigned_files": [
         "chatterbot/llm.py"
       ],
-      "can_expand": false
+      "can_expand": true
     },
     {
       "name": "Unclassified",
@@ -197,6 +196,7 @@
         "chatterbot/constants.py",
         "chatterbot/utils.py",
         "chatterbot/exceptions.py",
+        "chatterbot/languages.py",
         "chatterbot/ext/__init__.py",
         "chatterbot/ext/django_chatterbot/__init__.py",
         "chatterbot/ext/django_chatterbot/apps.py",
@@ -208,6 +208,13 @@
         "chatterbot/storage/__init__.py",
         "chatterbot/logic/__init__.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {

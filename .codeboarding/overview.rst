@@ -12,6 +12,7 @@ Overview
       Unclassified["Unclassified"]
       Unclassified["Unclassified"]
       Unclassified["Unclassified"]
+      Unclassified["Unclassified"]
       Chatbot_Core_Engine -- "Receives Processed Input From" --> Input_Output_Processors
       Chatbot_Core_Engine -- "Delegates Response Generation To" --> Logic_Response_Adapters
       Logic_Response_Adapters -- "Queries Knowledge Base From" --> Data_Storage_Training
@@ -21,8 +22,10 @@ Overview
       Data_Storage_Training -- "Provides Knowledge Base Data To" --> Logic_Response_Adapters
       LLM_Integration -- "Returns Generative Response To" --> Chatbot_Core_Engine
       click Chatbot_Core_Engine href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/Chatbot_Core_Engine.html" "Details"
+      click Logic_Response_Adapters href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/Logic_Response_Adapters.html" "Details"
       click Data_Storage_Training href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/Data_Storage_Training.html" "Details"
       click Input_Output_Processors href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/Input_Output_Processors.html" "Details"
+      click LLM_Integration href "https://github.com/CodeBoarding/ChatterBot/blob/master/.codeboarding/LLM_Integration.html" "Details"
 
 | |codeboarding-badge| |demo-badge| |contact-badge|
 
@@ -51,6 +54,8 @@ The central orchestrator, managing conversation flow, input processing, and resp
 
 Logic & Response Adapters
 ^^^^^^^^^^^^^^^^^^^^^^^^^
+
+:ref:`Expand <Logic_Response_Adapters>`
 
 A collection of specialized modules that determine how the chatbot responds to specific types of input, including statement comparison and response selection logic.
 
@@ -88,11 +93,20 @@ Responsible for preprocessing raw user input (e.g., cleaning whitespace, parsing
 LLM Integration
 ^^^^^^^^^^^^^^^
 
+:ref:`Expand <LLM_Integration>`
+
 Provides an abstract interface for integrating Large Language Models, allowing ChatterBot to leverage advanced generative capabilities for responses.
 
 **Related Classes/Methods**:
 
 * chatterbot.llm
+
+Unclassified
+^^^^^^^^^^^^
+
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+**Related Classes/Methods**: *None*
 
 Unclassified
 ^^^^^^^^^^^^
