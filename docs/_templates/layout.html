@@ -5,6 +5,83 @@
 
 {%- block htmltitle %}
     <meta name="google-site-verification" content="uM9aB6XUTqBdf9f_THPuD1p8GplQU7kYLPAsrl1cORs" />
+
+    <link rel="stylesheet" id="silktide-consent-manager-css" href="{{ pathto('_static/silktide-consent-manager.css', 1) }}">
+    <script src="{{ pathto('_static/silktide-consent-manager.js', 1) }}"></script>
+    <script>
+    silktideCookieBannerManager.updateCookieBannerConfig({
+      background: {
+        showBackground: true
+      },
+      cookieIcon: {
+        position: "bottomRight"
+      },
+      cookieTypes: [
+        {
+          id: "analytics",
+          name: "Analytics",
+          description: "<p>These cookies are necessary for the website to function properly and cannot be switched off. They help with things like logging in and setting your privacy preferences.</p>",
+          defaultValue: true,
+          required: false,
+          onAccept: function() {
+            gtag('consent', 'update', {
+              analytics_storage: 'granted',
+            });
+            dataLayer.push({
+              'event': 'consent_accepted_analytics',
+            });
+          },
+          onReject: function() {
+            gtag('consent', 'update', {
+              analytics_storage: 'denied',
+            });
+          }
+        },
+        {
+          id: "advertising",
+          name: "Advertising",
+          description: "<p>These cookies help us improve the site by tracking which pages are most popular and how visitors move around the site.</p>",
+          defaultValue: true,
+          required: false,
+          onAccept: function() {
+            gtag('consent', 'update', {
+              ad_storage: 'granted',
+              ad_user_data: 'granted',
+              ad_personalization: 'granted',
+            });
+            dataLayer.push({
+              'event': 'consent_accepted_advertising',
+            });
+          },
+          onReject: function() {
+            gtag('consent', 'update', {
+              ad_storage: 'denied',
+              ad_user_data: 'denied',
+              ad_personalization: 'denied',
+            });
+          }
+        }
+      ],
+      text: {
+        banner: {
+          description: "<p>We use cookies on our site to enhance your user experience, provide personalized content, and analyze our traffic. <a href=\"https://chatterbot.us/privacy/\" target=\"_blank\">Cookie Policy.</a></p>",
+          acceptAllButtonText: "Accept all",
+          acceptAllButtonAccessibleLabel: "Accept all cookies",
+          rejectNonEssentialButtonText: "Reject non-essential",
+          rejectNonEssentialButtonAccessibleLabel: "Reject non-essential",
+          preferencesButtonText: "Preferences",
+          preferencesButtonAccessibleLabel: "Toggle preferences"
+        },
+        preferences: {
+          title: "Customize your cookie preferences",
+          description: "<p>We respect your right to privacy. You can choose not to allow some types of cookies. Your cookie preferences will apply across our website.</p>",
+          creditLinkText: "Get this banner for free",
+          creditLinkAccessibleLabel: "Get this banner for free"
+        }
+      }
+    });
+    </script>
+
     <meta name="google-adsense-account" content="ca-pub-3019790405701706">
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-3019790405701706"
     crossorigin="anonymous"></script>
@@ -27,8 +104,17 @@
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
-    gtag('js', new Date());
 
+    // Set consent defaults
+    // https://silktide.com/consent-manager/docs/google-consent-mode/
+    gtag('consent', 'default', {
+        analytics_storage: localStorage.getItem('silktideCookieChoice_analytics') === 'true' ? 'granted' : 'denied',
+        ad_storage: localStorage.getItem('silktideCookieChoice_advertising') === 'true' ? 'granted' : 'denied',
+        ad_user_data: localStorage.getItem('silktideCookieChoice_advertising') === 'true' ? 'granted' : 'denied',
+        ad_personalization: localStorage.getItem('silktideCookieChoice_advertising') === 'true' ? 'granted' : 'denied',
+    });
+
+    gtag('js', new Date());
     gtag('config', 'G-733BJS6NWQ');
     </script>
 {% endblock %}

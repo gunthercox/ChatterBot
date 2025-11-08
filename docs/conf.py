@@ -143,11 +143,13 @@ html_sidebars = {
 }
 
 html_css_files = [
-    'style.css'
+    'style.css',
+    'silktide-consent-manager.css'
 ]
 
 html_js_files = [
-    'mobile.js'
+    'mobile.js',
+    'silktide-consent-manager.js'
 ]
 
 # Additional templates that should be rendered to pages, maps page names to
