@@ -146,6 +146,10 @@ html_css_files = [
     'style.css'
 ]
 
+html_js_files = [
+    'mobile.js'
+]
+
 # Additional templates that should be rendered to pages, maps page names to
 # template names.
 # html_additional_pages = {}

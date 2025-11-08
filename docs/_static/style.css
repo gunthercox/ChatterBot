@@ -1,5 +1,13 @@
+/* ===================================================================
+   MOBILE-FIRST RESPONSIVE DESIGN
+   Optimized for mobile devices, tablets, and desktop screens
+   =================================================================== */
+
+/* Base Styles - Mobile First */
 table {
     width: 100%;
+    overflow-x: auto;
+    display: block;
 }
 
 th.head p {
@@ -51,7 +59,6 @@ div.sphinxsidebar input[type="submit"] {
     border-bottom-right-radius: 5px;
 }
 
-
 .help-footer {
     margin-top: 15px;
     border-top: 15px #320023 solid;
@@ -66,7 +73,6 @@ div.sphinxsidebar input[type="submit"] {
     color: #2980B9;
     text-decoration: none;
 }
-
 
 .bluesky-social-icon {
     width: 30px;
@@ -83,4 +89,583 @@ div.sphinxsidebar input[type="submit"] {
     padding: 12px;
     border: 1px solid;
     border-radius: 2px;
+}
+
+/* ===================================================================
+   MOBILE RESPONSIVE ENHANCEMENTS
+   =================================================================== */
+
+/* Skip to content link for accessibility */
+.skip-to-content {
+    position: absolute;
+    top: -40px;
+    left: 0;
+    background: #300a24;
+    color: #e8ffca;
+    padding: 8px 15px;
+    text-decoration: none;
+    z-index: 1002;
+    border-radius: 0 0 4px 0;
+    font-weight: 600;
+    transition: top 0.2s;
+}
+
+.skip-to-content:focus {
+    top: 0;
+    outline: 3px solid #2980B9;
+    outline-offset: 0;
+}
+
+/* Mobile Sidebar Overlay */
+.mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.5);
+    z-index: 998;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+
+.mobile-sidebar-overlay.active {
+    display: block;
+    opacity: 1;
+}
+
+/* Mobile Menu Toggle Button */
+.mobile-menu-toggle {
+    display: none;
+    position: fixed;
+    top: 15px;
+    right: 15px;
+    z-index: 1001;
+    background-color: #300a24;
+    color: #e8ffca;
+    border: 2px solid #503949;
+    padding: 10px 18px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.4);
+    transition: all 0.2s ease;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
+}
+
+.mobile-menu-toggle:hover,
+.mobile-menu-toggle:focus {
+    background-color: #503949;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+    outline: none;
+}
+
+.mobile-menu-toggle:active {
+    transform: scale(0.95);
+}
+
+/* Mobile Styles - Screens smaller than 480px (actual phones) */
+@media screen and (max-width: 480px) {
+
+    /* Show mobile menu toggle */
+    .mobile-menu-toggle {
+        display: block;
+    }
+
+    /* Document wrapper adjustments - Remove any added margins */
+    div.document {
+        width: 100% !important;
+        margin: 0 !important;
+        max-width: none !important;
+    }
+
+    div.documentwrapper {
+        float: none !important;
+        width: 100% !important;
+        margin: 0 !important;
+        margin-left: 0 !important;
+        margin-right: 0 !important;
+    }
+
+    div.bodywrapper {
+        margin: 0 !important;
+        padding: 0 !important;
+    }
+
+    div.body {
+        padding: 15px !important;
+        min-width: auto !important;
+        max-width: 100% !important;
+        margin: 0 !important;
+    }
+
+    /* Sidebar responsive behavior */
+    div.sphinxsidebar {
+        float: none !important;
+        width: 85% !important;
+        max-width: 320px !important;
+        margin: 0 !important;
+        padding: 20px !important;
+        position: fixed !important;
+        top: 0;
+        left: -100%;
+        height: 100vh;
+        overflow-y: auto;
+        overflow-x: hidden;
+        background-color: #300a24 !important;
+        z-index: 999;
+        transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        box-shadow: 3px 0 10px rgba(0, 0, 0, 0.3);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    div.sphinxsidebar.mobile-open {
+        left: 0;
+    }
+
+    /* Improve sidebar content on mobile - light text on dark background */
+    div.sphinxsidebar h3 {
+        font-size: 1.1em !important;
+        margin-top: 0;
+        padding-top: 0;
+        color: #e8ffca !important;
+    }
+
+    div.sphinxsidebar ul {
+        margin-left: 0;
+        padding-left: 20px;
+    }
+
+    div.sphinxsidebar li {
+        margin: 8px 0;
+    }
+
+    div.sphinxsidebar a {
+        display: block;
+        padding: 8px 0;
+        line-height: 1.4;
+        color: #e8ffca !important;
+    }
+
+    div.sphinxsidebar a:hover {
+        color: #ffffff !important;
+        text-decoration: underline;
+    }
+
+    /* Related navigation bar */
+    div.related {
+        padding: 8px 15px !important;
+        font-size: 0.9em;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    div.related ul {
+        white-space: nowrap;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 5px;
+    }
+
+    div.related li {
+        font-size: 0.85em;
+        display: inline-block;
+    }
+
+    div.related a {
+        padding: 5px 10px;
+    }
+
+    /* Banner image */
+    .banner img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Typography adjustments */
+    div.body h1 {
+        font-size: 1.75em !important;
+        margin-top: 0.5em;
+        line-height: 1.2;
+        word-wrap: break-word;
+    }
+
+    div.body h2 {
+        font-size: 1.45em !important;
+        line-height: 1.3;
+        word-wrap: break-word;
+    }
+
+    div.body h3 {
+        font-size: 1.25em !important;
+        line-height: 1.3;
+    }
+
+    div.body h4,
+    div.body h5,
+    div.body h6 {
+        font-size: 1.1em !important;
+        line-height: 1.3;
+    }
+
+    div.body p,
+    div.body li {
+        line-height: 1.6;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* Code blocks */
+    div.highlight,
+    pre {
+        overflow-x: auto !important;
+        font-size: 0.85em;
+        -webkit-overflow-scrolling: touch;
+        border-radius: 4px;
+        margin: 1em 0;
+    }
+
+    div.highlight pre {
+        white-space: pre;
+        word-wrap: normal;
+        overflow-wrap: normal;
+    }
+
+    /* Code block wrapper indicator */
+    div.highlight::after {
+        content: '← Scroll →';
+        display: block;
+        text-align: center;
+        font-size: 0.7em;
+        color: #666;
+        margin-top: -5px;
+        padding: 3px;
+        opacity: 0.6;
+    }
+
+    /* Tables */
+    table {
+        font-size: 0.85em;
+        display: block;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    table.docutils {
+        border: 0;
+        margin: 1em 0;
+    }
+
+    table.docutils td,
+    table.docutils th {
+        padding: 8px !important;
+        border: 1px solid #ccc;
+        white-space: nowrap;
+    }
+
+    table.docutils th {
+        background-color: #300a24;
+        color: #e8ffca;
+        font-weight: bold;
+    }
+
+    /* Table wrapper */
+    .table-wrapper {
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 1em 0;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    /* Images */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+        display: block;
+    }
+
+    /* Footer */
+    div.footer {
+        padding: 15px !important;
+        font-size: 0.9em;
+        text-align: center;
+    }
+
+    /* Search box */
+    #searchbox {
+        margin-bottom: 15px;
+    }
+
+    #searchbox input[type="text"] {
+        width: 100% !important;
+        box-sizing: border-box;
+        padding: 8px;
+        font-size: 16px; /* Prevents zoom on iOS */
+    }
+
+    #searchbox input[type="submit"] {
+        padding: 8px 15px;
+        font-size: 16px;
+    }
+
+    /* Admonitions */
+    .admonition {
+        padding: 12px !important;
+        margin: 15px 0 !important;
+        border-radius: 4px;
+    }
+
+    .admonition-title {
+        font-size: 1em !important;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    /* Links */
+    a {
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    /* Prevent text overflow */
+    div.body {
+        overflow-wrap: break-word;
+        word-wrap: break-word;
+    }
+}
+
+/* Small to Medium Screens - Restore Sphinx default layout */
+@media screen and (min-width: 481px) {
+    /* Reset document to use flex layout (Sphinx classic theme default) */
+    div.document {
+        display: flex !important;
+    }
+
+    /* Completely reset all mobile sidebar overrides */
+    div.sphinxsidebar {
+        position: relative !important;
+        float: none !important;
+        width: 230px !important;
+        max-width: 230px !important;
+        left: auto !important;
+        top: auto !important;
+        height: auto !important;
+        background-color: #300a24 !important;
+        box-shadow: none !important;
+        transition: none !important;
+        z-index: auto !important;
+        overflow-y: visible !important;
+        overflow-x: visible !important;
+        padding: 0 15px 15px 0 !important;
+        margin: 0 !important;
+        order: -1 !important;
+        flex-shrink: 0 !important;
+    }
+
+    /* Light text on dark background for desktop sidebar too */
+    div.sphinxsidebar h3 {
+        color: #e8ffca !important;
+    }
+
+    div.sphinxsidebar a {
+        color: #e8ffca !important;
+    }
+
+    div.sphinxsidebar a:hover {
+        color: #ffffff !important;
+    }
+
+    /* Ensure content wrapper uses flex layout - sidebar on LEFT */
+    div.documentwrapper {
+        float: left !important;
+        width: 100% !important;
+        margin-left: 0 !important;
+        flex-grow: 1 !important;
+    }
+
+    div.bodywrapper {
+        margin: 0 0 0 0px !important;
+        padding: 0 !important;
+    }
+
+    /* Clean margins */
+    div.document {
+        margin: 0 !important;
+        max-width: none !important;
+    }
+
+    div.body {
+        margin: 0 !important;
+    }
+}
+
+/* Large Screen Optimizations - Screens larger than 1024px */
+@media screen and (min-width: 1024px) {
+
+    /* Wider sidebar for large screens */
+    div.sphinxsidebar {
+        width: 300px !important;
+        max-width: 300px !important;
+    }
+
+    div.bodywrapper {
+        margin: 0 0 0 0px !important;
+    }
+
+    /* Just ensure clean margins, don't override layout */
+    div.document {
+        margin: 0 !important;
+        max-width: none !important;
+        display: flex !important;
+    }
+
+    div.documentwrapper {
+        margin: 0 !important;
+    }
+
+    div.body {
+        margin: 0 !important;
+    }
+
+    /* Images */
+    img {
+        max-width: 100%;
+        height: auto;
+    }
+
+    /* Code blocks with better readability */
+    div.highlight,
+    pre {
+        max-width: 100%;
+    }
+
+    /* Better table spacing */
+    table.docutils td,
+    table.docutils th {
+        padding: 10px !important;
+    }
+}
+
+/* Extra large screens - same as desktop */
+@media screen and (min-width: 1600px) {
+    div.document {
+        margin: 0 !important;
+        max-width: none !important;
+    }
+
+    div.body {
+        font-size: 16px;
+        line-height: 1.7;
+    }
+}
+
+/* Touch-friendly improvements for all mobile devices */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Increase tap targets */
+    a,
+    button,
+    input[type="submit"],
+    input[type="button"] {
+        min-height: 44px;
+        min-width: 44px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px 15px;
+    }
+
+    /* Better spacing for touch */
+    div.sphinxsidebar a {
+        padding: 12px 5px;
+    }
+
+    /* Improve touch scrolling */
+    div.sphinxsidebar,
+    div.body,
+    div.highlight,
+    table,
+    .table-wrapper {
+        -webkit-overflow-scrolling: touch;
+    }
+
+    /* Remove hover states that don't work on touch */
+    *:hover {
+        -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    }
+
+    /* Better focus states for accessibility */
+    a:focus,
+    button:focus,
+    input:focus {
+        outline: 3px solid #2980B9;
+        outline-offset: 2px;
+    }
+}
+
+/* Landscape orientation on mobile */
+@media screen and (max-width: 480px) and (orientation: landscape) {
+    div.sphinxsidebar {
+        width: 60% !important;
+        max-width: 400px !important;
+    }
+
+    div.body {
+        padding: 10px 15px !important;
+    }
+}
+
+/* High DPI / Retina displays */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    /* Sharper borders and shadows */
+    .mobile-menu-toggle {
+        border-width: 1px;
+    }
+
+    div.sphinxsidebar {
+        box-shadow: 2px 0 8px rgba(0, 0, 0, 0.25);
+    }
+}
+
+/* Reduce motion for users who prefer it */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+
+    div.sphinxsidebar {
+        transition: none !important;
+    }
+
+    .mobile-sidebar-overlay {
+        transition: none !important;
+    }
+}
+
+/* Print styles */
+@media print {
+
+    div.sphinxsidebar,
+    div.related,
+    .mobile-menu-toggle {
+        display: none !important;
+    }
+
+    div.documentwrapper {
+        width: 100% !important;
+        margin: 0 !important;
+    }
+
+    div.body {
+        padding: 0 !important;
+    }
 }
