@@ -17,17 +17,7 @@
           "reference_start_line": 10,
           "reference_end_line": 34
         }
-      ],
-      "assigned_files": [
-        "chatterbot/search.py",
-        "chatterbot/logic/unit_conversion.py",
-        "chatterbot/logic/mathematical_evaluation.py",
-        "chatterbot/logic/logic_adapter.py",
-        "chatterbot/logic/best_match.py",
-        "chatterbot/logic/specific_response.py",
-        "chatterbot/logic/time_adapter.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Response Selection",
@@ -39,11 +29,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "chatterbot/response_selection.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Comparisons",
@@ -73,21 +59,12 @@
           "reference_start_line": 122,
           "reference_end_line": 182
         }
-      ],
-      "assigned_files": [
-        "chatterbot/comparisons.py"
-      ],
-      "can_expand": true
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "chatterbot/vectorstores.py",
-        "chatterbot/filters.py"
-      ],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [

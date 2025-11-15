@@ -11,9 +11,7 @@
           "reference_start_line": 302,
           "reference_end_line": 310
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Language Model Interface",
@@ -31,11 +29,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [
-        "chatterbot/llm.py"
-      ],
-      "can_expand": false
+      ]
     },
     {
       "name": "Tool Executor",
@@ -53,9 +47,7 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": true
+      ]
     },
     {
       "name": "Response Formatter",
@@ -67,16 +59,12 @@
           "reference_start_line": null,
           "reference_end_line": null
         }
-      ],
-      "assigned_files": [],
-      "can_expand": false
+      ]
     },
     {
       "name": "Unclassified",
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [],
-      "can_expand": false
+      "referenced_source_code": []
     }
   ],
   "components_relations": [
