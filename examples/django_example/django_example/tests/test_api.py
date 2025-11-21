@@ -2,7 +2,6 @@ import json
 from django.test import TestCase
 from django.urls import reverse
 
-
 class ApiTestCase(TestCase):
 
     def setUp(self):
@@ -13,10 +12,9 @@ class ApiTestCase(TestCase):
         response = self.client.post(
             self.api_url,
             data=json.dumps({
-                'type': 'classmethod'
+                'type': 'classmethod'  # Missing 'text' field
             }),
-            content_type='application/json',
-            format='json'
+            content_type='application/json'
         )
 
         self.assertEqual(response.status_code, 400)
@@ -24,16 +22,12 @@ class ApiTestCase(TestCase):
         self.assertEqual(['The attribute "text" is required.'], response.json()['text'])
 
     def test_post(self):
-        """
-        Test that a response is returned.
-        """
         response = self.client.post(
             self.api_url,
             data=json.dumps({
                 'text': 'How are you?'
             }),
-            content_type='application/json',
-            format='json'
+            content_type='application/json'
         )
 
         self.assertEqual(response.status_code, 200)
@@ -42,16 +36,12 @@ class ApiTestCase(TestCase):
         self.assertIn('in_response_to', response.json())
 
     def test_post_unicode(self):
-        """
-        Test that a response is returned.
-        """
         response = self.client.post(
             self.api_url,
             data=json.dumps({
-                'text': u'سلام'
+                'text': 'سلام'  # Unicode string
             }),
-            content_type='application/json',
-            format='json'
+            content_type='application/json'
         )
 
         self.assertEqual(response.status_code, 200)
@@ -60,16 +50,12 @@ class ApiTestCase(TestCase):
         self.assertIn('in_response_to', response.json())
 
     def test_escaped_unicode_post(self):
-        """
-        Test that unicode reponce
-        """
         response = self.client.post(
             self.api_url,
             data=json.dumps({
-                'text': '\u2013'
+                'text': '\u2013'  # Unicode escape
             }),
-            content_type='application/json',
-            format=json
+            content_type='application/json'
         )
 
         self.assertEqual(response.status_code, 200)
@@ -86,8 +72,7 @@ class ApiTestCase(TestCase):
         response = self.client.post(
             self.api_url,
             data=json.dumps(post_data),
-            content_type='application/json',
-            format='json'
+            content_type='application/json'
         )
 
         self.assertEqual(response.status_code, 200)
@@ -98,20 +83,16 @@ class ApiTestCase(TestCase):
 
     def test_get(self):
         response = self.client.get(self.api_url)
-
         self.assertEqual(response.status_code, 200)
 
     def test_patch(self):
         response = self.client.patch(self.api_url)
-
         self.assertEqual(response.status_code, 405)
 
     def test_put(self):
         response = self.client.put(self.api_url)
-
         self.assertEqual(response.status_code, 405)
 
     def test_delete(self):
         response = self.client.delete(self.api_url)
-
         self.assertEqual(response.status_code, 405)
