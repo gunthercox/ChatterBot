@@ -103,6 +103,16 @@ See release notes for changes https://github.com/gunthercox/ChatterBot/releases
 5. Use the projects [built-in automated testing](https://docs.chatterbot.us/testing/).
    to help make sure that your contribution is free from errors.
 
+# Sponsors
+
+ChatterBot is sponsored by:
+
+<p style="font-size:21px; color:black;">Browser testing via 
+   <a href="https://www.lambdatest.com/?utm_source=chatterbot&utm_medium=sponsor" target="_blank">
+      <img src="https://www.lambdatest.com/blue-logo.png" style="vertical-align: middle;" width="250" height="45" />
+   </a>
+</p>
+
 # License
 
 ChatterBot is licensed under the [BSD 3-clause license](https://opensource.org/licenses/BSD-3-Clause).
