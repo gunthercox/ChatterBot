@@ -123,5 +123,9 @@ ChatterBot is sponsored by:
       </a>
    </div>
 
+   <p>
+      If you, or your organization is interested in sponsoring the ChatterBot project, you can do so directly via <a href="https://github.com/sponsors/gunthercox">GitHub Sponsors</a> as well as reach out directly via <code>community@chatterbot.us</code> for more information and to discuss sponsorship opportunities.
+   </p>
+
 .. _GitHub: https://github.com/gunthercox/ChatterBot/issues/
 .. _Salvius: https://salvius.org
