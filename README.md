@@ -92,16 +92,10 @@ section of the documentation.
 
 See release notes for changes https://github.com/gunthercox/ChatterBot/releases
 
-# Development pattern for contributors
+# Contributing
 
-1. [Create a fork](https://help.github.com/articles/fork-a-repo/) of
-   the [main ChatterBot repository](https://github.com/gunthercox/ChatterBot) on GitHub.
-2. Make your changes in a branch named something different from `master`, e.g. create
-   a new branch `my-pull-request`.
-3. [Create a pull request](https://help.github.com/articles/creating-a-pull-request/).
-4. Please follow the [Python style guide for PEP-8](https://www.python.org/dev/peps/pep-0008/).
-5. Use the projects [built-in automated testing](https://docs.chatterbot.us/testing/).
-   to help make sure that your contribution is free from errors.
+Contributions are welcomed, to help ensure a smooth process please start with the contributing guidelines in our documentation:
+https://docs.chatterbot.us/contributing/
 
 # Sponsors
 
