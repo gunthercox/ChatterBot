@@ -13,6 +13,15 @@ class NoOpTagger(object):
     def __init__(self, language=None):
         self.language = language or languages.ENG
 
+    def needs_text_indexing(self):
+        """
+        Indicates whether this tagger performs text indexing/transformation.
+        Returns False since NoOpTagger passes text through unchanged.
+
+        :return: False
+        """
+        return False
+
     def get_text_index_string(self, text: Union[str, List[str]]):
         """
         Return the text unchanged (no indexing applied).
@@ -61,6 +70,15 @@ class LowercaseTagger(object):
         self.nlp.add_pipe(
             'chatterbot_lowercase_indexer', name='chatterbot_lowercase_indexer', last=True
         )
+
+    def needs_text_indexing(self):
+        """
+        Indicates whether this tagger performs text indexing/transformation.
+        Returns True since LowercaseTagger transforms text to lowercase.
+
+        :return: True
+        """
+        return True
 
     def get_text_index_string(self, text: Union[str, List[str]]):
         if isinstance(text, list):
@@ -113,6 +131,15 @@ class PosLemmaTagger(object):
         self.nlp.add_pipe(
             'chatterbot_bigram_indexer', name='chatterbot_bigram_indexer', last=True
         )
+
+    def needs_text_indexing(self):
+        """
+        Indicates whether this tagger performs text indexing/transformation.
+        Returns True since PosLemmaTagger creates POS-lemma bigram indexes.
+
+        :return: True
+        """
+        return True
 
     def get_text_index_string(self, text: Union[str, List[str]]) -> str:
         """

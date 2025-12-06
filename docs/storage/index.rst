@@ -44,7 +44,7 @@ Choosing a Storage Adapter
 
 **For Semantic AI Chatbots** (Recommended for modern conversational AI):
 
-Note that as of December 2025, the Redis Vector Storage Adapter is still an experimental betafeature.
+Note that as of December 2025, the Redis Vector Storage Adapter is still an experimental beta feature.
 
 Use **Redis Vector Storage** when you need:
 

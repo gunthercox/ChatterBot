@@ -3,7 +3,7 @@ from typing import Union
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import TextSearch, IndexedTextSearch
-from chatterbot.tagging import PosLemmaTagger, NoOpTagger
+from chatterbot.tagging import PosLemmaTagger
 from chatterbot.conversation import Statement
 from chatterbot import languages
 from chatterbot import utils
@@ -212,14 +212,14 @@ class ChatBot(object):
                 input_statement.in_response_to = previous_statement.text
 
         # Make sure the input statement has its search text saved
-        if isinstance(self.tagger, NoOpTagger):
-            # NoOpTagger returns text unchanged, so we can skip the tagging call
+        if not self.tagger.needs_text_indexing():
+            # Tagger doesn't transform text, use it directly
             if not input_statement.search_text:
                 input_statement.search_text = input_statement.text
             if not input_statement.search_in_response_to and input_statement.in_response_to:
                 input_statement.search_in_response_to = input_statement.in_response_to
         else:
-            # Use tagger for POS-lemma indexing or other transformations
+            # Use tagger for text indexing or transformations
             if not input_statement.search_text:
                 _search_text = self.tagger.get_text_index_string(input_statement.text)
                 input_statement.search_text = _search_text
