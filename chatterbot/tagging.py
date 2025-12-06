@@ -4,6 +4,47 @@ from chatterbot.utils import get_model_for_language
 import spacy
 
 
+class NoOpTagger(object):
+    """
+    A no-operation tagger that returns text unchanged.
+    Used by storage adapters that don't rely on indexed search_text fields.
+    """
+
+    def __init__(self, language=None):
+        self.language = language or languages.ENG
+
+    def get_text_index_string(self, text: Union[str, List[str]]):
+        """
+        Return the text unchanged (no indexing applied).
+        """
+        return text
+
+    def as_nlp_pipeline(
+        self,
+        texts: Union[List[str], Tuple[str, dict]],
+        batch_size: int = 1000,
+        n_process: int = 1
+    ):
+        """
+        Returns texts unchanged without NLP processing.
+        Maintains API compatibility with other taggers.
+
+        :param texts: Text strings or tuples of (text, context_dict)
+        :param batch_size: Ignored (for API compatibility)
+        :param n_process: Ignored (for API compatibility)
+        """
+        process_as_tuples = texts and isinstance(texts[0], tuple)
+
+        if process_as_tuples:
+            # Return generator of (text, context) tuples
+            for text, context in texts:
+                yield (text, context)
+        else:
+            # Return generator of text strings
+            for text in texts:
+                yield text
+
+
 class LowercaseTagger(object):
     """
     Returns the text in lowercase.
