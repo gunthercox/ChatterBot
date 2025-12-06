@@ -3,7 +3,7 @@ from typing import Union
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import TextSearch, IndexedTextSearch
-from chatterbot.tagging import PosLemmaTagger
+from chatterbot.tagging import PosLemmaTagger, NoOpTagger
 from chatterbot.conversation import Statement
 from chatterbot import languages
 from chatterbot import utils
@@ -125,8 +125,8 @@ class ChatBot(object):
         # Check if storage adapter has a preferred search algorithm
         preferred_search_algorithm = self.storage.get_preferred_search_algorithm()
         if preferred_search_algorithm and preferred_search_algorithm in self.search_algorithms:
-            # Move preferred algorithm to be used by logic adapters that don't specify one
-            # Logic adapters will inherit this preference through their search_algorithm_name parameter
+            # Set as default for logic adapters that don't specify their own search algorithm
+            # This ensures BestMatch and other adapters use the optimal search method
             self.logger.info(f'Storage adapter prefers search algorithm: {preferred_search_algorithm}')
             kwargs.setdefault('search_algorithm_name', preferred_search_algorithm)
 
@@ -212,9 +212,6 @@ class ChatBot(object):
                 input_statement.in_response_to = previous_statement.text
 
         # Make sure the input statement has its search text saved
-        # Skip expensive tagging if using NoOpTagger (text returned unchanged)
-        from chatterbot.tagging import NoOpTagger
-        
         if isinstance(self.tagger, NoOpTagger):
             # NoOpTagger returns text unchanged, so we can skip the tagging call
             if not input_statement.search_text:

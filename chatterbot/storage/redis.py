@@ -30,7 +30,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
         in the future and its behavior has not yet been finalized.
 
     The RedisVectorStorageAdapter allows ChatterBot to store conversation
-    data in a redis instance.
+    data in a redis instance using vector embeddings for semantic similarity search.
 
     All parameters are optional, by default a redis instance on localhost is assumed.
 

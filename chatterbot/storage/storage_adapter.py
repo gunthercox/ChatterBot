@@ -179,8 +179,34 @@ class StorageAdapter(object):
         Returns None by default, meaning the default tagger will be used.
 
         Storage adapters should override this method to specify their
-        preferred tagger (e.g., NoOpTagger for vector-based storage,
-        PosLemmaTagger for indexed text search).
+        preferred tagger based on their search capabilities.
+
+        Available Taggers:
+
+        - NoOpTagger: Returns text unchanged (for vector-based storage).
+          No spaCy model loading (~500MB memory saved).
+          Faster startup (<1 second vs 2-5 seconds).
+          Use when storage handles semantic search natively.
+
+        - PosLemmaTagger: Creates POS-lemma bigrams (default, for SQL).
+          Enables pattern matching (e.g., "NOUN:cat VERB:run").
+          Requires spaCy language model.
+          Best for exact phrase matching.
+
+        - LowercaseTagger: Simple lowercase transformation.
+          Minimal processing overhead.
+          Case-insensitive matching.
+
+        Example - Vector Storage::
+
+            def get_preferred_tagger(self):
+                from chatterbot.tagging import NoOpTagger
+                return NoOpTagger
+
+        Example - Traditional Storage::
+
+            def get_preferred_tagger(self):
+                return None  # Use default PosLemmaTagger
 
         :return: Tagger class or None
         """
@@ -192,8 +218,37 @@ class StorageAdapter(object):
         Returns None by default, meaning the default search algorithm will be used.
 
         Storage adapters should override this method to specify their
-        preferred search algorithm (e.g., 'semantic_vector_search' for
-        vector-based storage, 'indexed_text_search' for indexed text search).
+        preferred search algorithm based on their capabilities.
+
+        Available Search Algorithms:
+
+        - 'indexed_text_search' (default):
+          Uses POS-lemma indexed fields (search_text, search_in_response_to).
+          Python-based Levenshtein distance comparison.
+          Requires PosLemmaTagger.
+          Best for: Exact pattern matching.
+
+        - 'semantic_vector_search':
+          Uses raw text with vector similarity.
+          Delegates to storage.filter(search_in_response_to_contains=text).
+          No tagger required (works with NoOpTagger).
+          Confidence from storage adapter (cosine similarity).
+          Best for: Context-aware AI responses, semantic understanding.
+
+        - 'text_search' (fallback):
+          Compares raw text without indexes.
+          Slower but works with any storage.
+          Uses comparison functions on all statements.
+
+        Example - Vector Storage::
+
+            def get_preferred_search_algorithm(self):
+                return 'semantic_vector_search'
+
+        Example - SQL Storage::
+
+            def get_preferred_search_algorithm(self):
+                return None  # Use default 'indexed_text_search'
 
         :return: Search algorithm name string or None
         """
