@@ -157,3 +157,73 @@ class TextSearch:
                 if confidence >= 1.0:
                     self.chatbot.logger.info('Exact match found, stopping search')
                     break
+
+
+class SemanticVectorSearch:
+    """
+    Semantic vector search for storage adapters that use vector embeddings.
+    Does not require a tagger or comparison function - relies on the storage
+    adapter's native vector similarity search capabilities.
+
+    :param search_page_size:
+        The maximum number of records to load into memory at a time when searching.
+        Defaults to 1000
+    """
+
+    name = 'semantic_vector_search'
+
+    def __init__(self, chatbot, **kwargs):
+        self.chatbot = chatbot
+
+        self.search_page_size = kwargs.get(
+            'search_page_size', 1000
+        )
+
+    def search(self, input_statement, **additional_parameters):
+        """
+        Search for semantically similar statements using vector similarity.
+        Confidence scores are calculated by the storage adapter based on
+        vector distances and returned in the results.
+
+        :param input_statement: A statement.
+        :type input_statement: chatterbot.conversation.Statement
+
+        :param **additional_parameters: Additional parameters to be passed
+            to the ``filter`` method of the storage adapter when searching.
+
+        :rtype: Generator yielding one closest matching statement at a time.
+        """
+        self.chatbot.logger.info('Beginning semantic vector search')
+
+        search_parameters = {
+            'search_in_response_to_contains': input_statement.text,
+            'persona_not_startswith': 'bot:',
+            'page_size': self.search_page_size
+        }
+
+        if additional_parameters:
+            search_parameters.update(additional_parameters)
+
+        statement_list = self.chatbot.storage.filter(**search_parameters)
+
+        best_confidence_so_far = 0
+
+        self.chatbot.logger.info('Processing search results')
+
+        # Yield statements with confidence scores from vector similarity
+        for statement in statement_list:
+            # Confidence should already be set by the storage adapter
+            confidence = getattr(statement, 'confidence', 0.0)
+
+            if confidence > best_confidence_so_far:
+                best_confidence_so_far = confidence
+
+                self.chatbot.logger.info('Similar statement found: {} {}'.format(
+                    statement.in_response_to, confidence
+                ))
+
+                yield statement
+
+                if confidence >= 1.0:
+                    self.chatbot.logger.info('Exact match found, stopping search')
+                    break
