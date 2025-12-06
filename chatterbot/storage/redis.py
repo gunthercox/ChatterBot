@@ -37,6 +37,12 @@ class RedisVectorStorageAdapter(StorageAdapter):
     :keyword database_uri: eg: redis://localhost:6379/0',
         The database_uri can be specified to choose a redis instance.
     :type database_uri: str
+
+    NOTES:
+    * Unlike other database based storage adapters, the RedisVectorStorageAdapter
+      does not leverage `search_text` and `search_in_response_to` fields for indexing.
+      Instead, it uses vector embeddings to find similar statements based on
+      semantic similarity. This allows for more flexible and context-aware matching.
     """
 
     class RedisMetaDataType:
