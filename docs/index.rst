@@ -19,7 +19,7 @@ developers to create chat bots and automate conversations with users.
 **Modern AI Capabilities** (2025):
 
 - **Semantic Vector Search**: Advanced context understanding using vector embeddings and Redis vector database
-- **Large Language Model (LLM) Integration**: Direct support for Ollama and OpenAI models (in development)
+- **Large Language Model (LLM) Integration**: Experimental support for Ollama and OpenAI models
 - **Storage-Aware Architecture**: Automatic optimization based on storage backend capabilities
 - **Multi-Language Support**: Language-independent design with spaCy integration
 

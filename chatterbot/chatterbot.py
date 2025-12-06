@@ -2,7 +2,7 @@ import logging
 from typing import Union
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
-from chatterbot.search import TextSearch, IndexedTextSearch
+from chatterbot.search import TextSearch, IndexedTextSearch, SemanticVectorSearch
 from chatterbot.tagging import PosLemmaTagger
 from chatterbot.conversation import Statement
 from chatterbot import languages
@@ -110,8 +110,6 @@ class ChatBot(object):
                     raise io_error
 
         # Initialize search algorithms
-        from chatterbot.search import SemanticVectorSearch
-        
         primary_search_algorithm = IndexedTextSearch(self, **kwargs)
         text_search_algorithm = TextSearch(self, **kwargs)
         semantic_vector_search_algorithm = SemanticVectorSearch(self, **kwargs)

@@ -164,7 +164,7 @@ The Redis adapter uses **semantic vector search** instead of traditional pattern
 
    # These inputs find similar responses despite different words:
    response1 = chatbot.get_response("What's the weather like?")
-   response2 = chatbot.get_response("How's the climate today?")  
+   response2 = chatbot.get_response("How's the climate today?")
    # Both queries find weather-related responses due to semantic similarity
 
    # Confidence scores help rank responses:
