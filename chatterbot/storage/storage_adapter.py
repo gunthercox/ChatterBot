@@ -173,6 +173,32 @@ class StorageAdapter(object):
         """
         pass
 
+    def get_preferred_tagger(self):
+        """
+        Returns the tagger class preferred by this storage adapter.
+        Returns None by default, meaning the default tagger will be used.
+
+        Storage adapters should override this method to specify their
+        preferred tagger (e.g., NoOpTagger for vector-based storage,
+        PosLemmaTagger for indexed text search).
+
+        :return: Tagger class or None
+        """
+        return None
+
+    def get_preferred_search_algorithm(self):
+        """
+        Returns the search algorithm name preferred by this storage adapter.
+        Returns None by default, meaning the default search algorithm will be used.
+
+        Storage adapters should override this method to specify their
+        preferred search algorithm (e.g., 'semantic_vector_search' for
+        vector-based storage, 'indexed_text_search' for indexed text search).
+
+        :return: Search algorithm name string or None
+        """
+        return None
+
     class EmptyDatabaseException(Exception):
 
         def __init__(self, message=None):

@@ -74,40 +74,61 @@ class ChatBot(object):
 
         tagger_language = kwargs.get('tagger_language', languages.ENG)
 
-        try:
-            Tagger = kwargs.get('tagger', PosLemmaTagger)
+        # Check if storage adapter has a preferred tagger
+        PreferredTagger = self.storage.get_preferred_tagger()
 
-            # Allow instances to be provided for performance optimization
-            # (Example: a pre-loaded model in a tagger when unit testing)
-            if not isinstance(Tagger, type):
-                self.tagger = Tagger
-            else:
-                self.tagger = Tagger(language=tagger_language)
-        except IOError as io_error:
-            # Return a more helpful error message if possible
-            if "Can't find model" in str(io_error):
-                model_name = utils.get_model_for_language(tagger_language)
-                if hasattr(tagger_language, 'ENGLISH_NAME'):
-                    language_name = tagger_language.ENGLISH_NAME
+        if PreferredTagger is not None:
+            # Storage adapter specifies its own tagger
+            self.tagger = PreferredTagger(language=tagger_language)
+        else:
+            # Use default or user-specified tagger
+            try:
+                Tagger = kwargs.get('tagger', PosLemmaTagger)
+
+                # Allow instances to be provided for performance optimization
+                # (Example: a pre-loaded model in a tagger when unit testing)
+                if not isinstance(Tagger, type):
+                    self.tagger = Tagger
                 else:
-                    language_name = tagger_language
-                raise self.ChatBotException(
-                    'Setup error:\n'
-                    f'The Spacy model for "{language_name}" language is missing.\n'
-                    'Please install the model using the command:\n\n'
-                    f'python -m spacy download {model_name}\n\n'
-                    'See https://spacy.io/usage/models for more information about available models.'
-                ) from io_error
-            else:
-                raise io_error
+                    self.tagger = Tagger(language=tagger_language)
+            except IOError as io_error:
+                # Return a more helpful error message if possible
+                if "Can't find model" in str(io_error):
+                    model_name = utils.get_model_for_language(tagger_language)
+                    if hasattr(tagger_language, 'ENGLISH_NAME'):
+                        language_name = tagger_language.ENGLISH_NAME
+                    else:
+                        language_name = tagger_language
+                    raise self.ChatBotException(
+                        'Setup error:\n'
+                        f'The Spacy model for "{language_name}" language is missing.\n'
+                        'Please install the model using the command:\n\n'
+                        f'python -m spacy download {model_name}\n\n'
+                        'See https://spacy.io/usage/models for more information about available models.'
+                    ) from io_error
+                else:
+                    raise io_error
 
+        # Initialize search algorithms
+        from chatterbot.search import SemanticVectorSearch
+        
         primary_search_algorithm = IndexedTextSearch(self, **kwargs)
         text_search_algorithm = TextSearch(self, **kwargs)
+        semantic_vector_search_algorithm = SemanticVectorSearch(self, **kwargs)
 
         self.search_algorithms = {
             primary_search_algorithm.name: primary_search_algorithm,
-            text_search_algorithm.name: text_search_algorithm
+            text_search_algorithm.name: text_search_algorithm,
+            semantic_vector_search_algorithm.name: semantic_vector_search_algorithm
         }
+
+        # Check if storage adapter has a preferred search algorithm
+        preferred_search_algorithm = self.storage.get_preferred_search_algorithm()
+        if preferred_search_algorithm and preferred_search_algorithm in self.search_algorithms:
+            # Move preferred algorithm to be used by logic adapters that don't specify one
+            # Logic adapters will inherit this preference through their search_algorithm_name parameter
+            self.logger.info(f'Storage adapter prefers search algorithm: {preferred_search_algorithm}')
+            kwargs.setdefault('search_algorithm_name', preferred_search_algorithm)
 
         for adapter in logic_adapters:
             utils.validate_adapter_class(adapter, LogicAdapter)
@@ -191,15 +212,25 @@ class ChatBot(object):
                 input_statement.in_response_to = previous_statement.text
 
         # Make sure the input statement has its search text saved
+        # Skip expensive tagging if using NoOpTagger (text returned unchanged)
+        from chatterbot.tagging import NoOpTagger
+        
+        if isinstance(self.tagger, NoOpTagger):
+            # NoOpTagger returns text unchanged, so we can skip the tagging call
+            if not input_statement.search_text:
+                input_statement.search_text = input_statement.text
+            if not input_statement.search_in_response_to and input_statement.in_response_to:
+                input_statement.search_in_response_to = input_statement.in_response_to
+        else:
+            # Use tagger for POS-lemma indexing or other transformations
+            if not input_statement.search_text:
+                _search_text = self.tagger.get_text_index_string(input_statement.text)
+                input_statement.search_text = _search_text
 
-        if not input_statement.search_text:
-            _search_text = self.tagger.get_text_index_string(input_statement.text)
-            input_statement.search_text = _search_text
-
-        if not input_statement.search_in_response_to and input_statement.in_response_to:
-            input_statement.search_in_response_to = self.tagger.get_text_index_string(
-                input_statement.in_response_to
-            )
+            if not input_statement.search_in_response_to and input_statement.in_response_to:
+                input_statement.search_in_response_to = self.tagger.get_text_index_string(
+                    input_statement.in_response_to
+                )
 
         response = self.generate_response(
             input_statement,

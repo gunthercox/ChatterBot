@@ -106,6 +106,21 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
         self.vector_store = RedisVectorStore(embeddings, config=config)
 
+    def get_preferred_tagger(self):
+        """
+        Redis uses vector embeddings and doesn't need POS-lemma indexing.
+        Returns NoOpTagger to avoid unnecessary spaCy processing.
+        """
+        from chatterbot.tagging import NoOpTagger
+        return NoOpTagger
+
+    def get_preferred_search_algorithm(self):
+        """
+        Redis uses semantic vector search instead of text-based matching.
+        Returns the name of the SemanticVectorSearch algorithm.
+        """
+        return 'semantic_vector_search'
+
     def get_statement_model(self):
         """
         Return the statement model.
@@ -294,12 +309,31 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
             Document = self.get_statement_model()
             documents = []
-            for result in results:
+
+            # Calculate confidence from vector distances
+            # Results are ordered by similarity (best match first)
+            for idx, result in enumerate(results):
                 in_response_to = result.get('in_response_to', '')
 
-                created_at_int = int(result.get('created_at', 0))
-                if created_at_int:
-                    created_at = datetime.strptime(str(created_at_int), '%y%m%d')
+                # Redis vector_score is cosine distance (lower is better)
+                # Convert to confidence: confidence = 1 - distance
+                # If vector_score not available, use result order
+                vector_score = result.get('vector_score')
+                if vector_score is not None:
+                    # Cosine distance ranges from 0 (identical) to 2 (opposite)
+                    # Normalize to confidence: 1.0 (identical) to 0.0 (opposite)
+                    confidence = max(0.0, 1.0 - (float(vector_score) / 2.0))
+                else:
+                    # Fallback: use result order (first result = highest confidence)
+                    # Start at 0.95 for first result, decay by 0.05 per position
+                    confidence = max(0.0, 0.95 - (idx * 0.05))
+
+                # Parse timestamp
+                created_at_value = result.get('created_at', 0)
+                if isinstance(created_at_value, str):
+                    created_at = datetime.fromtimestamp(float(created_at_value))
+                elif created_at_value:
+                    created_at = datetime.fromtimestamp(float(created_at_value))
                 else:
                     created_at = datetime.now()
 
@@ -309,6 +343,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                     'persona': result.get('persona', ''),
                     'tags': result.get('tags', ''),
                     'created_at': created_at,
+                    'confidence': confidence,
                 }
                 doc = Document(
                     page_content=in_response_to,
@@ -370,9 +405,25 @@ class RedisVectorStorageAdapter(StorageAdapter):
             # Convert results to Document objects
             Document = self.get_statement_model()
             documents = []
-            for result in results:
+
+            # Calculate confidence from vector distances
+            # Results are ordered by similarity (best match first)
+            for idx, result in enumerate(results):
                 # Extract metadata and content
                 in_response_to = result.get('in_response_to', '')
+
+                # Redis vector_score is cosine distance (lower is better)
+                # Convert to confidence: confidence = 1 - distance
+                # If vector_score not available, use result order
+                vector_score = result.get('vector_score')
+                if vector_score is not None:
+                    # Cosine distance ranges from 0 (identical) to 2 (opposite)
+                    # Normalize to confidence: 1.0 (identical) to 0.0 (opposite)
+                    confidence = max(0.0, 1.0 - (float(vector_score) / 2.0))
+                else:
+                    # Fallback: use result order (first result = highest confidence)
+                    # Start at 0.95 for first result, decay by 0.05 per position
+                    confidence = max(0.0, 0.95 - (idx * 0.05))
 
                 # Convert Unix timestamp back to datetime
                 # Redis returns numeric fields as strings
@@ -388,6 +439,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                     'persona': result.get('persona', ''),
                     'tags': result.get('tags', ''),
                     'created_at': created_at,
+                    'confidence': confidence,
                 }
                 doc = Document(
                     page_content=in_response_to,
