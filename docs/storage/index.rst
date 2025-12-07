@@ -2,8 +2,18 @@
 Storage Adapters
 ================
 
+.. meta::
+   :description: ChatterBot storage adapters: SQL, Redis vector database, MongoDB. Semantic search with vector embeddings for AI-powered contextual responses
+   :keywords: storage adapter, database, SQL, Redis, MongoDB, vector database, semantic search, vector embeddings
+
 Storage adapters provide an interface that allows ChatterBot
-to connect to different storage technologies.
+to connect to different storage technologies. Each adapter is optimized
+for different use cases:
+
+- **Redis Vector Storage**: Semantic similarity search using vector embeddings (best for contextual AI responses)
+- **SQL Storage**: Traditional pattern matching with POS-lemma indexing (best for exact phrase matching)
+- **MongoDB Storage**: NoSQL document storage with flexible schema
+- **Django Storage**: Integrated with Django ORM for web applications
 
 The storage adapter that your bot uses can be specified by setting
 the ``storage_adapter`` parameter to the import path of the
@@ -19,6 +29,8 @@ storage adapter you want to use.
 Built-in Storage Adapters
 =========================
 
+ChatterBot includes multiple storage adapters for different AI and database technologies:
+
 .. toctree::
    :maxdepth: 2
 
@@ -26,6 +38,33 @@ Built-in Storage Adapters
    mongodb
    sql
    ../django/index
+
+Choosing a Storage Adapter
+===========================
+
+**For Semantic AI Chatbots** (Recommended for modern conversational AI):
+
+Note that as of December 2025, the Redis Vector Storage Adapter is still an experimental beta feature.
+
+Use **Redis Vector Storage** when you need:
+
+- Context-aware responses based on meaning, not keywords
+- Vector embeddings for semantic similarity search
+- Automatic confidence scoring from cosine similarity
+- Best match for conversational AI and natural language understanding
+
+**For Pattern-Based Matching**:
+
+Use **SQL Storage** when you need:
+
+- Exact phrase or pattern matching
+- POS-lemma bigram indexing
+- Traditional database features (ACID compliance)
+- Lower memory footprint
+
+**For Flexibility**:
+
+Use **MongoDB** or **Django Storage** for schema flexibility and web framework integration.
 
 Common storage adapter attributes
 =================================

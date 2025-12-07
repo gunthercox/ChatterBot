@@ -30,13 +30,19 @@ class RedisVectorStorageAdapter(StorageAdapter):
         in the future and its behavior has not yet been finalized.
 
     The RedisVectorStorageAdapter allows ChatterBot to store conversation
-    data in a redis instance.
+    data in a redis instance using vector embeddings for semantic similarity search.
 
     All parameters are optional, by default a redis instance on localhost is assumed.
 
     :keyword database_uri: eg: redis://localhost:6379/0',
         The database_uri can be specified to choose a redis instance.
     :type database_uri: str
+
+    NOTES:
+    * Unlike other database based storage adapters, the RedisVectorStorageAdapter
+      does not leverage `search_text` and `search_in_response_to` fields for indexing.
+      Instead, it uses vector embeddings to find similar statements based on
+      semantic similarity. This allows for more flexible and context-aware matching.
     """
 
     class RedisMetaDataType:
@@ -100,6 +106,21 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
         self.vector_store = RedisVectorStore(embeddings, config=config)
 
+    def get_preferred_tagger(self):
+        """
+        Redis uses vector embeddings and doesn't need POS-lemma indexing.
+        Returns NoOpTagger to avoid unnecessary spaCy processing.
+        """
+        from chatterbot.tagging import NoOpTagger
+        return NoOpTagger
+
+    def get_preferred_search_algorithm(self):
+        """
+        Redis uses semantic vector search instead of text-based matching.
+        Returns the name of the SemanticVectorSearch algorithm.
+        """
+        return 'semantic_vector_search'
+
     def get_statement_model(self):
         """
         Return the statement model.
@@ -126,6 +147,16 @@ class RedisVectorStorageAdapter(StorageAdapter):
             values['id'] = document.id
 
         values.update(document.metadata)
+
+        # Convert Unix timestamp back to datetime for StatementObject
+        # Redis may return this as int, float, or string representation
+        if 'created_at' in values:
+            created_at_value = values['created_at']
+            if isinstance(created_at_value, str):
+                # Convert string to float first
+                created_at_value = float(created_at_value)
+            if isinstance(created_at_value, (int, float)):
+                values['created_at'] = datetime.fromtimestamp(created_at_value)
 
         tags = values['tags']
         values['tags'] = list(set(tags.split('|') if tags else []))
@@ -177,6 +208,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             - exclude_text
             - exclude_text_words
             - persona_not_startswith
+            - search_text_contains
             - search_in_response_to_contains
             - order_by
         """
@@ -245,27 +277,26 @@ class RedisVectorStorageAdapter(StorageAdapter):
             else:
                 filter_condition = query
 
-        # Handle search_text parameter (used by BestMatch logic adapter)
-        # BestMatch uses search_text to find statements with matching indexed text.
-        # Since Redis doesn't store search_text as a field, we approximate this by:
-        # 1. Using the search_text value as a semantic query against in_response_to
-        # 2. This finds statements that are responses to similar inputs
-        # The effect is similar to BestMatch's Phase 2: finding alternate responses
-        if 'search_text' in kwargs:
-            _search_text = kwargs.get('search_text', '')
+        if 'search_text_contains' in kwargs:
+            # Find statements whose text (responses) are similar.
+            #
+            # Use semantic similarity on the search query itself. This finds responses
+            # that would be semantically appropriate, even if they don't share exact words.
+            #
+            # Our vectors are of 'in_response_to' (what was said TO the bot),
+            # not 'text' (what the bot said). So we use the query as if it were an input,
+            # and find statements that would respond to similar inputs. The result is
+            # statements whose context (in_response_to) is similar, which tends to yield
+            # similar responses.
+            _search_query = kwargs['search_text_contains']
 
-            # Get embedding for the search text
-            # Note: search_text may be indexed (e.g., "NOUN:cat VERB:run") so this
-            # approximates finding responses to semantically similar queries
-            embedding = self.vector_store.embeddings.embed_query(_search_text)
+            # Use vector similarity to find statements responding to similar contexts
+            embedding = self.vector_store.embeddings.embed_query(_search_query)
 
-            # Build return fields from metadata schema
             return_fields = [
                 'text', 'in_response_to', 'conversation', 'persona', 'tags', 'created_at'
             ]
 
-            # Use direct index query via RedisVL
-            # Search on the vectorized content (in_response_to) to find similar response patterns
             query = VectorQuery(
                 vector=embedding,
                 vector_field_name='embedding',
@@ -274,20 +305,35 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 filter_expression=filter_condition
             )
 
-            # Execute query
             results = self.vector_store.index.query(query)
 
-            # Convert results to Document objects
             Document = self.get_statement_model()
             documents = []
-            for result in results:
-                # Extract metadata and content
+
+            # Calculate confidence from vector distances
+            # Results are ordered by similarity (best match first)
+            for idx, result in enumerate(results):
                 in_response_to = result.get('in_response_to', '')
 
-                # Convert created_at from integer (YYMMDD) to datetime
-                created_at_int = int(result.get('created_at', 0))
-                if created_at_int:
-                    created_at = datetime.strptime(str(created_at_int), '%y%m%d')
+                # Redis vector_score is cosine distance (lower is better)
+                # Convert to confidence: confidence = 1 - distance
+                # If vector_score not available, use result order
+                vector_score = result.get('vector_score')
+                if vector_score is not None:
+                    # Cosine distance ranges from 0 (identical) to 2 (opposite)
+                    # Normalize to confidence: 1.0 (identical) to 0.0 (opposite)
+                    confidence = max(0.0, 1.0 - (float(vector_score) / 2.0))
+                else:
+                    # Fallback: use result order (first result = highest confidence)
+                    # Start at 0.95 for first result, decay by 0.05 per position
+                    confidence = max(0.0, 0.95 - (idx * 0.05))
+
+                # Parse timestamp
+                created_at_value = result.get('created_at', 0)
+                if isinstance(created_at_value, str):
+                    created_at = datetime.fromtimestamp(float(created_at_value))
+                elif created_at_value:
+                    created_at = datetime.fromtimestamp(float(created_at_value))
                 else:
                     created_at = datetime.now()
 
@@ -297,6 +343,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                     'persona': result.get('persona', ''),
                     'tags': result.get('tags', ''),
                     'created_at': created_at,
+                    'confidence': confidence,
                 }
                 doc = Document(
                     page_content=in_response_to,
@@ -306,6 +353,23 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 documents.append(doc)
 
             return [self.model_to_object(document) for document in documents]
+
+        # Redis uses vector similarity: we search for statements whose actual
+        # text field is semantically similar to the text that produced this search_text.
+        # This is stored in the closest_match.text field, but BestMatch only passes
+        # search_text. Since we can't reverse POS tags to original text (for now),
+        # we treat this parameter as a signal to do text-based similarity search.
+        #
+        # Note: The caller should ideally pass the actual text, but for compatibility
+        # we'll work with what we receive. In practice, search_text_contains is the
+        # better parameter for this use case.
+        if 'search_text' in kwargs:
+            # For now, we'll treat search_text as a filter-only parameter
+            # and fall through to the regular query_search below.
+            # This prevents the broken behavior of embedding POS tags.
+            # The proper fix requires BestMatch to pass additional context
+            # or use search_text_contains instead.
+            pass
 
         ordering = kwargs.get('order_by', None)
 
@@ -341,14 +405,31 @@ class RedisVectorStorageAdapter(StorageAdapter):
             # Convert results to Document objects
             Document = self.get_statement_model()
             documents = []
-            for result in results:
+
+            # Calculate confidence from vector distances
+            # Results are ordered by similarity (best match first)
+            for idx, result in enumerate(results):
                 # Extract metadata and content
                 in_response_to = result.get('in_response_to', '')
 
-                # Convert created_at from integer (YYMMDD) to datetime
-                created_at_int = int(result.get('created_at', 0))
-                if created_at_int:
-                    created_at = datetime.strptime(str(created_at_int), '%y%m%d')
+                # Redis vector_score is cosine distance (lower is better)
+                # Convert to confidence: confidence = 1 - distance
+                # If vector_score not available, use result order
+                vector_score = result.get('vector_score')
+                if vector_score is not None:
+                    # Cosine distance ranges from 0 (identical) to 2 (opposite)
+                    # Normalize to confidence: 1.0 (identical) to 0.0 (opposite)
+                    confidence = max(0.0, 1.0 - (float(vector_score) / 2.0))
+                else:
+                    # Fallback: use result order (first result = highest confidence)
+                    # Start at 0.95 for first result, decay by 0.05 per position
+                    confidence = max(0.0, 0.95 - (idx * 0.05))
+
+                # Convert Unix timestamp back to datetime
+                # Redis returns numeric fields as strings
+                created_at_timestamp = result.get('created_at', '0')
+                if created_at_timestamp and created_at_timestamp != '0':
+                    created_at = datetime.fromtimestamp(float(created_at_timestamp))
                 else:
                     created_at = datetime.now()
 
@@ -358,6 +439,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                     'persona': result.get('persona', ''),
                     'tags': result.get('tags', ''),
                     'created_at': created_at,
+                    'confidence': confidence,
                 }
                 doc = Document(
                     page_content=in_response_to,
@@ -395,9 +477,9 @@ class RedisVectorStorageAdapter(StorageAdapter):
         metadata = {
             'text': text,
             'category': kwargs.get('category', ''),
-            # NOTE: `created_at` must have a valid numeric value or results will
-            # not be returned for similarity_search for some reason
-            'created_at': kwargs.get('created_at') or int(_default_date.strftime('%y%m%d')),
+            # Store created_at as Unix timestamp with microseconds (float)
+            # This provides full datetime precision while maintaining Redis NUMERIC field compatibility
+            'created_at': kwargs.get('created_at') or _default_date.timestamp(),
             'tags': '|'.join(unique_tags) if unique_tags else '',
             'conversation': kwargs.get('conversation', ''),
             'persona': kwargs.get('persona', ''),
@@ -427,7 +509,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 metadata={
                     'text': statement.text,
                     'conversation': statement.conversation or '',
-                    'created_at': int(statement.created_at.strftime('%y%m%d')),
+                    'created_at': statement.created_at.timestamp(),
                     'persona': statement.persona or '',
                     # Prevent duplicate tag entries in the database
                     'tags': '|'.join(
@@ -452,7 +534,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
         metadata = {
             'text': statement.text,
             'conversation': statement.conversation or '',
-            'created_at': int(statement.created_at.strftime('%y%m%d')),
+            'created_at': statement.created_at.timestamp(),
             'persona': statement.persona or '',
             'tags': '|'.join(unique_tags) if unique_tags else '',
         }
@@ -508,11 +590,9 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 # Parse the metadata
                 metadata = json.loads(data[b'_metadata_json'].decode())
 
-                # Convert created_at from integer (YYMMDD) back to datetime
-                if 'created_at' in metadata and isinstance(metadata['created_at'], int):
-                    created_at_str = str(metadata['created_at'])
-                    # Parse YYMMDD format
-                    metadata['created_at'] = datetime.strptime(created_at_str, '%y%m%d')
+                # Convert created_at from Unix timestamp back to datetime
+                if 'created_at' in metadata and isinstance(metadata['created_at'], (int, float)):
+                    metadata['created_at'] = datetime.fromtimestamp(metadata['created_at'])
 
                 # Get the in_response_to from the hash
                 in_response_to = data.get(b'in_response_to', b'').decode()

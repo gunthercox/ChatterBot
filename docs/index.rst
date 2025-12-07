@@ -1,6 +1,6 @@
 .. meta::
-   :description: ChatterBot documentation: ChatterBot is a machine learning, conversational dialog engine designed to support multiple languages.
-   :keywords: ChatterBot, chatbot, chat, bot, natural language processing, nlp, artificial intelligence, ai
+   :description: ChatterBot documentation: Python machine learning chatbot library with semantic vector search, AI conversational dialog engine supporting multiple languages and vector databases
+   :keywords: ChatterBot, chatbot, chat, bot, natural language processing, nlp, artificial intelligence, ai, machine learning, vector database, semantic search, vector embeddings, conversational ai, python chatbot library
 
 .. container:: banner
 
@@ -15,6 +15,14 @@ ChatterBot is a Python library that makes it easy to generate automated
 responses to a user's input. ChatterBot uses a selection of machine learning
 algorithms to produce different types of responses. This makes it easy for
 developers to create chat bots and automate conversations with users.
+
+**Modern AI Capabilities** (2025):
+
+- **Semantic Vector Search**: Advanced context understanding using vector embeddings and Redis vector database
+- **Large Language Model (LLM) Integration**: Experimental support for Ollama and OpenAI models
+- **Storage-Aware Architecture**: Automatic optimization based on storage backend capabilities
+- **Multi-Language Support**: Language-independent design with spaCy integration
+
 For more details about the ideas and concepts behind ChatterBot see the
 :ref:`process flow diagram <process_flow_diagram>`.
 
