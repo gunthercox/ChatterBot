@@ -1,0 +1,114 @@
+{
+  "description": "The ChatterBot core subsystem is designed around a central `ChatterBot` orchestrator that manages the conversational flow. User input is encapsulated within a `Statement` object, which then undergoes a series of transformations by `Preprocessors` to clean and normalize the text. The `ChatterBot` then leverages various `Logic Adapters` to determine the most appropriate response, often utilizing `Parsing Utilities` for advanced text interpretation. The final response is also represented as a `Statement` object, completing the conversational turn. This modular design allows for flexible extension and customization of input processing, response generation, and data handling.",
+  "components": [
+    {
+      "name": "ChatterBot",
+      "description": "The core orchestrator of the conversational system. It manages the lifecycle of a conversation, from receiving input to generating a response. It composes and utilizes preprocessors and logic adapters to achieve its functionality.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.ChatterBot",
+          "reference_file": "chatterbot/chatterbot.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ]
+    },
+    {
+      "name": "Statement",
+      "description": "The fundamental data model representing a single utterance or piece of text within the conversational system. It acts as the primary data carrier, flowing through various components and being modified or consumed by them.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.conversation.Statement",
+          "reference_file": "chatterbot/conversation.py",
+          "reference_start_line": 62,
+          "reference_end_line": 118
+        }
+      ]
+    },
+    {
+      "name": "Preprocessors",
+      "description": "A collection of functions responsible for applying initial transformations to an input `Statement` object. These transformations, such as cleaning whitespace, unescaping HTML, or converting to ASCII, prepare the text data for subsequent natural language processing tasks.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.preprocessors.clean_whitespace",
+          "reference_file": "chatterbot/preprocessors.py",
+          "reference_start_line": 10,
+          "reference_end_line": 25
+        },
+        {
+          "qualified_name": "chatterbot.preprocessors.unescape_html",
+          "reference_file": "chatterbot/preprocessors.py",
+          "reference_start_line": 28,
+          "reference_end_line": 35
+        },
+        {
+          "qualified_name": "chatterbot.preprocessors.convert_to_ascii",
+          "reference_file": "chatterbot/preprocessors.py",
+          "reference_start_line": 38,
+          "reference_end_line": 47
+        }
+      ]
+    },
+    {
+      "name": "LogicAdapter",
+      "description": "An abstract base class for components that define the chatbot's response generation strategy. `ChatterBot` can utilize multiple concrete implementations of `LogicAdapter` to process an input statement and select or generate a suitable response.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.logic.logic_adapter.LogicAdapter",
+          "reference_file": "chatterbot/logic/logic_adapter.py",
+          "reference_start_line": 10,
+          "reference_end_line": 136
+        }
+      ]
+    },
+    {
+      "name": "Parsing Utilities",
+      "description": "This module contains various utilities and functions for advanced interpretation and structuring of text within statements. This includes functionalities like parsing dates, times, and numerical expressions, which are crucial for understanding user intent in complex queries.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.parsing",
+          "reference_file": "chatterbot/parsing.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ]
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": []
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "orchestrates",
+      "src_name": "ChatterBot",
+      "dst_name": "Preprocessors"
+    },
+    {
+      "relation": "utilizes",
+      "src_name": "ChatterBot",
+      "dst_name": "LogicAdapter"
+    },
+    {
+      "relation": "creates/processes",
+      "src_name": "ChatterBot",
+      "dst_name": "Statement"
+    },
+    {
+      "relation": "modify",
+      "src_name": "Preprocessors",
+      "dst_name": "Statement"
+    },
+    {
+      "relation": "consumes/produces",
+      "src_name": "LogicAdapter",
+      "dst_name": "Statement"
+    },
+    {
+      "relation": "assists",
+      "src_name": "Parsing Utilities",
+      "dst_name": "LogicAdapter"
+    }
+  ]
+}
