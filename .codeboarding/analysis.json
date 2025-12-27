@@ -43,8 +43,8 @@
       ],
       "assigned_files": [
         "chatterbot/search.py",
-        "chatterbot/adapters.py",
         "chatterbot/response_selection.py",
+        "chatterbot/vectorstores.py",
         "chatterbot/filters.py",
         "chatterbot/comparisons.py",
         "chatterbot/logic/unit_conversion.py",
@@ -153,7 +153,6 @@
         }
       ],
       "assigned_files": [
-        "chatterbot/vectorstores.py",
         "chatterbot/llm.py"
       ],
       "can_expand": true
@@ -195,6 +194,7 @@
         "docs/_ext/github.py",
         "docs/_ext/canonical.py",
         "chatterbot/__init__.py",
+        "chatterbot/adapters.py",
         "chatterbot/__main__.py",
         "chatterbot/constants.py",
         "chatterbot/utils.py",
@@ -208,6 +208,13 @@
         "chatterbot/ext/django_chatterbot/admin.py",
         "chatterbot/ext/sqlalchemy_app/__init__.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {
