@@ -44,11 +44,9 @@
       "assigned_files": [
         "chatterbot/search.py",
         "chatterbot/response_selection.py",
-        "chatterbot/vectorstores.py",
         "chatterbot/filters.py",
         "chatterbot/comparisons.py",
         "chatterbot/logic/unit_conversion.py",
-        "chatterbot/logic/__init__.py",
         "chatterbot/logic/mathematical_evaluation.py",
         "chatterbot/logic/logic_adapter.py",
         "chatterbot/logic/best_match.py",
@@ -81,12 +79,16 @@
         }
       ],
       "assigned_files": [
+        "examples/training_example_chatterbot_corpus.py",
+        "examples/training_example_list_data.py",
+        "examples/training_example_ubuntu_corpus.py",
+        "examples/django_example/django_example/management/commands/train.py",
         "chatterbot/corpus.py",
+        "chatterbot/vectorstores.py",
         "chatterbot/trainers.py",
         "chatterbot/ext/django_chatterbot/models.py",
         "chatterbot/ext/django_chatterbot/abstract_models.py",
         "chatterbot/ext/django_chatterbot/migrations/0014_remove_statement_extra_data.py",
-        "chatterbot/ext/django_chatterbot/migrations/__init__.py",
         "chatterbot/ext/django_chatterbot/migrations/0005_statement_created_at.py",
         "chatterbot/ext/django_chatterbot/migrations/0011_blank_extra_data.py",
         "chatterbot/ext/django_chatterbot/migrations/0016_statement_stemmed_text.py",
@@ -108,7 +110,6 @@
         "chatterbot/ext/django_chatterbot/migrations/0017_tags_unique.py",
         "chatterbot/ext/sqlalchemy_app/models.py",
         "chatterbot/storage/storage_adapter.py",
-        "chatterbot/storage/__init__.py",
         "chatterbot/storage/mongodb.py",
         "chatterbot/storage/redis.py",
         "chatterbot/storage/sql_storage.py",
@@ -162,7 +163,6 @@
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
-        "examples/training_example_chatterbot_corpus.py",
         "examples/__init__.py",
         "examples/basic_example.py",
         "examples/terminal_example.py",
@@ -170,10 +170,8 @@
         "examples/specific_response_example.py",
         "examples/tagged_dataset_example.py",
         "examples/memory_sql_example.py",
-        "examples/training_example_list_data.py",
         "examples/math_and_time.py",
         "examples/openai_example.py",
-        "examples/training_example_ubuntu_corpus.py",
         "examples/convert_units.py",
         "examples/ollama_example.py",
         "examples/export_example.py",
@@ -189,7 +187,6 @@
         "examples/django_example/django_example/urls.py",
         "examples/django_example/django_example/management/__init__.py",
         "examples/django_example/django_example/management/commands/__init__.py",
-        "examples/django_example/django_example/management/commands/train.py",
         "docs/conf.py",
         "docs/_ext/github.py",
         "docs/_ext/canonical.py",
@@ -206,8 +203,18 @@
         "chatterbot/ext/django_chatterbot/settings.py",
         "chatterbot/ext/django_chatterbot/model_admin.py",
         "chatterbot/ext/django_chatterbot/admin.py",
-        "chatterbot/ext/sqlalchemy_app/__init__.py"
+        "chatterbot/ext/django_chatterbot/migrations/__init__.py",
+        "chatterbot/ext/sqlalchemy_app/__init__.py",
+        "chatterbot/storage/__init__.py",
+        "chatterbot/logic/__init__.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {

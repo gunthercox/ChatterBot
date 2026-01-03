@@ -20,6 +20,7 @@ Overview
       Unclassified["Unclassified"]
       Unclassified["Unclassified"]
       Unclassified["Unclassified"]
+      Unclassified["Unclassified"]
       Chatbot_Core_Engine -- "Receives Processed Input From" --> Input_Output_Processors
       Chatbot_Core_Engine -- "Delegates Response Generation To" --> Logic_Response_Adapters
       Logic_Response_Adapters -- "Queries Knowledge Base From" --> Data_Storage_Training
@@ -107,6 +108,13 @@ Provides an abstract interface for integrating Large Language Models, allowing C
 **Related Classes/Methods**:
 
 * chatterbot.llm
+
+Unclassified
+^^^^^^^^^^^^
+
+Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)
+
+**Related Classes/Methods**: *None*
 
 Unclassified
 ^^^^^^^^^^^^
