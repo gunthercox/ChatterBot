@@ -23,7 +23,7 @@ class SQLStorageAdapter(StorageAdapter):
         from sqlalchemy import create_engine, inspect, event
         from sqlalchemy import Index
         from sqlalchemy.engine import Engine
-        from sqlalchemy.orm import sessionmaker
+        from sqlalchemy.orm import sessionmaker, scoped_session
 
         self.database_uri = kwargs.get('database_uri', False)
 
@@ -35,7 +35,10 @@ class SQLStorageAdapter(StorageAdapter):
         if not self.database_uri:
             self.database_uri = 'sqlite:///db.sqlite3'
 
-        self.engine = create_engine(self.database_uri)
+        # Configure connection pool with safe defaults to prevent exhaustion
+        # Note: SQLite uses SingletonThreadPool which doesn't support these params
+        # PostgreSQL, MySQL, etc. use QueuePool which does support them
+        pool_config = {}
 
         if self.database_uri.startswith('sqlite://'):
 
@@ -66,6 +69,23 @@ class SQLStorageAdapter(StorageAdapter):
                 cursor.execute('PRAGMA synchronous=NORMAL')
                 cursor.close()
 
+        else:
+            # Only apply pool configuration for databases that support QueuePool
+            # pool_size: Maximum persistent connections (10)
+            # max_overflow: Additional connections during peak load (20)
+            # pool_timeout: Seconds to wait for connection before error (30)
+            # pool_recycle: Recycle connections after 1 hour to prevent stale connections
+            # pool_pre_ping: Test connections before using to detect disconnects
+            pool_config = {
+                'pool_size': kwargs.get('pool_size', 10),
+                'max_overflow': kwargs.get('max_overflow', 20),
+                'pool_timeout': kwargs.get('pool_timeout', 30),
+                'pool_recycle': kwargs.get('pool_recycle', 3600),
+                'pool_pre_ping': kwargs.get('pool_pre_ping', True),
+            }
+
+        self.engine = create_engine(self.database_uri, **pool_config)
+
         if not inspect(self.engine).has_table('statement'):
             self.create_database()
 
@@ -91,7 +111,10 @@ class SQLStorageAdapter(StorageAdapter):
 
             search_in_response_to_index.create(bind=self.engine)
 
-        self.Session = sessionmaker(bind=self.engine, expire_on_commit=True)
+        # Use a scoped session for thread-safe session management
+        # This provides thread-local session storage to prevent session sharing across threads
+        session_factory = sessionmaker(bind=self.engine, expire_on_commit=True)
+        self.Session = scoped_session(session_factory)
 
     def get_statement_model(self):
         """
@@ -119,9 +142,11 @@ class SQLStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
 
         session = self.Session()
-        statement_count = session.query(Statement).count()
-        session.close()
-        return statement_count
+        try:
+            statement_count = session.query(Statement).count()
+            return statement_count
+        finally:
+            session.close()
 
     def remove(self, statement_text):
         """
@@ -131,13 +156,14 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Statement = self.get_model('statement')
         session = self.Session()
+        try:
+            query = session.query(Statement).filter_by(text=statement_text)
+            record = query.first()
 
-        query = session.query(Statement).filter_by(text=statement_text)
-        record = query.first()
-
-        session.delete(record)
-        session.commit()
-        session.close()
+            session.delete(record)
+            session.commit()
+        finally:
+            session.close()
 
     def filter(self, **kwargs):
         """
@@ -152,8 +178,6 @@ class SQLStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
         Tag = self.get_model('tag')
 
-        session = self.Session()
-
         page_size = kwargs.pop('page_size', 1000)
         order_by = kwargs.pop('order_by', None)
         tags = kwargs.pop('tags', [])
@@ -167,65 +191,69 @@ class SQLStorageAdapter(StorageAdapter):
         if isinstance(tags, str):
             tags = [tags]
 
-        if len(kwargs) == 0:
-            statements = session.query(Statement).filter()
-        else:
-            statements = session.query(Statement).filter_by(**kwargs)
+        # Use context manager to ensure session cleanup even if generator is partially consumed
+        session = self.Session()
+        try:
+            if len(kwargs) == 0:
+                statements = session.query(Statement).filter()
+            else:
+                statements = session.query(Statement).filter_by(**kwargs)
 
-        if tags:
-            statements = statements.join(Statement.tags).filter(
-                Tag.name.in_(tags)
-            )
+            if tags:
+                statements = statements.join(Statement.tags).filter(
+                    Tag.name.in_(tags)
+                )
 
-        if exclude_text:
-            statements = statements.filter(
-                ~Statement.text.in_(exclude_text)
-            )
+            if exclude_text:
+                statements = statements.filter(
+                    ~Statement.text.in_(exclude_text)
+                )
 
-        if exclude_text_words:
-            or_word_query = [
-                Statement.text.ilike('%' + word + '%') for word in exclude_text_words
-            ]
-            statements = statements.filter(
-                ~or_(*or_word_query)
-            )
+            if exclude_text_words:
+                or_word_query = [
+                    Statement.text.ilike('%' + word + '%') for word in exclude_text_words
+                ]
+                statements = statements.filter(
+                    ~or_(*or_word_query)
+                )
 
-        if persona_not_startswith:
-            statements = statements.filter(
-                ~Statement.persona.startswith('bot:')
-            )
+            if persona_not_startswith:
+                statements = statements.filter(
+                    ~Statement.persona.startswith('bot:')
+                )
 
-        if search_text_contains:
-            or_query = [
-                Statement.search_text.contains(word) for word in search_text_contains.split(' ')
-            ]
-            statements = statements.filter(
-                or_(*or_query)
-            )
+            if search_text_contains:
+                or_query = [
+                    Statement.search_text.contains(word) for word in search_text_contains.split(' ')
+                ]
+                statements = statements.filter(
+                    or_(*or_query)
+                )
 
-        if search_in_response_to_contains:
-            or_query = [
-                Statement.search_in_response_to.contains(word) for word in search_in_response_to_contains.split(' ')
-            ]
-            statements = statements.filter(
-                or_(*or_query)
-            )
+            if search_in_response_to_contains:
+                or_query = [
+                    Statement.search_in_response_to.contains(word) for word in search_in_response_to_contains.split(' ')
+                ]
+                statements = statements.filter(
+                    or_(*or_query)
+                )
 
-        if order_by:
+            if order_by:
 
-            if 'created_at' in order_by:
-                index = order_by.index('created_at')
-                order_by[index] = Statement.created_at.asc()
+                if 'created_at' in order_by:
+                    index = order_by.index('created_at')
+                    order_by[index] = Statement.created_at.asc()
 
-            statements = statements.order_by(*order_by)
+                statements = statements.order_by(*order_by)
 
-        total_statements = statements.count()
+            total_statements = statements.count()
 
-        for start_index in range(0, total_statements, page_size):
-            for statement in statements.slice(start_index, start_index + page_size):
-                yield self.model_to_object(statement)
-
-        session.close()
+            for start_index in range(0, total_statements, page_size):
+                for statement in statements.slice(start_index, start_index + page_size):
+                    yield self.model_to_object(statement)
+        finally:
+            # Always close session, even if generator is abandoned or exception occurs
+            session.close()
 
     def create(
         self,
@@ -336,8 +364,11 @@ class SQLStorageAdapter(StorageAdapter):
                 statement_model_object.tags.append(tag)
             create_statements.append(statement_model_object)
 
-        session.add_all(create_statements)
-        session.commit()
+        try:
+            session.add_all(create_statements)
+            session.commit()
+        finally:
+            session.close()
 
     def update(self, statement):
         """
@@ -348,49 +379,51 @@ class SQLStorageAdapter(StorageAdapter):
         Tag = self.get_model('tag')
 
         session = self.Session()
-        record = None
+        try:
+            record = None
 
-        if hasattr(statement, 'id') and statement.id is not None:
-            record = session.get(Statement, statement.id)
-        else:
-            record = session.query(Statement).filter(
-                Statement.text == statement.text,
-                Statement.conversation == statement.conversation,
-            ).first()
+            if hasattr(statement, 'id') and statement.id is not None:
+                record = session.get(Statement, statement.id)
+            else:
+                record = session.query(Statement).filter(
+                    Statement.text == statement.text,
+                    Statement.conversation == statement.conversation,
+                ).first()
 
-            # Create a new statement entry if one does not already exist
-            if not record:
-                record = Statement(
-                    text=statement.text,
-                    conversation=statement.conversation,
-                    persona=statement.persona
-                )
+                # Create a new statement entry if one does not already exist
+                if not record:
+                    record = Statement(
+                        text=statement.text,
+                        conversation=statement.conversation,
+                        persona=statement.persona
+                    )
 
-        # Update the response value
-        record.in_response_to = statement.in_response_to
+            # Update the response value
+            record.in_response_to = statement.in_response_to
 
-        record.created_at = statement.created_at
+            record.created_at = statement.created_at
 
-        if not statement.search_text:
-            if self.raise_on_missing_search_text:
-                raise Exception('update issued without search_text value')
+            if not statement.search_text:
+                if self.raise_on_missing_search_text:
+                    raise Exception('update issued without search_text value')
 
-        if statement.in_response_to and not statement.search_in_response_to:
-            if self.raise_on_missing_search_text:
-                raise Exception('update issued without search_in_response_to value')
+            if statement.in_response_to and not statement.search_in_response_to:
+                if self.raise_on_missing_search_text:
+                    raise Exception('update issued without search_in_response_to value')
 
-        for tag_name in statement.get_tags():
-            tag = session.query(Tag).filter_by(name=tag_name).first()
+            for tag_name in statement.get_tags():
+                tag = session.query(Tag).filter_by(name=tag_name).first()
 
-            if not tag:
-                # Create the record
-                tag = Tag(name=tag_name)
+                if not tag:
+                    # Create the record
+                    tag = Tag(name=tag_name)
 
-            record.tags.append(tag)
+                record.tags.append(tag)
 
-        session.add(record)
-        session.commit()
-        session.close()
+            session.add(record)
+            session.commit()
+        finally:
+            session.close()
 
     def get_random(self):
         """
@@ -399,17 +432,19 @@ class SQLStorageAdapter(StorageAdapter):
         Statement = self.get_model('statement')
 
         session = self.Session()
-        count = self.count()
-        if count < 1:
-            raise self.EmptyDatabaseException()
+        try:
+            count = self.count()
+            if count < 1:
+                raise self.EmptyDatabaseException()
 
-        random_index = random.randrange(0, count)
-        random_statement = session.query(Statement)[random_index]
+            random_index = random.randrange(0, count)
+            random_statement = session.query(Statement)[random_index]
 
-        statement = self.model_to_object(random_statement)
+            statement = self.model_to_object(random_statement)
 
-        session.close()
-        return statement
+            return statement
+        finally:
+            session.close()
 
     def drop(self):
         """
@@ -419,12 +454,13 @@ class SQLStorageAdapter(StorageAdapter):
         Tag = self.get_model('tag')
 
         session = self.Session()
+        try:
+            session.query(Statement).delete()
+            session.query(Tag).delete()
 
-        session.query(Statement).delete()
-        session.query(Tag).delete()
-
-        session.commit()
-        session.close()
+            session.commit()
+        finally:
+            session.close()
 
     def create_database(self):
         """
@@ -438,5 +474,10 @@ class SQLStorageAdapter(StorageAdapter):
         Close the database connection and dispose of the engine.
         This ensures proper cleanup of resources.
         """
+        # Remove thread-local sessions from scoped_session registry
+        if hasattr(self, 'Session'):
+            self.Session.remove()
+
+        # Dispose of the connection pool
         if hasattr(self, 'engine'):
             self.engine.dispose()
