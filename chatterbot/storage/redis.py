@@ -117,9 +117,6 @@ class RedisVectorStorageAdapter(StorageAdapter):
             ],
         )
 
-        # TODO should this call from_existing_index if connecting to
-        # a redis instance that already contains data?
-
         self.logger.info('Loading HuggingFace embeddings')
 
         # TODO: Research different embeddings
@@ -196,22 +193,16 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
     def count(self) -> int:
         """
-        Return the number of entries in the database.
+        Return the number of statement entries in the database.
         """
-
-        '''
-        TODO
-        faiss_vector_store = FAISS(
-            embedding_function=embedding_function,
-            index=IndexFlatL2(embedding_size),
-            docstore=InMemoryDocstore(),
-            index_to_docstore_id={}
-        )
-        doc_count = faiss_vector_store.index.ntotal
-        '''
-
+        index_name = self.vector_store.config.index_name
         client = self.vector_store.index.client
-        return client.dbsize()
+
+        # Count only keys matching the ChatterBot index prefix
+        count = 0
+        for _ in client.scan_iter(f'{index_name}:*'):
+            count += 1
+        return count
 
     def remove(self, statement):
         """
