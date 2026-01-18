@@ -65,6 +65,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             index_name='chatterbot',
             redis_url=self.database_uri,
             content_field='in_response_to',
+            legacy_key_format=False,
             metadata_schema=[
                 {
                     'name': 'conversation',
@@ -212,11 +213,15 @@ class RedisVectorStorageAdapter(StorageAdapter):
             - search_in_response_to_contains
             - order_by
         """
-        from redisvl.query import VectorQuery
         from redisvl.query.filter import Tag, Text
 
         # https://redis.io/docs/latest/develop/interact/search-and-query/advanced-concepts/query_syntax/
         filter_condition = None
+
+        ordering = kwargs.get('order_by', None)
+
+        if ordering:
+            ordering = ','.join(ordering)
 
         if 'in_response_to' in kwargs:
             filter_condition = Text('in_response_to') == kwargs['in_response_to']
@@ -255,7 +260,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             _query = '|'.join([
                 f'%%{text}%%' for text in kwargs['exclude_text_words']
             ])
-            query = Text('text') % f'-({ _query })'
+            query = Text('text') % f'-({_query})'
             if filter_condition:
                 filter_condition &= query
             else:
@@ -290,67 +295,20 @@ class RedisVectorStorageAdapter(StorageAdapter):
             # similar responses.
             _search_query = kwargs['search_text_contains']
 
-            # Use vector similarity to find statements responding to similar contexts
-            embedding = self.vector_store.embeddings.embed_query(_search_query)
-
-            return_fields = [
-                'text', 'in_response_to', 'conversation', 'persona', 'tags', 'created_at'
-            ]
-
-            query = VectorQuery(
-                vector=embedding,
-                vector_field_name='embedding',
-                return_fields=return_fields,
-                num_results=page_size,
-                filter_expression=filter_condition
+            documents = self.vector_store.similarity_search(
+                _search_query,
+                k=page_size,  # The number of results to return
+                return_all=True,  # Include the full document with IDs
+                filter=filter_condition,
+                sort_by=ordering
             )
 
-            results = self.vector_store.index.query(query)
-
-            Document = self.get_statement_model()
-            documents = []
-
-            # Calculate confidence from vector distances
+            # Add confidence scores based on similarity ordering
             # Results are ordered by similarity (best match first)
-            for idx, result in enumerate(results):
-                in_response_to = result.get('in_response_to', '')
-
-                # Redis vector_score is cosine distance (lower is better)
-                # Convert to confidence: confidence = 1 - distance
-                # If vector_score not available, use result order
-                vector_score = result.get('vector_score')
-                if vector_score is not None:
-                    # Cosine distance ranges from 0 (identical) to 2 (opposite)
-                    # Normalize to confidence: 1.0 (identical) to 0.0 (opposite)
-                    confidence = max(0.0, 1.0 - (float(vector_score) / 2.0))
-                else:
-                    # Fallback: use result order (first result = highest confidence)
-                    # Start at 0.95 for first result, decay by 0.05 per position
-                    confidence = max(0.0, 0.95 - (idx * 0.05))
-
-                # Parse timestamp
-                created_at_value = result.get('created_at', 0)
-                if isinstance(created_at_value, str):
-                    created_at = datetime.fromtimestamp(float(created_at_value))
-                elif created_at_value:
-                    created_at = datetime.fromtimestamp(float(created_at_value))
-                else:
-                    created_at = datetime.now()
-
-                metadata = {
-                    'text': result.get('text', ''),
-                    'conversation': result.get('conversation', ''),
-                    'persona': result.get('persona', ''),
-                    'tags': result.get('tags', ''),
-                    'created_at': created_at,
-                    'confidence': confidence,
-                }
-                doc = Document(
-                    page_content=in_response_to,
-                    metadata=metadata,
-                    id=result['id']
-                )
-                documents.append(doc)
+            for idx, doc in enumerate(documents):
+                # Start at 0.95 for first result, decay by 0.05 per position
+                confidence = max(0.0, 0.95 - (idx * 0.05))
+                doc.metadata['confidence'] = confidence
 
             return [self.model_to_object(document) for document in documents]
 
@@ -379,74 +337,20 @@ class RedisVectorStorageAdapter(StorageAdapter):
         if 'search_in_response_to_contains' in kwargs:
             _search_text = kwargs.get('search_in_response_to_contains', '')
 
-            # Get embedding for the search text
-            embedding = self.vector_store.embeddings.embed_query(_search_text)
-
-            # Build return fields from metadata schema
-            return_fields = [
-                'text', 'in_response_to', 'conversation', 'persona', 'tags', 'created_at'
-            ]
-
-            # Use direct index query via RedisVL
-            # langchain's similarity_search has issues with filters in v0.2.4
-            # and may not work properly with existing indexes
-            # TODO: Look into similarity_search_with_score implementation
-            query = VectorQuery(
-                vector=embedding,
-                vector_field_name='embedding',
-                return_fields=return_fields,
-                num_results=page_size,
-                filter_expression=filter_condition
+            documents = self.vector_store.similarity_search(
+                _search_text,
+                k=page_size,  # The number of results to return
+                return_all=True,  # Include the full document with IDs
+                filter=filter_condition,
+                sort_by=ordering
             )
 
-            # Execute query
-            results = self.vector_store.index.query(query)
-
-            # Convert results to Document objects
-            Document = self.get_statement_model()
-            documents = []
-
-            # Calculate confidence from vector distances
+            # Add confidence scores based on similarity ordering
             # Results are ordered by similarity (best match first)
-            for idx, result in enumerate(results):
-                # Extract metadata and content
-                in_response_to = result.get('in_response_to', '')
-
-                # Redis vector_score is cosine distance (lower is better)
-                # Convert to confidence: confidence = 1 - distance
-                # If vector_score not available, use result order
-                vector_score = result.get('vector_score')
-                if vector_score is not None:
-                    # Cosine distance ranges from 0 (identical) to 2 (opposite)
-                    # Normalize to confidence: 1.0 (identical) to 0.0 (opposite)
-                    confidence = max(0.0, 1.0 - (float(vector_score) / 2.0))
-                else:
-                    # Fallback: use result order (first result = highest confidence)
-                    # Start at 0.95 for first result, decay by 0.05 per position
-                    confidence = max(0.0, 0.95 - (idx * 0.05))
-
-                # Convert Unix timestamp back to datetime
-                # Redis returns numeric fields as strings
-                created_at_timestamp = result.get('created_at', '0')
-                if created_at_timestamp and created_at_timestamp != '0':
-                    created_at = datetime.fromtimestamp(float(created_at_timestamp))
-                else:
-                    created_at = datetime.now()
-
-                metadata = {
-                    'text': result.get('text', ''),
-                    'conversation': result.get('conversation', ''),
-                    'persona': result.get('persona', ''),
-                    'tags': result.get('tags', ''),
-                    'created_at': created_at,
-                    'confidence': confidence,
-                }
-                doc = Document(
-                    page_content=in_response_to,
-                    metadata=metadata,
-                    id=result['id']
-                )
-                documents.append(doc)
+            for idx, doc in enumerate(documents):
+                # Start at 0.95 for first result, decay by 0.05 per position
+                confidence = max(0.0, 0.95 - (idx * 0.05))
+                doc.metadata['confidence'] = confidence
         else:
             documents = self.vector_store.query_search(
                 k=page_size,
@@ -551,11 +455,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
             client = self.vector_store.index.client
             client.delete(statement.id)
 
-            # NOTE: langchain-redis has an inconsistency - it uses :: for auto-generated
-            # IDs but : (single colon) when keys are explicitly provided
-            if '::' in statement.id:
-                key = statement.id.split('::', 1)[1]
-            elif ':' in statement.id:
+            # Extract the key from the full ID (format: prefix:key)
+            if ':' in statement.id:
                 key = statement.id.split(':', 1)[1]
             else:
                 # If no delimiter found, use the entire ID as the key
@@ -564,13 +465,6 @@ class RedisVectorStorageAdapter(StorageAdapter):
             ids = self.vector_store.add_texts(
                 [document.page_content], [metadata], keys=[key]
             )
-
-            # Normalize the ID to use :: delimiter (if langchain-redis returned single colon)
-            if ids and ':' in ids[0] and '::' not in ids[0]:
-                # Replace first occurrence of single colon with double colon
-                normalized_id = ids[0].replace(':', '::', 1)
-                # Update the key in Redis to use the correct format
-                client.rename(ids[0], normalized_id)
         else:
             self.vector_store.add_documents([document])
 
