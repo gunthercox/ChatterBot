@@ -59,6 +59,11 @@ class BestMatch(LogicAdapter):
         #   - The vector search inherently considers the entire semantic space, not just
         #     exact string matches, so additional variation searching is unnecessary
         #
+        # NOTE: This difference of functionality may need to be modified in the future
+        # if the redis adapter is determined to benefit from a Phase 2 style response
+        # selection. The main symptom that would drive such a change would be low
+        # quality or repetitive responses when using semantic vector search.
+        #
         # Therefore, semantic vector search returns the Phase 1 result directly.
         if self.search_algorithm.name == 'semantic_vector_search' and closest_match.confidence > 0:
             response = closest_match
