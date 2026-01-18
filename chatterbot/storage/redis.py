@@ -65,6 +65,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             index_name='chatterbot',
             redis_url=self.database_uri,
             content_field='in_response_to',
+            legacy_key_format=False,
             metadata_schema=[
                 {
                     'name': 'conversation',
@@ -551,11 +552,8 @@ class RedisVectorStorageAdapter(StorageAdapter):
             client = self.vector_store.index.client
             client.delete(statement.id)
 
-            # NOTE: langchain-redis has an inconsistency - it uses :: for auto-generated
-            # IDs but : (single colon) when keys are explicitly provided
-            if '::' in statement.id:
-                key = statement.id.split('::', 1)[1]
-            elif ':' in statement.id:
+            # Extract the key from the full ID (format: prefix:key)
+            if ':' in statement.id:
                 key = statement.id.split(':', 1)[1]
             else:
                 # If no delimiter found, use the entire ID as the key
@@ -564,13 +562,6 @@ class RedisVectorStorageAdapter(StorageAdapter):
             ids = self.vector_store.add_texts(
                 [document.page_content], [metadata], keys=[key]
             )
-
-            # Normalize the ID to use :: delimiter (if langchain-redis returned single colon)
-            if ids and ':' in ids[0] and '::' not in ids[0]:
-                # Replace first occurrence of single colon with double colon
-                normalized_id = ids[0].replace(':', '::', 1)
-                # Update the key in Redis to use the correct format
-                client.rename(ids[0], normalized_id)
         else:
             self.vector_store.add_documents([document])
 
