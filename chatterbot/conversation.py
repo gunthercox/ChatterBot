@@ -101,7 +101,7 @@ class Statement(StatementMixin):
         # This is the confidence with which the chat bot believes
         # this is an accurate response. This value is set when the
         # statement is returned by the chat bot.
-        self.confidence = 0
+        self.confidence = kwargs.get('confidence', 0)
 
         self.storage = None
 

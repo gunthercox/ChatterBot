@@ -128,6 +128,10 @@ class RedisVectorStorageAdapter(StorageAdapter):
         """
         from langchain_core.documents import Document
 
+        # Add the extra_statement_field_names attribute expected by StorageAdapter
+        if not hasattr(Document, 'extra_statement_field_names'):
+            Document.extra_statement_field_names = []
+
         return Document
 
     def model_to_object(self, document):
@@ -256,7 +260,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             else:
                 filter_condition = query
 
-        if 'exclude_text_words' in kwargs:
+        if 'exclude_text_words' in kwargs and kwargs['exclude_text_words']:
             _query = '|'.join([
                 f'%%{text}%%' for text in kwargs['exclude_text_words']
             ])
@@ -295,7 +299,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             # similar responses.
             _search_query = kwargs['search_text_contains']
 
-            documents = self.vector_store.similarity_search(
+            results = self.vector_store.similarity_search_with_score(
                 _search_query,
                 k=page_size,  # The number of results to return
                 return_all=True,  # Include the full document with IDs
@@ -303,12 +307,19 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 sort_by=ordering
             )
 
-            # Add confidence scores based on similarity ordering
-            # Results are ordered by similarity (best match first)
-            for idx, doc in enumerate(documents):
-                # Start at 0.95 for first result, decay by 0.05 per position
-                confidence = max(0.0, 0.95 - (idx * 0.05))
+            # Add confidence scores based on actual vector similarity
+            # similarity_search_with_score returns (document, score) tuples
+            # Redis uses cosine distance where lower is better (0 = identical, 2 = opposite)
+            documents = []
+            for doc, distance in results:
+                # Convert cosine distance to confidence: 1.0 (identical) to 0.0 (opposite)
+                if distance is not None:
+                    confidence = max(0.0, 1.0 - (float(distance) / 2.0))
+                else:
+                    # Fallback if distance is None
+                    confidence = 0.0
                 doc.metadata['confidence'] = confidence
+                documents.append(doc)
 
             return [self.model_to_object(document) for document in documents]
 
@@ -332,12 +343,15 @@ class RedisVectorStorageAdapter(StorageAdapter):
         ordering = kwargs.get('order_by', None)
 
         if ordering:
+            # Redis can't sort by 'id' (it's the key, not a field)
+            # Use 'created_at' instead which provides chronological ordering
+            ordering = ['created_at' if field == 'id' else field for field in ordering]
             ordering = ','.join(ordering)
 
         if 'search_in_response_to_contains' in kwargs:
             _search_text = kwargs.get('search_in_response_to_contains', '')
 
-            documents = self.vector_store.similarity_search(
+            results = self.vector_store.similarity_search_with_score(
                 _search_text,
                 k=page_size,  # The number of results to return
                 return_all=True,  # Include the full document with IDs
@@ -345,12 +359,19 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 sort_by=ordering
             )
 
-            # Add confidence scores based on similarity ordering
-            # Results are ordered by similarity (best match first)
-            for idx, doc in enumerate(documents):
-                # Start at 0.95 for first result, decay by 0.05 per position
-                confidence = max(0.0, 0.95 - (idx * 0.05))
+            # Add confidence scores based on actual vector similarity
+            # similarity_search_with_score returns (document, score) tuples
+            # Redis uses cosine distance where lower is better (0 = identical, 2 = opposite)
+            documents = []
+            for doc, distance in results:
+                # Convert cosine distance to confidence: 1.0 (identical) to 0.0 (opposite)
+                if distance is not None:
+                    confidence = max(0.0, 1.0 - (float(distance) / 2.0))
+                else:
+                    # Fallback if distance is None
+                    confidence = 0.0
                 doc.metadata['confidence'] = confidence
+                documents.append(doc)
         else:
             documents = self.vector_store.query_search(
                 k=page_size,
@@ -378,12 +399,21 @@ class RedisVectorStorageAdapter(StorageAdapter):
         # Prevent duplicate tag entries in the database
         unique_tags = list(set(tags)) if tags else []
 
+        # Handle created_at: convert datetime to timestamp if needed
+        created_at_value = kwargs.get('created_at')
+        if isinstance(created_at_value, datetime):
+            created_at_timestamp = created_at_value.timestamp()
+        elif created_at_value:
+            created_at_timestamp = created_at_value
+        else:
+            created_at_timestamp = _default_date.timestamp()
+
         metadata = {
             'text': text,
             'category': kwargs.get('category', ''),
             # Store created_at as Unix timestamp with microseconds (float)
             # This provides full datetime precision while maintaining Redis NUMERIC field compatibility
-            'created_at': kwargs.get('created_at') or _default_date.timestamp(),
+            'created_at': created_at_timestamp,
             'tags': '|'.join(unique_tags) if unique_tags else '',
             'conversation': kwargs.get('conversation', ''),
             'persona': kwargs.get('persona', ''),
