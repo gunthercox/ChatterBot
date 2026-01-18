@@ -202,6 +202,168 @@ Performance Considerations
 - 10,000 statements: ~30MB vector data
 - Trade-off: Higher memory for better semantic understanding
 
+Embedding Model Configuration
+------------------------------
+
+.. versionadded:: 1.2.8
+   Support for configurable embedding models and providers.
+
+The Redis adapter now supports custom embedding models and providers, allowing you to optimize for different use cases:
+
+Default Configuration
+^^^^^^^^^^^^^^^^^^^^^
+
+By default, the adapter uses HuggingFace's ``sentence-transformers/all-mpnet-base-v2``:
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       'Bot',
+       storage_adapter='chatterbot.storage.RedisVectorStorageAdapter'
+   )
+   # Uses: sentence-transformers/all-mpnet-base-v2 (768-dim, balanced)
+
+Alternative HuggingFace Models
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Choose different models based on your requirements:
+
+**Fast/Lightweight Model** (for high-throughput applications):
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       'FastBot',
+       storage_adapter='chatterbot.storage.RedisVectorStorageAdapter',
+       embedding_model='all-MiniLM-L6-v2'
+   )
+   # Model: all-MiniLM-L6-v2
+   # Dimensions: 384 (vs 768 default)
+   # Size: 80MB (vs 420MB default)
+   # Speed: 5x faster
+   # Quality: ~10% lower accuracy
+
+**Q&A Optimized Model** (for question-answering chatbots):
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       'QABot',
+       storage_adapter='chatterbot.storage.RedisVectorStorageAdapter',
+       embedding_model='multi-qa-mpnet-base-dot-v1'
+   )
+   # Model: multi-qa-mpnet-base-dot-v1
+   # Trained specifically on Q&A datasets
+   # Better performance on question-answer pairs
+
+**Multilingual Model** (for multi-language support):
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       'MultilingualBot',
+       storage_adapter='chatterbot.storage.RedisVectorStorageAdapter',
+       embedding_model='paraphrase-multilingual-mpnet-base-v2'
+   )
+   # Model: paraphrase-multilingual-mpnet-base-v2
+   # Supports 50+ languages
+   # Same 768 dimensions as default
+
+Advanced Embedding Configuration
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Pass additional parameters to the embedding model:
+
+.. code-block:: python
+
+   chatbot = ChatBot(
+       'CustomBot',
+       storage_adapter='chatterbot.storage.RedisVectorStorageAdapter',
+       embedding_model='all-MiniLM-L6-v2',
+       embedding_kwargs={
+           'model_kwargs': {
+               'device': 'cpu',  # or 'cuda' for GPU
+               'torch_dtype': 'float16'  # Reduce memory usage
+           },
+           'encode_kwargs': {
+               'normalize_embeddings': True,  # L2 normalization
+               'batch_size': 32  # Process 32 texts at once
+           }
+       }
+   )
+
+Alternative Embedding Providers
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+**OpenAI Embeddings** (cloud-based, requires API key):
+
+.. code-block:: python
+
+   # Requires: pip install langchain-openai
+   # Set: export OPENAI_API_KEY="your-api-key"
+
+   chatbot = ChatBot(
+       'OpenAIBot',
+       storage_adapter='chatterbot.storage.RedisVectorStorageAdapter',
+       embedding_provider='openai',
+       embedding_model='text-embedding-3-small',
+       embedding_kwargs={'dimensions': 1536}
+   )
+   # Pros: High quality, fast API calls
+   # Cons: Costs money per token, requires internet
+
+**Cohere Embeddings** (cloud-based, requires API key):
+
+.. code-block:: python
+
+   # Requires: pip install langchain-cohere
+   # Set: export COHERE_API_KEY="your-api-key"
+
+   chatbot = ChatBot(
+       'CohereBot',
+       storage_adapter='chatterbot.storage.RedisVectorStorageAdapter',
+       embedding_provider='cohere',
+       embedding_model='embed-english-v3.0'
+   )
+   # Pros: Optimized for semantic search
+   # Cons: Subscription-based, requires internet
+
+Model Selection Guide
+^^^^^^^^^^^^^^^^^^^^^
+
+.. list-table:: Embedding Model Comparison
+   :widths: 25 20 20 35
+   :header-rows: 1
+
+   * - Use Case
+     - Recommended Model
+     - Dimensions
+     - Trade-offs
+   * - General chatbot (default)
+     - ``all-mpnet-base-v2``
+     - 768
+     - Best balance of speed and quality
+   * - High-throughput / limited resources
+     - ``all-MiniLM-L6-v2``
+     - 384
+     - 5x faster, smaller size, slight quality loss
+   * - Question-answering bot
+     - ``multi-qa-mpnet-base-dot-v1``
+     - 768
+     - Better Q&A performance, same size as default
+   * - Multilingual bot
+     - ``paraphrase-multilingual-mpnet-base-v2``
+     - 768
+     - Supports 50+ languages, same size
+   * - Cloud/Production (API)
+     - OpenAI or Cohere
+     - 1024-1536
+     - Higher quality, costs money, requires API key
+
+**Example: Complete Configuration**
+
+See ``examples/redis_embedding_examples.py`` for complete working examples of all embedding configurations.
+
 More on Vector Databases & Semantic Search
 -------------------------------------------
 

@@ -22,7 +22,7 @@ class RedisStorageAdapterTestCase(TestCase):
         snapshot_download(repo_id='sentence-transformers/all-mpnet-base-v2', repo_type='model')
 
         cls.adapter = RedisVectorStorageAdapter(
-            database_uri='redis://localhost:6379/0'  # TODO: Adjust in CI
+            database_uri='redis://localhost:6379/0'
         )
 
     def tearDown(self):

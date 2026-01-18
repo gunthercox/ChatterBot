@@ -110,10 +110,18 @@ class ListTrainer(Trainer):
 
         # Create statements from processed documents
         for document in tqdm(documents, desc='List Trainer', disable=self.disable_progress):
-            statement_search_text = document._.search_index
+            # Handle both spaCy Doc objects and plain strings from NoOpTagger
+            if isinstance(document, str):
+                # NoOpTagger returns plain strings
+                statement_text = document
+                statement_search_text = self.chatbot.tagger.get_text_index_string(document)
+            else:
+                # Regular taggers return spaCy Doc objects
+                statement_text = document.text
+                statement_search_text = document._.search_index
 
             statement = Statement(
-                text=document.text,
+                text=statement_text,
                 search_text=statement_search_text,
                 in_response_to=previous_statement_text,
                 search_in_response_to=previous_statement_search_text,
@@ -183,10 +191,18 @@ class ChatterBotCorpusTrainer(Trainer):
                     document = documents[doc_index]
                     doc_index += 1
 
-                    statement_search_text = document._.search_index
+                    # Handle both spaCy Doc objects and plain strings from NoOpTagger
+                    if isinstance(document, str):
+                        # NoOpTagger returns plain strings
+                        statement_text = document
+                        statement_search_text = self.chatbot.tagger.get_text_index_string(document)
+                    else:
+                        # Regular taggers return spaCy Doc objects
+                        statement_text = document.text
+                        statement_search_text = document._.search_index
 
                     statement = Statement(
-                        text=document.text,
+                        text=statement_text,
                         search_text=statement_search_text,
                         in_response_to=previous_statement_text,
                         search_in_response_to=previous_statement_search_text,
@@ -383,12 +399,28 @@ class GenericFileTrainer(Trainer):
                     )
 
                     for document in response_documents:
-                        response_to_search_index_mapping[document.text] = document._.search_index
+                        # Handle both spaCy Doc objects and plain strings from NoOpTagger
+                        if isinstance(document, str):
+                            # NoOpTagger returns plain strings
+                            response_to_search_index_mapping[document] = self.chatbot.tagger.get_text_index_string(document)
+                        else:
+                            # Regular taggers return spaCy Doc objects
+                            response_to_search_index_mapping[document.text] = document._.search_index
 
             # Create statements from processed documents
             for document, context in tqdm(documents_list, desc='Creating statements', disable=self.disable_progress, leave=False):
+                # Handle both spaCy Doc objects and plain strings from NoOpTagger
+                if isinstance(document, str):
+                    # NoOpTagger returns plain strings
+                    statement_text = document
+                    statement_search_text = self.chatbot.tagger.get_text_index_string(document)
+                else:
+                    # Regular taggers return spaCy Doc objects
+                    statement_text = document.text
+                    statement_search_text = document._.search_index
+                
                 statement = Statement(
-                    text=document.text,
+                    text=statement_text,
                     conversation=context.get('conversation', 'training'),
                     persona=context.get('persona', None),
                     tags=context.get('tags', [])
@@ -397,7 +429,7 @@ class GenericFileTrainer(Trainer):
                 if 'created_at' in context:
                     statement.created_at = date_parser.parse(context['created_at'])
 
-                statement.search_text = document._.search_index
+                statement.search_text = statement_search_text
 
                 # Use the in_response_to attribute for the previous statement if
                 # one is defined, otherwise use the last statement which was created

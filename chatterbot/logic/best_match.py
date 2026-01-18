@@ -41,83 +41,110 @@ class BestMatch(LogicAdapter):
                 break
 
         self.chatbot.logger.info('Selecting "{}" as a response to "{}" with a confidence of {}'.format(
-            closest_match.in_response_to, input_statement.text, closest_match.confidence
+            closest_match.text, input_statement.text, closest_match.confidence
         ))
 
-        recent_repeated_responses = filters.get_recent_repeated_responses(
-            self.chatbot,
-            input_statement.conversation
-        )
-
-        for index, recent_repeated_response in enumerate(recent_repeated_responses):
-            self.chatbot.logger.info('{}. Excluding recent repeated response of "{}"'.format(
-                index, recent_repeated_response
-            ))
-
-        response_selection_parameters = {
-            'search_text': closest_match.search_text,
-            'persona_not_startswith': 'bot:',
-            'exclude_text': recent_repeated_responses,
-            'exclude_text_words': self.excluded_words
-        }
-
-        alternate_response_selection_parameters = {
-            'search_in_response_to': self.chatbot.tagger.get_text_index_string(
-                input_statement.text
-            ),
-            'persona_not_startswith': 'bot:',
-            'exclude_text': recent_repeated_responses,
-            'exclude_text_words': self.excluded_words
-        }
-
-        if additional_response_selection_parameters:
-            response_selection_parameters.update(
-                additional_response_selection_parameters
-            )
-            alternate_response_selection_parameters.update(
-                additional_response_selection_parameters
-            )
-
-        # Get all statements with text similar to the closest match
-        response_list = list(self.chatbot.storage.filter(**response_selection_parameters))
-
-        if response_list:
-            response = self.select_response(
-                input_statement,
-                response_list,
-                self.chatbot.storage
-            )
-
-            response.confidence = closest_match.confidence
-            self.chatbot.logger.info('Selecting "{}" from {} optimal responses.'.format(
-                response.text,
-                len(response_list)
-            ))
+        # Semantic vector search vs indexed text search have different architectures:
+        #
+        # For SQL with indexed text search:
+        #   - Phase 1 finds a match based on string similarity (Levenshtein distance)
+        #   - Phase 2 finds variations of that match to get diverse responses
+        #   - This makes sense because you might have multiple instances of similar statements
+        #     learned from different conversations that provide different response options
+        #
+        # For Redis with semantic vectors:
+        #   - Phase 1 finds semantically similar responses using vector embeddings
+        #   - The semantic similarity already captures the "closeness" we want
+        #   - Phase 2 would be redundant - we already have the best semantic match
+        #   - The vector search inherently considers the entire semantic space, not just
+        #     exact string matches, so additional variation searching is unnecessary
+        #
+        # NOTE: This difference of functionality may need to be modified in the future
+        # if the redis adapter is determined to benefit from a Phase 2 style response
+        # selection. The main symptom that would drive such a change would be low
+        # quality or repetitive responses when using semantic vector search.
+        #
+        # Therefore, semantic vector search returns the Phase 1 result directly.
+        if self.search_algorithm.name == 'semantic_vector_search' and closest_match.confidence > 0:
+            response = closest_match
+            self.chatbot.logger.info('Using semantic search result directly: "{}"'.format(response.text))
         else:
-            '''
-            The case where there was no responses returned for the selected match
-            but a value exists for the statement the match is in response to.
-            '''
-            self.chatbot.logger.info('No responses found. Generating alternate response list.')
+            # For other search algorithms (indexed_text_search, text_search),
+            # we need to find responses to the closest match
+            recent_repeated_responses = filters.get_recent_repeated_responses(
+                self.chatbot,
+                input_statement.conversation
+            )
 
-            alternate_response_list = list(self.chatbot.storage.filter(
-                **alternate_response_selection_parameters
-            ))
+            for index, recent_repeated_response in enumerate(recent_repeated_responses):
+                self.chatbot.logger.info('{}. Excluding recent repeated response of "{}"'.format(
+                    index, recent_repeated_response
+                ))
 
-            if alternate_response_list:
+            response_selection_parameters = {
+                'search_text': closest_match.search_text,
+                'persona_not_startswith': 'bot:',
+                'exclude_text': recent_repeated_responses,
+                'exclude_text_words': self.excluded_words
+            }
+
+            alternate_response_selection_parameters = {
+                'search_in_response_to': self.chatbot.tagger.get_text_index_string(
+                    input_statement.text
+                ),
+                'persona_not_startswith': 'bot:',
+                'exclude_text': recent_repeated_responses,
+                'exclude_text_words': self.excluded_words
+            }
+
+            if additional_response_selection_parameters:
+                response_selection_parameters.update(
+                    additional_response_selection_parameters
+                )
+                alternate_response_selection_parameters.update(
+                    additional_response_selection_parameters
+                )
+
+            # Get all statements with text similar to the closest match
+            response_list = list(self.chatbot.storage.filter(**response_selection_parameters))
+
+            if response_list:
                 response = self.select_response(
                     input_statement,
-                    alternate_response_list,
+                    response_list,
                     self.chatbot.storage
                 )
 
                 response.confidence = closest_match.confidence
-                self.chatbot.logger.info('Selected alternative response "{}" from {} options'.format(
+                self.chatbot.logger.info('Selecting "{}" from {} optimal responses.'.format(
                     response.text,
-                    len(alternate_response_list)
+                    len(response_list)
                 ))
             else:
-                response = self.get_default_response(input_statement)
-                self.chatbot.logger.info('Using "%s" as a default response.', response.text)
+                '''
+                The case where there was no responses returned for the selected match
+                but a value exists for the statement the match is in response to.
+                '''
+                self.chatbot.logger.info('No responses found. Generating alternate response list.')
+
+                alternate_response_list = list(self.chatbot.storage.filter(
+                    **alternate_response_selection_parameters
+                ))
+
+                if alternate_response_list:
+                    response = self.select_response(
+                        input_statement,
+                        alternate_response_list,
+                        self.chatbot.storage
+                    )
+
+                    response.confidence = closest_match.confidence
+                    self.chatbot.logger.info('Selected alternative response "{}" from {} options'.format(
+                        response.text,
+                        len(alternate_response_list)
+                    ))
+                else:
+                    response = self.get_default_response(input_statement)
+                    self.chatbot.logger.info('Using "%s" as a default response.', response.text)
 
         return response

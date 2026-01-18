@@ -38,6 +38,48 @@ class RedisVectorStorageAdapter(StorageAdapter):
         The database_uri can be specified to choose a redis instance.
     :type database_uri: str
 
+    :keyword embedding_model: The name of the embedding model to use.
+        Default: 'sentence-transformers/all-mpnet-base-v2' (768-dim, balanced speed/quality).
+        Alternatives: 'all-MiniLM-L6-v2' (384-dim, faster), 'multi-qa-mpnet-base-dot-v1' (768-dim, Q&A optimized),
+        'paraphrase-multilingual-mpnet-base-v2' (768-dim, multilingual).
+    :type embedding_model: str
+
+    :keyword embedding_provider: The embedding provider to use. Options: 'huggingface' (default),
+        'openai', 'cohere'. Requires corresponding packages (langchain-openai, langchain-cohere).
+    :type embedding_provider: str
+
+    :keyword embedding_kwargs: Additional keyword arguments to pass to the embedding provider.
+        For HuggingFace: model_kwargs (device, torch_dtype), encode_kwargs (normalize_embeddings, batch_size).
+        For OpenAI: model name (e.g., 'text-embedding-3-small'), dimensions.
+        For Cohere: model name (e.g., 'embed-english-v3.0').
+    :type embedding_kwargs: dict
+
+    Architecture:
+    -------------
+    Unlike SQL storage adapters that use indexed text fields (search_text,
+    search_in_response_to) for string-based similarity matching, Redis uses
+    vector embeddings for semantic similarity. The 'in_response_to' field is
+    embedded as a vector, enabling the system to find statements that respond
+    to semantically similar inputs.
+
+    When used with SemanticVectorSearch, this adapter returns the best matching
+    response directly from Phase 1 search. The semantic vector similarity already
+    captures contextual closeness, making the traditional Phase 2 variation search
+    (used in indexed text search) redundant.
+
+    For SQL with indexed text search:
+    - Phase 1 finds a match based on string similarity (Levenshtein distance)
+    - Phase 2 finds variations of that match to get diverse responses
+    - This makes sense because you might have multiple instances of similar statements
+      learned from different conversations that provide different response options
+
+    For Redis with semantic vectors:
+    - Phase 1 finds semantically similar responses using vector embeddings
+    - The semantic similarity already captures the "closeness" we want
+    - Phase 2 would be redundant - we already have the best semantic match
+    - The vector search inherently considers the entire semantic space, not just
+      exact string matches, so additional variation searching is unnecessary
+
     NOTES:
     * Unlike other database based storage adapters, the RedisVectorStorageAdapter
       does not leverage `search_text` and `search_in_response_to` fields for indexing.
@@ -56,8 +98,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         from chatterbot.vectorstores import RedisVectorStore
-        from langchain_redis import RedisConfig  # RedisVectorStore
-        from langchain_huggingface import HuggingFaceEmbeddings
+        from langchain_redis import RedisConfig
 
         self.database_uri = kwargs.get('database_uri', 'redis://localhost:6379/0')
 
@@ -91,17 +132,52 @@ class RedisVectorStorageAdapter(StorageAdapter):
             ],
         )
 
-        # TODO should this call from_existing_index if connecting to
-        # a redis instance that already contains data?
-
-        self.logger.info('Loading HuggingFace embeddings')
-
-        # TODO: Research different embeddings
-        # https://python.langchain.com/docs/integrations/vectorstores/mongodb_atlas/#initialization
-
-        embeddings = HuggingFaceEmbeddings(
-            model_name='sentence-transformers/all-mpnet-base-v2'
+        # Configure embedding model
+        embedding_provider = kwargs.get('embedding_provider', 'huggingface').lower()
+        embedding_model = kwargs.get(
+            'embedding_model',
+            'sentence-transformers/all-mpnet-base-v2'
         )
+        embedding_kwargs = kwargs.get('embedding_kwargs', {})
+
+        self.logger.info(f'Loading {embedding_provider} embeddings: {embedding_model}')
+
+        # Initialize embeddings based on provider
+        if embedding_provider == 'huggingface':
+            from langchain_huggingface import HuggingFaceEmbeddings
+            embeddings = HuggingFaceEmbeddings(
+                model_name=embedding_model,
+                **embedding_kwargs
+            )
+        elif embedding_provider == 'openai':
+            try:
+                from langchain_openai import OpenAIEmbeddings
+                embeddings = OpenAIEmbeddings(
+                    model=embedding_model,
+                    **embedding_kwargs
+                )
+            except ImportError:
+                raise ImportError(
+                    "OpenAI embeddings require 'langchain-openai' package. "
+                    "Install with: pip install langchain-openai"
+                )
+        elif embedding_provider == 'cohere':
+            try:
+                from langchain_cohere import CohereEmbeddings
+                embeddings = CohereEmbeddings(
+                    model=embedding_model,
+                    **embedding_kwargs
+                )
+            except ImportError:
+                raise ImportError(
+                    "Cohere embeddings require 'langchain-cohere' package. "
+                    "Install with: pip install langchain-cohere"
+                )
+        else:
+            raise ValueError(
+                f"Unsupported embedding provider: {embedding_provider}. "
+                "Supported providers: 'huggingface', 'openai', 'cohere'"
+            )
 
         self.logger.info('Creating Redis Vector Store')
 
@@ -127,6 +203,10 @@ class RedisVectorStorageAdapter(StorageAdapter):
         Return the statement model.
         """
         from langchain_core.documents import Document
+
+        # Add the extra_statement_field_names attribute expected by StorageAdapter
+        if not hasattr(Document, 'extra_statement_field_names'):
+            Document.extra_statement_field_names = []
 
         return Document
 
@@ -166,22 +246,16 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
     def count(self) -> int:
         """
-        Return the number of entries in the database.
+        Return the number of statement entries in the database.
         """
-
-        '''
-        TODO
-        faiss_vector_store = FAISS(
-            embedding_function=embedding_function,
-            index=IndexFlatL2(embedding_size),
-            docstore=InMemoryDocstore(),
-            index_to_docstore_id={}
-        )
-        doc_count = faiss_vector_store.index.ntotal
-        '''
-
+        index_name = self.vector_store.config.index_name
         client = self.vector_store.index.client
-        return client.dbsize()
+
+        # Count only keys matching the ChatterBot index prefix
+        count = 0
+        for _ in client.scan_iter(f'{index_name}:*'):
+            count += 1
+        return count
 
     def remove(self, statement):
         """
@@ -256,7 +330,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             else:
                 filter_condition = query
 
-        if 'exclude_text_words' in kwargs:
+        if 'exclude_text_words' in kwargs and kwargs['exclude_text_words']:
             _query = '|'.join([
                 f'%%{text}%%' for text in kwargs['exclude_text_words']
             ])
@@ -295,7 +369,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
             # similar responses.
             _search_query = kwargs['search_text_contains']
 
-            documents = self.vector_store.similarity_search(
+            results = self.vector_store.similarity_search_with_score(
                 _search_query,
                 k=page_size,  # The number of results to return
                 return_all=True,  # Include the full document with IDs
@@ -303,12 +377,19 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 sort_by=ordering
             )
 
-            # Add confidence scores based on similarity ordering
-            # Results are ordered by similarity (best match first)
-            for idx, doc in enumerate(documents):
-                # Start at 0.95 for first result, decay by 0.05 per position
-                confidence = max(0.0, 0.95 - (idx * 0.05))
+            # Add confidence scores based on actual vector similarity
+            # similarity_search_with_score returns (document, score) tuples
+            # Redis uses cosine distance where lower is better (0 = identical, 2 = opposite)
+            documents = []
+            for doc, distance in results:
+                # Convert cosine distance to confidence: 1.0 (identical) to 0.0 (opposite)
+                if distance is not None:
+                    confidence = max(0.0, 1.0 - (float(distance) / 2.0))
+                else:
+                    # Fallback if distance is None
+                    confidence = 0.0
                 doc.metadata['confidence'] = confidence
+                documents.append(doc)
 
             return [self.model_to_object(document) for document in documents]
 
@@ -332,12 +413,15 @@ class RedisVectorStorageAdapter(StorageAdapter):
         ordering = kwargs.get('order_by', None)
 
         if ordering:
+            # Redis can't sort by 'id' (it's the key, not a field)
+            # Use 'created_at' instead which provides chronological ordering
+            ordering = ['created_at' if field == 'id' else field for field in ordering]
             ordering = ','.join(ordering)
 
         if 'search_in_response_to_contains' in kwargs:
             _search_text = kwargs.get('search_in_response_to_contains', '')
 
-            documents = self.vector_store.similarity_search(
+            results = self.vector_store.similarity_search_with_score(
                 _search_text,
                 k=page_size,  # The number of results to return
                 return_all=True,  # Include the full document with IDs
@@ -345,12 +429,19 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 sort_by=ordering
             )
 
-            # Add confidence scores based on similarity ordering
-            # Results are ordered by similarity (best match first)
-            for idx, doc in enumerate(documents):
-                # Start at 0.95 for first result, decay by 0.05 per position
-                confidence = max(0.0, 0.95 - (idx * 0.05))
+            # Add confidence scores based on actual vector similarity
+            # similarity_search_with_score returns (document, score) tuples
+            # Redis uses cosine distance where lower is better (0 = identical, 2 = opposite)
+            documents = []
+            for doc, distance in results:
+                # Convert cosine distance to confidence: 1.0 (identical) to 0.0 (opposite)
+                if distance is not None:
+                    confidence = max(0.0, 1.0 - (float(distance) / 2.0))
+                else:
+                    # Fallback if distance is None
+                    confidence = 0.0
                 doc.metadata['confidence'] = confidence
+                documents.append(doc)
         else:
             documents = self.vector_store.query_search(
                 k=page_size,
@@ -378,12 +469,21 @@ class RedisVectorStorageAdapter(StorageAdapter):
         # Prevent duplicate tag entries in the database
         unique_tags = list(set(tags)) if tags else []
 
+        # Handle created_at: convert datetime to timestamp if needed
+        created_at_value = kwargs.get('created_at')
+        if isinstance(created_at_value, datetime):
+            created_at_timestamp = created_at_value.timestamp()
+        elif created_at_value:
+            created_at_timestamp = created_at_value
+        else:
+            created_at_timestamp = _default_date.timestamp()
+
         metadata = {
             'text': text,
             'category': kwargs.get('category', ''),
             # Store created_at as Unix timestamp with microseconds (float)
             # This provides full datetime precision while maintaining Redis NUMERIC field compatibility
-            'created_at': kwargs.get('created_at') or _default_date.timestamp(),
+            'created_at': created_at_timestamp,
             'tags': '|'.join(unique_tags) if unique_tags else '',
             'conversation': kwargs.get('conversation', ''),
             'persona': kwargs.get('persona', ''),
