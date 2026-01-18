@@ -165,6 +165,27 @@ class SemanticVectorSearch:
     Does not require a tagger or comparison function - relies on the storage
     adapter's native vector similarity search capabilities.
 
+    This search algorithm is designed for vector-based storage adapters like
+    RedisVectorStorageAdapter. Unlike indexed text search (IndexedTextSearch)
+    which uses string matching and requires a two-phase search, semantic vector
+    search finds the best matching response in a single phase using vector
+    similarity.
+
+    Architecture differences:
+    -------------------------
+    Indexed Text Search (SQL adapters):
+    - Phase 1: Find statements with string similarity to input
+    - Phase 2: Find variations of the match to get diverse responses
+    - Requires search_text and search_in_response_to indexed fields
+    - Uses comparison functions (Levenshtein, Jaccard, etc.)
+
+    Semantic Vector Search (Redis adapter):
+    - Single phase: Find statements with vector similarity to input
+    - Semantic embeddings capture contextual meaning
+    - No need for Phase 2 - vector similarity already provides the best match
+    - Does not use search_text/search_in_response_to fields
+    - Confidence scores based on cosine distance in vector space
+
     :param search_page_size:
         The maximum number of records to load into memory at a time when searching.
         Defaults to 1000

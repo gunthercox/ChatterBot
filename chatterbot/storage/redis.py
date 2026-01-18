@@ -38,6 +38,32 @@ class RedisVectorStorageAdapter(StorageAdapter):
         The database_uri can be specified to choose a redis instance.
     :type database_uri: str
 
+    Architecture:
+    -------------
+    Unlike SQL storage adapters that use indexed text fields (search_text,
+    search_in_response_to) for string-based similarity matching, Redis uses
+    vector embeddings for semantic similarity. The 'in_response_to' field is
+    embedded as a vector, enabling the system to find statements that respond
+    to semantically similar inputs.
+
+    When used with SemanticVectorSearch, this adapter returns the best matching
+    response directly from Phase 1 search. The semantic vector similarity already
+    captures contextual closeness, making the traditional Phase 2 variation search
+    (used in indexed text search) redundant.
+
+    For SQL with indexed text search:
+    - Phase 1 finds a match based on string similarity (Levenshtein distance)
+    - Phase 2 finds variations of that match to get diverse responses
+    - This makes sense because you might have multiple instances of similar statements
+      learned from different conversations that provide different response options
+
+    For Redis with semantic vectors:
+    - Phase 1 finds semantically similar responses using vector embeddings
+    - The semantic similarity already captures the "closeness" we want
+    - Phase 2 would be redundant - we already have the best semantic match
+    - The vector search inherently considers the entire semantic space, not just
+      exact string matches, so additional variation searching is unnecessary
+
     NOTES:
     * Unlike other database based storage adapters, the RedisVectorStorageAdapter
       does not leverage `search_text` and `search_in_response_to` fields for indexing.
