@@ -730,10 +730,13 @@ def next_week_day(base_date: datetime, weekday: int) -> datetime:
     return day
 
 
-def datetime_parsing(text: str, base_date: datetime = datetime.now()) -> list[tuple[str, datetime, tuple[int, int]]]:
+def datetime_parsing(text: str, base_date: datetime = None) -> list[tuple[str, datetime, tuple[int, int]]]:
     """
     Extract datetime objects from a string of text.
     """
+    if base_date is None:
+        base_date = datetime.now()
+
     matches = []
     found_array = []
 
