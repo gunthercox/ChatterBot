@@ -38,6 +38,22 @@ class RedisVectorStorageAdapter(StorageAdapter):
         The database_uri can be specified to choose a redis instance.
     :type database_uri: str
 
+    :keyword embedding_model: The name of the embedding model to use.
+        Default: 'sentence-transformers/all-mpnet-base-v2' (768-dim, balanced speed/quality).
+        Alternatives: 'all-MiniLM-L6-v2' (384-dim, faster), 'multi-qa-mpnet-base-dot-v1' (768-dim, Q&A optimized),
+        'paraphrase-multilingual-mpnet-base-v2' (768-dim, multilingual).
+    :type embedding_model: str
+
+    :keyword embedding_provider: The embedding provider to use. Options: 'huggingface' (default),
+        'openai', 'cohere'. Requires corresponding packages (langchain-openai, langchain-cohere).
+    :type embedding_provider: str
+
+    :keyword embedding_kwargs: Additional keyword arguments to pass to the embedding provider.
+        For HuggingFace: model_kwargs (device, torch_dtype), encode_kwargs (normalize_embeddings, batch_size).
+        For OpenAI: model name (e.g., 'text-embedding-3-small'), dimensions.
+        For Cohere: model name (e.g., 'embed-english-v3.0').
+    :type embedding_kwargs: dict
+
     Architecture:
     -------------
     Unlike SQL storage adapters that use indexed text fields (search_text,
@@ -82,8 +98,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         from chatterbot.vectorstores import RedisVectorStore
-        from langchain_redis import RedisConfig  # RedisVectorStore
-        from langchain_huggingface import HuggingFaceEmbeddings
+        from langchain_redis import RedisConfig
 
         self.database_uri = kwargs.get('database_uri', 'redis://localhost:6379/0')
 
@@ -117,14 +132,52 @@ class RedisVectorStorageAdapter(StorageAdapter):
             ],
         )
 
-        self.logger.info('Loading HuggingFace embeddings')
-
-        # TODO: Research different embeddings
-        # https://python.langchain.com/docs/integrations/vectorstores/mongodb_atlas/#initialization
-
-        embeddings = HuggingFaceEmbeddings(
-            model_name='sentence-transformers/all-mpnet-base-v2'
+        # Configure embedding model
+        embedding_provider = kwargs.get('embedding_provider', 'huggingface').lower()
+        embedding_model = kwargs.get(
+            'embedding_model',
+            'sentence-transformers/all-mpnet-base-v2'
         )
+        embedding_kwargs = kwargs.get('embedding_kwargs', {})
+
+        self.logger.info(f'Loading {embedding_provider} embeddings: {embedding_model}')
+
+        # Initialize embeddings based on provider
+        if embedding_provider == 'huggingface':
+            from langchain_huggingface import HuggingFaceEmbeddings
+            embeddings = HuggingFaceEmbeddings(
+                model_name=embedding_model,
+                **embedding_kwargs
+            )
+        elif embedding_provider == 'openai':
+            try:
+                from langchain_openai import OpenAIEmbeddings
+                embeddings = OpenAIEmbeddings(
+                    model=embedding_model,
+                    **embedding_kwargs
+                )
+            except ImportError:
+                raise ImportError(
+                    "OpenAI embeddings require 'langchain-openai' package. "
+                    "Install with: pip install langchain-openai"
+                )
+        elif embedding_provider == 'cohere':
+            try:
+                from langchain_cohere import CohereEmbeddings
+                embeddings = CohereEmbeddings(
+                    model=embedding_model,
+                    **embedding_kwargs
+                )
+            except ImportError:
+                raise ImportError(
+                    "Cohere embeddings require 'langchain-cohere' package. "
+                    "Install with: pip install langchain-cohere"
+                )
+        else:
+            raise ValueError(
+                f"Unsupported embedding provider: {embedding_provider}. "
+                "Supported providers: 'huggingface', 'openai', 'cohere'"
+            )
 
         self.logger.info('Creating Redis Vector Store')
 
