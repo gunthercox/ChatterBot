@@ -13,6 +13,10 @@
         }
       ],
       "assigned_files": [
+        "chatterbot/__init__.py",
+        "chatterbot/__main__.py",
+        "chatterbot/conversation.py",
+        "chatterbot/components.py",
         "chatterbot/chatterbot.py"
       ],
       "can_expand": true
@@ -41,15 +45,17 @@
         }
       ],
       "assigned_files": [
+        "chatterbot/search.py",
+        "chatterbot/response_selection.py",
+        "chatterbot/filters.py",
+        "chatterbot/comparisons.py",
         "chatterbot/logic/unit_conversion.py",
         "chatterbot/logic/__init__.py",
         "chatterbot/logic/mathematical_evaluation.py",
+        "chatterbot/logic/logic_adapter.py",
         "chatterbot/logic/best_match.py",
         "chatterbot/logic/specific_response.py",
-        "chatterbot/logic/time_adapter.py",
-        "chatterbot/comparisons.py",
-        "chatterbot/response_selection.py",
-        "chatterbot/logic/logic_adapter.py"
+        "chatterbot/logic/time_adapter.py"
       ],
       "can_expand": true
     },
@@ -77,75 +83,9 @@
         }
       ],
       "assigned_files": [
-        "chatterbot/storage/__init__.py",
-        "chatterbot/storage/mongodb.py",
-        "chatterbot/storage/redis.py",
-        "chatterbot/storage/sql_storage.py",
-        "chatterbot/storage/django_storage.py",
         "chatterbot/corpus.py",
-        "chatterbot/trainers.py",
-        "chatterbot/storage/storage_adapter.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Input/Output Processors",
-      "description": "Responsible for preprocessing raw user input (e.g., cleaning whitespace, parsing dates) before it reaches the core engine, and potentially post-processing responses.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "chatterbot.preprocessors",
-          "reference_file": "chatterbot/chatterbot.py",
-          "reference_start_line": 118,
-          "reference_end_line": 118
-        },
-        {
-          "qualified_name": "chatterbot.parsing",
-          "reference_file": "chatterbot/parsing.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "chatterbot/preprocessors.py",
-        "chatterbot/parsing.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "LLM Integration",
-      "description": "Provides an abstract interface for integrating Large Language Models, allowing ChatterBot to leverage advanced generative capabilities for responses.",
-      "referenced_source_code": [
-        {
-          "qualified_name": "chatterbot.llm",
-          "reference_file": "chatterbot/llm.py",
-          "reference_start_line": null,
-          "reference_end_line": null
-        }
-      ],
-      "assigned_files": [
-        "chatterbot/llm.py"
-      ],
-      "can_expand": true
-    },
-    {
-      "name": "Unclassified",
-      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
-      "referenced_source_code": [],
-      "assigned_files": [
-        "chatterbot/adapters.py",
-        "chatterbot/search.py",
-        "chatterbot/__init__.py",
-        "chatterbot/__main__.py",
-        "chatterbot/constants.py",
-        "chatterbot/tagging.py",
-        "chatterbot/conversation.py",
         "chatterbot/vectorstores.py",
-        "chatterbot/utils.py",
-        "chatterbot/components.py",
-        "chatterbot/filters.py",
-        "chatterbot/exceptions.py",
-        "chatterbot/languages.py",
-        "chatterbot/ext/__init__.py",
+        "chatterbot/trainers.py",
         "chatterbot/ext/django_chatterbot/__init__.py",
         "chatterbot/ext/django_chatterbot/apps.py",
         "chatterbot/ext/django_chatterbot/models.py",
@@ -176,6 +116,61 @@
         "chatterbot/ext/django_chatterbot/migrations/0017_tags_unique.py",
         "chatterbot/ext/sqlalchemy_app/__init__.py",
         "chatterbot/ext/sqlalchemy_app/models.py",
+        "chatterbot/storage/storage_adapter.py",
+        "chatterbot/storage/__init__.py",
+        "chatterbot/storage/mongodb.py",
+        "chatterbot/storage/redis.py",
+        "chatterbot/storage/sql_storage.py",
+        "chatterbot/storage/django_storage.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Input/Output Processors",
+      "description": "Responsible for preprocessing raw user input (e.g., cleaning whitespace, parsing dates) before it reaches the core engine, and potentially post-processing responses.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.preprocessors",
+          "reference_file": "chatterbot/chatterbot.py",
+          "reference_start_line": 118,
+          "reference_end_line": 118
+        },
+        {
+          "qualified_name": "chatterbot.parsing",
+          "reference_file": "chatterbot/parsing.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "chatterbot/tagging.py",
+        "chatterbot/parsing.py",
+        "chatterbot/preprocessors.py",
+        "chatterbot/languages.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "LLM Integration",
+      "description": "Provides an abstract interface for integrating Large Language Models, allowing ChatterBot to leverage advanced generative capabilities for responses.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.llm",
+          "reference_file": "chatterbot/llm.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ],
+      "assigned_files": [
+        "chatterbot/llm.py"
+      ],
+      "can_expand": true
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [
         "examples/training_example_chatterbot_corpus.py",
         "examples/__init__.py",
         "examples/basic_example.py",
@@ -206,8 +201,20 @@
         "examples/django_example/django_example/management/commands/train.py",
         "docs/conf.py",
         "docs/_ext/github.py",
-        "docs/_ext/canonical.py"
+        "docs/_ext/canonical.py",
+        "chatterbot/adapters.py",
+        "chatterbot/constants.py",
+        "chatterbot/utils.py",
+        "chatterbot/exceptions.py",
+        "chatterbot/ext/__init__.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {
