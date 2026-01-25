@@ -1,0 +1,97 @@
+{
+  "description": "This graph represents the core functionality of a system that processes user queries, generates responses using a language model, and interacts with external tools. The main flow involves receiving a query, parsing it, invoking a language model to determine the appropriate action, executing that action (which might involve using a tool), and finally formatting and returning the response to the user. Its purpose is to provide a flexible and extensible framework for building AI-powered applications that can understand and act upon user requests.",
+  "components": [
+    {
+      "name": "Query Processor",
+      "description": "Handles incoming user queries, including parsing and initial validation.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "QueryParser:parse",
+          "reference_file": "chatterbot/parsing.py",
+          "reference_start_line": 302,
+          "reference_end_line": 310
+        }
+      ]
+    },
+    {
+      "name": "Language Model Interface",
+      "description": "Manages interactions with the underlying language model, sending prompts and receiving generated text.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "LLMClient:send_prompt",
+          "reference_file": "chatterbot/llm.py",
+          "reference_start_line": 62,
+          "reference_end_line": 86
+        },
+        {
+          "qualified_name": "LLMClient:receive_response",
+          "reference_file": "chatterbot/llm.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ]
+    },
+    {
+      "name": "Tool Executor",
+      "description": "Executes specific tools based on the language model's output, handling tool invocation and result retrieval.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "ToolRegistry:get_tool",
+          "reference_file": "tool_executor.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "Tool:execute",
+          "reference_file": "tool_executor.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ]
+    },
+    {
+      "name": "Response Formatter",
+      "description": "Formats the final response to be sent back to the user, potentially combining information from the language model and tool outputs.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "ResponseBuilder:build",
+          "reference_file": "chatterbot/response_selection.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ]
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": []
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "sends queries to",
+      "src_name": "Query Processor",
+      "dst_name": "Language Model Interface"
+    },
+    {
+      "relation": "receives output from",
+      "src_name": "Language Model Interface",
+      "dst_name": "Tool Executor"
+    },
+    {
+      "relation": "invokes",
+      "src_name": "Tool Executor",
+      "dst_name": "Tool"
+    },
+    {
+      "relation": "sends results to",
+      "src_name": "Tool Executor",
+      "dst_name": "Response Formatter"
+    },
+    {
+      "relation": "returns formatted response from",
+      "src_name": "Response Formatter",
+      "dst_name": "Query Processor"
+    }
+  ]
+}

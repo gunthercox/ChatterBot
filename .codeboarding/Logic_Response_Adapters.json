@@ -1,0 +1,87 @@
+{
+  "description": "The `chatterbot` system's core conversational flow is orchestrated by `Logic Adapters` and `Response Selection`. `Logic Adapters` (represented by `chatterbot.logic.LogicAdapter` and its specialized subclasses) are responsible for interpreting user input, often leveraging `Comparisons` (such as `chatterbot.comparisons.Comparator` and its implementations) to find relevant matches within the chatbot's knowledge base. Each adapter proposes potential responses with confidence scores. These diverse responses are then consolidated by the `Response Selection` component (functions within `chatterbot.response_selection`), which applies a defined strategy to choose the most appropriate single reply, ensuring a coherent and effective conversational output.",
+  "components": [
+    {
+      "name": "Logic Adapters",
+      "description": "This component comprises a collection of specialized modules, each implementing distinct conversational logic. Their primary role is to process user input, compare it against known statements (often utilizing comparison logic from `chatterbot.comparisons.Comparator` and its subclasses), and generate a list of potential responses based on their specific algorithms and the chatbot's knowledge base. This component embodies the \"Adapter Pattern\" by allowing different logic strategies to be plugged in and executed based on the conversational context.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.logic.LogicAdapter",
+          "reference_file": "",
+          "reference_start_line": null,
+          "reference_end_line": null
+        },
+        {
+          "qualified_name": "chatterbot.comparisons.Comparator",
+          "reference_file": "chatterbot/comparisons.py",
+          "reference_start_line": 10,
+          "reference_end_line": 34
+        }
+      ]
+    },
+    {
+      "name": "Response Selection",
+      "description": "This component acts as an arbiter, receiving multiple candidate responses from various `Logic Adapters`. Its responsibility is to apply a selection algorithm (such as `get_first_response`, `get_most_frequent_response`, or `get_random_response` from `chatterbot.response_selection`) to evaluate these candidates and determine the single most appropriate response to be returned to the user. This component ensures that the chatbot provides a coherent and optimal reply, even when multiple logic paths suggest different answers, thereby orchestrating the final output.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.response_selection",
+          "reference_file": "chatterbot/response_selection.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ]
+    },
+    {
+      "name": "Comparisons",
+      "description": "This component encapsulates the logic for comparing statements, primarily used by `Logic Adapters` to assess similarity between user input and known statements. It includes various comparison algorithms like Levenshtein Distance, Spacy Similarity, and Jaccard Similarity, all stemming from `chatterbot.comparisons.Comparator`.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.comparisons.Comparator",
+          "reference_file": "chatterbot/comparisons.py",
+          "reference_start_line": 10,
+          "reference_end_line": 34
+        },
+        {
+          "qualified_name": "chatterbot.comparisons.LevenshteinDistance",
+          "reference_file": "chatterbot/comparisons.py",
+          "reference_start_line": 37,
+          "reference_end_line": 71
+        },
+        {
+          "qualified_name": "chatterbot.comparisons.SpacySimilarity",
+          "reference_file": "chatterbot/comparisons.py",
+          "reference_start_line": 74,
+          "reference_end_line": 119
+        },
+        {
+          "qualified_name": "chatterbot.comparisons.JaccardSimilarity",
+          "reference_file": "chatterbot/comparisons.py",
+          "reference_start_line": 122,
+          "reference_end_line": 182
+        }
+      ]
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": []
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "uses",
+      "src_name": "Logic Adapters",
+      "dst_name": "Comparisons"
+    },
+    {
+      "relation": "provides candidate responses to",
+      "src_name": "Logic Adapters",
+      "dst_name": "Response Selection"
+    },
+    {
+      "relation": "selects final response from",
+      "src_name": "Response Selection",
+      "dst_name": "Logic Adapters"
+    }
+  ]
+}

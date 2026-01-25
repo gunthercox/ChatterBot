@@ -1,0 +1,63 @@
+{
+  "description": "The ChatterBot system is structured around three core components: the `Storage Adapters`, `Training Module`, and `Corpus Data Loader`. The `Corpus Data Loader` is responsible for providing raw conversational data, which is then consumed by the `Training Module`. The `Training Module` processes this data to learn and update the chatbot's knowledge base, persisting and retrieving conversational statements through the `Storage Adapters`. This design ensures a clear separation of concerns, allowing for flexible data storage and diverse training methodologies.",
+  "components": [
+    {
+      "name": "Storage Adapters",
+      "description": "Provides an abstract interface for all data persistence and retrieval operations within ChatterBot. It allows for interchangeable storage backends (e.g., SQL, NoSQL, in-memory) without affecting the core chatbot logic, managing the storage of statements, responses, and other conversational data.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.storage.StorageAdapter",
+          "reference_file": "chatterbot/storage/storage_adapter.py",
+          "reference_start_line": null,
+          "reference_end_line": null
+        }
+      ]
+    },
+    {
+      "name": "Training Module",
+      "description": "Responsible for the entire lifecycle of training the chatbot. It takes raw conversational data (corpus) and processes it to populate and update the chatbot's knowledge base, making it capable of generating responses.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.trainers.Trainer",
+          "reference_file": "chatterbot/trainers.py",
+          "reference_start_line": 14,
+          "reference_end_line": 77
+        }
+      ]
+    },
+    {
+      "name": "Corpus Data Loader",
+      "description": "Dedicated to loading and managing conversational corpus data. It provides a standardized way to access and prepare datasets that are used by the Training Module to train the chatbot, primarily through functions like `load_corpus` and `list_corpus_files`.",
+      "referenced_source_code": [
+        {
+          "qualified_name": "chatterbot.corpus",
+          "reference_file": "<file_path>",
+          "reference_start_line": 1,
+          "reference_end_line": 10
+        }
+      ]
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": []
+    }
+  ],
+  "components_relations": [
+    {
+      "relation": "depends on",
+      "src_name": "Training Module",
+      "dst_name": "Corpus Data Loader"
+    },
+    {
+      "relation": "writes to",
+      "src_name": "Training Module",
+      "dst_name": "Storage Adapters"
+    },
+    {
+      "relation": "reads from",
+      "src_name": "Training Module",
+      "dst_name": "Storage Adapters"
+    }
+  ]
+}

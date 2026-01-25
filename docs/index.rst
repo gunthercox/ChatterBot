@@ -92,6 +92,7 @@ Contents:
    preprocessors
    logic/index
    storage/index
+   architecture/index
    large-language-models
    filters
    chatterbot

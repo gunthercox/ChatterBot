@@ -73,6 +73,7 @@ test = [
     "coverage",
     "sphinx>=5.3,<9.2",
     "sphinx-sitemap>=2.6.0",
+    "sphinxcontrib-mermaid",
     "huggingface_hub",
     "django<=4.1,<6.0"
 ]
