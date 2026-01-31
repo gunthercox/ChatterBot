@@ -13,8 +13,8 @@
         }
       ],
       "assigned_files": [
-        "chatterbot/__init__.py",
-        "chatterbot/__main__.py",
+        "examples/basic_example.py",
+        "examples/terminal_example.py",
         "chatterbot/conversation.py",
         "chatterbot/components.py",
         "chatterbot/chatterbot.py"
@@ -45,9 +45,12 @@
         }
       ],
       "assigned_files": [
+        "examples/specific_response_example.py",
+        "examples/math_and_time.py",
+        "examples/convert_units.py",
+        "examples/default_response_example.py",
         "chatterbot/search.py",
         "chatterbot/response_selection.py",
-        "chatterbot/filters.py",
         "chatterbot/comparisons.py",
         "chatterbot/logic/unit_conversion.py",
         "chatterbot/logic/__init__.py",
@@ -83,6 +86,15 @@
         }
       ],
       "assigned_files": [
+        "examples/training_example_chatterbot_corpus.py",
+        "examples/terminal_mongo_example.py",
+        "examples/tagged_dataset_example.py",
+        "examples/memory_sql_example.py",
+        "examples/training_example_list_data.py",
+        "examples/training_example_ubuntu_corpus.py",
+        "examples/export_example.py",
+        "examples/learning_feedback_example.py",
+        "examples/django_example/django_example/management/commands/train.py",
         "chatterbot/corpus.py",
         "chatterbot/vectorstores.py",
         "chatterbot/trainers.py",
@@ -146,6 +158,7 @@
         "chatterbot/tagging.py",
         "chatterbot/parsing.py",
         "chatterbot/preprocessors.py",
+        "chatterbot/filters.py",
         "chatterbot/languages.py"
       ],
       "can_expand": true
@@ -162,6 +175,8 @@
         }
       ],
       "assigned_files": [
+        "examples/openai_example.py",
+        "examples/ollama_example.py",
         "chatterbot/llm.py"
       ],
       "can_expand": true
@@ -171,24 +186,8 @@
       "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
       "referenced_source_code": [],
       "assigned_files": [
-        "examples/training_example_chatterbot_corpus.py",
         "examples/__init__.py",
-        "examples/basic_example.py",
-        "examples/terminal_example.py",
-        "examples/terminal_mongo_example.py",
-        "examples/specific_response_example.py",
-        "examples/tagged_dataset_example.py",
-        "examples/memory_sql_example.py",
-        "examples/training_example_list_data.py",
-        "examples/math_and_time.py",
-        "examples/openai_example.py",
-        "examples/training_example_ubuntu_corpus.py",
-        "examples/convert_units.py",
-        "examples/ollama_example.py",
-        "examples/export_example.py",
-        "examples/default_response_example.py",
         "examples/tkinter_gui.py",
-        "examples/learning_feedback_example.py",
         "examples/django_example/manage.py",
         "examples/django_example/django_example/asgi.py",
         "examples/django_example/django_example/__init__.py",
@@ -198,16 +197,24 @@
         "examples/django_example/django_example/urls.py",
         "examples/django_example/django_example/management/__init__.py",
         "examples/django_example/django_example/management/commands/__init__.py",
-        "examples/django_example/django_example/management/commands/train.py",
         "docs/conf.py",
         "docs/_ext/github.py",
         "docs/_ext/canonical.py",
+        "chatterbot/__init__.py",
         "chatterbot/adapters.py",
+        "chatterbot/__main__.py",
         "chatterbot/constants.py",
         "chatterbot/utils.py",
         "chatterbot/exceptions.py",
         "chatterbot/ext/__init__.py"
       ],
+      "can_expand": false
+    },
+    {
+      "name": "Unclassified",
+      "description": "Component for all unclassified files and utility functions (Utility functions/External Libraries/Dependencies)",
+      "referenced_source_code": [],
+      "assigned_files": [],
       "can_expand": false
     },
     {
