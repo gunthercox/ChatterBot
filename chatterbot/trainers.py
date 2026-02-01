@@ -7,6 +7,7 @@ import tarfile
 from typing import List, Union
 from tqdm import tqdm
 from dateutil import parser as date_parser
+from chatterbot import constants
 from chatterbot.chatterbot import ChatBot
 from chatterbot.conversation import Statement
 
@@ -19,6 +20,12 @@ class Trainer(object):
            trainer. The environment variable ``CHATTERBOT_SHOW_TRAINING_PROGRESS``
            can also be set to control this. ``show_training_progress`` will override
            the environment variable if it is set.
+
+    :param boolean validate: Enable validation of training data before processing.
+           When enabled, checks statement text length against STATEMENT_TEXT_MAX_LENGTH
+           and skips or rejects invalid conversations with descriptive warnings.
+           Defaults to ``True``. Disabling validation may improve performance but could
+           result in storage adapter errors if data exceeds database constraints.
     """
 
     def __init__(self, chatbot: ChatBot, **kwargs):
@@ -30,6 +37,8 @@ class Trainer(object):
             'show_training_progress',
             environment_default
         )
+
+        self.validate = kwargs.get('validate', True)
 
     def get_preprocessed_statement(self, input_statement: Statement) -> Statement:
         """
@@ -88,6 +97,18 @@ class ListTrainer(Trainer):
         Train the chat bot based on the provided list of
         statements that represents a single conversation.
         """
+        # Validate text lengths before processing
+        if self.validate:
+            for i, text in enumerate(conversation):
+                text_str = str(text)
+                if len(text_str) > constants.STATEMENT_TEXT_MAX_LENGTH:
+                    snippet = text_str[:100] + ('...' if len(text_str) > 100 else '')
+                    raise self.TrainerInitializationException(
+                        f'Training conversation \'training\' contains a statement exceeding maximum '
+                        f'text length ({len(text_str)} > {constants.STATEMENT_TEXT_MAX_LENGTH}). '
+                        f'Statement at index {i}: "{snippet}"'
+                    )
+
         previous_statement_text = None
         previous_statement_search_text = ''
         statements_to_create = []
@@ -156,6 +177,43 @@ class ChatterBotCorpusTrainer(Trainer):
             for conversation in corpus:
                 conversation_lengths.append(len(conversation))
                 all_texts.extend(conversation)
+
+            # Validate text lengths and filter out invalid conversations
+            if self.validate:
+                valid_conversations = []
+                filtered_texts = []
+                text_index = 0
+
+                for conv_idx, conv_length in enumerate(conversation_lengths):
+                    conversation_texts = all_texts[text_index:text_index + conv_length]
+                    has_invalid = False
+
+                    for text in conversation_texts:
+                        text_str = str(text)
+                        if len(text_str) > constants.STATEMENT_TEXT_MAX_LENGTH:
+                            snippet = text_str[:100] + ('...' if len(text_str) > 100 else '')
+                            self.chatbot.logger.warning(
+                                f'Skipping conversation {conv_idx + 1} in {_file_path}: '
+                                f'contains statement exceeding maximum text length '
+                                f'({len(text_str)} > {constants.STATEMENT_TEXT_MAX_LENGTH}). '
+                                f'Statement text: "{snippet}"'
+                            )
+                            has_invalid = True
+                            break
+
+                    if not has_invalid:
+                        valid_conversations.append(conv_length)
+                        filtered_texts.extend(conversation_texts)
+
+                    text_index += conv_length
+
+                # Update with filtered data
+                all_texts = filtered_texts
+                conversation_lengths = valid_conversations
+
+                # Skip this corpus file if no valid conversations remain
+                if not conversation_lengths:
+                    continue
 
             # Preprocess all texts
             preprocessed_texts = all_texts
@@ -307,7 +365,7 @@ class GenericFileTrainer(Trainer):
                     else:
                         data = csv.reader(file, delimiter='\t')
                 else:
-                    self.logger.warning(f'Skipping unsupported file type: {file_extension}')
+                    self.chatbot.logger.warning(f'Skipping unsupported file type: {file_extension}')
                     continue
 
                 files_processed += 1
@@ -658,7 +716,51 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         self.data_download_url = data_download_url
 
         start_time = time.time()
-        super().train(self.data_path, limit=limit)
+
+        # If validation is enabled, pre-scan files to skip conversations with invalid text lengths
+        if self.validate:
+            valid_files = []
+            for file_path in self._get_file_list(self.data_path, limit):
+                try:
+                    with open(file_path, encoding='utf-8') as file:
+                        data = csv.reader(file, delimiter='\t')
+                        rows = [row for row in data if len(row) > 0]
+
+                        # Check if any text in this file exceeds max length
+                        has_invalid = False
+                        text_column_index = self.field_map['text']
+
+                        for row in rows:
+                            if len(row) > text_column_index:
+                                text = row[text_column_index]
+                                if len(text) > constants.STATEMENT_TEXT_MAX_LENGTH:
+                                    snippet = text[:100] + ('...' if len(text) > 100 else '')
+                                    self.chatbot.logger.warning(
+                                        f'Skipping conversation file {file_path}: '
+                                        f'contains statement exceeding maximum text length '
+                                        f'({len(text)} > {constants.STATEMENT_TEXT_MAX_LENGTH}). '
+                                        f'Statement text: "{snippet}"'
+                                    )
+                                    has_invalid = True
+                                    break
+
+                        if not has_invalid:
+                            valid_files.append(file_path)
+
+                except Exception as e:
+                    self.chatbot.logger.warning(f'Error reading file {file_path}: {e}')
+                    continue
+
+            # Train only on valid files by temporarily replacing _get_file_list
+            if valid_files:
+                original_get_file_list = self._get_file_list
+                self._get_file_list = lambda *args, **kwargs: iter(valid_files)
+                super().train(self.data_path, limit=limit)
+                self._get_file_list = original_get_file_list
+            else:
+                self.chatbot.logger.warning('No valid conversation files found after validation.')
+        else:
+            super().train(self.data_path, limit=limit)
 
         if not self.disable_progress:
             print('Training took', time.time() - start_time, 'seconds.')

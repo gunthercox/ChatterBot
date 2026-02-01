@@ -79,6 +79,34 @@ This will establish each item in the list as a possible response to it's predece
        "You are welcome.",
    ])
 
+Training parameters
++++++++++++++++++++
+
+Trainers accept optional parameters to control their behavior:
+
+.. code-block:: python
+
+   from chatterbot.trainers import ListTrainer
+
+   # Disable progress indicators
+   trainer = ListTrainer(chatbot, show_training_progress=False)
+
+   # Disable validation for performance (not recommended)
+   # Warning: Disabling validation may result in storage adapter errors
+   # if training data exceeds database constraints
+   trainer = ListTrainer(chatbot, validate=False)
+
+The ``validate`` parameter (enabled by default) checks that statement text does not exceed
+the maximum length defined by ``STATEMENT_TEXT_MAX_LENGTH`` (255 characters). When validation
+is enabled:
+
+- **ListTrainer**: Raises an exception if any statement exceeds the maximum length
+- **ChatterBotCorpusTrainer**: Skips conversations containing invalid statements and logs warnings
+- **UbuntuCorpusTrainer**: Skips entire conversation files containing invalid statements and logs warnings
+
+Disabling validation can improve performance when processing large datasets, but may cause
+database errors if the data contains statements that exceed storage adapter constraints.
+
 
 Training with corpus data
 -------------------------
