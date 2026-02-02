@@ -233,8 +233,8 @@ class SemanticVectorSearch:
 
         # Yield statements with confidence scores from vector similarity
         for statement in statement_list:
-            # Confidence should already be set by the storage adapter
-            confidence = getattr(statement, 'confidence', 0.0)
+            # Confidence is set by the storage adapter during filter()
+            confidence = statement.confidence
 
             if confidence > best_confidence_so_far:
                 best_confidence_so_far = confidence

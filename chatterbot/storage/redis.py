@@ -211,6 +211,30 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
         return Document
 
+    def _calculate_confidence_from_distance(self, distance):
+        """
+        Convert Redis cosine distance to confidence score.
+
+        :param distance: Cosine distance from Redis (0 = identical, 2 = opposite)
+        :return: Confidence score (1.0 = identical, 0.0 = opposite)
+        """
+        if distance is not None:
+            return max(0.0, 1.0 - (float(distance) / 2.0))
+        return 0.0
+
+    def _add_confidence_to_results(self, results):
+        """
+        Add confidence scores to similarity search results.
+
+        :param results: List of (document, distance) tuples from similarity_search_with_score
+        :return: List of documents with confidence in metadata
+        """
+        documents = []
+        for doc, distance in results:
+            doc.metadata['confidence'] = self._calculate_confidence_from_distance(distance)
+            documents.append(doc)
+        return documents
+
     def model_to_object(self, document):
 
         in_response_to = document.page_content
@@ -378,20 +402,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 sort_by=ordering
             )
 
-            # Add confidence scores based on actual vector similarity
-            # similarity_search_with_score returns (document, score) tuples
-            # Redis uses cosine distance where lower is better (0 = identical, 2 = opposite)
-            documents = []
-            for doc, distance in results:
-                # Convert cosine distance to confidence: 1.0 (identical) to 0.0 (opposite)
-                if distance is not None:
-                    confidence = max(0.0, 1.0 - (float(distance) / 2.0))
-                else:
-                    # Fallback if distance is None
-                    confidence = 0.0
-                doc.metadata['confidence'] = confidence
-                documents.append(doc)
-
+            documents = self._add_confidence_to_results(results)
             return [self.model_to_object(document) for document in documents]
 
         # Redis uses vector similarity: we search for statements whose actual
@@ -430,19 +441,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 sort_by=ordering
             )
 
-            # Add confidence scores based on actual vector similarity
-            # similarity_search_with_score returns (document, score) tuples
-            # Redis uses cosine distance where lower is better (0 = identical, 2 = opposite)
-            documents = []
-            for doc, distance in results:
-                # Convert cosine distance to confidence: 1.0 (identical) to 0.0 (opposite)
-                if distance is not None:
-                    confidence = max(0.0, 1.0 - (float(distance) / 2.0))
-                else:
-                    # Fallback if distance is None
-                    confidence = 0.0
-                doc.metadata['confidence'] = confidence
-                documents.append(doc)
+            documents = self._add_confidence_to_results(results)
         else:
             documents = self.vector_store.query_search(
                 k=page_size,
