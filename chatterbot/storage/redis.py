@@ -102,6 +102,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
 
         self.database_uri = kwargs.get('database_uri', 'redis://localhost:6379/0')
 
+        # https://reference.langchain.com/python/integrations/langchain_redis/
         config = RedisConfig(
             index_name='chatterbot',
             redis_url=self.database_uri,
