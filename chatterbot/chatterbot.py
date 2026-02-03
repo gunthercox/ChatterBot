@@ -147,11 +147,6 @@ class ChatBot(object):
         # NOTE: 'xx' is the language code for a multi-language model
         self.nlp = spacy.blank(self.tagger.language.ISO_639_1)
 
-        self.model = None
-        if model := kwargs.get('model'):
-            import_path = model.pop('client')
-            self.model = utils.initialize_class(import_path, self, **model)
-
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)
 
@@ -268,12 +263,6 @@ class ChatBot(object):
         results = []
         result = None
         max_confidence = -1
-
-        # If a model is provided, use it to process the input statement
-        # instead of the logic adapters
-        if self.model:
-            model_response = self.model.process(input_statement)
-            return model_response
 
         for adapter in self.logic_adapters:
             if adapter.can_process(input_statement):
