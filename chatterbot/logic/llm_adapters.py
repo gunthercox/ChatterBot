@@ -45,6 +45,10 @@ class LLMLogicAdapter(LogicAdapter):
     """
     Base class for Large Language Model logic adapters.
 
+    .. warning::
+        LLM logic adapters are experimental and may change in future releases.
+        Tool calling functionality is still being refined and may have limitations.
+
     LLM adapters participate in ChatterBot's consensus voting mechanism
     alongside traditional logic adapters. They can also use other logic
     adapters as tools through MCP.
@@ -400,6 +404,11 @@ class OllamaLogicAdapter(LLMLogicAdapter):
     """
     Logic adapter for Ollama LLMs with MCP tool support.
 
+    .. warning::
+        This adapter is experimental. Tool capability detection uses template
+        inspection which may not work for all model formats. Tool calling behavior
+        varies significantly between models.
+
     Configuration:
         model (str): Ollama model name (e.g., 'llama3.1', 'mistral')
         host (str): Ollama API endpoint (default: http://localhost:11434)
@@ -613,6 +622,11 @@ class OllamaLogicAdapter(LLMLogicAdapter):
 class OpenAILogicAdapter(LLMLogicAdapter):
     """
     Logic adapter for OpenAI LLMs with MCP tool support.
+
+    .. warning::
+        This adapter is experimental. Tool capability is validated via API dry run
+        which incurs minimal token costs. Not all OpenAI models support tool calling
+        (e.g., o1-preview, legacy completion models).
 
     OpenAI models have universal tool calling support, so force_native_tools
     is always True unless explicitly disabled.
