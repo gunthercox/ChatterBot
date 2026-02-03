@@ -20,11 +20,24 @@ from chatterbot import utils
 
 # Ollama models known to support native tool/function calling
 OLLAMA_TOOL_CAPABLE_MODELS = {
-    'llama3.1', 'llama3.2',  # Llama 3.1+ series
-    'mistral', 'mistral-nemo',  # Mistral series
-    'qwen2.5',  # Qwen 2.5+
-    'command-r', 'command-r-plus',  # Cohere Command-R series
-    'firefunction',  # FireFunction series
+    # Llama Series (most stable)
+    'llama3.1', 'llama3.2',
+    'llama3-groq-tool-use',  # Specialized for complex nested tool calls
+
+    # Mistral Series (requires v0.3+ for base mistral; mistral:latest usually pulls v0.3)
+    'mistral', 'mistral:v0.3', 'mistral-nemo', 'mistral-large',
+
+    # Qwen Series (highly capable, stable)
+    'qwen2.5', 'qwen2.5-coder',
+
+    # Specialized Tool Models
+    'firefunction', 'firefunction-v2',  # v2 recommended over v1
+    'nemotron', 'nemotron-mini',  # NVIDIA's tool-optimized models
+    'command-r', 'command-r-plus',  # Cohere Command-R series optimized for RAG/tools
+
+    # Enterprise/Other
+    'granite3.1-dense',  # IBM Granite trained for enterprise tool use
+    'hermes3',  # Nous Hermes 3 with good tool calling support
 }
 
 
@@ -424,12 +437,39 @@ class OllamaLogicAdapter(LLMLogicAdapter):
         """
         Detect if the Ollama model supports native tool calling.
 
+        Uses template inspection to check if the model's template includes
+        tool-specific tokens like {{ .Tools }} or {{ tools }}.
+
         Returns:
-            True if model is in the known tool-capable list
+            True if model supports tools
         """
-        # Check if model name (without version/size suffix) is in allowlist
-        base_model = self.model.split(':')[0]
-        return base_model in OLLAMA_TOOL_CAPABLE_MODELS
+        try:
+            # Get model metadata
+            model_info = self.client.show(self.model)
+
+            # Get the template string
+            template = model_info.get('template', '')
+
+            # Check for tool-specific tokens in the template
+            has_tools = '{{ .Tools }}' in template or '{{ tools }}' in template
+
+            if has_tools:
+                self.chatbot.logger.info(
+                    f"Model '{self.model}' supports native tool calling (template inspection)"
+                )
+            else:
+                self.chatbot.logger.info(
+                    f"Model '{self.model}' does not support native tool calling, will use prompt-based approach"
+                )
+
+            return has_tools
+
+        except Exception as e:
+            self.chatbot.logger.warning(
+                f"Failed to inspect model '{self.model}' for tool support: {e}. "
+                f"Falling back to prompt-based tool calling."
+            )
+            return False
 
     def _get_tools_for_llm(self) -> List[Dict[str, Any]]:
         """
@@ -613,12 +653,56 @@ class OpenAILogicAdapter(LLMLogicAdapter):
 
     def _detect_tool_capability(self) -> bool:
         """
-        OpenAI models universally support tool calling.
+        Detect if the OpenAI model supports tool calling.
+
+        Performs a 'dry run' with a minimal request including a dummy tool
+        to check if the model accepts the tools parameter.
 
         Returns:
-            True (all OpenAI models support tools)
+            True if model supports tools
         """
-        return True
+        try:
+            from openai import BadRequestError
+
+            # Perform dry run with dummy tool
+            response = self.client.chat.completions.create(
+                model=self.model,
+                messages=[{"role": "user", "content": "Hi"}],
+                tools=[{
+                    "type": "function",
+                    "function": {
+                        "name": "dummy_tool",
+                        "description": "A test tool",
+                        "parameters": {"type": "object", "properties": {}}
+                    }
+                }],
+                max_tokens=1  # Minimize cost/latency
+            )
+
+            self.chatbot.logger.info(
+                f"Model '{self.model}' supports native tool calling (dry run validation)"
+            )
+            return True
+
+        except BadRequestError as e:
+            # Check specifically for tools-related errors
+            if "tools" in str(e).lower() or "not supported" in str(e).lower():
+                self.chatbot.logger.info(
+                    f"Model '{self.model}' does not support tool calling (API validation), "
+                    f"will use prompt-based approach"
+                )
+            else:
+                self.chatbot.logger.warning(
+                    f"Unexpected error checking tool support for '{self.model}': {e}"
+                )
+            return False
+
+        except Exception as e:
+            self.chatbot.logger.warning(
+                f"Failed to validate tool support for '{self.model}': {e}. "
+                f"Falling back to prompt-based tool calling."
+            )
+            return False
 
     def _get_tools_for_llm(self) -> List[Dict[str, Any]]:
         """
