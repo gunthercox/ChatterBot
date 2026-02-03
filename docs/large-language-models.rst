@@ -40,11 +40,12 @@ Support for local and remote LLMs.
 
 **Phase 3:**
 
-LLM integration with specific logic adapter features via :term:`RAG` or similar approach.
+LLM integration with specific logic adapter features via MCP tool calling.
 
-* ☐ Mathematical operations :class:`~chatterbot.logic.MathematicalEvaluation` via :mod:`mathparse`
-* ☐ Date and time :class:`~chatterbot.logic.TimeLogicAdapter`
-* ☐ Unit conversion ``UnitConversion``
+* ☑ Mathematical operations :class:`~chatterbot.logic.MathematicalEvaluation` via :mod:`mathparse`
+* ☑ Date and time :class:`~chatterbot.logic.TimeLogicAdapter`
+* ☑ Unit conversion ``UnitConversion``
+* ☑ LLM adapters participate in consensus voting alongside traditional logic adapters
 
 One of the concepts / theories here that we want to evaluate is, for example,
 that it may be easier (and more efficient) to teach AI to use a calculator
@@ -158,3 +159,6 @@ using pip or by using the extra option from the ChatterBot package that includes
 .. literalinclude:: ../examples/openai_example.py
    :caption: examples/openai_example.py
    :language: python
+
+
+.. _`Ollama LLMs`: https://ollama.com/library?sort=popular
