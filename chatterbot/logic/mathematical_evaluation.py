@@ -1,9 +1,10 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot import languages
+from chatterbot.mcp_tools import MCPToolAdapter
 
 
-class MathematicalEvaluation(LogicAdapter):
+class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
     """
     The MathematicalEvaluation logic adapter parses input to determine
     whether the user is asking a question that requires math to be done.
@@ -66,3 +67,53 @@ class MathematicalEvaluation(LogicAdapter):
             response.confidence = 0
 
         return response
+
+    def get_tool_schema(self):
+        """
+        Return the MCP tool schema for mathematical evaluation.
+        """
+        return {
+            "name": "calculate",
+            "description": "Evaluate mathematical expressions and solve equations. Supports basic arithmetic, algebra, and common mathematical functions.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "expression": {
+                        "type": "string",
+                        "description": "The mathematical expression to evaluate (e.g., '2 + 2', 'sqrt(16)', 'three plus five')"
+                    }
+                },
+                "required": ["expression"]
+            }
+        }
+
+    def execute_as_tool(self, **kwargs):
+        """
+        Execute mathematical evaluation as a tool.
+
+        Args:
+            **kwargs: Must contain 'expression' parameter
+
+        Returns:
+            The evaluation result as a string
+        """
+        from mathparse import mathparse
+
+        expression = kwargs.get("expression", "")
+
+        if not expression:
+            return "Error: No expression provided"
+
+        try:
+            # Extract mathematical expression
+            extracted = mathparse.extract_expression(expression, language=self.language.ISO_639.upper())
+
+            # Evaluate the expression
+            result = mathparse.parse(extracted, language=self.language.ISO_639.upper())
+
+            return f"{extracted} = {result}"
+
+        except mathparse.PostfixTokenEvaluationException:
+            return f"Error: Could not evaluate expression '{expression}'"
+        except Exception as e:
+            return f"Error: {str(e)}"

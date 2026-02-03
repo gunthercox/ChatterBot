@@ -3,11 +3,12 @@ from chatterbot.conversation import Statement
 from chatterbot.exceptions import OptionalDependencyImportError
 from chatterbot import languages
 from chatterbot import parsing
+from chatterbot.mcp_tools import MCPToolAdapter
 from mathparse import mathparse
 import re
 
 
-class UnitConversion(LogicAdapter):
+class UnitConversion(LogicAdapter, MCPToolAdapter):
     """
     The UnitConversion logic adapter parse inputs to convert values
     between several metric units.
@@ -163,3 +164,50 @@ class UnitConversion(LogicAdapter):
             response.confidence = 0.0
 
         return response
+
+    def get_tool_schema(self):
+        """
+        Return the MCP tool schema for unit conversion.
+        """
+        return {
+            "name": "convert_units",
+            "description": "Convert values between different units of measurement. Supports distance, weight, temperature, time, and other common unit conversions.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "query": {
+                        "type": "string",
+                        "description": "Unit conversion query in natural language (e.g., 'How many meters are in 5 kilometers?', '100 fahrenheit to celsius')"
+                    }
+                },
+                "required": ["query"]
+            }
+        }
+
+    def execute_as_tool(self, **kwargs):
+        """
+        Execute unit conversion as a tool.
+
+        Args:
+            **kwargs: Must contain 'query' parameter
+
+        Returns:
+            The conversion result as a string
+        """
+        query = kwargs.get("query", "")
+
+        if not query:
+            return "Error: No conversion query provided"
+
+        try:
+            # Create a statement and process it
+            input_statement = Statement(text=query)
+            response = self.process(input_statement)
+
+            if response.confidence == 1.0:
+                return response.text
+            else:
+                return f"Error: Could not parse unit conversion from '{query}'. Try formats like 'X units to Y units' or 'How many Y in X units?'"
+
+        except Exception as e:
+            return f"Error: {str(e)}"

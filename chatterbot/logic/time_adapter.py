@@ -3,10 +3,11 @@ from chatterbot import languages
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot.utils import get_model_for_language
+from chatterbot.mcp_tools import MCPToolAdapter
 import spacy
 
 
-class TimeLogicAdapter(LogicAdapter):
+class TimeLogicAdapter(LogicAdapter, MCPToolAdapter):
     """
     The TimeLogicAdapter returns the current time.
 
@@ -66,3 +67,27 @@ class TimeLogicAdapter(LogicAdapter):
 
         response.confidence = confidence
         return response
+
+    def get_tool_schema(self):
+        """
+        Return the MCP tool schema for getting current time.
+        """
+        return {
+            "name": "get_current_time",
+            "description": "Get the current date and time. Returns formatted time string.",
+            "parameters": {
+                "type": "object",
+                "properties": {},
+                "required": []
+            }
+        }
+
+    def execute_as_tool(self, **kwargs):
+        """
+        Execute time query as a tool.
+
+        Returns:
+            Current time as formatted string
+        """
+        now = datetime.now()
+        return f"The current time is {now.strftime('%I:%M %p')} on {now.strftime('%A, %B %d, %Y')}"
