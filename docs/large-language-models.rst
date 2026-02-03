@@ -19,18 +19,24 @@ become available.
 
 .. note::
     * Added April 1st, 2025
-    * Last updated: April 8th, 2025
+    * Last updated: February 2nd, 2026
 
 **Phase 1:**
 
 Support for local and remote LLMs.
 
-1. ☑ Support for Ollama LLMs, which at the current time appear to be the easiest to set up and run on local hardware.
+1. ☑ Support for `Ollama LLMs`_, which at the current time appear to be the easiest to set up and run on local hardware.
 2. ☑ Support for accessing LLMs that use the OpenAI API.
 
 **Phase 2:**
 
 * ☐ Streaming response support across features in ChatterBot.
+
+.. note::
+    This functionality is being skipped for now, but may be reprioritized in the future.
+    This would be more important to implement if streaming inputs, eg. text from streaming
+    audio or video sources were being supported (which is not currently something this
+    project aims to address, nor do most LLMs support).
 
 **Phase 3:**
 
