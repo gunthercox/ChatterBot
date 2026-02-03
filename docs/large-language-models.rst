@@ -47,18 +47,14 @@ LLM integration with specific logic adapter features via MCP tool calling.
 * ☑ Unit conversion ``UnitConversion``
 * ☑ LLM adapters participate in consensus voting alongside traditional logic adapters
 
-One of the concepts / theories here that we want to evaluate is, for example,
-that it may be easier (and more efficient) to teach AI to use a calculator
-than it is to teach it the rules of mathematics. Whether this is because it
-lets us use smaller LLMs that don't have a strong understanding of math, or
-because in general it allows us to offload processing of other complex tasks,
-there is likely a strong use case here.
+Phase 3 has been implemented using the Model Context Protocol (:term:`MCP`) tool format,
+allowing LLMs to invoke specialized logic adapters as tools.
 
-Both interestingly and conveniently, ChatterBot's existing architecture used
-for its logic adapters is already very similar to approaches used to provide
-additional tools to LLMs. The Model Context Protocol (:term:`MCP`) supported by a
-`range of MCP server implementations <https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file#what-is-mcp>`_
-currently seems like a strong candidate for this.
+The implementation supports:
+
+* **Native tool calling** for models that support it (Ollama llama3.1+, mistral, qwen2.5; all OpenAI models)
+* **Prompt-based fallback** for models without native tool support using structured JSON
+* **Hybrid configurations** where LLM adapters work alongside traditional logic adapters in consensus voting
 
 .. list-table:: Comparison of ChatterBot Architectures
    :class: table-justified
@@ -69,9 +65,87 @@ currently seems like a strong candidate for this.
    * - .. image:: _static/dialog-processing-flow.svg
      - .. image:: _static/dialog-processing-flow-llm.svg
 
-The choice to enforce one LLM per chat bot instance is currently based on the
-notion that one capable model per chat bot is likely simpler and more efficient
-than trying to reconcile the output of multiple models.
+LLM adapters now participate in ChatterBot's consensus voting mechanism alongside
+traditional logic adapters. This allows multiple adapters (LLM and non-LLM) to
+"vote" on the best response, with the highest confidence response winning.
+
+LLM Adapter Configuration
+==========================
+
+LLMs are integrated as logic adapters.
+
+Basic LLM Configuration
+------------------------
+
+.. code-block:: python
+
+    from chatterbot import ChatBot
+
+    bot = ChatBot(
+        'My Bot',
+        logic_adapters=[
+            {
+                'import_path': 'chatterbot.logic.OllamaLogicAdapter',
+                'model': 'llama3.1',
+                'host': 'http://localhost:11434'
+            }
+        ]
+    )
+
+LLM with Tool Support
+---------------------
+
+Enable specialized tools by passing logic adapters in the ``logic_adapters_as_tools`` parameter:
+
+.. code-block:: python
+
+    bot = ChatBot(
+        'My Bot',
+        logic_adapters=[
+            {
+                'import_path': 'chatterbot.logic.OllamaLogicAdapter',
+                'model': 'llama3.1',
+                'logic_adapters_as_tools': [
+                    'chatterbot.logic.MathematicalEvaluation',
+                    'chatterbot.logic.TimeLogicAdapter',
+                    'chatterbot.logic.UnitConversion'
+                ]
+            }
+        ]
+    )
+
+When a tool-capable model is used (e.g., llama3.1, mistral, qwen2.5, or any OpenAI model),
+the LLM will be able to invoke these tools using native function calling. For models without
+native support, the adapter automatically falls back to prompt-based tool calling.
+
+Hybrid Configuration
+--------------------
+
+Combine LLM adapters with traditional logic adapters for consensus voting:
+
+.. code-block:: python
+
+    bot = ChatBot(
+        'My Bot',
+        logic_adapters=[
+            {
+                'import_path': 'chatterbot.logic.OllamaLogicAdapter',
+                'model': 'llama3.1',
+                'logic_adapters_as_tools': [
+                    'chatterbot.logic.MathematicalEvaluation',
+                    'chatterbot.logic.TimeLogicAdapter'
+                ],
+                'min_confidence': 0.6,
+                'max_confidence': 0.9
+            },
+            'chatterbot.logic.BestMatch',
+            'chatterbot.logic.SpecificResponseAdapter'
+        ]
+    )
+
+In this configuration, the LLM adapter votes alongside BestMatch and SpecificResponseAdapter,
+with the highest confidence response being selected. The ``min_confidence`` and ``max_confidence``
+parameters control the LLM's confidence range for voting purposes.
 
 **Phase 4:**
 
