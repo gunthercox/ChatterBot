@@ -8,6 +8,7 @@ voting system and enable tool calling for specialized tasks.
 """
 from chatterbot import ChatBot
 from dotenv import load_dotenv
+import uuid
 
 # Load the OPENAI_API_KEY from the .env file
 load_dotenv('../.env')
@@ -31,12 +32,16 @@ bot = ChatBot(
 
 print('Type something to begin...')
 
+# Generate a conversation ID so the LLM adapter can retrieve
+# previous messages and maintain context across turns.
+conversation_id = uuid.uuid4().hex
+
 # The following loop will execute each time the user enters input
 while True:
     try:
         user_input = input()
 
-        bot_response = bot.get_response(user_input)
+        bot_response = bot.get_response(user_input, conversation=conversation_id)
         print(bot_response)
 
     # Press ctrl-c or ctrl-d on the keyboard to exit

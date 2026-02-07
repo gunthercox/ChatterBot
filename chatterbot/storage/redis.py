@@ -68,12 +68,14 @@ class RedisVectorStorageAdapter(StorageAdapter):
     (used in indexed text search) redundant.
 
     For SQL with indexed text search:
+
     - Phase 1 finds a match based on string similarity (Levenshtein distance)
     - Phase 2 finds variations of that match to get diverse responses
     - This makes sense because you might have multiple instances of similar statements
       learned from different conversations that provide different response options
 
     For Redis with semantic vectors:
+
     - Phase 1 finds semantically similar responses using vector embeddings
     - The semantic similarity already captures the "closeness" we want
     - Phase 2 would be redundant - we already have the best semantic match
@@ -81,6 +83,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
       exact string matches, so additional variation searching is unnecessary
 
     NOTES:
+
     * Unlike other database based storage adapters, the RedisVectorStorageAdapter
       does not leverage `search_text` and `search_in_response_to` fields for indexing.
       Instead, it uses vector embeddings to find similar statements based on

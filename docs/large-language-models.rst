@@ -5,9 +5,32 @@ Large Language Models
 .. warning::
 
     Starting in ChatterBot 1.2.7 experimental support for :term:`large language models`
-    is being added. This support is not yet complete and is not yet ready for
-    general use beyond experimental purposes. The API will likely change in the
-    future and the functionality may not be fully implemented.
+    is being added. This support is not yet complete and is not yet ready for general
+    use beyond experimental purposes. The API will likely change in the future and the
+    functionality may not be fully implemented.
+
+.. warning::
+
+    **Do not deploy LLM-enabled ChatterBot applications in production without:**
+
+    * Comprehensive security review and hardening
+    * Enabling security scanning (see :doc:`security`)
+    * Additional rate limiting and abuse prevention
+    * Monitoring and alerting for security violations
+    * Understanding of OWASP Top 10 for LLM Applications
+    * Regular security audits and penetration testing
+
+    The API may change in future releases as LLM support matures.
+
+    **Security Considerations:**
+
+    LLM applications are vulnerable to prompt injection, jailbreaking, and other
+    attacks. ChatterBot provides optional security scanning via llm-guard (see
+    :doc:`security`), but this is a baseline defense and not sufficient for
+    production deployment without additional hardening.
+
+    Review the `OWASP Top 10 for LLM Applications <https://owasp.org/www-project-top-10-for-large-language-model-applications/>`_
+    before deploying any LLM-enabled application.
 
 LLM Roadmap
 ===========
@@ -45,10 +68,22 @@ LLM integration with specific logic adapter features via MCP tool calling.
 * ☑ Mathematical operations :class:`~chatterbot.logic.MathematicalEvaluation` via :mod:`mathparse`
 * ☑ Date and time :class:`~chatterbot.logic.TimeLogicAdapter`
 * ☑ Unit conversion ``UnitConversion``
-* ☑ LLM adapters participate in consensus voting alongside traditional logic adapters
 
-Phase 3 has been implemented using the Model Context Protocol (:term:`MCP`) tool format,
-allowing LLMs to invoke specialized logic adapters as tools.
+One of the concepts / theories here that we want to evaluate is, for example,
+that it may be easier (and more efficient) to teach AI to use a calculator
+than it is to teach it the rules of mathematics. Whether this is because it
+lets us use smaller LLMs that don't have a strong understanding of math, or
+because in general it allows us to offload processing of other complex tasks,
+there is likely a strong use case here.
+
+Both interestingly and conveniently, ChatterBot's existing architecture used
+for its logic adapters is already very similar to approaches used to provide
+additional tools to LLMs. The Model Context Protocol (:term:`MCP`) supported by a
+`range of MCP server implementations <https://github.com/punkpeye/awesome-mcp-servers?tab=readme-ov-file#what-is-mcp>`_
+currently seems like a strong candidate for this.
+
+Phase 3 has been implemented using the MCP tool format to allow LLMs to invoke
+logic adapters as tools.
 
 The implementation supports:
 
@@ -68,11 +103,6 @@ The implementation supports:
 LLM adapters now participate in ChatterBot's consensus voting mechanism alongside
 traditional logic adapters. This allows multiple adapters (LLM and non-LLM) to
 "vote" on the best response, with the highest confidence response winning.
-
-LLM Adapter Configuration
-==========================
-
-LLMs are integrated as logic adapters.
 
 Basic LLM Configuration
 ------------------------

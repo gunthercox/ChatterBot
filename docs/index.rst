@@ -90,9 +90,10 @@ Contents:
    examples
    training
    preprocessors
+   security
+   large-language-models
    logic/index
    storage/index
-   large-language-models
    filters
    chatterbot
    conversations

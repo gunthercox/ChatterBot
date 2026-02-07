@@ -49,11 +49,6 @@ class LLMLogicAdapter(LogicAdapter):
         max_confidence (float): Maximum confidence for LLM responses (default: 0.85)
         conversation_context_count (int): Number of previous statements to include (default: 5)
         system_message (str): Custom system message for LLM
-        input_scanners (list): Input security scanners (None=defaults, []=disabled, list=custom)
-        output_scanners (list): Output security scanners (None=defaults, []=disabled, list=custom)
-        security_fail_fast (bool): Stop at first security violation (default: False)
-        security_raise_on_violation (bool): Raise exception on violation (default: False)
-        security_default_response (str): Response when output rejected
 
     Example:
         {
@@ -86,108 +81,34 @@ class LLMLogicAdapter(LogicAdapter):
         self.conversation_context_count = kwargs.get('conversation_context_count', 5)
 
         # System message
-        self.system_message = kwargs.get(
-            'system_message',
-            "You are a helpful AI assistant. Please keep responses concise, conversational, and responses under 1100 tokens."
+        default_system_message = (
+            "You are a helpful AI assistant engaged in a direct conversation. "
+            "Address the person you're speaking with directly rather than referring to them in third person. "
+            "Please keep responses concise, conversational, and under 1100 tokens."
         )
 
-        # Scanner configuration
-        # None = use defaults (enabled), [] = explicitly disabled, List = custom scanners
-        self.input_scanners = kwargs.get('input_scanners', None)
-        self.output_scanners = kwargs.get('output_scanners', None)
+        # If tools are configured, enhance system message to clarify tool usage
+        if kwargs.get('logic_adapters_as_tools'):
+            default_system_message += (
+                "\n\nYou have access to specialized tools that can help you answer certain types of questions. "
+                "Use these tools when they would be helpful, but you should respond naturally to ALL questions, "
+                "not just tool-related ones. For general conversation, greetings, or topics outside the tools' scope, "
+                "respond directly without using tools."
+            )
 
-        # Security behavior
-        self.security_fail_fast = kwargs.get('security_fail_fast', False)  # Stop at first violation
-        self.security_raise_on_violation = kwargs.get('security_raise_on_violation', False)  # Raise exception
-        self.security_default_response = kwargs.get(
-            'security_default_response',
-            "I cannot provide that information."  # Response when output rejected
-        )
-
-        # Initialize security scanners if enabled (enabled = scanners not explicitly disabled)
-        self._llm_guard_available = False
-        if self.input_scanners != [] or self.output_scanners != []:
-            self._initialize_security_scanners()
+        self.system_message = kwargs.get('system_message', default_system_message)
 
         # Tool calling configuration
         self.force_native_tools = kwargs.get('force_native_tools', None)
         self.tool_registry = {}
+        self._native_tools_supported = None  # Cached tool capability detection result
 
         # Initialize tool adapters if provided
         logic_adapters_as_tools = kwargs.get('logic_adapters_as_tools', [])
         if logic_adapters_as_tools:
             self._initialize_tool_adapters(logic_adapters_as_tools, **kwargs)
-
-    def _initialize_security_scanners(self):
-        """
-        Lazy import and validate llm-guard scanners.
-
-        Checks if llm-guard is available and disables security if not installed.
-        Logs a warning to guide users to install the optional dependency.
-        """
-        try:
-            import llm_guard
-            self._llm_guard_available = True
-            self.chatbot.logger.info("Security scanning enabled with llm-guard")
-        except ImportError:
-            self.chatbot.logger.warning(
-                "llm-guard not installed. Security scanning disabled. "
-                "Install with: pip install 'chatterbot[security]' or pip install llm-guard"
-            )
-            self._llm_guard_available = False
-            # Disable scanners by setting to empty list
-            if self.input_scanners is not None:
-                self.input_scanners = []
-            if self.output_scanners is not None:
-                self.output_scanners = []
-
-    def _scan_input(self, statement: Statement) -> Statement:
-        """
-        Apply input security scanning.
-
-        Args:
-            statement: User input statement to scan
-
-        Returns:
-            Scanned statement (sanitized if violations found)
-        """
-        # Skip if explicitly disabled or llm-guard unavailable
-        if self.input_scanners == [] or not self._llm_guard_available:
-            return statement
-
-        from chatterbot.preprocessors import llm_guard_input_scanner
-
-        return llm_guard_input_scanner(
-            statement,
-            scanners=self.input_scanners,
-            fail_fast=self.security_fail_fast,
-            raise_on_violation=self.security_raise_on_violation
-        )
-
-    def _scan_output(self, response: Statement, input_text: str = "") -> Statement:
-        """
-        Apply output security scanning.
-
-        Args:
-            response: Bot response statement to scan
-            input_text: Original user input (for context)
-
-        Returns:
-            Scanned statement (sanitized or default response if violations found)
-        """
-        # Skip if explicitly disabled or llm-guard unavailable
-        if self.output_scanners == [] or not self._llm_guard_available:
-            return response
-
-        from chatterbot.preprocessors import llm_guard_output_scanner
-
-        return llm_guard_output_scanner(
-            response,
-            input_text=input_text,
-            scanners=self.output_scanners,
-            fail_fast=self.security_fail_fast,
-            default_response=self.security_default_response
-        )
+            # Detect tool capability once during initialization
+            self._native_tools_supported = self._detect_tool_capability()
 
     def _initialize_tool_adapters(self, adapter_configs: List[Union[str, Dict]], **kwargs):
         """
@@ -218,17 +139,11 @@ class LLMLogicAdapter(LogicAdapter):
         """
         Retrieve previous conversation context from storage.
 
-        .. warning::
-            Context Poisoning Risk: Historical messages are loaded without security scanning.
-            If malicious input was stored in previous interactions, it could be injected
-            into the LLM context, potentially bypassing current input security measures.
-
-        TODO: Add optional security scanning of conversation context in future release.
-              Options to consider:
-              - Scan each historical statement before including in context
-              - Add `scan_conversation_context` parameter (default False for performance)
-              - Cache scanned contexts to avoid repeated scanning
-              - Apply lighter-weight scanners (e.g., BanSubstrings only) for performance
+        .. note::
+            Security Note: Conversation history is loaded from storage without modification.
+            If you need to scan historical messages for security issues (e.g., context poisoning),
+            consider implementing security scanning at the application level before calling
+            bot.get_response(). See the security documentation for examples.
 
         Args:
             input_statement: The current input statement
@@ -306,8 +221,13 @@ class LLMLogicAdapter(LogicAdapter):
         if self.force_native_tools is not None:
             return self.force_native_tools
 
-        # Otherwise, auto-detect based on model
-        return self._detect_tool_capability()
+        # Otherwise, use cached detection result
+        # (detection happens once during initialization)
+        if self._native_tools_supported is None:
+            # Fallback: detect now if somehow not set during init
+            self._native_tools_supported = self._detect_tool_capability()
+
+        return self._native_tools_supported
 
     def _detect_tool_capability(self) -> bool:
         """
@@ -341,6 +261,7 @@ class LLMLogicAdapter(LogicAdapter):
             Tool execution result as string
         """
         if tool_name not in self.tool_registry:
+            self.chatbot.logger.warning(f"Tool not found: '{tool_name}'")
             return f"Error: Tool '{tool_name}' not found"
 
         adapter = self.tool_registry[tool_name]
@@ -348,7 +269,11 @@ class LLMLogicAdapter(LogicAdapter):
         try:
             # Validate parameters
             if not adapter.validate_tool_parameters(**parameters):
+                self.chatbot.logger.warning(f"Invalid parameters for tool '{tool_name}': {parameters}")
                 return f"Error: Invalid parameters for tool '{tool_name}'"
+
+            # Log tool execution
+            self.chatbot.logger.info(f"Executing tool: '{tool_name}' with parameters: {parameters}")
 
             # Execute tool
             result = adapter.execute_as_tool(**parameters)
@@ -357,6 +282,7 @@ class LLMLogicAdapter(LogicAdapter):
             if not isinstance(result, str):
                 result = str(result)
 
+            self.chatbot.logger.info(f"Tool '{tool_name}' completed successfully")
             return result
 
         except Exception as e:
@@ -398,16 +324,20 @@ class LLMLogicAdapter(LogicAdapter):
 
         tools_text = "\n".join(tool_descriptions)
 
+        # TODO: Consider switching from JSON to TOON
+
         # Enhanced system message with tool instructions
         system_msg = f"""{self.system_message}
 
-You have access to the following tools:
+You have access to the following specialized tools:
 {tools_text}
 
-To use a tool, respond ONLY with a JSON object in this format:
+IMPORTANT: You can respond to ANY question the user asks. Use tools when they would be helpful for specific tasks, but respond naturally to general conversation, greetings, or topics that don't require tools.
+
+When you need to use a tool, respond with a JSON object in this exact format:
 {{"tool": "tool_name", "parameters": {{"param1": "value1"}}}}
 
-If you don't need to use a tool, respond normally with plain text."""
+For all other questions, respond normally with plain text conversationally."""
 
         # Get LLM response
         response_text = self._call_llm(input_statement, system_msg)
@@ -418,6 +348,8 @@ If you don't need to use a tool, respond normally with plain text."""
                 tool_call = json.loads(response_text)
                 tool_name = tool_call.get('tool')
                 parameters = tool_call.get('parameters', {})
+
+                self.chatbot.logger.info(f"LLM requested tool via prompt: '{tool_name}'")
 
                 # Execute tool
                 tool_result = self._execute_tool(tool_name, parameters)
@@ -496,11 +428,7 @@ If you don't need to use a tool, respond normally with plain text."""
 
     def process(self, statement: Statement, additional_response_selection_parameters: dict = None) -> Statement:
         """
-        Process the input statement using the LLM with security scanning.
-
-        Security scanning is applied in two stages:
-        1. Input scanning: Before LLM processing (prevents prompt injection)
-        2. Output scanning: After LLM processing (prevents harmful outputs)
+        Process the input statement using the LLM.
 
         Args:
             statement: The input statement to process
@@ -509,26 +437,18 @@ If you don't need to use a tool, respond normally with plain text."""
         Returns:
             Response statement with confidence score
         """
-        # Stage 1: Scan input for security threats
-        scanned_input = self._scan_input(statement)
-
-        # Process with LLM
         # If no tools are configured, just call LLM directly
         if not self.tool_registry:
-            response_text = self._call_llm(scanned_input)
+            response_text = self._call_llm(statement)
             response = Statement(text=response_text)
             response.confidence = self._calculate_confidence(response_text)
+            return response
+
+        # Determine tool calling method
+        if self._supports_native_tools():
+            return self._handle_native_tool_calling(statement)
         else:
-            # Determine tool calling method
-            if self._supports_native_tools():
-                response = self._handle_native_tool_calling(scanned_input)
-            else:
-                response = self._handle_prompt_based_tool_calling(scanned_input)
-
-        # Stage 2: Scan output for security/safety issues
-        scanned_output = self._scan_output(response, input_text=statement.text)
-
-        return scanned_output
+            return self._handle_prompt_based_tool_calling(statement)
 
 
 class OllamaLogicAdapter(LLMLogicAdapter):
@@ -577,12 +497,39 @@ class OllamaLogicAdapter(LLMLogicAdapter):
         """
         Detect if the Ollama model supports native tool calling.
 
-        Uses template inspection to check if the model's template includes
-        tool-specific tokens like {{ .Tools }} or {{ tools }}.
+        Uses a combination of known model patterns and template inspection
+        to determine tool support.
 
         Returns:
             True if model supports tools
         """
+        # Known models with tool support (as of 2026)
+        # Check model name patterns - handles versioned models (e.g., llama3.1:8b)
+        model_base = self.model.split(':')[0].lower()
+
+        # Known tool-supporting model patterns
+        tool_supporting_patterns = [
+            # Llama series
+            'llama3.1', 'llama3.2', 'llama3-groq-tool',
+            # Mistral series
+            'mistral', 'mistral-nemo', 'mistral-large',
+            # Qwen series
+            'qwen2.5', 'qwen2.5-coder',
+            # Specialized models
+            'firefunction', 'nemotron', 'command-r', 'command-r-plus',
+            # Enterprise models
+            'granite3.1-dense', 'hermes3'
+        ]
+
+        # Check if model matches any known pattern
+        for pattern in tool_supporting_patterns:
+            if pattern in model_base:
+                self.chatbot.logger.info(
+                    f"Model '{self.model}' supports native tool calling (known model)"
+                )
+                return True
+
+        # Fallback to template inspection for unknown models
         try:
             # Get model metadata
             model_info = self.client.show(self.model)
@@ -701,7 +648,23 @@ class OllamaLogicAdapter(LLMLogicAdapter):
 
             # Check if LLM wants to use a tool
             if tool_calls := message.get('tool_calls'):
-                # Execute each tool call
+                self.chatbot.logger.info(f"Ollama LLM requested {len(tool_calls)} tool(s)")
+
+                # Serialize the message properly for Ollama API
+                # The message object needs to be converted to dict format
+                if hasattr(message, 'model_dump'):
+                    # Pydantic v2
+                    message_dict = message.model_dump(exclude_none=True)
+                elif hasattr(message, 'dict'):
+                    # Pydantic v1
+                    message_dict = message.dict(exclude_none=True)
+                else:
+                    # Fallback if it's already a dict or needs manual conversion
+                    message_dict = dict(message) if not isinstance(message, dict) else message
+
+                messages.append(message_dict)
+
+                # Execute each tool call and add results
                 for tool_call in tool_calls:
                     function = tool_call['function']
                     tool_name = function['name']
@@ -710,17 +673,18 @@ class OllamaLogicAdapter(LLMLogicAdapter):
                     # Execute tool
                     tool_result = self._execute_tool(tool_name, parameters)
 
-                    # Add tool result to conversation
-                    messages.append(message)
+                    # Add tool result to conversation with tool_name field
                     messages.append({
                         'role': 'tool',
-                        'content': tool_result
+                        'content': tool_result,
+                        'tool_name': tool_name
                     })
 
                 # Get final response from LLM with tool results
                 final_response = self.client.chat(
                     model=self.model,
-                    messages=messages
+                    messages=messages,
+                    tools=tools
                 )
 
                 response_text = final_response['message']['content']
@@ -928,6 +892,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
 
             # Check if LLM wants to use a tool
             if tool_calls := message.tool_calls:
+                self.chatbot.logger.info(f"OpenAI LLM requested {len(tool_calls)} tool(s)")
                 # Execute each tool call
                 for tool_call in tool_calls:
                     function = tool_call.function
@@ -961,7 +926,8 @@ class OpenAILogicAdapter(LLMLogicAdapter):
                 # Get final response from LLM with tool results
                 final_response = self.client.chat.completions.create(
                     model=self.model,
-                    messages=messages
+                    messages=messages,
+                    tools=tools
                 )
 
                 response_text = final_response.choices[0].message.content
