@@ -134,12 +134,16 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.text, 'Hello')
 
     def test_three_statements_two_responses_known(self):
-        self._create_with_search_text(text='Hi', in_response_to=None)
-        self._create_with_search_text(text='Hello', in_response_to='Hi')
-        self._create_with_search_text(text='How are you?', in_response_to='Hello')
+        """
+        Test the case that one response is known and there is a response
+        entry for it in the database.
+        """
+        self._create_with_search_text(text='Hi', in_response_to=None, conversation='test')
+        self._create_with_search_text(text='Hello', in_response_to='Hi', conversation='test')
+        self._create_with_search_text(text='How are you?', in_response_to='Hello', conversation='test')
 
-        first_response = self.chatbot.get_response('Hi')
-        second_response = self.chatbot.get_response('How are you?')
+        first_response = self.chatbot.get_response('Hi', conversation='test')
+        second_response = self.chatbot.get_response('How are you?', conversation='test')
 
         self.assertEqual(first_response.confidence, 1)
         self.assertEqual(first_response.text, 'Hello')
@@ -147,13 +151,13 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(second_response.text, 'Hi')
 
     def test_four_statements_three_responses_known(self):
-        self._create_with_search_text(text='Hi', in_response_to=None)
-        self._create_with_search_text(text='Hello', in_response_to='Hi')
-        self._create_with_search_text(text='How are you?', in_response_to='Hello')
-        self._create_with_search_text(text='I am well.', in_response_to='How are you?')
+        self._create_with_search_text(text='Hi', in_response_to=None, conversation='test')
+        self._create_with_search_text(text='Hello', in_response_to='Hi', conversation='test')
+        self._create_with_search_text(text='How are you?', in_response_to='Hello', conversation='test')
+        self._create_with_search_text(text='I am well.', in_response_to='How are you?', conversation='test')
 
-        first_response = self.chatbot.get_response('Hi')
-        second_response = self.chatbot.get_response('How are you?')
+        first_response = self.chatbot.get_response('Hi', conversation='test')
+        second_response = self.chatbot.get_response('How are you?', conversation='test')
 
         self.assertEqual(first_response.confidence, 1)
         self.assertEqual(first_response.text, 'Hello')

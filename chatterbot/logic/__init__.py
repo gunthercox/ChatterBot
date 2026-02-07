@@ -4,6 +4,11 @@ from chatterbot.logic.mathematical_evaluation import MathematicalEvaluation
 from chatterbot.logic.specific_response import SpecificResponseAdapter
 from chatterbot.logic.time_adapter import TimeLogicAdapter
 from chatterbot.logic.unit_conversion import UnitConversion
+from chatterbot.logic.llm_adapters import (
+    LLMLogicAdapter,
+    OllamaLogicAdapter,
+    OpenAILogicAdapter,
+)
 
 
 __all__ = (
@@ -13,4 +18,7 @@ __all__ = (
     'SpecificResponseAdapter',
     'TimeLogicAdapter',
     'UnitConversion',
+    'LLMLogicAdapter',
+    'OllamaLogicAdapter',
+    'OpenAILogicAdapter',
 )
