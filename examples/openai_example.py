@@ -1,5 +1,7 @@
 """
-Example of using OpenAI LLM with MCP tool support via OpenAILogicAdapter.
+EXPERIMENTAL: See https://docs.chatterbot.us/large-language-models/ for more information.
+
+Example of using the OpenAI API with the OpenAI Python client.
 
 Requires OPENAI_API_KEY environment variable to be set.
 

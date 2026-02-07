@@ -1,5 +1,7 @@
 """
-Example of using Ollama LLM with MCP tool support via OllamaLogicAdapter.
+EXPERIMENTAL: See https://docs.chatterbot.us/large-language-models/ for more information.
+
+Example of using the Ollama API with the Ollama Python client.
 
 This example shows how to integrate Ollama models into ChatterBot's consensus
 voting system and optionally enable tool calling for specialized tasks.

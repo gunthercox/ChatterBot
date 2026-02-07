@@ -1,9 +1,8 @@
 """
 LLM Logic Adapters for ChatterBot.
 
-This module provides logic adapters that integrate Large Language Models
-as participants in the consensus voting mechanism. LLM adapters can use
-other logic adapters as tools via MCP (Model Context Protocol).
+This module provides logic adapters that integrate Large Language Models.
+LLM adapters can use other logic adapters as tools via MCP (Model Context Protocol).
 """
 import json
 from typing import Any, Dict, List, Optional, Union
@@ -18,16 +17,6 @@ from chatterbot.logic.mcp_tools import (
 from chatterbot import utils
 
 
-# Note: The following models are known to support native tool/function calling.
-# This list is informational only - actual detection uses template inspection.
-# Ollama models with tool support (as of 2026):
-# - Llama Series: llama3.1, llama3.2, llama3-groq-tool-use
-# - Mistral Series: mistral (v0.3+), mistral-nemo, mistral-large
-# - Qwen Series: qwen2.5, qwen2.5-coder
-# - Specialized: firefunction-v2, nemotron, nemotron-mini, command-r, command-r-plus
-# - Enterprise: granite3.1-dense, hermes3
-
-
 class LLMLogicAdapter(LogicAdapter):
     """
     Base class for Large Language Model logic adapters.
@@ -36,7 +25,7 @@ class LLMLogicAdapter(LogicAdapter):
         LLM logic adapters are experimental and may change in future releases.
         Tool calling functionality is still being refined and may have limitations.
 
-    LLM adapters participate in ChatterBot's consensus voting mechanism
+    LLM adapters can participate in ChatterBot's consensus voting mechanism
     alongside traditional logic adapters. They can also use other logic
     adapters as tools through MCP.
 
@@ -48,7 +37,7 @@ class LLMLogicAdapter(LogicAdapter):
         min_confidence (float): Minimum confidence for LLM responses (default: 0.5)
         max_confidence (float): Maximum confidence for LLM responses (default: 0.85)
         conversation_context_count (int): Number of previous statements to include (default: 5)
-        system_message (str): Custom system message for LLM
+        system_message (str): Custom system message for the LLM
 
     Example:
         {
@@ -142,8 +131,7 @@ class LLMLogicAdapter(LogicAdapter):
         .. note::
             Security Note: Conversation history is loaded from storage without modification.
             If you need to scan historical messages for security issues (e.g., context poisoning),
-            consider implementing security scanning at the application level before calling
-            bot.get_response(). See the security documentation for examples.
+            override this method in a base class.
 
         Args:
             input_statement: The current input statement
@@ -636,6 +624,8 @@ class OllamaLogicAdapter(LLMLogicAdapter):
         # Get tools in Ollama format
         tools = self._get_tools_for_llm()
 
+        # TODO: Look into support for thinking mode
+
         try:
             # Initial LLM call with tools
             response = self.client.chat(
@@ -708,12 +698,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
     Logic adapter for OpenAI LLMs with MCP tool support.
 
     .. warning::
-        This adapter is experimental. Tool capability is validated via API dry run
-        which incurs minimal token costs. Not all OpenAI models support tool calling
-        (e.g., o1-preview, legacy completion models).
-
-    OpenAI models have universal tool calling support, so force_native_tools
-    is always True unless explicitly disabled.
+        This adapter is experimental.
 
     Configuration:
         model (str): OpenAI model name (e.g., 'gpt-4', 'gpt-3.5-turbo')
@@ -753,54 +738,10 @@ class OpenAILogicAdapter(LLMLogicAdapter):
         """
         Detect if the OpenAI model supports tool calling.
 
-        Performs a 'dry run' with a minimal request including a dummy tool
-        to check if the model accepts the tools parameter.
-
         Returns:
-            True if model supports tools
+            True (all current OpenAI models support tool calling)
         """
-        try:
-            from openai import BadRequestError
-
-            # Perform dry run with dummy tool
-            response = self.client.chat.completions.create(
-                model=self.model,
-                messages=[{"role": "user", "content": "Hi"}],
-                tools=[{
-                    "type": "function",
-                    "function": {
-                        "name": "dummy_tool",
-                        "description": "A test tool",
-                        "parameters": {"type": "object", "properties": {}}
-                    }
-                }],
-                max_tokens=1  # Minimize cost/latency
-            )
-
-            self.chatbot.logger.info(
-                f"Model '{self.model}' supports native tool calling (dry run validation)"
-            )
-            return True
-
-        except BadRequestError as e:
-            # Check specifically for tools-related errors
-            if "tools" in str(e).lower() or "not supported" in str(e).lower():
-                self.chatbot.logger.info(
-                    f"Model '{self.model}' does not support tool calling (API validation), "
-                    f"will use prompt-based approach"
-                )
-            else:
-                self.chatbot.logger.warning(
-                    f"Unexpected error checking tool support for '{self.model}': {e}"
-                )
-            return False
-
-        except Exception as e:
-            self.chatbot.logger.warning(
-                f"Failed to validate tool support for '{self.model}': {e}. "
-                f"Falling back to prompt-based tool calling."
-            )
-            return False
+        return True
 
     def _get_tools_for_llm(self) -> List[Dict[str, Any]]:
         """

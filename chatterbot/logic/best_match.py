@@ -89,7 +89,7 @@ class BestMatch(LogicAdapter):
             }
 
             alternate_response_selection_parameters = {
-                'search_in_response_to': self.chatbot.tagger.get_text_index_string(
+                'search_in_response_to': input_statement.search_text or self.chatbot.tagger.get_text_index_string(
                     input_statement.text
                 ),
                 'persona_not_startswith': 'bot:',
