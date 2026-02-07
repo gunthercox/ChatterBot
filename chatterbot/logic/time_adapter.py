@@ -3,7 +3,7 @@ from chatterbot import languages
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot.utils import get_model_for_language
-from chatterbot.mcp_tools import MCPToolAdapter
+from chatterbot.logic.mcp_tools import MCPToolAdapter
 import spacy
 
 

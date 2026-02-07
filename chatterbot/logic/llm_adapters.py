@@ -10,7 +10,7 @@ from typing import Any, Dict, List, Optional, Union
 
 from chatterbot.logic.logic_adapter import LogicAdapter
 from chatterbot.conversation import Statement
-from chatterbot.mcp_tools import (
+from chatterbot.logic.mcp_tools import (
     is_tool_adapter,
     convert_to_openai_tool_format,
     convert_to_ollama_tool_format
@@ -18,27 +18,14 @@ from chatterbot.mcp_tools import (
 from chatterbot import utils
 
 
-# Ollama models known to support native tool/function calling
-OLLAMA_TOOL_CAPABLE_MODELS = {
-    # Llama Series (most stable)
-    'llama3.1', 'llama3.2',
-    'llama3-groq-tool-use',  # Specialized for complex nested tool calls
-
-    # Mistral Series (requires v0.3+ for base mistral; mistral:latest usually pulls v0.3)
-    'mistral', 'mistral:v0.3', 'mistral-nemo', 'mistral-large',
-
-    # Qwen Series (highly capable, stable)
-    'qwen2.5', 'qwen2.5-coder',
-
-    # Specialized Tool Models
-    'firefunction', 'firefunction-v2',  # v2 recommended over v1
-    'nemotron', 'nemotron-mini',  # NVIDIA's tool-optimized models
-    'command-r', 'command-r-plus',  # Cohere Command-R series optimized for RAG/tools
-
-    # Enterprise/Other
-    'granite3.1-dense',  # IBM Granite trained for enterprise tool use
-    'hermes3',  # Nous Hermes 3 with good tool calling support
-}
+# Note: The following models are known to support native tool/function calling.
+# This list is informational only - actual detection uses template inspection.
+# Ollama models with tool support (as of 2026):
+# - Llama Series: llama3.1, llama3.2, llama3-groq-tool-use
+# - Mistral Series: mistral (v0.3+), mistral-nemo, mistral-large
+# - Qwen Series: qwen2.5, qwen2.5-coder
+# - Specialized: firefunction-v2, nemotron, nemotron-mini, command-r, command-r-plus
+# - Enterprise: granite3.1-dense, hermes3
 
 
 class LLMLogicAdapter(LogicAdapter):
@@ -62,6 +49,11 @@ class LLMLogicAdapter(LogicAdapter):
         max_confidence (float): Maximum confidence for LLM responses (default: 0.85)
         conversation_context_count (int): Number of previous statements to include (default: 5)
         system_message (str): Custom system message for LLM
+        input_scanners (list): Input security scanners (None=defaults, []=disabled, list=custom)
+        output_scanners (list): Output security scanners (None=defaults, []=disabled, list=custom)
+        security_fail_fast (bool): Stop at first security violation (default: False)
+        security_raise_on_violation (bool): Raise exception on violation (default: False)
+        security_default_response (str): Response when output rejected
 
     Example:
         {
@@ -99,15 +91,103 @@ class LLMLogicAdapter(LogicAdapter):
             "You are a helpful AI assistant. Please keep responses concise, conversational, and responses under 1100 tokens."
         )
 
+        # Scanner configuration
+        # None = use defaults (enabled), [] = explicitly disabled, List = custom scanners
+        self.input_scanners = kwargs.get('input_scanners', None)
+        self.output_scanners = kwargs.get('output_scanners', None)
+
+        # Security behavior
+        self.security_fail_fast = kwargs.get('security_fail_fast', False)  # Stop at first violation
+        self.security_raise_on_violation = kwargs.get('security_raise_on_violation', False)  # Raise exception
+        self.security_default_response = kwargs.get(
+            'security_default_response',
+            "I cannot provide that information."  # Response when output rejected
+        )
+
+        # Initialize security scanners if enabled (enabled = scanners not explicitly disabled)
+        self._llm_guard_available = False
+        if self.input_scanners != [] or self.output_scanners != []:
+            self._initialize_security_scanners()
+
         # Tool calling configuration
         self.force_native_tools = kwargs.get('force_native_tools', None)
-        self.tool_adapters = []
         self.tool_registry = {}
 
         # Initialize tool adapters if provided
         logic_adapters_as_tools = kwargs.get('logic_adapters_as_tools', [])
         if logic_adapters_as_tools:
             self._initialize_tool_adapters(logic_adapters_as_tools, **kwargs)
+
+    def _initialize_security_scanners(self):
+        """
+        Lazy import and validate llm-guard scanners.
+
+        Checks if llm-guard is available and disables security if not installed.
+        Logs a warning to guide users to install the optional dependency.
+        """
+        try:
+            import llm_guard
+            self._llm_guard_available = True
+            self.chatbot.logger.info("Security scanning enabled with llm-guard")
+        except ImportError:
+            self.chatbot.logger.warning(
+                "llm-guard not installed. Security scanning disabled. "
+                "Install with: pip install 'chatterbot[security]' or pip install llm-guard"
+            )
+            self._llm_guard_available = False
+            # Disable scanners by setting to empty list
+            if self.input_scanners is not None:
+                self.input_scanners = []
+            if self.output_scanners is not None:
+                self.output_scanners = []
+
+    def _scan_input(self, statement: Statement) -> Statement:
+        """
+        Apply input security scanning.
+
+        Args:
+            statement: User input statement to scan
+
+        Returns:
+            Scanned statement (sanitized if violations found)
+        """
+        # Skip if explicitly disabled or llm-guard unavailable
+        if self.input_scanners == [] or not self._llm_guard_available:
+            return statement
+
+        from chatterbot.preprocessors import llm_guard_input_scanner
+
+        return llm_guard_input_scanner(
+            statement,
+            scanners=self.input_scanners,
+            fail_fast=self.security_fail_fast,
+            raise_on_violation=self.security_raise_on_violation
+        )
+
+    def _scan_output(self, response: Statement, input_text: str = "") -> Statement:
+        """
+        Apply output security scanning.
+
+        Args:
+            response: Bot response statement to scan
+            input_text: Original user input (for context)
+
+        Returns:
+            Scanned statement (sanitized or default response if violations found)
+        """
+        # Skip if explicitly disabled or llm-guard unavailable
+        if self.output_scanners == [] or not self._llm_guard_available:
+            return response
+
+        from chatterbot.preprocessors import llm_guard_output_scanner
+
+        return llm_guard_output_scanner(
+            response,
+            input_text=input_text,
+            scanners=self.output_scanners,
+            fail_fast=self.security_fail_fast,
+            default_response=self.security_default_response
+        )
 
     def _initialize_tool_adapters(self, adapter_configs: List[Union[str, Dict]], **kwargs):
         """
@@ -124,7 +204,6 @@ class LLMLogicAdapter(LogicAdapter):
 
             # Check if adapter supports tool functionality
             if is_tool_adapter(adapter):
-                self.tool_adapters.append(adapter)
                 tool_name = adapter.get_tool_name()
                 self.tool_registry[tool_name] = adapter
                 self.chatbot.logger.info(
@@ -138,6 +217,18 @@ class LLMLogicAdapter(LogicAdapter):
     def _get_conversation_context(self, input_statement: Statement) -> List[Dict[str, str]]:
         """
         Retrieve previous conversation context from storage.
+
+        .. warning::
+            Context Poisoning Risk: Historical messages are loaded without security scanning.
+            If malicious input was stored in previous interactions, it could be injected
+            into the LLM context, potentially bypassing current input security measures.
+
+        TODO: Add optional security scanning of conversation context in future release.
+              Options to consider:
+              - Scan each historical statement before including in context
+              - Add `scan_conversation_context` parameter (default False for performance)
+              - Cache scanned contexts to avoid repeated scanning
+              - Apply lighter-weight scanners (e.g., BanSubstrings only) for performance
 
         Args:
             input_statement: The current input statement
@@ -175,6 +266,34 @@ class LLMLogicAdapter(LogicAdapter):
             self.chatbot.logger.warning(f"Failed to retrieve conversation context: {e}")
 
         return messages
+
+    def _build_base_messages(self, input_statement: Statement, system_message: Optional[str] = None) -> List[Dict[str, str]]:
+        """
+        Build base message list for LLM API calls.
+
+        Args:
+            input_statement: The input statement
+            system_message: Optional system message override
+
+        Returns:
+            List of message dicts in LLM format
+        """
+        messages = [{'role': 'system', 'content': system_message or self.system_message}]
+        messages.extend(self._get_conversation_context(input_statement))
+        messages.append({'role': 'user', 'content': input_statement.text})
+        return messages
+
+    def _format_error_response(self, error: Exception) -> str:
+        """
+        Format a consistent error response message.
+
+        Args:
+            error: The exception that occurred
+
+        Returns:
+            Formatted error message string
+        """
+        return f"I apologize, but I encountered an error: {str(error)}"
 
     def _supports_native_tools(self) -> bool:
         """
@@ -272,7 +391,7 @@ class LLMLogicAdapter(LogicAdapter):
         """
         # Build tool descriptions for prompt
         tool_descriptions = []
-        for adapter in self.tool_adapters:
+        for adapter in self.tool_registry.values():
             schema = adapter.get_tool_schema()
             tool_desc = f"- {schema['name']}: {schema['description']}"
             tool_descriptions.append(tool_desc)
@@ -377,7 +496,11 @@ If you don't need to use a tool, respond normally with plain text."""
 
     def process(self, statement: Statement, additional_response_selection_parameters: dict = None) -> Statement:
         """
-        Process the input statement using the LLM.
+        Process the input statement using the LLM with security scanning.
+
+        Security scanning is applied in two stages:
+        1. Input scanning: Before LLM processing (prevents prompt injection)
+        2. Output scanning: After LLM processing (prevents harmful outputs)
 
         Args:
             statement: The input statement to process
@@ -386,18 +509,26 @@ If you don't need to use a tool, respond normally with plain text."""
         Returns:
             Response statement with confidence score
         """
+        # Stage 1: Scan input for security threats
+        scanned_input = self._scan_input(statement)
+
+        # Process with LLM
         # If no tools are configured, just call LLM directly
-        if not self.tool_adapters:
-            response_text = self._call_llm(statement)
+        if not self.tool_registry:
+            response_text = self._call_llm(scanned_input)
             response = Statement(text=response_text)
             response.confidence = self._calculate_confidence(response_text)
-            return response
-
-        # Determine tool calling method
-        if self._supports_native_tools():
-            return self._handle_native_tool_calling(statement)
         else:
-            return self._handle_prompt_based_tool_calling(statement)
+            # Determine tool calling method
+            if self._supports_native_tools():
+                response = self._handle_native_tool_calling(scanned_input)
+            else:
+                response = self._handle_prompt_based_tool_calling(scanned_input)
+
+        # Stage 2: Scan output for security/safety issues
+        scanned_output = self._scan_output(response, input_text=statement.text)
+
+        return scanned_output
 
 
 class OllamaLogicAdapter(LLMLogicAdapter):
@@ -488,7 +619,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
             List of Ollama-formatted tool definitions
         """
         tools = []
-        for adapter in self.tool_adapters:
+        for adapter in self.tool_registry.values():
             schema = adapter.get_tool_schema()
             ollama_tool = convert_to_ollama_tool_format(schema)
             tools.append(ollama_tool)
@@ -505,13 +636,8 @@ class OllamaLogicAdapter(LLMLogicAdapter):
         Returns:
             LLM response text
         """
-        sys_msg = system_message or self.system_message
-
         # Build messages with conversation context
-        messages = []
-        messages.append({'role': 'system', 'content': sys_msg})
-        messages.extend(self._get_conversation_context(input_statement))
-        messages.append({'role': 'user', 'content': input_statement.text})
+        messages = self._build_base_messages(input_statement, system_message)
 
         try:
             response = self.client.chat(
@@ -521,7 +647,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
             return response['message']['content']
         except Exception as e:
             self.chatbot.logger.error(f"Ollama API error: {e}")
-            return f"I apologize, but I encountered an error: {str(e)}"
+            return self._format_error_response(e)
 
     def _call_llm_with_context(self, input_statement: Statement, additional_context: str) -> str:
         """
@@ -534,10 +660,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
         Returns:
             LLM response text
         """
-        messages = []
-        messages.append({'role': 'system', 'content': self.system_message})
-        messages.extend(self._get_conversation_context(input_statement))
-        messages.append({'role': 'user', 'content': input_statement.text})
+        messages = self._build_base_messages(input_statement)
         messages.append({'role': 'assistant', 'content': additional_context})
 
         try:
@@ -548,7 +671,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
             return response['message']['content']
         except Exception as e:
             self.chatbot.logger.error(f"Ollama API error: {e}")
-            return f"I apologize, but I encountered an error: {str(e)}"
+            return self._format_error_response(e)
 
     def _handle_native_tool_calling(self, input_statement: Statement) -> Statement:
         """
@@ -561,10 +684,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
             Response statement with confidence
         """
         # Build messages
-        messages = []
-        messages.append({'role': 'system', 'content': self.system_message})
-        messages.extend(self._get_conversation_context(input_statement))
-        messages.append({'role': 'user', 'content': input_statement.text})
+        messages = self._build_base_messages(input_statement)
 
         # Get tools in Ollama format
         tools = self._get_tools_for_llm()
@@ -614,7 +734,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
 
         except Exception as e:
             self.chatbot.logger.error(f"Ollama tool calling error: {e}")
-            response = Statement(text=f"I apologize, but I encountered an error: {str(e)}")
+            response = Statement(text=self._format_error_response(e))
             response.confidence = self.min_confidence
             return response
 
@@ -726,7 +846,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
             List of OpenAI-formatted tool definitions
         """
         tools = []
-        for adapter in self.tool_adapters:
+        for adapter in self.tool_registry.values():
             schema = adapter.get_tool_schema()
             openai_tool = convert_to_openai_tool_format(schema)
             tools.append(openai_tool)
@@ -743,13 +863,8 @@ class OpenAILogicAdapter(LLMLogicAdapter):
         Returns:
             LLM response text
         """
-        sys_msg = system_message or self.system_message
-
         # Build messages with conversation context
-        messages = []
-        messages.append({'role': 'system', 'content': sys_msg})
-        messages.extend(self._get_conversation_context(input_statement))
-        messages.append({'role': 'user', 'content': input_statement.text})
+        messages = self._build_base_messages(input_statement, system_message)
 
         try:
             response = self.client.chat.completions.create(
@@ -759,7 +874,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
             return response.choices[0].message.content
         except Exception as e:
             self.chatbot.logger.error(f"OpenAI API error: {e}")
-            return f"I apologize, but I encountered an error: {str(e)}"
+            return self._format_error_response(e)
 
     def _call_llm_with_context(self, input_statement: Statement, additional_context: str) -> str:
         """
@@ -772,10 +887,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
         Returns:
             LLM response text
         """
-        messages = []
-        messages.append({'role': 'system', 'content': self.system_message})
-        messages.extend(self._get_conversation_context(input_statement))
-        messages.append({'role': 'user', 'content': input_statement.text})
+        messages = self._build_base_messages(input_statement)
         messages.append({'role': 'assistant', 'content': additional_context})
 
         try:
@@ -786,7 +898,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
             return response.choices[0].message.content
         except Exception as e:
             self.chatbot.logger.error(f"OpenAI API error: {e}")
-            return f"I apologize, but I encountered an error: {str(e)}"
+            return self._format_error_response(e)
 
     def _handle_native_tool_calling(self, input_statement: Statement) -> Statement:
         """
@@ -799,10 +911,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
             Response statement with confidence
         """
         # Build messages
-        messages = []
-        messages.append({'role': 'system', 'content': self.system_message})
-        messages.extend(self._get_conversation_context(input_statement))
-        messages.append({'role': 'user', 'content': input_statement.text})
+        messages = self._build_base_messages(input_statement)
 
         # Get tools in OpenAI format
         tools = self._get_tools_for_llm()
@@ -866,6 +975,6 @@ class OpenAILogicAdapter(LLMLogicAdapter):
 
         except Exception as e:
             self.chatbot.logger.error(f"OpenAI tool calling error: {e}")
-            response = Statement(text=f"I apologize, but I encountered an error: {str(e)}")
+            response = Statement(text=self._format_error_response(e))
             response.confidence = self.min_confidence
             return response

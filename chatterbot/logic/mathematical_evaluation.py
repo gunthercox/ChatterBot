@@ -1,7 +1,7 @@
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot import languages
-from chatterbot.mcp_tools import MCPToolAdapter
+from chatterbot.logic.mcp_tools import MCPToolAdapter
 
 
 class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):

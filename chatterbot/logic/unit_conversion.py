@@ -3,7 +3,7 @@ from chatterbot.conversation import Statement
 from chatterbot.exceptions import OptionalDependencyImportError
 from chatterbot import languages
 from chatterbot import parsing
-from chatterbot.mcp_tools import MCPToolAdapter
+from chatterbot.logic.mcp_tools import MCPToolAdapter
 from mathparse import mathparse
 import re
 
