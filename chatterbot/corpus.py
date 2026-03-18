@@ -1,8 +1,7 @@
 import io
 from pathlib import Path
-import glob
 from dataclasses import dataclass
-from typing import List, Generator, Tuple
+from typing import List, Generator
 
 from chatterbot.exceptions import OptionalDependencyImportError
 
@@ -10,11 +9,11 @@ from chatterbot.exceptions import OptionalDependencyImportError
 try:
     from chatterbot_corpus.corpus import DATA_DIRECTORY
 except (ImportError, ModuleNotFoundError):
-    # Default to home directory
+    # Default to home directory if corpus package not installed
     DATA_DIRECTORY = Path.home() / 'chatterbot_corpus' / 'data'
 
-# Default corpus file extensions
-CORPUS_EXTENSIONS = ['yml', 'yaml', 'json']
+# Only support YAML formats for now
+CORPUS_EXTENSIONS = ['yml', 'yaml']
 
 # Simple cache for loaded corpus files
 _corpus_cache = {}
@@ -33,7 +32,7 @@ def get_file_path(dotted_path: str, extensions: List[str] = CORPUS_EXTENSIONS) -
     Raises FileNotFoundError if the file does not exist.
     """
     path = Path(dotted_path)
-    
+
     # If path already exists, return it
     if path.exists():
         return path
@@ -42,7 +41,7 @@ def get_file_path(dotted_path: str, extensions: List[str] = CORPUS_EXTENSIONS) -
     parts = dotted_path.split('.')
     if parts[0] == 'chatterbot':
         parts[0] = str(DATA_DIRECTORY)
-    
+
     base_path = Path(*parts)
 
     # Check for file existence with supported extensions
@@ -60,7 +59,7 @@ def get_file_path(dotted_path: str, extensions: List[str] = CORPUS_EXTENSIONS) -
 
 def read_corpus(file_path: Path) -> dict:
     """
-    Read a YAML or JSON corpus file and return its contents.
+    Read a YAML corpus file and return its contents.
     Caches results for repeated access.
     """
     if file_path in _corpus_cache:
