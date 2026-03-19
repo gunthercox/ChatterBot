@@ -350,23 +350,20 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 filter_condition = query
 
         if 'exclude_text' in kwargs:
-            query = Text('text') != '|'.join([
-                f'%%{text}%%' for text in kwargs['exclude_text']
-            ])
-            if filter_condition:
-                filter_condition &= query
-            else:
-                filter_condition = query
+            for excl_text in kwargs['exclude_text']:
+                query = Text('text') != excl_text
+                if filter_condition:
+                    filter_condition &= query
+                else:
+                    filter_condition = query
 
         if 'exclude_text_words' in kwargs and kwargs['exclude_text_words']:
-            _query = '|'.join([
-                f'%%{text}%%' for text in kwargs['exclude_text_words']
-            ])
-            query = Text('text') % f'-({_query})'
-            if filter_condition:
-                filter_condition &= query
-            else:
-                filter_condition = query
+            for excl_word in kwargs['exclude_text_words']:
+                query = Text('text') % f'-({excl_word})'
+                if filter_condition:
+                    filter_condition &= query
+                else:
+                    filter_condition = query
 
         if 'persona_not_startswith' in kwargs:
             _query = _escape_redis_special_characters(kwargs['persona_not_startswith'])
@@ -377,8 +374,7 @@ class RedisVectorStorageAdapter(StorageAdapter):
                 filter_condition = query
 
         if 'text' in kwargs:
-            _query = _escape_redis_special_characters(kwargs['text'])
-            query = Text('text') % '|'.join([f'%%{_q}%%' for _q in _query.split()])
+            query = Text('text') == kwargs['text']
             if filter_condition:
                 filter_condition &= query
             else:
