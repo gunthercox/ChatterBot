@@ -6,9 +6,9 @@ from chatterbot.storage.redis import RedisVectorStorageAdapter
 
 
 @unittest.skipIf(
-    sys.version_info < (3, 10),
-    'The Redis adapter requires Python 3.10+'
-)
+    sys.version_info >= (3, 14),
+    'redisvl depends on pydantic v1 which is incompatible with Python 3.14+'
+)  # TODO: Remove this skip when redisvl supports pydantic v2 and Python 3.14+
 class RedisStorageAdapterTestCase(TestCase):
 
     @classmethod
