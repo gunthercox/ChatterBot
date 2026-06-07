@@ -78,3 +78,33 @@ class ConvertToASCIIPreprocessorTestCase(ChatBotTestCase):
         normal_text = 'Kluft skrams infor pa federal electoral groe'
 
         self.assertEqual(cleaned.text, normal_text)
+        
+class NormalizeRepeatingCharactersPreprocessorTestCase(ChatBotTestCase):
+    """
+    Make sure that ChatterBot's repeating-character preprocessor works as expected.
+    """
+
+    def test_elongated_word_is_reduced(self):
+        statement = Statement(text='I am sooooo happy')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+        self.assertEqual(cleaned.text, 'I am soo happy')
+
+    def test_multiple_elongated_words(self):
+        statement = Statement(text='Yesss that was greaaaat')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+        self.assertEqual(cleaned.text, 'Yess that was greaat')
+
+    def test_natural_double_letters_preserved(self):
+        statement = Statement(text='That book looks really cool')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+        self.assertEqual(cleaned.text, 'That book looks really cool')
+
+    def test_repeating_digits_preserved(self):
+        statement = Statement(text='I have 1000000 dollars')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+        self.assertEqual(cleaned.text, 'I have 1000000 dollars')
+
+    def test_repeating_punctuation_preserved(self):
+        statement = Statement(text='Wow!!!')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+        self.assertEqual(cleaned.text, 'Wow!!!')
