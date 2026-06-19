@@ -618,13 +618,18 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         if not self.disable_progress:
             print('Extracting {}'.format(file_path))
 
+        if os.path.islink(self.data_path):
+            raise self.TrainerInitializationException(
+                'Refusing to extract archive to a symbolic link: {}'.format(self.data_path)
+            )
+
         if not os.path.exists(self.data_path):
             os.makedirs(self.data_path)
 
         def is_within_directory(directory, target):
 
-            abs_directory = os.path.abspath(directory)
-            abs_target = os.path.abspath(target)
+            abs_directory = os.path.realpath(directory)
+            abs_target = os.path.realpath(target)
 
             prefix = os.path.commonprefix([abs_directory, abs_target])
 
@@ -633,6 +638,8 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         def safe_extract(tar, path='.', members=None, *, numeric_owner=False):
 
             for member in tar.getmembers():
+                if member.issym() or member.islnk():
+                    raise Exception('Symlinks and hard links are not permitted in the tar file')
                 member_path = os.path.join(path, member.name)
                 if not is_within_directory(path, member_path):
                     raise Exception('Attempted Path Traversal in Tar File')

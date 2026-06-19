@@ -213,3 +213,77 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
         extracted = self.trainer.is_extracted(self.trainer.data_path)
 
         self.assertFalse(extracted)
+
+    def test_extract_raises_on_symlink_data_path(self):
+        """
+        Test that extract() raises an exception when data_path is a symlink.
+
+        A local attacker could pre-plant a symlink at the predictable
+        data_path location to redirect archive extraction to an arbitrary
+        directory. The trainer must reject a symlink target before extracting.
+        """
+        import tempfile
+        import shutil
+
+        attacker_target = tempfile.mkdtemp(prefix='cb_symlink_attack_')
+        try:
+            file_object_path = self._create_test_corpus(self._get_data())
+
+            # Plant the symlink at data_path before extraction
+            os.makedirs(self.trainer.data_directory, exist_ok=True)
+            os.symlink(attacker_target, self.trainer.data_path)
+
+            with self.assertRaises(Exception):
+                self.trainer.extract(file_object_path)
+
+            # Confirm nothing was written to the attacker's target directory
+            self.assertEqual(
+                os.listdir(attacker_target), [],
+                'Files were written through the symlink to the attacker target directory'
+            )
+        finally:
+            if os.path.islink(self.trainer.data_path):
+                os.unlink(self.trainer.data_path)
+            shutil.rmtree(attacker_target, ignore_errors=True)
+            self._destroy_test_corpus()
+
+    def test_extract_does_not_follow_symlink_members(self):
+        """
+        Test that safe_extract() rejects tar members whose resolved paths
+        escape the extraction directory via a symlink.
+
+        Even if data_path itself is legitimate, a tar archive containing a
+        symlink member pointing outside the extraction root must be rejected.
+        """
+        import tempfile
+        import shutil
+
+        attacker_target = tempfile.mkdtemp(prefix='cb_member_symlink_attack_')
+        try:
+            os.makedirs(self.trainer.data_path, exist_ok=True)
+
+            # Build a tar containing a directory entry that is a symlink
+            # pointing outside the extraction root, plus a file routed through it.
+            file_path = os.path.join(self.trainer.data_directory, 'malicious.tgz')
+            with tarfile.TarFile(file_path, 'w') as tf:
+                link_info = tarfile.TarInfo('escape_link')
+                link_info.type = tarfile.SYMTYPE
+                link_info.linkname = attacker_target
+                tf.addfile(link_info)
+
+                payload = b'should not be written outside extraction root\n'
+                file_info = tarfile.TarInfo('escape_link/pwned.txt')
+                file_info.size = len(payload)
+                tf.addfile(file_info, BytesIO(payload))
+
+            with self.assertRaises(Exception):
+                self.trainer.extract(file_path)
+
+            self.assertEqual(
+                os.listdir(attacker_target), [],
+                'Files were written outside the extraction root via a symlink member'
+            )
+        finally:
+            if os.path.exists(file_path):
+                os.remove(file_path)
+            shutil.rmtree(attacker_target, ignore_errors=True)
