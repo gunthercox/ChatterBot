@@ -96,7 +96,7 @@ class MathematicalEvaluationTests(ChatBotTestCase):
     def test_pi_constant(self):
         statement = Statement(text='What is pi plus one ?')
         response = self.adapter.process(statement)
-        self.assertEqual(response.text, 'pi plus one = 4.141693')
+        self.assertEqual(response.text, 'pi plus one = 4.141593')
         self.assertEqual(response.confidence, 1)
 
     def test_e_constant(self):
