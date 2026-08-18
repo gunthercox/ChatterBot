@@ -102,8 +102,8 @@ https://docs.chatterbot.us/contributing/
 ChatterBot is sponsored by:
 
 <p>
-   <a href="https://www.testmuai.com/?utm_source=chatterbot&utm_medium=sponsor" target="_blank">
-      <img src="docs/_static/testmu-ai-white-logo.png" style="vertical-align: middle;" width="250" height="80" />
+   <a href="https://www.testmuai.com/?utm_medium=sponsor&utm_source=chatterbot" target="_blank">
+      <img src="docs/_static/testmu-ai-black-logo-512px.png" style="vertical-align: middle;" width="250" height="80" />
    </a>
 </p>
 
