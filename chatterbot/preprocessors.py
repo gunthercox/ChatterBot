@@ -3,7 +3,7 @@ Statement pre-processors.
 """
 from chatterbot.conversation import Statement
 from unicodedata import normalize
-from re import sub as re_sub
+from re import sub as re_sub, compile as re_compile
 from html import unescape
 
 
@@ -44,4 +44,28 @@ def convert_to_ascii(statement: Statement) -> Statement:
     text = text.encode('ascii', 'ignore').decode('utf-8')
 
     statement.text = str(text)
+    return statement
+
+# Matches a single letter that is immediately repeated three or more times.
+# Digits, punctuation, and whitespace are intentionally excluded so that
+# values such as "1000000" or "!!!" are left unchanged.
+_REPEATING_CHARACTER_PATTERN = re_compile(r'([^\W\d_])\1{2,}')
+
+
+def normalize_repeating_characters(statement: Statement) -> Statement:
+    """
+    Reduce runs of three or more repeated letters down to two.
+
+    Elongated words are common in conversational text (for example
+    "I am sooooo happy"). Collapsing the repeated characters maps these
+    variations to a single, consistent form ("I am soo happy") which helps
+    the chat bot match input against statements it has been trained on.
+
+    Letter pairs that occur naturally (such as the "oo" in "cool") are
+    preserved, and repeated digits or punctuation are left unchanged.
+    """
+    statement.text = _REPEATING_CHARACTER_PATTERN.sub(
+        lambda match: match.group(1) * 2, statement.text
+    )
+
     return statement
