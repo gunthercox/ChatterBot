@@ -78,3 +78,78 @@ class ConvertToASCIIPreprocessorTestCase(ChatBotTestCase):
         normal_text = 'Kluft skrams infor pa federal electoral groe'
 
         self.assertEqual(cleaned.text, normal_text)
+
+
+class NormalizeRepeatingCharactersPreprocessorTestCase(ChatBotTestCase):
+    """
+    Make sure that ChatterBot's repeating-character preprocessor works as expected.
+    """
+
+    def test_elongated_word_is_reduced(self):
+        statement = Statement(text='I am sooooo happy')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'I am so happy')
+
+    def test_elongated_word_matches_its_unelongated_form(self):
+        elongated = preprocessors.normalize_repeating_characters(
+            Statement(text='I am sooooo happy')
+        )
+        plain = preprocessors.normalize_repeating_characters(
+            Statement(text='I am so happy')
+        )
+
+        self.assertEqual(elongated.text, plain.text)
+
+    def test_multiple_elongated_words(self):
+        statement = Statement(text='Yesss that was greaaaat')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'Yes that was great')
+
+    def test_case_of_first_character_in_run_is_kept(self):
+        statement = Statement(text='HEYYY there')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'HEY there')
+
+    def test_natural_double_letters_preserved(self):
+        statement = Statement(text='That book looks really cool')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'That book looks really cool')
+
+    def test_non_ascii_letters_are_reduced(self):
+        statement = Statement(text=u'Das ist schööön')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, u'Das ist schön')
+
+    def test_repeating_digits_preserved(self):
+        statement = Statement(text='I have 1000000 dollars')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'I have 1000000 dollars')
+
+    def test_repeating_punctuation_preserved(self):
+        statement = Statement(text='Wow!!!')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'Wow!!!')
+
+    def test_repeating_whitespace_preserved(self):
+        statement = Statement(text='Hello    there')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'Hello    there')
+
+    def test_elongated_word_containing_a_doubled_letter(self):
+        """
+        A word that genuinely contains a doubled letter is reduced past its
+        correct spelling, since telling the two cases apart would require a
+        dictionary lookup.
+        """
+        statement = Statement(text='That is gooood')
+        cleaned = preprocessors.normalize_repeating_characters(statement)
+
+        self.assertEqual(cleaned.text, 'That is god')

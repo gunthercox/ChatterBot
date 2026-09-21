@@ -28,6 +28,8 @@ ChatterBot comes with several built-in preprocessors.
 
 .. autofunction:: chatterbot.preprocessors.convert_to_ascii
 
+.. autofunction:: chatterbot.preprocessors.normalize_repeating_characters
+
 
 Creating new preprocessors
 ==========================
