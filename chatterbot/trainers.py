@@ -26,6 +26,16 @@ _DIR_FD_EXTRACTION_SUPPORTED = (
     and os.path.isdir('/proc/self/fd')
 )
 
+# The download path opens the archive itself rather than handing a path to
+# tarfile, so it needs no procfs magic path and can be anchored to a directory
+# fd anywhere the relevant calls accept one.
+_DIR_FD_DOWNLOAD_SUPPORTED = (
+    hasattr(os, 'O_NOFOLLOW')
+    and os.open in os.supports_dir_fd
+    and os.rename in os.supports_dir_fd
+    and os.unlink in os.supports_dir_fd
+)
+
 
 class Trainer(object):
     """
@@ -609,28 +619,77 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
         file_name = url.split('/')[-1]
         file_path = os.path.join(self.data_directory, file_name)
 
+        self._reject_symlinked_path(file_path)
+
         # Do not download the data if it already exists
         if self.is_downloaded(file_path):
             return file_path
 
-        with open(file_path, 'wb') as open_file:
-            if show_status:
-                print('Downloading %s' % url)
-            response = requests.get(url, stream=True)
-            total_length = response.headers.get('content-length')
+        # Write to an unpredictably-named staging file and commit it with a
+        # rename, the same way extract() stages its output. os.rename()
+        # replaces a symlink at the destination instead of writing through it,
+        # so the archive lands inside data_directory even if the path is
+        # swapped after the check above. Where supported, the open, the rename
+        # and the cleanup are all anchored to a directory fd held open with
+        # O_NOFOLLOW, which keeps them bound to the directory inode verified
+        # here rather than to whatever the path resolves to later on.
+        base_fd = None
+        if _DIR_FD_DOWNLOAD_SUPPORTED:
+            base_fd = self._open_verified_directory_fd(self.data_directory)
 
-            if total_length is None:
-                # No content length header. Stream regardless of whether
-                # progress is shown, to avoid buffering the whole body in memory.
-                for data in response.iter_content(chunk_size=4096):
-                    open_file.write(data)
+        staging_name = 'tmp_' + secrets.token_hex(8)
+        staging_path = os.path.join(self.data_directory, staging_name)
+        open_flags = os.O_WRONLY | os.O_CREAT | os.O_EXCL
+        # O_NOFOLLOW is POSIX-only, and O_BINARY exists only on Windows, where
+        # os.open() would otherwise translate newlines inside the archive.
+        open_flags |= getattr(os, 'O_NOFOLLOW', 0) | getattr(os, 'O_BINARY', 0)
+
+        try:
+            if base_fd is not None:
+                staging_fd = os.open(staging_name, open_flags, 0o666, dir_fd=base_fd)
             else:
-                for data in tqdm(
-                    response.iter_content(chunk_size=4096),
-                    desc='Downloading',
-                    disable=not show_status
-                ):
-                    open_file.write(data)
+                staging_fd = os.open(staging_path, open_flags, 0o666)
+
+            with os.fdopen(staging_fd, 'wb') as open_file:
+                if show_status:
+                    print('Downloading %s' % url)
+                response = requests.get(url, stream=True)
+                total_length = response.headers.get('content-length')
+
+                if total_length is None:
+                    # No content length header. Stream regardless of whether
+                    # progress is shown, to avoid buffering the whole body in memory.
+                    for data in response.iter_content(chunk_size=4096):
+                        open_file.write(data)
+                else:
+                    for data in tqdm(
+                        response.iter_content(chunk_size=4096),
+                        desc='Downloading',
+                        disable=not show_status
+                    ):
+                        open_file.write(data)
+
+            try:
+                if base_fd is not None:
+                    os.rename(staging_name, file_name, src_dir_fd=base_fd, dst_dir_fd=base_fd)
+                else:
+                    os.rename(staging_path, file_path)
+            except OSError as e:
+                raise self.TrainerInitializationException(
+                    'Refusing to commit downloaded archive to {}: {}'.format(file_path, e)
+                ) from e
+        except BaseException:
+            try:
+                if base_fd is not None:
+                    os.unlink(staging_name, dir_fd=base_fd)
+                else:
+                    os.unlink(staging_path)
+            except OSError:
+                pass
+            raise
+        finally:
+            if base_fd is not None:
+                os.close(base_fd)
 
         if show_status:
             print('Download location: %s' % file_path)
@@ -656,7 +715,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
             return os.open(path, os.O_RDONLY | os.O_DIRECTORY | os.O_NOFOLLOW)
         except OSError as e:
             raise self.TrainerInitializationException(
-                'Refusing to extract archive: unable to safely open {}: {}'.format(path, e)
+                'Refusing to use data directory: unable to safely open {}: {}'.format(path, e)
             ) from e
 
     def extract(self, file_path: str):

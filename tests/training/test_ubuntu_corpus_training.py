@@ -498,3 +498,38 @@ class UbuntuCorpusTrainerTestCase(ChatBotTestCase):
                 'dir_fd extraction is enabled but /proc/self/fd is unavailable, '
                 'so the extraction root resolves to a nonexistent path'
             )
+
+    def test_download_refuses_symlinked_archive_path(self):
+        """
+        Test that train() refuses to write the corpus archive through a
+        symlink planted at the archive path inside data_directory.
+
+        is_downloaded() is a bare os.path.exists(), so a dangling symlink at
+        the predictable archive path reads as not-yet-downloaded, and a plain
+        open() would then create the link target rather than a file inside
+        the data directory.
+        """
+        import tempfile
+        import shutil
+
+        attacker_directory = tempfile.mkdtemp(prefix='cb_download_symlink_attack_')
+        attacker_target = os.path.join(attacker_directory, 'planted.tgz')
+        archive_path = os.path.join(self.trainer.data_directory, 'ubuntu_dialogs.tgz')
+
+        try:
+            requests.get = Mock(side_effect=self._mock_get_response)
+
+            os.makedirs(self.trainer.data_directory, exist_ok=True)
+            os.symlink(attacker_target, archive_path)
+
+            with self.assertRaises(self.trainer.TrainerInitializationException):
+                self.trainer.train(self.data_download_url, limit=50)
+
+            self.assertFalse(
+                os.path.exists(attacker_target),
+                'The archive was written through the symlink at the archive path'
+            )
+        finally:
+            if os.path.islink(archive_path):
+                os.unlink(archive_path)
+            shutil.rmtree(attacker_directory, ignore_errors=True)
