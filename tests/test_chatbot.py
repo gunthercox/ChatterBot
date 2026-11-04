@@ -1,6 +1,6 @@
 from tests.base_case import ChatBotTestCase
 from chatterbot import ChatBot
-from chatterbot.logic import LogicAdapter
+from chatterbot.logic import LogicAdapter, MathematicalEvaluation
 from chatterbot.conversation import Statement
 from chatterbot import languages
 
@@ -417,6 +417,18 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
 
         self.assertEqual(statement.confidence, 0.5)
         self.assertEqual(statement.text, 'Good morning.')
+
+    def test_no_adapter_can_process_statement(self):
+        """
+        If no logic adapter can process the statement,
+        a ChatBotException should be raised.
+        """
+        self.chatbot.logic_adapters = [MathematicalEvaluation(self.chatbot)]
+
+        with self.assertRaises(ChatBot.ChatBotException) as exc:
+            self.chatbot.generate_response(Statement(text='Howdy!'))
+
+        self.assertIn('No logic adapter was able to process', str(exc.exception))
 
     def test_chatbot_set_for_all_logic_adapters(self):
         for sub_adapter in self.chatbot.logic_adapters:
