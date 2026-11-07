@@ -117,8 +117,10 @@ class UnitConversion(LogicAdapter, MCPToolAdapter):
         """
         response = Statement(text='')
 
-        from_parsed = match.group("from")
-        target_parsed = match.group("target")
+        # Units are captured as any non-whitespace text, so a question such
+        # as "How many meters are in one kilometer?" captures "kilometer?"
+        from_parsed = match.group("from").rstrip('?!.,;:')
+        target_parsed = match.group("target").rstrip('?!.,;:')
         n_statement = match.group("number")
 
         if n_statement == 'a' or n_statement == 'an':

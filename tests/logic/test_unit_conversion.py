@@ -126,3 +126,9 @@ class UnitConversionTests(ChatBotTestCase):
         self.assertIsNotNone(response_statement)
         self.assertEqual(response_statement.confidence, 1)
         self.assertLessEqual(abs(float(response_statement.text) - expected_value), 0.1)
+
+    def test_unit_followed_by_punctuation(self):
+        statement = Statement(text='How many meters are in one kilometer?')
+        response_statement = self.adapter.process(statement)
+        self.assertEqual(response_statement.confidence, 1)
+        self.assertEqual(float(response_statement.text), 1000.0)
