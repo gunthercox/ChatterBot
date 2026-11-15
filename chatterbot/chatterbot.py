@@ -332,6 +332,11 @@ class ChatBot(object):
             if most_common.count > 1:
                 result = most_common.statement
 
+        if result is None:
+            raise self.ChatBotException(
+                f'No logic adapter was able to process the statement "{input_statement.text}".'
+            )
+
         response = Statement(
             text=result.text,
             in_response_to=input_statement.text,
