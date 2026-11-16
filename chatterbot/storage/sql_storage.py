@@ -158,9 +158,8 @@ class SQLStorageAdapter(StorageAdapter):
         session = self.Session()
         try:
             query = session.query(Statement).filter_by(text=statement_text)
-            record = query.first()
-
-            session.delete(record)
+            for record in query:
+                session.delete(record)
             session.commit()
         finally:
             session.close()
