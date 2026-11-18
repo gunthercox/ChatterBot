@@ -133,7 +133,9 @@ class SQLStorageAdapter(StorageAdapter):
     def model_to_object(self, statement):
         from chatterbot.conversation import Statement as StatementObject
 
-        return StatementObject(**statement.serialize())
+        statement_object = StatementObject(**statement.serialize())
+        statement_object.storage = self
+        return statement_object
 
     def count(self) -> int:
         """

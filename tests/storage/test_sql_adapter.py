@@ -113,6 +113,29 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
         with self.assertRaises(StorageAdapter.EmptyDatabaseException):
             self.adapter.get_random()
 
+    def test_created_statement_can_save(self):
+        statement = self.adapter.create(text='Initial statement')
+        self._assert_statement_can_save(statement)
+
+    def test_filtered_statement_can_save(self):
+        self.adapter.create(text='Initial statement')
+        statement, = self.adapter.filter(text='Initial statement')
+        self._assert_statement_can_save(statement)
+
+    def test_random_statement_can_save(self):
+        self.adapter.create(text='Initial statement')
+        statement = self.adapter.get_random()
+        self._assert_statement_can_save(statement)
+
+    def _assert_statement_can_save(self, statement):
+        statement.in_response_to = 'Updated response'
+        statement.save()
+
+        stored, = self.adapter.filter(id=statement.id)
+        self.assertEqual(stored.in_response_to, 'Updated response')
+        self.assertEqual(self.adapter.count(), 1)
+        self.assertIs(statement.storage, self.adapter)
+
     def test_remove(self):
         text = "Sometimes you have to run before you can walk."
         self.adapter.create(text=text)
