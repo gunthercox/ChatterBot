@@ -21,10 +21,15 @@ class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
     """
 
     def __init__(self, chatbot, **kwargs):
+        from mathparse import mathwords
+
         super().__init__(chatbot, **kwargs)
 
         self.language = kwargs.get('language', languages.ENG)
         self.cache = {}
+
+        math_words = mathwords.MATH_WORDS.get(self.language.ISO_639.upper(), {})
+        self.stop_words: set = chatbot.nlp.Defaults.stop_words - set(math_words.get('scales', {}))
 
     def can_process(self, statement) -> bool:
         """
@@ -58,7 +63,11 @@ class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
         try:
             response.text = '{} = {}'.format(
                 response.text,
-                mathparse.parse(expression, language=self.language.ISO_639.upper())
+                mathparse.parse(
+                    expression,
+                    language=self.language.ISO_639.upper(),
+                    stopwords=self.stop_words
+                )
             )
 
             # The confidence is 1 if the expression could be evaluated
@@ -109,7 +118,11 @@ class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
             extracted = mathparse.extract_expression(expression, language=self.language.ISO_639.upper())
 
             # Evaluate the expression
-            result = mathparse.parse(extracted, language=self.language.ISO_639.upper())
+            result = mathparse.parse(
+                extracted,
+                language=self.language.ISO_639.upper(),
+                stopwords=self.stop_words
+            )
 
             return f"{extracted} = {result}"
 
