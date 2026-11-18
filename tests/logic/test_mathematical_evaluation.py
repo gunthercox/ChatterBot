@@ -1,6 +1,76 @@
+from types import SimpleNamespace
+from unittest import TestCase
+
+from chatterbot import ChatBot, languages
 from tests.base_case import ChatBotTestCase
 from chatterbot.logic import MathematicalEvaluation
 from chatterbot.conversation import Statement
+from chatterbot.tagging import NoOpTagger
+
+
+class MathematicalEvaluationStopwordTests(TestCase):
+
+    def create_adapter(self, language, math_language=languages.ENG):
+        chatbot = ChatBot(
+            'Math Bot',
+            database_uri=None,
+            initialize=False,
+            tagger=NoOpTagger(language=language),
+            logic_adapters=[{
+                'import_path': 'chatterbot.logic.MathematicalEvaluation',
+                'language': math_language,
+            }],
+        )
+        self.addCleanup(chatbot.storage.close)
+        self.addCleanup(chatbot.storage.drop)
+        return chatbot.logic_adapters[0]
+
+    def test_english_stopwords(self):
+        adapter = self.create_adapter(languages.ENG)
+        response = adapter.process(Statement(text='2 plus the 2'))
+
+        self.assertEqual(response.text, '2 plus the 2 = 4')
+        self.assertEqual(response.confidence, 1)
+        self.assertEqual(adapter.execute_as_tool(expression='2 plus the 2'), '2 plus the 2 = 4')
+
+    def test_scale_words_are_not_removed(self):
+        adapter = self.create_adapter(languages.ENG)
+        expression = 'one hundred plus two thousand'
+        response = adapter.process(Statement(text=expression))
+
+        self.assertEqual(response.text, 'one hundred plus two thousand = 2100')
+        self.assertEqual(response.confidence, 1)
+        self.assertEqual(adapter.execute_as_tool(expression=expression), response.text)
+
+    def test_spanish_stopwords(self):
+        adapter = self.create_adapter(languages.SPA)
+        response = adapter.process(Statement(text='2 plus de 2'))
+
+        self.assertEqual(response.text, '2 plus de 2 = 4')
+        self.assertEqual(response.confidence, 1)
+        self.assertEqual(adapter.execute_as_tool(expression='2 plus de 2'), '2 plus de 2 = 4')
+
+    def test_german_stopwords_and_math_language(self):
+        adapter = self.create_adapter(languages.GER, math_language=languages.GER)
+        response = adapter.process(Statement(text='zwei plus die zwei'))
+
+        self.assertEqual(response.text, 'zwei plus die zwei = 4')
+        self.assertEqual(response.confidence, 1)
+        self.assertEqual(adapter.execute_as_tool(expression='zwei plus die zwei'), response.text)
+
+    def test_no_spacy_stopwords(self):
+        adapter = self.create_adapter(SimpleNamespace(ISO_639_1='xx'))
+        self.assertEqual(adapter.stop_words, set())
+
+        response = adapter.process(Statement(text='2 plus 2'))
+        self.assertEqual(response.text, '2 plus 2 = 4')
+        self.assertEqual(response.confidence, 1)
+        self.assertEqual(adapter.execute_as_tool(expression='2 plus 2'), '2 plus 2 = 4')
+        self.assertEqual(adapter.process(Statement(text='2 plus the 2')).confidence, 0)
+        self.assertEqual(
+            adapter.execute_as_tool(expression='2 plus the 2'),
+            "Error: Could not evaluate expression '2 plus the 2'",
+        )
 
 
 class MathematicalEvaluationTests(ChatBotTestCase):

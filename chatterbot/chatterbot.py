@@ -137,6 +137,9 @@ class ChatBot(object):
             self.logger.info(f'Storage adapter prefers search algorithm: {preferred_search_algorithm}')
             kwargs.setdefault('search_algorithm_name', preferred_search_algorithm)
 
+        # NOTE: 'xx' is the language code for a multi-language model
+        self.nlp = spacy.blank(self.tagger.language.ISO_639_1)
+
         for adapter in logic_adapters:
             utils.validate_adapter_class(adapter, LogicAdapter)
             logic_adapter = utils.initialize_class(adapter, self, **kwargs)
@@ -152,9 +155,6 @@ class ChatBot(object):
 
         for preprocessor in preprocessors:
             self.preprocessors.append(utils.import_module(preprocessor))
-
-        # NOTE: 'xx' is the language code for a multi-language model
-        self.nlp = spacy.blank(self.tagger.language.ISO_639_1)
 
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)
