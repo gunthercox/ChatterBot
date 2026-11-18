@@ -1,3 +1,4 @@
+from copy import copy
 from random import choice
 
 from chatterbot.adapters import Adapter
@@ -48,6 +49,19 @@ class LogicAdapter(Adapter):
         self.search_algorithm = self.chatbot.search_algorithms[
             self.search_algorithm_name
         ]
+
+        statement_comparison_function = kwargs.get('statement_comparison_function')
+
+        if statement_comparison_function is not None and hasattr(self.search_algorithm, 'compare_statements'):
+            if isinstance(statement_comparison_function, str):
+                statement_comparison_function = utils.import_module(
+                    statement_comparison_function
+                )
+
+            self.search_algorithm = copy(self.search_algorithm)
+            self.search_algorithm.compare_statements = statement_comparison_function(
+                language=self.chatbot.tagger.language
+            )
 
         self.maximum_similarity_threshold = kwargs.get(
             'maximum_similarity_threshold', 0.95
