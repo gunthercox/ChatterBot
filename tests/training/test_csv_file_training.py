@@ -1,4 +1,6 @@
+import csv
 import os
+import tempfile
 from tests.base_case import ChatBotTestCase
 from chatterbot.trainers import CsvFileTrainer
 
@@ -59,3 +61,34 @@ class CsvFileTrainerTestCase(ChatBotTestCase):
 
         self.assertEqual(len(results), 2)
         self.assertEqual(results[0].search_in_response_to, 'AUX:anyone PRON:there')
+
+    def test_train_with_explicit_responses(self):
+        for extension, delimiter in [('csv', ','), ('tsv', '\t')]:
+            for use_header in [True, False]:
+                with self.subTest(extension=extension, use_header=use_header):
+                    reply = f'Reply from {extension}, header={use_header}'
+                    prompt = 'Is anyone there?'
+                    field_map = {
+                        'text': 'reply' if use_header else 1,
+                        'in_response_to': 'prompt' if use_header else 0,
+                    }
+                    trainer = CsvFileTrainer(
+                        self.chatbot,
+                        show_training_progress=False,
+                        file_extension=extension,
+                        field_map=field_map,
+                    )
+
+                    with tempfile.TemporaryDirectory() as directory:
+                        filename = os.path.join(directory, f'conversation.{extension}')
+                        with open(filename, 'w', encoding='utf-8', newline='') as file:
+                            writer = csv.writer(file, delimiter=delimiter)
+                            if use_header:
+                                writer.writerow(['prompt', 'reply'])
+                            writer.writerow([prompt, reply])
+                        trainer.train(filename)
+
+                    results = list(self.chatbot.storage.filter(text=reply))
+                    self.assertEqual(len(results), 1)
+                    self.assertEqual(results[0].in_response_to, prompt)
+                    self.assertEqual(results[0].search_in_response_to, 'AUX:anyone PRON:there')
