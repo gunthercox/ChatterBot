@@ -20,7 +20,9 @@ class LogicAdapter(Adapter):
         The maximum amount of similarity between two statement that is required
         before the search process is halted. The search for a matching statement
         will continue until a statement with a greater than or equal similarity
-        is found or the search set is exhausted.
+        is found or the search set is exhausted. When a default response is
+        configured, the chatbot also uses this value as the minimum confidence
+        required to accept a response from this adapter.
         Defaults to 0.95
 
     :param response_selection_method:

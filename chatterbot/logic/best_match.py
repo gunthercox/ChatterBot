@@ -105,8 +105,17 @@ class BestMatch(LogicAdapter):
                     additional_response_selection_parameters
                 )
 
-            # Get all statements with text similar to the closest match
-            response_list = list(self.chatbot.storage.filter(**response_selection_parameters))
+            exact_response_selection_parameters = dict(response_selection_parameters)
+            exact_response_selection_parameters.pop('search_text', None)
+            exact_response_selection_parameters['in_response_to'] = (
+                closest_match.in_response_to or input_statement.text
+            )
+
+            response_list = list(self.chatbot.storage.filter(**exact_response_selection_parameters))
+
+            if not response_list:
+                # Fall back to indexed text to support normalized variations.
+                response_list = list(self.chatbot.storage.filter(**response_selection_parameters))
 
             if response_list:
                 response = self.select_response(
