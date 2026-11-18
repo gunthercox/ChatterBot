@@ -1,6 +1,7 @@
 from tests.base_case import ChatBotTestCase
 from chatterbot import ChatBot
-from chatterbot.logic import LogicAdapter, MathematicalEvaluation
+from chatterbot import comparisons, utils
+from chatterbot.logic import BestMatch, LogicAdapter, MathematicalEvaluation
 from chatterbot.conversation import Statement
 from chatterbot import languages
 
@@ -400,6 +401,38 @@ class TestAdapterC(LogicAdapter):
 
 
 class ChatBotLogicAdapterTestCase(ChatBotTestCase):
+
+    def test_adapter_comparison_functions_are_isolated(self):
+        self.chatbot.logic_adapters = [
+            utils.initialize_class(
+                {
+                    'import_path': 'chatterbot.logic.BestMatch',
+                    'statement_comparison_function': 'chatterbot.comparisons.JaccardSimilarity'
+                },
+                self.chatbot
+            ),
+            BestMatch(
+                self.chatbot,
+                statement_comparison_function=comparisons.LevenshteinDistance
+            )
+        ]
+
+        self.assertIsInstance(
+            self.chatbot.logic_adapters[0].search_algorithm.compare_statements,
+            comparisons.JaccardSimilarity
+        )
+        self.assertIsInstance(
+            self.chatbot.logic_adapters[1].search_algorithm.compare_statements,
+            comparisons.LevenshteinDistance
+        )
+        self.assertIsNot(
+            self.chatbot.logic_adapters[0].search_algorithm,
+            self.chatbot.logic_adapters[1].search_algorithm
+        )
+        self.assertIsInstance(
+            self.chatbot.search_algorithms['indexed_text_search'].compare_statements,
+            comparisons.LevenshteinDistance
+        )
 
     def test_sub_adapter_agreement(self):
         """
