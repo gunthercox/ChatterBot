@@ -279,6 +279,7 @@ class ChatBot(object):
         results = []
         result = None
         max_confidence = -1
+        has_confident_response = False
 
         for adapter in self.logic_adapters:
             if adapter.can_process(input_statement):
@@ -295,6 +296,9 @@ class ChatBot(object):
                 if output.confidence > max_confidence:
                     result = output
                     max_confidence = output.confidence
+
+                if output.confidence >= adapter.maximum_similarity_threshold:
+                    has_confident_response = True
             else:
                 self.logger.info(
                     'Not processing the statement using {}'.format(adapter.class_name)
@@ -336,6 +340,12 @@ class ChatBot(object):
             raise self.ChatBotException(
                 f'No logic adapter was able to process the statement "{input_statement.text}".'
             )
+
+        if not has_confident_response:
+            for adapter in self.logic_adapters:
+                if adapter.default_responses:
+                    result = adapter.get_default_response(input_statement)
+                    break
 
         response = Statement(
             text=result.text,
