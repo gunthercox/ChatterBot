@@ -87,6 +87,27 @@ class BestMatchTestCase(ChatBotTestCase):
         self.assertEqual(response.text, 'To eat pasta.')
         self.assertEqual(response.confidence, 1)
 
+    def test_exact_response_link_precedes_normalized_text_matches(self):
+        self.chatbot.storage.create(
+            text='Unrelated follow-up',
+            in_response_to='Different answer',
+            search_text=self.chatbot.tagger.get_text_index_string('Matched answer'),
+            search_in_response_to=self.chatbot.tagger.get_text_index_string('Different answer')
+        )
+        self._create_with_search_text(
+            text='Matched answer',
+            in_response_to='Known question'
+        )
+        self._create_with_search_text(
+            text='Exact follow-up',
+            in_response_to='Matched answer'
+        )
+
+        statement = self._add_search_text(text='Known question')
+        response = self.adapter.process(statement)
+
+        self.assertEqual(response.text, 'Matched answer')
+
     def test_excluded_words(self):
         """
         Test that the logic adapter cannot return a response containing

@@ -418,6 +418,20 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
         self.assertEqual(statement.confidence, 0.5)
         self.assertEqual(statement.text, 'Good morning.')
 
+    def test_default_response_when_no_adapter_meets_similarity_threshold(self):
+        self.chatbot.logic_adapters = [
+            TestAdapterA(
+                self.chatbot,
+                default_response='I do not understand.',
+                maximum_similarity_threshold=0.65
+            )
+        ]
+
+        response = self.chatbot.generate_response(Statement(text='Something unexpected'))
+
+        self.assertEqual(response.text, 'I do not understand.')
+        self.assertEqual(response.confidence, 0)
+
     def test_no_adapter_can_process_statement(self):
         """
         If no logic adapter can process the statement,
