@@ -68,7 +68,8 @@ Setting parameters
            {
                "import_path": "chatterbot.logic.BestMatch",
                "statement_comparison_function": chatterbot.comparisons.LevenshteinDistance,
-               "response_selection_method": chatterbot.response_selection.get_first_response
+               "response_selection_method": chatterbot.response_selection.get_first_response,
+               "maximum_similarity_threshold": 0.7
            }
        ]
    )
@@ -81,6 +82,13 @@ Setting parameters
     See the :ref:`statement-comparison` documentation for the list of functions included with ChatterBot.
 
     See the :ref:`response-selection` documentation for the list of response selection methods included with ChatterBot.
+
+``maximum_similarity_threshold`` controls when the search stops and, when a default response is configured, whether
+an adapter result is accepted instead of that default. If omitted, it uses the selected comparison function's
+``default_threshold``: 0.70 for Levenshtein and spaCy similarity, and 0.50 for Jaccard similarity. Custom comparison
+functions default to 0.95 and can define their own ``default_threshold`` attribute. Set
+``maximum_similarity_threshold`` explicitly to override these starting values. These defaults are not calibrated to
+a particular corpus; validate them with representative matches and non-matches for your application.
 
 
 Time Logic Adapter
