@@ -12,6 +12,9 @@ class Comparator:
     Base class establishing the interface that all comparators should implement.
     """
 
+    # Default maximum_similarity_threshold for search stopping and fallback acceptance.
+    default_threshold = 0.95
+
     def __init__(self, language):
 
         self.language = language
@@ -43,6 +46,9 @@ class LevenshteinDistance(Comparator):
     "where is the post office?" and "looking for the post office"
     based on the Levenshtein distance algorithm.
     """
+
+    # Default maximum_similarity_threshold for search stopping and fallback acceptance.
+    default_threshold = 0.70
 
     def compare_text(self, text_a: str, text_b: str) -> float:
         """
@@ -97,6 +103,9 @@ class SpacySimilarity(Comparator):
 
     """
 
+    # Default maximum_similarity_threshold for search stopping and fallback acceptance.
+    default_threshold = 0.70
+
     def __init__(self, language):
         super().__init__(language)
 
@@ -147,6 +156,9 @@ class JaccardSimilarity(Comparator):
 
     .. _`Jaccard similarity index`: https://en.wikipedia.org/wiki/Jaccard_index
     """
+
+    # Default maximum_similarity_threshold for search stopping and fallback acceptance.
+    default_threshold = 0.50
 
     def __init__(self, language):
         super().__init__(language)

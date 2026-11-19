@@ -21,10 +21,8 @@ class LogicAdapter(Adapter):
         The maximum amount of similarity between two statement that is required
         before the search process is halted. The search for a matching statement
         will continue until a statement with a greater than or equal similarity
-        is found or the search set is exhausted. When a default response is
-        configured, the chatbot also uses this value as the minimum confidence
-        required to accept a response from this adapter.
-        Defaults to 0.95
+        is found or the search set is exhausted. Defaults to the selected
+        comparison function's ``default_threshold``.
 
     :param response_selection_method:
           The a response selection method.
@@ -63,8 +61,11 @@ class LogicAdapter(Adapter):
                 language=self.chatbot.tagger.language
             )
 
+        comparison_function = getattr(self.search_algorithm, 'compare_statements', None)
+        default_threshold = getattr(comparison_function, 'default_threshold', 0.95)
+
         self.maximum_similarity_threshold = kwargs.get(
-            'maximum_similarity_threshold', 0.95
+            'maximum_similarity_threshold', default_threshold
         )
 
         if response_selection_method := kwargs.get('response_selection_method'):

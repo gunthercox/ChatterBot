@@ -433,6 +433,45 @@ class ChatBotLogicAdapterTestCase(ChatBotTestCase):
             self.chatbot.search_algorithms['indexed_text_search'].compare_statements,
             comparisons.LevenshteinDistance
         )
+        self.assertEqual(self.chatbot.logic_adapters[0].maximum_similarity_threshold, 0.5)
+        self.assertEqual(self.chatbot.logic_adapters[1].maximum_similarity_threshold, 0.7)
+
+        spacy_adapter = BestMatch(
+            self.chatbot,
+            statement_comparison_function=comparisons.SpacySimilarity
+        )
+        self.assertEqual(spacy_adapter.maximum_similarity_threshold, 0.7)
+
+        overridden_adapter = BestMatch(
+            self.chatbot,
+            statement_comparison_function=comparisons.LevenshteinDistance,
+            maximum_similarity_threshold=0.6
+        )
+        self.assertEqual(overridden_adapter.maximum_similarity_threshold, 0.6)
+
+    def test_single_word_query_uses_comparer_default_confidence(self):
+        question = 'What is a microprocessor?'
+        answer = 'An integrated circuit that implements the functions of a central processing unit of a computer.'
+        self._create_with_search_text(text=question)
+        self._create_with_search_text(text=answer, in_response_to=question)
+
+        for comparison_function in (
+            comparisons.JaccardSimilarity,
+            comparisons.LevenshteinDistance
+        ):
+            self.chatbot.logic_adapters = [
+                BestMatch(
+                    self.chatbot,
+                    statement_comparison_function=comparison_function,
+                    default_response='I do not understand.'
+                )
+            ]
+
+            response = self.chatbot.generate_response(
+                self._add_search_text(text='microprocessor')
+            )
+
+            self.assertEqual(response.text, answer)
 
     def test_sub_adapter_agreement(self):
         """
