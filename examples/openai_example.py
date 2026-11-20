@@ -21,7 +21,7 @@ bot = ChatBot(
     logic_adapters=[
         {
             'import_path': 'chatterbot.logic.OpenAILogicAdapter',
-            'model': 'gpt-4o-mini',
+            'model': 'gpt-5.4-mini',
             # Enable tools for math, time, and unit conversion
             'logic_adapters_as_tools': [
                 'chatterbot.logic.MathematicalEvaluation',

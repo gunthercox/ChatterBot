@@ -701,7 +701,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
         This adapter is experimental.
 
     Configuration:
-        model (str): OpenAI model name (e.g., 'gpt-4', 'gpt-3.5-turbo')
+        model (str): OpenAI model name (e.g., 'gpt-5.4-mini')
         host (str): Optional custom API endpoint
         logic_adapters_as_tools (list): Logic adapters to expose as tools
 
@@ -711,7 +711,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
     Example:
         {
             'import_path': 'chatterbot.logic.OpenAILogicAdapter',
-            'model': 'gpt-4o-mini',
+            'model': 'gpt-5.4-mini',
             'logic_adapters_as_tools': [
                 'chatterbot.logic.MathematicalEvaluation',
                 'chatterbot.logic.TimeLogicAdapter'
