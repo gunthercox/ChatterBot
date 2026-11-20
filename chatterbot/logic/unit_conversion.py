@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING as _TYPE_CHECKING
+
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot.exceptions import OptionalDependencyImportError
@@ -6,6 +8,9 @@ from chatterbot import parsing
 from chatterbot.logic.mcp_tools import MCPToolAdapter
 from mathparse import mathparse
 import re
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
 
 
 class UnitConversion(LogicAdapter, MCPToolAdapter):
@@ -22,7 +27,7 @@ class UnitConversion(LogicAdapter, MCPToolAdapter):
         The language is set to ``chatterbot.languages.ENG`` for English by default.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         super().__init__(chatbot, **kwargs)
         try:
             from pint import UnitRegistry

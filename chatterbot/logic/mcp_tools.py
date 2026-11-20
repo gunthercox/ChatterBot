@@ -5,7 +5,7 @@ This module provides a mixin class that allows logic adapters to be exposed
 as MCP-compatible tools to LLMs. Logic adapters that inherit from MCPToolAdapter
 can define tool schemas and be invoked by LLM adapters.
 """
-from typing import Any, Dict
+from typing import Any
 from abc import ABC, abstractmethod
 
 
@@ -18,7 +18,7 @@ class MCPToolAdapter(ABC):
 
     Example:
         class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
-            def get_tool_schema(self) -> Dict[str, Any]:
+            def get_tool_schema(self) -> dict[str, Any]:
                 return {
                     "name": "calculate",
                     "description": "Evaluate mathematical expressions",
@@ -41,7 +41,7 @@ class MCPToolAdapter(ABC):
     """
 
     @abstractmethod
-    def get_tool_schema(self) -> Dict[str, Any]:
+    def get_tool_schema(self) -> dict[str, Any]:
         """
         Return the tool schema for this logic adapter.
 
@@ -155,7 +155,7 @@ def is_tool_adapter(adapter) -> bool:
     )
 
 
-def convert_to_openai_tool_format(schema: Dict[str, Any]) -> Dict[str, Any]:
+def convert_to_openai_tool_format(schema: dict[str, Any]) -> dict[str, Any]:
     """
     Convert MCP tool schema to OpenAI function calling format.
 
@@ -185,7 +185,7 @@ def convert_to_openai_tool_format(schema: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
-def convert_to_ollama_tool_format(schema: Dict[str, Any]) -> Dict[str, Any]:
+def convert_to_ollama_tool_format(schema: dict[str, Any]) -> dict[str, Any]:
     """
     Convert MCP tool schema to Ollama function calling format.
 

@@ -1,4 +1,8 @@
+from collections.abc import Iterable as _Iterable
 import logging
+from typing import Any as _Any
+
+from chatterbot.conversation import Statement as _Statement
 
 
 class StorageAdapter(object):
@@ -7,7 +11,7 @@ class StorageAdapter(object):
     that all storage adapters should implement.
     """
 
-    def __init__(self, *args, **kwargs):
+    def __init__(self, *args: _Any, **kwargs: _Any) -> None:
         """
         Initialize common attributes shared by all storage adapters.
 
@@ -43,7 +47,7 @@ class StorageAdapter(object):
 
         return get_model_method()
 
-    def get_statement_object(self):
+    def get_statement_object(self) -> type[_Statement]:
         from chatterbot.conversation import Statement
 
         StatementModel = self.get_model('statement')
@@ -62,7 +66,7 @@ class StorageAdapter(object):
             'The `count` method is not implemented by this adapter.'
         )
 
-    def remove(self, statement_text):
+    def remove(self, statement_text: str) -> None:
         """
         Removes the statement that matches the input text.
         Removes any responses from statements where the response text matches
@@ -132,7 +136,7 @@ class StorageAdapter(object):
             'The `create` method is not implemented by this adapter.'
         )
 
-    def create_many(self, statements):
+    def create_many(self, statements: _Iterable[_Statement]) -> None:
         """
         Creates multiple statement entries.
         """
@@ -157,7 +161,7 @@ class StorageAdapter(object):
             'The `get_random` method is not implemented by this adapter.'
         )
 
-    def drop(self):
+    def drop(self) -> None:
         """
         Drop the database attached to a given adapter.
         """
@@ -165,7 +169,7 @@ class StorageAdapter(object):
             'The `drop` method is not implemented by this adapter.'
         )
 
-    def close(self):
+    def close(self) -> None:
         """
         Close any open connections or sessions.
         This method should be called when the storage adapter is no longer needed
@@ -212,7 +216,7 @@ class StorageAdapter(object):
         """
         return None
 
-    def get_preferred_search_algorithm(self):
+    def get_preferred_search_algorithm(self) -> str | None:
         """
         Returns the search algorithm name preferred by this storage adapter.
         Returns None by default, meaning the default search algorithm will be used.
@@ -256,7 +260,7 @@ class StorageAdapter(object):
 
     class EmptyDatabaseException(Exception):
 
-        def __init__(self, message=None):
+        def __init__(self, message: str | None = None) -> None:
             default = 'The database currently contains no entries. At least one entry is expected. You may need to train your chat bot to populate your database.'
             super().__init__(message or default)
 
