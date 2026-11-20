@@ -56,7 +56,7 @@ class ChatBotInitializationTestCase(ChatBotTestCase):
         )
         self.addCleanup(chatbot.storage.close)
 
-        self.assertIs(chatbot.tagger.language, languages.JPN)
+        self.assertIs(chatbot.tagger.language, languages.GER)
 
     def test_tagger_language_overrides_language(self):
         chatbot = ChatBot(
