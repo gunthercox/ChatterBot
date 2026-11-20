@@ -1,7 +1,12 @@
+from typing import TYPE_CHECKING as _TYPE_CHECKING
+
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot import languages
 from chatterbot.logic.mcp_tools import MCPToolAdapter
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
 
 
 class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
@@ -20,7 +25,7 @@ class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
           The language is set to ``chatterbot.languages.ENG`` for English by default.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         from mathparse import mathwords
 
         super().__init__(chatbot, **kwargs)

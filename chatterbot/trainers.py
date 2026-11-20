@@ -6,7 +6,6 @@ import json
 import shutil
 import secrets
 import tarfile
-from typing import List, Union
 from tqdm import tqdm
 from dateutil import parser as date_parser
 from chatterbot.chatterbot import ChatBot
@@ -109,7 +108,7 @@ class ListTrainer(Trainer):
     where the list represents a conversation.
     """
 
-    def train(self, conversation: List[str]):
+    def train(self, conversation: list[str]):
         """
         Train the chat bot based on the provided list of
         statements that represents a single conversation.
@@ -167,7 +166,7 @@ class ChatterBotCorpusTrainer(Trainer):
     ChatterBot dialog corpus.
     """
 
-    def train(self, *corpus_paths: Union[str, List[str]]):
+    def train(self, *corpus_paths: str | list[str]):
         from chatterbot.corpus import load_corpus, list_corpus_files
 
         data_file_paths = []
@@ -275,7 +274,7 @@ class GenericFileTrainer(Trainer):
             self.DEFAULT_STATEMENT_TO_HEADER_MAPPING
         )
 
-    def _get_file_list(self, data_path: str, limit: Union[int, None]):
+    def _get_file_list(self, data_path: str, limit: int | None):
         """
         Get a list of files to read from the data set.
         """
@@ -834,7 +833,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
         return True
 
-    def _get_file_list(self, data_path: str, limit: Union[int, None]):
+    def _get_file_list(self, data_path: str, limit: int | None):
         """
         Get a list of files to read from the data set.
         """
@@ -865,7 +864,7 @@ class UbuntuCorpusTrainer(CsvFileTrainer):
 
             yield file_path
 
-    def train(self, data_download_url: str, limit: Union[int, None] = None):
+    def train(self, data_download_url: str, limit: int | None = None):
         """
         :param str data_download_url: The URL to download the Ubuntu dialog corpus from.
         :param int limit: The maximum number of files to train from.

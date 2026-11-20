@@ -5,7 +5,7 @@ This module provides logic adapters that integrate Large Language Models.
 LLM adapters can use other logic adapters as tools via MCP (Model Context Protocol).
 """
 import json
-from typing import Any, Dict, List, Optional, Union
+from typing import TYPE_CHECKING as _TYPE_CHECKING, Any
 
 from chatterbot.logic.logic_adapter import LogicAdapter
 from chatterbot.conversation import Statement
@@ -15,6 +15,9 @@ from chatterbot.logic.mcp_tools import (
     convert_to_ollama_tool_format
 )
 from chatterbot import utils
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
 
 
 class LLMLogicAdapter(LogicAdapter):
@@ -52,7 +55,7 @@ class LLMLogicAdapter(LogicAdapter):
         }
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         super().__init__(chatbot, **kwargs)
 
         # Model configuration
@@ -99,7 +102,7 @@ class LLMLogicAdapter(LogicAdapter):
             # Detect tool capability once during initialization
             self._native_tools_supported = self._detect_tool_capability()
 
-    def _initialize_tool_adapters(self, adapter_configs: List[Union[str, Dict]], **kwargs):
+    def _initialize_tool_adapters(self, adapter_configs: list[str | dict[str, Any]], **kwargs):
         """
         Initialize logic adapters to be used as tools.
 
@@ -124,7 +127,7 @@ class LLMLogicAdapter(LogicAdapter):
                     f"Adapter {adapter.__class__.__name__} does not implement MCPToolAdapter, skipping"
                 )
 
-    def _get_conversation_context(self, input_statement: Statement) -> List[Dict[str, str]]:
+    def _get_conversation_context(self, input_statement: Statement) -> list[dict[str, str]]:
         """
         Retrieve previous conversation context from storage.
 
@@ -170,7 +173,7 @@ class LLMLogicAdapter(LogicAdapter):
 
         return messages
 
-    def _build_base_messages(self, input_statement: Statement, system_message: Optional[str] = None) -> List[Dict[str, str]]:
+    def _build_base_messages(self, input_statement: Statement, system_message: str | None = None) -> list[dict[str, str]]:
         """
         Build base message list for LLM API calls.
 
@@ -227,7 +230,7 @@ class LLMLogicAdapter(LogicAdapter):
         """
         return False
 
-    def _get_tools_for_llm(self) -> List[Dict[str, Any]]:
+    def _get_tools_for_llm(self) -> list[dict[str, Any]]:
         """
         Get tool definitions in the format expected by the LLM provider.
         Override in subclasses for provider-specific formats.
@@ -237,7 +240,7 @@ class LLMLogicAdapter(LogicAdapter):
         """
         raise NotImplementedError("Subclasses must implement _get_tools_for_llm()")
 
-    def _execute_tool(self, tool_name: str, parameters: Dict[str, Any]) -> str:
+    def _execute_tool(self, tool_name: str, parameters: dict[str, Any]) -> str:
         """
         Execute a tool by its name with the given parameters.
 
@@ -358,7 +361,7 @@ For all other questions, respond normally with plain text conversationally."""
         response.confidence = self._calculate_confidence(response_text)
         return response
 
-    def _call_llm(self, input_statement: Statement, system_message: Optional[str] = None) -> str:
+    def _call_llm(self, input_statement: Statement, system_message: str | None = None) -> str:
         """
         Make a direct LLM API call without tool support.
         Override in subclasses for provider-specific implementation.
@@ -465,7 +468,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
         }
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         # Set default host before parent init
         if 'host' not in kwargs:
             kwargs['host'] = 'http://localhost:11434'
@@ -546,7 +549,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
             )
             return False
 
-    def _get_tools_for_llm(self) -> List[Dict[str, Any]]:
+    def _get_tools_for_llm(self) -> list[dict[str, Any]]:
         """
         Get tool definitions in Ollama format.
 
@@ -560,7 +563,7 @@ class OllamaLogicAdapter(LLMLogicAdapter):
             tools.append(ollama_tool)
         return tools
 
-    def _call_llm(self, input_statement: Statement, system_message: Optional[str] = None) -> str:
+    def _call_llm(self, input_statement: Statement, system_message: str | None = None) -> str:
         """
         Call Ollama API without tool support.
 
@@ -719,7 +722,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
         }
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         super().__init__(chatbot, **kwargs)
 
         # Initialize OpenAI client
@@ -743,7 +746,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
         """
         return True
 
-    def _get_tools_for_llm(self) -> List[Dict[str, Any]]:
+    def _get_tools_for_llm(self) -> list[dict[str, Any]]:
         """
         Get tool definitions in OpenAI format.
 
@@ -757,7 +760,7 @@ class OpenAILogicAdapter(LLMLogicAdapter):
             tools.append(openai_tool)
         return tools
 
-    def _call_llm(self, input_statement: Statement, system_message: Optional[str] = None) -> str:
+    def _call_llm(self, input_statement: Statement, system_message: str | None = None) -> str:
         """
         Call OpenAI API without tool support.
 

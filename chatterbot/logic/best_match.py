@@ -1,6 +1,11 @@
+from typing import TYPE_CHECKING as _TYPE_CHECKING
+
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot import filters
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
 
 
 class BestMatch(LogicAdapter):
@@ -18,7 +23,7 @@ class BestMatch(LogicAdapter):
     :type excluded_words: list
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         super().__init__(chatbot, **kwargs)
 
         self.excluded_words = kwargs.get('excluded_words')

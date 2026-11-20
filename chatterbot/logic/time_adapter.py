@@ -1,3 +1,5 @@
+from typing import TYPE_CHECKING as _TYPE_CHECKING
+
 from datetime import datetime
 from chatterbot import languages
 from chatterbot.logic import LogicAdapter
@@ -5,6 +7,9 @@ from chatterbot.conversation import Statement
 from chatterbot.utils import get_model_for_language
 from chatterbot.logic.mcp_tools import MCPToolAdapter
 import spacy
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
 
 
 class TimeLogicAdapter(LogicAdapter, MCPToolAdapter):
@@ -19,7 +24,7 @@ class TimeLogicAdapter(LogicAdapter, MCPToolAdapter):
           The language for the spacy model. Defaults to English.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         super().__init__(chatbot, **kwargs)
 
         # TODO / FUTURE: Switch `positive` to `patterns` for more accurate naming

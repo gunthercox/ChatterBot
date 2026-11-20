@@ -1,3 +1,9 @@
+from typing import TYPE_CHECKING as _TYPE_CHECKING, Any as _Any
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
+
+
 class Adapter(object):
     """
     A superclass for all adapter classes.
@@ -5,7 +11,7 @@ class Adapter(object):
     :param chatbot: A ChatBot instance.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
         self.chatbot = chatbot
 
     class AdapterMethodNotImplementedError(NotImplementedError):
@@ -15,7 +21,10 @@ class Adapter(object):
         method in a subclass.
         """
 
-        def __init__(self, message='This method must be overridden in a subclass method.'):
+        def __init__(
+            self,
+            message: str = 'This method must be overridden in a subclass method.'
+        ) -> None:
             """
             Set the message for the exception.
             """
