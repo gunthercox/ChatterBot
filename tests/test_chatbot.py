@@ -50,7 +50,7 @@ class ChatBotInitializationTestCase(ChatBotTestCase):
     def test_language_is_used_as_tagger_language_default(self):
         chatbot = ChatBot(
             'Test Bot',
-            language=languages.JPN,
+            language=languages.GER,
             tagger=NoOpTagger,
             database_uri=None
         )
@@ -61,7 +61,7 @@ class ChatBotInitializationTestCase(ChatBotTestCase):
     def test_tagger_language_overrides_language(self):
         chatbot = ChatBot(
             'Test Bot',
-            language=languages.JPN,
+            language=languages.GER,
             tagger_language=languages.ENG,
             tagger=NoOpTagger,
             database_uri=None
