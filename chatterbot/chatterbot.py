@@ -31,8 +31,12 @@ class ChatBot(object):
     :type tagger: object
 
     :param tagger_language: The language to use for the tagger.
-                            Defaults to :class:`~chatterbot.languages.ENG`.
+                            Defaults to ``language`` if provided, otherwise
+                            :class:`~chatterbot.languages.ENG`.
     :type tagger_language: object
+
+    :param language: The language to use when no ``tagger_language`` is provided.
+    :type language: object
 
     :param preprocessors: A list of preprocessor functions to use for the chat bot.
     :type preprocessors: list
@@ -81,7 +85,10 @@ class ChatBot(object):
 
         self.storage = utils.initialize_class(storage_adapter, **kwargs)
 
-        tagger_language = kwargs.get('tagger_language', languages.ENG)
+        tagger_language = kwargs.get(
+            'tagger_language',
+            kwargs.get('language', languages.ENG)
+        )
 
         # Check if storage adapter has a preferred tagger
         PreferredTagger = self.storage.get_preferred_tagger()

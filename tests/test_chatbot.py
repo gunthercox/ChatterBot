@@ -4,6 +4,7 @@ from chatterbot import comparisons, utils
 from chatterbot.logic import BestMatch, LogicAdapter, MathematicalEvaluation
 from chatterbot.conversation import Statement
 from chatterbot import languages
+from chatterbot.tagging import NoOpTagger
 
 
 class ChatBotInitializationTestCase(ChatBotTestCase):
@@ -45,6 +46,29 @@ class ChatBotInitializationTestCase(ChatBotTestCase):
                 'spacy download nb_core_news_sm',
                 str(exc.exception),
             )
+
+    def test_language_is_used_as_tagger_language_default(self):
+        chatbot = ChatBot(
+            'Test Bot',
+            language=languages.JPN,
+            tagger=NoOpTagger,
+            database_uri=None
+        )
+        self.addCleanup(chatbot.storage.close)
+
+        self.assertIs(chatbot.tagger.language, languages.JPN)
+
+    def test_tagger_language_overrides_language(self):
+        chatbot = ChatBot(
+            'Test Bot',
+            language=languages.JPN,
+            tagger_language=languages.ENG,
+            tagger=NoOpTagger,
+            database_uri=None
+        )
+        self.addCleanup(chatbot.storage.close)
+
+        self.assertIs(chatbot.tagger.language, languages.ENG)
 
 
 class ChatterBotResponseTestCase(ChatBotTestCase):
