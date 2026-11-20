@@ -1,3 +1,12 @@
+from collections.abc import Iterator as _Iterator
+from typing import TYPE_CHECKING as _TYPE_CHECKING, Any as _Any
+
+from chatterbot.conversation import Statement as _Statement
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
+
+
 class IndexedTextSearch:
     """
     :param statement_comparison_function: A comparison class.
@@ -10,7 +19,7 @@ class IndexedTextSearch:
 
     name = 'indexed_text_search'
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
         from chatterbot.comparisons import LevenshteinDistance
 
         self.chatbot = chatbot
@@ -28,7 +37,11 @@ class IndexedTextSearch:
             'search_page_size', 1000
         )
 
-    def search(self, input_statement, **additional_parameters):
+    def search(
+        self,
+        input_statement: _Statement,
+        **additional_parameters: _Any
+    ) -> _Iterator[_Any]:
         """
         Search for close matches to the input. Confidence scores for
         subsequent results will order of increasing value.
@@ -91,7 +104,7 @@ class TextSearch:
 
     name = 'text_search'
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
         from chatterbot.comparisons import LevenshteinDistance
 
         self.chatbot = chatbot
@@ -109,7 +122,11 @@ class TextSearch:
             'search_page_size', 1000
         )
 
-    def search(self, input_statement, **additional_parameters):
+    def search(
+        self,
+        input_statement: _Statement,
+        **additional_parameters: _Any
+    ) -> _Iterator[_Any]:
         """
         Search for close matches to the input. Confidence scores for
         subsequent results will order of increasing value.
@@ -193,14 +210,18 @@ class SemanticVectorSearch:
 
     name = 'semantic_vector_search'
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
         self.chatbot = chatbot
 
         self.search_page_size = kwargs.get(
             'search_page_size', 1000
         )
 
-    def search(self, input_statement, **additional_parameters):
+    def search(
+        self,
+        input_statement: _Statement,
+        **additional_parameters: _Any
+    ) -> _Iterator[_Any]:
         """
         Search for semantically similar statements using vector similarity.
         Confidence scores are calculated by the storage adapter based on

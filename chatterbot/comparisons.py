@@ -4,6 +4,7 @@ designed to compare one statement to another.
 """
 from chatterbot.utils import get_model_for_language
 from difflib import SequenceMatcher
+from typing import Any as _Any
 import spacy
 
 
@@ -15,11 +16,11 @@ class Comparator:
     # Default maximum_similarity_threshold for search stopping and fallback acceptance.
     default_threshold = 0.95
 
-    def __init__(self, language):
+    def __init__(self, language: _Any) -> None:
 
         self.language = language
 
-    def __call__(self, statement_a, statement_b):
+    def __call__(self, statement_a: _Any, statement_b: _Any) -> float:
         return self.compare(statement_a, statement_b)
 
     def compare_text(self, text_a: str, text_b: str) -> float:
@@ -30,7 +31,7 @@ class Comparator:
         """
         return 0
 
-    def compare(self, statement_a, statement_b) -> float:
+    def compare(self, statement_a: _Any, statement_b: _Any) -> float:
         """
         :return: The percent of similarity between the statements based on the implemented algorithm.
         """
@@ -106,7 +107,7 @@ class SpacySimilarity(Comparator):
     # Default maximum_similarity_threshold for search stopping and fallback acceptance.
     default_threshold = 0.70
 
-    def __init__(self, language):
+    def __init__(self, language: _Any) -> None:
         super().__init__(language)
 
         model = get_model_for_language(language)
@@ -160,7 +161,7 @@ class JaccardSimilarity(Comparator):
     # Default maximum_similarity_threshold for search stopping and fallback acceptance.
     default_threshold = 0.50
 
-    def __init__(self, language):
+    def __init__(self, language: _Any) -> None:
         super().__init__(language)
 
         model = get_model_for_language(language)

@@ -1,8 +1,13 @@
+from typing import TYPE_CHECKING as _TYPE_CHECKING
+
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
 from chatterbot import languages
 from chatterbot.utils import get_model_for_language
 import spacy
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
 
 
 class SpecificResponseAdapter(LogicAdapter):
@@ -17,7 +22,7 @@ class SpecificResponseAdapter(LogicAdapter):
           If a function is provided, it should return a string.
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs):
         super().__init__(chatbot, **kwargs)
 
         try:

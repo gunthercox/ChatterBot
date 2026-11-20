@@ -1,11 +1,15 @@
 from copy import copy
 from random import choice
+from typing import TYPE_CHECKING as _TYPE_CHECKING, Any as _Any
 
 from chatterbot.adapters import Adapter
 from chatterbot.storage import StorageAdapter
 from chatterbot.search import IndexedTextSearch
 from chatterbot.conversation import Statement
 from chatterbot import utils
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
 
 
 class LogicAdapter(Adapter):
@@ -35,7 +39,7 @@ class LogicAdapter(Adapter):
     :type default_response: str or list or tuple
     """
 
-    def __init__(self, chatbot, **kwargs):
+    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
         super().__init__(chatbot, **kwargs)
         from chatterbot.response_selection import get_first_response
 
@@ -94,7 +98,7 @@ class LogicAdapter(Adapter):
             Statement(text=default) for default in default_responses
         ]
 
-    def can_process(self, statement) -> bool:
+    def can_process(self, statement: Statement) -> bool:
         """
         A preliminary check that is called to determine if a
         logic adapter can process a given statement. By default,
@@ -103,7 +107,11 @@ class LogicAdapter(Adapter):
         """
         return True
 
-    def process(self, statement: Statement, additional_response_selection_parameters: dict = None) -> Statement:
+    def process(
+        self,
+        statement: Statement,
+        additional_response_selection_parameters: dict[str, _Any] | None = None
+    ) -> Statement:
         """
         Override this method and implement your logic for selecting a response to an input statement.
 

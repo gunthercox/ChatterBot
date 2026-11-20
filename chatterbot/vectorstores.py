@@ -3,7 +3,6 @@ Redis vector store.
 """
 from __future__ import annotations
 
-from typing import List
 
 from langchain_core.documents import Document
 from redisvl.redis.utils import convert_bytes
@@ -22,7 +21,7 @@ class RedisVectorStore(LangChainRedisVectorStore):
         k=4,
         filter=None,
         sort_by=None,
-    ) -> List[Document]:
+    ) -> list[Document]:
         """
         Return docs based on the provided query.
 

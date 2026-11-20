@@ -1,4 +1,5 @@
 from datetime import datetime, timezone
+from typing import Any as _Any
 from dateutil import parser as date_parser
 
 
@@ -34,13 +35,13 @@ class StatementMixin(object):
         """
         return self.tags
 
-    def add_tags(self, *tags):
+    def add_tags(self, *tags: str) -> None:
         """
         Add a list of strings to the statement as tags.
         """
         self.tags.extend(tags)
 
-    def serialize(self) -> dict:
+    def serialize(self) -> dict[str, _Any]:
         """
         :returns: A dictionary representation of the statement object.
         """
@@ -79,7 +80,12 @@ class Statement(StatementMixin):
         'storage',
     )
 
-    def __init__(self, text: str, in_response_to=None, **kwargs):
+    def __init__(
+        self,
+        text: str,
+        in_response_to: str | None = None,
+        **kwargs: _Any
+    ) -> None:
 
         self.id = kwargs.get('id')
         self.text = str(text)
@@ -105,13 +111,13 @@ class Statement(StatementMixin):
 
         self.storage = None
 
-    def __str__(self):
+    def __str__(self) -> str:
         return self.text
 
-    def __repr__(self):
+    def __repr__(self) -> str:
         return '<Statement text:%s>' % (self.text)
 
-    def save(self):
+    def save(self) -> None:
         """
         Save the statement in the database.
         """
