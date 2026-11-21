@@ -121,6 +121,34 @@ class SQLStorageAdapterTests(SQLStorageAdapterTestCase):
 
         self.assertEqual(list(results), [])
 
+    def test_remove_missing_text_leaves_other_statements(self):
+        statement = self.adapter.create(text='Keep this statement')
+
+        self.adapter.remove('Missing statement')
+
+        remaining, = self.adapter.filter()
+        self.assertEqual(remaining.id, statement.id)
+
+    def test_remove_all_matching_statements_and_tag_associations(self):
+        from chatterbot.ext.sqlalchemy_app.models import tag_association_table
+
+        self.adapter.create(text='Hello', in_response_to='Question one', tags=['shared', 'first'])
+        self.adapter.create(text='Hello', in_response_to='Question two', tags=['shared', 'second'])
+        remaining = self.adapter.create(text='Keep this statement', tags=['shared'])
+
+        self.adapter.remove('Hello')
+
+        self.assertEqual(list(self.adapter.filter(text='Hello')), [])
+        self.assertEqual(self.adapter.count(), 1)
+        stored, = self.adapter.filter(id=remaining.id)
+        self.assertEqual(stored.get_tags(), ['shared'])
+        session = self.adapter.Session()
+        try:
+            associations = session.execute(tag_association_table.select()).all()
+            self.assertEqual([row.statement_id for row in associations], [remaining.id])
+        finally:
+            session.close()
+
 
 class SQLStorageAdapterFilterTests(SQLStorageAdapterTestCase):
 
