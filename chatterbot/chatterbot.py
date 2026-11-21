@@ -1,6 +1,6 @@
 import logging
 import uuid
-from typing import Union
+from typing import Any as _Any
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import TextSearch, IndexedTextSearch, SemanticVectorSearch
@@ -56,7 +56,7 @@ class ChatBot(object):
                    (Added in version 1.2.7)
     """
 
-    def __init__(self, name, stream=False, **kwargs):
+    def __init__(self, name: str, stream: bool = False, **kwargs: _Any) -> None:
         self.name = name
 
         self.stream = stream
@@ -166,7 +166,11 @@ class ChatBot(object):
         # Allow the bot to save input it receives so that it can learn
         self.read_only = kwargs.get('read_only', False)
 
-    def get_response(self, statement: Union[Statement, str, dict] = None, **kwargs) -> Statement:
+    def get_response(
+        self,
+        statement: Statement | str | dict[str, _Any] | None = None,
+        **kwargs: _Any
+    ) -> Statement:
         """
         Return the bot's response based on the input.
 
@@ -275,7 +279,11 @@ class ChatBot(object):
 
         return response
 
-    def generate_response(self, input_statement, additional_response_selection_parameters=None):
+    def generate_response(
+        self,
+        input_statement: Statement,
+        additional_response_selection_parameters: dict[str, _Any] | None = None
+    ) -> Statement:
         """
         Return a response based on a given input statement.
 
@@ -367,7 +375,11 @@ class ChatBot(object):
 
         return response
 
-    def learn_response(self, statement, previous_statement=None):
+    def learn_response(
+        self,
+        statement: Statement,
+        previous_statement: Statement | str | None = None
+    ):
         """
         Learn that the statement provided is a valid response.
         """

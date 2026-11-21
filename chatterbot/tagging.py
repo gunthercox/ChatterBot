@@ -1,4 +1,5 @@
-from typing import List, Union, Tuple
+from collections.abc import Iterator as _Iterator
+from typing import Any as _Any
 from chatterbot import languages
 from chatterbot.utils import get_model_for_language
 import spacy
@@ -10,10 +11,10 @@ class NoOpTagger(object):
     Used by storage adapters that don't rely on indexed search_text fields.
     """
 
-    def __init__(self, language=None):
+    def __init__(self, language: _Any = None) -> None:
         self.language = language or languages.ENG
 
-    def needs_text_indexing(self):
+    def needs_text_indexing(self) -> bool:
         """
         Indicates whether this tagger performs text indexing/transformation.
         Returns False since NoOpTagger passes text through unchanged.
@@ -22,7 +23,7 @@ class NoOpTagger(object):
         """
         return False
 
-    def get_text_index_string(self, text: Union[str, List[str]]):
+    def get_text_index_string(self, text: str | list[str]) -> str | list[str]:
         """
         Return the text unchanged (no indexing applied).
         """
@@ -30,10 +31,10 @@ class NoOpTagger(object):
 
     def as_nlp_pipeline(
         self,
-        texts: Union[List[str], Tuple[str, dict]],
+        texts: list[str] | list[tuple[str, dict[str, _Any]]],
         batch_size: int = 1000,
         n_process: int = 1
-    ):
+    ) -> _Iterator[str | tuple[str, dict[str, _Any]]]:
         """
         Returns texts unchanged without NLP processing.
         Maintains API compatibility with other taggers.
@@ -59,7 +60,7 @@ class LowercaseTagger(object):
     Returns the text in lowercase.
     """
 
-    def __init__(self, language=None):
+    def __init__(self, language: _Any = None) -> None:
         from chatterbot.components import chatterbot_lowercase_indexer  # noqa
 
         self.language = language or languages.ENG
@@ -71,7 +72,7 @@ class LowercaseTagger(object):
             'chatterbot_lowercase_indexer', name='chatterbot_lowercase_indexer', last=True
         )
 
-    def needs_text_indexing(self):
+    def needs_text_indexing(self) -> bool:
         """
         Indicates whether this tagger performs text indexing/transformation.
         Returns True since LowercaseTagger transforms text to lowercase.
@@ -80,7 +81,7 @@ class LowercaseTagger(object):
         """
         return True
 
-    def get_text_index_string(self, text: Union[str, List[str]]):
+    def get_text_index_string(self, text: str | list[str]) -> str | list[str]:
         if isinstance(text, list):
             documents = self.nlp.pipe(text, batch_size=1000, n_process=1)
             return [document._.search_index for document in documents]
@@ -90,10 +91,10 @@ class LowercaseTagger(object):
 
     def as_nlp_pipeline(
         self,
-        texts: Union[List[str], Tuple[str, dict]],
+        texts: list[str] | list[tuple[str, dict[str, _Any]]],
         batch_size: int = 1000,
         n_process: int = 1
-    ):
+    ) -> _Iterator[spacy.tokens.Doc | tuple[spacy.tokens.Doc, dict[str, _Any]]]:
         """
         Process texts through the spaCy NLP pipeline with optimized batching.
 
@@ -118,7 +119,7 @@ class LowercaseTagger(object):
 
 class PosLemmaTagger(object):
 
-    def __init__(self, language=None):
+    def __init__(self, language: _Any = None) -> None:
         from chatterbot.components import chatterbot_bigram_indexer  # noqa
 
         self.language = language or languages.ENG
@@ -132,7 +133,7 @@ class PosLemmaTagger(object):
             'chatterbot_bigram_indexer', name='chatterbot_bigram_indexer', last=True
         )
 
-    def needs_text_indexing(self):
+    def needs_text_indexing(self) -> bool:
         """
         Indicates whether this tagger performs text indexing/transformation.
         Returns True since PosLemmaTagger creates POS-lemma bigram indexes.
@@ -141,7 +142,7 @@ class PosLemmaTagger(object):
         """
         return True
 
-    def get_text_index_string(self, text: Union[str, List[str]]) -> str:
+    def get_text_index_string(self, text: str | list[str]) -> str | list[str]:
         """
         Return a string of text containing part-of-speech, lemma pairs.
         """
@@ -154,10 +155,10 @@ class PosLemmaTagger(object):
 
     def as_nlp_pipeline(
         self,
-        texts: Union[List[str], Tuple[str, dict]],
+        texts: list[str] | list[tuple[str, dict[str, _Any]]],
         batch_size: int = 1000,
         n_process: int = 1
-    ) -> spacy.tokens.Doc:
+    ) -> _Iterator[spacy.tokens.Doc | tuple[spacy.tokens.Doc, dict[str, _Any]]]:
         """
         Accepts a single string or a list of strings, or a list of tuples
         where the first element is the text and the second element is a

@@ -1,4 +1,16 @@
-def get_recent_repeated_responses(chatbot, conversation, sample=10, threshold=3, quantity=3) -> list:
+from typing import TYPE_CHECKING as _TYPE_CHECKING
+
+if _TYPE_CHECKING:
+    from chatterbot.chatterbot import ChatBot
+
+
+def get_recent_repeated_responses(
+    chatbot: 'ChatBot',
+    conversation: str,
+    sample: int = 10,
+    threshold: int = 3,
+    quantity: int = 3
+) -> list[str]:
     """
     A filter that eliminates possibly repetitive responses to prevent
     a chat bot from repeating statements that it has recently said.
