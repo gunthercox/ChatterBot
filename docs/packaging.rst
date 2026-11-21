@@ -103,5 +103,5 @@ Testing your code
        """
 
        def test_irony(self):
-          # TODO: Implement test logic
+          # ... (test logic goes here)
           self.assertTrue(response.irony)
