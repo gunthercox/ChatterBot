@@ -74,7 +74,7 @@ test = [
     "sphinx>=5.3,<9.2",
     "sphinx-sitemap>=2.6.0",
     "huggingface_hub",
-    "django>=5.2.15,<6.0"
+    "django>=5.2.16,<6.0"
 ]
 dev = [
     "pint>=0.8.1",
