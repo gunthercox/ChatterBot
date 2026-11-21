@@ -160,7 +160,7 @@ class MathematicalEvaluationTests(ChatBotTestCase):
     def test_negative_decimal_multiplication(self):
         statement = Statement(text='What is -100.5 * 20?')
         response = self.adapter.process(statement)
-        self.assertEqual(response.text, '-100.5 * 20 = -2010.0')
+        self.assertEqual(response.text, '-100.5 * 20 = -2010')
         self.assertEqual(response.confidence, 1)
 
     def test_pi_constant(self):
