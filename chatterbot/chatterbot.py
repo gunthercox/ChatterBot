@@ -383,6 +383,8 @@ class ChatBot(object):
 
         if not isinstance(previous_statement, (str, type(None), )):
             statement.in_response_to = previous_statement.text
+            if isinstance(previous_statement, Statement):
+                statement.search_in_response_to = previous_statement.search_text
         elif isinstance(previous_statement, str):
             statement.in_response_to = previous_statement
 

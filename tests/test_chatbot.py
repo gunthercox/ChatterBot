@@ -329,12 +329,17 @@ class ChatterBotResponseTestCase(ChatBotTestCase):
         self.assertEqual(response.confidence, 0)
 
     def test_learn_response(self):
-        previous_response = Statement(text='Define Hemoglobin.')
+        previous_response = Statement(
+            text='Define Hemoglobin.',
+            search_text='PRECOMPUTED_INDEX'
+        )
         statement = Statement(text='Hemoglobin is an oxygen-transport metalloprotein.')
         self.chatbot.learn_response(statement, previous_response)
         results = list(self.chatbot.storage.filter(text=statement.text))
 
         self.assertIsLength(results, 1)
+        self.assertEqual(results[0].in_response_to, previous_response.text)
+        self.assertEqual(results[0].search_in_response_to, previous_response.search_text)
 
     def test_get_response_does_not_add_new_statement(self):
         """
