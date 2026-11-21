@@ -368,7 +368,7 @@ class GenericFileTrainer(Trainer):
                         context = {
                             key: row[value]
                             for key, value in self.field_map.items()
-                            if key != text_row
+                            if key != 'text'
                         }
                         contexts.append(context)
 
@@ -424,14 +424,15 @@ class GenericFileTrainer(Trainer):
                         n_process=1
                     )
 
-                    for document in response_documents:
+                    # Use the original response text as the metadata lookup key.
+                    for response_text, document in zip(response_texts, response_documents):
                         # Handle both spaCy Doc objects and plain strings from NoOpTagger
                         if isinstance(document, str):
                             # NoOpTagger returns plain strings
-                            response_to_search_index_mapping[document] = self.chatbot.tagger.get_text_index_string(document)
+                            response_to_search_index_mapping[response_text] = self.chatbot.tagger.get_text_index_string(document)
                         else:
                             # Regular taggers return spaCy Doc objects
-                            response_to_search_index_mapping[document.text] = document._.search_index
+                            response_to_search_index_mapping[response_text] = document._.search_index
 
             # Create statements from processed documents
             for document, context in tqdm(documents_list, desc='Creating statements', disable=self.disable_progress, leave=False):
@@ -444,7 +445,7 @@ class GenericFileTrainer(Trainer):
                     # Regular taggers return spaCy Doc objects
                     statement_text = document.text
                     statement_search_text = document._.search_index
-                
+
                 statement = Statement(
                     text=statement_text,
                     conversation=context.get('conversation', 'training'),
@@ -460,9 +461,9 @@ class GenericFileTrainer(Trainer):
                 # Use the in_response_to attribute for the previous statement if
                 # one is defined, otherwise use the last statement which was created
                 if 'in_response_to' in self.field_map.keys():
-                    statement.in_response_to = context.get(self.field_map['in_response_to'], None)
+                    statement.in_response_to = context.get('in_response_to')
                     statement.search_in_response_to = response_to_search_index_mapping.get(
-                        context.get(self.field_map['in_response_to'], None), ''
+                        statement.in_response_to, ''
                     )
                 else:
                     # List-type data such as CSVs with no response specified can use
