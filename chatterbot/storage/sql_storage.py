@@ -154,12 +154,19 @@ class SQLStorageAdapter(StorageAdapter):
         Removes any responses from statements where the response text matches
         the input text.
         """
+        from chatterbot.ext.sqlalchemy_app.models import tag_association_table
+
         Statement = self.get_model('statement')
         session = self.Session()
         try:
             query = session.query(Statement).filter_by(text=statement_text)
-            for record in query:
-                session.delete(record)
+            matching_ids = query.with_entities(Statement.id)
+            session.execute(
+                tag_association_table.delete().where(
+                    tag_association_table.c.statement_id.in_(matching_ids)
+                )
+            )
+            query.delete(synchronize_session=False)
             session.commit()
         finally:
             session.close()
