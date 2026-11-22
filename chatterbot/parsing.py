@@ -606,7 +606,12 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
         if time == 'this':
             return datetime(relative_date.year, relative_date.month, relative_date.day)
         elif time == 'last' or time == 'previous':
-            return datetime(relative_date.year, relative_date.month - 1, relative_date.day)
+            # Roll back into December of the previous year when needed and
+            # keep the day within the range of the target month
+            year = relative_date.year if relative_date.month > 1 else relative_date.year - 1
+            month = relative_date.month - 1 if relative_date.month > 1 else 12
+            day = min(relative_date.day, calendar.monthrange(year, month)[1])
+            return datetime(year, month, day)
         elif time == 'next' or time == 'following':
             if relative_date.month + ord >= 12:
                 month = relative_date.month - 1 + ord
@@ -633,8 +638,7 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
         elif time == 'next' or time == 'following':
             return relative_date + timedelta(weeks=ord)
         elif time == 'end of the':
-            day_of_week = base_date.weekday()
-            return day_of_week + timedelta(days=6 - relative_date.weekday())
+            return relative_date + timedelta(days=6 - relative_date.weekday())
     elif dow in day_variations:
         if time == 'this':
             return relative_date

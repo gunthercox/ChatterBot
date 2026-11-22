@@ -462,6 +462,44 @@ class DateTimeParsingTestCases(TestCase):
         self.assertEqual(parser[0][1].month, 6)
         self.assertEqual(parser[0][1].day, 30)
 
+    def test_last_month_from_january(self):
+        """
+        Test 'last month' from January rolls back to December of the previous year
+        """
+        base_date = datetime(2025, 1, 15, 12, 0, 0)
+        input_text = 'last month'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertEqual(parser[0][1].year, 2024)
+        self.assertEqual(parser[0][1].month, 12)
+        self.assertEqual(parser[0][1].day, 15)
+
+    def test_last_month_from_march_31st(self):
+        """
+        Test 'last month' from March 31 handles February correctly
+        """
+        base_date = datetime(2025, 3, 31, 12, 0, 0)
+        input_text = 'last month'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        # February only has 28 days in 2025, should clamp to last valid day
+        self.assertEqual(parser[0][1].year, 2025)
+        self.assertEqual(parser[0][1].month, 2)
+        self.assertEqual(parser[0][1].day, 28)
+
+    def test_end_of_the_week(self):
+        """
+        Test 'end of the week' returns the Sunday of the current week
+        """
+        base_date = datetime(2025, 6, 11, 12, 0, 0)  # Wednesday
+        input_text = 'end of the week'
+        parser = parsing.datetime_parsing(input_text, base_date)
+
+        self.assertEqual(len(parser), 1)
+        self.assertEqual(parser[0][1], datetime(2025, 6, 15))
+
     def test_multiple_datetime_expressions(self):
         """
         Test parsing text with multiple date/time references
