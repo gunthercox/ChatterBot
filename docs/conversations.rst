@@ -29,6 +29,40 @@ web browsers to have separate conversations with the chat bot.
    :dedent: 4
 
 
+Tracking message authors
+------------------------
+
+Use a statement's ``persona`` to record who sent it, and ``conversation`` to
+identify the chat session. These are separate from the statement's ``text``,
+so an author's name does not need to become part of the text used for matching.
+
+For example, in a Discord message handler, pass the author's stable user ID
+and the channel ID from the message supplied by Discord:
+
+.. code-block:: python
+
+   response = chatbot.get_response(
+       message.content,
+       persona=f"user:{message.author.id}",
+       conversation=f"channel:{message.channel.id}",
+   )
+
+This groups messages from a channel into one conversation while retaining
+each sender's identity, even if their display name changes. Use the same
+conversation value for participants who share that conversation. ChatterBot
+assigns generated replies the persona ``bot:`` followed by the bot's name;
+the reply is not attributed to the incoming message's author.
+
+When conversational learning is enabled (``read_only=False``), the saved input
+statement retains its ``persona``. For example, with the SQL storage adapter,
+you can retrieve a sender's statements using
+``chatbot.storage.filter(persona="user:123", conversation="channel:456")``.
+
+These fields record metadata. They do not authenticate users or restrict
+which learned statements can be selected as responses. Obtain the author ID
+from your chat platform and enforce access control in your application.
+
+
 ..  _conversation_statements:
 
 Statements
