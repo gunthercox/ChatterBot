@@ -132,3 +132,22 @@ class UnitConversionTests(ChatBotTestCase):
         response_statement = self.adapter.process(statement)
         self.assertEqual(response_statement.confidence, 1)
         self.assertEqual(float(response_statement.text), 1000.0)
+
+    def test_unit_symbols_keep_their_case(self):
+        """
+        "MB" is megabyte and "mb" is millibarn, "Mm" is megameter
+        and "mm" is millimeter, so the case typed must be respected.
+        """
+        cases = [
+            ('How many kB are in 5 MB?', 5000.0),
+            ('5 Mm to m', 5000000.0),
+            ('5 ML to L', 5000000.0),
+            ('5 Ms to s', 5000000.0),
+            ('5 mL to L', 0.005),
+            ('1 Hz to kHz', 0.001),
+        ]
+        for text, expected_value in cases:
+            with self.subTest(text=text):
+                response_statement = self.adapter.process(Statement(text=text))
+                self.assertEqual(response_statement.confidence, 1)
+                self.assertAlmostEqual(float(response_statement.text), expected_value)
