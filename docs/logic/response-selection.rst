@@ -55,6 +55,54 @@ is shown below.
        response_selection_method=get_most_frequent_response
    )
 
+Getting repeatable answers
+==========================
+
+The same input can have several learned responses. Random response selection,
+learning during a conversation, and filtering recent repeated responses can
+each change the answer. Choosing the first response alone does not freeze
+the other two behaviors.
+
+For a ``BestMatch`` bot using a trained SQL database, disable conversational
+learning and select the first candidate:
+
+.. code-block:: python
+
+   from chatterbot import ChatBot
+   from chatterbot.response_selection import get_first_response
+
+   chatbot = ChatBot(
+       "Helpdesk",
+       database_uri="sqlite:///helpdesk.sqlite3",
+       read_only=True,
+       logic_adapters=[{
+           "import_path": "chatterbot.logic.BestMatch",
+           "response_selection_method": get_first_response,
+       }],
+   )
+
+Order the SQL candidates by ID and allow the same answer even when it appears
+in recent conversation history:
+
+.. code-block:: python
+
+   response = chatbot.get_response(
+       "How do I reset my password?",
+       conversation="helpdesk-demo",
+       additional_response_selection_parameters={
+           "order_by": ["id"],
+           "exclude_text": [],
+       },
+   )
+
+With unchanged training data and settings, this makes candidate selection
+repeatable. ``read_only`` prevents this bot from learning through
+``get_response``; it does not stop explicit training or other processes from
+changing the database. Other logic adapters and randomly chosen default
+responses can also introduce variation, so review those separately if they
+are part of your configuration.
+
+
 Response selection in logic adapters
 ====================================
 
