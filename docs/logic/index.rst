@@ -91,6 +91,53 @@ functions default to 0.95 and can define their own ``default_threshold`` attribu
 a particular corpus; validate them with representative matches and non-matches for your application.
 
 
+Excluding words from replies
+----------------------------
+
+Set ``excluded_words`` on the ``BestMatch`` adapter to filter its response
+candidates. For example, with SQL storage:
+
+.. code-block:: python
+
+   from chatterbot import ChatBot
+
+   blocked_words = {"exampleword"}
+   chatbot = ChatBot(
+       "Word filter example",
+       storage_adapter="chatterbot.storage.SQLStorageAdapter",
+       logic_adapters=[{
+           "import_path": "chatterbot.logic.BestMatch",
+           "excluded_words": list(blocked_words),
+           "default_response": "I do not have a suitable reply.",
+       }],
+   )
+
+SQL storage matches case-insensitive substrings in candidate replies. The
+setting does not check the user's input, prevent learning it, or generate a
+warning message. Choose a suitable default response as well, because default
+responses are not filtered through the candidate query.
+
+To return a specific message for rejected input, check it before calling the
+bot. This small application helper uses whole-word matching for its example
+list:
+
+.. code-block:: python
+
+   import re
+
+   def reply_to(text):
+       words = set(re.findall(r"\w+", text.casefold()))
+       if blocked_words.intersection(words):
+           return "Please choose different words."
+       return str(chatbot.get_response(text))
+
+Rejected text never reaches ``get_response``, so it is not learned through
+that call. Adapt the input check to your application's language and matching
+requirements; it is separate from the SQL output filter. Preprocessors
+transform statements before matching but do not provide this application-level
+early return.
+
+
 Time Logic Adapter
 ==================
 
