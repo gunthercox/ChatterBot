@@ -90,11 +90,26 @@ class UnitConversion(LogicAdapter, MCPToolAdapter):
                 continue
         return None
 
+    def get_unit_candidates(self, unit_name):
+        """
+        Return every unit pint knows for the spelling as typed, in lower
+        case and in upper case. The spelling as typed comes first because
+        pint symbols are case sensitive ("MB" is megabyte, "mb" is
+        millibarn).
+        """
+        candidates = []
+        for name in (unit_name, unit_name.lower(), unit_name.upper()):
+            unit = self.get_unit([name])
+            if isinstance(unit, self.unit_registry.Unit) and unit not in candidates:
+                candidates.append(unit)
+        return candidates
+
     def get_valid_units(self, from_unit, target_unit):
         """
         Returns the first match `pint.unit.Unit` object for from_unit and
         target_unit strings from a possible variation of metric unit names
-        supported by pint library.
+        supported by pint library. A pair of units that can be converted
+        into each other is preferred over a pair that cannot.
 
         :param from_unit: source metric unit
         :type from_unit: str
@@ -102,10 +117,16 @@ class UnitConversion(LogicAdapter, MCPToolAdapter):
         :param from_unit: target metric unit
         :type from_unit: str
         """
-        from_unit_variations = [from_unit.lower(), from_unit.upper()]
-        target_unit_variations = [target_unit.lower(), target_unit.upper()]
-        from_unit = self.get_unit(from_unit_variations)
-        target_unit = self.get_unit(target_unit_variations)
+        from_candidates = self.get_unit_candidates(from_unit)
+        target_candidates = self.get_unit_candidates(target_unit)
+
+        for from_candidate in from_candidates:
+            for target_candidate in target_candidates:
+                if from_candidate.is_compatible_with(target_candidate):
+                    return from_candidate, target_candidate
+
+        from_unit = self.get_unit([from_unit.lower(), from_unit.upper()])
+        target_unit = self.get_unit([target_unit.lower(), target_unit.upper()])
         return from_unit, target_unit
 
     def handle_matches(self, match):
