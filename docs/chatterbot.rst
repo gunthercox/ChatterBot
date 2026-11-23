@@ -93,6 +93,45 @@ This can be useful when testing and debugging your code.
        logger=custom_logger
    )
 
+Saving a conversation transcript
+================================
+
+Diagnostic logging describes how adapters choose responses. To record the
+input and the final reply together, log them around ``get_response`` in your
+application. This works independently of the storage adapter, including when
+``read_only=True`` disables conversational learning.
+
+For an existing, non-streaming ``chatbot`` instance, the following helper
+appends one JSON object per line to a UTF-8 file:
+
+.. code-block:: python
+
+   import json
+   from datetime import datetime, timezone
+
+   def get_logged_response(chatbot, text, conversation, log_path="conversation.jsonl"):
+       response = chatbot.get_response(text, conversation=conversation)
+       record = {
+           "timestamp": datetime.now(timezone.utc).isoformat(),
+           "conversation": response.conversation,
+           "input": text,
+           "response": response.text,
+           "confidence": response.confidence,
+       }
+       with open(log_path, "a", encoding="utf-8") as log_file:
+           log_file.write(json.dumps(record, ensure_ascii=False) + "\n")
+       return response
+
+JSON escapes newlines inside messages, so each transcript entry still occupies
+one line. Open the file in append mode to preserve earlier entries, and use a
+stable conversation identifier to group turns from the same session.
+
+The corpus trainer does not attach a training file path to each generated
+response. This transcript helps identify unwanted replies during testing but
+does not recover their source filename. To track that provenance, keep a
+separate text-to-source index when preparing your training data.
+
+
 Adapters
 ========
 
