@@ -21,6 +21,44 @@ You can also create your own training class. This is recommended if you wish to 
 with data you have stored in a format that is not already supported by one of the pre-built
 classes listed below.
 
+Controlling learning from user conversations
+============================================
+
+By default, ``get_response`` saves the user's input and the generated reply.
+To let people use a bot without teaching it new phrases, set ``read_only=True``
+and train it on reviewed data beforehand:
+
+.. code-block:: python
+
+   from chatterbot import ChatBot
+
+   chatbot = ChatBot(
+       "Reviewed replies",
+       database_uri="sqlite:///reviewed.sqlite3",
+       read_only=True,
+       logic_adapters=[{
+           "import_path": "chatterbot.logic.BestMatch",
+           "default_response": "I do not have a reviewed answer for that.",
+       }],
+   )
+
+The explicit default response avoids echoing unknown input when no suitable
+learned response exists. ``read_only`` stops conversational learning through
+``get_response``; it does not disable trainers, explicit ``learn_response``
+calls, or direct storage writes.
+
+This setting does not remove unwanted phrases that are already in the
+database or training corpus. Review and clean those sources as well. The
+``BestMatch`` option ``excluded_words`` filters response candidates; it does
+not prevent incoming text from being learned when conversational learning is
+enabled.
+
+If you want to learn only from accepted messages, check them in your
+application before calling ``get_response``. Return your application's
+rejection reply without passing rejected text to the bot. Apply the same
+review to data supplied directly to trainers or storage.
+
+
 Training classes
 ================
 
