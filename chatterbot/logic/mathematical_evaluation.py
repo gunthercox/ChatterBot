@@ -72,7 +72,7 @@ class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
 
             # The confidence is 1 if the expression could be evaluated
             response.confidence = 1
-        except mathparse.PostfixTokenEvaluationException:
+        except (mathparse.PostfixTokenEvaluationException, ArithmeticError, ValueError):
             response.confidence = 0
 
         return response
