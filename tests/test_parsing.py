@@ -174,9 +174,26 @@ class DateTimeParsingFunctionIntegrationTestCases(TestCase):
         input_text = 'Last quarter of 2015'
         parser = parsing.datetime_parsing(input_text)
         self.assertIn(input_text, parser[0])
-        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'), '01-09-2015')
+        self.assertEqual(parser[0][1][0].strftime('%d-%m-%Y'), '01-10-2015')
         self.assertEqual(parser[0][1][1].strftime('%d-%m-%Y'), '31-12-2015')
         self.assertEqual(len(parser), 1)
+
+    def test_calendar_quarter_boundaries(self):
+        quarters = [
+            ('First', datetime(2016, 1, 1), datetime(2016, 3, 31)),
+            ('Second', datetime(2016, 4, 1), datetime(2016, 6, 30)),
+            ('Third', datetime(2016, 7, 1), datetime(2016, 9, 30)),
+            ('Fourth', datetime(2016, 10, 1), datetime(2016, 12, 31)),
+            ('Last', datetime(2016, 10, 1), datetime(2016, 12, 31)),
+        ]
+        for ordinal, start, end in quarters:
+            with self.subTest(quarter=ordinal):
+                input_text = f'{ordinal} quarter of 2016'
+                result = parsing.datetime_parsing(input_text, self.base_date)
+
+                self.assertEqual(len(result), 1)
+                self.assertEqual(result[0][0], input_text)
+                self.assertEqual(result[0][1], [start, end])
 
     def test_captured_pattern_is_next_three_weeks(self):
         input_text = 'Next 3 weeks'

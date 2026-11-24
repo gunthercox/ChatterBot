@@ -548,13 +548,12 @@ def date_from_quarter(base_date: datetime, ordinal: int, year: int) -> list[date
     """
     Extract date from quarter of a year
     """
+    # The "last" ordinal refers to the fourth quarter.
+    if ordinal < 1:
+        ordinal = 4
     interval = 3
-    month_start = interval * (ordinal - 1)
-    if month_start < 0:
-        month_start = 9
-    month_end = month_start + interval
-    if month_start == 0:
-        month_start = 1
+    month_start = interval * (ordinal - 1) + 1
+    month_end = month_start + interval - 1
     return [
         datetime(year, month_start, 1),
         datetime(year, month_end, calendar.monthrange(year, month_end)[1])
