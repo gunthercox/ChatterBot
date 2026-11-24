@@ -23,6 +23,7 @@ class SQLStorageAdapter(StorageAdapter):
         from sqlalchemy import create_engine, inspect, event
         from sqlalchemy import Index
         from sqlalchemy.engine import Engine
+        from sqlalchemy.engine.url import make_url
         from sqlalchemy.orm import sessionmaker, scoped_session
 
         self.database_uri = kwargs.get('database_uri', False)
@@ -40,7 +41,7 @@ class SQLStorageAdapter(StorageAdapter):
         # PostgreSQL, MySQL, etc. use QueuePool which does support them
         pool_config = {}
 
-        if self.database_uri.startswith('sqlite://'):
+        if make_url(self.database_uri).get_backend_name() == 'sqlite':
 
             @event.listens_for(Engine, 'connect')
             def set_sqlite_pragma(dbapi_connection, connection_record):
