@@ -105,6 +105,19 @@ class JaccardSimilarityTestCase(TestCase):
             language=languages.ENG
         )
 
+    def test_empty_token_sets_have_zero_similarity(self):
+        for text_a, text_b in [('', ''), ('the', 'and'), ('is the', 'we are')]:
+            with self.subTest(text_a=text_a, text_b=text_b):
+                self.assertEqual(self.compare.compare_text(text_a, text_b), 0)
+
+    def test_one_empty_token_set_has_zero_similarity(self):
+        for text_a, text_b in [('', 'cat'), ('the', 'cat'), ('cat', 'and')]:
+            with self.subTest(text_a=text_a, text_b=text_b):
+                self.assertEqual(self.compare.compare_text(text_a, text_b), 0)
+
+    def test_nonempty_token_sets_keep_their_jaccard_score(self):
+        self.assertEqual(self.compare.compare_text('cat dog', 'cat'), 0.5)
+
     def test_exact_match_different_capitalization(self):
         """
         Test that text capitalization is ignored.
