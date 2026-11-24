@@ -596,7 +596,7 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
         if time == 'this' or time == 'coming':
             return datetime(relative_date.year, 1, 1)
         elif time == 'last' or time == 'previous':
-            return datetime(relative_date.year - 1, relative_date.month, 1)
+            return datetime(relative_date.year - ord, relative_date.month, 1)
         elif time == 'next' or time == 'following':
             return relative_date + timedelta(ord * 365)
         elif time == 'end of the':
@@ -605,10 +605,11 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
         if time == 'this':
             return datetime(relative_date.year, relative_date.month, relative_date.day)
         elif time == 'last' or time == 'previous':
-            # Roll back into December of the previous year when needed and
-            # keep the day within the range of the target month
-            year = relative_date.year if relative_date.month > 1 else relative_date.year - 1
-            month = relative_date.month - 1 if relative_date.month > 1 else 12
+            # Move across year boundaries and keep the day within the
+            # valid range of the target month
+            month_index = relative_date.month - 1 - ord
+            year = relative_date.year + month_index // 12
+            month = month_index % 12 + 1
             day = min(relative_date.day, calendar.monthrange(year, month)[1])
             return datetime(year, month, day)
         elif time == 'next' or time == 'following':
@@ -633,7 +634,7 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
         if time == 'this':
             return relative_date - timedelta(days=relative_date.weekday())
         elif time == 'last' or time == 'previous':
-            return relative_date - timedelta(weeks=1)
+            return relative_date - timedelta(weeks=ord)
         elif time == 'next' or time == 'following':
             return relative_date + timedelta(weeks=ord)
         elif time == 'end of the':
@@ -642,7 +643,7 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
         if time == 'this':
             return relative_date
         elif time == 'last' or time == 'previous':
-            return relative_date - timedelta(days=1)
+            return relative_date - timedelta(days=ord)
         elif time == 'next' or time == 'following':
             return relative_date + timedelta(days=ord)
         elif time == 'end of the':
