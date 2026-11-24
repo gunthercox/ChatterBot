@@ -89,7 +89,7 @@ class Statement(StatementMixin):
         self.tags = kwargs.pop('tags', [])
         self.in_response_to = in_response_to
         self.search_in_response_to = kwargs.get('search_in_response_to', '')
-        self.created_at = kwargs.get('created_at', datetime.now())
+        self.created_at = kwargs.get('created_at', datetime.now(timezone.utc))
 
         if not isinstance(self.created_at, datetime):
             self.created_at = date_parser.parse(self.created_at)
