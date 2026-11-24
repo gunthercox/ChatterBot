@@ -1,4 +1,6 @@
+from datetime import datetime, timedelta, timezone
 from unittest import TestCase
+from unittest.mock import patch
 from tests.base_case import ChatBotTestCase
 from chatterbot import ChatBot
 from chatterbot.conversation import Statement
@@ -12,6 +14,39 @@ class StatementTests(TestCase):
     def test_serializer(self):
         data = self.statement.serialize()
         self.assertEqual(self.statement.text, data['text'])
+
+    def test_default_created_at_uses_the_current_utc_instant(self):
+        expected = datetime(2026, 1, 2, 3, 4, 5, tzinfo=timezone.utc)
+
+        for offset in (8, -5):
+            local_timezone = timezone(timedelta(hours=offset))
+
+            class LocalDatetime(datetime):
+                @classmethod
+                def now(cls, tz=None):
+                    instant = cls(2026, 1, 2, 3, 4, 5, tzinfo=timezone.utc)
+                    if tz is None:
+                        return instant.astimezone(local_timezone).replace(tzinfo=None)
+                    return instant.astimezone(tz)
+
+            with self.subTest(utc_offset=offset):
+                with patch('chatterbot.conversation.datetime', LocalDatetime):
+                    statement = Statement(text='A timestamped statement.')
+
+                self.assertEqual(statement.created_at, expected)
+                self.assertEqual(statement.created_at.tzinfo, timezone.utc)
+
+    def test_explicit_aware_created_at_is_preserved(self):
+        timestamp = datetime(2026, 1, 2, 3, 4, 5, tzinfo=timezone(timedelta(hours=8)))
+        statement = Statement(text='A timestamped statement.', created_at=timestamp)
+
+        self.assertIs(statement.created_at, timestamp)
+
+    def test_explicit_naive_created_at_is_assumed_to_be_utc(self):
+        timestamp = datetime(2026, 1, 2, 3, 4, 5)
+        statement = Statement(text='A timestamped statement.', created_at=timestamp)
+
+        self.assertEqual(statement.created_at, timestamp.replace(tzinfo=timezone.utc))
 
 
 class DefaultConversationTestCase(ChatBotTestCase):
