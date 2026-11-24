@@ -192,6 +192,9 @@ class JaccardSimilarity(Comparator):
         # Calculate Jaccard similarity
         numerator = len(statement_a_lemmas.intersection(statement_b_lemmas))
         denominator = float(len(statement_a_lemmas.union(statement_b_lemmas)))
+        if not denominator:
+            return 0
+
         ratio = numerator / denominator
 
         return ratio
