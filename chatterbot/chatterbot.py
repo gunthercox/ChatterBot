@@ -321,14 +321,14 @@ class ChatBot(object):
         if len(results) >= 3:
             result_options = {}
             for result_option in results:
-                result_string = result_option.text + ':' + (result_option.in_response_to or '')
+                result_key = (result_option.text, result_option.in_response_to or '')
 
-                if result_string in result_options:
-                    result_options[result_string].count += 1
-                    if result_options[result_string].statement.confidence < result_option.confidence:
-                        result_options[result_string].statement = result_option
+                if result_key in result_options:
+                    result_options[result_key].count += 1
+                    if result_options[result_key].statement.confidence < result_option.confidence:
+                        result_options[result_key].statement = result_option
                 else:
-                    result_options[result_string] = ResultOption(
+                    result_options[result_key] = ResultOption(
                         result_option
                     )
 
