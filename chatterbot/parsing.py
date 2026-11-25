@@ -630,6 +630,15 @@ def date_from_relative_week_year(base_date: datetime, time: str, dow: str, ordin
                 relative_date.month,
                 calendar.monthrange(relative_date.year, relative_date.month)[1]
             )
+    elif dow in minute_variations:
+        if time == 'this' or time == 'coming':
+            return base_date.replace(second=0, microsecond=0)
+        elif time == 'last' or time == 'previous':
+            return base_date - timedelta(minutes=ord)
+        elif time == 'next' or time == 'following':
+            return base_date + timedelta(minutes=ord)
+        elif time == 'end of the':
+            return base_date.replace(second=59, microsecond=0)
     elif dow in week_variations:
         if time == 'this':
             return relative_date - timedelta(days=relative_date.weekday())
