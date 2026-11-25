@@ -22,6 +22,9 @@ def get_file_path(dotted_path, extension='json') -> str:
     """
     Reads a dotted file path and returns the file path.
     """
+    if os.path.exists(dotted_path):
+        return dotted_path
+
     # If the operating system's file path seperator character is in the string
     if os.sep in dotted_path or '/' in dotted_path:
         # Assume the path is a valid file path
