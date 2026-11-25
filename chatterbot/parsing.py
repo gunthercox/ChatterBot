@@ -778,15 +778,11 @@ def datetime_parsing(text: str, base_date: datetime = None) -> list[tuple[str, d
         for match in expression.finditer(text):
             matches.append((match.group(), function(match, base_date), match.span()))
 
-    # Wrap the matched text with TAG element to prevent nested selections
+    # Keep the first matching expression at each position, in regex priority order.
     for match, value, spans in matches:
-        subn = re.subn(
-            '(?!<TAG[^>]*?>)' + match + '(?![^<]*?</TAG>)', '<TAG>' + match + '</TAG>', text
-        )
-        text = subn[0]
-        is_substituted = subn[1]
-        if is_substituted != 0:
-            found_array.append((match, value, spans))
+        if any(spans[0] < selected[2][1] and selected[2][0] < spans[1] for selected in found_array):
+            continue
+        found_array.append((match, value, spans))
 
     # To preserve order of the match, sort based on the start position
     return sorted(found_array, key=lambda match: match and match[2][0])
