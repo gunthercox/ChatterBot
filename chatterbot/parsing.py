@@ -176,7 +176,7 @@ regex = [
                 ((?P<dow>%s)[,\s][-\s]*)? #Matches Monday, Jan 12 2012, Jan 12 2012 etc
                 (?P<month>%s) # Matches any month name
                 [-\s] # Space
-                ((?P<day>\d{1,2})) # Matches a digit
+                ((?P<day>\d{1,2})(?!\d)) # Do not consume the first digits of a year
                 (%s)?
                 ([-\s](?P<year>%s))? # Year
                 ((\s|,\s|\s(%s))?\s*(%s))?
