@@ -345,7 +345,7 @@ class SQLStorageAdapter(StorageAdapter):
         for statement in statements:
 
             statement_data = statement.serialize()
-            tag_data = statement_data.pop('tags', [])
+            tag_data = set(statement_data.pop('tags', []))
 
             statement_model_object = Statement(**statement_data)
 
@@ -405,6 +405,8 @@ class SQLStorageAdapter(StorageAdapter):
                         persona=statement.persona
                     )
 
+            existing_tag_names = {tag.name for tag in record.tags}
+
             # Update the response value
             record.in_response_to = statement.in_response_to
 
@@ -419,6 +421,9 @@ class SQLStorageAdapter(StorageAdapter):
                     raise Exception('update issued without search_in_response_to value')
 
             for tag_name in statement.get_tags():
+                if tag_name in existing_tag_names:
+                    continue
+
                 tag = session.query(Tag).filter_by(name=tag_name).first()
 
                 if not tag:
@@ -426,6 +431,7 @@ class SQLStorageAdapter(StorageAdapter):
                     tag = Tag(name=tag_name)
 
                 record.tags.append(tag)
+                existing_tag_names.add(tag_name)
 
             session.add(record)
             session.commit()
