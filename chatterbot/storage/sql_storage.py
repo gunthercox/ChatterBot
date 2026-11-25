@@ -218,7 +218,7 @@ class SQLStorageAdapter(StorageAdapter):
 
             if exclude_text_words:
                 or_word_query = [
-                    Statement.text.ilike('%' + word + '%') for word in exclude_text_words
+                    Statement.text.icontains(word, autoescape=True) for word in exclude_text_words
                 ]
                 statements = statements.filter(
                     ~or_(*or_word_query)
@@ -231,7 +231,7 @@ class SQLStorageAdapter(StorageAdapter):
 
             if search_text_contains:
                 or_query = [
-                    Statement.search_text.contains(word) for word in search_text_contains.split(' ')
+                    Statement.search_text.contains(word, autoescape=True) for word in search_text_contains.split(' ')
                 ]
                 statements = statements.filter(
                     or_(*or_query)
@@ -239,7 +239,8 @@ class SQLStorageAdapter(StorageAdapter):
 
             if search_in_response_to_contains:
                 or_query = [
-                    Statement.search_in_response_to.contains(word) for word in search_in_response_to_contains.split(' ')
+                    Statement.search_in_response_to.contains(word, autoescape=True)
+                    for word in search_in_response_to_contains.split(' ')
                 ]
                 statements = statements.filter(
                     or_(*or_query)
