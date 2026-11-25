@@ -142,6 +142,10 @@ Training with CSV or TSV formatted data
    .. autoattribute:: chatterbot.trainers.CsvFileTrainer.DEFAULT_STATEMENT_TO_HEADER_MAPPING
 
 
+A mapped ``tags`` field containing text is one complete tag, including any
+spaces or commas in that text. An empty string adds no tags. The JSON file
+trainer also accepts a list in that field when a statement needs multiple tags.
+
 Example CSV data format:
 
 .. literalinclude:: ../tests/training/test_data/csv_corpus/1.csv

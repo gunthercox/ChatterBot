@@ -446,11 +446,15 @@ class GenericFileTrainer(Trainer):
                     statement_text = document.text
                     statement_search_text = document._.search_index
 
+                tags = context.get('tags', [])
+                if isinstance(tags, str):
+                    tags = [tags] if tags else []
+
                 statement = Statement(
                     text=statement_text,
                     conversation=context.get('conversation', 'training'),
                     persona=context.get('persona', None),
-                    tags=context.get('tags', [])
+                    tags=tags
                 )
 
                 if 'created_at' in context:
