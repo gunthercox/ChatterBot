@@ -207,8 +207,8 @@ class SQLStorageAdapter(StorageAdapter):
                 statements = session.query(Statement).filter_by(**kwargs)
 
             if tags:
-                statements = statements.join(Statement.tags).filter(
-                    Tag.name.in_(tags)
+                statements = statements.filter(
+                    Statement.tags.any(Tag.name.in_(tags))
                 )
 
             if exclude_text:
