@@ -671,6 +671,7 @@ def date_from_duration(base_date: datetime, number_as_string: str, unit: str, du
     Find dates from duration
     Eg: 20 days from now
     Currently does not support strings like "20 days from last monday".
+    Year offsets clamp February 29 to February 28 in non-leap target years.
     """
     # Check if query is `2 days before yesterday` or `day before yesterday`
     if base_time is not None:
@@ -688,11 +689,15 @@ def date_from_duration(base_date: datetime, number_as_string: str, unit: str, du
         args = {'years': num}
     if duration == 'ago' or duration == 'before' or duration == 'earlier':
         if 'years' in args:
-            return datetime(base_date.year - args['years'], base_date.month, base_date.day)
+            year = base_date.year - args['years']
+            day = min(base_date.day, calendar.monthrange(year, base_date.month)[1])
+            return datetime(year, base_date.month, day)
         return base_date - timedelta(**args)
     elif duration == 'after' or duration == 'later' or duration == 'from now':
         if 'years' in args:
-            return datetime(base_date.year + args['years'], base_date.month, base_date.day)
+            year = base_date.year + args['years']
+            day = min(base_date.day, calendar.monthrange(year, base_date.month)[1])
+            return datetime(year, base_date.month, day)
         return base_date + timedelta(**args)
 
 
