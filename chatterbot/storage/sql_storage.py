@@ -419,6 +419,9 @@ class SQLStorageAdapter(StorageAdapter):
                 if self.raise_on_missing_search_text:
                     raise Exception('update issued without search_in_response_to value')
 
+            record.search_text = statement.search_text or ''
+            record.search_in_response_to = statement.search_in_response_to or ''
+
             for tag_name in statement.get_tags():
                 tag = session.query(Tag).filter_by(name=tag_name).first()
 
