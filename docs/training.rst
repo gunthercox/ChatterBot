@@ -133,6 +133,14 @@ You can also specify file paths to corpus files or directories of corpus files w
    )
 
 
+The CSV/TSV and JSON file trainers infer response links when ``in_response_to``
+is not mapped. Each row then replies to the previous row in the same
+``conversation``, including when conversations are interleaved. Without a mapped
+conversation field, all rows in the file belong to ``training``. These chains
+reset for each input file; an explicitly mapped response field keeps its supplied
+links.
+
+
 Training with CSV or TSV formatted data
 ---------------------------------------
 
