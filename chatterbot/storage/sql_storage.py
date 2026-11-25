@@ -280,47 +280,48 @@ class SQLStorageAdapter(StorageAdapter):
 
         session = self.Session()
 
-        if search_text is None:
-            if self.raise_on_missing_search_text:
-                raise Exception('generate a search_text value')
+        try:
+            if search_text is None:
+                if self.raise_on_missing_search_text:
+                    raise Exception('generate a search_text value')
 
-        if search_in_response_to is None and in_response_to is not None:
-            if self.raise_on_missing_search_text:
-                raise Exception('generate a search_in_response_to value')
+            if search_in_response_to is None and in_response_to is not None:
+                if self.raise_on_missing_search_text:
+                    raise Exception('generate a search_in_response_to value')
 
-        statement = Statement(
-            text=text,
-            in_response_to=in_response_to,
-            search_text=search_text,
-            search_in_response_to=search_in_response_to,
-            **kwargs
-        )
+            statement = Statement(
+                text=text,
+                in_response_to=in_response_to,
+                search_text=search_text,
+                search_in_response_to=search_in_response_to,
+                **kwargs
+            )
 
-        tags = frozenset(tags) if tags else frozenset()
+            tags = frozenset(tags) if tags else frozenset()
 
-        # Batch query tags
-        if tags:
-            existing_tags = session.query(Tag).filter(Tag.name.in_(tags)).all()
-            existing_tag_dict = {tag.name: tag for tag in existing_tags}
+            # Batch query tags
+            if tags:
+                existing_tags = session.query(Tag).filter(Tag.name.in_(tags)).all()
+                existing_tag_dict = {tag.name: tag for tag in existing_tags}
 
-            for tag_name in tags:
-                tag = existing_tag_dict.get(tag_name)
-                if not tag:
-                    # Create the tag if it doesn't exist
-                    tag = Tag(name=tag_name)
-                statement.tags.append(tag)
+                for tag_name in tags:
+                    tag = existing_tag_dict.get(tag_name)
+                    if not tag:
+                        # Create the tag if it doesn't exist
+                        tag = Tag(name=tag_name)
+                    statement.tags.append(tag)
 
-        session.add(statement)
+            session.add(statement)
 
-        session.commit()
+            session.commit()
 
-        session.refresh(statement)
+            session.refresh(statement)
 
-        statement_object = self.model_to_object(statement)
+            statement_object = self.model_to_object(statement)
 
-        session.close()
-
-        return statement_object
+            return statement_object
+        finally:
+            session.close()
 
     def create_many(self, statements):
         """
