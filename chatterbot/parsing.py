@@ -513,8 +513,22 @@ def convert_string_to_number(value: str) -> int:
         return value
     if value.isdigit():
         return int(value)
-    num_list = map(lambda s: NUMBERS[s], re.findall(numbers + '+', value.lower()))
-    return sum(num_list)
+    value = value.lower()
+    if value == 'a':
+        return 1
+
+    total = 0
+    group = 0
+    for word in re.findall(r'\b' + numbers + r'\b', value):
+        number = 1 if word == 'a' else NUMBERS[word]
+        if number == 100:
+            group = (group or 1) * number
+        elif number == 1000:
+            total += (group or 1) * number
+            group = 0
+        else:
+            group += number
+    return total + group
 
 
 def convert_time_to_hour_minute(hour: str, minute: str, convention: str) -> dict:
