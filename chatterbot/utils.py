@@ -1,15 +1,16 @@
 """
 ChatterBot utility functions
 """
-from typing import TYPE_CHECKING as _TYPE_CHECKING, Any as _Any
+from typing import TYPE_CHECKING, Any
+from chatterbot.conversation import Statement
 import importlib
 import time
 
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from chatterbot.chatterbot import ChatBot
 
 
-def import_module(dotted_path: str) -> _Any:
+def import_module(dotted_path: str) -> Any:
     """
     Imports the specified module based on the
     dot notated import path for the module.
@@ -22,10 +23,10 @@ def import_module(dotted_path: str) -> _Any:
 
 
 def initialize_class(
-    data: dict[str, _Any] | str,
-    *args: _Any,
-    **kwargs: _Any
-) -> _Any:
+    data: dict[str, Any] | str,
+    *args: Any,
+    **kwargs: Any
+) -> Any:
     """
     :param data: A string or dictionary containing a import_path attribute.
     """
@@ -41,7 +42,10 @@ def initialize_class(
         return Class(*args, **kwargs)
 
 
-def validate_adapter_class(validate_class: _Any, adapter_class: _Any) -> None:
+def validate_adapter_class(
+    validate_class: str | dict[str, Any],
+    adapter_class: type
+) -> None:
     """
     Raises an exception if validate_class is not a
     subclass of adapter_class.
@@ -78,7 +82,10 @@ def validate_adapter_class(validate_class: _Any, adapter_class: _Any) -> None:
         )
 
 
-def get_response_time(chatbot: 'ChatBot', statement: _Any = 'Hello') -> float:
+def get_response_time(
+    chatbot: 'ChatBot',
+    statement: Statement | str | dict[str, Any] | None = 'Hello'
+) -> float:
     """
     Returns the amount of time taken for a given
     chat bot to return a response.
@@ -95,7 +102,7 @@ def get_response_time(chatbot: 'ChatBot', statement: _Any = 'Hello') -> float:
     return time.time() - start_time
 
 
-def get_model_for_language(language: _Any) -> str:
+def get_model_for_language(language: type) -> str:
     """
     Returns the spacy model for the specified language.
     """

@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING as _TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from datetime import datetime
 from chatterbot import languages
@@ -8,7 +8,7 @@ from chatterbot.utils import get_model_for_language
 from chatterbot.logic.mcp_tools import MCPToolAdapter
 import spacy
 
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from chatterbot.chatterbot import ChatBot
 
 

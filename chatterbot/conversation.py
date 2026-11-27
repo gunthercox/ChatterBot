@@ -1,5 +1,5 @@
 from datetime import datetime, timezone
-from typing import Any as _Any
+from typing import Any
 from dateutil import parser as date_parser
 
 
@@ -41,7 +41,7 @@ class StatementMixin(object):
         """
         self.tags.extend(tags)
 
-    def serialize(self) -> dict[str, _Any]:
+    def serialize(self) -> dict[str, Any]:
         """
         :returns: A dictionary representation of the statement object.
         """
@@ -84,7 +84,7 @@ class Statement(StatementMixin):
         self,
         text: str,
         in_response_to: str | None = None,
-        **kwargs: _Any
+        **kwargs: Any
     ) -> None:
 
         self.id = kwargs.get('id')

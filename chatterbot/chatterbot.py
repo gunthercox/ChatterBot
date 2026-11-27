@@ -1,6 +1,6 @@
 import logging
 import uuid
-from typing import Any as _Any
+from typing import Any
 from chatterbot.storage import StorageAdapter
 from chatterbot.logic import LogicAdapter
 from chatterbot.search import TextSearch, IndexedTextSearch, SemanticVectorSearch
@@ -56,7 +56,7 @@ class ChatBot(object):
                    (Added in version 1.2.7)
     """
 
-    def __init__(self, name: str, stream: bool = False, **kwargs: _Any) -> None:
+    def __init__(self, name: str, stream: bool = False, **kwargs: Any) -> None:
         self.name = name
 
         self.stream = stream
@@ -168,8 +168,8 @@ class ChatBot(object):
 
     def get_response(
         self,
-        statement: Statement | str | dict[str, _Any] | None = None,
-        **kwargs: _Any
+        statement: Statement | str | dict[str, Any] | None = None,
+        **kwargs: Any
     ) -> Statement:
         """
         Return the bot's response based on the input.
@@ -282,7 +282,7 @@ class ChatBot(object):
     def generate_response(
         self,
         input_statement: Statement,
-        additional_response_selection_parameters: dict[str, _Any] | None = None
+        additional_response_selection_parameters: dict[str, Any] | None = None
     ) -> Statement:
         """
         Return a response based on a given input statement.
