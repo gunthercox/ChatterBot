@@ -226,7 +226,7 @@ class SQLStorageAdapter(StorageAdapter):
 
             if persona_not_startswith:
                 statements = statements.filter(
-                    ~Statement.persona.startswith('bot:')
+                    ~Statement.persona.startswith(persona_not_startswith, autoescape=True)
                 )
 
             if search_text_contains:
