@@ -37,7 +37,8 @@ class MathematicalEvaluation(LogicAdapter, MCPToolAdapter):
         adapter to respond to the user input.
         """
         response = self.process(statement)
-        self.cache[statement.text] = response
+        # Only keep the result needed by the next process call.
+        self.cache = {statement.text: response}
         return response.confidence == 1
 
     def process(self, statement: Statement, additional_response_selection_parameters: dict = None) -> Statement:
