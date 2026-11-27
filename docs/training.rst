@@ -219,6 +219,45 @@ file and extracting it. If the file has already been downloaded, it will not be
 downloaded again. If the file is already extracted, it will not be extracted again.
 
 
+Statement order in learn_response
+=================================
+
+``chatbot.learn_response(statement, previous_statement=...)`` records that
+``statement`` is a response to ``previous_statement``. The previous statement
+is the message being answered, not necessarily the bot's previous reply.
+
+For a conversation ending with ``human: How are you?`` followed by
+``bot: Doing well``, the current statement is ``Doing well`` and the previous
+one is the human's ``How are you?``:
+
+.. code-block:: python
+
+   from chatterbot.conversation import Statement
+
+   previous = Statement(
+       text="How are you?", conversation="example", persona="user:alice"
+   )
+   current = Statement(
+       text="Doing well", conversation="example", persona="bot:" + chatbot.name
+   )
+   learned = chatbot.learn_response(current, previous_statement=previous)
+   # learned.in_response_to == "How are you?"
+
+This call saves the current statement with its ``in_response_to`` link; it
+does not also save the previous statement. Neither argument is restricted to
+a particular speaker. Set ``persona`` explicitly when recording human speech,
+because an empty current persona defaults to ``bot:`` plus the bot's name.
+
+When ``previous_statement`` is omitted, the method first uses the current
+statement's ``in_response_to`` text, then falls back to the latest stored
+statement in its conversation. Pass it explicitly when you already know the
+message being answered.
+
+During ordinary conversation, ``get_response`` calls ``learn_response`` for
+the generated reply with the user's input as the previous statement, unless
+``read_only=True``. There is no need to learn the same reply again manually.
+
+
 Creating a new training class
 =============================
 
