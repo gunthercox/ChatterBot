@@ -458,11 +458,14 @@ class SQLStorageAdapter(StorageAdapter):
         """
         Drop the database.
         """
+        from chatterbot.ext.sqlalchemy_app.models import tag_association_table
+
         Statement = self.get_model('statement')
         Tag = self.get_model('tag')
 
         session = self.Session()
         try:
+            session.execute(tag_association_table.delete())
             session.query(Statement).delete()
             session.query(Tag).delete()
 
