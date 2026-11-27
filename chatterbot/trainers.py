@@ -320,8 +320,7 @@ class GenericFileTrainer(Trainer):
 
         for data_file in tqdm(data_files, desc='Training', disable=self.disable_progress):
 
-            previous_statement_text = None
-            previous_statement_search_text = ''
+            previous_statements = {}
 
             file_extension = data_file.split('.')[-1].lower()
 
@@ -467,12 +466,12 @@ class GenericFileTrainer(Trainer):
                     )
                 else:
                     # List-type data such as CSVs with no response specified can use
-                    # the previous statement as the in_response_to value
-                    statement.in_response_to = previous_statement_text
-                    statement.search_in_response_to = previous_statement_search_text
+                    # the previous statement from the same conversation.
+                    statement.in_response_to, statement.search_in_response_to = previous_statements.get(
+                        statement.conversation, (None, '')
+                    )
 
-                previous_statement_text = statement.text
-                previous_statement_search_text = statement.search_text
+                previous_statements[statement.conversation] = (statement.text, statement.search_text)
 
                 statements_to_create.append(statement)
 
