@@ -1,5 +1,11 @@
+from pathlib import Path
+from tempfile import TemporaryDirectory
 from unittest import TestCase
+
+from sqlalchemy.exc import IntegrityError
+
 from chatterbot.conversation import Statement
+from chatterbot.ext.sqlalchemy_app.models import Tag
 from chatterbot.storage.sql_storage import SQLStorageAdapter
 
 
@@ -503,3 +509,62 @@ class StorageAdapterUpdateTests(SQLStorageAdapterTestCase):
         self.assertEqual(len(statements), 1)
         self.assertEqual(len(statements[0].get_tags()), 1)
         self.assertEqual(statements[0].get_tags(), ['ab'])
+
+
+class SQLiteDriverURITests(TestCase):
+
+    def test_file_database_uses_sqlite_pragmas(self):
+        with TemporaryDirectory() as directory:
+            database = Path(directory) / 'statements.sqlite3'
+            adapter = SQLStorageAdapter(database_uri='sqlite+pysqlite:///' + str(database))
+            try:
+                with adapter.engine.connect() as connection:
+                    self.assertEqual(
+                        connection.exec_driver_sql('PRAGMA journal_mode').scalar(),
+                        'wal',
+                    )
+                    self.assertEqual(
+                        connection.exec_driver_sql('PRAGMA synchronous').scalar(),
+                        1,
+                    )
+            finally:
+                adapter.close()
+
+    def test_memory_database_accepts_default_and_explicit_drivers(self):
+        for uri in ('sqlite+pysqlite://', 'sqlite+pysqlite:///:memory:', 'sqlite://'):
+            with self.subTest(database_uri=uri):
+                adapter = SQLStorageAdapter(database_uri=uri)
+                try:
+                    adapter.create(text='SQLite statement', search_text='sqlite statement')
+
+                    self.assertEqual(adapter.count(), 1)
+                    self.assertEqual(adapter.get_random().text, 'SQLite statement')
+                finally:
+                    adapter.close()
+
+
+class SQLCreateErrorsTests(TestCase):
+
+    def test_failed_insert_does_not_poison_the_scoped_session(self):
+        adapter = SQLStorageAdapter(
+            database_uri=None, raise_on_missing_search_text=False
+        )
+        self.addCleanup(adapter.close)
+        original = adapter.create(id=1, text='Original', tags=['keep'])
+
+        with self.assertRaises(IntegrityError):
+            adapter.create(id=1, text='Duplicate ID', tags=['rolled back'])
+
+        created = adapter.create(id=2, text='Next valid insert', tags=['new'])
+
+        self.assertEqual(adapter.count(), 2)
+        stored_original, = adapter.filter(id=original.id)
+        stored_created, = adapter.filter(id=created.id)
+        self.assertEqual(stored_original.text, 'Original')
+        self.assertEqual(stored_original.get_tags(), ['keep'])
+        self.assertEqual(stored_created.text, 'Next valid insert')
+        self.assertEqual(stored_created.get_tags(), ['new'])
+        with adapter.Session() as session:
+            self.assertEqual(
+                session.query(Tag).filter_by(name='rolled back').count(), 0
+            )
