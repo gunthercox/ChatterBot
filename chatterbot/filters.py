@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING as _TYPE_CHECKING
+from typing import TYPE_CHECKING
 
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from chatterbot.chatterbot import ChatBot
 
 

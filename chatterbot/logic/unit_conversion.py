@@ -1,4 +1,4 @@
-from typing import TYPE_CHECKING as _TYPE_CHECKING
+from typing import TYPE_CHECKING
 
 from chatterbot.logic import LogicAdapter
 from chatterbot.conversation import Statement
@@ -9,7 +9,7 @@ from chatterbot.logic.mcp_tools import MCPToolAdapter
 from mathparse import mathparse
 import re
 
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from chatterbot.chatterbot import ChatBot
 
 

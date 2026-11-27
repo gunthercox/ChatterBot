@@ -1,5 +1,5 @@
-from collections.abc import Iterator as _Iterator
-from typing import Any as _Any
+from collections.abc import Iterator
+from typing import Any
 from chatterbot import languages
 from chatterbot.utils import get_model_for_language
 import spacy
@@ -11,7 +11,7 @@ class NoOpTagger(object):
     Used by storage adapters that don't rely on indexed search_text fields.
     """
 
-    def __init__(self, language: _Any = None) -> None:
+    def __init__(self, language: type | None = None) -> None:
         self.language = language or languages.ENG
 
     def needs_text_indexing(self) -> bool:
@@ -31,10 +31,10 @@ class NoOpTagger(object):
 
     def as_nlp_pipeline(
         self,
-        texts: list[str] | list[tuple[str, dict[str, _Any]]],
+        texts: list[str] | list[tuple[str, dict[str, Any]]],
         batch_size: int = 1000,
         n_process: int = 1
-    ) -> _Iterator[str | tuple[str, dict[str, _Any]]]:
+    ) -> Iterator[str | tuple[str, dict[str, Any]]]:
         """
         Returns texts unchanged without NLP processing.
         Maintains API compatibility with other taggers.
@@ -60,7 +60,7 @@ class LowercaseTagger(object):
     Returns the text in lowercase.
     """
 
-    def __init__(self, language: _Any = None) -> None:
+    def __init__(self, language: type | None = None) -> None:
         from chatterbot.components import chatterbot_lowercase_indexer  # noqa
 
         self.language = language or languages.ENG
@@ -91,10 +91,10 @@ class LowercaseTagger(object):
 
     def as_nlp_pipeline(
         self,
-        texts: list[str] | list[tuple[str, dict[str, _Any]]],
+        texts: list[str] | list[tuple[str, dict[str, Any]]],
         batch_size: int = 1000,
         n_process: int = 1
-    ) -> _Iterator[spacy.tokens.Doc | tuple[spacy.tokens.Doc, dict[str, _Any]]]:
+    ) -> Iterator[spacy.tokens.Doc | tuple[spacy.tokens.Doc, dict[str, Any]]]:
         """
         Process texts through the spaCy NLP pipeline with optimized batching.
 
@@ -119,7 +119,7 @@ class LowercaseTagger(object):
 
 class PosLemmaTagger(object):
 
-    def __init__(self, language: _Any = None) -> None:
+    def __init__(self, language: type | None = None) -> None:
         from chatterbot.components import chatterbot_bigram_indexer  # noqa
 
         self.language = language or languages.ENG
@@ -155,10 +155,10 @@ class PosLemmaTagger(object):
 
     def as_nlp_pipeline(
         self,
-        texts: list[str] | list[tuple[str, dict[str, _Any]]],
+        texts: list[str] | list[tuple[str, dict[str, Any]]],
         batch_size: int = 1000,
         n_process: int = 1
-    ) -> _Iterator[spacy.tokens.Doc | tuple[spacy.tokens.Doc, dict[str, _Any]]]:
+    ) -> Iterator[spacy.tokens.Doc | tuple[spacy.tokens.Doc, dict[str, Any]]]:
         """
         Accepts a single string or a list of strings, or a list of tuples
         where the first element is the text and the second element is a

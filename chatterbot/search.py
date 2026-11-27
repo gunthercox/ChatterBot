@@ -1,9 +1,9 @@
-from collections.abc import Iterator as _Iterator
-from typing import TYPE_CHECKING as _TYPE_CHECKING, Any as _Any
+from collections.abc import Iterator
+from typing import TYPE_CHECKING, Any
 
 from chatterbot.conversation import Statement as _Statement
 
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from chatterbot.chatterbot import ChatBot
 
 
@@ -19,7 +19,7 @@ class IndexedTextSearch:
 
     name = 'indexed_text_search'
 
-    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
+    def __init__(self, chatbot: 'ChatBot', **kwargs: Any) -> None:
         from chatterbot.comparisons import LevenshteinDistance
 
         self.chatbot = chatbot
@@ -40,8 +40,8 @@ class IndexedTextSearch:
     def search(
         self,
         input_statement: _Statement,
-        **additional_parameters: _Any
-    ) -> _Iterator[_Any]:
+        **additional_parameters: Any
+    ) -> Iterator[Any]:
         """
         Search for close matches to the input. Confidence scores for
         subsequent results will order of increasing value.
@@ -104,7 +104,7 @@ class TextSearch:
 
     name = 'text_search'
 
-    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
+    def __init__(self, chatbot: 'ChatBot', **kwargs: Any) -> None:
         from chatterbot.comparisons import LevenshteinDistance
 
         self.chatbot = chatbot
@@ -125,8 +125,8 @@ class TextSearch:
     def search(
         self,
         input_statement: _Statement,
-        **additional_parameters: _Any
-    ) -> _Iterator[_Any]:
+        **additional_parameters: Any
+    ) -> Iterator[Any]:
         """
         Search for close matches to the input. Confidence scores for
         subsequent results will order of increasing value.
@@ -210,7 +210,7 @@ class SemanticVectorSearch:
 
     name = 'semantic_vector_search'
 
-    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
+    def __init__(self, chatbot: 'ChatBot', **kwargs: Any) -> None:
         self.chatbot = chatbot
 
         self.search_page_size = kwargs.get(
@@ -220,8 +220,8 @@ class SemanticVectorSearch:
     def search(
         self,
         input_statement: _Statement,
-        **additional_parameters: _Any
-    ) -> _Iterator[_Any]:
+        **additional_parameters: Any
+    ) -> Iterator[Any]:
         """
         Search for semantically similar statements using vector similarity.
         Confidence scores are calculated by the storage adapter based on

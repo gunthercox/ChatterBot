@@ -1,6 +1,6 @@
 from collections.abc import Iterable as _Iterable
 import logging
-from typing import Any as _Any
+from typing import Any
 
 from chatterbot.conversation import Statement as _Statement
 
@@ -11,7 +11,7 @@ class StorageAdapter(object):
     that all storage adapters should implement.
     """
 
-    def __init__(self, *args: _Any, **kwargs: _Any) -> None:
+    def __init__(self, *args: Any, **kwargs: Any) -> None:
         """
         Initialize common attributes shared by all storage adapters.
 

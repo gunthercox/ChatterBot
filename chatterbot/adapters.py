@@ -1,6 +1,6 @@
-from typing import TYPE_CHECKING as _TYPE_CHECKING, Any as _Any
+from typing import TYPE_CHECKING, Any
 
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from chatterbot.chatterbot import ChatBot
 
 
@@ -11,7 +11,7 @@ class Adapter(object):
     :param chatbot: A ChatBot instance.
     """
 
-    def __init__(self, chatbot: 'ChatBot', **kwargs: _Any) -> None:
+    def __init__(self, chatbot: 'ChatBot', **kwargs: Any) -> None:
         self.chatbot = chatbot
 
     class AdapterMethodNotImplementedError(NotImplementedError):

@@ -5,7 +5,7 @@ This module provides logic adapters that integrate Large Language Models.
 LLM adapters can use other logic adapters as tools via MCP (Model Context Protocol).
 """
 import json
-from typing import TYPE_CHECKING as _TYPE_CHECKING, Any
+from typing import TYPE_CHECKING, Any
 
 from chatterbot.logic.logic_adapter import LogicAdapter
 from chatterbot.conversation import Statement
@@ -16,7 +16,7 @@ from chatterbot.logic.mcp_tools import (
 )
 from chatterbot import utils
 
-if _TYPE_CHECKING:
+if TYPE_CHECKING:
     from chatterbot.chatterbot import ChatBot
 
 
